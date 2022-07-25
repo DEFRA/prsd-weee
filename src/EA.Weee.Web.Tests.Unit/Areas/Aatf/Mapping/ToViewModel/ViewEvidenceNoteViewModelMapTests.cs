@@ -466,6 +466,27 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithRedirectTab_RedirectTabShouldBeSet()
+        {
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            
+            var result = map.Map(source);
+
+            result.RedirectTab.Should().Be(source.RedirectTab);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithNoRedirectTab_RedirectTabShouldBeSet()
+        {
+            var source = TestFixture.Build<ViewEvidenceNoteMapTransfer>()
+                .With(v => v.RedirectTab, (string)null).Create();
+
+            var result = map.Map(source);
+
+            result.RedirectTab.Should().BeNull();
+        }
+
+        [Fact]
         public void Map_GivenReturnedReasonAndNoRejectedReason_ReasonMustBeSet()
         {
             var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();

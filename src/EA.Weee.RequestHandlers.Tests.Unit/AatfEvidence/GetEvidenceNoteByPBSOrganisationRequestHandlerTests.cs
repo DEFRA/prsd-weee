@@ -114,7 +114,8 @@
                                                               e.ComplianceYear == request.ComplianceYear &&
                                                               e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.EvidenceNote) &&
                                                               e.NoteTypeFilter.Count == 1 && 
-                                                              e.OrganisationId == organisationId &&
+                                                              e.RecipientId == organisationId &&
+                                                              e.OrganisationId == null &&
                                                               e.PageNumber == 1 &&
                                                               e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
@@ -136,13 +137,13 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
-                e.RecipientId == null &&
+                e.RecipientId == organisationId &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.AatfId == null &&
                 e.ComplianceYear == request.ComplianceYear &&
                 e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.TransferNote) &&
                 e.NoteTypeFilter.Count == 1 &&
-                e.OrganisationId == request.OrganisationId))).MustHaveHappenedOnceExactly();
+                e.OrganisationId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

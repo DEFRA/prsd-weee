@@ -19,6 +19,8 @@
 
         public string StatusName { get; set; }
 
+        public SchemeStatus Status { get; set; }
+
         public AddressData Address { get; set; }
 
         public ContactData Contact { get; set; }

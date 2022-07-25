@@ -344,7 +344,7 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = TestFixture.CreateMany<Note>().ToList();
+            var noteList = TestFixture.CreateMany<Note>(2).ToList();
 
             var evidenceNoteDatas = new List<EvidenceNoteData>()
             {

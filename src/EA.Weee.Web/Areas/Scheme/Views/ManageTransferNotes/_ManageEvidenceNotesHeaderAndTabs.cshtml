@@ -1,5 +1,4 @@
 ﻿@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
@@ -7,7 +6,7 @@
 
 @model ManageEvidenceNoteSchemeViewModel
 @{
-    var title = String.Format("Manage evidence notes for {0}", Model.OrganisationName);
+    var title = "Manage PBS evidence notes" ;
     ViewBag.Title = title + " - GOV.UK";
 
 }
@@ -20,7 +19,7 @@
     </h1>
 </header>
 
- @{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() {{ "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }, { "width", "107px" } });}
+ @{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() {{ "controller", "ManageTransferNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }, { "width", "107px" } });}
 
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Review submitted evidence",
