@@ -385,7 +385,7 @@
 
                 var result = await dataAccess.GetOrganisationUsers(filter);
 
-                Assert.Equal(3, result.Count());
+                Assert.Equal(2, result.Count());
 
                 Assert.Single(result.Where(r => r.OrganisationName == organisationOneName));
                 Assert.Single(result.Where(r => r.OrganisationName == organisationTwoName));
