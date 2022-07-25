@@ -15,7 +15,7 @@
     using Requests.Scheme;
     using Security;
 
-    public class EditTransferEvidenceNoteRequestHandler : IRequestHandler<EditTransferEvidenceNoteRequest, Guid>
+    public class EditTransferEvidenceNoteRequestHandler : SaveTransferNoteRequestBase, IRequestHandler<EditTransferEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -56,6 +56,8 @@
             Condition.Requires(recipientOrganisation).IsNotNull();
 
             var note = await evidenceDataAccess.GetNoteById(request.TransferNoteId);
+
+            ValidToSave(organisation, note.ComplianceYear, currentDate);
 
             using (var transaction = transactionAdapter.BeginTransaction())
             {

@@ -39,17 +39,17 @@
     @if (Model.DisplayMessage)
     {
     @(this.WeeeGds().BackLink(
-            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }),
+            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear }),
             "Manage evidence notes")
             )
-    @(this.WeeeGds().Panel(Model.SuccessMessage))
+        @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-    @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }))
-            )
-    }
+        @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear }))
+                )
+        }
     <div class="govuk-!-margin-top-3"></div>
     @Html.Partial("_ViewEvidenceNotePartial", Model)
 }

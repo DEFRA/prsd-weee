@@ -23,8 +23,6 @@
 
     @using (Html.BeginForm(actionName: "TransferEvidenceNote", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
-        @Html.HiddenFor(m => m.SelectedComplianceYear, Model.SelectedComplianceYear)
-
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model); }
     }
 }

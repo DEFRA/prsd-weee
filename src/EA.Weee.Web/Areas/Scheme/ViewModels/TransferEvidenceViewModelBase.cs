@@ -18,6 +18,8 @@
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
 
+        public int ComplianceYear { get; set; }
+
         protected TransferEvidenceViewModelBase()
         {
             EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
