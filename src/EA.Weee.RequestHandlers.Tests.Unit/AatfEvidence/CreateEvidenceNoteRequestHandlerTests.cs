@@ -40,8 +40,7 @@
         private readonly Aatf aatf;
         private readonly Guid userId;
 
-        private const string Error =
-            "You cannot create evidence if your site approval has been cancelled or suspended or your site is not approved for the selected compliance year";
+        private const string Error = "You cannot create evidence if the start and end dates are not in the current compliance year";
 
         public CreateEvidenceNoteRequestHandlerTests()
         {
