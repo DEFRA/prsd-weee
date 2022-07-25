@@ -27,7 +27,6 @@
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => noteData, noteData);
-            Guard.ArgumentNotNull(() => scheme, scheme);
 
             OrganisationId = organisationId;
             NoteData = noteData;

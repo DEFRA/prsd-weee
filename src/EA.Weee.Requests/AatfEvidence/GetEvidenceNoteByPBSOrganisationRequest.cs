@@ -6,9 +6,9 @@
     using System.Collections.Generic;
     using CuttingEdge.Conditions;
 
-    public class GetEvidenceNotesByOrganisationRequest : EvidenceNoteFilterBaseRequest
+    public class GetEvidenceNoteByPbsOrganisationRequest : EvidenceNoteFilterBaseRequest
     {
-        public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
+        public GetEvidenceNoteByPbsOrganisationRequest(Guid organisationId,
             List<NoteStatus> allowedStatuses,
             int complianceYear,
             List<NoteType> noteTypeFilterList,
@@ -24,7 +24,6 @@
             AllowedStatuses = allowedStatuses;
             ComplianceYear = complianceYear;
             NoteTypeFilterList = noteTypeFilterList;
-            TransferredOut = transferredOut;
         }
     }
 }

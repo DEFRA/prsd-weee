@@ -66,19 +66,6 @@
         }
 
         [Fact]
-        public void Map_GivenSchemeNameIsNull_ArgumentNullExceptionExpected()
-        {
-            //act
-            var exception = Record.Exception(() => new ViewAndTransferEvidenceViewModelMapTransfer(Guid.NewGuid(), TestFixture.Create<EvidenceNoteSearchDataResult>(), 
-                null, 
-                TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>()));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void Map_GivenListOfEvidenceNotes_MapperShouldBeCalled()
         {
             //arrange

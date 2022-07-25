@@ -62,7 +62,7 @@
 
             return note;
         }
-        public async Task<List<Note>> GetAllNotes(NoteFilter filter)
+        public async Task<EvidenceNoteResults> GetAllNotes(NoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value).ToList();
             var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
@@ -136,10 +136,12 @@
                 notes = notes.Where(p => p.Aatf.AatfId == groupedAatfId);
             }
 
-            return await notes.OrderByDescending(n => n.Reference)
+            var returnNotes = await notes.OrderByDescending(n => n.Reference)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
+
+            return new EvidenceNoteResults(returnNotes.ToList(), notes.Count());
         }
 
         public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
