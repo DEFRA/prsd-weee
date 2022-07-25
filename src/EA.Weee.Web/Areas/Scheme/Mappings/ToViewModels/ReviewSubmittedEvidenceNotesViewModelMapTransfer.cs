@@ -8,11 +8,11 @@
 
     public class ReviewSubmittedEvidenceNotesViewModelMapTransfer : BaseEvidenceNotesViewModelMapTransfer
     {
-        public ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid organisationId, 
-            List<EvidenceNoteData> notes,
-            SchemePublicInfo scheme,
+        public ReviewSubmittedEvidenceNotesViewModelMapTransfer(Guid organisationId,
+            EvidenceNoteSearchDataResult noteData,
+            SchemePublicInfo scheme, 
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel) : base(organisationId, notes, scheme, currentDate, manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel) : base(organisationId, noteData, scheme, currentDate, manageEvidenceNoteViewModel)
         {
         }
     }

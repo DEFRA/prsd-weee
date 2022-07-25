@@ -191,8 +191,7 @@
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(
                 A<AatfEvidenceToSelectYourAatfViewModelMapTransfer>.That.Matches(
                     v => v.AatfList == aatfs &&
-                         v.OrganisationId == organisationId &&
-                         v.EvidenceSiteSelectionStartDateFrom == evidenceNoteStartDate))).MustHaveHappenedOnceExactly();
+                         v.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
