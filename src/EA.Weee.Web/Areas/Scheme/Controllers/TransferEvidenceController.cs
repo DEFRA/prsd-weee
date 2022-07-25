@@ -179,7 +179,7 @@
                     var id = await client.SendAsync(User.GetAccessToken(), updatedRequest);
 
                     return RedirectToAction("TransferredEvidence", "TransferEvidence",
-                        new { pcsId = model.PcsId, evidenceNoteId = id });
+                        new { pcsId = model.PcsId, evidenceNoteId = id, redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers) });
                 }
 
                 var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, client);

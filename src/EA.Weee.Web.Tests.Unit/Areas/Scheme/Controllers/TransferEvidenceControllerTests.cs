@@ -1079,6 +1079,7 @@
             result.RouteValues["action"].Should().Be("TransferredEvidence");
             result.RouteValues["pcsId"].Should().Be(model.PcsId);
             result.RouteValues["evidenceNoteId"].Should().Be(id);
+            result.RouteValues["redirectTab"].Should().Be(Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers));
         }
 
         [Fact]

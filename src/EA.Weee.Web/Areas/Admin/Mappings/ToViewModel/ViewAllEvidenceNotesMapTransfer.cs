@@ -1,22 +1,21 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
-    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.ViewModels.Shared;
 
-    public class ViewAllEvidenceNotesMapModel
+    public class ViewAllEvidenceNotesMapTransfer
     {
-        public List<EvidenceNoteData> Notes { get; set; }
+        public EvidenceNoteSearchDataResult NoteData { get; set; }
 
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
 
-        public ViewAllEvidenceNotesMapModel(List<EvidenceNoteData> notes,
+        public ViewAllEvidenceNotesMapTransfer(EvidenceNoteSearchDataResult noteData,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            Guard.ArgumentNotNull(() => notes, notes);
+            Guard.ArgumentNotNull(() => noteData, noteData);
 
-            Notes = notes;
+            NoteData = noteData;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
         }
     }

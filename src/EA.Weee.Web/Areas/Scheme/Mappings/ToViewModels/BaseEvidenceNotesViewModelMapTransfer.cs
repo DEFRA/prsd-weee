@@ -13,24 +13,24 @@
 
         public SchemePublicInfo Scheme { get; protected set; }
 
-        public List<EvidenceNoteData> Notes { get; protected set; }
+        public EvidenceNoteSearchDataResult NoteData { get; protected set; }
 
         public DateTime CurrentDate { get; protected set; }
 
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; protected set; }
 
-        protected BaseEvidenceNotesViewModelMapTransfer(Guid organisationId, 
-            List<EvidenceNoteData> notes,
+        protected BaseEvidenceNotesViewModelMapTransfer(Guid organisationId,
+            EvidenceNoteSearchDataResult noteData,
             SchemePublicInfo scheme,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-            Guard.ArgumentNotNull(() => notes, notes);
+            Guard.ArgumentNotNull(() => noteData, noteData);
             Guard.ArgumentNotNull(() => scheme, scheme);
 
             OrganisationId = organisationId;
-            Notes = notes;
+            NoteData = noteData;
             Scheme = scheme;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
