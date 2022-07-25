@@ -20,29 +20,28 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.Scheme.Controllers;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ManageTransferNotesControllerTests
+    public class ManageTransferNotesControllerTests : SimpleUnitTestBase
     {
-        protected readonly IWeeeClient WeeeClient;
-        protected readonly IMapper Mapper;
-        protected readonly ManageTransferNotesController ManageTransferNotesController;
-        protected readonly BreadcrumbService Breadcrumb;
-        protected readonly IWeeeCache Cache;
-        protected readonly Guid OrganisationId;
-        protected readonly Fixture Fixture;
+        private readonly IWeeeClient weeeClient;
+        private readonly IMapper mapper;
+        private readonly ManageTransferNotesController manageTransferNotesController;
+        private readonly BreadcrumbService breadcrumb;
+        private readonly IWeeeCache cache;
+        private readonly Guid organisationId;
 
         public ManageTransferNotesControllerTests()
         {
-            Fixture = new Fixture();
-            WeeeClient = A.Fake<IWeeeClient>();
-            Breadcrumb = A.Fake<BreadcrumbService>();
-            Cache = A.Fake<IWeeeCache>();
-            Mapper = A.Fake<IMapper>();
-            OrganisationId = Guid.NewGuid();
-            ManageTransferNotesController = new ManageTransferNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
+            weeeClient = A.Fake<IWeeeClient>();
+            breadcrumb = A.Fake<BreadcrumbService>();
+            cache = A.Fake<IWeeeCache>();
+            mapper = A.Fake<IMapper>();
+            organisationId = Guid.NewGuid();
+            manageTransferNotesController = new ManageTransferNotesController(mapper, breadcrumb, cache, () => weeeClient);
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
         }
 
         [Fact]
@@ -74,18 +73,19 @@
             //arrange
             var schemeName = Faker.Company.Name();
             var organisationId = Guid.NewGuid();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(new List<EvidenceNoteData>());
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedManageEvidenceNotesSchemeViewModel());
-            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(noteData);
+            A.CallTo(() => mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedManageEvidenceNotesSchemeViewModel());
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(schemeName);
 
             //act
-            await ManageTransferNotesController.Index(organisationId, tab);
+            await manageTransferNotesController.Index(organisationId, tab);
 
             //assert
-            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
-            Breadcrumb.ExternalOrganisation.Should().Be(schemeName);
-            Breadcrumb.OrganisationId.Should().Be(organisationId);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.ExternalOrganisation.Should().Be(schemeName);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
         [Theory]
@@ -97,10 +97,10 @@
         public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(string tab)
         {
             //act
-            await ManageTransferNotesController.Index(OrganisationId, tab);
+            await manageTransferNotesController.Index(organisationId, tab);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -110,21 +110,19 @@
         {
             // Arrange
             var status = new List<NoteStatus>() { NoteStatus.Submitted };
-            var schemeName = Faker.Company.Name();
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var currentDate = Fixture.Create<DateTime>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var currentDate = TestFixture.Create<DateTime>();
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(noteData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageTransferNotesController.Index(OrganisationId, tab);
+            await manageTransferNotesController.Index(organisationId, tab);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) &&
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(organisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(currentDate.Year) &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes)))).MustHaveHappenedOnceExactly();
@@ -137,24 +135,24 @@
         {
             // Arrange
             var status = new List<NoteStatus>() { NoteStatus.Submitted };
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var currentDate = Fixture.Create<DateTime>();
-            var complianceYear = Fixture.Create<short>();
+            var currentDate = TestFixture.Create<DateTime>();
+            var complianceYear = TestFixture.Create<short>();
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
-            var model = Fixture.Build<ManageEvidenceNoteViewModel>()
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageTransferNotesController.Index(OrganisationId, tab, model);
+            await manageTransferNotesController.Index(organisationId, tab, model);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) &&
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(organisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(complianceYear) &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes)))).MustHaveHappenedOnceExactly();
@@ -174,10 +172,10 @@
         public async Task IndexGet_GivenDefaultAndReviewTab_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus(NoteStatus status, string tab)
         {
             //act
-            await ManageTransferNotesController.Index(OrganisationId, tab);
+            await manageTransferNotesController.Index(organisationId, tab);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.AllowedStatuses.Contains(status)))).MustNotHaveHappened();
         }
 
@@ -187,20 +185,20 @@
         public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedData_ViewModelShouldBeBuilt(string tab)
         {
             // Arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var currentDate = Fixture.Create<DateTime>();
+            var currentDate = TestFixture.Create<DateTime>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageTransferNotesController.Index(OrganisationId, tab);
+            await manageTransferNotesController.Index(organisationId, tab);
 
             //asset
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
+            A.CallTo(() => mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
+                    a => a.OrganisationId.Equals(organisationId) && a.Notes.Equals(returnList) &&
                          a.SchemeName.Equals(String.Empty) &&
                          a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
         }
@@ -211,22 +209,24 @@
         public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt(string tab)
         {
             // Arrange
-            var evidenceData = Fixture.Create<EvidenceNoteData>();
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
             var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var currentDate = Fixture.Create<DateTime>();
-            var model = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var currentDate = TestFixture.Create<DateTime>();
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(noteData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
 
-            await ManageTransferNotesController.Index(OrganisationId, tab, model);
+            await manageTransferNotesController.Index(organisationId, tab, model);
 
             //asset
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
+            A.CallTo(() => mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(OrganisationId) && a.Notes.Equals(returnList) &&
+                    a => a.OrganisationId.Equals(organisationId) && 
+                         a.NoteData.Equals(noteData) &&
                          a.SchemeName.Equals(String.Empty) &&
                          a.CurrentDate.Equals(currentDate) &&
                          a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
@@ -238,12 +238,12 @@
         public async Task IndexGet_GivenReviewSubmittedEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned(string tab)
         {
             //arrange
-            var model = Fixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
+            var model = TestFixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageTransferNotesController.Index(OrganisationId, tab) as ViewResult;
+            var result = await manageTransferNotesController.Index(organisationId, tab) as ViewResult;
 
             //asset
             result.Model.Should().Be(model);
@@ -258,7 +258,7 @@
         {
             var pcs = Guid.NewGuid();
 
-            var result = await ManageTransferNotesController.Index(pcs, tab) as ViewResult;
+            var result = await manageTransferNotesController.Index(pcs, tab) as ViewResult;
 
             result.ViewName.Should().Be(view);
         }

@@ -15,7 +15,7 @@
     using System.Threading.Tasks;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class GetEvidenceNoteByPbsOrganisationRequestHandler : IRequestHandler<GetEvidenceNoteByPbsOrganisationRequest, List<EvidenceNoteData>>
+    public class GetEvidenceNoteByPbsOrganisationRequestHandler : IRequestHandler<GetEvidenceNoteByPbsOrganisationRequest, EvidenceNoteSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
@@ -30,12 +30,12 @@
             this.mapper = mapper;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNoteByPbsOrganisationRequest request)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNoteByPbsOrganisationRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(request.OrganisationId);
 
-            var filter = new NoteFilter(request.ComplianceYear)
+            var filter = new NoteFilter(request.ComplianceYear, int.MaxValue, 1)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 OrganisationId = request.OrganisationId,
@@ -43,9 +43,11 @@
                     .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
 
-            var notes = await noteDataAccess.GetAllNotes(filter);
+            var noteData = await noteDataAccess.GetAllNotes(filter);
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(noteData.Notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+
+            return new EvidenceNoteSearchDataResult(mappedResults, noteData.NumberOfResults);
         }
     }
 }

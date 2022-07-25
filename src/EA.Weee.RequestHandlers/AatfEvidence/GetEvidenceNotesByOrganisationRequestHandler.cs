@@ -62,11 +62,11 @@
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
 
-            var notes = await noteDataAccess.GetAllNotes(filter);
+            var noteData = await noteDataAccess.GetAllNotes(filter);
 
-            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(noteData.Notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
 
-            return new EvidenceNoteSearchDataResult(mappedResults, mappedResults.Count);
+            return new EvidenceNoteSearchDataResult(mappedResults, noteData.NumberOfResults);
         }
     }
 }

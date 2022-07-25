@@ -164,7 +164,7 @@
         public void Map_GivenTransferNoteData_AndNoOrganisationSchemeData_SubmittedByShouldBeSet_ToOrganisationName()
         {
             //arrange
-            var organisationName = fixture.Create<string>();
+            var organisationName = TestFixture.Create<string>();
             var evidenceNoteData = new EvidenceNoteData()
             {
                 OrganisationData = new OrganisationData() { OrganisationName = organisationName },

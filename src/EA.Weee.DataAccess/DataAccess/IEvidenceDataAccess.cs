@@ -21,7 +21,7 @@
             NoteStatus status,
             DateTime date);
 
-        Task<List<Note>> GetAllNotes(NoteFilter filter);
+        Task<EvidenceNoteResults> GetAllNotes(NoteFilter filter);
 
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear);
 

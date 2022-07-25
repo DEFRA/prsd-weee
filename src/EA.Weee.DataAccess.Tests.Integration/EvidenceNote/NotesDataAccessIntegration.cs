@@ -1119,7 +1119,8 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(0);
+                notes.NumberOfResults.Should().Be(0);
+                notes.Notes.Count.Should().Be(0);
             }
         }
 
