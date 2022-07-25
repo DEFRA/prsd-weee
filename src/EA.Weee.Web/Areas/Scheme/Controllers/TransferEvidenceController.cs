@@ -41,10 +41,17 @@
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
+            var selectedComplianceYear = sessionService.GetTransferSessionObject<object>(Session, SessionKeyConstant.SchemeSelectedComplianceYear);
+            if (selectedComplianceYear == null)
+            {
+                RedirectToManageEvidence(pcsId);
+            }
+
             var model = new TransferEvidenceNoteCategoriesViewModel
             {
                 OrganisationId = pcsId,
-                SchemasToDisplay = await GetApprovedSchemes(pcsId)
+                SchemasToDisplay = await GetApprovedSchemes(pcsId),
+                SelectedComplianceYear = (int)selectedComplianceYear
             };
 
             var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
@@ -116,7 +123,7 @@
                 }
 
                 var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds));
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.SelectedComplianceYear));
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
 
@@ -237,7 +244,7 @@
             }
 
             var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.SelectedComplianceYear, transferRequest.EvidenceNoteIds));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId)
             {

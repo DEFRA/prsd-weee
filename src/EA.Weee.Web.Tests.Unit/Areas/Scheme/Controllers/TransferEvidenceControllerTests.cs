@@ -1270,13 +1270,14 @@
         private TransferEvidenceNoteRequest GetRequest(List<Guid> evidenceIds = null)
         {
             var categoryIds = TestFixture.CreateMany<int>().ToList();
-          
+            var complianceYear = TestFixture.Create<int>();
+
             if (evidenceIds == null)
             {
                 evidenceIds = TestFixture.CreateMany<Guid>().ToList();
             }
            
-            return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds)
+            return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds, complianceYear)
             {
                 EvidenceNoteIds = evidenceIds
             };
@@ -1286,8 +1287,9 @@
         {
             var categoryIds = new List<int> { 3, 5, 9, 11 };
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var complianceYear = TestFixture.Create<int>();
 
-            return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds)
+            return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds, complianceYear)
             {
                 EvidenceNoteIds = evidenceNoteIds
             };
