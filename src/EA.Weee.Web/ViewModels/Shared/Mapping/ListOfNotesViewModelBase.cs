@@ -5,6 +5,8 @@
     using System.Linq;
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
+    using Core.Scheme;
+    using Core.Shared;
     using CuttingEdge.Conditions;
     using Extensions;
     using Prsd.Core.Mapper;

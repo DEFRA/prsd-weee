@@ -382,6 +382,7 @@
     <Compile Include="Organisations\OrganisationBySchemeIdHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandlerTests.cs" />
     <Compile Include="Scheme\AddSchemeHandlerTests.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfoHandlerTests.cs" />
     <Compile Include="Scheme\UpdateSchemeContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
