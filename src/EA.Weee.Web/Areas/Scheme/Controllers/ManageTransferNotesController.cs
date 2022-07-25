@@ -78,7 +78,7 @@
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNoteByPBSOrganisationRequest(organisationId,
+                new GetEvidenceNoteByPbsOrganisationRequest(organisationId,
                     new List<NoteStatus>() { NoteStatus.Submitted },
                     SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 

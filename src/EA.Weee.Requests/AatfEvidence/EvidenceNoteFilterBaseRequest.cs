@@ -17,5 +17,9 @@
         public int ComplianceYear { get; protected set; }
 
         public NoteType NoteTypeFilter { get; protected set; }
+
+        public List<NoteType> NoteTypeFilterList { get; protected set; }
+
+        public bool TransferredOut { get; protected set; }
     }
 }

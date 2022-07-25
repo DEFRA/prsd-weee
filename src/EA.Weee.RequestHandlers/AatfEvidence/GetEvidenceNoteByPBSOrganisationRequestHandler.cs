@@ -15,13 +15,13 @@
     using System.Threading.Tasks;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class GetEvidenceNoteByPBSOrganisationRequestHandler : IRequestHandler<GetEvidenceNoteByPBSOrganisationRequest, List<EvidenceNoteData>>
+    public class GetEvidenceNoteByPbsOrganisationRequestHandler : IRequestHandler<GetEvidenceNoteByPbsOrganisationRequest, List<EvidenceNoteData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
 
-        public GetEvidenceNoteByPBSOrganisationRequestHandler(IWeeeAuthorization authorization,
+        public GetEvidenceNoteByPbsOrganisationRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess,
             IMapper mapper)
         {
@@ -30,19 +30,17 @@
             this.mapper = mapper;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNoteByPBSOrganisationRequest request)
+        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNoteByPbsOrganisationRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(request.OrganisationId);
 
-            Guid? organisationId = request.OrganisationId;
-
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(request.ComplianceYear)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
-                OrganisationId = organisationId,
-                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = request.ComplianceYear
+                OrganisationId = request.OrganisationId,
+                AllowedStatuses = request.AllowedStatuses
+                    .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
