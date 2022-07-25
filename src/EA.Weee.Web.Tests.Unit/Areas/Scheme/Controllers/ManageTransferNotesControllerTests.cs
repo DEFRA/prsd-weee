@@ -75,7 +75,7 @@
             var schemeName = Faker.Company.Name();
             var organisationId = Guid.NewGuid();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPBSOrganisationRequest>._)).Returns(new List<EvidenceNoteData>());
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(new List<EvidenceNoteData>());
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedManageEvidenceNotesSchemeViewModel());
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
 
@@ -116,14 +116,14 @@
             var currentDate = Fixture.Create<DateTime>();
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPBSOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
             await ManageTransferNotesController.Index(OrganisationId, tab);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPBSOrganisationRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(currentDate.Year) &&
@@ -146,14 +146,14 @@
             var model = Fixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPBSOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
             await ManageTransferNotesController.Index(OrganisationId, tab, model);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPBSOrganisationRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
                      g.ComplianceYear.Equals(complianceYear) &&
@@ -191,7 +191,7 @@
             var returnList = new List<EvidenceNoteData>() { evidenceData };
             var currentDate = Fixture.Create<DateTime>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPBSOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
@@ -216,7 +216,7 @@
             var currentDate = Fixture.Create<DateTime>();
             var model = Fixture.Create<ManageEvidenceNoteViewModel>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPBSOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act

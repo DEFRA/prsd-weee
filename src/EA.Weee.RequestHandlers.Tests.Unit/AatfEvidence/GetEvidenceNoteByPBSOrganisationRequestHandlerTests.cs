@@ -26,13 +26,13 @@
 
     public class GetEvidenceNoteByPBSOrganisationRequestHandlerTests
     {
-        private GetEvidenceNoteByPBSOrganisationRequestHandler handler;
+        private GetEvidenceNoteByPbsOrganisationRequestHandler handler;
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
         private readonly Guid organisationId;
-        private readonly GetEvidenceNoteByPBSOrganisationRequest request;
+        private readonly GetEvidenceNoteByPbsOrganisationRequest request;
 
         public GetEvidenceNoteByPBSOrganisationRequestHandlerTests()
         {
@@ -43,9 +43,9 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNoteByPBSOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            request = new GetEvidenceNoteByPbsOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
 
-            handler = new GetEvidenceNoteByPBSOrganisationRequestHandler(weeeAuthorization,
+            handler = new GetEvidenceNoteByPbsOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
                 mapper);
         }
@@ -55,7 +55,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-            handler = new GetEvidenceNoteByPBSOrganisationRequestHandler(authorization, evidenceDataAccess, mapper);
+            handler = new GetEvidenceNoteByPbsOrganisationRequestHandler(authorization, evidenceDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNoteByPBSOrganisationRequest()));
@@ -69,7 +69,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            handler = new GetEvidenceNoteByPBSOrganisationRequestHandler(authorization, evidenceDataAccess, mapper);
+            handler = new GetEvidenceNoteByPbsOrganisationRequestHandler(authorization, evidenceDataAccess, mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNoteByPBSOrganisationRequest()));
@@ -125,7 +125,7 @@
             //arrange
             var scheme = A.Fake<Scheme>();
             var schemeId = fixture.Create<Guid>();
-            var request = new GetEvidenceNoteByPBSOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
+            var request = new GetEvidenceNoteByPbsOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
 
             A.CallTo(() => scheme.Id).Returns(schemeId);
             var status = request.AllowedStatuses
@@ -207,9 +207,9 @@
             result.Should().BeEquivalentTo(noteData);
         }
 
-        private GetEvidenceNoteByPBSOrganisationRequest GetEvidenceNoteByPBSOrganisationRequest()
+        private GetEvidenceNoteByPbsOrganisationRequest GetEvidenceNoteByPBSOrganisationRequest()
         {
-            return new GetEvidenceNoteByPBSOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            return new GetEvidenceNoteByPbsOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
         }
     }
 }
