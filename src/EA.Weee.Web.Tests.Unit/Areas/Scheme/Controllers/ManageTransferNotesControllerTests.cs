@@ -83,7 +83,7 @@
             await manageTransferNotesController.Index(organisationId, tab);
 
             //assert
-            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.ExternalOrganisation.Should().Be(schemeName);
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
@@ -135,8 +135,7 @@
         {
             // Arrange
             var status = new List<NoteStatus>() { NoteStatus.Submitted };
-            var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var currentDate = TestFixture.Create<DateTime>();
             var complianceYear = TestFixture.Create<short>();
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
@@ -144,7 +143,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
@@ -186,10 +185,10 @@
         {
             // Arrange
             var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
             var currentDate = TestFixture.Create<DateTime>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(returnList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNoteByPbsOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
@@ -198,8 +197,9 @@
             //asset
             A.CallTo(() => mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(organisationId) && a.Notes.Equals(returnList) &&
-                         a.SchemeName.Equals(String.Empty) &&
+                    a => a.OrganisationId.Equals(organisationId) && 
+                         a.NoteData.Equals(noteData) &&
+                         a.Scheme == null &&
                          a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
         }
 
@@ -210,7 +210,6 @@
         {
             // Arrange
             var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
             var currentDate = TestFixture.Create<DateTime>();
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
@@ -227,7 +226,7 @@
                 A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(organisationId) && 
                          a.NoteData.Equals(noteData) &&
-                         a.SchemeName.Equals(String.Empty) &&
+                         a.Scheme == null &&
                          a.CurrentDate.Equals(currentDate) &&
                          a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
         }

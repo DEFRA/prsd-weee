@@ -458,6 +458,7 @@
     <Compile Include="RazorHelpers\WeeeGdsFormTests.cs" />
     <Compile Include="Startup\GlobalFilterConfigurationTests.cs" />
     <Compile Include="ViewModels\Aatf\AatfEditContactMapTests.cs" />
+    <Compile Include="ViewModels\ListOfSchemeNotesViewModelBaseTests.cs" />
     <Compile Include="ViewModels\ListOfNotesViewModelBaseTests.cs" />
     <Compile Include="ViewModels\RadioButtonStringCollectionViewModelTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />

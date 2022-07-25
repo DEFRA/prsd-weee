@@ -2,7 +2,9 @@
 {
     using DataAccess.DataAccess;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Threading.Tasks;
 
@@ -29,7 +31,8 @@
                 SchemeId = scheme.Id,
                 OrganisationId = scheme.OrganisationId,
                 Name = scheme.SchemeName,
-                ApprovalNo = scheme.ApprovalNumber
+                ApprovalNo = scheme.ApprovalNumber,
+                Status = scheme.SchemeStatus.ToCoreEnumeration<SchemeStatus>()
             };
         }
     }

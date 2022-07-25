@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using Aatf.ViewModels;
     using Core.AatfEvidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -18,7 +16,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.ViewModels.Shared;
-    using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
 
     public class ManageTransferNotesController : BalancingSchemeEvidenceBaseController
@@ -42,9 +39,7 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
-
-                var organisationName = await Cache.FetchOrganisationName(pcsId);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.PbsManageEvidence);
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
@@ -83,7 +78,7 @@
                     SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                    new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, String.Empty, currentDate, manageEvidenceNoteViewModel));
+                    new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, null, currentDate, manageEvidenceNoteViewModel));
 
                 return View("ReviewSubmittedEvidence", model);
             }
