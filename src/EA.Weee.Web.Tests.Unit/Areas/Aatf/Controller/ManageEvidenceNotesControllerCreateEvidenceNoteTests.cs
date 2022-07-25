@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -11,6 +12,8 @@
     using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core.Web.ApiClient;
+    using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
@@ -27,6 +30,13 @@
         public void ManageEvidenceNotesControllerInheritsExternalSiteController()
         {
             typeof(ManageEvidenceNotesController).BaseType.Name.Should().Be(nameof(AatfEvidenceBaseController));
+        }
+
+        [Fact]
+        public void CreateEvidenceNoteGet_ShouldHaveCheckCanCreateEvidenceNoteAttributeAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+                .BeDecoratedWith<CheckCanCreateEvidenceNoteAttribute>();
         }
 
         [Fact]
@@ -65,22 +75,22 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNoteGet_SchemesListShouldBeRetrieved()
+        public async Task CreateEvidenceNoteGet_OrganisationSchemesListShouldBeRetrieved()
         {
             //act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(r => r.IncludePBS.Equals(true)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task CreateEvidenceNoteGet_ViewModelMapperShouldBeCalled()
         {
             //arrange
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId);
@@ -112,6 +122,13 @@
         }
 
         [Fact]
+        public void CreateEvidenceNotePost_ShouldHaveCheckCanCreateEvidenceNoteAttributeAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<CheckCanCreateEvidenceNoteAttribute>();
+        }
+
+        [Fact]
         public async Task CreateEvidenceNotePost_GivenInvalidModel_BreadcrumbShouldBeSet()
         {
             //arrange
@@ -131,7 +148,7 @@
         }
 
         [Fact]
-        public async Task CreateEvidenceNotePost_GivenInvalidModel_SchemesListShouldBeRetrieved()
+        public async Task CreateEvidenceNotePost_GivenInvalidModel_OrganisationSchemesListShouldBeRetrieved()
         {
             //arrange
             AddModelError();
@@ -141,15 +158,15 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
-                A<GetSchemesExternal>.That.Matches(r => r.IncludeWithdrawn.Equals(false)))).MustHaveHappenedOnceExactly();
+                A<GetOrganisationScheme>.That.Matches(r => r.IncludePBS.Equals(true)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task CreateEvidenceNotePost_GivenInvalidModel_ViewModelMapperShouldBeCalled()
         {
             //arrange
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
             var model = A.Dummy<EditEvidenceNoteViewModel>();
             AddModelError();
 
@@ -187,7 +204,7 @@
             {
                 EndDate = DateTime.Now,
                 StartDate = DateTime.Now,
-                ReceivedId = Guid.NewGuid()
+                RecipientId = Guid.NewGuid()
             };
             
             //act
@@ -268,6 +285,46 @@
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
         }
 
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenApiHasBeenCalledAndThrowsApiExceptionWithInnerInvalidOperationException_ShouldAddErrorToModelState()
+        {
+            //arrange
+            var model = ValidModel();
+            var validationMessage = Fixture.Create<string>();
+            var exception = new ApiException(Fixture.Create<HttpStatusCode>(), new ApiError()
+            {
+                ExceptionType = typeof(InvalidOperationException).FullName,
+                ExceptionMessage = validationMessage
+            });
+            A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Throws(exception);
+
+            //act
+            await Record.ExceptionAsync(async () => await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId));
+
+            //assert
+            ManageEvidenceController.ModelState.ElementAt(0).Key.Should().BeNullOrEmpty();
+            ManageEvidenceController.ModelState.ElementAt(0).Value.Errors.ElementAt(0).ErrorMessage.Should()
+                .Be(validationMessage);
+        }
+
+        [Fact]
+        public async Task CreateEvidenceNotePost_GivenApiHasBeenCalledAndThrowsApiExceptionWithWhereInnerItNotInvalidOperationException_ExceptionShouldBeReThrown()
+        {
+            //arrange
+            var model = ValidModel();
+            var exception = new ApiException(Fixture.Create<HttpStatusCode>(), new ApiError()
+            {
+                ExceptionType = Fixture.Create<string>()
+            });
+            A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Throws(exception);
+
+            //act
+            var result = await Record.ExceptionAsync(async () => await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId));
+
+            //assert
+            result.Should().NotBeNull();
+        }
+
         [Theory]
         [InlineData(NoteStatus.Draft)]
         [InlineData(NoteStatus.Submitted)]
@@ -296,12 +353,12 @@
             A.CallTo(() => CreateRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
 
             ManageEvidenceController.ModelState.AddModelError("ProtocolValue", new Exception());
-            ManageEvidenceController.ModelState.AddModelError("ReceivedId", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("RecipientId", new Exception());
             ManageEvidenceController.ModelState.AddModelError("CategoryValues2", new Exception());
             ManageEvidenceController.ModelState.AddModelError("WasteTypeValue", new Exception());
             ManageEvidenceController.ModelState.AddModelError("StartDate", new Exception());
             ManageEvidenceController.ModelState.AddModelError("EndDate", new Exception());
-            ManageEvidenceController.ModelState.AddModelError("Received-auto", new Exception());
+            ManageEvidenceController.ModelState.AddModelError("Recipient-auto", new Exception());
             ManageEvidenceController.ModelState.AddModelError("CategoryValues", new Exception());
 
             //act
@@ -310,8 +367,8 @@
             //assert
             ManageEvidenceController.ModelState.ElementAt(0).Key.Should().Be("StartDate");
             ManageEvidenceController.ModelState.ElementAt(1).Key.Should().Be("EndDate");
-            ManageEvidenceController.ModelState.ElementAt(2).Key.Should().Be("ReceivedId");
-            ManageEvidenceController.ModelState.ElementAt(3).Key.Should().Be("Received-auto");
+            ManageEvidenceController.ModelState.ElementAt(2).Key.Should().Be("RecipientId");
+            ManageEvidenceController.ModelState.ElementAt(3).Key.Should().Be("Recipient-auto");
             ManageEvidenceController.ModelState.ElementAt(4).Key.Should().Be("WasteTypeValue");
             ManageEvidenceController.ModelState.ElementAt(5).Key.Should().Be("ProtocolValue");
             ManageEvidenceController.ModelState.ElementAt(6).Key.Should().Be("CategoryValues2");
@@ -336,8 +393,8 @@
             var model = ValidModel();
             A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
 
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //Act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, true);
@@ -353,8 +410,8 @@
         public async Task CreateEvidenceNoteGet_GivenFalseReturnFromCopyPaste_Should_CallMapperWithoutExistingModel()
         {
             //Arrange
-            var schemes = Fixture.CreateMany<SchemeData>().ToList();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemesExternal>._)).Returns(schemes);
+            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //Act
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, false);

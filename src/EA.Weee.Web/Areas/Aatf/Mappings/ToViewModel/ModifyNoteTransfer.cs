@@ -9,7 +9,7 @@
 
     public abstract class ModifyNoteTransfer
     {
-        public List<SchemeData> Schemes { get; private set; }
+        public List<OrganisationSchemeData> Schemes { get; private set; }
 
         public EditEvidenceNoteViewModel ExistingModel { get; set; }
 
@@ -17,7 +17,7 @@
 
         public Guid AatfId { get; set; }
 
-        protected ModifyNoteTransfer(List<SchemeData> schemes,
+        protected ModifyNoteTransfer(List<OrganisationSchemeData> schemes,
             EditEvidenceNoteViewModel existingModel,
             Guid organisationId,
             Guid aatfId)

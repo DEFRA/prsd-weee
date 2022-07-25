@@ -294,6 +294,7 @@
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerEditEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerViewDraftEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerTestBase.cs" />
+    <Compile Include="Areas\Aatf\Helper\AatfEvidenceHelperTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\Filters\AatfDataFilterTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerCreateEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\AatfDataToHomeViewModelMapTests.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
@@ -363,6 +365,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModelTests.cs" />
+    <Compile Include="Extensions\EvidenceNoteDataListExtensionTests.cs" />
     <Compile Include="RazorHelpers\GdsWarningUnitTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelMapTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />

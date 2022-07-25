@@ -17,7 +17,14 @@
     }
     else
     {
-        <p class="govuk-details__text">You cannot create evidence if your site approval has been cancelled or suspended or your site is not approved for the selected compliance year</p>
+        if (Model.ComplianceYearClosed)
+        {
+<p class="govuk-details__text">This compliance year has now closed and therefore you are unable to create a new evidence note or edit an existing one</p>
+        }
+        else
+        {
+            <p class="govuk-details__text">You cannot create evidence if your site approval has been cancelled or suspended or your site is not approved for the selected compliance year</p>
+        }
     }
 }
 
