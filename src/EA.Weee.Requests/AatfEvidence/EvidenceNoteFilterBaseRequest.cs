@@ -6,7 +6,7 @@
     using Prsd.Core.Mediator;
 
     [Serializable]
-    public class EvidenceNoteFilterBaseRequest : IRequest<List<EvidenceNoteData>>
+    public class EvidenceNoteFilterBaseRequest : IRequest<EvidenceNoteSearchDataResult>
     {
         public List<NoteStatus> AllowedStatuses { get; protected set; }
 
@@ -15,6 +15,10 @@
         public string SearchRef { get; protected set; }
 
         public int ComplianceYear { get; protected set; }
+
+        public int PageNumber { get; private set; }
+
+        public int PageSize { get; private set; }
 
         public NoteType NoteTypeFilter { get; protected set; }
 

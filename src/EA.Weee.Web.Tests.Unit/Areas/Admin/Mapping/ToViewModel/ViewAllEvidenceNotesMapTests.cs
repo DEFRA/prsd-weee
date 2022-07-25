@@ -10,20 +10,26 @@
     using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ViewAllEvidenceNotesMapTests
+    public class ViewAllEvidenceNotesMapTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
         private readonly ViewAllEvidenceNotesMap map;
         private readonly IMapper mapper;
 
         public ViewAllEvidenceNotesMapTests()
         {
-            fixture = new Fixture();
             mapper = A.Fake<IMapper>();
 
             map = new ViewAllEvidenceNotesMap(mapper);
+        }
+
+        [Fact]
+        public void ShouldBeDerivedFromViewAllEvidenceNotesMapBase()
+        {
+            typeof(ViewAllEvidenceNotesMap).Should().BeDerivedFrom<ViewAllNotesMapBase<ViewAllEvidenceNotesViewModel>>();
         }
 
         [Fact]
@@ -37,29 +43,27 @@
         }
 
         [Fact]
-        public void Map_GivenViewAllEvidenceNotesMapModelWithNotes_MapperShouldBeCalled()
+        public void Map_GivenViewAllEvidenceNotesMapModelWithNoteData_MapperShouldBeCalled()
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var source = fixture.Build<ViewAllEvidenceNotesMapModel>()
-                .With(s => s.Notes, notes)
-                .Create();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null);
 
             //act
             map.Map(source);
 
             // assert 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e => e.SequenceEqual(noteData.Results)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public void Map_GivenViewAllEvidenceNotesMapModelWithEmptyNotes_MustReturnAnEmptyModel()
         {
             //arrange
-            var notes = new List<EvidenceNoteData>();
-            var source = fixture.Build<ViewAllEvidenceNotesMapModel>()
-                .With(s => s.Notes, notes)
-                .Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.Results, new List<EvidenceNoteData>()).Create();
+
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null);
 
             //act
             var result = map.Map(source);
@@ -72,8 +76,8 @@
         public void Map_GivenManageEvidenceNoteViewModel_PropertiesShouldBeMapped()
         {
             //arrange
-            var managedEvidenceNoteViewModel = fixture.Create<ManageEvidenceNoteViewModel>();
-            var source = fixture.Build<ViewAllEvidenceNotesMapModel>()
+            var managedEvidenceNoteViewModel = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var source = TestFixture.Build<ViewAllEvidenceNotesMapTransfer>()
                 .With(s => s.ManageEvidenceNoteViewModel, managedEvidenceNoteViewModel)
                 .Create();
 
@@ -89,7 +93,7 @@
         {
             //arrange
             var managedEvidenceNoteViewModel = (ManageEvidenceNoteViewModel)null;
-            var source = fixture.Build<ViewAllEvidenceNotesMapModel>()
+            var source = TestFixture.Build<ViewAllEvidenceNotesMapTransfer>()
                 .With(s => s.ManageEvidenceNoteViewModel, managedEvidenceNoteViewModel)
                 .Create();
 

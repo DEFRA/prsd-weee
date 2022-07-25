@@ -3,6 +3,7 @@
     using Prsd.Core;
     using System;
     using System.Linq;
+    using Core.Aatf;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
     using Extensions;
@@ -43,14 +44,31 @@
             Condition.Requires(viewModel).IsNotNull();
 
             var transferValues = viewModel.TransferCategoryValues.Select(t =>
-                new TransferTonnageValue(Guid.Empty, t.CategoryId, t.Received.ToDecimal(), t.Reused.ToDecimal(),
-                    t.TransferTonnageId));
+                new TransferTonnageValue(t.Id, t.CategoryId, t.Received.ToDecimal(), t.Reused.ToDecimal(), Guid.Empty));
 
             return new TransferEvidenceNoteRequest(request.OrganisationId, 
-                request.SchemeId, 
+                request.RecipientId, 
                 request.CategoryIds,
                 transferValues.ToList(),
                 request.EvidenceNoteIds,
+                viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
+        }
+
+        public EditTransferEvidenceNoteRequest EditSelectTonnageToRequest(TransferEvidenceNoteRequest request, TransferEvidenceTonnageViewModel viewModel)
+        {
+            Condition.Requires(viewModel).IsNotNull();
+
+            var transferValues = viewModel.TransferCategoryValues.Select(t =>
+                new TransferTonnageValue(t.Id, t.CategoryId, t.Received.ToDecimal(), t.Reused.ToDecimal(),
+                    t.TransferTonnageId));
+
+            var organisationId = viewModel.PcsId;
+            var recipientId = request?.RecipientId ?? viewModel.RecipientId;
+
+            return new EditTransferEvidenceNoteRequest(viewModel.ViewTransferNoteViewModel.EvidenceNoteId,
+                organisationId,
+                recipientId,
+                transferValues.ToList(),
                 viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
         }
     }

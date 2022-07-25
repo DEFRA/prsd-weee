@@ -16,7 +16,7 @@
     using System.Threading.Tasks;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, List<EvidenceNoteData>>
+    public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, EvidenceNoteSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
@@ -34,7 +34,7 @@
             this.schemeDataAccess = schemeDataAccess;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetEvidenceNotesByOrganisationRequest request)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesByOrganisationRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(request.OrganisationId);
@@ -46,26 +46,27 @@
             authorization.EnsureSchemeAccess(scheme.Id);
 
             Guid? organisationId = null;
-            Guid? schemeId = scheme.Id;
+            Guid? recipientId = request.OrganisationId;
             
             if (request.TransferredOut)
             {
                 organisationId = request.OrganisationId;
-                schemeId = null;
+                recipientId = null;
             }
 
-            var filter = new NoteFilter(DateTime.Now.Year)
+            var filter = new NoteFilter(request.ComplianceYear, int.MaxValue, 1)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
-                SchemeId = schemeId,
+                RecipientId = recipientId,
                 OrganisationId = organisationId,
-                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = request.ComplianceYear
+                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
 
             var notes = await noteDataAccess.GetAllNotes(filter);
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+
+            return new EvidenceNoteSearchDataResult(mappedResults, mappedResults.Count);
         }
     }
 }

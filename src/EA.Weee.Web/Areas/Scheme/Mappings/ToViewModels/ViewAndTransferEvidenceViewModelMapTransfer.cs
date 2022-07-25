@@ -7,11 +7,11 @@
 
     public class ViewAndTransferEvidenceViewModelMapTransfer : BaseEvidenceNotesViewModelMapTransfer
     {
-        public ViewAndTransferEvidenceViewModelMapTransfer(Guid organisationId, 
-            List<EvidenceNoteData> notes, 
+        public ViewAndTransferEvidenceViewModelMapTransfer(Guid organisationId,
+            EvidenceNoteSearchDataResult noteData, 
             string schemeName,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel) : base(organisationId, notes, schemeName, currentDate, manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel) : base(organisationId, noteData, schemeName, currentDate, manageEvidenceNoteViewModel)
         {
         }
     }

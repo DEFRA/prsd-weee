@@ -26,14 +26,17 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
+        private readonly ISessionService sessionService;
 
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient) : base(breadcrumb, cache)
+            Func<IWeeeClient> apiClient, 
+            ISessionService sessionService) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
+            this.sessionService = sessionService;
         }
 
         [HttpGet]
@@ -41,6 +44,8 @@
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
         {
+            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.TransferNoteKey);
+
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
