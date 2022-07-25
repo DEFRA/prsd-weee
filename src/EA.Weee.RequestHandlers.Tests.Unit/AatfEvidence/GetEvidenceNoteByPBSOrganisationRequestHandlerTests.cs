@@ -24,26 +24,24 @@
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
 
-    public class GetEvidenceNoteByPBSOrganisationRequestHandlerTests
+    public class GetEvidenceNoteByPbsOrganisationRequestHandlerTests : SimpleUnitTestBase
     {
         private GetEvidenceNoteByPbsOrganisationRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
         private readonly Guid organisationId;
         private readonly GetEvidenceNoteByPbsOrganisationRequest request;
 
-        public GetEvidenceNoteByPBSOrganisationRequestHandlerTests()
+        public GetEvidenceNoteByPbsOrganisationRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             mapper = A.Fake<IMapper>();
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNoteByPbsOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            request = new GetEvidenceNoteByPbsOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
 
             handler = new GetEvidenceNoteByPbsOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -116,7 +114,9 @@
                                                               e.ComplianceYear == request.ComplianceYear &&
                                                               e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.EvidenceNote) &&
                                                               e.NoteTypeFilter.Count == 1 && 
-                                                              e.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
+                                                              e.OrganisationId == organisationId &&
+                                                              e.PageNumber == 1 &&
+                                                              e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -124,8 +124,8 @@
         {
             //arrange
             var scheme = A.Fake<Scheme>();
-            var schemeId = fixture.Create<Guid>();
-            var request = new GetEvidenceNoteByPbsOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
+            var schemeId = TestFixture.Create<Guid>();
+            var request = new GetEvidenceNoteByPbsOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
 
             A.CallTo(() => scheme.Id).Returns(schemeId);
             var status = request.AllowedStatuses
@@ -136,7 +136,7 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
-                e.SchemeId == null &&
+                e.RecipientId == null &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.AatfId == null &&
                 e.ComplianceYear == request.ComplianceYear &&
@@ -166,8 +166,9 @@
                 note2,
                 note3
             };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             // act
             await handler.HandleAsync(request);
@@ -186,17 +187,18 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>().ToList();
+            var noteList = TestFixture.CreateMany<Note>().ToList();
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            var noteData = new List<EvidenceNoteData>()
+            var mappedNoteData = new List<EvidenceNoteData>()
             {
                 A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
+            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = mappedNoteData };
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
@@ -204,12 +206,13 @@
             var result = await handler.HandleAsync(request);
 
             // assert
-            result.Should().BeEquivalentTo(noteData);
+            result.Results.Should().BeEquivalentTo(mappedNoteData);
+            result.NoteCount.Should().Be(noteList.Count);
         }
 
         private GetEvidenceNoteByPbsOrganisationRequest GetEvidenceNoteByPBSOrganisationRequest()
         {
-            return new GetEvidenceNoteByPbsOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            return new GetEvidenceNoteByPbsOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
         }
     }
 }

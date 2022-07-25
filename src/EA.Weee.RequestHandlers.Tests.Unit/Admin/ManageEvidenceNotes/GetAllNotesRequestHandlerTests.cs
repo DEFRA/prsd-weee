@@ -131,8 +131,9 @@
                 note2,
                 note3
             };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             // act
             await handler.HandleAsync(message);
@@ -159,10 +160,11 @@
                 A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 

@@ -188,7 +188,9 @@
                 note3
             };
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
+
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             // act
             await handler.HandleAsync(request);
@@ -207,26 +209,26 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>().ToList();
+            var noteList = fixture.CreateMany<Note>(2).ToList();
 
-            var noteData = new List<EvidenceNoteData>()
+            var mappedNoteData = new List<EvidenceNoteData>()
             {
                 A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
+            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = mappedNoteData };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
-
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
             // act
             var result = await handler.HandleAsync(request);
 
             // assert
-            result.Results.Should().BeEquivalentTo(noteData);
-            result.NoteCount.Should().Be(noteData.Count);
+            result.NoteCount.Should().Be(2);
+            result.Results.Should().BeEquivalentTo(mappedNoteData);
         }
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
