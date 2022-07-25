@@ -43,11 +43,11 @@
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
             };
 
-            var notes = await noteDataAccess.GetAllNotes(noteFilter);
+            var noteData = await noteDataAccess.GetAllNotes(noteFilter);
 
-            var mappedNotes = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(n => n.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+            var mappedNotes = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(noteData.Notes.OrderByDescending(n => n.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
 
-            return new EvidenceNoteSearchDataResult(mappedNotes, mappedNotes.Count);
+            return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults);
         }
     }
 }

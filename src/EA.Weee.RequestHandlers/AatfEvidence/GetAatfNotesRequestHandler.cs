@@ -50,13 +50,13 @@
                 ComplianceYear = message.ComplianceYear
             };
 
-            var notes = await noteDataAccess.GetAllNotes(filter);
+            var noteData = await noteDataAccess.GetAllNotes(filter);
 
             var mappedNotes = mapper
-                .Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(n => n.CreatedDate).ToList(),
+                .Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(noteData.Notes.OrderByDescending(n => n.CreatedDate).ToList(),
                     false)).ListOfEvidenceNoteData;
 
-            return new EvidenceNoteSearchDataResult(mappedNotes, mappedNotes.Count);
+            return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults);
         }
     }
 }
