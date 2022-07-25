@@ -219,7 +219,13 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+            var selectedComplianceYear = sessionService.GetTransferSessionObject<object>(Session, SessionKeyConstant.SchemeSelectedComplianceYear);
+
+            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : (selectedComplianceYear == null ? currentDate.Year : (int)selectedComplianceYear);
+
+            sessionService.SetTransferSessionObject(Session, complianceYear, SessionKeyConstant.SchemeSelectedComplianceYear);
+
+            return complianceYear;
         }
 
         private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)

@@ -33,7 +33,8 @@
             var newRequest = new TransferEvidenceNoteRequest(
                 viewModel.OrganisationId,
                 viewModel.SelectedSchema.Value,
-                selectedIds);
+                selectedIds,
+                viewModel.SelectedComplianceYear);
 
             return newRequest;
         }

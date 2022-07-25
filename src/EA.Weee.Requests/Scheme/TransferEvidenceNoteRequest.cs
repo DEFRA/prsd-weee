@@ -15,7 +15,8 @@
 
         public TransferEvidenceNoteRequest(Guid organisationId,
             Guid recipientId, 
-            List<int> categoryIds)
+            List<int> categoryIds,
+            int selectedComplianceYear)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
@@ -24,6 +25,7 @@
             OrganisationId = organisationId;
             RecipientId = recipientId;
             CategoryIds = categoryIds;
+            SelectedComplianceYear = selectedComplianceYear;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
@@ -74,5 +76,7 @@
         public EA.Weee.Core.AatfEvidence.NoteStatus Status { get; set; }
 
         public List<TransferTonnageValue> TransferValues { get; set; }
+
+        public int SelectedComplianceYear { get; set; }
     }
 }
