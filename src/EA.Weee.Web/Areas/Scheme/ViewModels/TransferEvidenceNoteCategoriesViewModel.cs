@@ -8,6 +8,8 @@
 
     public class TransferEvidenceNoteCategoriesViewModel : TransferEvidenceViewModelBase
     {
+        public int SelectedComplianceYear { get; set; }
+
         public Guid OrganisationId { get; set; }
 
         [Required(ErrorMessage = "Select who you would like to transfer evidence to")]
