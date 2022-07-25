@@ -80,7 +80,12 @@
                     return new RedirectToRouteResult(route, new RouteValueDictionary()
                     {
                         { "pcsId", model.PcsId },
-                        { "evidenceNoteId", model.ViewTransferNoteViewModel.EvidenceNoteId }
+                        { "evidenceNoteId", model.ViewTransferNoteViewModel.EvidenceNoteId },
+                        {
+                            "redirectTab",
+                            Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions
+                                .OutgoingTransfers)
+                        }
                     });
                 }
 
