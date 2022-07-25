@@ -11,11 +11,8 @@
 
     public class TransferEvidenceCategoriesViewModelMap : TransferEvidenceMapBase<TransferEvidenceNoteCategoriesViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>
     {
-        private readonly IMapper mapper;
-
         public TransferEvidenceCategoriesViewModelMap(IWeeeCache cache, IMapper mapper, IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel> transferNoteMapper) : base(mapper, cache, transferNoteMapper)
         {
-            this.mapper = mapper;
         }
 
         public TransferEvidenceNoteCategoriesViewModel Map(TransferEvidenceNotesViewModelMapTransfer source)

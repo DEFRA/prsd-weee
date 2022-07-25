@@ -19,7 +19,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(null, TestFixture.Create<TransferEvidenceNoteRequest>(),
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), null, TestFixture.Create<TransferEvidenceNoteRequest>(),
                     TestFixture.Create<Guid>()));
 
             //assert
@@ -45,7 +45,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
                     null,
                     TestFixture.Create<Guid>()));
 
@@ -86,7 +86,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
                     TestFixture.Create<TransferEvidenceNoteRequest>(), 
                     Guid.Empty));
 
@@ -101,14 +101,15 @@
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
             var request = TestFixture.Create<TransferEvidenceNoteRequest>();
             var organisationId = TestFixture.Create<Guid>();
-
+            var complianceYear = TestFixture.Create<int>();
             //act
-            var result = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            var result = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, notes, request, organisationId);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
             result.Notes.ToList().Should().BeEquivalentTo(notes);
             result.Request.Should().Be(request);
+            result.ComplianceYear.Should().Be(complianceYear);
         }
 
         [Fact]

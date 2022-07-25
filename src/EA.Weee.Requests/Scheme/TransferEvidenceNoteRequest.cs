@@ -10,13 +10,13 @@
     public class TransferEvidenceNoteRequest : IRequest<Guid>
     {
         public TransferEvidenceNoteRequest()
-        { 
+        {
+            EvidenceNoteIds = new List<Guid>();
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
             Guid recipientId, 
-            List<int> categoryIds,
-            int selectedComplianceYear)
+            List<int> categoryIds)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
@@ -25,7 +25,6 @@
             OrganisationId = organisationId;
             RecipientId = recipientId;
             CategoryIds = categoryIds;
-            SelectedComplianceYear = selectedComplianceYear;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
@@ -36,7 +35,6 @@
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
-            Condition.Requires(evidenceNoteIds).IsNotEmpty().IsNotNull();
 
             OrganisationId = organisationId;
             RecipientId = recipientId;
@@ -49,7 +47,8 @@
             List<int> categoryIds,
             List<TransferTonnageValue> transferValues,
             List<Guid> evidenceNoteIds,
-            Core.AatfEvidence.NoteStatus status)
+            Core.AatfEvidence.NoteStatus status,
+            int complianceYear)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
@@ -63,6 +62,7 @@
             Status = status;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
+            ComplianceYear = complianceYear;
         }
 
         public Guid RecipientId { get; set; } 
@@ -77,6 +77,6 @@
 
         public List<TransferTonnageValue> TransferValues { get; set; }
 
-        public int SelectedComplianceYear { get; set; }
+        public int ComplianceYear { get; set; }
     }
 }

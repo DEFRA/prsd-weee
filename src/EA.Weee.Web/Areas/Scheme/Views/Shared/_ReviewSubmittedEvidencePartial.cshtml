@@ -52,7 +52,7 @@
                     <td class="govuk-table__cell">
                         @if (note.Type == NoteType.Evidence)
                         {
-                            if (!Model.IsWithdrawn)
+                            if (Model.CanSchemeManageEvidence)
                             {
                                 if (Model.SchemeInfo != null)
                                 {
@@ -66,7 +66,7 @@
                         }
                         else
                         {
-                            if (!Model.IsWithdrawn)
+                            if (Model.CanSchemeManageEvidence)
                             {
                                 @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
                             }

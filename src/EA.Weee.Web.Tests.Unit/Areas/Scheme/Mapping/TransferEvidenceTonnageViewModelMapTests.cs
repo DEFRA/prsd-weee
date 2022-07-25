@@ -109,7 +109,7 @@
         }
 
         [Fact]
-        public void Map_GivenRequestSource_SchemeValuesShouldBeSet()
+        public void Map_GivenRequestSource_DefaultShouldBeSet()
         {
             //arrange
             var source = GetRequestTransferObject();
@@ -119,6 +119,7 @@
 
             //assert
             result.PcsId.Should().Be(source.OrganisationId);
+            result.ComplianceYear.Should().Be(source.ComplianceYear);
         }
 
         [Fact]
@@ -209,7 +210,7 @@
                 .Create();
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes.ToList(), request, organisationId);
 
             var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -276,7 +277,7 @@
             var request = DefaultRequest();
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes, request, organisationId);
 
             var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -752,7 +753,7 @@
                     }).Create();
 
             var organisationId = TestFixture.Create<Guid>();
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes, request, organisationId);
             return source;
         }
 
@@ -787,7 +788,7 @@
                 .Create();
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes.ToList(), request, organisationId);
 
             viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -842,7 +843,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            return new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes, request, organisationId);
         }
 
         private TransferEvidenceNotesViewModelMapTransfer GetTransferNoteDataTransferObject()

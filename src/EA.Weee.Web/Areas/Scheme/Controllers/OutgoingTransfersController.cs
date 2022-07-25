@@ -17,6 +17,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Attributes;
     using Core.Helpers;
     using Requests;
     using ViewModels;
@@ -43,6 +44,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -96,6 +98,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab = null)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -191,6 +194,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -208,7 +212,7 @@
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
                 var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.SelectedComplianceYear));
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear));
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, noteData, pcsId);
 
@@ -220,6 +224,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);

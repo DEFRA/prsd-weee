@@ -19,7 +19,7 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<TransferEvidenceController>(a => a.TransferFrom(Model.PcsId))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<TransferEvidenceController>(a => a.TransferFrom(Model.PcsId, Model.ComplianceYear))))
 
     @Html.Gds().ValidationSummary()
     <h1 class="govuk-heading-l">
