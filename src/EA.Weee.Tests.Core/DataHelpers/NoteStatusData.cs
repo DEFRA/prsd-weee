@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core.DataHelpers
 {
-    using EA.Prsd.Core.Domain;
     using System.Collections;
     using System.Collections.Generic;
-    using Domain.Evidence;
+    using EA.Prsd.Core.Domain;
+    using EA.Weee.Domain.Evidence;
 
     public class NoteStatusData : IEnumerable<object[]>
     {

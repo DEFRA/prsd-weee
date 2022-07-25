@@ -16,6 +16,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 
@@ -91,9 +92,14 @@
 
                 context.Aatfs.Add(aatf1);
 
+                var recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                context.Schemes.Add(scheme);
+
                 await db.WeeeContext.SaveChangesAsync();
 
-                var note1 = ApprovedNote(db, organisation1, aatf1, 1000);
+                var note1 = ApprovedNote(db, organisation1, recipientOrganisation, aatf1, 1000);
 
                 var tonnageCount = 0;
                 foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
@@ -154,9 +160,14 @@
 
                 context.Aatfs.Add(aatf1);
 
+                var recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                context.Schemes.Add(scheme);
+
                 await db.WeeeContext.SaveChangesAsync();
 
-                var note1 = ApprovedNote(db, organisation1, aatf1, 1957);
+                var note1 = ApprovedNote(db, organisation1, recipientOrganisation, aatf1, 1957);
 
                 context.Notes.Add(note1);
 
@@ -186,10 +197,15 @@
                 context.Aatfs.Add(aatf1);
                 context.Aatfs.Add(aatf2);
 
+                var recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                context.Schemes.Add(scheme);
+
                 await db.WeeeContext.SaveChangesAsync();
 
-                var note1 = ApprovedNote(db, organisation1, aatf1, 1234);
-                var note2 = ApprovedNote(db, organisation1, aatf2, 1234);
+                var note1 = ApprovedNote(db, organisation1, recipientOrganisation, aatf1, 1234);
+                var note2 = ApprovedNote(db, organisation1, recipientOrganisation, aatf2, 1234);
                 var tonnageCount = 0;
                 foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
                 {
@@ -231,13 +247,18 @@
 
                 context.Aatfs.Add(aatf1);
 
+                var recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                context.Schemes.Add(scheme);
+
                 await db.WeeeContext.SaveChangesAsync();
 
                 var notes = new List<Note>();
 
                 for (var i = 0; i < 500; i++)
                 {
-                    var note1 = ApprovedNote(db, organisation1, aatf1, 1500);
+                    var note1 = ApprovedNote(db, organisation1, recipientOrganisation, aatf1, 1500);
 
                     foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
                     {
@@ -280,10 +301,14 @@
                 var context = db.WeeeContext;
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var recipientScheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
-
-                context.Schemes.Add(recipientScheme);
                 context.Organisations.Add(organisation1);
+
+                context.Organisations.Add(organisation1);
+
+                var recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                context.Schemes.Add(scheme);
 
                 var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(db, organisation1);
 
@@ -295,7 +320,7 @@
 
                 for (var i = 0; i < 5; i++)
                 {
-                    var note = ApprovedNote(db, organisation1, aatf1, 2000);
+                    var note = ApprovedNote(db, organisation1, recipientOrganisation, aatf1, 2000);
                     foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
                     {
                         note.NoteTonnage.Add(new NoteTonnage((WeeeCategory)value, 2, 1));
@@ -304,7 +329,7 @@
                     context.Notes.Add(note);
                 }
 
-                var note5 = ApprovedNote(db, organisation1, aatf1, 2010);
+                var note5 = ApprovedNote(db, organisation1, recipientOrganisation, aatf1, 2010);
                 foreach (var value in Enum.GetValues(typeof(WeeeCategory)))
                 {
                     note5.NoteTonnage.Add(new NoteTonnage((WeeeCategory)value, 20, 10));
@@ -350,13 +375,24 @@
             }
         }
 
-        private static Note ApprovedNote(DatabaseWrapper db, Organisation organisation1, Aatf aatf1, int complianceYear)
+        private static Note ApprovedNote(DatabaseWrapper db, Organisation organisation1, Organisation recipientOrganisation, Aatf aatf1, int complianceYear)
         {
-            var note1 = NoteCommon.CreateNote(db, organisation1, null, aatf1);
-            note1.ComplianceYear = complianceYear;
-            note1.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
-            note1.UpdateStatus(NoteStatus.Approved, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
-            return note1;
+            var note = new Note(organisation1,
+                recipientOrganisation,
+                DateTime.UtcNow,
+                DateTime.UtcNow,
+                WasteType.HouseHold,
+                Protocol.Actual,
+                aatf1,
+                db.WeeeContext.GetCurrentUser().ToString(),
+                new List<NoteTonnage>())
+            {
+                ComplianceYear = complianceYear
+            };
+
+            note.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
+            note.UpdateStatus(NoteStatus.Approved, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
+            return note;
         }
     }
 }

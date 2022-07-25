@@ -8,6 +8,8 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Aatf;
+    using Core.AatfEvidence;
     using Core.Helpers;
     using Domain.Evidence;
     using Domain.Lookup;
@@ -21,6 +23,9 @@
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Requests.Scheme;
+    using NoteStatus = Domain.Evidence.NoteStatus;
+    using NoteType = Domain.Evidence.NoteType;
+    using WasteType = Domain.Evidence.WasteType;
 
     public class CreateTransferEvidenceNoteRequestHandlerIntegrationTests : IntegrationTestBase
     {
@@ -36,7 +41,7 @@
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
 
                 recipientOrganisation = OrganisationDbSetup.Init().Create();
-                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 
                 var existingTonnagesNote1 = new List<NoteTonnage>()
                 {
@@ -64,12 +69,12 @@
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.DisplayEquipment.ToInt(), 1, null, transferTonnage1.Id),
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.LargeHouseholdAppliances.ToInt(), 3, 1, transferTonnage2.Id),
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.MonitoringAndControlInstruments.ToInt(), 7, 1, transferTonnage3.Id),
+                    new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 1, null, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage2.Id, WeeeCategory.LargeHouseholdAppliances.ToInt(), 3, 1, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage3.Id, WeeeCategory.MonitoringAndControlInstruments.ToInt(), 7, 1, Guid.Empty),
                 };
 
-                request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientScheme.Id, new List<int>()
+                request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientOrganisation.Id, new List<int>()
                     {
                         WeeeCategory.DisplayEquipment.ToInt(),
                         WeeeCategory.LargeHouseholdAppliances.ToInt(),
@@ -111,7 +116,7 @@
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
 
                 recipientOrganisation = OrganisationDbSetup.Init().Create();
-                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 
                 var existingTonnagesNote1 = new List<NoteTonnage>()
                 {
@@ -160,10 +165,10 @@
                 // now to call the request to take the last 1 tonne
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.ConsumerEquipment.ToInt(), 1, null, transferTonnage1.Id)
+                    new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.ConsumerEquipment.ToInt(), 1, null, Guid.Empty)
                 };
 
-                request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientScheme.Id, new List<int>()
+                request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientOrganisation.Id, new List<int>()
                     {
                         WeeeCategory.ConsumerEquipment.ToInt()
                     },
@@ -203,7 +208,7 @@
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
 
                 recipientOrganisation = OrganisationDbSetup.Init().Create();
-                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 
                 var existingTonnagesNote1 = new List<NoteTonnage>()
                 {
@@ -228,10 +233,10 @@
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
-                    new TransferTonnageValue(Guid.Empty, WeeeCategory.DisplayEquipment.ToInt(), 1, null, transferTonnage1.Id)
+                    new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 1, null, Guid.Empty)
                 };
 
-                request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientScheme.Id, 
+                request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientOrganisation.Id, 
                     new List<int>()
                     {
                         WeeeCategory.DisplayEquipment.ToInt()
@@ -290,7 +295,7 @@
                 foreach (var transferTonnageValue in transferTonnageValues)
                 {
                     var tonnage = note.NoteTransferTonnage.FirstOrDefault(ntt =>
-                        ntt.NoteTonnageId.Equals(transferTonnageValue.TransferTonnageId));
+                        ntt.NoteTonnageId.Equals(transferTonnageValue.Id));
 
                     tonnage.Should().NotBeNull();
                     tonnage.Received.Should().Be(transferTonnageValue.FirstTonnage);

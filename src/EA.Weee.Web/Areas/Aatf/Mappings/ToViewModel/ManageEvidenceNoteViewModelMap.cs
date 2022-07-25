@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Core.AatfReturn;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
@@ -21,18 +22,18 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var singleAatf = source.Aatfs.Where(a =>
-                a.FacilityType.Equals(FacilityType.Aatf) && 
-                ((int)a.ComplianceYear).Equals(source.ComplianceYear));
+            var aatfs = aatfEvidenceHelper.GroupedValidAatfs(source.Aatfs);
 
             var model = new ManageEvidenceNoteViewModel()
             {
                 OrganisationId = source.OrganisationId, 
                 AatfId = source.AatfId, 
                 AatfName = source.AatfData.Name, 
-                SingleAatf = singleAatf.Count().Equals(1),
+                SingleAatf = aatfs.Count == 1,
                 ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
-                CanCreateEdit = aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear)
+                CanCreateEdit = (aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear) && 
+                                 WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)),
+                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)
             };
 
             if (source.FilterViewModel != null)

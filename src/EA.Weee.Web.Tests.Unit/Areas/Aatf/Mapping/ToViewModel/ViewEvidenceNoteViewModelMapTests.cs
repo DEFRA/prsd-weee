@@ -17,6 +17,7 @@
     using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewEvidenceNoteViewModelMapTests : SimpleUnitTestBase

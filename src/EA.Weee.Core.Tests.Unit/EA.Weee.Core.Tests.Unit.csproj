@@ -194,13 +194,7 @@
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />
     <Compile Include="Helpers\ExtensionsTests.cs" />
-    <Compile Include="Helpers\NoteStatusCoreData.cs" />
-    <Compile Include="Helpers\NoteStatusData.cs" />
-    <Compile Include="Helpers\NoteTypeCoreData.cs" />
-    <Compile Include="Helpers\NoteTypeData.cs" />
-    <Compile Include="Helpers\ProtocolData.cs" />
     <Compile Include="Helpers\SimpleObject.cs" />
-    <Compile Include="Helpers\WasteTypeData.cs" />
     <Compile Include="Helpers\WindowHelperTests.cs" />
     <Compile Include="Organisations\OrganisationDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

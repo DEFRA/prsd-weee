@@ -6,6 +6,7 @@
     using FluentAssertions;
     using Prsd.Core.Helpers;
     using Web.ViewModels.Shared;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewEvidenceNoteViewModelTests

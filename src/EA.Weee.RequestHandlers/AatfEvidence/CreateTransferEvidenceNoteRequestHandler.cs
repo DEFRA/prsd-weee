@@ -3,17 +3,14 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using AatfReturn;
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
-    using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Scheme;
     using Factories;
-    using Prsd.Core;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
@@ -56,27 +53,29 @@
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
-            var scheme = await genericDataAccess.GetById<Scheme>(request.SchemeId);
+            var recipientOrganisation = await genericDataAccess.GetById<Organisation>(request.RecipientId);
 
             Condition.Requires(organisation).IsNotNull();
-            Condition.Requires(scheme).IsNotNull();
+            Condition.Requires(recipientOrganisation).IsNotNull();
 
             using (var transaction = transactionAdapter.BeginTransaction())
             {
-                Guid transferNoteId;
+                Note note;
                 try
                 {
                     await transferTonnagesValidator.Validate(request.TransferValues);
 
-                    var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.TransferTonnageId,
+                    var transferNoteTonnages = request.TransferValues.Select(t => new NoteTransferTonnage(t.Id,
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
                     var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
 
-                    transferNoteId = await evidenceDataAccess.AddTransferNote(organisation, scheme.Organisation,
+                    note = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
                         userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
+
+                    transactionAdapter.Commit(transaction);
                 }
                 catch
                 {
@@ -84,9 +83,7 @@
                     throw;
                 }
 
-                transactionAdapter.Commit(transaction);
-
-                return transferNoteId;
+                return note.Id;
             }
         }
     }
