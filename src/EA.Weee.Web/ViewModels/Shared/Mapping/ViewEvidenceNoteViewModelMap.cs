@@ -73,7 +73,6 @@
                     null),
                 SchemeId = source.SchemeId,
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
-                SelectedComplianceYear = source.SelectedComplianceYear,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab
             };

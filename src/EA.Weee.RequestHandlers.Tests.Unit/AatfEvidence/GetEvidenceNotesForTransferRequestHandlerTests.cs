@@ -121,17 +121,13 @@
         [Fact]
         public async void HandleAsync_GivenRequest_DataAccessGetNotesToTransferShouldBeCalled()
         {
-            //arrange
-            var date = TestFixture.Create<DateTime>();
-            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(date);
-
             //act
             await handler.HandleAsync(request);
 
             //assert
             A.CallTo(() =>
                     evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._, date.Year))
+                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._, request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -153,7 +149,7 @@
 
             //assert
             A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), date.Year)).MustHaveHappenedOnceExactly();
+                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), request.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

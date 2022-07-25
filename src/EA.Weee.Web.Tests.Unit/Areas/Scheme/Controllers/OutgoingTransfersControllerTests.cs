@@ -1266,7 +1266,7 @@
             await outgoingTransferEvidenceController.EditCategories(model);
 
             //assert
-            A.CallTo(() => transferEvidenceRequestCreator.SelectCategoriesToRequest(model))
+            A.CallTo(() => transferEvidenceRequestCreator.SelectCategoriesToRequest(model, null))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1279,7 +1279,7 @@
 
             A.CallTo(() =>
                     transferEvidenceRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>
-                        ._))
+                        ._, null))
                 .Returns(request);
 
             //act

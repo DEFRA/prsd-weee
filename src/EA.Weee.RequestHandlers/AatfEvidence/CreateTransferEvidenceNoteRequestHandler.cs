@@ -9,14 +9,13 @@
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Organisation;
-    using Domain.Scheme;
     using Factories;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
     using Security;
 
-    public class CreateTransferEvidenceNoteRequestHandler : IRequestHandler<TransferEvidenceNoteRequest, Guid>
+    public class CreateTransferEvidenceNoteRequestHandler : SaveTransferNoteRequestBase, IRequestHandler<TransferEvidenceNoteRequest, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -58,6 +57,8 @@
             Condition.Requires(organisation).IsNotNull();
             Condition.Requires(recipientOrganisation).IsNotNull();
 
+            ValidToSave(organisation, request.ComplianceYear, currentDate);
+
             using (var transaction = transactionAdapter.BeginTransaction())
             {
                 Note note;
@@ -69,10 +70,8 @@
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
-                    var complianceYear = await evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds);
-
                     note = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
-                        transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), complianceYear,
+                        transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), request.ComplianceYear,
                         userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
 
                     transactionAdapter.Commit(transaction);
