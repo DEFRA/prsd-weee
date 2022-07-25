@@ -8,10 +8,6 @@
 
     public class GetEvidenceNotesByOrganisationRequest : EvidenceNoteFilterBaseRequest
     {
-        public bool TransferredOut { get; private set; }
-
-        public List<NoteType> NoteTypeFilterList { get; private set; }
-
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
             List<NoteStatus> allowedStatuses,
             int complianceYear,
