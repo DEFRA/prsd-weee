@@ -356,6 +356,10 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
 
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+            SessionKeyConstant.TransferNoteKey)).Returns(null);
+
             //act
             await transferEvidenceController.TransferEvidenceNote(model);
 
@@ -365,18 +369,73 @@
         }
 
         [Fact]
-        public async Task TransferEvidenceNotePost_GivenModelIsValid_TransferRequestCreatorShouldBeCalled()
+        public async Task TransferEvidenceNotePost_GivenModelIsValid_TransferNoteSessionObjectIsCalled()
+        {
+            //arrange
+            var model = GetValidModel(Guid.NewGuid(), Guid.NewGuid());
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(transferEvidenceController);
+           
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+               SessionKeyConstant.TransferNoteKey)).Returns(null);
+
+            //act
+            await transferEvidenceController.TransferEvidenceNote(model);
+
+            //assert
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                    SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNotePost_GivenModelIsValidAndTransferObjectIsNull_TransferRequestCreatorShouldBeCalled()
         {
             //arrange
             var model = GetValidModel(Guid.NewGuid(), Guid.NewGuid());
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
 
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+            SessionKeyConstant.TransferNoteKey)).Returns(null);
+
             //act
             await transferEvidenceController.TransferEvidenceNote(model);
 
             //assert
             A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(model)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNotePost_GivenModelIsValidAndTransferObjectIsNotNull_SessionTransferNoteObjectShouldBeUpdatedWithSelectedNotes()
+        {
+            //arrange
+            var model = GetValidModel(Guid.NewGuid(), Guid.NewGuid());
+            model.PcsId = Guid.NewGuid();
+            var request = GetRequestWithCategoryIds();
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(transferEvidenceController);
+
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+            SessionKeyConstant.TransferNoteKey)).Returns(request);
+
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(request);
+
+            //act
+            await transferEvidenceController.TransferEvidenceNote(model);
+
+            //assert
+            A.CallTo(() =>
+            sessionService.SetTransferSessionObject(transferEvidenceController.Session,
+                A<object>.That.Matches(a => ((TransferEvidenceNoteRequest)a).OrganisationId.Equals(model.PcsId) &&
+                                            ((TransferEvidenceNoteRequest)a).CategoryIds.Equals(request.CategoryIds) &&
+                                            ((TransferEvidenceNoteRequest)a).RecipientId.Equals(request.RecipientId) &&
+                                            ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.Count > 0 &&
+                                            ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.TrueForAll(s => request.EvidenceNoteIds.Contains(s))),
+                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -388,6 +447,10 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
 
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+            SessionKeyConstant.TransferNoteKey)).Returns(null);
+            
             A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
 
             //act
@@ -407,6 +470,10 @@
             var transferRequest = GetRequest();
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
+
+            A.CallTo(() =>
+            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+            SessionKeyConstant.TransferNoteKey)).Returns(null);
 
             A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
 
