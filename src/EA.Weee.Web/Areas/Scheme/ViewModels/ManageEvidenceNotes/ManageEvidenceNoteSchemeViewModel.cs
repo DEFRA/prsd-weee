@@ -11,6 +11,7 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public string OrganisationName { get; set; }
         public IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
         public ManageEvidenceNotesDisplayOptions ActiveDisplayOption { get; set; }
@@ -19,7 +20,7 @@
 
         public SchemePublicInfo SchemeInfo { get; set; }
 
-        public bool IsWithdrawn => SchemeInfo.Status == SchemeStatus.Withdrawn;
+        public bool IsWithdrawn => SchemeInfo != null && SchemeInfo.Status == SchemeStatus.Withdrawn;
 
         public bool CanSchemeManageEvidence { get; set; }
 

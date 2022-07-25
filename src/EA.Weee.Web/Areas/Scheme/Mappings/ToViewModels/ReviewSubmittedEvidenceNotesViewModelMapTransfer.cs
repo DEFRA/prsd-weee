@@ -4,7 +4,6 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
     using System;
-    using System.Collections.Generic;
 
     public class ReviewSubmittedEvidenceNotesViewModelMapTransfer : BaseEvidenceNotesViewModelMapTransfer
     {
