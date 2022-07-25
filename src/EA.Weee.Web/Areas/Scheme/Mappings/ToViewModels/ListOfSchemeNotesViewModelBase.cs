@@ -25,7 +25,7 @@
 
             var model = MapBase(noteData, currentDate, manageEvidenceNoteViewModel);
             model.SchemeInfo = scheme;
-            model.CanSchemeManageEvidence = scheme.Status != SchemeStatus.Withdrawn;
+            model.CanSchemeManageEvidence = scheme != null && scheme.Status != SchemeStatus.Withdrawn;
 
             return model;
         }

@@ -18,9 +18,12 @@
 
         public int PageNumber { get; private set; }
 
-        /// <summary>
-        /// Defines how many users are returned for the requested page of results.
-        /// </summary>
         public int PageSize { get; private set; }
+
+        public NoteType NoteTypeFilter { get; protected set; }
+
+        public List<NoteType> NoteTypeFilterList { get; protected set; }
+
+        public bool TransferredOut { get; protected set; }
     }
 }
