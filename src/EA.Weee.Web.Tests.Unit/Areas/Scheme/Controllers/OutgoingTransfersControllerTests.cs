@@ -1,27 +1,26 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
+    using Api.Client;
     using AutoFixture;
+    using Constant;
     using Core.AatfEvidence;
+    using Core.Helpers;
+    using Core.Scheme;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
-    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Extensions;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
+    using Services;
+    using Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Core.Helpers;
-    using Core.Scheme;
-    using Core.Tests.Unit.Helpers;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
@@ -1835,6 +1834,8 @@
             result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName);
             result.RouteValues["pcsId"].Should().Be(transferEvidenceTonnageViewModel.PcsId);
             result.RouteValues["evidenceNoteId"].Should().Be(transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.EvidenceNoteId);
+            result.RouteValues["redirectTab"].Should().Be(DisplayExtensions.ToDisplayString(
+                ManageEvidenceNotesDisplayOptions.OutgoingTransfers));
         }
 
         [Fact]
@@ -1850,6 +1851,8 @@
             result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName);
             result.RouteValues["pcsId"].Should().Be(transferEvidenceTonnageViewModel.PcsId);
             result.RouteValues["evidenceNoteId"].Should().Be(transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.EvidenceNoteId);
+            result.RouteValues["redirectTab"].Should().Be(DisplayExtensions.ToDisplayString(
+                ManageEvidenceNotesDisplayOptions.OutgoingTransfers));
         }
     }
 }

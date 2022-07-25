@@ -168,6 +168,7 @@
             var evidenceNoteData = new EvidenceNoteData()
             {
                 OrganisationData = new OrganisationData() { OrganisationName = organisationName },
+                RecipientOrganisationData = new OrganisationData(),
                 RecipientSchemeData = new SchemeData(),
                 Type = NoteType.Transfer
             };

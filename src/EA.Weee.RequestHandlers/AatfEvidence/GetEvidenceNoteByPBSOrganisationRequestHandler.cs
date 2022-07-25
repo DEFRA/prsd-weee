@@ -38,7 +38,7 @@
             var filter = new NoteFilter(request.ComplianceYear, int.MaxValue, 1)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
-                OrganisationId = request.OrganisationId,
+                RecipientId = request.OrganisationId,
                 AllowedStatuses = request.AllowedStatuses
                     .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
             };
