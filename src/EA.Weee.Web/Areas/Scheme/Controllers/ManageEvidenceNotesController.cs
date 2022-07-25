@@ -196,7 +196,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear, string redirectTab = null)
         {
             using (var client = this.apiClient())
             {
@@ -209,7 +209,8 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus])
                 {
                     SchemeId = pcsId,
-                    SelectedComplianceYear = selectedComplianceYear
+                    SelectedComplianceYear = selectedComplianceYear,
+                    RedirectTab = redirectTab
                 });
 
                 return View(model);
