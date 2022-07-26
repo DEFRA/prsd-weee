@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\EvidenceDataAccess.cs" />
+    <Compile Include="DataAccess\EvidenceNoteResults.cs" />
     <Compile Include="DataAccess\GenericDataAccess.cs" />
     <Compile Include="DataAccess\IEvidenceDataAccess.cs" />
     <Compile Include="DataAccess\IGenericDataAccess.cs" />

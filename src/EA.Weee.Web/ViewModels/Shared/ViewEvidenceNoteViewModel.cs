@@ -73,5 +73,7 @@
                 }
             }
         }
+
+        public string RedirectTab { get; set; }
     }
 }

@@ -104,8 +104,8 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note1.Id);
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(note1.Id);
             }
         }
 
@@ -149,8 +149,8 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note1.Id);
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(note1.Id);
             }
         }
 
@@ -206,9 +206,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(2);
-                notes.ElementAt(0).Reference.Should().Be(note3.Reference);
-                notes.ElementAt(1).Reference.Should().Be(note2.Reference);
+                notes.NumberOfResults.Should().Be(5);
+                notes.Notes.Count.Should().Be(2);
+                notes.Notes.ElementAt(0).Reference.Should().Be(note3.Reference);
+                notes.Notes.ElementAt(1).Reference.Should().Be(note2.Reference);
             }
         }
 
@@ -246,8 +247,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note2Included.Id);
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(note2Included.Id);
             }
         }
 
@@ -284,8 +286,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note2Included.Id);
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(note2Included.Id);
             }
         }
 
@@ -327,8 +330,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.Where(n => n.Id == note4Included.Id).Should().NotBeNull();
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.Where(n => n.Id == note4Included.Id).Should().NotBeNull();
             }
         }
 
@@ -370,10 +374,11 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(3);
-                notes.Should().Contain(n => n.Id == note1Included.Id);
-                notes.Should().Contain(n => n.Id == note2Included.Id);
-                notes.Should().Contain(n => n.Id == note3Included.Id);
+                notes.NumberOfResults.Should().Be(3);
+                notes.Notes.Count.Should().Be(3);
+                notes.Notes.Should().Contain(n => n.Id == note1Included.Id);
+                notes.Notes.Should().Contain(n => n.Id == note2Included.Id);
+                notes.Notes.Should().Contain(n => n.Id == note3Included.Id);
             }
         }
 
@@ -410,12 +415,13 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(draftNote.Id);
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Submitted));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Approved));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Rejected));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Void));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(draftNote.Id);
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Submitted));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Approved));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Rejected));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Void));
             }
         }
 
@@ -452,12 +458,13 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(submittedNote.Id);
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Draft));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Approved));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Rejected));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Void));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(submittedNote.Id);
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Draft));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Approved));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Rejected));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Void));
             }
         }
 
@@ -494,12 +501,13 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(2);
-                notes.Should().Contain(n => n.Id.Equals(draftNote.Id));
-                notes.Should().Contain(n => n.Id.Equals(submittedNote.Id));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Approved));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Rejected));
-                notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Void));
+                notes.NumberOfResults.Should().Be(2);
+                notes.Notes.Count.Should().Be(2);
+                notes.Notes.Should().Contain(n => n.Id.Equals(draftNote.Id));
+                notes.Notes.Should().Contain(n => n.Id.Equals(submittedNote.Id));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Approved));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Rejected));
+                notes.Notes.Should().NotContain(n => n.Status.Equals(NoteStatus.Void));
             }
         }
 
@@ -543,8 +551,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note1.Id);
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(note1.Id);
             }
         }
 
@@ -588,7 +597,8 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(3);
+                notes.NumberOfResults.Should().Be(3);
+                notes.Notes.Count.Should().Be(3);
             }
         }
 
@@ -632,8 +642,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(2);
-                notes.Should().NotContain(n => n.Id.Equals(note2.Id));
+                notes.NumberOfResults.Should().Be(2);
+                notes.Notes.Count.Should().Be(2);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note2.Id));
             }
         }
 
@@ -657,9 +668,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -699,9 +711,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -745,10 +758,11 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.ElementAt(0).RecipientId.Should().Be(organisationToMatch.Id);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.ElementAt(0).RecipientId.Should().Be(organisationToMatch.Id);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -785,11 +799,12 @@
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
-
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.ElementAt(0).Status.Should().Be(NoteStatus.Void);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.ElementAt(0).Status.Should().Be(NoteStatus.Void);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -837,9 +852,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -875,8 +891,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(0);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound1.Id));
+                notes.NumberOfResults.Should().Be(0);
+                notes.Notes.Count.Should().Be(0);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound1.Id));
             }
         }
 
@@ -914,8 +931,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(0);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound1.Id));
+                notes.NumberOfResults.Should().Be(0);
+                notes.Notes.Count.Should().Be(0);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound1.Id));
             }
         }
 
@@ -962,9 +980,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -1012,10 +1031,11 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(2);
-                notes.Count(n => n.Id == note2ShouldBeFound.Id).Should().Be(1);
-                notes.Count(n => n.Id == note1ShouldBeFound.Id).Should().Be(1);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(2);
+                notes.Notes.Count.Should().Be(2);
+                notes.Notes.Count(n => n.Id == note2ShouldBeFound.Id).Should().Be(1);
+                notes.Notes.Count(n => n.Id == note1ShouldBeFound.Id).Should().Be(1);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -1041,9 +1061,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -1066,7 +1087,8 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(0);
+                notes.NumberOfResults.Should().Be(0);
+                notes.Notes.Count.Should().Be(0);
             }
         }
 
@@ -1092,9 +1114,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
-                notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(noteShouldBeFound.Id);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteShouldNotBeFound.Id));
             }
         }
 
@@ -1119,7 +1142,8 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(0);
+                notes.NumberOfResults.Should().Be(0);
+                notes.Notes.Count.Should().Be(0);
             }
         }
 
@@ -1291,8 +1315,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note1OldNote.Id);
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(note1OldNote.Id);
             }
         }
 
@@ -1337,8 +1362,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(1);
-                notes.ElementAt(0).Id.Should().Be(note2CurrentNote.Id);
+                notes.NumberOfResults.Should().Be(1);
+                notes.Notes.Count.Should().Be(1);
+                notes.Notes.ElementAt(0).Id.Should().Be(note2CurrentNote.Id);
             }
         }
 
@@ -1393,9 +1419,10 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(6);
-                notes.Count(x => x.NoteType == NoteType.EvidenceNote).Should().Be(3);
-                notes.Count(x => x.NoteType == NoteType.TransferNote).Should().Be(3);
+                notes.NumberOfResults.Should().Be(6);
+                notes.Notes.Count.Should().Be(6);
+                notes.Notes.Count(x => x.NoteType == NoteType.EvidenceNote).Should().Be(3);
+                notes.Notes.Count(x => x.NoteType == NoteType.TransferNote).Should().Be(3);
             }
         }
 
@@ -1451,8 +1478,9 @@
 
                 var notes = await dataAccess.GetAllNotes(filter);
 
-                notes.Count.Should().Be(3);
-                notes.Should().OnlyContain(x => x.NoteType == noteType);
+                notes.NumberOfResults.Should().Be(3);
+                notes.Notes.Count.Should().Be(3);
+                notes.Notes.Should().OnlyContain(x => x.NoteType == noteType);
             }
         }
     }

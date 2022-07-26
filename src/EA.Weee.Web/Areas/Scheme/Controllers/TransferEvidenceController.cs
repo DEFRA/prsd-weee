@@ -69,9 +69,24 @@
 
             if (ModelState.IsValid)
             {
-                var transferRequest = transferNoteRequestCreator.SelectCategoriesToRequest(model);
+                var existingTransferRequest =
+                   sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                       SessionKeyConstant.TransferNoteKey);
 
-                sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.TransferNoteKey);
+                var transferRequestWithSelectedCategories = transferNoteRequestCreator.SelectCategoriesToRequest(model);
+
+                if (existingTransferRequest != null)
+                {
+                    var updatedTransferRequest =
+                     new TransferEvidenceNoteRequest(model.PcsId, transferRequestWithSelectedCategories.RecipientId, transferRequestWithSelectedCategories.CategoryIds,
+                     existingTransferRequest.EvidenceNoteIds.ToList());
+
+                    sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
+                }
+                else
+                {
+                    sessionService.SetTransferSessionObject(Session, transferRequestWithSelectedCategories, SessionKeyConstant.TransferNoteKey);
+                }
 
                 return RedirectToAction("TransferFrom", "TransferEvidence", new { area = "Scheme", pcsId = model.OrganisationId });
             }

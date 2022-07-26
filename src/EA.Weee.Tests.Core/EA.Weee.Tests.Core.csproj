@@ -160,6 +160,7 @@
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="AuthorizationBuilder.cs" />
     <Compile Include="DataHelpers\NoteStatusCoreData.cs" />
+    <Compile Include="DataHelpers\SchemeStatusCoreData.cs" />
     <Compile Include="DataHelpers\SchemeStatusData.cs" />
     <Compile Include="DataHelpers\NoteStatusData.cs" />
     <Compile Include="DataHelpers\NoteTypeCoreData.cs" />

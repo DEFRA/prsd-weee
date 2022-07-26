@@ -1,5 +1,4 @@
 ﻿@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
@@ -7,8 +6,9 @@
 
 @model ManageEvidenceNoteSchemeViewModel
 @{
-    var title = String.Format("Manage evidence notes for {0}", Model.SchemeInfo.Name);
+    var title = "Manage PBS evidence notes" ;
     ViewBag.Title = title + " - GOV.UK";
+
 }
 
 @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
@@ -19,30 +19,21 @@
     </h1>
 </header>
 
-@{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }, { "width", "107px" } });}
-
-<!-- injected Withdrawn scheme message when applicable -->
-@if (Model.IsWithdrawn)
-{
-    <p class="govuk-details__text govuk-!-margin-bottom-7">
-        Your scheme has been withdrawn and therefore you are unable to action any evidence notes.<br />
-        Contact your environmental regulator if you think this is not the case.
-    </p>
-}
+ @{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() {{ "controller", "ManageTransferNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }, { "width", "107px" } });}
 
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Review submitted evidence",
-        Url.Action("Index", "ManageEvidenceNotes",
+        Url.Action("Index", "ManageTransferNotes",
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
-    @this.WeeeGds().Tab("View and transfer evidence",
-        Url.Action("Index", "ManageEvidenceNotes",
+    @*@this.WeeeGds().Tab("View and transfer evidence",
+        Url.Action("Index", "ManageTransferNotes",
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
     @this.WeeeGds().Tab("Outgoing transfers",
-      Url.Action("Index", "ManageEvidenceNotes",
+      Url.Action("Index", "ManageTransferNotes",
           new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
-      Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
+      Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers)*@
 </ul>
 
 
