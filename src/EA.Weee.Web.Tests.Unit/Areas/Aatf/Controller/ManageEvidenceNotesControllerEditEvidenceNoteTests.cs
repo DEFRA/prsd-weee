@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
@@ -10,6 +11,7 @@
     using Core.Scheme;
     using FakeItEasy;
     using FluentAssertions;
+    using Prsd.Core.Web.ApiClient;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.ViewModels;
@@ -409,10 +411,50 @@
             model.Action = ActionEnum.Submit;
 
             //Act
-            var result = await ManageEvidenceController.EditEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
+            await ManageEvidenceController.EditEvidenceNote(model, OrganisationId, AatfId);
 
             //Assert
             A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, model, A<string>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task EditEvidenceNotePost_GivenApiHasBeenCalledAndThrowsApiExceptionWithInnerInvalidOperationException_ShouldAddErrorToModelState()
+        {
+            //arrange
+            var model = ValidModel();
+            var validationMessage = Fixture.Create<string>();
+            var exception = new ApiException(Fixture.Create<HttpStatusCode>(), new ApiError()
+            {
+                ExceptionType = typeof(InvalidOperationException).FullName,
+                ExceptionMessage = validationMessage
+            });
+            A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Throws(exception);
+
+            //act
+            await Record.ExceptionAsync(async () => await ManageEvidenceController.EditEvidenceNote(model, OrganisationId, AatfId));
+
+            //assert
+            ManageEvidenceController.ModelState.ElementAt(0).Key.Should().BeNullOrEmpty();
+            ManageEvidenceController.ModelState.ElementAt(0).Value.Errors.ElementAt(0).ErrorMessage.Should()
+                .Be(validationMessage);
+        }
+
+        [Fact]
+        public async Task EditEvidenceNotePost_GivenApiHasBeenCalledAndThrowsApiExceptionWithWhereInnerItNotInvalidOperationException_ExceptionShouldBeReThrown()
+        {
+            //arrange
+            var model = ValidModel();
+            var exception = new ApiException(Fixture.Create<HttpStatusCode>(), new ApiError()
+            {
+                ExceptionType = Fixture.Create<string>()
+            });
+            A.CallTo(() => WeeeClient.SendAsync<Guid>(A<string>._, A<EvidenceNoteBaseRequest>._)).Throws(exception);
+
+            //act
+            var result = await Record.ExceptionAsync(async () => await ManageEvidenceController.EditEvidenceNote(model, OrganisationId, AatfId));
+
+            //assert
+            result.Should().NotBeNull();
         }
 
         [Fact]
