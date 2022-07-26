@@ -78,6 +78,71 @@
             request.CategoryIds.Should().BeEquivalentTo(selectedIds);
             request.RecipientId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNoteIds.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void SelectCategoriesToRequest_GivenValidModelAndExistingRequestWithNullEvidenceNotes_CreateTransferNoteRequestShouldBeCreated()
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var selectedScheme = Guid.NewGuid();
+
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
+
+            //act
+            var request = requestCreator.SelectCategoriesToRequest(model, new TransferEvidenceNoteRequest());
+
+            //assert
+            request.CategoryIds.Should().BeEquivalentTo(selectedIds);
+            request.RecipientId.Should().Be(selectedScheme);
+            request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNoteIds.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SelectCategoriesToRequest_GivenValidModelAndExistingRequestWithEmptyEvidenceNotes_CreateTransferNoteRequestShouldBeCreated()
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var selectedScheme = Guid.NewGuid();
+
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
+
+            //act
+            var request = requestCreator.SelectCategoriesToRequest(model, new TransferEvidenceNoteRequest());
+
+            //assert
+            request.CategoryIds.Should().BeEquivalentTo(selectedIds);
+            request.RecipientId.Should().Be(selectedScheme);
+            request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNoteIds.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SelectCategoriesToRequest_GivenValidModelAndExistingRequestWithEvidenceNotes_CreateTransferNoteRequestShouldBeCreated()
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var selectedScheme = Guid.NewGuid();
+
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
+            var evidenceIds = TestFixture.CreateMany<Guid>().ToList();
+
+            var existingRequest =
+                new TransferEvidenceNoteRequest(organisationId, selectedScheme, selectedIds, evidenceIds);
+
+            //act
+            var request = requestCreator.SelectCategoriesToRequest(model, existingRequest);
+
+            //assert
+            request.CategoryIds.Should().BeEquivalentTo(selectedIds);
+            request.RecipientId.Should().Be(selectedScheme);
+            request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNoteIds.Should().BeEquivalentTo(evidenceIds);
         }
 
         [Theory]
@@ -90,6 +155,7 @@
             var schemeId = TestFixture.Create<Guid>();
             var categories = TestFixture.CreateMany<int>().ToList();
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var complianceYear = TestFixture.Create<int>();
 
             var transferCategoryTonnage = new List<TransferEvidenceCategoryValue>()
             {
@@ -105,6 +171,7 @@
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(v => v.Action, action)
                 .With(v => v.TransferCategoryValues, transferCategoryTonnage)
+                .With(v => v.ComplianceYear, complianceYear)
                 .Create();
             
             //act
@@ -116,6 +183,7 @@
             result.Status.Should().Be(expectedStatus);
             result.CategoryIds.Should().BeEquivalentTo(categories);
             result.EvidenceNoteIds.Should().BeEquivalentTo(evidenceNoteIds);
+            result.ComplianceYear.Should().Be(complianceYear);
             var category1ToFind = transferCategoryTonnage.ElementAt(0);
             result.TransferValues.Should().Contain(t =>
                 t.Id.Equals(category1ToFind.Id) &&
@@ -165,7 +233,7 @@
             result.RecipientId.Should().Be(schemeId);
             result.Status.Should().Be(expectedStatus);
             result.CategoryIds.Should().BeNull();
-            result.EvidenceNoteIds.Should().BeNull();
+            result.EvidenceNoteIds.Should().BeEmpty();
             var category1ToFind = transferCategoryTonnage.ElementAt(0);
             result.TransferValues.Should().Contain(t =>
                 t.TransferTonnageId.Equals(category1ToFind.TransferTonnageId) &&
@@ -196,6 +264,7 @@
             var schemeId = TestFixture.Create<Guid>();
             var evidenceNoteId = TestFixture.Create<Guid>();
             var electricalAndElectronicToolsTonnageId = TestFixture.Create<Guid>();
+            var complianceYear = TestFixture.Create<int>();
 
             var transferCategoryTonnage = new List<TransferEvidenceCategoryValue>()
             {
@@ -225,7 +294,7 @@
             result.RecipientId.Should().Be(schemeId);
             result.Status.Should().Be(expectedStatus);
             result.CategoryIds.Should().BeNull();
-            result.EvidenceNoteIds.Should().BeNull();
+            result.EvidenceNoteIds.Should().BeEmpty();
             var category1ToFind = transferCategoryTonnage.ElementAt(0);
             result.TransferValues.Should().Contain(t =>
                 t.TransferTonnageId.Equals(category1ToFind.TransferTonnageId) &&
