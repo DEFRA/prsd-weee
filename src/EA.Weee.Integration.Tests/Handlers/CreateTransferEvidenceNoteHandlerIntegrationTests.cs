@@ -82,7 +82,8 @@
                     }, 
                     transferTonnageValues,
                     new List<Guid>() { note1.Id },
-                EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                EA.Weee.Core.AatfEvidence.NoteStatus.Draft,
+                    note1.ComplianceYear);
             };
 
             private readonly Because of = () =>
@@ -174,7 +175,8 @@
                     },
                     transferTonnageValues,
                     new List<Guid>() { note1.Id },
-                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
+                    EA.Weee.Core.AatfEvidence.NoteStatus.Draft,
+                    note1.ComplianceYear);
             };
 
             private readonly Because of = () =>
@@ -243,7 +245,8 @@
                     },
                     transferTonnageValues,
                     new List<Guid>() { note1.Id },
-                    Core.AatfEvidence.NoteStatus.Draft);
+                    Core.AatfEvidence.NoteStatus.Draft,
+                    note1.ComplianceYear);
             };
 
             private readonly Because of = () =>

@@ -21,10 +21,9 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNotesForTransferRequestHandlerTests
+    public class GetEvidenceNotesForTransferRequestHandlerTests : SimpleUnitTestBase
     {
         private GetEvidenceNotesForTransferRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISchemeDataAccess schemeDataAccess;
@@ -37,21 +36,20 @@
 
         public GetEvidenceNotesForTransferRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             schemeDataAccess = A.Fake<ISchemeDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             mapper = A.Fake<IMapper>();
-            fixture.Create<Guid>();
-            schemeId = fixture.Create<Guid>();
+            TestFixture.Create<Guid>();
+            schemeId = TestFixture.Create<Guid>();
             scheme = A.Fake<Scheme>();
-            organisationId = fixture.Create<Guid>();
+            organisationId = TestFixture.Create<Guid>();
 
             A.CallTo(() => scheme.Id).Returns(schemeId);
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
 
-            request = new GetEvidenceNotesForTransferRequest(organisationId, fixture.CreateMany<int>().ToList());
+            request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(), TestFixture.Create<int>());
 
             handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess, systemDataDataAccess);
         }
@@ -123,17 +121,13 @@
         [Fact]
         public async void HandleAsync_GivenRequest_DataAccessGetNotesToTransferShouldBeCalled()
         {
-            //arrange
-            var date = fixture.Create<DateTime>();
-            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(date);
-
             //act
             await handler.HandleAsync(request);
 
             //assert
             A.CallTo(() =>
                     evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._, date.Year))
+                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>._, request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -141,12 +135,13 @@
         public async void HandleAsync_GivenRequestWithEvidenceNotes_DataAccessGetNotesToTransferShouldBeCalled()
         {
             //arrange
-            var organisationId = fixture.Create<Guid>();
-            var request = new GetEvidenceNotesForTransferRequest(organisationId, fixture.CreateMany<int>().ToList(),
-                fixture.CreateMany<Guid>().ToList());
+            var organisationId = TestFixture.Create<Guid>();
+            var request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(),
+                TestFixture.Create<int>(),
+                TestFixture.CreateMany<Guid>().ToList());
             
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
-            var date = fixture.Create<DateTime>();
+            var date = TestFixture.Create<DateTime>();
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(date);
 
             //act
@@ -154,7 +149,7 @@
 
             //assert
             A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), date.Year)).MustHaveHappenedOnceExactly();
+                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), request.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -235,7 +230,7 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>().ToList();
+            var noteList = TestFixture.CreateMany<Note>().ToList();
 
             var noteData = new List<EvidenceNoteData>()
             {

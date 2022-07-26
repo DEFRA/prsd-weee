@@ -15,14 +15,16 @@
 
         public List<Guid> EvidenceNotes { get; private set; }
 
-        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories, List<Guid> evidenceNotes = null)
+        public int ComplianceYear { get; private set; }
+
+        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories, int complianceYear, List<Guid> evidenceNotes = null)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categories).IsNotEmpty();
 
             OrganisationId = organisationId;
             Categories = categories;
-
+            ComplianceYear = complianceYear;
             EvidenceNotes = evidenceNotes ?? new List<Guid>();
         }
     }
