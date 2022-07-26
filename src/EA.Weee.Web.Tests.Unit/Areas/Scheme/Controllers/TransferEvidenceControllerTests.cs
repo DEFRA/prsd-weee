@@ -1243,7 +1243,6 @@
                     t => t.OrganisationId.Equals(organisationId) && 
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification == null &&
-                         t.SelectedComplianceYear == complianceYear &&
                          t.RedirectTab == redirectTab)))
                 .MustHaveHappenedOnceExactly();
         }
