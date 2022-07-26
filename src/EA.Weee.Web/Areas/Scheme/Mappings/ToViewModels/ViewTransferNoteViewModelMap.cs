@@ -9,6 +9,8 @@
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Helpers;
+    using Core.Shared;
     using ViewModels;
 
     public class ViewTransferNoteViewModelMap : IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>
@@ -39,7 +41,6 @@
                 RedirectTab = source.RedirectTab,
                 ReturnToView = source.ReturnToView ?? false, 
                 EditMode = source.Edit,
-                SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
                 Status = source.TransferEvidenceNoteData.Status,
@@ -76,8 +77,10 @@
                     transferOrganisationAddress.Postcode,
                     null),
                 Summary = GenerateNotesModel(source),
-                DisplayEditButton = 
-                    (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
+                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) 
+                                    && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
+                                    && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
+                                    && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime)
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
@@ -94,19 +97,19 @@
                     switch (note.Status)
                     {
                         case NoteStatus.Submitted:
-                            model.SuccessMessage = $"You have successfully submitted the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            model.SuccessMessage = $"You have successfully submitted the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                             break;
                         case NoteStatus.Draft:
-                            model.SuccessMessage = $"You have successfully saved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference} as a draft";
+                            model.SuccessMessage = $"You have successfully saved the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference} as a draft";
                             break;
                         case NoteStatus.Approved:
-                            model.SuccessMessage = $"You have approved the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            model.SuccessMessage = $"You have approved the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                             break;
                         case NoteStatus.Rejected:
-                            model.SuccessMessage = $"You have rejected the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            model.SuccessMessage = $"You have rejected the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                             break;
                         case NoteStatus.Returned:
-                            model.SuccessMessage = $"You have returned the evidence note transfer with reference ID {note.Type.ToDisplayString()}{note.Reference}";
+                            model.SuccessMessage = $"You have returned the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                             break;
                     }
                 }

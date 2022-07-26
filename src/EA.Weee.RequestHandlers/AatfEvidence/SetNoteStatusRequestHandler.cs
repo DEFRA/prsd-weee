@@ -13,7 +13,7 @@
     using DataAccess.DataAccess;
     using Factories;
 
-    public class SetNoteStatusRequestHandler : IRequestHandler<SetNoteStatus, Guid>
+    public class SetNoteStatusRequestHandler : SaveTransferNoteRequestBase, IRequestHandler<SetNoteStatus, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
@@ -44,6 +44,8 @@
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var changedBy = userContext.UserId.ToString();
+
+            ValidToSave(evidenceNote.Recipient, evidenceNote.ComplianceYear, currentDate);
 
             evidenceNote.UpdateStatus(message.Status.ToDomainEnumeration<NoteStatus>(), changedBy, CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate), message.Reason);
 

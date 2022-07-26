@@ -13,7 +13,7 @@
 {
     @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.ViewEvidenceNoteViewModel.SchemeId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ViewEvidenceNoteViewModel.SelectedComplianceYear })))
+            new { @pcsId = Model.ViewEvidenceNoteViewModel.SchemeId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ViewEvidenceNoteViewModel.ComplianceYear })))
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
