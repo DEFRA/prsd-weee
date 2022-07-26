@@ -22,6 +22,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Filters;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using ViewModels;
@@ -60,6 +61,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
@@ -114,6 +116,7 @@
 
         [HttpGet]
         [CheckCanCreateEvidenceNote]
+        [NoCacheFilter]
 
         public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId, bool returnFromCopyPaste = false)
         { 
@@ -185,6 +188,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
@@ -203,6 +207,7 @@
 
         [HttpGet]
         [CheckCanEditEvidenceNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false)
         {
             using (var client = apiClient())

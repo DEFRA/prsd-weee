@@ -15,6 +15,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Filters;
     using Web.ViewModels.Shared;
     using Weee.Requests.Shared;
 
@@ -33,6 +34,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(Guid pcsId, 
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
