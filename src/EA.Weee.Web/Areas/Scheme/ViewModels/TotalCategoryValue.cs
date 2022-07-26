@@ -4,6 +4,7 @@
     using Core.Shared;
     using System;
 
+    [Serializable]
     public class TotalCategoryValue : CategoryValue
     {
         public string TotalReceived { get; set; }

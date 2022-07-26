@@ -5,6 +5,7 @@
     using Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
 
+    [Serializable]
     public class ViewTransferNoteViewModel : ViewEvidenceNoteViewModel
     {
         public Guid EvidenceNoteId { get; set; }

@@ -10,6 +10,8 @@
 
     public class TransferEvidenceNotesViewModelMapTransfer
     {
+        public TransferEvidenceTonnageViewModel ExistingTransferTonnageViewModel { get; set; }
+
         public TransferEvidenceNoteCategoriesViewModel ExistingTransferEvidenceNoteCategoriesViewModel { get; }
 
         public IList<EvidenceNoteData> Notes { get; }
