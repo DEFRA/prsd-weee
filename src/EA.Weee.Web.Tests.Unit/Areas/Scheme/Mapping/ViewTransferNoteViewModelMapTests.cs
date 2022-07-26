@@ -110,7 +110,6 @@
             //assert
             model.SchemeId.Should().Be(source.OrganisationId);
             model.EvidenceNoteId.Should().Be(source.TransferEvidenceNoteData.Id);
-            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
             model.EditMode.Should().Be(editMode);
         }
 
@@ -296,7 +295,6 @@
             model.ComplianceYear.Should().Be(source.TransferEvidenceNoteData.ComplianceYear);
             model.ReturnToView.Should().Be(source.ReturnToView.Value);
             model.EditMode.Should().Be(source.Edit);
-            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
             model.Reference.Should().Be(source.TransferEvidenceNoteData.Reference);
             model.Type.Should().Be(source.TransferEvidenceNoteData.Type);
             model.Status.Should().Be(source.TransferEvidenceNoteData.Status);
