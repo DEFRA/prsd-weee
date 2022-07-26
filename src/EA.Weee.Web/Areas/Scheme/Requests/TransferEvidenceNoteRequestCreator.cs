@@ -2,6 +2,7 @@
 {
     using Prsd.Core;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Core.Aatf;
     using Core.AatfEvidence;
@@ -14,7 +15,7 @@
 
     public class TransferEvidenceNoteRequestCreator : ITransferEvidenceRequestCreator
     {
-        public TransferEvidenceNoteRequest SelectCategoriesToRequest(TransferEvidenceNoteCategoriesViewModel viewModel)
+        public TransferEvidenceNoteRequest SelectCategoriesToRequest(TransferEvidenceNoteCategoriesViewModel viewModel, TransferEvidenceNoteRequest existingEvidenceNoteRequest = null)
         {
             Guard.ArgumentNotNull(() => viewModel, viewModel);
 
@@ -30,10 +31,18 @@
                 throw new InvalidOperationException("TransferEvidenceNoteRequest At Least One Category Id Must Be Selected");
             }
 
+            var evidenceNoteIds = new List<Guid>();
+
+            if (existingEvidenceNoteRequest?.EvidenceNoteIds != null && existingEvidenceNoteRequest.EvidenceNoteIds.Any())
+            {
+                evidenceNoteIds.AddRange(existingEvidenceNoteRequest.EvidenceNoteIds.ToList());
+            }
+
             var newRequest = new TransferEvidenceNoteRequest(
                 viewModel.OrganisationId,
                 viewModel.SelectedSchema.Value,
-                selectedIds);
+                selectedIds,
+                evidenceNoteIds);
 
             return newRequest;
         }
@@ -51,7 +60,7 @@
                 request.CategoryIds,
                 transferValues.ToList(),
                 request.EvidenceNoteIds,
-                viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted);
+                viewModel.Action.Equals(ActionEnum.Save) ? NoteStatus.Draft : NoteStatus.Submitted, viewModel.ComplianceYear);
         }
 
         public EditTransferEvidenceNoteRequest EditSelectTonnageToRequest(TransferEvidenceNoteRequest request, TransferEvidenceTonnageViewModel viewModel)

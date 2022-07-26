@@ -34,7 +34,8 @@
             {
                 PcsId = source.OrganisationId,
                 RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemePublicInfo(recipientId)).Name,
-                RecipientId = recipientId
+                RecipientId = recipientId,
+                ComplianceYear = source.ComplianceYear
             };
 
             if (source.Notes != null)
