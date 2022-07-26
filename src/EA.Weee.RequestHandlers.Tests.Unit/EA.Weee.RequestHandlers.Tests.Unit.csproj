@@ -162,6 +162,7 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\EditTransferEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />
@@ -384,6 +385,7 @@
     <Compile Include="Organisations\OrganisationBySchemeIdHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandlerTests.cs" />
     <Compile Include="Scheme\AddSchemeHandlerTests.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfoHandlerTests.cs" />
     <Compile Include="Scheme\GetOrganisationSchemeHandlerTests.cs" />
     <Compile Include="Scheme\UpdateSchemeContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeIdHandlerTests.cs" />
