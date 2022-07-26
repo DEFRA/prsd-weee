@@ -307,12 +307,9 @@
             var result = await handler.HandleAsync(GetRequest(true));
 
             // assert
-            result[0].DisplayName.Should().Be(schemeApprovedName1);
-            result[0].Id.Should().Be(schemeApprovedOrganisationId1);
-            result[1].DisplayName.Should().Be(schemeApprovedName2);
-            result[1].Id.Should().Be(schemeApprovedOrganisationId2);
-            result[2].DisplayName.Should().Be(pbsOrganisationName);
-            result[2].Id.Should().Be(pbsOrganisationId);
+            result.Contains(organisationSchemeDataForScheme1);
+            result.Contains(organisationSchemeDataForScheme2);
+            result.Contains(organisationSchemeDataForPBS);
         }
 
         [Fact]
