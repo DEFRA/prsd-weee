@@ -41,7 +41,6 @@
                 RedirectTab = source.RedirectTab,
                 ReturnToView = source.ReturnToView ?? false, 
                 EditMode = source.Edit,
-                SelectedComplianceYear = source.SelectedComplianceYear,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
                 Status = source.TransferEvidenceNoteData.Status,
@@ -81,7 +80,7 @@
                 DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) 
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (!source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme && source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
-                                    && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, )
+                                    && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime)
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
