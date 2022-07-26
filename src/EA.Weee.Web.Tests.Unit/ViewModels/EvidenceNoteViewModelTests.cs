@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -27,6 +28,12 @@
             calculator = A.Fake<ICategoryValueTotalCalculator>();
 
             model = new EvidenceNoteViewModel(calculator);
+        }
+
+        [Fact]
+        public void EvidenceNoteViewModel_ShouldHaveSerializableAttribute()
+        {
+            typeof(EvidenceNoteViewModel).Should().BeDecoratedWith<SerializableAttribute>();
         }
 
         [Theory]
