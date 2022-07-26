@@ -229,20 +229,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequestAndThereIsNoAatfForTheComplianceYear_ArgumentNullExceptionExpected()
-        {
-            //arrange
-            A.CallTo(() => aatfDataAccess.GetDetails(A<Guid>._)).Returns(aatf);
-            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns((Aatf)null);
-
-            //act
-            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenDraftRequest_NoteShouldBeAddedToContext()
         {
             //act
@@ -302,7 +288,6 @@
 
             var systemDateTime = new DateTime(2021, 12, 1);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(systemDateTime);
-
             A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             //arrange
@@ -420,6 +405,21 @@
             //arrange
             A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Cancelled);
             A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Message.Should().Be(Error);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndThereIsNoAatfForTheComplianceYear_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => aatfDataAccess.GetDetails(A<Guid>._)).Returns(aatf);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns((Aatf)null);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
