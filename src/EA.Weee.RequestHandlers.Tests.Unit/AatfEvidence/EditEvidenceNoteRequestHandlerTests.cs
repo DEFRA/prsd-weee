@@ -14,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using RequestHandlers.Aatf;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Factories;
     using RequestHandlers.Security;
@@ -32,6 +33,7 @@
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
         private readonly EditEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Organisation recipientOrganisation;
@@ -44,6 +46,7 @@
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            aatfDataAccess = A.Fake<IAatfDataAccess>();
             var currentDate = new DateTime(2021, 12, 1);
             genericDataAccess = A.Fake<IGenericDataAccess>();
 
@@ -67,11 +70,12 @@
 
             request = Request();
 
-            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess, aatfDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(request.Id)).Returns(note);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, request.StartDate.Year)).Returns(aatf);
         }
 
         [Fact]
@@ -80,7 +84,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess, aatfDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -95,13 +99,27 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess, aatfDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
             //assert
             result.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_AatfForComplianceYearShouldBeRetrieved()
+        {
+            //arrange
+            A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, request.StartDate.Year))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -299,6 +317,7 @@
         {
             //arrange
             A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Cancelled);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -313,6 +332,7 @@
         {
             //arrange
             A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Suspended);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));

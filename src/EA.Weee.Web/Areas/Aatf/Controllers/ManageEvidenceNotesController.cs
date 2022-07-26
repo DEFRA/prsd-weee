@@ -244,9 +244,23 @@
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = updateStatus;
 
-                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                    try
+                    {
+                        var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
+                        return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
+                    }
+                    catch (ApiException ex)
+                    {
+                        if (ex.ErrorData.ExceptionType == typeof(InvalidOperationException).FullName)
+                        {
+                            ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
 
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
