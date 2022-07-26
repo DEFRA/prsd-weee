@@ -551,6 +551,16 @@
                 .MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task IndexGet_GivenRequestIsCreated_EditTransferTonnageViewModelKeySessionShouldBeUpdated()
+        {
+            // act
+            await ManageEvidenceController.Index(OrganisationId);
+
+            // assert
+            A.CallTo(() => SessionService.ClearTransferSessionObject(ManageEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).MustHaveHappenedOnceExactly();
+        }
+
         public static IEnumerable<object[]> ManageEvidenceModelData =>
             new List<object[]>
             {
