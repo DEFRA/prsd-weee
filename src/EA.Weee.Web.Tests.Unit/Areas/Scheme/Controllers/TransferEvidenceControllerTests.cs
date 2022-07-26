@@ -62,21 +62,21 @@
         [Fact]
         public void TransferEvidenceController_ActionsShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
              .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferTonnageGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(Guid), typeof(bool) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(Guid), typeof(int), typeof(bool) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferFromGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -132,7 +132,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await transferEvidenceController.TransferEvidenceNote(organisationId);
+            await transferEvidenceController.TransferEvidenceNote(organisationId, TestFixture.Create<int>());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -146,8 +146,9 @@
             A.CallTo(() =>
             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
             SessionKeyConstant.TransferNoteKey)).Returns(null);
+            var complianceYear = TestFixture.Create<int>();
 
-            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId, complianceYear) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
@@ -156,6 +157,7 @@
             model.SchemasToDisplay.Should().BeEmpty();
             model.SelectedSchema.Should().BeNull();
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
+            model.ComplianceYear.Should().Be(complianceYear);
         }
 
         [Fact]
@@ -167,7 +169,7 @@
             SessionKeyConstant.TransferNoteKey)).Returns(null);
 
             var categoryValues = new CategoryValues<CategoryBooleanViewModel>();
-            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId, TestFixture.Create<int>()) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
@@ -190,7 +192,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
 
             // act
-            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId, TestFixture.Create<int>()) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
@@ -202,7 +204,7 @@
         public async Task TransferEvidenceNoteGet_GivenSchemesListIsNotEmpty_ShouldCallToGetSchemes()
         {
             // act
-            await transferEvidenceController.TransferEvidenceNote(organisationId);
+            await transferEvidenceController.TransferEvidenceNote(organisationId, TestFixture.Create<int>());
 
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>.That
@@ -214,7 +216,7 @@
         public async Task TransferEvidenceNoteGet_TransferNoteSessionObjectShouldBeRetrieved()
         {
             // act
-            await transferEvidenceController.TransferEvidenceNote(organisationId);
+            await transferEvidenceController.TransferEvidenceNote(organisationId, TestFixture.Create<int>());
 
             // assert
             A.CallTo(() =>
@@ -229,9 +231,10 @@
             A.CallTo(() =>
              sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                  SessionKeyConstant.TransferNoteKey)).Returns(null);
+            var complianceYear = TestFixture.Create<int>();
 
             // act
-            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId, complianceYear) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
@@ -245,6 +248,7 @@
             model.SchemasToDisplay.Should().BeEmpty();
             model.SelectedSchema.Should().BeNull();
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
+            model.ComplianceYear.Should().Be(complianceYear);
         }
 
         [Fact]
@@ -257,9 +261,9 @@
             A.CallTo(() =>
              sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                  SessionKeyConstant.TransferNoteKey)).Returns(request);
-
+            var complianceYear = TestFixture.Create<int>();
             // act
-            var result = await transferEvidenceController.TransferEvidenceNote(organisationId) as ViewResult;
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId, complianceYear) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
 
             // assert
@@ -274,6 +278,7 @@
             model.SchemasToDisplay.Should().BeEmpty();
             model.SelectedSchema.Should().Be(schemeId);
             model.HasSelectedAtLeastOneCategory.Should().BeTrue();
+            model.ComplianceYear.Should().Be(complianceYear);
         }
 
         [Fact]
@@ -406,7 +411,27 @@
             await transferEvidenceController.TransferEvidenceNote(model);
 
             //assert
-            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(model, null)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferEvidenceNotePost_GivenModelIsValidAndTransferObjectIsNotNull_TransferRequestCreatorShouldBeCalled()
+        {
+            //arrange
+            var model = GetValidModel(Guid.NewGuid(), Guid.NewGuid());
+            var httpContext = new HttpContextMocker();
+            httpContext.AttachToController(transferEvidenceController);
+            var transferRequest = TestFixture.Create<TransferEvidenceNoteRequest>();
+
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                    SessionKeyConstant.TransferNoteKey)).Returns(transferRequest);
+
+            //act
+            await transferEvidenceController.TransferEvidenceNote(model);
+
+            //assert
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(model, transferRequest)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -419,11 +444,10 @@
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
 
-            A.CallTo(() =>
-            sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
-            SessionKeyConstant.TransferNoteKey)).Returns(request);
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                SessionKeyConstant.TransferNoteKey)).Returns(null);
 
-            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(request);
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._, A<TransferEvidenceNoteRequest>._)).Returns(request);
 
             //act
             await transferEvidenceController.TransferEvidenceNote(model);
@@ -431,7 +455,7 @@
             //assert
             A.CallTo(() =>
             sessionService.SetTransferSessionObject(transferEvidenceController.Session,
-                A<object>.That.Matches(a => ((TransferEvidenceNoteRequest)a).OrganisationId.Equals(model.PcsId) &&
+                A<object>.That.Matches(a => ((TransferEvidenceNoteRequest)a).OrganisationId.Equals(request.OrganisationId) &&
                                             ((TransferEvidenceNoteRequest)a).CategoryIds.Equals(request.CategoryIds) &&
                                             ((TransferEvidenceNoteRequest)a).RecipientId.Equals(request.RecipientId) &&
                                             ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.Count > 0 &&
@@ -452,7 +476,7 @@
             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
             SessionKeyConstant.TransferNoteKey)).Returns(null);
             
-            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._, A<TransferEvidenceNoteRequest>._)).Returns(transferRequest);
 
             //act
             var result = await transferEvidenceController.TransferEvidenceNote(model) as RedirectToRouteResult;
@@ -476,7 +500,7 @@
             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
             SessionKeyConstant.TransferNoteKey)).Returns(null);
 
-            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._)).Returns(transferRequest);
+            A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._, A<TransferEvidenceNoteRequest>._)).Returns(transferRequest);
 
             //act
             await transferEvidenceController.TransferEvidenceNote(model);
@@ -514,7 +538,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await transferEvidenceController.TransferFrom(organisationId);
+            await transferEvidenceController.TransferFrom(organisationId, TestFixture.Create<int>());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -525,7 +549,7 @@
         public async Task TransferFromGet_TransferNoteSessionObjectShouldBeRetrieved()
         {
             // act
-            await transferEvidenceController.TransferFrom(organisationId);
+            await transferEvidenceController.TransferFrom(organisationId, TestFixture.Create<int>());
 
             // assert
             A.CallTo(() =>
@@ -540,9 +564,10 @@
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(null);
+            var complianceYear = TestFixture.Create<int>();
 
             // act
-            var result = await transferEvidenceController.TransferFrom(organisationId) as RedirectToRouteResult;
+            var result = await transferEvidenceController.TransferFrom(organisationId, complianceYear) as RedirectToRouteResult;
 
             // assert
             result.RouteValues["action"].Should().Be("Index");
@@ -550,6 +575,7 @@
             result.RouteValues["pcsId"].Should().Be(organisationId);
             result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
             result.RouteValues["area"].Should().Be("Scheme");
+            result.RouteValues["selectedComplianceYear"].Should().Be(complianceYear);
         }
 
         [Fact]
@@ -560,16 +586,18 @@
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
+            var complianceYear = TestFixture.Create<int>();
 
             // act
-            await transferEvidenceController.TransferFrom(organisationId);
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
 
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
                         g.Categories.Equals(request.CategoryIds) && 
                         g.OrganisationId.Equals(organisationId) && 
-                        g.EvidenceNotes.Count.Equals(0))))
+                        g.EvidenceNotes.Count.Equals(0) &&
+                        g.ComplianceYear == complianceYear)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -579,6 +607,7 @@
             //arrange
             var request = GetRequest();
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -587,7 +616,7 @@
                 A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
 
             // act
-            await transferEvidenceController.TransferFrom(organisationId);
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
 
             // assert
 
@@ -595,7 +624,8 @@
                 A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
                     t.OrganisationId.Equals(organisationId) &&
                     t.Notes.Equals(notes) &&
-                    t.Request.Equals(request)))).MustHaveHappenedOnceExactly();
+                    t.Request.Equals(request) &&
+                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -603,6 +633,7 @@
         {
             var request = GetRequest();
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -611,13 +642,14 @@
                 A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
 
             // act
-            await transferEvidenceController.TransferFrom(organisationId);
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
 
             // assert
 
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
                 A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
-                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds)))).MustHaveHappenedOnceExactly();
+                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds) &&
+                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         public static IEnumerable<object[]> EvidenceNoteIds =>
@@ -635,6 +667,7 @@
             var request = GetRequest(evidenceIds);
  
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -643,13 +676,14 @@
                 A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
 
             // act
-            await transferEvidenceController.TransferFrom(organisationId);
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
 
             // assert
 
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
                 A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
-                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds)))).MustHaveHappenedOnceExactly();
+                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds) &&
+                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -662,7 +696,7 @@
                 A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
 
             // act
-            var result = await transferEvidenceController.TransferFrom(organisationId) as ViewResult;
+            var result = await transferEvidenceController.TransferFrom(organisationId, TestFixture.Create<int>()) as ViewResult;
 
             // assert
             result.Model.Should().Be(model);
@@ -672,7 +706,7 @@
         public async Task TransferFromGet_TransferFromViewShouldBeReturned()
         {
             // act
-            var result = await transferEvidenceController.TransferFrom(organisationId) as ViewResult;
+            var result = await transferEvidenceController.TransferFrom(organisationId, TestFixture.Create<int>()) as ViewResult;
 
             // assert
             result.ViewName.Should().Be("TransferFrom");
@@ -774,7 +808,9 @@
         public async Task TransferFromPost_GivenModelIsValid_ShouldRedirectToTransferTonnage()
         {
             // arrange 
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var complianceYear = TestFixture.Create<int>();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.ComplianceYear, complianceYear).Create();
           
             // act
             var result = await transferEvidenceController.TransferFrom(model) as RedirectToRouteResult;
@@ -785,6 +821,7 @@
             result.RouteValues["area"].Should().Be("Scheme");
             result.RouteValues["pcsId"].Should().Be(model.PcsId);
             result.RouteValues["transferAllTonnage"].Should().Be(false);
+            result.RouteValues["complianceYear"].Should().Be(complianceYear);
         }
 
         [Theory]
@@ -794,11 +831,11 @@
         {
             // arrange 
             var organisationName = "OrganisationName";
-
+            var complianceYear = TestFixture.Create<int>();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage);
+            await transferEvidenceController.TransferTonnage(organisationId, complianceYear, transferAllTonnage);
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -810,8 +847,11 @@
         [InlineData(false)]
         public async Task TransferTonnageGet_TransferNoteSessionObjectShouldBeRetrieved(bool transferAllTonnage)
         {
+            //arrange
+            var complianceYear = TestFixture.Create<int>();
+
             // act
-            await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage);
+            await transferEvidenceController.TransferTonnage(organisationId, complianceYear, transferAllTonnage);
 
             // assert
             A.CallTo(() =>
@@ -823,7 +863,7 @@
         public async Task TransferTonnageGet_ExistingTransferTonnageModelShouldBeRetrievedAndThenCleared()
         {
             // act
-            await transferEvidenceController.TransferTonnage(organisationId, TestFixture.Create<bool>());
+            await transferEvidenceController.TransferTonnage(organisationId, TestFixture.Create<int>(), TestFixture.Create<bool>());
 
             // assert
             A.CallTo(() =>
@@ -838,12 +878,13 @@
         public async Task TransferTonnageGet_GivenTransferNoteSessionObjectIsRetrievedAndIsNull_ShouldRedirectToManageEvidenceNotes(bool transferAllTonnage)
         {
             //arrange
+            var complianceYear = TestFixture.Create<int>();
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(null);
 
             // act
-            var result = await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage) as RedirectToRouteResult;
+            var result = await transferEvidenceController.TransferTonnage(organisationId, complianceYear, transferAllTonnage) as RedirectToRouteResult;
 
             // assert
             result.RouteValues["action"].Should().Be("Index");
@@ -851,6 +892,7 @@
             result.RouteValues["pcsId"].Should().Be(organisationId);
             result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
             result.RouteValues["area"].Should().Be("Scheme");
+            result.RouteValues["selectedComplianceYear"].Should().Be(complianceYear);
         }
 
         [Theory]
@@ -863,16 +905,18 @@
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
+            var complianceYear = TestFixture.Create<int>();
 
             // act
-            await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage);
+            await transferEvidenceController.TransferTonnage(organisationId, complianceYear, transferAllTonnage);
 
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
                         g.Categories.Equals(request.CategoryIds) 
                         && g.OrganisationId.Equals(organisationId) 
-                        && g.EvidenceNotes.Equals(request.EvidenceNoteIds))))
+                        && g.EvidenceNotes.Equals(request.EvidenceNoteIds) &&
+                        g.ComplianceYear == complianceYear)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -884,7 +928,8 @@
             //arrange
             var request = GetRequest();
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
-            
+            var complianceYear = TestFixture.Create<int>();
+
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
@@ -895,7 +940,7 @@
                         transferEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).Returns(null);
 
             // act
-            await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage);
+            await transferEvidenceController.TransferTonnage(organisationId, complianceYear, transferAllTonnage);
 
             // assert
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
@@ -904,7 +949,8 @@
                     t.TransferAllTonnage.Equals(transferAllTonnage) &&
                     t.Notes.Equals(notes) &&
                     t.Request.Equals(request) &&
-                    t.ExistingTransferTonnageViewModel == null))).MustHaveHappenedOnceExactly();
+                    t.ExistingTransferTonnageViewModel == null &&
+                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -913,6 +959,7 @@
             //arrange
             var request = GetRequest();
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -926,7 +973,7 @@
             var transferTonnage = TestFixture.Create<bool>();
 
             // act
-            await transferEvidenceController.TransferTonnage(organisationId, transferTonnage);
+            await transferEvidenceController.TransferTonnage(organisationId, complianceYear, transferTonnage);
 
             // assert
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
@@ -935,7 +982,8 @@
                     t.TransferAllTonnage.Equals(transferTonnage) &&
                     t.Notes.Equals(notes) &&
                     t.Request.Equals(request) &&
-                    t.ExistingTransferTonnageViewModel.Equals(existingModel)))).MustHaveHappenedOnceExactly();
+                    t.ExistingTransferTonnageViewModel.Equals(existingModel) &&
+                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -950,7 +998,7 @@
                 A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
 
             // act
-            var result = await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage) as ViewResult;
+            var result = await transferEvidenceController.TransferTonnage(organisationId, TestFixture.Create<int>(), transferAllTonnage) as ViewResult;
 
             // assert
             result.Model.Should().Be(model);
@@ -962,7 +1010,7 @@
         public async Task TransferTonnageGet_TransferFromViewShouldBeReturned(bool transferAllTonnage)
         {
             // act
-            var result = await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage) as ViewResult;
+            var result = await transferEvidenceController.TransferTonnage(organisationId, TestFixture.Create<int>(), transferAllTonnage) as ViewResult;
 
             // assert
             result.ViewName.Should().Be("TransferTonnage");
@@ -1016,6 +1064,7 @@
             result.RouteValues["action"].Should().Be("TransferFrom");
             result.RouteValues["controller"].Should().Be("TransferEvidence");
             result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["complianceYear"].Should().Be(model.ComplianceYear);
         }
 
         [Fact]
@@ -1280,7 +1329,6 @@
                     t => t.OrganisationId.Equals(organisationId) && 
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification == null &&
-                         t.SelectedComplianceYear == complianceYear &&
                          t.RedirectTab == redirectTab)))
                 .MustHaveHappenedOnceExactly();
         }
@@ -1353,7 +1401,7 @@
         private TransferEvidenceNoteRequest GetRequest(List<Guid> evidenceIds = null)
         {
             var categoryIds = TestFixture.CreateMany<int>().ToList();
-          
+
             if (evidenceIds == null)
             {
                 evidenceIds = TestFixture.CreateMany<Guid>().ToList();

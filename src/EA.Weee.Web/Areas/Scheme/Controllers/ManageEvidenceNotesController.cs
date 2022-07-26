@@ -18,6 +18,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -76,9 +77,9 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Transfer(Guid organisationId)
+        public ActionResult Transfer(Guid organisationId, int complianceYear)
         {
-            return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = organisationId });
+            return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = organisationId, complianceYear = complianceYear });
         }
 
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId,
@@ -149,18 +150,19 @@
         }
         
         [HttpGet]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear)
+        [CheckCanEditTransferNote]
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
                 // create the new evidence note schemeName request from note's Guid
-                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client, selectedComplianceYear);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
 
                 if (model.ViewEvidenceNoteViewModel.Status != NoteStatus.Submitted)
                 {
-                    return RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), selectedComplianceYear });
+                    return RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() });
                 }
 
                 //return viewmodel to view
@@ -190,14 +192,14 @@
 
                 await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
 
-                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client, model.ViewEvidenceNoteViewModel.SelectedComplianceYear);
+                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
 
                 return View("ReviewEvidenceNote", model);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear, string redirectTab = null)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null)
         {
             using (var client = this.apiClient())
             {
@@ -210,7 +212,6 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus])
                 {
                     SchemeId = pcsId,
-                    SelectedComplianceYear = selectedComplianceYear,
                     RedirectTab = redirectTab
                 });
 
@@ -220,17 +221,18 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+
+            return complianceYear;
         }
 
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
         {
             var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null)
             {
-                SchemeId = pcsId,
-                SelectedComplianceYear = complianceYear
+                SchemeId = pcsId
             });
 
             return model;

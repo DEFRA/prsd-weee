@@ -212,16 +212,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ComplianceYearShouldBeRetrieved()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => evidenceDataAccess.GetComplianceYearByNotes(request.EvidenceNoteIds)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenValidRequest_TransferNoteShouldBeAdded()
         {
             //arrange
@@ -229,7 +219,6 @@
             SystemTime.Freeze(currentDate);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(recipientOrganisation);
-            A.CallTo(() => evidenceDataAccess.GetComplianceYearByNotes(A<List<Guid>>._)).Returns(complianceYear);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             //act
@@ -239,7 +228,7 @@
             A.CallTo(() =>
                 evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
                     A<List<NoteTransferTonnage>>.That.Matches(t => 
-                        t.Count.Equals(request.TransferValues.Count)), NoteStatus.Draft, complianceYear, userId.ToString(), 
+                        t.Count.Equals(request.TransferValues.Count)), NoteStatus.Draft, request.ComplianceYear, userId.ToString(), 
                     A<DateTime>.That.Matches(d => d.Year == currentDate.Year && d.Month == currentDate.Month && d.Day == currentDate.Day))).MustHaveHappenedOnceExactly();
 
             foreach (var transferValue in request.TransferValues)
@@ -324,7 +313,8 @@
                 TestFixture.CreateMany<int>().ToList(), 
                 TestFixture.CreateMany<TransferTonnageValue>().ToList(), 
                 TestFixture.CreateMany<Guid>().ToList(),
-                Core.AatfEvidence.NoteStatus.Draft);
+                Core.AatfEvidence.NoteStatus.Draft,
+                TestFixture.Create<int>());
         }
     }
 }
