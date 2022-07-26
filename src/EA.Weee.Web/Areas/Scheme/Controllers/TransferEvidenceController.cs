@@ -21,6 +21,7 @@
     using ViewModels;
     using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
+    using Weee.Requests.Shared;
 
     public class TransferEvidenceController : SchemeEvidenceBaseController
     {
@@ -206,11 +207,13 @@
                 var noteData = await client.SendAsync(User.GetAccessToken(),
                     new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
+                var currentDateTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
-                    SelectedComplianceYear = selectedComplianceYear,
-                    RedirectTab = redirectTab
+                    RedirectTab = redirectTab,
+                    SystemDateTime = currentDateTime
                 });
 
                 return this.View("TransferredEvidence", model);
