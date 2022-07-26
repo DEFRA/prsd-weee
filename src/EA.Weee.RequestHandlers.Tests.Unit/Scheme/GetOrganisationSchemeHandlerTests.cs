@@ -198,14 +198,14 @@
             // arrange 
             var schemeApproved1 = A.Fake<Scheme>();
             var schemeApprovedOrganisationId1 = TestFixture.Create<Guid>();
-            var schemeApprovedName1 = TestFixture.Create<string>();
+            var schemeApprovedName1 = "XXXXXX";
             A.CallTo(() => schemeApproved1.OrganisationId).Returns(schemeApprovedOrganisationId1);
             A.CallTo(() => schemeApproved1.SchemeName).Returns(schemeApprovedName1);
             A.CallTo(() => schemeApproved1.SchemeStatus).Returns(SchemeStatus.Approved);
 
             var schemeApproved2 = A.Fake<Scheme>();
             var schemeApprovedOrganisationId2 = TestFixture.Create<Guid>();
-            var schemeApprovedName2 = TestFixture.Create<string>();
+            var schemeApprovedName2 = "AAAAAAAA";
             A.CallTo(() => schemeApproved2.OrganisationId).Returns(schemeApprovedOrganisationId2);
             A.CallTo(() => schemeApproved2.SchemeName).Returns(schemeApprovedName2);
             A.CallTo(() => schemeApproved2.SchemeStatus).Returns(SchemeStatus.Approved);
@@ -246,10 +246,10 @@
             var result = await handler.HandleAsync(GetRequest(false));
 
             // assert
-            result[0].DisplayName.Should().Be(schemeApprovedName1);
-            result[0].Id.Should().Be(schemeApprovedOrganisationId1);
-            result[1].DisplayName.Should().Be(schemeApprovedName2);
-            result[1].Id.Should().Be(schemeApprovedOrganisationId2);
+            result[1].DisplayName.Should().Be(schemeApprovedName1);
+            result[1].Id.Should().Be(schemeApprovedOrganisationId1);
+            result[0].DisplayName.Should().Be(schemeApprovedName2);
+            result[0].Id.Should().Be(schemeApprovedOrganisationId2);
         }
 
         [Fact]
