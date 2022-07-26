@@ -310,6 +310,7 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\SchemeDataOrganisationMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditDraftReturnedNotesViewModelTests.cs" />
