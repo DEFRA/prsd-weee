@@ -10,7 +10,7 @@
     var controller = ViewData["controller"] as string;
 }
 
-@using (Html.BeginForm(actionName: action, controllerName: controller, method: FormMethod.Post))
+@using (Html.BeginForm(actionName: action, controllerName: controller, method: FormMethod.Post, htmlAttributes: new { id = "tonnages-form-partial" }))
 {
     @Html.AntiForgeryToken()
 
@@ -38,7 +38,6 @@
         }
 
         <div class="govuk-panel-grey-background govuk-!-margin-bottom-5 govuk-!-padding-left-2 govuk-!-padding-right-2">
-
 
             <span class="govuk-label--s" id="reference-label-@i.ToString()">Reference ID&nbsp;</span><span class="govuk-body" aria-labelledby="reference-label-@i.ToString()">@note.ReferenceDisplay</span><br />
             <span class="govuk-label--s" id="received-label-@i.ToString()">WEEE received between&nbsp;</span><span class="govuk-body" aria-labelledby="received-label-@i.ToString()">@note.StartDate.Value.ToShortDateString() - @note.EndDate.Value.ToShortDateString()</span>
@@ -158,6 +157,7 @@
         </tbody>
     </table>
 
+ 
     <div class="govuk-!-margin-top-3">
         <div class="govuk-button-group">
 

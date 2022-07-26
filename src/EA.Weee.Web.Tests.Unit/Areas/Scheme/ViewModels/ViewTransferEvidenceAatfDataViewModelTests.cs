@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
+    using System;
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
@@ -14,6 +15,12 @@
         public ViewTransferEvidenceAatfDataViewModelTests()
         {
             fixture = new Fixture();
+        }
+
+        [Fact]
+        public void ViewTransferEvidenceAatfDataViewModel_ShouldHaveSerializableAttribute()
+        {
+            typeof(ViewTransferEvidenceAatfDataViewModel).Should().BeDecoratedWith<SerializableAttribute>();
         }
 
         [Fact]

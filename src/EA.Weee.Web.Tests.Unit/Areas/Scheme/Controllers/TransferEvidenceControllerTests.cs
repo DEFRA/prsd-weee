@@ -22,6 +22,7 @@
     using System.Web.Mvc;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Prsd.Core.Mediator;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -818,6 +819,19 @@
                     SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task TransferTonnageGet_ExistingTransferTonnageModelShouldBeRetrievedAndThenCleared()
+        {
+            // act
+            await transferEvidenceController.TransferTonnage(organisationId, TestFixture.Create<bool>());
+
+            // assert
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(transferEvidenceController.Session,
+                    SessionKeyConstant.EditTransferTonnageViewModelKey)).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => sessionService.ClearTransferSessionObject(transferEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).MustHaveHappenedOnceExactly());
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -870,12 +884,15 @@
             //arrange
             var request = GetRequest();
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
-
+            
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(
+                        transferEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).Returns(null);
 
             // act
             await transferEvidenceController.TransferTonnage(organisationId, transferAllTonnage);
@@ -886,7 +903,39 @@
                     t.OrganisationId.Equals(organisationId) &&
                     t.TransferAllTonnage.Equals(transferAllTonnage) &&
                     t.Notes.Equals(notes) &&
-                    t.Request.Equals(request)))).MustHaveHappenedOnceExactly();
+                    t.Request.Equals(request) &&
+                    t.ExistingTransferTonnageViewModel == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferTonnageGet_GivenTransferNoteSessionObjectAndNotesAndExistingTonnageViewModel_ModelShouldBeMapped()
+        {
+            //arrange
+            var request = GetRequest();
+            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
+                    SessionKeyConstant.TransferNoteKey)).Returns(request);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
+
+            var existingModel = TestFixture.Create<TransferEvidenceTonnageViewModel>();
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(
+                transferEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).Returns(existingModel);
+            var transferTonnage = TestFixture.Create<bool>();
+
+            // act
+            await transferEvidenceController.TransferTonnage(organisationId, transferTonnage);
+
+            // assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
+                A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
+                    t.OrganisationId.Equals(organisationId) &&
+                    t.TransferAllTonnage.Equals(transferTonnage) &&
+                    t.Notes.Equals(notes) &&
+                    t.Request.Equals(request) &&
+                    t.ExistingTransferTonnageViewModel.Equals(existingModel)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -949,6 +998,40 @@
 
             // assert
             result.ViewName.Should().Be("TransferTonnage");
+        }
+
+        [Fact]
+        public async Task TransferTonnagePost_GivenModelActionIsBack_ShouldRedirectToTransferFromAction()
+        {
+            // arrange 
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(t => t.Action, ActionEnum.Back).Create();
+
+            AddModelError();
+
+            // act
+            var result = await transferEvidenceController.TransferTonnage(model) as RedirectToRouteResult;
+
+            // assert
+            result.RouteValues["action"].Should().Be("TransferFrom");
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+        }
+
+        [Fact]
+        public async Task TransferTonnagePost_GivenModelActionIsBack_NoApiCallShouldBeMade()
+        {
+            // arrange 
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(t => t.Action, ActionEnum.Back).Create();
+
+            AddModelError();
+
+            // act
+            var result = await transferEvidenceController.TransferTonnage(model) as RedirectToRouteResult;
+
+            // assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest>._)).MustNotHaveHappened();
         }
 
         [Fact]

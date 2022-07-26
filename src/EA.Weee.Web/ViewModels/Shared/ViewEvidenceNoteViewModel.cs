@@ -5,6 +5,7 @@
     using Core.AatfEvidence;
     using Extensions;
 
+    [Serializable]
     public class ViewEvidenceNoteViewModel : EvidenceNoteViewModel
     {
         public string SuccessMessage { get; set; }
