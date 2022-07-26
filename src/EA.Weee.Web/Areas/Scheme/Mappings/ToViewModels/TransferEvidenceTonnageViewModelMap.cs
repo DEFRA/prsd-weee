@@ -36,9 +36,31 @@
 
             SetupTonnages(source, model, model.EvidenceNotesDataList);
 
+            SetupExistingValues(source, model);
+
             SetupTotals(source, model);
 
             return model;
+        }
+
+        private void SetupExistingValues(TransferEvidenceNotesViewModelMapTransfer source,
+            TransferEvidenceTonnageViewModel model)
+        {
+            if (source.ExistingTransferTonnageViewModel != null)
+            {
+                foreach (var transferEvidenceCategoryValue in model.TransferCategoryValues)
+                {
+                    var existingValue =
+                        source.ExistingTransferTonnageViewModel.TransferCategoryValues.FirstOrDefault(t =>
+                            t.Id == transferEvidenceCategoryValue.Id);
+
+                    if (existingValue != null)
+                    {
+                        transferEvidenceCategoryValue.Received = existingValue.Received;
+                        transferEvidenceCategoryValue.Reused = existingValue.Reused;
+                    }
+                }
+            }
         }
 
         private void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,

@@ -8,6 +8,7 @@
     using Constant;
     using Core.Helpers;
     using Core.Scheme;
+    using Domain.AatfReturn;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Scheme;
@@ -179,6 +180,13 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> TransferTonnage(TransferEvidenceTonnageViewModel model)
         {
+            if (model.Action == ActionEnum.Back)
+            {
+                sessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferTonnageViewModelKey);
+
+                return RedirectToAction("TransferFrom", "TransferEvidence", new { pcsId = model.PcsId });
+            }
+
             using (var client = this.apiClient())
             {
                 if (ModelState.IsValid)
@@ -236,12 +244,16 @@
                 return null;
             }
 
+            var existingModel = sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
+            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
+
             var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId)
             {
-                TransferAllTonnage = transferAllTonnage
+                TransferAllTonnage = transferAllTonnage,
+                ExistingTransferTonnageViewModel = existingModel
             };
 
             var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
