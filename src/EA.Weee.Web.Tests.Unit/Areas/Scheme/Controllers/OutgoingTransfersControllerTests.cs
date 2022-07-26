@@ -151,7 +151,7 @@
         public void EditDraftTransfer_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -618,7 +618,7 @@
         }
 
         [Fact]
-        public async Task EditDraftTransferGet_ShouldReturnView(int? complianceYear)
+        public async Task EditDraftTransferGet_ShouldReturnView()
         {
             //act
             var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null) as ViewResult;
