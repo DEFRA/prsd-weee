@@ -110,7 +110,7 @@
                             }
                             else if (!viewModel.Dcf && inputTonnage < existingNotDcfTonnage)
                             {
-                                ModelState.AddModelError(string.Empty, $"Catagory {categoryValue.CategoryId} tonnage must be more than or equal to {existingNotDcfTonnage} tonnes");
+                                ModelState.AddModelError(string.Empty, $"Category {categoryValue.CategoryId} tonnage must be more than or equal to {existingNotDcfTonnage} tonnes");
                                 error = true;
                             }
                         }
