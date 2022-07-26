@@ -13,7 +13,7 @@
 @using (Html.BeginForm(actionName: action, controllerName: controller, method: FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-
+    @Html.HiddenFor(m => m.ComplianceYear)
     @Html.HiddenFor(m => m.PcsId)
     if (Model.ViewTransferNoteViewModel != null)
     {

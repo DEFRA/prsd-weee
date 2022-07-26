@@ -5,6 +5,7 @@
     using System.Linq;
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Core.Scheme;
     using Core.Shared;
     using CuttingEdge.Conditions;
@@ -26,13 +27,19 @@
         {
             Condition.Requires(notes).IsNotNull();
 
+            var complianceYear =
+                manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0
+                    ? manageEvidenceNoteViewModel.SelectedComplianceYear
+                    : currentDate.Year;
+
             var m = new T
             {
                 EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes.Results.ToList()),
-                ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
+                ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel
                 {
                     ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
-                    SelectedComplianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year
+                    SelectedComplianceYear = complianceYear,
+                    ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(complianceYear, currentDate)
                 }
             };
 

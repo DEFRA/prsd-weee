@@ -28,6 +28,8 @@
 
         public IList<Guid> SessionEvidenceNotesId { get; set; }
 
+        public int ComplianceYear { get; set; }
+
         public TransferEvidenceNotesViewModelMapTransfer(
             IList<EvidenceNoteData> notes,
             TransferEvidenceNoteRequest request,
@@ -44,7 +46,9 @@
             OrganisationId = organisationId;
         }
 
-        public TransferEvidenceNotesViewModelMapTransfer(IList<EvidenceNoteData> notes,
+        public TransferEvidenceNotesViewModelMapTransfer(
+            int complianceYear,
+            IList<EvidenceNoteData> notes,
             TransferEvidenceNoteRequest request,
             Guid organisationId)
         {
@@ -55,6 +59,7 @@
             Notes = notes;
             Request = request;
             OrganisationId = organisationId;
+            ComplianceYear = complianceYear;
         }
 
         public TransferEvidenceNotesViewModelMapTransfer(TransferEvidenceNoteData transferNoteData,
