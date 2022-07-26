@@ -97,8 +97,16 @@
 
                             if ((viewModel.Dcf && inputTonnage > existingNotDcfTonnage))
                             {
-                                ModelState.AddModelError($"CategoryValues[{categoryValue.CategoryId - 1}].Tonnage", $"Catagory {categoryValue.CategoryId} tonnage must be less than or equal to {existingNotDcfTonnage} tonnes");
-                                error = true;
+                                if (existingNotDcfTonnage == 0)
+                                {
+                                    ModelState.AddModelError($"CategoryValues[{categoryValue.CategoryId - 1}].Tonnage", $"Category {categoryValue.CategoryId} tonnage must be equal to {existingNotDcfTonnage} tonnes");
+                                    error = true;
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError($"CategoryValues[{categoryValue.CategoryId - 1}].Tonnage", $"Category {categoryValue.CategoryId} tonnage must be less than or equal to {existingNotDcfTonnage} tonnes");
+                                    error = true;
+                                }                                
                             }
                             else if (!viewModel.Dcf && inputTonnage < existingNotDcfTonnage)
                             {
