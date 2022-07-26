@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Aatf;
     using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
@@ -22,16 +23,19 @@
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
 
         public EditEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess evidenceDataAccess,
             ISystemDataDataAccess systemDataDataAccess, 
-            IGenericDataAccess genericDataAccess)
+            IGenericDataAccess genericDataAccess, 
+            IAatfDataAccess aatfDataAccess)
         {
             this.authorization = authorization;
             this.evidenceDataAccess = evidenceDataAccess;
             this.systemDataDataAccess = systemDataDataAccess;
             this.genericDataAccess = genericDataAccess;
+            this.aatfDataAccess = aatfDataAccess;
         }
 
         public async Task<Guid> HandleAsync(EditEvidenceNoteRequest message)
@@ -57,7 +61,9 @@
                 throw new InvalidOperationException($"Evidence note {evidenceNote.Id} is incorrect state to be edited");
             }
 
-            AatfIsValidToSave(evidenceNote.Aatf, currentDate);
+            var complianceYearAatf = await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(evidenceNote.Aatf.AatfId, message.StartDate.Year);
+
+            AatfIsValidToSave(complianceYearAatf, currentDate);
 
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
                 (WeeeCategory)t.CategoryId,
