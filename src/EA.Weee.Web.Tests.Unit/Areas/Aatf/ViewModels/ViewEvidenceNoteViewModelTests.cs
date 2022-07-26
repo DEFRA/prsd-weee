@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
 {
+    using System;
     using System.ComponentModel;
     using Core.AatfEvidence;
     using Core.Tests.Unit.Helpers;
@@ -11,6 +12,12 @@
 
     public class ViewEvidenceNoteViewModelTests
     {
+        [Fact]
+        public void ViewEvidenceNoteViewModel_ShouldHaveSerializableAttribute()
+        {
+            typeof(ViewEvidenceNoteViewModel).Should().BeDecoratedWith<SerializableAttribute>();
+        }
+
         [Fact]
         public void ViewEvidenceNoteViewModel_ShouldBeDerivedFromEvidenceNoteViewModel()
         {

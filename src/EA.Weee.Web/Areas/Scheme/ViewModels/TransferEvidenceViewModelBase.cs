@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Web.ViewModels.Shared;
 
+    [Serializable]
     public abstract class TransferEvidenceViewModelBase
     {
         public Guid PcsId { get; set; }

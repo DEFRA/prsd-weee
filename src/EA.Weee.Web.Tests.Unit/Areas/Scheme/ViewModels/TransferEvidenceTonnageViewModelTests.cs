@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
+    using System;
     using System.ComponentModel;
     using EA.Weee.Web.Areas.Aatf.Attributes;
     using FluentAssertions;
@@ -8,6 +9,12 @@
 
     public class TransferEvidenceTonnageViewModelTests
     {
+        [Fact]
+        public void TransferEvidenceTonnageViewModel_ShouldHaveSerializableAttribute()
+        {
+            typeof(TransferEvidenceTonnageViewModel).Should().BeDecoratedWith<SerializableAttribute>();
+        }
+
         [Fact]
         public void TransferEvidenceTonnageViewModel_ShouldBeDerivedFrom_TransferEvidenceViewModelBase()
         {
