@@ -31,8 +31,11 @@
                 ManageEvidenceNoteViewModel = source.ManageEvidenceNoteViewModel
             };
 
-            model.ManageEvidenceNoteViewModel.ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate);
-            model.ManageEvidenceNoteViewModel.SelectedComplianceYear = complianceYear;
+            if (model.ManageEvidenceNoteViewModel != null)
+            {
+                model.ManageEvidenceNoteViewModel.ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate);
+                model.ManageEvidenceNoteViewModel.SelectedComplianceYear = complianceYear;
+            }
 
             return model;
         }
