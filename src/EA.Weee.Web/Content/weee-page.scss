@@ -18,9 +18,9 @@ a {
     margin-bottom: ($govuk-gutter*1.5);
 }
 
-#global-cookie-message {
+#global-cookie-message, #global-cookie-accept-message, #global-cookie-reject-message {
     width: 100%;
-    background-color: #d5e8f3;
+    background-color: #f3f2f1;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -30,36 +30,309 @@ a {
     visibility: hidden;
 }
 
-#global-header-bar, #global-cookie-message p {
+#global-header-bar, 
+#global-cookie-message p, 
+#global-cookie-accept-message p, 
+#global-cookie-reject-message p {
     max-width: 960px;
     margin: 0 15px;
 }
 
 @media (min-width: 641px) {
-    #global-cookie-message p {
+    #global-cookie-message p, 
+    #global-cookie-accept-message p, 
+    #global-cookie-reject-message p {
         margin: 0 30px;
     }
 }
 
 
 @media (min-width: 1020px) {
-    #global-cookie-message p {
+    #global-cookie-message p, 
+    #global-cookie-accept-message p, 
+    #global-cookie-reject-message p {
         margin: 0 auto;
     }
 }
 
-#global-cookie-message p {
-    font-family: $govuk-font-family;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
 .js-enabled #global-cookie-message {
     display: none;
+}
+
+#global-cookie-message-p1 {
+    font-size: 20px;
+    font-weight: 700;
+    font-style: normal;
+    margin-bottom: 10px !important;
+}
+
+#global-cookie-message-p2, #global-cookie-message-p3, #global-cookie-message-p4 {
+    font-size: 15px;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 10px !important;
+}
+
+// Example boxes
+// ==========================================================================
+.example {
+    @include govuk-clearfix;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid govuk-colour('grey-2');
+    margin-top: $govuk-gutter-half;
+    margin-bottom: $govuk-gutter*1.5;
+    padding-top: $govuk-gutter;
+    padding-right: $govuk-gutter-half;
+    padding-bottom: $govuk-gutter-half;
+    padding-left: $govuk-gutter-half;
+
+    @include govuk-media-query($from: tablet) {
+        padding-top: $govuk-gutter*1.5;
+        padding-right: $govuk-gutter;
+        padding-bottom: $govuk-gutter;
+        padding-left: $govuk-gutter;
+    }
+
+    &:before {
+        content: "EXAMPLE";
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: em(4) em(15) em(4) em(15);
+
+        @include govuk-font(14);
+        background: govuk-colour('grey-2');
+        color: white;
+    }
+    // Blue text for heading sizes
+    .highlight {
+        font-style: normal;
+        color: govuk-colour-organisations('hm-government');
+    }
+    // Fix grid layout within example boxes for IE7 and below
+    // where box-sizing isn't supported: http://caniuse.com/#search=box-sizing
+    @mixin example-box-column($width) {
+        width: (($govuk-page-width - $govuk-gutter) * $width) - $govuk-gutter;
+    }
+
+    @include ie-lte(7) {
+        // Set example box width to 900px (removing left and right padding)
+        $example-box-width: $govuk-page-width - ($govuk-gutter * 2);
+        width: $example-box-width;
+        // Recalculate grid column widths
+        .column-quarter {
+            @include example-box-column( 1/4 );
+        }
+
+        .column-one-half {
+            @include example-box-column( 1/2 );
+        }
+
+        .column-third {
+            @include example-box-column( 1/3 );
+        }
+
+        .column-two-thirds {
+            @include example-box-column( 2/3 );
+        }
+        // Scale images to fit grid columns
+        img {
+            width: 100%;
+        }
+    }
+}
+
+
+// 1. Layout
+// ==========================================================================
+
+.example-grid p {
+    width: 100%;
+    background: file-url("examples/grid.png") 0 0 repeat;
+    margin-bottom: 0;
+    height: 30px;
+
+    @include govuk-media-query($from: tablet) {
+        height: 60px;
+    }
+
+    overflow: hidden;
+    text-indent: -999em;
+}
+
+// 2. Typography
+// ==========================================================================
+
+
+// 3. Colour
+// ==========================================================================
+
+// Colour swatches
+.swatch {
+    width: 60px;
+    height: 60px;
+    @include border-radius(100%);
+
+    @include govuk-media-query($from: mobile) {
+        clear: both;
+        float: left;
+        margin-right: $govuk-gutter-half;
+        margin-bottom: $govuk-gutter-half;
+    }
+
+    @include govuk-media-query($from: tablet) {
+        margin: 0 auto $govuk-gutter-half auto;
+    }
+}
+
+$palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-purple')), ("fuschia", govuk-colour('bright-purple')), ("pink", govuk-colour('pink')), ("baby-pink", govuk-colour('light-pink')), ("red", govuk-colour('red')), ("mellow-red", govuk-colour('bright-red')), ("orange", govuk-colour('orange')), ("brown", govuk-colour('brown')), ("yellow", govuk-colour('yellow')), ("green", govuk-colour('green')), ("grass-green", govuk-colour('light-green')), ("turquoise", govuk-colour('turquoise')), ("light-blue", govuk-colour('light-blue')) );
+
+@mixin color-swatches {
+    @each $color in $palette {
+        $color-name: nth($color, 1);
+        $color-var: nth($color, 2);
+
+        .swatch-#{$color-name} {
+            background-color: $color-var;
+        }
+    }
+}
+
+@include color-swatches;
+
+.swatch-alpha {
+    background-color: govuk-colour('pink');
+}
+
+.swatch-beta {
+    background-color: govuk-colour('orange');
+}
+
+.swatch-discovery {
+    background-color: govuk-colour('bright-purple');
+}
+
+.swatch-live {
+    background-color: govuk-colour('light-green');
+}
+
+.swatch-error {
+    background-color: govuk-colour('red');
+}
+
+.swatch-focus {
+    background-color: govuk-colour('yellow');
+}
+
+.swatch-button-colour {
+    background-color: $govuk-button-colour;
+}
+
+.swatch-black {
+    background-color: govuk-colour('black');
+}
+
+.swatch-grey-1 {
+    background-color: govuk-colour('grey-1');
+}
+
+.swatch-grey-2 {
+    background-color: govuk-colour('grey-2');
+}
+
+.swatch-grey-3 {
+    //background-color: govuk-colour('grey-3');
+}
+
+.swatch-grey-4 {
+    background-color: govuk-colour('grey-4');
+}
+
+.swatch-white {
+    background-color: govuk-colour('white');
+    border: 1px solid govuk-colour('grey-3');
+}
+
+.swatch-text-colour {
+    background-color: $govuk-text-colour;
+}
+
+.swatch-text-secondary {
+    background-color: $govuk-secondary-text-colour;
+}
+
+.swatch-page-colour {
+    background-color: govuk-colour('white');
+    border: 1px solid govuk-colour('grey-3');
+}
+
+.swatch-button-colour {
+    background-color: $govuk-button-colour;
+}
+
+.swatch-link-colour {
+    background-color: $govuk-link-colour;
+}
+
+.swatch-link-colour-visited {
+    background-color: $govuk-link-visited-colour;
+}
+
+.swatch-link-colour-hover {
+    background-color: $govuk-link-hover-colour;
+}
+
+.swatch-border-colour {
+    background-color: $govuk-border-colour;
+}
+
+.swatch-panel-colour {
+    background-color: govuk-colour('grey-3');
+}
+
+.swatch-highlight-colour {
+    background-color: govuk-colour('grey-4');
+}
+
+// Colour swatch layout
+.swatch-wrapper {
+    @include govuk-media-query($from: tablet) {
+        float: left;
+        width: 20%;
+        text-align: center;
+    }
+
+    .govuk-heading-s {
+        margin-bottom: em(10);
+    }
+
+    ul {
+        padding-bottom: $govuk-gutter-half;
+
+        @include govuk-media-query($from: mobile) {
+            min-height: 50px;
+            padding-top: 10px;
+        }
+    }
+
+    li {
+        @include govuk-font(16);
+    }
+
+    b {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+}
+
+
+// 4. Images and icons
+// ==========================================================================
+
+.example-images img {
+    max-width: 100%;
+    vertical-align: top;
 }
 
 th.sorted-ascending, th.sorted-descending {
@@ -643,4 +916,131 @@ input[type="search"][value="dark"]::-webkit-search-cancel-button {
 input[type="search"]:focus::-webkit-search-cancel-button {
     opacity: .3;
     pointer-events: all;
+}
+}
+
+.cookie-settings-confirmation {
+    font-size: 16px;
+    line-height: 1.3157894737;
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    line-height: 1.25;
+    display: none;
+}
+
+.govuk-notification-banner-success {
+    border-color: #00703c;
+    background-color: #00703c;
+}
+
+.govuk-notification-banner {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+    margin-bottom: 30px;
+    border: 5px solid #00703c;
+    background-color: #00703c;
+}
+
+.govuk-notification-banner-header {
+    padding: 2px 15px 5px;
+    border-bottom: 1px solid transparent;
+}
+
+.govuk-notification-banner-heading {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.1111111111;
+    margin: 0 0 15px 0;
+    padding: 0;
+}
+
+.govuk-notification-banner-title {
+    font-size: 19px;
+    line-height: 1.3157894737;
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.govuk-notification-banner-content {
+    color: #0b0c0c;
+    padding: 15px;
+    background-color: #fff;
+}
+
+.govuk-notification-banner-success,
+.govuk-notification-banner-link:link,
+.govuk-notification-banner-success,
+.govuk-notification-banner-link:visited {
+    color: #00703c;
+}
+
+.govuk-body, .govuk-body-m {
+    color: #0b0c0c;
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.25;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.previousPage {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: underline;
+    font-size: 18px !important;
+    color: #005ea5 !important;
+}
+
+#tbSessionCookies th, #tbSessionCookies td,
+#tbGoogleAnalytics th, #tbGoogleAnalytics td,
+#tbIntroductoryCookies th, #tbIntroductoryCookies td{
+    line-height: 1.31579 !important;
+    font-size: 16px !important;
+}
+
+.cookietbColumnWidth1 {
+    width: 25% !important;
+}
+
+.cookietbColumnWidth2 {
+    width: 55% !important;
+}
+
+.cookietbColumnWidth3 {
+    width: 20% !important;
+}
+
+#dvAccessibility1 ul li,
+#dvAccessibility2 ul li,
+#dvAccessibility3 ul li {
+    margin-bottom: 15px !important;
+}
+
+.accessibility-l{
+    padding-top: 0px !important;
+    margin-bottom : 15px !important;
+}
+
+#dvAccessbility a:visited {
+    color: #005ea5 !important;
 }

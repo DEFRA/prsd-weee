@@ -34,16 +34,50 @@
     </script>
 
     @RenderSection("body_start", required: false)
-    
+
     <div id="skiplink-container">
-        <a href="#main-content" class="govuk-skip-link skiplink" data-module="govuk-skip-link">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
+        <div>
+            <a href="#main-content" class="govuk-skip-link skiplink">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
+        </div>
     </div>
-        
-    <div id="global-cookie-message" class="govuk-cookie-banner " data-nosnippet role="region" aria-label="Cookies on your service">
-        @Html.Raw(ViewBag.CookieMessage ?? "<p>" + @Html.ActionLink("GOV.UK uses cookies to make the site simpler. Find out more about cookies", "Cookies", "NewUser", new { area = string.Empty }, new { rel = "external" }) + "</p>")
+
+    <!--start global-cookie-message-->
+    <div id="global-cookie-message" style="display:none;" class="govuk-cookie-banner " data-nosnippet role="region" aria-label="Cookies on your service">
+        <p id="global-cookie-message-p1">
+            Cookies on Waste Electrical and Electronic Equipment (WEEE)
+        </p>
+        <p id="global-cookie-message-p2">
+            We use some essential cookies to make this service work.
+        </p>
+        <p id="global-cookie-message-p3">
+            In addition, we'd like to use analytics cookies so we can understand how you use the service and make improvements. We also use some essential cookies to remember your chosen settings for analytics cookies.
+        </p>
+        <p id="#global-cookie-message-p4">
+            <input type="submit" id="acceptCookies" value="Accept additional cookies" class="govuk-cookie-button">
+            <input type="submit" id="rejectCookies" value="Reject additional cookies" class="govuk-cookie-button">
+            @Html.ActionLink("View cookies", "Cookies", "NewUser", new { area = string.Empty }, null)
+        </p>
+    </div>
+
+    <div id="global-cookie-accept-message" style="display:none;">
+        <p id="global-cookie-message-p2">
+            You have accepted additional cookies. You can @Html.ActionLink("change your cookie settings", "Cookies", "NewUser", new { area = string.Empty }, null) at any time.
+        </p>
+        <p>
+            <input type="submit" id="hideAcceptCookies" value="Hide this message" class="govuk-cookie-button">
+        </p>
+    </div>
+
+    <div id="global-cookie-reject-message" style="display:none;">
+        <p id="global-cookie-message-p2">
+            You have rejected additional cookies. You can @Html.ActionLink("change your cookie settings", "Cookies", "NewUser", new { area = string.Empty }, null) at any time.
+        </p>
+        <p>
+            <input type="submit" id="hideRejectCookies" value="Hide this message" class="govuk-cookie-button">
+        </p>
     </div>
     <!--end global-cookie-message-->
-    <!--end header-->
+
 
     <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
@@ -107,3 +141,101 @@
 </body>
 
 </html>
+
+<script>
+    var cookieConsent = GOVUK.getCookie("weee-cookie-consent");
+
+    if (cookieConsent === null || cookieConsent === "null") {
+        document.getElementById("global-cookie-message").style.display = "block";
+    } else if (cookieConsent !== null && cookieConsent === 'yes') {
+        loadAnalytics();
+    } else {
+        document.getElementById("global-cookie-message").style.display = "none";
+    }
+
+    $("#acceptCookies").click(function () {
+        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 365 });
+        loadAnalytics();
+        document.getElementById("global-cookie-message").style.display = "none";
+        document.getElementById("global-cookie-accept-message").style.display = "block";
+    });
+
+    $("#rejectCookies").click(function () {
+        GOVUK.cookie('weee-cookie-consent', 'no', { days: 365 });
+        document.getElementById("global-cookie-message").style.display = "none";
+        GOVUK.cookie('_ga', null);
+        GOVUK.cookie('_gid', null);
+        GOVUK.cookie('_gat', null);
+        GOVUK.cookie('_gat_govuk_shared', null);
+        document.getElementById("global-cookie-reject-message").style.display = "block";
+    });
+
+    $("#hideAcceptCookies").click(function () {
+        document.getElementById("global-cookie-accept-message").style.display = "none";
+    });
+
+    $("#hideRejectCookies").click(function () {
+        document.getElementById("global-cookie-reject-message").style.display = "none";
+    });
+
+    function loadAnalytics() {
+        var googleAnalyticsAccountId = String("@System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GoogleAnalyticsAccountId"].ToString()");
+
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', googleAnalyticsAccountId, 'auto');
+        ga('create', 'UA-145652997-1', 'auto', 'govuk_shared', { 'allowLinker': true });
+        ga('govuk_shared.require', 'linker');
+        ga('govuk_shared.linker.set', 'anonymizeIp', true);
+        ga('govuk_shared.linker.set', 'allowAdFeatures', false);
+        ga('govuk_shared.linker:autoLink', ['www.gov.uk', 'www.nationalarchives.gov.uk', 'www.daera-ni.gov.uk', 'www.data.gov.uk']);
+        ga('send', 'pageview');
+        ga('govuk_shared.send', 'pageview');
+    }
+
+    var element = document.getElementById('saveCookieChoice');
+    if (typeof (element) != 'undefined' && element != null) {
+        if (cookieConsent && cookieConsent === "yes") {
+            document.getElementById("cookieChoiceYes").checked = true;
+        } else {
+            document.getElementById("cookieChoiceNo").checked = true;
+        }
+    }
+
+    function acceptCookies() {
+        GOVUK.cookie('weee-cookie-consent', 'yes', { days: 365 });
+        loadAnalytics();
+        document.getElementById("global-cookie-message").style.display = "none";
+    }
+
+    function rejectCookies() {
+        GOVUK.cookie('weee-cookie-consent', 'no', { days: 365 });
+        document.getElementById("global-cookie-message").style.display = "none";
+        GOVUK.cookie('_ga', null);
+        GOVUK.cookie('_gid', null);
+        GOVUK.cookie('_gat', null);
+        GOVUK.cookie('_gat_govuk_shared', null);
+    }
+
+    function setCookieChoice() {
+        if (document.getElementById("cookieChoiceYes").checked === false &&
+            document.getElementById("cookieChoiceNo").checked === false) {
+            return;
+        }
+
+        if (document.getElementById("cookieChoiceYes").checked) {
+            acceptCookies();
+        } else {
+            rejectCookies();
+        }
+
+        window.scrollTo({ top: 0 });
+        document.getElementById("dvSuccessMessage").style.display = "block";
+        document.getElementById("global-cookie-accept-message").style.display = "none";
+        document.getElementById("global-cookie-reject-message").style.display = "none";
+    }
+</script>
