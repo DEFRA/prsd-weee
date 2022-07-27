@@ -127,6 +127,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
