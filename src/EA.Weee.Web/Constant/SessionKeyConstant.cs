@@ -4,8 +4,10 @@
     {
         public static string TransferNoteKey = "transferNote";
         public static string EditEvidenceViewModelKey = "editEvidenceNoteViewModel";
+        public static string EditTransferTonnageViewModelKey = "editTransferTonnageViewModel";
         public static string FilterRecipientNameKey = "filterRecipientNameKey";
-        public static string AatfSelectedComplianceYear = "selectedComplianceYear";
+        public static string AatfSelectedComplianceYear = "aatfSelectedComplianceYear";
+        public static string SchemeSelectedComplianceYear = "schemeSelectedComplianceYear";
         public static string AASelectedComplianceYear = "selectedComplianceYearAdmin";
     }
 }

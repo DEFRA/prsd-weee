@@ -8,11 +8,11 @@
 
 <section class="govuk-tabs__panel" id="pcsDetails">
     <h2 class="govuk-heading-m">
-        Review submitted evidence notes
+        Review submitted evidence
     </h2>
 
     <table id="submitted-evidence-notes-table" class="govuk-table">
-        <caption class="govuk-table__caption govuk-visually-hidden">Review submitted evidence notes</caption>
+        <caption class="govuk-table__caption govuk-visually-hidden">Review submitted evidence</caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header">
@@ -52,7 +52,7 @@
                     <td class="govuk-table__cell">
                         @if (note.Type == NoteType.Evidence)
                         {
-                            if (!Model.IsWithdrawn)
+                            if (Model.CanSchemeManageEvidence)
                             {
                                 if (Model.SchemeInfo != null)
                                 {
@@ -66,7 +66,7 @@
                         }
                         else
                         {
-                            if (!Model.IsWithdrawn)
+                            if (Model.CanSchemeManageEvidence)
                             {
                                 @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
                             }

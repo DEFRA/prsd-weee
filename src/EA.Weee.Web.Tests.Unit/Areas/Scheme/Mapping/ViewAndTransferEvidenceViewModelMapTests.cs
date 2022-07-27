@@ -210,12 +210,16 @@
 
         [Theory]
         [ClassData(typeof(SchemeStatusCoreData))]
-        public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithdrawn_DisplayTransferButtonShouldBeSetToTrue(SchemeStatus status)
+        public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithdrawnAndComplianceWindowIsOpen_DisplayTransferButtonShouldBeSetToTrue(SchemeStatus status)
         {
             if (status == SchemeStatus.Withdrawn)
             {
                 return;
             }
+
+            var currentDate = new DateTime(2022, 1, 1);
+            var manageEvidenceModel = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2022).Create();
 
             //arrange
             var notes = new List<EvidenceNoteData>
@@ -231,9 +235,42 @@
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(TestFixture.Create<Guid>(),
                 noteData,
-                scheme, 
-                TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>()));
+                scheme,
+                currentDate,
+                manageEvidenceModel));
+
+            //assert
+            result.DisplayTransferButton.Should().BeTrue();
+        }
+
+        [Theory]
+        [ClassData(typeof(SchemeStatusCoreData))]
+        public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithdrawnAndComplianceWindowIsOpenAndExistingModelIsNull_DisplayTransferButtonShouldBeSetToTrue(SchemeStatus status)
+        {
+            if (status == SchemeStatus.Withdrawn)
+            {
+                return;
+            }
+
+            var currentDate = new DateTime(2022, 1, 1);
+          
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+            };
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.Status, status)
+                .Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.Results, notes).Create();
+
+            //act
+            var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(TestFixture.Create<Guid>(),
+                noteData,
+                scheme,
+                currentDate,
+                null));
 
             //assert
             result.DisplayTransferButton.Should().BeTrue();
@@ -243,6 +280,9 @@
         public void Map_GivenApprovedEvidenceNotesAndSchemeIsWithDrawn_DisplayTransferButtonShouldBeSetToFalse()
         {
             //arrange
+            var currentDate = new DateTime(2022, 1, 1);
+            var manageEvidenceModel = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2022).Create();
             var notes = new List<EvidenceNoteData>
             {
                 TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
@@ -256,8 +296,8 @@
             var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(TestFixture.Create<Guid>(),
                 noteData,
                 scheme,
-                TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>()));
+                currentDate,
+                manageEvidenceModel));
 
             //assert
             result.DisplayTransferButton.Should().BeFalse();
