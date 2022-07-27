@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -47,7 +48,7 @@
         {
             //arrange
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
-            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, SystemTime.Now);
 
             //act
             map.Map(source);
@@ -63,7 +64,7 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
                 .With(e => e.Results, new List<EvidenceNoteData>()).Create();
 
-            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, SystemTime.Now);
 
             //act
             var result = map.Map(source);

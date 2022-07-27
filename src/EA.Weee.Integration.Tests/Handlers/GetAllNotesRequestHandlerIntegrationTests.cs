@@ -28,6 +28,8 @@
             {
                 LocalSetup();
 
+                var complianceYear = fixture.Create<int>();
+
                 var evidenceWithApprovedStatus = EvidenceNoteDbSetup.Init()
                  .With(n =>
                  {
@@ -69,11 +71,13 @@
                 notesSet.Add(evidenceWithReturnedStatus);
                 notesSet.Add(evidenceWithRejectedStatus);
                 notesSet.Add(evidenceWithVoidStatus);
+
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear);
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotesInternal(noteTypeFilter, allowedStatuses))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
             private readonly It shouldReturnListOfEvidenceNotes = () =>
@@ -112,11 +116,13 @@
 
                 notesSet.Add(evidenceWithDraftStatus1);
                 notesSet.Add(evidenceWithDraftStatus2);
+
+                request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
             private readonly It shouldReturnEmptyListOfEvidenceNotes = () =>
@@ -141,6 +147,7 @@
             protected static List<NoteType> noteTypeFilterForTransferNote;
             protected static IRequestHandler<GetAllNotesInternal, EvidenceNoteSearchDataResult> handler;
             protected static Fixture fixture;
+            protected static GetAllNotesInternal request;
 
             public static void LocalSetup()
             {
