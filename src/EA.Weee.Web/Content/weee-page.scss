@@ -79,7 +79,7 @@ a {
     @include govuk-clearfix;
     position: relative;
     overflow: hidden;
-    border: 1px solid govuk-colour('grey-2');
+    border: 1px solid govuk-colour('mid-grey');
     margin-top: $govuk-gutter-half;
     margin-bottom: $govuk-gutter*1.5;
     padding-top: $govuk-gutter;
@@ -102,7 +102,7 @@ a {
         padding: em(4) em(15) em(4) em(15);
 
         @include govuk-font(14);
-        background: govuk-colour('grey-2');
+        background: govuk-colour('mid-grey');
         color: white;
     }
     // Blue text for heading sizes
@@ -234,11 +234,11 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
 }
 
 .swatch-grey-1 {
-    background-color: govuk-colour('grey-1');
+    background-color: govuk-colour('dark-grey');
 }
 
 .swatch-grey-2 {
-    background-color: govuk-colour('grey-2');
+    background-color: govuk-colour('mid-grey');
 }
 
 .swatch-grey-3 {
@@ -246,12 +246,12 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
 }
 
 .swatch-grey-4 {
-    background-color: govuk-colour('grey-4');
+    background-color: govuk-colour('light-grey');
 }
 
 .swatch-white {
     background-color: govuk-colour('white');
-    border: 1px solid govuk-colour('grey-3');
+    border: 1px solid govuk-colour('mid-grey');
 }
 
 .swatch-text-colour {
@@ -264,7 +264,7 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
 
 .swatch-page-colour {
     background-color: govuk-colour('white');
-    border: 1px solid govuk-colour('grey-3');
+    border: 1px solid govuk-colour('mid-grey');
 }
 
 .swatch-button-colour {
@@ -288,11 +288,11 @@ $palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-pu
 }
 
 .swatch-panel-colour {
-    background-color: govuk-colour('grey-3');
+    background-color: govuk-colour('mid-grey');
 }
 
 .swatch-highlight-colour {
-    background-color: govuk-colour('grey-4');
+    background-color: govuk-colour('mid-grey');
 }
 
 // Colour swatch layout
