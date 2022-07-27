@@ -41,6 +41,7 @@
             {
                 NoteTypeFilter = message.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
+                ComplianceYear = message.ComplianceYear
             };
 
             var noteData = await noteDataAccess.GetAllNotes(noteFilter);
