@@ -8,6 +8,7 @@
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
 
+    [Serializable]
     public class TransferEvidenceTonnageViewModel : TransferEvidenceViewModelBase, IActionModel
     {
         [DisplayName("Transfer all available tonnage from all notes that you have selected")]

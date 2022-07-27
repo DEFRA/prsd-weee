@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using AutoFixture;
+    using Core.Scheme;
+    using Core.Shared;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -110,7 +112,6 @@
             //assert
             model.SchemeId.Should().Be(source.OrganisationId);
             model.EvidenceNoteId.Should().Be(source.TransferEvidenceNoteData.Id);
-            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
             model.EditMode.Should().Be(editMode);
         }
 
@@ -296,7 +297,6 @@
             model.ComplianceYear.Should().Be(source.TransferEvidenceNoteData.ComplianceYear);
             model.ReturnToView.Should().Be(source.ReturnToView.Value);
             model.EditMode.Should().Be(source.Edit);
-            model.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
             model.Reference.Should().Be(source.TransferEvidenceNoteData.Reference);
             model.Type.Should().Be(source.TransferEvidenceNoteData.Type);
             model.Status.Should().Be(source.TransferEvidenceNoteData.Status);
@@ -484,7 +484,7 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedAndOrganisationIsTransferOrganisation_DisplayEditButtonShouldBeTrue(NoteStatus status)
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedAndOrganisationIsTransferOrganisationAndSchemeIsValid_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
             if (status != NoteStatus.Draft && status != NoteStatus.Returned)
             {
@@ -492,13 +492,22 @@
             }
 
             var transferOrganisationId = TestFixture.Create<Guid>();
-
+            var date = new DateTime(2022, 1, 1);
             var source = new ViewTransferNoteViewModelMapTransfer(transferOrganisationId,
                 TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.Status, status)
-                    .With(x => x.TransferredOrganisationData, TestFixture.Build<OrganisationData>().With(o => o.Id, transferOrganisationId).Create())
+                    .With(x => x.ComplianceYear, date.Year)
+                    .With(x => x.TransferredSchemeData, TestFixture.Build<SchemeData>().With(s => s.SchemeStatus, SchemeStatus.Approved).Create())
+                    .With(x => x.TransferredOrganisationData, 
+                        TestFixture.Build<OrganisationData>()
+                            .With(o => o.Id, transferOrganisationId)
+                            .With(o => o.IsBalancingScheme, false)
+                            .Create())
                     .Create(),
-                false);
+                false)
+            {
+                SystemDateTime = date
+            };
 
             //act
             var model = map.Map(source);
@@ -509,7 +518,7 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedButOrganisationIsNotTransferOrganisation_DisplayEditButtonShouldBeFalse(NoteStatus status)
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedButOrganisationIsNotTransferOrganisationAndSchemeIsValid_DisplayEditButtonShouldBeFalse(NoteStatus status)
         {
             if (status != NoteStatus.Draft && status != NoteStatus.Returned)
             {
@@ -517,19 +526,164 @@
             }
 
             var transferOrganisationId = TestFixture.Create<Guid>();
-
+            var date = new DateTime(2022, 1, 1);
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.Status, status)
-                    .With(x => x.TransferredOrganisationData, TestFixture.Build<OrganisationData>().With(o => o.Id, transferOrganisationId).Create())
+                    .With(x => x.ComplianceYear, date.Year)
+                    .With(x => x.TransferredSchemeData, TestFixture.Build<SchemeData>().With(s => s.SchemeStatus, SchemeStatus.Approved).Create())
+                    .With(x => x.TransferredOrganisationData,
+                        TestFixture.Build<OrganisationData>()
+                            .With(o => o.Id, transferOrganisationId)
+                            .With(o => o.IsBalancingScheme, false)
+                            .Create())
                     .Create(),
-                false);
+                false)
+            {
+                SystemDateTime = date
+            };
 
             //act
             var model = map.Map(source);
 
             //assert
             model.DisplayEditButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationButSchemeIsWithdrawn_DisplayEditButtonShouldBeFalse(NoteStatus status)
+        {
+            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            {
+                return;
+            }
+
+            var transferOrganisationId = TestFixture.Create<Guid>();
+            var date = new DateTime(2022, 1, 1);
+            var source = new ViewTransferNoteViewModelMapTransfer(transferOrganisationId,
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.Status, status)
+                    .With(x => x.ComplianceYear, date.Year)
+                    .With(x => x.TransferredSchemeData, TestFixture.Build<SchemeData>().With(s => s.SchemeStatus, SchemeStatus.Withdrawn).Create())
+                    .With(x => x.TransferredOrganisationData,
+                        TestFixture.Build<OrganisationData>()
+                            .With(o => o.Id, transferOrganisationId)
+                            .With(o => o.IsBalancingScheme, false)
+                            .Create())
+                    .Create(),
+                false)
+            {
+                SystemDateTime = date
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.DisplayEditButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationButSchemeOutOfComplianceYear_DisplayEditButtonShouldBeFalse(NoteStatus status)
+        {
+            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            {
+                return;
+            }
+
+            var transferOrganisationId = TestFixture.Create<Guid>();
+            var date = new DateTime(2023, 2, 1);
+            var source = new ViewTransferNoteViewModelMapTransfer(transferOrganisationId,
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.Status, status)
+                    .With(x => x.ComplianceYear, date.Year - 1)
+                    .With(x => x.TransferredSchemeData, TestFixture.Build<SchemeData>().With(s => s.SchemeStatus, SchemeStatus.Approved).Create())
+                    .With(x => x.TransferredOrganisationData,
+                        TestFixture.Build<OrganisationData>()
+                            .With(o => o.Id, transferOrganisationId)
+                            .With(o => o.IsBalancingScheme, false)
+                            .Create())
+                    .Create(),
+                false)
+            {
+                SystemDateTime = date
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.DisplayEditButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationAndOrganisationIsBalancingSchemeOutOfComplianceYear_DisplayEditButtonShouldBeFalse(NoteStatus status)
+        {
+            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            {
+                return;
+            }
+
+            var transferOrganisationId = TestFixture.Create<Guid>();
+            var date = new DateTime(2023, 2, 1);
+            var source = new ViewTransferNoteViewModelMapTransfer(transferOrganisationId,
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.Status, status)
+                    .With(x => x.ComplianceYear, date.Year - 1)
+                    .With(x => x.TransferredSchemeData, TestFixture.Build<SchemeData>().With(s => s.SchemeStatus, SchemeStatus.Approved).Create())
+                    .With(x => x.TransferredOrganisationData,
+                        TestFixture.Build<OrganisationData>()
+                            .With(o => o.Id, transferOrganisationId)
+                            .With(o => o.IsBalancingScheme, true)
+                            .Create())
+                    .Create(),
+                false)
+            {
+                SystemDateTime = date
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.DisplayEditButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationButOrganisationIsBalancignScheme_DisplayEditButtonShouldBeTrue(NoteStatus status)
+        {
+            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            {
+                return;
+            }
+
+            var transferOrganisationId = TestFixture.Create<Guid>();
+            var date = new DateTime(2022, 2, 1);
+            var source = new ViewTransferNoteViewModelMapTransfer(transferOrganisationId,
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.Status, status)
+                    .With(x => x.ComplianceYear, date.Year)
+                    .With(x => x.TransferredSchemeData, TestFixture.Build<SchemeData>().With(s => s.SchemeStatus, SchemeStatus.Withdrawn).Create())
+                    .With(x => x.TransferredOrganisationData,
+                        TestFixture.Build<OrganisationData>()
+                            .With(o => o.Id, transferOrganisationId)
+                            .With(o => o.IsBalancingScheme, true)
+                            .Create())
+                    .Create(),
+                false)
+            {
+                SystemDateTime = date
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.DisplayEditButton.Should().BeTrue();
         }
 
         private OrganisationData CreateOrganisationData()

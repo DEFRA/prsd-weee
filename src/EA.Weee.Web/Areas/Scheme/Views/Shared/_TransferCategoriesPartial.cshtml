@@ -4,6 +4,7 @@
 
 @Html.AntiForgeryToken()
 @Html.HiddenFor(m => m.OrganisationId)
+@Html.HiddenFor(m => m.ComplianceYear)
 
 <div class="govuk-form-group govuk-!-width-one-half @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
     @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m" })
@@ -21,7 +22,6 @@
         <div class="govuk-!-padding-top-5"></div>
         @for (var i = 0; i < Model.CategoryBooleanViewModels.Count; i++)
         {
-
             @Html.HiddenFor(m => m.HasSelectedAtLeastOneCategory, new { id = i + "_HasSelectedAtLeastOneCategory" })
 
             <div>

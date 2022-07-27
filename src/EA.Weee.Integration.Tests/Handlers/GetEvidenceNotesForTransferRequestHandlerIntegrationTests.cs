@@ -112,7 +112,8 @@
                     {
                         Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt(),
                         Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools.ToInt()
-                    });
+                    },
+                    notesSetToBeIncluded.ElementAt(0).ComplianceYear);
             };
 
             private readonly Because of = () =>
@@ -206,7 +207,9 @@
                     new List<int>()
                     {
                         Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt()
-                    }, new List<Guid>()
+                    },
+                    notesSetToBeIncluded.ElementAt(0).ComplianceYear,
+                    new List<Guid>()
                     {
                         notesSetToBeIncluded.ElementAt(0).Id,
                         notesSetToBeIncluded.ElementAt(1).Id
@@ -261,7 +264,7 @@
                 note = EvidenceNoteDbSetup.Init().Create();
 
                 request = new GetEvidenceNotesForTransferRequest(Guid.NewGuid(),
-                    new List<int>() {1});
+                    new List<int>() {1}, note.ComplianceYear);
             };
 
             private readonly Because of = () =>

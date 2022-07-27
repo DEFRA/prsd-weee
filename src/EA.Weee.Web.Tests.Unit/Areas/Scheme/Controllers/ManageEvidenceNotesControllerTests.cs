@@ -75,22 +75,21 @@
         [Fact]
         public void TransferPost_ShouldHaveHttpPostAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
         [Fact]
         public void TransferPost_ShouldHaveAntiForgeryAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("Transfer", new[] { typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
         [Fact]
         public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) }).Should()
-                .BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Theory]
@@ -552,6 +551,16 @@
                 .MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task IndexGet_GivenRequestIsCreated_EditTransferTonnageViewModelKeySessionShouldBeUpdated()
+        {
+            // act
+            await ManageEvidenceController.Index(OrganisationId);
+
+            // assert
+            A.CallTo(() => SessionService.ClearTransferSessionObject(ManageEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).MustHaveHappenedOnceExactly();
+        }
+
         public static IEnumerable<object[]> ManageEvidenceModelData =>
             new List<object[]>
             {
@@ -604,11 +613,17 @@
         [Fact]
         public void TransferPost_PageRedirectsToTransferPage()
         {
-            var result = ManageEvidenceController.Transfer(OrganisationId) as RedirectToRouteResult;
+            //arrange
+            var complianceYear = TestFixture.Create<int>();
+            
+            //act
+            var result = ManageEvidenceController.Transfer(OrganisationId, complianceYear) as RedirectToRouteResult;
 
+            //assert
             result.RouteValues["action"].Should().Be("TransferEvidenceNote");
             result.RouteValues["controller"].Should().Be("TransferEvidence");
             result.RouteValues["pcsId"].Should().Be(OrganisationId);
+            result.RouteValues["complianceYear"].Should().Be(complianceYear);
         }
 
         private List<NoteStatus> GetOutgoingTransfersAllowedStatuses()

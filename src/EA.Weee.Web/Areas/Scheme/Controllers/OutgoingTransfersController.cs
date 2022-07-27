@@ -17,10 +17,12 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Attributes;
     using Core.Helpers;
     using Requests;
     using ViewModels;
     using Weee.Requests.Scheme;
+    using Weee.Requests.Shared;
 
     public class OutgoingTransfersController : SchemeEvidenceBaseController
     {
@@ -43,6 +45,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -96,7 +99,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab = null)
+        [CheckCanEditTransferNote]
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
@@ -107,13 +111,15 @@
                 var noteData = await client.SendAsync(User.GetAccessToken(),
                     new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
                     noteData, null)
                 {
-                    SelectedComplianceYear = selectedComplianceYear,
                     Edit = true,
                     ReturnToView = returnToView,
-                    RedirectTab = redirectTab
+                    RedirectTab = redirectTab,
+                    SystemDateTime = currentDate
                 });
 
                 return this.View("EditDraftTransfer", model);
@@ -137,7 +143,6 @@
                 var model = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, noteData, null)
                 {
                     OrganisationId = pcsId,
-                    SelectedComplianceYear = selectedComplianceYear, 
                     ReturnToView = returnToView,
                     RedirectTab = redirectTab,
                 });
@@ -171,8 +176,7 @@
 
                     var modelRefreshed = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.OrganisationId, note, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                     {
-                        OrganisationId = model.OrganisationId,
-                        SelectedComplianceYear = model.ViewTransferNoteViewModel.ComplianceYear
+                        OrganisationId = model.OrganisationId
                     });
 
                     return View("DownloadTransferNote", modelRefreshed);
@@ -182,8 +186,7 @@
 
                 var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.ViewTransferNoteViewModel.SchemeId, noteData, null)
                 {
-                    OrganisationId = model.ViewTransferNoteViewModel.SchemeId,
-                    SelectedComplianceYear = model.ViewTransferNoteViewModel.SelectedComplianceYear.Value
+                    OrganisationId = model.ViewTransferNoteViewModel.SchemeId
                 });
 
                 return View("SubmittedTransfer", refreshedModel);
@@ -191,6 +194,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -208,7 +212,7 @@
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
                 var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds));
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear));
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, noteData, pcsId);
 
@@ -220,6 +224,7 @@
         }
 
         [HttpGet]
+        [CheckCanEditTransferNote]
         public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -312,8 +317,7 @@
                 await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var request =
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.TransferNoteKey);
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.TransferNoteKey);
 
             var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
 
@@ -326,7 +330,7 @@
             var noteIds = request != null ? request.CategoryIds : noteData.CategoryIds;
 
             var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, noteIds, existingEvidenceNoteIds));
+                new GetEvidenceNotesForTransferRequest(pcsId, noteIds, noteData.ComplianceYear, existingEvidenceNoteIds));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId);
 

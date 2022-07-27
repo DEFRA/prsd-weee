@@ -5,9 +5,11 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Attributes;
     using Constant;
     using Core.Helpers;
     using Core.Scheme;
+    using Domain.AatfReturn;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Scheme;
@@ -20,6 +22,7 @@
     using ViewModels;
     using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
+    using Weee.Requests.Shared;
 
     public class TransferEvidenceController : SchemeEvidenceBaseController
     {
@@ -37,14 +40,16 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferEvidenceNote(Guid pcsId)
+        [CheckCanCreateTransferNote]
+        public async Task<ActionResult> TransferEvidenceNote(Guid pcsId, int complianceYear)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
             var model = new TransferEvidenceNoteCategoriesViewModel
             {
                 OrganisationId = pcsId,
-                SchemasToDisplay = await GetApprovedSchemes(pcsId)
+                SchemasToDisplay = await GetApprovedSchemes(pcsId),
+                ComplianceYear = complianceYear
             };
 
             var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
@@ -73,22 +78,11 @@
                    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                        SessionKeyConstant.TransferNoteKey);
 
-                var transferRequestWithSelectedCategories = transferNoteRequestCreator.SelectCategoriesToRequest(model);
+                var transferRequestWithSelectedCategories = transferNoteRequestCreator.SelectCategoriesToRequest(model, existingTransferRequest);
 
-                if (existingTransferRequest != null)
-                {
-                    var updatedTransferRequest =
-                     new TransferEvidenceNoteRequest(model.PcsId, transferRequestWithSelectedCategories.RecipientId, transferRequestWithSelectedCategories.CategoryIds,
-                     existingTransferRequest.EvidenceNoteIds.ToList());
+                sessionService.SetTransferSessionObject(Session, transferRequestWithSelectedCategories, SessionKeyConstant.TransferNoteKey);
 
-                    sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
-                }
-                else
-                {
-                    sessionService.SetTransferSessionObject(Session, transferRequestWithSelectedCategories, SessionKeyConstant.TransferNoteKey);
-                }
-
-                return RedirectToAction("TransferFrom", "TransferEvidence", new { area = "Scheme", pcsId = model.OrganisationId });
+                return RedirectToAction("TransferFrom", "TransferEvidence", new { area = "Scheme", pcsId = model.OrganisationId, complianceYear = model.ComplianceYear });
             }
 
             await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
@@ -101,7 +95,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferFrom(Guid pcsId)
+        [CheckCanCreateTransferNote]
+        public async Task<ActionResult> TransferFrom(Guid pcsId, int complianceYear)
         {
             using (var client = this.apiClient())
             {
@@ -112,13 +107,13 @@
 
                 if (transferRequest == null)
                 {
-                    return RedirectToManageEvidence(pcsId);
+                    return RedirectToManageEvidence(pcsId, complianceYear);
                 }
 
                 var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds));
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear));
 
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId);
+                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId);
 
                 var evidenceNoteIds = transferRequest.EvidenceNoteIds;
                 if (evidenceNoteIds != null)
@@ -151,7 +146,8 @@
 
                 sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
 
-                return RedirectToAction("TransferTonnage", "TransferEvidence", new { area = "Scheme", pcsId = model.PcsId, transferAllTonnage = false });
+                return RedirectToAction("TransferTonnage", "TransferEvidence", 
+                    new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
             }
 
             await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
@@ -160,15 +156,16 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferTonnage(Guid pcsId, bool transferAllTonnage = false)
+        [CheckCanCreateTransferNote]
+        public async Task<ActionResult> TransferTonnage(Guid pcsId, int complianceYear, bool transferAllTonnage = false)
         {
             using (var client = this.apiClient())
             {
-                var model = await TransferEvidenceTonnageViewModel(pcsId, transferAllTonnage, client);
+                var model = await TransferEvidenceTonnageViewModel(pcsId, transferAllTonnage, complianceYear, client);
 
                 if (model == null)
                 {
-                    return RedirectToManageEvidence(pcsId);
+                    return RedirectToManageEvidence(pcsId, complianceYear);
                 }
 
                 return this.View("TransferTonnage", model);
@@ -179,13 +176,18 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> TransferTonnage(TransferEvidenceTonnageViewModel model)
         {
+            if (model.Action == ActionEnum.Back)
+            {
+                sessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferTonnageViewModelKey);
+
+                return RedirectToAction("TransferFrom", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
+            }
+
             using (var client = this.apiClient())
             {
                 if (ModelState.IsValid)
                 {
-                    var transferRequest =
-                        sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                            SessionKeyConstant.TransferNoteKey);
+                    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.TransferNoteKey);
 
                     var updatedRequest = transferNoteRequestCreator.SelectTonnageToRequest(transferRequest, model);
 
@@ -197,7 +199,7 @@
                         new { pcsId = model.PcsId, evidenceNoteId = id, redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers) });
                 }
 
-                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, client);
+                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, model.ComplianceYear, client);
 
                 return this.View("TransferTonnage", updatedModel);
             }
@@ -213,18 +215,20 @@
                 var noteData = await client.SendAsync(User.GetAccessToken(),
                     new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
+                var currentDateTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
-                    SelectedComplianceYear = selectedComplianceYear,
-                    RedirectTab = redirectTab
+                    RedirectTab = redirectTab,
+                    SystemDateTime = currentDateTime
                 });
 
                 return this.View("TransferredEvidence", model);
             }
         }
 
-        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, bool transferAllTonnage, IWeeeClient client)
+        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, bool transferAllTonnage, int complianceYear, IWeeeClient client)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
@@ -236,12 +240,16 @@
                 return null;
             }
 
-            var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, transferRequest.EvidenceNoteIds));
+            var existingModel = sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
+            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
 
-            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, pcsId)
+            var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds));
+
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId)
             {
-                TransferAllTonnage = transferAllTonnage
+                TransferAllTonnage = transferAllTonnage,
+                ExistingTransferTonnageViewModel = existingModel
             };
 
             var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
@@ -278,10 +286,15 @@
             }
         }
 
-        private ActionResult RedirectToManageEvidence(Guid pcsId)
+        private ActionResult RedirectToManageEvidence(Guid pcsId, int complianceYear)
         {
-            return RedirectToAction("Index", "ManageEvidenceNotes",
-                new { pcsId, area = "Scheme", tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString() });
+            return RedirectToAction("Index", "ManageEvidenceNotes", new 
+            { 
+                pcsId, 
+                area = "Scheme", 
+                tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(),
+                selectedComplianceYear = complianceYear
+            });
         }
     }
 }
