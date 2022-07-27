@@ -36,6 +36,7 @@
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var evidenceWithSubmittedStatus = EvidenceNoteDbSetup.Init()
@@ -43,6 +44,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var evidenceWithReturnedStatus = EvidenceNoteDbSetup.Init()
@@ -50,6 +52,7 @@
                 {
                     n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 })
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var evidenceWithRejectedStatus = EvidenceNoteDbSetup.Init()
@@ -57,6 +60,7 @@
                   {
                       n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
                   })
+                  .WithComplianceYear(complianceYear)
                   .Create();
 
                 var evidenceWithVoidStatus = EvidenceNoteDbSetup.Init()
@@ -64,6 +68,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 notesSet.Add(evidenceWithApprovedStatus);
