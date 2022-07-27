@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping.ToViewModel
 {
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
@@ -14,7 +15,7 @@
     {
         private readonly EvidenceNoteSearchDataResult noteData;
         private readonly ManageEvidenceNoteViewModel manageEvidenceNoteViewModel;
-        
+
         public ViewAllEvidenceNotesMapModelTests()
         {
             var evidenceNoteData1 = new EvidenceNoteData();
@@ -30,20 +31,24 @@
         [Fact]
         public void ViewAllEvidenceNotesMapModel_Constructor_PropertiesShouldBeSet()
         {
+            // arrange
+            var currentDate = SystemTime.Now;
+
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate);
 
             //assert
             model.Should().NotBeNull();
             model.ManageEvidenceNoteViewModel.Should().BeEquivalentTo(manageEvidenceNoteViewModel);
             model.NoteData.Should().Be(noteData);
+            model.CurrentDate.Should().Be(currentDate);
         }
 
         [Fact]
         public void ViewAllEvidenceNotesMapModel_Constructor_NotesIsNull_ShouldThrowAnException()
         {
             //act
-            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel));
+            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel, SystemTime.Now));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -52,12 +57,16 @@
         [Fact]
         public void ViewAllEvidenceNotesMapModel_Constructor_ManageEvidenceNoteViewModelIsNull_PropertiesShouldBeSet()
         {
+            // arrange 
+            var currentDate = SystemTime.Now;
+
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate);
 
             //assert
             model.Should().NotBeNull();
             model.ManageEvidenceNoteViewModel.Should().BeNull();
+            model.CurrentDate.Should().Be(currentDate);
         }
     }
 }
