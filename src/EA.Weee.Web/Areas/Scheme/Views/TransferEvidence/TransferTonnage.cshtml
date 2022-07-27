@@ -31,6 +31,7 @@
 
     @using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Get, htmlAttributes: new Dictionary<string, object>() { { "id", "TransferEvidenceForm" } }))
     {
+        @Html.HiddenFor(m => m.ComplianceYear, new {id = "transfer-all-compliance-year" })
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-body">Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</legend>
             <div class="govuk-checkboxes">
