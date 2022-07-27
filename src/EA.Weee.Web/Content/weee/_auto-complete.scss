@@ -102,8 +102,8 @@
     }
 
 .autocomplete__option:first-of-type {
-    height: 40px;
-    padding: 1px;
+    min-height: 30px;
+    height: auto;
     border-top-width: 0;
 }
 

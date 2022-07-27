@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    public class CheckCanCreateTransferNoteAttribute : CheckTransferNoteAttributeBase
+    public class CheckCanCreateTransferNoteAttribute : CheckSchemeNoteAttributeBase
     {
         public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid pcsId)
         {
