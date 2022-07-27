@@ -801,6 +801,7 @@
     <Content Include="Areas\Scheme\Views\ManageTransferNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageTransferNotes\ReviewSubmittedEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageTransferNotes\_ReviewSubmittedTransferEvidencePartial.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
