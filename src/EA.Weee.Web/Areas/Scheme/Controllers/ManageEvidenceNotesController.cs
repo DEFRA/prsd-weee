@@ -150,7 +150,6 @@
         }
         
         [HttpGet]
-        [CheckCanEditTransferNote]
         public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
