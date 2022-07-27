@@ -55,16 +55,15 @@
             using (var client = this.apiClient())
             {
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-                int selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
-
+          
                 switch (value)
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, selectedComplianceYear);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate);
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, selectedComplianceYear);
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate);
                     default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, selectedComplianceYear);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate);
                 }
             }
         }
@@ -104,9 +103,11 @@
             }
         }
 
-        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int selectedComplianceYear)
+        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+
+            var selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear));
 
@@ -115,9 +116,11 @@
             return View("ViewAllEvidenceNotes", model);
         }
 
-        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int selectedComplianceYear)
+        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+
+            var selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear));
 
@@ -128,11 +131,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            var selectedComplianceYear = sessionService.GetTransferSessionObject<object>(Session, SessionKeyConstant.AASelectedComplianceYear);
-
-            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : (selectedComplianceYear == null ? currentDate.Year : (int)selectedComplianceYear);
-
-            sessionService.SetTransferSessionObject(Session, complianceYear, SessionKeyConstant.AASelectedComplianceYear);
+            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
 
             return complianceYear;
         }

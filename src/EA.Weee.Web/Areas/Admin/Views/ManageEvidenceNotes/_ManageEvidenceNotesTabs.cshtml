@@ -25,11 +25,11 @@
 <ul class="govuk-tabs__list govuk-!-padding-top-5">
     @this.WeeeGds().Tab("View all evidence notes",
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString() }),
+            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString(), @selectedComplianceYear = Model.ComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes, "viewAllEvidenceNotes")
 
     @this.WeeeGds().Tab("View all evidence transfers",
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString() }),
+            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString(), @selectedComplianceYear = Model.ComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers, "viewAllEvidenceTransfers")
 </ul>
