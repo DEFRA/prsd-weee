@@ -27,8 +27,6 @@
         {
             currentDate = new DateTime(2019, 1, 1);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
-
-            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AASelectedComplianceYear)).Returns(null);
         }
 
         [Fact]
