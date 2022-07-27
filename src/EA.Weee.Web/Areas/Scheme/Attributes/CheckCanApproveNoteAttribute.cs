@@ -6,7 +6,7 @@
     using Infrastructure;
     using Weee.Requests.AatfEvidence;
 
-    public class CheckCaApproveNoteAttribute : CheckTransferNoteAttributeBase
+    public class CheckCanApproveNoteAttribute : CheckSchemeNoteAttributeBase
     {
         public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid pcsId)
         {

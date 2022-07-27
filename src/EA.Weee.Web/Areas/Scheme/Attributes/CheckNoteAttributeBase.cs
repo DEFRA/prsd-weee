@@ -3,7 +3,9 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
+    using Filters;
     using Services.Caching;
 
     public abstract class CheckNoteAttributeBase : ActionFilterAttribute
@@ -14,9 +16,32 @@
 
         public abstract Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid pcsId);
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            var pcsId = TryGetPcsId(context);
+
+            AsyncHelpers.RunSync(async () =>
+            {
+                try
+                {
+                    await OnAuthorizationAsync(context, pcsId);
+                }
+                catch (InvalidOperationException)
+                {
+                    context.Result = new RedirectToRouteResult(new RouteValueDictionary()
+                    {
+                        { "action", "Index" },
+                        { "controller", "ManageEvidenceNotes" }
+                    });
+                }
+            });
+
+            base.OnActionExecuting(context);
+        }
+
         protected Guid TryGetPcsId(ActionExecutingContext filterContext)
         {
-            if (!filterContext.ActionParameters.TryGetValue("pcsId", out var idActionParameter))
+            if (!filterContext.RouteData.Values.TryGetValue("pcsId", out var idActionParameter))
             {
                 throw new ArgumentException("No pcs ID was specified.");
             }
@@ -31,7 +56,7 @@
 
         protected Guid TryGetEvidenceNoteId(ActionExecutingContext filterContext)
         {
-            if (!filterContext.ActionParameters.TryGetValue("evidenceNoteId", out var idActionParameter))
+            if (!filterContext.RouteData.Values.TryGetValue("evidenceNoteId", out var idActionParameter))
             {
                 throw new ArgumentException("No evidence note id specified");
             }

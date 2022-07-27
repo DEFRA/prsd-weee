@@ -175,6 +175,7 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\CreateEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetAatfNotesRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\GetEvidenceNoteByPbsOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesByOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandlerTests.cs" />
