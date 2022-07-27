@@ -7,7 +7,6 @@
     using Base;
     using Core.Helpers;
     using Domain.Evidence;
-    using Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Weee.Tests.Core;
@@ -50,6 +49,12 @@
         {
             ObjectInstantiator<Note>.SetProperty(o => o.Organisation, null, instance);
             ObjectInstantiator<Note>.SetProperty(o => o.OrganisationId, organisationId, instance);
+            return this;
+        }
+
+        public TransferEvidenceNoteDbSetup WithComplianceYear(int complianceYear)
+        {
+            instance.ComplianceYear = complianceYear;
             return this;
         }
     }

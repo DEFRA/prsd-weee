@@ -33,6 +33,7 @@
                 var noteRejectedStatus = TransferEvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString(), "rejected")
+                    .WithComplianceYear(complianceYear)
                     .Create();
 
                 var noteApprovedStatus = TransferEvidenceNoteDbSetup.Init()
@@ -41,6 +42,7 @@
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var notehSubmittedStatus = TransferEvidenceNoteDbSetup.Init()
@@ -48,6 +50,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var noteReturnedStatus = TransferEvidenceNoteDbSetup.Init()
@@ -55,6 +58,7 @@
                 {
                     n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 })
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var noteVoidStatus = TransferEvidenceNoteDbSetup.Init()
@@ -62,6 +66,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 notesSet.Add(noteApprovedStatus);
