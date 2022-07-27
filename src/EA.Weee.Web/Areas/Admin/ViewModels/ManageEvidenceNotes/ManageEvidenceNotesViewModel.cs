@@ -9,6 +9,8 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public int ComplianceYear { get; set; }
+
         public IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
         public ManageEvidenceNotesTabDisplayOptions ActiveDisplayOption { get; set; }
