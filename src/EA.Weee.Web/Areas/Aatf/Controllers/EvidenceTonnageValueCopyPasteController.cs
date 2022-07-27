@@ -29,7 +29,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, string returnAction, bool redirect = false)
+        public async Task<ActionResult> Index(Guid organisationId, string returnAction, int complianceYear, bool redirect = false)
         { 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -40,7 +40,14 @@
                 return ReturnLinkCase(returnAction, evidenceModel);
             }
 
-            var model = new EvidenceTonnageValueCopyPasteViewModel() { OrganisationId = evidenceModel.OrganisationId, AatfId = evidenceModel.AatfId, Action = returnAction, EvidenceId = evidenceModel.Id };
+            var model = new EvidenceTonnageValueCopyPasteViewModel() 
+                { 
+                    OrganisationId = evidenceModel.OrganisationId, 
+                    AatfId = evidenceModel.AatfId, 
+                    Action = returnAction, 
+                    EvidenceId = evidenceModel.Id,
+                    ComplianceYear = complianceYear
+            };
 
             return View(model);
         }
@@ -74,7 +81,7 @@
                 case EvidenceCopyPasteActionConstants.EditEvidenceNoteAction:
                     return RedirectToRoute(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true });
                 default: 
-                    return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { evidenceModel.OrganisationId, evidenceModel.AatfId, returnFromCopyPaste = true });
+                    return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { evidenceModel.OrganisationId, evidenceModel.AatfId, complianceYear = evidenceModel.ComplianceYear, returnFromCopyPaste = true });
             }
         }
 

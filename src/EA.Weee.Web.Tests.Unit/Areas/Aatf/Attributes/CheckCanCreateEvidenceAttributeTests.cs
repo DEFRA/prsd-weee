@@ -45,23 +45,6 @@
         }
 
         [Fact]
-        public void OnActionExecuting_GivenSelectedComplianceYearSessionIsNull_ShouldRedirectToManageEvidenceNotes()
-        {
-            //arrange
-            A.CallTo(() => sessionService.GetTransferSessionObject<object>(context.HttpContext.Session,
-                SessionKeyConstant.AatfSelectedComplianceYear)).Returns(null);
-
-            //act
-            attribute.OnActionExecuting(context);
-
-            var result = context.Result as RedirectToRouteResult;
-
-            //assert
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
-        }
-
-        [Fact]
         public void OnActionExecuting_GivenNoAatfId_ArgumentExceptionExpected()
         {
             //arrange
@@ -148,9 +131,6 @@
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
             var complianceYear = TestFixture.Create<int>();
-
-            A.CallTo(() => sessionService.GetTransferSessionObject<object>(context.HttpContext.Session,
-                SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == organisationId))).Returns(aatfs);

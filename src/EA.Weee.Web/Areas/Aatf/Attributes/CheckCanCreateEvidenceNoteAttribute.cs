@@ -22,20 +22,6 @@
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var complianceYear = SessionService.GetTransferSessionObject<object>(context.HttpContext.Session,
-                SessionKeyConstant.AatfSelectedComplianceYear);
-
-            if (complianceYear == null)
-            {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary()
-                {
-                    { "action", "Index" },
-                    { "controller", "ManageEvidenceNotes" }
-                });
-
-                return;
-            }
-
             if (!context.ActionParameters.TryGetValue("organisationId", out var idActionParameter))
             {
                 throw new ArgumentException("No organisation ID was specified.");
@@ -56,7 +42,17 @@
                 throw new ArgumentException("The specified aatf ID is not valid.");
             }
 
-            AsyncHelpers.RunSync(() => OnAuthorizationAsync(context, organisationIdActionParameter, aatfIdActionParameter, (int)complianceYear));
+            if (!context.ActionParameters.TryGetValue("complianceYear", out idActionParameter))
+            {
+                throw new ArgumentException("No compliance year was specified.");
+            }
+
+            if (!(int.TryParse(idActionParameter.ToString(), out var complianceYearActionParameter)))
+            {
+                throw new ArgumentException("The specified compliance year is not valid.");
+            }
+
+            AsyncHelpers.RunSync(() => OnAuthorizationAsync(context, organisationIdActionParameter, aatfIdActionParameter, complianceYearActionParameter));
         }
 
         private async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid organisationId, Guid aatfId, int complianceYear)
