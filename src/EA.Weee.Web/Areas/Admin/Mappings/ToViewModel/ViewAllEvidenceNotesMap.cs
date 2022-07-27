@@ -3,8 +3,9 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
 
-    public class ViewAllEvidenceNotesMap : ViewAllNotesMapBase<ViewAllEvidenceNotesViewModel>, IMap<ViewAllEvidenceNotesMapTransfer, ViewAllEvidenceNotesViewModel>
+    public class ViewAllEvidenceNotesMap : ListOfNotesViewModelBase<ViewAllEvidenceNotesViewModel>, IMap<ViewAllEvidenceNotesMapTransfer, ViewAllEvidenceNotesViewModel>
     {
         public ViewAllEvidenceNotesMap(IMapper mapper) : base(mapper)
         {
@@ -14,7 +15,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = CreateModel(source);
+            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel);
 
             return model;
         }

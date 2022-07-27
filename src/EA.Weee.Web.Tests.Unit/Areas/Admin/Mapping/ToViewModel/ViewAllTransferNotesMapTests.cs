@@ -9,6 +9,7 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
@@ -30,7 +31,7 @@
         [Fact]
         public void ShouldBeDerivedFromViewAllEvidenceNotesMapBase()
         {
-            typeof(ViewAllTransferNotesMap).Should().BeDerivedFrom<ViewAllNotesMapBase<ViewAllTransferNotesViewModel>>();
+            typeof(ViewAllTransferNotesMap).Should().BeDerivedFrom<ListOfNotesViewModelBase<ViewAllTransferNotesViewModel>>();
         }
 
         [Fact]
