@@ -9,7 +9,7 @@
     {
         public CreateNoteMapTransfer(List<OrganisationSchemeData> schemes, 
             EditEvidenceNoteViewModel existingModel, 
-            Guid organisationId, Guid aatfId) : base(schemes, existingModel, organisationId, aatfId)
+            Guid organisationId, Guid aatfId, int complianceYear) : base(schemes, existingModel, organisationId, aatfId, complianceYear)
         {
         }
     }

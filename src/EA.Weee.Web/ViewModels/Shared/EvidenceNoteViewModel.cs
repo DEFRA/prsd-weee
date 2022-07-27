@@ -117,5 +117,7 @@
                 return ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString();
             }
         }
+
+        public int ComplianceYear { get; set; }
     }
 }

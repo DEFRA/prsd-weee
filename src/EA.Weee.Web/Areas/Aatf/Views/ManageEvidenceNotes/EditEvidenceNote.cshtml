@@ -10,7 +10,9 @@
 }
 
 @section full_main_content{
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, Model.AatfRedirectTab, null))))
+    @(this.WeeeGds().BackLink(
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear })))
 
     @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {

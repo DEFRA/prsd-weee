@@ -11,18 +11,16 @@
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class CreateNoteViewModelMapTests
+    public class CreateNoteViewModelMapTests : SimpleUnitTestBase
     {
         private readonly CreateNoteViewModelMap map;
-        private readonly Fixture fixture;
 
         public CreateNoteViewModelMapTests()
         {
             map = new CreateNoteViewModelMap();
-
-            fixture = new Fixture();
         }
 
         [Fact]
