@@ -21,6 +21,7 @@
         protected readonly Guid EvidenceNoteId;
         protected readonly EvidenceNoteData EvidenceNoteData;
         protected readonly TransferEvidenceNoteData TransferEvidenceNoteData;
+        protected readonly ISessionService SessionService;
 
         public ManageEvidenceNotesControllerTestsBase()
         {
@@ -28,12 +29,13 @@
             Breadcrumb = A.Fake<BreadcrumbService>();
             Mapper = A.Fake<IMapper>();
             Cache = A.Fake<IWeeeCache>();
+            SessionService = A.Fake<ISessionService>();
             EvidenceNoteId = Guid.NewGuid();
 
             EvidenceNoteData = TestFixture.Create<EvidenceNoteData>();
             TransferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
 
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService);
         }
     }
 }
