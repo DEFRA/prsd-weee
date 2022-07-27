@@ -368,7 +368,6 @@
             model.OrganisationId = organisationId;
             model.ViewEvidenceNoteViewModel.Id = evidenceNoteId;
             model.ViewEvidenceNoteViewModel.ComplianceYear = complianceYear;
-            model.ViewEvidenceNoteViewModel.SelectedComplianceYear = selectedComplianceYear;
 
             //act
             var result = await ManageEvidenceController.ReviewEvidenceNote(model) as RedirectToRouteResult;

@@ -17,10 +17,13 @@
 
         public Guid AatfId { get; set; }
 
+        public int ComplianceYear { get; private set; }
+
         protected ModifyNoteTransfer(List<OrganisationSchemeData> schemes,
             EditEvidenceNoteViewModel existingModel,
             Guid organisationId,
-            Guid aatfId)
+            Guid aatfId,
+            int complianceYear)
         {
             Guard.ArgumentNotNull(() => schemes, schemes);
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
@@ -30,6 +33,7 @@
             Schemes = schemes;
             OrganisationId = organisationId;
             AatfId = aatfId;
+            ComplianceYear = complianceYear;
         }
     }
 }

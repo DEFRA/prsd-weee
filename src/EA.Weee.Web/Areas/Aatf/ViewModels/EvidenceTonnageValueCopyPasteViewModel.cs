@@ -13,5 +13,7 @@
         public string[] ReceievedPastedValues { get; set; }
         [DisplayName("Reused as whole appliances (tonnes)")]
         public string[] ReusedPastedValues { get; set; }
+
+        public int ComplianceYear { get; set; }
     }
 }
