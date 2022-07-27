@@ -23,7 +23,6 @@
         private readonly IWeeeClient client;
         private readonly IWeeeCache cache;
         private readonly Guid pcsId;
-        private readonly int complianceYear;
 
         public CheckCanCreateTransferNoteAttributeTests()
         {
@@ -31,7 +30,7 @@
             cache = A.Fake<IWeeeCache>();
             attribute = new CheckCanCreateTransferNoteAttribute { Cache = cache, Client = () => client };
             context = A.Fake<ActionExecutingContext>();
-            complianceYear = 2022;
+            var complianceYear = 2022;
             pcsId = TestFixture.Create<Guid>();
 
             var routeData = new RouteData();
@@ -43,7 +42,7 @@
         }
 
         [Fact]
-        public void CheckCanCreateTransferNoteAttribute_ShouldBeDerivedFromCheckTransferNoteAttributeBaseAttribute()
+        public void CheckCanCreateTransferNoteAttribute_ShouldBeDerivedFromCheckSchemeNoteAttributeBaseAttribute()
         {
             typeof(CheckCanCreateTransferNoteAttribute).Should().BeDerivedFrom<CheckSchemeNoteAttributeBase>();
         }

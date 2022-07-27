@@ -45,7 +45,7 @@
         }
 
         [Fact]
-        public void CheckCanEditTransferNoteAttribute_ShouldBeDerivedFromCheckTransferNoteAttributeBaseAttribute()
+        public void CheckCanEditTransferNoteAttribute_ShouldBeDerivedFromCCheckSchemeNoteAttributeBaseAttribute()
         {
             typeof(CheckCanEditTransferNoteAttribute).Should().BeDerivedFrom<CheckSchemeNoteAttributeBase>();
         }
