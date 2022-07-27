@@ -35,7 +35,7 @@
             EvidenceNoteData = TestFixture.Create<EvidenceNoteData>();
             TransferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
 
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
         }
     }
 }
