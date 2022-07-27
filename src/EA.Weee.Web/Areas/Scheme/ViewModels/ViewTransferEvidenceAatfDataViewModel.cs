@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Core.AatfEvidence;
 
+    [Serializable]
     public class ViewTransferEvidenceAatfDataViewModel
     {
         public virtual string AatfName { get; set; }

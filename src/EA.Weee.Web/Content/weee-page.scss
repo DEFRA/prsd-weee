@@ -161,6 +161,13 @@ input[type="file"].form-control {
     padding-top: 0;
 }
 
+.button-as-back {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: $govuk-font-family;
+}
+
 .link-submit {
     background: none;
     border: none;

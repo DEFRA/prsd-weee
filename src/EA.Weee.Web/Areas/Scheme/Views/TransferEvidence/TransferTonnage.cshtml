@@ -19,7 +19,10 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<TransferEvidenceController>(a => a.TransferFrom(Model.PcsId))))
+    
+    <!-- this button is here to override the back link, as the back link would be at the top without this it becomes the form default action -->
+    <button class="govuk-visually-hidden" aria-hidden="true" style="z-index: -1" name="Action" value="@ActionEnum.Save" form="tonnages-form-partial"></button>
+    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="tonnages-form-partial">Back</button>
 
     @Html.Gds().ValidationSummary()
     <h1 class="govuk-heading-l">

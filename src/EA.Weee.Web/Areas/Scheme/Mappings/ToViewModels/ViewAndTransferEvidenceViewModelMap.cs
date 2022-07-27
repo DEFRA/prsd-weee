@@ -19,8 +19,9 @@
 
             var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme);
             model.OrganisationId = source.OrganisationId;
-            model.DisplayTransferButton = source.Scheme.Status != SchemeStatus.Withdrawn && source.NoteData.Results.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved);
-
+            model.DisplayTransferButton = model.CanSchemeManageEvidence
+                                          && source.NoteData.Results.Any(x =>
+                                              x.Status == Core.AatfEvidence.NoteStatus.Approved);
             return model;
         }
     }
