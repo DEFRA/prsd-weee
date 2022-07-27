@@ -60,11 +60,11 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, selectedComplianceYear);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, selectedComplianceYear);
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, selectedComplianceYear);
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, selectedComplianceYear);
                     default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, selectedComplianceYear);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, selectedComplianceYear);
                 }
             }
         }
@@ -104,24 +104,24 @@
             }
         }
 
-        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int selectedComplianceYear)
+        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int selectedComplianceYear)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear));
 
-            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel));
+            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate));
 
             return View("ViewAllEvidenceNotes", model);
         }
 
-        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int selectedComplianceYear)
+        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int selectedComplianceYear)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear));
 
-            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel));
+            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate));
 
             return View("ViewAllTransferNotes", model);
         }
