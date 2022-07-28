@@ -108,11 +108,7 @@
         {
             //arrange
             var scheme = A.Fake<Scheme>();
-            var schemeId = fixture.Create<Guid>();
-
-            A.CallTo(() => scheme.Id).Returns(schemeId);
-            var status = request.AllowedStatuses
-                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+            var status = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
 
             A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
 
@@ -121,13 +117,15 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e => 
-                                                              e.SchemeId.Equals(schemeId) && 
+                                                              e.RecipientId == request.OrganisationId && 
                                                               e.AllowedStatuses.SequenceEqual(status) &&
                                                               e.AatfId == null &&
                                                               e.ComplianceYear == request.ComplianceYear &&
                                                               e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.EvidenceNote) &&
                                                               e.NoteTypeFilter.Count == 1 && 
-                                                              e.OrganisationId == null))).MustHaveHappenedOnceExactly();
+                                                              e.OrganisationId == null &&
+                                                              e.PageNumber == 1 &&
+                                                              e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -149,7 +147,7 @@
 
             // assert
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
-                e.SchemeId == null &&
+                e.RecipientId == null &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.AatfId == null &&
                 e.ComplianceYear == request.ComplianceYear &&
@@ -190,7 +188,9 @@
                 note3
             };
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
+
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             // act
             await handler.HandleAsync(request);
@@ -209,25 +209,26 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>().ToList();
+            var noteList = fixture.CreateMany<Note>(2).ToList();
 
-            var noteData = new List<EvidenceNoteData>()
+            var mappedNoteData = new List<EvidenceNoteData>()
             {
                 A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
+            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = mappedNoteData };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
-
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
             // act
             var result = await handler.HandleAsync(request);
 
             // assert
-            result.Should().BeEquivalentTo(noteData);
+            result.NoteCount.Should().Be(2);
+            result.Results.Should().BeEquivalentTo(mappedNoteData);
         }
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()

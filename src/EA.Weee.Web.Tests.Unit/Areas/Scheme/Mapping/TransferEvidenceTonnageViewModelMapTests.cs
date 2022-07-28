@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Scheme;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.ViewModels;
     using Web.ViewModels.Shared;
@@ -108,7 +109,7 @@
         }
 
         [Fact]
-        public void Map_GivenRequestSource_SchemeValuesShouldBeSet()
+        public void Map_GivenRequestSource_DefaultShouldBeSet()
         {
             //arrange
             var source = GetRequestTransferObject();
@@ -118,6 +119,7 @@
 
             //assert
             result.PcsId.Should().Be(source.OrganisationId);
+            result.ComplianceYear.Should().Be(source.ComplianceYear);
         }
 
         [Fact]
@@ -140,7 +142,10 @@
             var schemeName = TestFixture.Create<string>();
             var source = GetRequestTransferObject();
 
-            A.CallTo(() => cache.FetchSchemeName(source.Request.SchemeId)).Returns(schemeName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(source.Request.RecipientId)).Returns(new SchemePublicInfo()
+            {
+                Name = schemeName
+            });
 
             //act
             var result = map.Map(source);
@@ -150,13 +155,18 @@
         }
 
         [Fact]
-        public void Map_GivenTransferNoteDataSource_SchemeNameShouldBeRetrievedFromCacheAndSet()
+        public void Map_GivenSourceWithTransferNoteData_SchemeNameShouldBeRetrievedFromCacheAndSet()
         {
             //arrange
             var schemeName = TestFixture.Create<string>();
-            var source = GetTransferNoteDataTransferObject();
+            var noteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var source = new TransferEvidenceNotesViewModelMapTransfer(new List<EvidenceNoteData>(),
+                null, noteData, TestFixture.Create<Guid>());
 
-            A.CallTo(() => cache.FetchSchemeName(source.TransferEvidenceNoteData.RecipientSchemeData.Id)).Returns(schemeName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(source.TransferEvidenceNoteData.RecipientOrganisationData.Id)).Returns(new SchemePublicInfo()
+            {
+                Name = schemeName
+            });
 
             //act
             var result = map.Map(source);
@@ -200,7 +210,7 @@
                 .Create();
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes.ToList(), request, organisationId);
 
             var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -267,7 +277,7 @@
             var request = DefaultRequest();
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes, request, organisationId);
 
             var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -302,8 +312,8 @@
             result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
             result.TransferCategoryValues.ElementAt(0).Received.Should().BeNull();
             result.TransferCategoryValues.ElementAt(0).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(0).TransferTonnageId.Should()
-                .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(2).Id);
+            result.TransferCategoryValues.ElementAt(0).Id.Should().Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(2).Id);
+            result.TransferCategoryValues.ElementAt(0).TransferTonnageId.Should().Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(0).AvailableReceived.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(2).Received);
             result.TransferCategoryValues.ElementAt(0).AvailableReused.Should()
@@ -311,8 +321,9 @@
             result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(1).Received.Should().BeNull();
             result.TransferCategoryValues.ElementAt(1).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(1).TransferTonnageId.Should()
+            result.TransferCategoryValues.ElementAt(1).Id.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(0).Id);
+            result.TransferCategoryValues.ElementAt(1).TransferTonnageId.Should().Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(1).AvailableReceived.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(0).Received);
             result.TransferCategoryValues.ElementAt(1).AvailableReused.Should()
@@ -320,8 +331,9 @@
             result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
             result.TransferCategoryValues.ElementAt(2).Received.Should().BeNull();
             result.TransferCategoryValues.ElementAt(2).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(2).TransferTonnageId.Should()
+            result.TransferCategoryValues.ElementAt(2).Id.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(1).Id);
+            result.TransferCategoryValues.ElementAt(2).TransferTonnageId.Should().Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(2).AvailableReceived.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(1).Received);
             result.TransferCategoryValues.ElementAt(2).AvailableReused.Should()
@@ -329,12 +341,161 @@
             result.TransferCategoryValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(3).Received.Should().BeNull();
             result.TransferCategoryValues.ElementAt(3).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(3).TransferTonnageId.Should()
+            result.TransferCategoryValues.ElementAt(3).Id.Should()
                 .Be(notes.ElementAt(0).EvidenceTonnageData.ElementAt(0).Id);
+            result.TransferCategoryValues.ElementAt(3).TransferTonnageId.Should().Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(3).AvailableReceived.Should()
                 .Be(notes.ElementAt(0).EvidenceTonnageData.ElementAt(0).Received);
             result.TransferCategoryValues.ElementAt(3).AvailableReused.Should()
                 .Be(notes.ElementAt(0).EvidenceTonnageData.ElementAt(0).Reused);
+            result.TransferCategoryValues.Count.Should()
+                .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
+        }
+
+        [Fact]
+        public void Map_GivenSourceEvidenceListsWithExistingTonnageTransferValuesAndExistingModel_TransferTonnageCategoriesShouldBeSet()
+        {
+            //arrange
+            var noteId1 = TestFixture.Create<Guid>();
+            var noteId2 = TestFixture.Create<Guid>();
+            var evidenceNoteTonnageId1 = TestFixture.Create<Guid>();
+            var evidenceNoteTonnageId2 = TestFixture.Create<Guid>();
+            var evidenceNoteTonnageId3 = TestFixture.Create<Guid>();
+            var evidenceNoteTonnageId4 = TestFixture.Create<Guid>();
+            var transferEvidenceNoteTonnageId1 = TestFixture.Create<Guid>();
+            var transferEvidenceNoteTonnageId2 = TestFixture.Create<Guid>();
+            var transferEvidenceNoteTonnageId3 = TestFixture.Create<Guid>();
+            var transferEvidenceNoteTonnageId4 = TestFixture.Create<Guid>();
+
+            notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
+                        new List<EvidenceTonnageData>()
+                        {
+                            new EvidenceTonnageData(evidenceNoteTonnageId1, WeeeCategory.AutomaticDispensers, 2, 1, 0, 0)
+                        })
+                    .With(e => e.AatfData, new AatfData() { Name = "Z" })
+                    .With(e => e.Id, noteId2).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(e => e.EvidenceTonnageData,
+                        new List<EvidenceTonnageData>()
+                        {
+                            new EvidenceTonnageData(evidenceNoteTonnageId2, WeeeCategory.AutomaticDispensers, 4, 2, 0, 0),
+                            new EvidenceTonnageData(evidenceNoteTonnageId3, WeeeCategory.GasDischargeLampsAndLedLightSources, 10,
+                                null, 0, 0),
+                            new EvidenceTonnageData(evidenceNoteTonnageId4, WeeeCategory.MedicalDevices, 12, 4, 0, 0)
+                        }).With(e => e.AatfData, new AatfData() { Name = "A" })
+                    .With(e => e.Id, noteId1).Create()
+            };
+
+            var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
+            {
+                TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                    .With(t => t.EvidenceTonnageData, new EvidenceTonnageData(transferEvidenceNoteTonnageId1, WeeeCategory.AutomaticDispensers, 2, 1, 1, 0) { OriginatingNoteTonnageId = evidenceNoteTonnageId1 }).Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                    .With(t => t.EvidenceTonnageData, new EvidenceTonnageData(transferEvidenceNoteTonnageId2, WeeeCategory.AutomaticDispensers, 4, 2, 3, 2) { OriginatingNoteTonnageId = evidenceNoteTonnageId2 }).Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                    .With(t => t.EvidenceTonnageData, new EvidenceTonnageData(transferEvidenceNoteTonnageId3, WeeeCategory.GasDischargeLampsAndLedLightSources, 10, null, 5, null) { OriginatingNoteTonnageId = evidenceNoteTonnageId3 }).Create(),
+                TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                    .With(t => t.EvidenceTonnageData, new EvidenceTonnageData(transferEvidenceNoteTonnageId4, WeeeCategory.MedicalDevices, 10, null, 6, 2) { OriginatingNoteTonnageId = evidenceNoteTonnageId4 }).Create(),
+            };
+
+            var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, transferNoteTonnageData)
+                .Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            var viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
+            {
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(v => v.CategoryValues,
+                        new List<EvidenceCategoryValue>()
+                        {
+                            new EvidenceCategoryValue(WeeeCategory.AutomaticDispensers)
+                        })
+                    .With(n => n.Id, noteId2)
+                    .With(n => n.SubmittedBy, "Z")
+                    .Create(),
+                TestFixture.Build<ViewEvidenceNoteViewModel>().With(v => v.CategoryValues,
+                        new List<EvidenceCategoryValue>()
+                        {
+                            new EvidenceCategoryValue(WeeeCategory.AutomaticDispensers),
+                            new EvidenceCategoryValue(WeeeCategory.GasDischargeLampsAndLedLightSources),
+                            new EvidenceCategoryValue(WeeeCategory.MedicalDevices)
+                        })
+                    .With(n => n.SubmittedBy, "A")
+                    .With(n => n.Id, noteId1)
+                    .Create()
+            };
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._))
+                .ReturnsNextFromSequence(viewEvidenceNoteViewModels.ToArray());
+
+            var existingModel = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(v => v.TransferCategoryValues, new List<TransferEvidenceCategoryValue>()
+                {
+                    new TransferEvidenceCategoryValue()
+                    {
+                        Id = evidenceNoteTonnageId1,
+                        Received = "ABC",
+                        Reused = null
+                    },
+                    new TransferEvidenceCategoryValue()
+                    {
+                        Id = evidenceNoteTonnageId2,
+                        Received = "1",
+                        Reused = "2"
+                    },
+                    new TransferEvidenceCategoryValue()
+                    {
+                        Id = evidenceNoteTonnageId3,
+                        Received = "3",
+                        Reused = string.Empty
+                    },
+                    new TransferEvidenceCategoryValue()
+                    {
+                        Id = evidenceNoteTonnageId4,
+                        Received = "60",
+                        Reused = "50"
+                    }
+                }).Create();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), null, transferNoteData, organisationId)
+            {
+                ExistingTransferTonnageViewModel = existingModel
+            };
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
+            result.TransferCategoryValues.ElementAt(0).Received.Should().Be("60");
+            result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("50");
+            result.TransferCategoryValues.ElementAt(0).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId4);
+            result.TransferCategoryValues.ElementAt(0).Id.Should().Be(evidenceNoteTonnageId4);
+            result.TransferCategoryValues.ElementAt(0).AvailableReceived.Should().Be(18M);
+            result.TransferCategoryValues.ElementAt(0).AvailableReused.Should().Be(6M);
+            result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(1).Received.Should().Be("1");
+            result.TransferCategoryValues.ElementAt(1).Reused.Should().Be("2");
+            result.TransferCategoryValues.ElementAt(1).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId2);
+            result.TransferCategoryValues.ElementAt(1).Id.Should().Be(evidenceNoteTonnageId2);
+            result.TransferCategoryValues.ElementAt(1).AvailableReceived.Should().Be(7M);
+            result.TransferCategoryValues.ElementAt(1).AvailableReused.Should().Be(4M);
+            result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
+            result.TransferCategoryValues.ElementAt(2).Received.Should().Be("3");
+            result.TransferCategoryValues.ElementAt(2).Reused.Should().Be(string.Empty);
+            result.TransferCategoryValues.ElementAt(2).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId3);
+            result.TransferCategoryValues.ElementAt(2).Id.Should().Be(evidenceNoteTonnageId3);
+            result.TransferCategoryValues.ElementAt(2).AvailableReceived.Should().Be(15M);
+            result.TransferCategoryValues.ElementAt(2).AvailableReused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
+            result.TransferCategoryValues.ElementAt(3).Received.Should().Be("ABC");
+            result.TransferCategoryValues.ElementAt(3).Reused.Should().BeNull();
+            result.TransferCategoryValues.ElementAt(3).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId1);
+            result.TransferCategoryValues.ElementAt(3).Id.Should().Be(evidenceNoteTonnageId1);
+            result.TransferCategoryValues.ElementAt(3).AvailableReceived.Should().Be(3M);
+            result.TransferCategoryValues.ElementAt(3).AvailableReused.Should().Be(1M);
             result.TransferCategoryValues.Count.Should()
                 .Be(viewEvidenceNoteViewModels.SelectMany(v => v.CategoryValues).Count());
         }
@@ -427,24 +588,28 @@
             result.TransferCategoryValues.ElementAt(0).Received.Should().Be("6.000");
             result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("2.000");
             result.TransferCategoryValues.ElementAt(0).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId4);
+            result.TransferCategoryValues.ElementAt(0).Id.Should().Be(evidenceNoteTonnageId4);
             result.TransferCategoryValues.ElementAt(0).AvailableReceived.Should().Be(18M);
             result.TransferCategoryValues.ElementAt(0).AvailableReused.Should().Be(6M);
             result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(1).Received.Should().Be("3.000");
             result.TransferCategoryValues.ElementAt(1).Reused.Should().Be("2.000");
             result.TransferCategoryValues.ElementAt(1).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId2);
+            result.TransferCategoryValues.ElementAt(1).Id.Should().Be(evidenceNoteTonnageId2);
             result.TransferCategoryValues.ElementAt(1).AvailableReceived.Should().Be(7M);
             result.TransferCategoryValues.ElementAt(1).AvailableReused.Should().Be(4M);
             result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
             result.TransferCategoryValues.ElementAt(2).Received.Should().Be("5.000");
             result.TransferCategoryValues.ElementAt(2).Reused.Should().Be(string.Empty);
             result.TransferCategoryValues.ElementAt(2).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId3);
+            result.TransferCategoryValues.ElementAt(2).Id.Should().Be(evidenceNoteTonnageId3);
             result.TransferCategoryValues.ElementAt(2).AvailableReceived.Should().Be(15M);
             result.TransferCategoryValues.ElementAt(2).AvailableReused.Should().BeNull();
             result.TransferCategoryValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(3).Received.Should().Be("1.000");
             result.TransferCategoryValues.ElementAt(3).Reused.Should().Be("0.000");
             result.TransferCategoryValues.ElementAt(3).TransferTonnageId.Should().Be(transferEvidenceNoteTonnageId1);
+            result.TransferCategoryValues.ElementAt(3).Id.Should().Be(evidenceNoteTonnageId1);
             result.TransferCategoryValues.ElementAt(3).AvailableReceived.Should().Be(3M);
             result.TransferCategoryValues.ElementAt(3).AvailableReused.Should().Be(1M);
             result.TransferCategoryValues.Count.Should()
@@ -465,8 +630,9 @@
             result.TransferCategoryValues.ElementAt(0).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
             result.TransferCategoryValues.ElementAt(0).Received.Should().Be("12.000");
             result.TransferCategoryValues.ElementAt(0).Reused.Should().Be("4.000");
-            result.TransferCategoryValues.ElementAt(0).TransferTonnageId.Should()
+            result.TransferCategoryValues.ElementAt(0).Id.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(2).Id);
+            result.TransferCategoryValues.ElementAt(0).TransferTonnageId.Should().Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(0).AvailableReceived.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(2).Received);
             result.TransferCategoryValues.ElementAt(0).AvailableReused.Should()
@@ -474,8 +640,9 @@
             result.TransferCategoryValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(1).Received.Should().Be("2.000");
             result.TransferCategoryValues.ElementAt(1).Reused.Should().Be("1.000");
-            result.TransferCategoryValues.ElementAt(1).TransferTonnageId.Should()
+            result.TransferCategoryValues.ElementAt(1).Id.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(0).Id);
+            result.TransferCategoryValues.ElementAt(1).TransferTonnageId.Should().Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(1).AvailableReceived.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(0).Received);
             result.TransferCategoryValues.ElementAt(1).AvailableReused.Should()
@@ -483,8 +650,10 @@
             result.TransferCategoryValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
             result.TransferCategoryValues.ElementAt(2).Received.Should().Be("10.000");
             result.TransferCategoryValues.ElementAt(2).Reused.Should().BeNull();
-            result.TransferCategoryValues.ElementAt(2).TransferTonnageId.Should()
+            result.TransferCategoryValues.ElementAt(2).Id.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(1).Id);
+            result.TransferCategoryValues.ElementAt(2).TransferTonnageId.Should()
+                .Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(2).AvailableReceived.Should()
                 .Be(notes.ElementAt(1).EvidenceTonnageData.ElementAt(1).Received);
             result.TransferCategoryValues.ElementAt(2).AvailableReused.Should()
@@ -492,8 +661,9 @@
             result.TransferCategoryValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.AutomaticDispensers.ToInt());
             result.TransferCategoryValues.ElementAt(3).Received.Should().Be("2.000");
             result.TransferCategoryValues.ElementAt(3).Reused.Should().Be("1.000");
-            result.TransferCategoryValues.ElementAt(3).TransferTonnageId.Should()
+            result.TransferCategoryValues.ElementAt(3).Id.Should()
                 .Be(notes.ElementAt(0).EvidenceTonnageData.ElementAt(0).Id);
+            result.TransferCategoryValues.ElementAt(3).TransferTonnageId.Should().Be(Guid.Empty);
             result.TransferCategoryValues.ElementAt(3).AvailableReceived.Should()
                 .Be(notes.ElementAt(0).EvidenceTonnageData.ElementAt(0).Received);
             result.TransferCategoryValues.ElementAt(3).AvailableReused.Should()
@@ -731,7 +901,7 @@
                     }).Create();
 
             var organisationId = TestFixture.Create<Guid>();
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes, request, organisationId);
             return source;
         }
 
@@ -766,7 +936,7 @@
                 .Create();
             var organisationId = TestFixture.Create<Guid>();
 
-            var source = new TransferEvidenceNotesViewModelMapTransfer(notes.ToList(), request, organisationId);
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes.ToList(), request, organisationId);
 
             viewEvidenceNoteViewModels = new List<ViewEvidenceNoteViewModel>()
             {
@@ -821,7 +991,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            return new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), notes, request, organisationId);
         }
 
         private TransferEvidenceNotesViewModelMapTransfer GetTransferNoteDataTransferObject()

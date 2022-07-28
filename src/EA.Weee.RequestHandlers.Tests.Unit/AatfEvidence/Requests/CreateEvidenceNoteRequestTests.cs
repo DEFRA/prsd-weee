@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
+    using Core.Aatf;
     using Core.AatfEvidence;
     using FluentAssertions;
     using Weee.Requests.Aatf;

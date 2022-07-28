@@ -8,6 +8,7 @@
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -20,6 +21,14 @@
 
     public class ManageEvidenceNotesControllerTests : ManageEvidenceNotesControllerTestsBase
     {
+        private readonly DateTime currentDate;
+
+        public ManageEvidenceNotesControllerTests()
+        {
+            currentDate = new DateTime(2019, 1, 1);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+        }
+
         [Fact]
         public void ManageEvidenceNotesControllerInheritsAdminBreadcrumbBaseController()
         {
@@ -64,7 +73,7 @@
             await ManageEvidenceController.Index(tab);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => statuses.SequenceEqual(g.AllowedStatuses) &&
                      types.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
         }
@@ -80,7 +89,7 @@
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => statuses.SequenceEqual(g.AllowedStatuses) &&
                      types.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
         }
@@ -98,7 +107,7 @@
             await ManageEvidenceController.Index(tab);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.AllowedStatuses.Contains(statusNotIncluded)))).MustNotHaveHappened();
         }
 
@@ -112,7 +121,7 @@
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.AllowedStatuses.Contains(statusNotIncluded)))).MustNotHaveHappened();
         }
 
@@ -129,7 +138,7 @@
             await ManageEvidenceController.Index(tab);
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded)))).MustNotHaveHappened();
         }
 
@@ -143,7 +152,7 @@
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
             //asset
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded)))).MustNotHaveHappened();
         }
 
@@ -153,38 +162,34 @@
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
-            var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
 
             //act
             await ManageEvidenceController.Index(tab);
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapModel>.That.Matches(
-                    a => a.Notes.Equals(returnList)))).MustHaveHappenedOnceExactly();
+                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task IndexGet_GivenViewAllEvidenceTransfersTab_ViewModelShouldBeBuilt()
         {
             // arrange
-            var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
-            var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
 
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapModel>.That.Matches(
-                    a => a.Notes.Equals(returnList)))).MustHaveHappenedOnceExactly();
+                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -193,19 +198,18 @@
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTabWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
-            var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
             var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
 
             //act
             await ManageEvidenceController.Index(tab, manageEvidenceNote);
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapModel>.That.Matches(
-                    a => a.Notes.Equals(returnList) && 
+                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData && 
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
         }
 
@@ -213,19 +217,18 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTabWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt()
         {
             // arrange
-            var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
             var manageEvidenceNote = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
 
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers", manageEvidenceNote);
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapModel>.That.Matches(
-                    a => a.Notes.Equals(returnList) &&
+                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData &&
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
         }
 
@@ -235,17 +238,16 @@
         public async Task IndexGet_GivenViewAllEvidenceNotesTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
         {
             // Arrange
-            var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
             //act
             await ManageEvidenceController.Index("view-all-evidence-notes", model);
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapModel>.That.Matches(
-                    a => a.Notes.Equals(returnList) &&
+                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData &&
                          a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
         }
 
@@ -255,17 +257,16 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
         {
             // Arrange
-            var evidenceData = TestFixture.Create<EvidenceNoteData>();
-            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotes>._)).Returns(returnList);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers", model);
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapModel>.That.Matches(
-                    a => a.Notes.Equals(returnList) &&
+                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData &&
                          a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
         }
 
@@ -277,7 +278,7 @@
             //arrange
             var viewModel = TestFixture.Create<ViewAllEvidenceNotesViewModel>();
 
-            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewAllEvidenceNotesMapModel>._)).Returns(viewModel);
+            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewAllEvidenceNotesMapTransfer>._)).Returns(viewModel);
 
             //act
             var result = await ManageEvidenceController.Index(tab) as ViewResult;
@@ -292,7 +293,7 @@
             //arrange
             var viewModel = TestFixture.Create<ViewAllTransferNotesViewModel>();
 
-            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewAllEvidenceNotesMapModel>._)).Returns(viewModel);
+            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewAllEvidenceNotesMapTransfer>._)).Returns(viewModel);
 
             //act
             var result = await ManageEvidenceController.Index("view-all-evidence-transfers") as ViewResult;

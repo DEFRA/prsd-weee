@@ -68,8 +68,7 @@
             var result = Record.Exception(() => new Note(null, A.Fake<Organisation>(),
                 "created",
                 transferTonnages.ToList(),
-                complianceYear,
-                WasteType.HouseHold));
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -95,8 +94,7 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), null,
                 "created",
                 transferTonnages.ToList(),
-                complianceYear,
-                WasteType.HouseHold));
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -167,8 +165,7 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 "created",
                 null,
-                complianceYear,
-                WasteType.HouseHold));
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -179,8 +176,7 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 "created",
                 null,
-                complianceYear,
-                WasteType.HouseHold));
+                complianceYear));
 
             result.Should().BeOfType<ArgumentNullException>();
         }
@@ -193,8 +189,7 @@
             var result = Record.Exception(() => new Note(A.Fake<Organisation>(), A.Fake<Organisation>(),
                 "created",
                 transferTonnages.ToList(),
-                complianceYear,
-                WasteType.HouseHold));
+                complianceYear));
 
             result.Should().BeOfType<ArgumentOutOfRangeException>();
         }
@@ -508,8 +503,7 @@
                 recipientOrganisation,
                 createdBy,
                 transferTonnages.ToList(),
-                complianceYear,
-                WasteType.HouseHold);
+                complianceYear);
         }
     }
 }

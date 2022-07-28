@@ -8,11 +8,12 @@
     {
         public void AatfIsValidToSave(Aatf aatf, DateTime systemDateTime)
         {
-            if (aatf.AatfStatus != AatfStatus.Approved || !WindowHelper.IsDateInComplianceYear(aatf.ComplianceYear, systemDateTime) 
-                                                       || (aatf.ApprovalDate.HasValue && aatf.ApprovalDate.Value.Date > systemDateTime.Date))
+            if (aatf == null || 
+                aatf.AatfStatus != AatfStatus.Approved 
+                || !WindowHelper.IsDateInComplianceYear(aatf.ComplianceYear, systemDateTime)
+                || (aatf.ApprovalDate.HasValue && aatf.ApprovalDate.Value.Date > systemDateTime.Date))
             {
-                throw new InvalidOperationException(
-                    $"Aatf with Id {aatf.AatfId} is in an invalid state to be saved");
+                throw new InvalidOperationException("You cannot create evidence if the start and end dates are not in the current compliance year");
             }
         }
     }

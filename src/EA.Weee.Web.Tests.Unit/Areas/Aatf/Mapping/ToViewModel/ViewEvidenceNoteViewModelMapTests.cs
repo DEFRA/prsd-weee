@@ -17,6 +17,7 @@
     using Web.ViewModels.Shared.Mapping;
     using Web.ViewModels.Shared.Utilities;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewEvidenceNoteViewModelMapTests : SimpleUnitTestBase
@@ -66,7 +67,6 @@
             result.SchemeId.Should().Be(source.SchemeId);
             result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
             result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
-            result.SelectedComplianceYear.Should().Be(source.SelectedComplianceYear);
             result.ComplianceYear.Should().Be(source.EvidenceNoteData.ComplianceYear);
         }
 
@@ -462,6 +462,27 @@
             var result = map.Map(source);
 
             result.ReturnedDate.Should().Be(string.Empty);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRedirectTab_RedirectTabShouldBeSet()
+        {
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            
+            var result = map.Map(source);
+
+            result.RedirectTab.Should().Be(source.RedirectTab);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithNoRedirectTab_RedirectTabShouldBeSet()
+        {
+            var source = TestFixture.Build<ViewEvidenceNoteMapTransfer>()
+                .With(v => v.RedirectTab, (string)null).Create();
+
+            var result = map.Map(source);
+
+            result.RedirectTab.Should().BeNull();
         }
 
         [Fact]

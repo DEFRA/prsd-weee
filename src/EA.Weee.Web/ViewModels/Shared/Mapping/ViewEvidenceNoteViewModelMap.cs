@@ -62,7 +62,8 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
-                RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
+                RecipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName :
+                        addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
                     source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
                     organisationAddress.Address1,
                     organisationAddress.Address2,
@@ -72,8 +73,8 @@
                     null),
                 SchemeId = source.SchemeId,
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
-                SelectedComplianceYear = source.SelectedComplianceYear,
-                DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence
+                DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
+                RedirectTab = source.RedirectTab
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)

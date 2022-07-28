@@ -6,7 +6,7 @@
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared.Mapping;
 
-    public class TransferredOutEvidenceViewModelMap : ListOfNotesViewModelBase<TransferredOutEvidenceNotesSchemeViewModel>, IMap<TransferredOutEvidenceNotesViewModelMapTransfer, TransferredOutEvidenceNotesSchemeViewModel>
+    public class TransferredOutEvidenceViewModelMap : ListOfSchemeNotesViewModelBase<TransferredOutEvidenceNotesSchemeViewModel>, IMap<TransferredOutEvidenceNotesViewModelMapTransfer, TransferredOutEvidenceNotesSchemeViewModel>
     {
         public TransferredOutEvidenceViewModelMap(IMapper mapper) : base(mapper)
         {
@@ -16,13 +16,13 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = MapBase(source.Notes, source.CurrentDate, source.ManageEvidenceNoteViewModel);
+            var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme);
             model.OrganisationId = source.OrganisationId;
-            model.SchemeName = source.SchemeName;
-
+           
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
-                evidenceNoteRowViewModel.DisplayEditLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Draft);
+                evidenceNoteRowViewModel.DisplayEditLink = evidenceNoteRowViewModel.Status == NoteStatus.Draft &&
+                                                           model.CanSchemeManageEvidence;
             }
 
             return model;

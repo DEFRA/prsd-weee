@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Autofac;
     using AutoFixture;
@@ -27,12 +28,15 @@
             {
                 LocalSetup();
 
+                var complianceYear = fixture.Create<int>();
+
                 var evidenceWithApprovedStatus = EvidenceNoteDbSetup.Init()
                  .With(n =>
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var evidenceWithSubmittedStatus = EvidenceNoteDbSetup.Init()
@@ -40,6 +44,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var evidenceWithReturnedStatus = EvidenceNoteDbSetup.Init()
@@ -47,6 +52,7 @@
                 {
                     n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 })
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var evidenceWithRejectedStatus = EvidenceNoteDbSetup.Init()
@@ -54,6 +60,7 @@
                   {
                       n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
                   })
+                  .WithComplianceYear(complianceYear)
                   .Create();
 
                 var evidenceWithVoidStatus = EvidenceNoteDbSetup.Init()
@@ -61,6 +68,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 notesSet.Add(evidenceWithApprovedStatus);
@@ -68,11 +76,13 @@
                 notesSet.Add(evidenceWithReturnedStatus);
                 notesSet.Add(evidenceWithRejectedStatus);
                 notesSet.Add(evidenceWithVoidStatus);
+
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear);
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotes(noteTypeFilter, allowedStatuses))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
             private readonly It shouldReturnListOfEvidenceNotes = () =>
@@ -82,14 +92,15 @@
 
             private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
             {
-                evidenceNoteData.Should().HaveSameCount(notesSet);
+                evidenceNoteData.Results.Should().HaveCount(notesSet.Count);
+                evidenceNoteData.NoteCount.Should().Be(notesSet.Count);
             };
 
             private readonly It shouldHaveExpectedData = () =>
             {
                 foreach (var note1 in notesSet)
                 {
-                    var evidenceNote = evidenceNoteData.Exists(n => n.Id == note1.Id);
+                    var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
                     evidenceNote.Should().BeTrue();
                 }
             };
@@ -110,34 +121,38 @@
 
                 notesSet.Add(evidenceWithDraftStatus1);
                 notesSet.Add(evidenceWithDraftStatus2);
+
+                request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year);
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotes(noteTypeFilterForTransferNote, notAllowedStatuses))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
             private readonly It shouldReturnEmptyListOfEvidenceNotes = () =>
             {
-                evidenceNoteData.Should().BeNullOrEmpty();
+                evidenceNoteData.Results.Should().BeNullOrEmpty();
             };
 
             private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
             {
-                evidenceNoteData.Should().HaveCount(0);
+                evidenceNoteData.Results.Should().HaveCount(0);
+                evidenceNoteData.NoteCount.Should().Be(0);
             };
         }
 
         public class GetAllNotesRequestHandlerTestBase : WeeeContextSpecification
         {
-            protected static List<EvidenceNoteData> evidenceNoteData;
+            protected static EvidenceNoteSearchDataResult evidenceNoteData;
             protected static List<Note> notesSet;
             protected static List<NoteStatus> allowedStatuses;
             protected static List<NoteStatus> notAllowedStatuses;
             protected static List<NoteType> noteTypeFilter;
             protected static List<NoteType> noteTypeFilterForTransferNote;
-            protected static IRequestHandler<GetAllNotes, List<EvidenceNoteData>> handler;
+            protected static IRequestHandler<GetAllNotesInternal, EvidenceNoteSearchDataResult> handler;
             protected static Fixture fixture;
+            protected static GetAllNotesInternal request;
 
             public static void LocalSetup()
             {
@@ -160,7 +175,7 @@
                 notAllowedStatuses = new List<NoteStatus> { NoteStatus.Draft };
                 noteTypeFilter = new List<NoteType> { NoteType.Evidence };
                 noteTypeFilterForTransferNote = new List<NoteType> { NoteType.Transfer };
-                handler = Container.Resolve<IRequestHandler<GetAllNotes, List<EvidenceNoteData>>>();
+                handler = Container.Resolve<IRequestHandler<GetAllNotesInternal, EvidenceNoteSearchDataResult>>();
             }
         }
     }

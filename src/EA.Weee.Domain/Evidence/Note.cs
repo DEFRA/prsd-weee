@@ -58,8 +58,7 @@
             Organisation recipient,
             string createdBy,
             IList<NoteTransferTonnage> transfer,
-            int complianceYear,
-            WasteType wasteType)
+            int complianceYear)
         {
             Guard.ArgumentNotNull(() => organisation, organisation);
             Guard.ArgumentNotNull(() => recipient, recipient);
@@ -79,7 +78,7 @@
             NoteStatusHistory = new List<NoteStatusHistory>();
             NoteTransferTonnage = transfer;
             ComplianceYear = complianceYear;
-            WasteType = wasteType;
+            WasteType = Evidence.WasteType.HouseHold;
         }
 
         public void Update(Organisation recipient, DateTime startDate, DateTime endDate, WasteType? wasteType,
@@ -94,6 +93,13 @@
             Recipient = recipient;
             StartDate = startDate;
             EndDate = endDate;
+        }
+
+        public void Update(Organisation recipient)
+        {
+            Guard.ArgumentNotNull(() => recipient, recipient);
+
+            Recipient = recipient;
         }
 
         public virtual void UpdateStatus(NoteStatus newStatus, string changedBy, DateTime date, string reason = null)
@@ -129,17 +135,6 @@
             throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
         }
 
-        /// <summary>
-        /// Should only be used for integration tests
-        /// </summary>
-        /// <param name="organisation"></param>
-        public void UpdateOrganisation(Guid organisationId)
-        {
-            Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-
-            OrganisationId = organisationId;
-            Organisation = null;
-        }
         public void UpdateAatf(Guid aatfId)
         {
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);

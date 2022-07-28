@@ -25,6 +25,11 @@
 
             var aatf = await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(message.AatfId, message.ComplianceYear);
 
+            if (aatf == null)
+            {
+                throw new ArgumentException($"Aatf with aatfId {message.AatfId} and compliance year {message.ComplianceYear} not found");
+            }
+
             return aatf.Id;
         }
     }

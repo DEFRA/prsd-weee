@@ -127,7 +127,7 @@
                 e.OrganisationId.Equals(request.OrganisationId) && 
                 e.AatfId.Equals(request.AatfId) && 
                 e.AllowedStatuses.SequenceEqual(status) &&
-                e.SchemeId == request.RecipientId))).MustHaveHappenedOnceExactly();
+                e.RecipientId == request.RecipientId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -148,7 +148,7 @@
                 e.OrganisationId.Equals(request.OrganisationId) &&
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
-                e.SchemeId == null &&
+                e.RecipientId == null &&
                 e.SearchRef.Equals(searchRef)))).MustHaveHappenedOnceExactly();
         }
 
@@ -171,7 +171,7 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef == null &&
-                e.SchemeId.Equals(recipientId)))).MustHaveHappenedOnceExactly();
+                e.RecipientId.Equals(recipientId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -193,7 +193,7 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef == null && 
-                e.SchemeId == null && e.WasteTypeId.Equals((int?)wasteType) &&
+                e.RecipientId == null && e.WasteTypeId.Equals((int?)wasteType) &&
                 e.NoteTypeFilter.Contains(NoteType.EvidenceNote) &&
                 e.NoteTypeFilter.Count == 1))).MustHaveHappenedOnceExactly();
         }
@@ -217,7 +217,7 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef == null &&
-                e.SchemeId == null && 
+                e.RecipientId == null && 
                 e.WasteTypeId == null && 
                 e.NoteStatusId.Equals((int?)noteStatus)))).MustHaveHappenedOnceExactly();
         }
@@ -241,7 +241,7 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef == null &&
-                e.SchemeId == null &&
+                e.RecipientId == null &&
                 e.WasteTypeId == null &&
                 e.NoteStatusId == null &&
                 e.StartDateSubmitted.Equals(startDate)))).MustHaveHappenedOnceExactly();
@@ -266,7 +266,7 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef == null &&
-                e.SchemeId == null &&
+                e.RecipientId == null &&
                 e.WasteTypeId == null &&
                 e.NoteStatusId == null &&
                 e.StartDateSubmitted == null &&
@@ -293,7 +293,7 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef.Equals(searchRef) &&
-                e.SchemeId.Equals(receivedId) &&
+                e.RecipientId.Equals(receivedId) &&
                 e.WasteTypeId.Equals((int?)wasteType) &&
                 e.NoteStatusId.Equals((int?)noteStatus) &&
                 e.StartDateSubmitted.Equals(startDate) &&
@@ -321,8 +321,9 @@
                 note2,
                 note3
             };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             // act
             await handler.HandleAsync(request);
@@ -343,17 +344,18 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = TestFixture.CreateMany<Note>().ToList();
+            var noteList = TestFixture.CreateMany<Note>(2).ToList();
 
             var evidenceNoteDatas = new List<EvidenceNoteData>()
             {
                 A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
@@ -361,9 +363,9 @@
             var result = await handler.HandleAsync(GetAatfNotesRequest(currentYear));
 
             // assert
-            result.Should().BeOfType<List<EvidenceNoteData>>();
-            result.Count().Should().Be(evidenceNoteDatas.Count);
-
+            result.Should().BeOfType<EvidenceNoteSearchDataResult>();
+            result.NoteCount.Should().Be(evidenceNoteDatas.Count);
+            result.Results.ToList().Should().BeEquivalentTo(listOfEvidenceNotes.ListOfEvidenceNoteData);
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }

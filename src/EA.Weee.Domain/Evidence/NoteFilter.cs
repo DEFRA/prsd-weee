@@ -13,7 +13,7 @@
 
         public Guid? OrganisationId { get; set; }
 
-        public Guid? SchemeId { get; set; }
+        public Guid? RecipientId { get; set; }
 
         public List<NoteStatus> AllowedStatuses { get; set; }
 
@@ -45,6 +45,10 @@
             }
         }
 
+        public int PageSize { get; private set; }
+
+        public int PageNumber { get; private set; }
+
         private bool MatchReferenceWithNoteType()
         {
             var regex = new Regex("^[E?|T?|e?|t?][1-9]+");
@@ -69,9 +73,11 @@
             }
         }
 
-        public NoteFilter(int complianceYear)
+        public NoteFilter(int complianceYear, int pageSize, int pageNumber)
         {
             ComplianceYear = complianceYear;
+            PageSize = pageSize;
+            PageNumber = pageNumber;
         }
     }
 }

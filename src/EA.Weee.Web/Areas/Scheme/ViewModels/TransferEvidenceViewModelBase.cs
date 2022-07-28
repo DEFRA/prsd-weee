@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Web.ViewModels.Shared;
 
+    [Serializable]
     public abstract class TransferEvidenceViewModelBase
     {
         public Guid PcsId { get; set; }
@@ -17,6 +18,8 @@
         public List<TotalCategoryValue> CategoryValues { get; set; }
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
+
+        public int ComplianceYear { get; set; }
 
         protected TransferEvidenceViewModelBase()
         {

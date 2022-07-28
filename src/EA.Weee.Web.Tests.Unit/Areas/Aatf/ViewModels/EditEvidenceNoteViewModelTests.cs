@@ -56,7 +56,7 @@
         [Theory]
         [InlineData("StartDate", "Start date")]
         [InlineData("EndDate", "End date")]
-        [InlineData("ReceivedId", "Recipient")]
+        [InlineData("RecipientId", "Recipient")]
         [InlineData("ProtocolValue", "Actual or protocol")]
         [InlineData("WasteTypeValue", "Type of waste")]
         [InlineData("SelectedSchemeName", "Recipient")]
@@ -71,7 +71,7 @@
         [Theory]
         [InlineData("StartDate", "Enter a start date")]
         [InlineData("EndDate", "Enter an end date")]
-        [InlineData("ReceivedId", "Select a recipient")]
+        [InlineData("RecipientId", "Select a recipient")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredAttribute(string property, string message)
         {
             typeof(EditEvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>(r => r.ErrorMessage.Equals(message));
@@ -177,7 +177,7 @@
         {
             var validationOrdering = EditEvidenceNoteViewModel.ValidationMessageDisplayOrder;
 
-            validationOrdering.Should().BeEquivalentTo("StartDate", "EndDate", "ReceivedId", "Received-auto", "WasteTypeValue", "ProtocolValue");
+            validationOrdering.Should().BeEquivalentTo("StartDate", "EndDate", "RecipientId", "Recipient-auto", "WasteTypeValue", "ProtocolValue");
         }
     }
 }

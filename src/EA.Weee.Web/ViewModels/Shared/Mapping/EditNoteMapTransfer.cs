@@ -12,7 +12,7 @@
     {
         public EvidenceNoteData NoteData { get; protected set; }
 
-        public EditNoteMapTransfer(List<SchemeData> schemes,
+        public EditNoteMapTransfer(List<OrganisationSchemeData> schemes,
             EditEvidenceNoteViewModel existingModel,
             Guid organisationId, Guid aatfId, EvidenceNoteData noteData) : base(schemes, existingModel, organisationId, aatfId)
         {

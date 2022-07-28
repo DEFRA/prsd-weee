@@ -7,17 +7,11 @@
     using EA.Prsd.Core;
     using FluentAssertions;
     using Web.Areas.Aatf.Mappings.ToViewModel;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class EvidenceNotesViewModelTransferTests
+    public class EvidenceNotesViewModelTransferTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
-
-        public EvidenceNotesViewModelTransferTests()
-        {
-            fixture = new Fixture();
-        }
-
         [Fact]
         public void Map_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
         {
@@ -32,7 +26,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now, null));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -42,7 +36,7 @@
         public void Map_GivenEvidenceNoteIdGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, fixture.CreateMany<EvidenceNoteData>().ToList(), SystemTime.Now, null));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();

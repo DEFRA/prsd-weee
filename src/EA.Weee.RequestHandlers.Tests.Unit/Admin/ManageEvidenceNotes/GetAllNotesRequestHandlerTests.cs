@@ -24,13 +24,13 @@
 
     public class GetAllNotesRequestHandlerTests : SimpleUnitTestBase
     {
-        private GetAllNotesRequestHandler handler;
+        private GetAllNotesInternalRequestHandler handler;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
-        private readonly GetAllNotes message;
+        private readonly GetAllNotesInternal message;
         private readonly ISystemDataDataAccess systemDataDataAccess;
-        private readonly GetAllNotes messageWithEmptyNoteTypeList;
+        private readonly GetAllNotesInternal messageWithEmptyNoteInternalTypeList;
 
         public GetAllNotesRequestHandlerTests()
         {
@@ -39,10 +39,10 @@
             mapper = A.Fake<IMapper>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
-            message = new GetAllNotes(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList());
-            messageWithEmptyNoteTypeList = new GetAllNotes(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList());
+            message = new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>());
+            messageWithEmptyNoteInternalTypeList = new GetAllNotesInternal(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>());
 
-            handler = new GetAllNotesRequestHandler(weeeAuthorization, noteDataAccess, mapper, systemDataDataAccess);
+            handler = new GetAllNotesInternalRequestHandler(weeeAuthorization, noteDataAccess, mapper, systemDataDataAccess);
         }
 
         [Fact]
@@ -51,7 +51,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            handler = new GetAllNotesRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
+            handler = new GetAllNotesInternalRequestHandler(authorization, noteDataAccess, mapper, systemDataDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetAllNotes()));
@@ -86,16 +86,18 @@
             // assert
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.AllowedStatuses.SequenceEqual(allowedStatuses) &&
-                e.NoteTypeFilter.SequenceEqual(noteTypeFilter)))).MustHaveHappenedOnceExactly();
+                e.NoteTypeFilter.SequenceEqual(noteTypeFilter) &&
+                e.PageNumber == 1 &&
+                e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async void HandleAsync_GivenRequestWithEmptyNoteType_NoteDataAccessShouldBeCalledOnce()
         {
             // act
-            await handler.HandleAsync(messageWithEmptyNoteTypeList);
+            await handler.HandleAsync(messageWithEmptyNoteInternalTypeList);
 
-            var allowedStatuses = messageWithEmptyNoteTypeList.AllowedStatuses
+            var allowedStatuses = messageWithEmptyNoteInternalTypeList.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             var noteTypeFilter = new List<Domain.Evidence.NoteType>();
@@ -103,7 +105,9 @@
             // assert
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.AllowedStatuses.SequenceEqual(allowedStatuses) &&
-                e.NoteTypeFilter.SequenceEqual(noteTypeFilter)))).MustHaveHappenedOnceExactly();
+                e.NoteTypeFilter.SequenceEqual(noteTypeFilter) &&
+                e.PageSize == int.MaxValue &&
+                e.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -127,8 +131,9 @@
                 note2,
                 note3
             };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             // act
             await handler.HandleAsync(message);
@@ -148,17 +153,18 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = TestFixture.CreateMany<Note>().ToList();
+            var noteList = TestFixture.CreateMany<Note>(2).ToList();
 
             var evidenceNoteDatas = new List<EvidenceNoteData>()
             {
                 A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
+            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
             var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteList);
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
@@ -166,16 +172,17 @@
             var result = await handler.HandleAsync(GetAllNotes());
 
             // assert
-            result.Should().BeOfType<List<EvidenceNoteData>>();
-            result.Count().Should().Be(evidenceNoteDatas.Count);
+            result.Should().BeOfType<EvidenceNoteSearchDataResult>();
+            result.NoteCount.Should().Be(evidenceNoteDatas.Count);
+            result.Results.Should().BeEquivalentTo(listOfEvidenceNotes.ListOfEvidenceNoteData);
 
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }
 
-        private GetAllNotes GetAllNotes()
+        private GetAllNotesInternal GetAllNotes()
         {
-            return new GetAllNotes(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList());    
+            return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>());    
         }
     }
 }

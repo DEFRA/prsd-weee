@@ -1,72 +1,72 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ViewAllEvidenceNotesMapModelTests
+    public class ViewAllEvidenceNotesMapModelTests : SimpleUnitTestBase
     {
-        private List<EvidenceNoteData> Notes { get; set; }
-        private ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
+        private readonly EvidenceNoteSearchDataResult noteData;
+        private readonly ManageEvidenceNoteViewModel manageEvidenceNoteViewModel;
 
         public ViewAllEvidenceNotesMapModelTests()
         {
             var evidenceNoteData1 = new EvidenceNoteData();
             var evidenceNoteData2 = new EvidenceNoteData();
 
-            Notes = new List<EvidenceNoteData>() { evidenceNoteData1, evidenceNoteData2 };
+            var notes = new List<EvidenceNoteData>() { evidenceNoteData1, evidenceNoteData2 };
+            noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.Results, notes).Create();
 
-            ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel();
+            manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel();
         }
 
         [Fact]
         public void ViewAllEvidenceNotesMapModel_Constructor_PropertiesShouldBeSet()
         {
+            // arrange
+            var currentDate = SystemTime.Now;
+
             //act
-            var model = new ViewAllEvidenceNotesMapModel(Notes, ManageEvidenceNoteViewModel);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate);
 
             //assert
             model.Should().NotBeNull();
-            model.ManageEvidenceNoteViewModel.Should().BeEquivalentTo(ManageEvidenceNoteViewModel);
-            model.Notes.SequenceEqual(Notes);
+            model.ManageEvidenceNoteViewModel.Should().BeEquivalentTo(manageEvidenceNoteViewModel);
+            model.NoteData.Should().Be(noteData);
+            model.CurrentDate.Should().Be(currentDate);
         }
 
         [Fact]
-        public void ViewAllEvidenceNotesMapModel_ConstructoR_NotesIsNull_ShouldThrowAnException()
+        public void ViewAllEvidenceNotesMapModel_Constructor_NotesIsNull_ShouldThrowAnException()
         {
             //act
-            var result = Record.Exception(() => new ViewAllEvidenceNotesMapModel(null, ManageEvidenceNoteViewModel));
+            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel, SystemTime.Now));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
-        public void ViewAllEvidenceNotesMapModel_ConstructoR_NotesIsEmptyList_PropertiesShouldBeSet()
-        {
-            //act
-            var model = new ViewAllEvidenceNotesMapModel(new List<EvidenceNoteData>(), ManageEvidenceNoteViewModel);
-
-            //assert
-            model.Should().NotBeNull();
-            model.Notes.Should().NotBeNull();
-            model.Notes.Should().BeEmpty();
-        }
-
-        [Fact]
         public void ViewAllEvidenceNotesMapModel_Constructor_ManageEvidenceNoteViewModelIsNull_PropertiesShouldBeSet()
         {
+            // arrange 
+            var currentDate = SystemTime.Now;
+
             //act
-            var model = new ViewAllEvidenceNotesMapModel(Notes, null);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate);
 
             //assert
             model.Should().NotBeNull();
             model.ManageEvidenceNoteViewModel.Should().BeNull();
+            model.CurrentDate.Should().Be(currentDate);
         }
     }
 }

@@ -28,13 +28,14 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var recipientId = source.Request?.SchemeId ?? source.TransferEvidenceNoteData.RecipientSchemeData.Id;
+            var recipientId = source.Request?.RecipientId ?? source.TransferEvidenceNoteData.RecipientOrganisationData.Id;
 
             var model = new T()
             {
                 PcsId = source.OrganisationId,
-                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemeName(recipientId)),
-                RecipientId = recipientId
+                RecipientName = AsyncHelpers.RunSync(async () => await Cache.FetchSchemePublicInfo(recipientId)).Name,
+                RecipientId = recipientId,
+                ComplianceYear = source.ComplianceYear
             };
 
             if (source.Notes != null)

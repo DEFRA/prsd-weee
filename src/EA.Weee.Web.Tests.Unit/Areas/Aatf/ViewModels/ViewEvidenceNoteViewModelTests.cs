@@ -1,15 +1,23 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
 {
+    using System;
     using System.ComponentModel;
     using Core.AatfEvidence;
     using Core.Tests.Unit.Helpers;
     using FluentAssertions;
     using Prsd.Core.Helpers;
     using Web.ViewModels.Shared;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewEvidenceNoteViewModelTests
     {
+        [Fact]
+        public void ViewEvidenceNoteViewModel_ShouldHaveSerializableAttribute()
+        {
+            typeof(ViewEvidenceNoteViewModel).Should().BeDecoratedWith<SerializableAttribute>();
+        }
+
         [Fact]
         public void ViewEvidenceNoteViewModel_ShouldBeDerivedFromEvidenceNoteViewModel()
         {
