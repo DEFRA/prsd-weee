@@ -202,6 +202,7 @@
     <Compile Include="Handlers\GetAllNotesRequestHandlerForTransfersIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteForInternalUserRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAllNotesRequestHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetEvidenceNoteByPbsOrganisationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetObligationComplianceYearsHandlerTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationHandlerIntegrationTests.cs" />
