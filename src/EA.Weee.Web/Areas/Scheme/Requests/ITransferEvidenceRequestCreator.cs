@@ -5,7 +5,11 @@
 
     public interface ITransferEvidenceRequestCreator
     {
-        TransferEvidenceNoteRequest SelectCategoriesToRequest(TransferEvidenceNoteCategoriesViewModel viewModel);
+        TransferEvidenceNoteRequest SelectCategoriesToRequest(TransferEvidenceNoteCategoriesViewModel viewModel, TransferEvidenceNoteRequest existingEvidenceNoteRequest = null);
+
         TransferEvidenceNoteRequest SelectTonnageToRequest(TransferEvidenceNoteRequest request, TransferEvidenceTonnageViewModel viewModel);
+
+        EditTransferEvidenceNoteRequest EditSelectTonnageToRequest(TransferEvidenceNoteRequest request,
+            TransferEvidenceTonnageViewModel viewModel);
     }
 }

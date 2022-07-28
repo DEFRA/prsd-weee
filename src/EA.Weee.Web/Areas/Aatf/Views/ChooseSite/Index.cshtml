@@ -39,7 +39,7 @@
                 </div>
 
                 @(this.WeeeGds().CreateProgressiveDisclosure("Why can't I see all of my sites?",
-                    "The site you're looking for may not yet be approved for the current compliance year or have its data in a previous service",
+                    @Html.Partial("~/Areas/Aatf/Views/Shared/_ContactProgressiveDisclosure_ChooseSite.cshtml").ToString(),
                     "Hidden content",
                     "Progressive disclosure",
                     "Why can't I see all of my sites?"))

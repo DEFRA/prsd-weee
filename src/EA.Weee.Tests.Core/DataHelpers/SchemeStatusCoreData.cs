@@ -1,15 +1,17 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core.DataHelpers
 {
-    using EA.Prsd.Core.Domain;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
-    using Domain.Evidence;
+    using EA.Prsd.Core.Domain;
+    using EA.Weee.Domain.Evidence;
+    using Weee.Core.Shared;
 
-    public class NoteStatusData : IEnumerable<object[]>
+    public class SchemeStatusCoreData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            foreach (var status in Enumeration.GetAll<NoteStatus>())
+            foreach (var status in Enum.GetValues(typeof(SchemeStatus)))
             {
                 yield return new object[] { status };
             }

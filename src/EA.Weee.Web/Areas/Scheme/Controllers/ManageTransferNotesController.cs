@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using Aatf.ViewModels;
     using Core.AatfEvidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -18,7 +16,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.ViewModels.Shared;
-    using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
 
     public class ManageTransferNotesController : BalancingSchemeEvidenceBaseController
@@ -42,31 +39,24 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
-                //var scheme = await Cache.FetchSchemePublicInfo(pcsId);
+                await SetBreadcrumb(pcsId, BreadCrumbConstant.PbsManageEvidence);
 
-                //var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
-                //if (tab == null)
-                //{
-                //    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
-                //}
-                //var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
+                if (tab == null)
+                {
+                    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+                }
+                var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
 
-                //switch (value)
-                //{
-                //    case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                //        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //    case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                //        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //    case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
-                //        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //    default:
-                //        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme.Name, currentDate, manageEvidenceNoteViewModel);
-                //}
+                switch (value)
+                {
+                    case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, currentDate, manageEvidenceNoteViewModel);
+                    default:
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, currentDate, manageEvidenceNoteViewModel);
+                }
             }
-
-            return null;
         }
 
         //[HttpPost]
@@ -76,24 +66,23 @@
         //    return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = organisationId });
         //}
 
-        //private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId, 
-        //    string schemeName, 
-        //    DateTime currentDate,
-        //    ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
-        //{
-        //    using (var client = this.apiClient())
-        //    {
-        //        var result = await client.SendAsync(User.GetAccessToken(),
-        //        new GetEvidenceNotesByOrganisationRequest(organisationId, 
-        //            new List<NoteStatus>() { NoteStatus.Submitted }, 
-        //            SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
+        private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId,
+            DateTime currentDate,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        {
+            using (var client = this.apiClient())
+            {
+                var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNoteByPbsOrganisationRequest(organisationId,
+                    new List<NoteStatus>() { NoteStatus.Submitted },
+                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
-        //        var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-        //            new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, schemeName, currentDate, manageEvidenceNoteViewModel));
+                var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
+                    new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, null, currentDate, manageEvidenceNoteViewModel));
 
-        //        return View("ReviewSubmittedEvidence", model);
-        //    }
-        //}
+                return View("ReviewSubmittedEvidence", model);
+            }
+        }
 
         //private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId, 
         //    string schemeName, 
@@ -142,7 +131,7 @@
         //        return View("OutgoingTransfers", model);
         //    }
         //}
-        
+
         //[HttpGet]
         //public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, int selectedComplianceYear)
         //{
@@ -207,10 +196,10 @@
         //    }
         //}
 
-        //private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
-        //{
-        //    return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
-        //}
+        private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        {
+            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+        }
 
         //private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)
         //{

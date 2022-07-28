@@ -159,6 +159,14 @@
     <Compile Include="AddressHelper.cs" />
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="AuthorizationBuilder.cs" />
+    <Compile Include="DataHelpers\NoteStatusCoreData.cs" />
+    <Compile Include="DataHelpers\SchemeStatusCoreData.cs" />
+    <Compile Include="DataHelpers\SchemeStatusData.cs" />
+    <Compile Include="DataHelpers\NoteStatusData.cs" />
+    <Compile Include="DataHelpers\NoteTypeCoreData.cs" />
+    <Compile Include="DataHelpers\NoteTypeData.cs" />
+    <Compile Include="DataHelpers\ProtocolData.cs" />
+    <Compile Include="DataHelpers\WasteTypeData.cs" />
     <Compile Include="DbContextHelper.cs" />
     <Compile Include="DomainHelper.cs" />
     <Compile Include="Model\AATF.cs">
@@ -425,6 +433,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

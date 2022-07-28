@@ -4,11 +4,12 @@
 
 @Html.AntiForgeryToken()
 @Html.HiddenFor(m => m.OrganisationId)
+@Html.HiddenFor(m => m.ComplianceYear)
 
 <div class="govuk-form-group govuk-!-width-one-half @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
     @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m" })
     @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
-    @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "SchemeName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
+    @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
 </div>
 
 <div class="govuk-!-padding-top-5 govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedAtLeastOneCategory)">
@@ -21,7 +22,6 @@
         <div class="govuk-!-padding-top-5"></div>
         @for (var i = 0; i < Model.CategoryBooleanViewModels.Count; i++)
         {
-
             @Html.HiddenFor(m => m.HasSelectedAtLeastOneCategory, new { id = i + "_HasSelectedAtLeastOneCategory" })
 
             <div>

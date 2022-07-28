@@ -25,7 +25,7 @@
                     {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.OrganisationId)
-
+                        @Html.Hidden("complianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, new { id = "transfer-compliance-year" })
                         @(this.WeeeGds().Submit("Transfer evidence"))
                     }
                 }

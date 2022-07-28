@@ -13,78 +13,7 @@
         <div class="govuk-grid-column-full">
             @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
 
-            <section class="govuk-tabs__panel" id="pcsDetails">
-                <h2 class="govuk-heading-m">
-                    Review submitted evidence notes
-                </h2>
-
-                <table id="submitted-evidence-notes-table" class="govuk-table">
-                    <caption class="govuk-table__caption govuk-visually-hidden">Review submitted evidence notes</caption>
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header">
-                            Reference ID
-                        </th>
-                        <th class="govuk-table__header">
-                            Submitted date
-                        </th>
-                        <th class="govuk-table__header" style="width: 35%;">
-                            Submitted by
-                        </th>
-                        <th class="govuk-table__header">
-                            Type of waste
-                        </th>
-                        <th class="govuk-table__header">
-                            @Html.Gds().VisuallyHidden("actions")
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    @if (Model.EvidenceNotesDataList.Any())
-                    {
-                        foreach (var note in Model.EvidenceNotesDataList)
-                        {
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
-                                <td class="govuk-table__cell">@note.SubmittedBy</td>
-                                @if (note.TypeOfWaste.HasValue)
-                                {
-                                    <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
-                                }
-                                else
-                                {
-                                    <td class="govuk-table__cell"> </td>
-                                }
-                            <td class="govuk-table__cell">
-                                @if (note.Type == NoteType.Evidence)
-                                {
-                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
-                                }
-                                else
-                                {
-                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference " + @note.ReferenceId, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
-                                }
-                            </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="4">
-                                <p>There are currently no evidence notes to review </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p> Showing 0 - 0 of 0 </p>
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </section>
+            @Html.Partial("_ReviewSubmittedEvidencePartial", Model)
         </div>
     </div>
 }

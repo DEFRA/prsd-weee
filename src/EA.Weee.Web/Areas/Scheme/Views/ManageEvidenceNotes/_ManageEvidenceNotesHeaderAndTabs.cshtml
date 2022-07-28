@@ -7,9 +7,8 @@
 
 @model ManageEvidenceNoteSchemeViewModel
 @{
-    var title = String.Format("Manage evidence notes for {0}", Model.SchemeName);
+    var title = String.Format("Manage evidence notes for {0}", Model.SchemeInfo.Name);
     ViewBag.Title = title + " - GOV.UK";
-
 }
 
 @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
@@ -20,7 +19,20 @@
     </h1>
 </header>
 
- @{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() {{ "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }, { "width", "107px" } });}
+@{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }, { "width", "107px" } });}
+
+<!-- injected Withdrawn scheme message when applicable -->
+@if (Model.IsWithdrawn)
+{
+    <p class="govuk-details__text govuk-!-margin-bottom-7">
+        Your scheme approval has been withdrawn and therefore you are unable to approve, return or reject any evidence notes or transfer any evidence. Contact your environmental regulator if you think this is not the case.
+    </p>
+} else if (Model.ManageEvidenceNoteViewModel.ComplianceYearClosed)
+{
+    <p class="govuk-details__text govuk-!-margin-bottom-7">
+        This compliance year has now closed and you are unable to approve, return or reject any evidence notes or transfer any evidence
+    </p>
+}
 
 <ul class="govuk-tabs__list">
     @this.WeeeGds().Tab("Review submitted evidence",

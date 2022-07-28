@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\EditEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteBaseRequest.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequest.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForAatfRequest.cs" />
@@ -124,7 +125,7 @@
     <Compile Include="Admin\GetAatfs.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYears.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYears.cs" />
-    <Compile Include="Admin\GetAllNotes.cs" />
+    <Compile Include="Admin\GetAllNotesInternal.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetEEEWEEEDataReturnSchemesByComplianceYear.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequest.cs" />
@@ -180,6 +181,8 @@
     <Compile Include="Organisations\GetAddress.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
+    <Compile Include="Scheme\GetOrganisationScheme.cs" />
+    <Compile Include="Scheme\EditTransferEvidenceNoteRequest.cs" />
     <Compile Include="Scheme\GetSchemeByOrganisationId.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemeExternalById.cs" />

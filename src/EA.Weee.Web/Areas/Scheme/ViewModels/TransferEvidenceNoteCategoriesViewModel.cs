@@ -14,7 +14,7 @@
         [Display(Name = "Who would you like to transfer evidence to?")]
         public Guid? SelectedSchema { get; set; }
 
-        public IList<SchemeData> SchemasToDisplay { get; set; }
+        public IList<OrganisationSchemeData> SchemasToDisplay { get; set; }
 
         public CategoryValues<CategoryBooleanViewModel> CategoryBooleanViewModels { get; set; }
 

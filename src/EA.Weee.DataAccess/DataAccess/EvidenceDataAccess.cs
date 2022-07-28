@@ -6,12 +6,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
-    using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
     using EA.Weee.Domain.Evidence;
     using Prsd.Core.Domain;
-    using Z.EntityFramework.Plus;
 
     public class EvidenceDataAccess : IEvidenceDataAccess
     {
@@ -65,7 +62,7 @@
 
             return note;
         }
-        public async Task<List<Note>> GetAllNotes(NoteFilter filter)
+        public async Task<EvidenceNoteResults> GetAllNotes(NoteFilter filter)
         {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value).ToList();
             var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
@@ -94,9 +91,9 @@
             {
                 notes = notes.Where(n => n.Organisation.Id == filter.OrganisationId.Value);
             }
-            if (filter.SchemeId.HasValue)
+            if (filter.RecipientId.HasValue)
             {
-                notes = notes.Where(n => n.Recipient.Schemes.FirstOrDefault().Id == filter.SchemeId.Value);
+                notes = notes.Where(n => n.RecipientId == filter.RecipientId);
             }
             if (filter.NoteStatusId.HasValue)
             {
@@ -136,10 +133,15 @@
             }
             if (groupedAatfId.HasValue)
             {
-                return await notes.Where(p => p.Aatf.AatfId == groupedAatfId).ToListAsync();
+                notes = notes.Where(p => p.Aatf.AatfId == groupedAatfId);
             }
 
-            return await notes.ToListAsync();
+            var returnNotes = await notes.OrderByDescending(n => n.Reference)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+            return new EvidenceNoteResults(returnNotes.ToList(), notes.Count());
         }
 
         public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
@@ -150,11 +152,11 @@
             return note.ComplianceYear;
         }
 
-        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid schemeId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
+        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid recipientOrganisationId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
         {
             var notes = await context.Notes
                 .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
-                .Where(n => n.Recipient.ProducerBalancingScheme != null ? true : n.Recipient.Schemes.FirstOrDefault().Id == schemeId &&
+                .Where(n => n.RecipientId == recipientOrganisationId &&
                             n.NoteType.Value == NoteType.EvidenceNote.Value &&
                             n.WasteType.Value == WasteType.HouseHold &&
                             n.Status.Value == NoteStatus.Approved.Value &&
@@ -168,11 +170,14 @@
 
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear)
         {
-            return await context.Notes.Where(n => (n.AatfId.HasValue && n.AatfId.Value.Equals(aatfId)) && n.Status.Value.Equals(status.Value) && n.ComplianceYear.Equals(complianceYear))
+            var aatf = await context.Aatfs.FindAsync(aatfId);
+            var groupedAatfId = aatf.AatfId;
+
+            return await context.Notes.Where(n => (n.AatfId.HasValue && n.Aatf.AatfId == groupedAatfId) && n.Status.Value.Equals(status.Value) && n.ComplianceYear.Equals(complianceYear))
                 .CountAsync();
         }
 
-        public async Task<Guid> AddTransferNote(Organisation organisation, 
+        public async Task<Note> AddTransferNote(Organisation organisation, 
             Organisation recipientOrganisation,
             List<NoteTransferTonnage> transferTonnage, 
             NoteStatus status, 
@@ -184,8 +189,7 @@
                 recipientOrganisation,
                 userId,
                 transferTonnage,
-                complianceYear,
-                WasteType.HouseHold);
+                complianceYear);
 
             if (status.Equals(NoteStatus.Submitted))
             {
@@ -196,7 +200,7 @@
 
             await context.SaveChangesAsync();
 
-            return note.Id;
+            return note;
         }
 
         public async Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids)
@@ -207,6 +211,42 @@
                 .Include(n => n.NoteTransferTonnage.Select(nt => nt.TransferNote))
                 .Where(n => ids.Contains(n.Id))
                 .ToListAsync();
+        }
+
+        public async Task<Note> UpdateTransfer(Note note, Organisation recipient,
+            IList<NoteTransferTonnage> tonnages,
+            NoteStatus status,
+            DateTime updateDate)
+        {
+            if (status.Equals(NoteStatus.Submitted))
+            {
+                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), updateDate);
+            }
+
+            foreach (var noteTonnage in tonnages)
+            {
+                var existingTonnage = note.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage.NoteTonnageId);
+
+                if (existingTonnage == null)
+                {
+                    note.NoteTransferTonnage.Add(noteTonnage);
+                }
+                else
+                {
+                    existingTonnage.UpdateValues(noteTonnage.Received, noteTonnage.Reused);
+                }
+            }
+
+            var itemsToRemove =
+                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId));
+
+            genericDataAccess.RemoveMany(itemsToRemove);
+            
+            note.Update(recipient);
+
+            await context.SaveChangesAsync();
+
+            return note;
         }
     }
 }

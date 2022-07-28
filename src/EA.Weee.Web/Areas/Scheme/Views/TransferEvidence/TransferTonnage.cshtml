@@ -4,21 +4,34 @@
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Scheme.ViewModels
 @using EA.Weee.Web.ViewModels.Shared
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Transfer tonnage - GOV.UK";
+
+    if (ViewData != null)
+    {
+        ViewData.Add("action", "TransferTonnage");
+        ViewData.Add("controller", "TransferEvidence");
+    }
 }
 
 @section full_main_content
 {
+    
+    <!-- this button is here to override the back link, as the back link would be at the top without this it becomes the form default action -->
+    <button class="govuk-visually-hidden" aria-hidden="true" style="z-index: -1" name="Action" value="@ActionEnum.Save" form="tonnages-form-partial"></button>
+    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="tonnages-form-partial">Back</button>
+
     @Html.Gds().ValidationSummary()
     <h1 class="govuk-heading-l">
         Transfer tonnage to @Model.RecipientName from selected evidence notes
     </h1>
 
-
     @using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Get, htmlAttributes: new Dictionary<string, object>() { { "id", "TransferEvidenceForm" } }))
     {
+        @Html.HiddenFor(m => m.ComplianceYear, new {id = "transfer-all-compliance-year" })
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-body">Choose the tonnage that you would like to transfer from each category, for each evidence note that you have selected</legend>
             <div class="govuk-checkboxes">

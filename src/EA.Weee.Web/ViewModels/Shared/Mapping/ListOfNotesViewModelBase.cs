@@ -2,8 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
+    using Core.Helpers;
+    using Core.Scheme;
+    using Core.Shared;
     using CuttingEdge.Conditions;
     using Extensions;
     using Prsd.Core.Mapper;
@@ -17,19 +21,25 @@
             this.Mapper = mapper;
         }
 
-        public T MapBase(List<EvidenceNoteData> notes, 
+        public T MapBase(EvidenceNoteSearchDataResult notes, 
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             Condition.Requires(notes).IsNotNull();
 
+            var complianceYear =
+                manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0
+                    ? manageEvidenceNoteViewModel.SelectedComplianceYear
+                    : currentDate.Year;
+
             var m = new T
             {
-                EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes),
-                ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
+                EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes.Results.ToList()),
+                ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel
                 {
                     ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
-                    SelectedComplianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year
+                    SelectedComplianceYear = complianceYear,
+                    ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(complianceYear, currentDate)
                 }
             };
 

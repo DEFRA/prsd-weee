@@ -11,20 +11,19 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Shared;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ListOfNotesViewModelBaseTests
+    public class ListOfNotesViewModelBaseTests : SimpleUnitTestBase
     {
         private readonly IMapper mapper;
         private readonly TestListBase testClass;
-        private readonly Fixture fixture;
 
         public ListOfNotesViewModelBaseTests()
         {
             mapper = A.Fake<IMapper>();
 
             testClass = new TestListBase(mapper);
-            fixture = new Fixture();
         }
 
         private class TestListBase : ListOfNotesViewModelBase<EditDraftReturnedNotesViewModel>
@@ -51,7 +50,7 @@
         public void Map_GivenNullSource_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => testClass.MapBase(null, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>()));
+            var exception = Record.Exception(() => testClass.MapBase(null, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -63,35 +62,36 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                fixture.Create<EvidenceNoteData>(),
-                fixture.Create<EvidenceNoteData>(),
-                fixture.Create<EvidenceNoteData>()
+                TestFixture.Create<EvidenceNoteData>(),
+                TestFixture.Create<EvidenceNoteData>(),
+                TestFixture.Create<EvidenceNoteData>()
             };
+            var noteData = new EvidenceNoteSearchDataResult(notes, 2);
 
             //act
-            testClass.MapBase(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
+            testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             // assert 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e => 
+                e.SequenceEqual(noteData.Results.ToList())))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public void Map_GivenListOfEvidenceNoteData_ShouldReturnMappedData()
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
-                fixture.Create<EvidenceNoteRowViewModel>(),
-                fixture.Create<EvidenceNoteRowViewModel>(),
-                fixture.Create<EvidenceNoteRowViewModel>()
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(notes)).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
-            var result = testClass.MapBase(notes, fixture.Create<DateTime>(), fixture.Create<ManageEvidenceNoteViewModel>());
+            var result = testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>());
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
@@ -102,12 +102,12 @@
         public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
-            var model = fixture.Create<ManageEvidenceNoteViewModel>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var date = new DateTime(2022, 1, 1);
 
             //act
-            var result = testClass.MapBase(notes, date, model);
+            var result = testClass.MapBase(noteData, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
@@ -123,11 +123,11 @@
         public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(year, 1, 1);
 
             //act
-            var result = testClass.MapBase(notes, date, null);
+            var result = testClass.MapBase(noteData, date, null);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
@@ -139,13 +139,13 @@
         public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int complianceYear)
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(2022, 1, 1);
-            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, complianceYear).Create();
 
             //act
-            var result = testClass.MapBase(notes, date, model);
+            var result = testClass.MapBase(noteData, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
@@ -155,13 +155,13 @@
         public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
         {
             //arrange
-            var notes = fixture.CreateMany<EvidenceNoteData>().ToList();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(2022, 1, 1);
-            var model = fixture.Build<ManageEvidenceNoteViewModel>()
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
-            var result = testClass.MapBase(notes, date, model);
+            var result = testClass.MapBase(noteData, date, model);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);

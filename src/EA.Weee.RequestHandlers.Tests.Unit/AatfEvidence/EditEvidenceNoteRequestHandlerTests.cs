@@ -6,22 +6,22 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.Tests.Unit.Helpers;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
-    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using RequestHandlers.Aatf;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Factories;
     using RequestHandlers.Security;
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using Protocol = Core.AatfEvidence.Protocol;
     using WasteType = Core.AatfEvidence.WasteType;
@@ -31,27 +31,26 @@
         private EditEvidenceNoteRequestHandler handler;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
-        private readonly ISchemeDataAccess schemeDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
         private readonly EditEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Organisation recipientOrganisation;
-        private readonly Scheme recipientScheme;
         private readonly Note note;
         private readonly Aatf aatf;
-
+        private const string Error = "You cannot create evidence if the start and end dates are not in the current compliance year";
         public EditEvidenceNoteRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
-            schemeDataAccess = A.Fake<ISchemeDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            aatfDataAccess = A.Fake<IAatfDataAccess>();
             var currentDate = new DateTime(2021, 12, 1);
-            recipientScheme = A.Fake<Scheme>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
+
             organisation = A.Fake<Organisation>();
             recipientOrganisation = A.Fake<Organisation>();
-            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
-            A.CallTo(() => recipientScheme.Organisation).Returns(recipientOrganisation);
             note = A.Fake<Note>();
             TestFixture.Create<Guid>();
             var organisationId = TestFixture.Create<Guid>();
@@ -70,10 +69,12 @@
 
             request = Request();
 
-            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(weeeAuthorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess, aatfDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(request.Id)).Returns(note);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, request.StartDate.Year)).Returns(aatf);
         }
 
         [Fact]
@@ -82,7 +83,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess, aatfDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -97,13 +98,27 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, schemeDataAccess, systemDataDataAccess);
+            handler = new EditEvidenceNoteRequestHandler(authorization, evidenceDataAccess, systemDataDataAccess, genericDataAccess, aatfDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
 
             //assert
             result.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_AatfForComplianceYearShouldBeRetrieved()
+        {
+            //arrange
+            A.CallTo(() => aatfDataAccess.GetDetails(aatf.Id)).Returns(aatf);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, request.StartDate.Year))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -143,10 +158,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequestAndNoSchemeFound_ShowThrowArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenRequestAndNoRecipientOrganisationFound_ShowThrowArgumentNullExceptionExpected()
         {
             //arrange
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns((Scheme)null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns((Organisation)null);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -184,7 +199,7 @@
             var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
@@ -213,8 +228,8 @@
             var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
-           
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
+
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
@@ -245,7 +260,7 @@
             var currentDate = new DateTime(2021, 12, 1);
             SystemTime.Freeze(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             var request = Request();
@@ -271,7 +286,7 @@
         {
             //act
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
 
             //arrange
             var result = await handler.HandleAsync(request);
@@ -287,7 +302,7 @@
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => note.Status).Returns(NoteStatus.Returned);
             A.CallTo(() => note.RecipientId).Returns(recipientOrganisation.Id);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefault(A<Guid>._)).Returns(recipientScheme);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
 
             //arrange
             var result = await handler.HandleAsync(request);
@@ -301,13 +316,14 @@
         {
             //arrange
             A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Cancelled);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         [Fact]
@@ -315,13 +331,14 @@
         {
             //arrange
             A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Suspended);
+            A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         public static IEnumerable<object[]> OutOfComplianceYear =>
@@ -345,7 +362,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         [Fact]
@@ -362,7 +379,7 @@
 
             //assert
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Contain("is in an invalid state to be saved");
+            exception.Message.Should().Be(Error);
         }
 
         private void AssertTonnages(List<NoteTonnage> tonnageValues)
