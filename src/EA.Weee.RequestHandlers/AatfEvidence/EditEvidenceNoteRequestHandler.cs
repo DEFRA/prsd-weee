@@ -3,12 +3,14 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Aatf;
     using Core.Helpers;
+    using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Lookup;
+    using Domain.Organisation;
     using Factories;
-    using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
@@ -19,18 +21,21 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
-        private readonly ISchemeDataAccess schemeDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IAatfDataAccess aatfDataAccess;
 
         public EditEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess evidenceDataAccess,
-            ISchemeDataAccess schemeDataAccess, 
-            ISystemDataDataAccess systemDataDataAccess)
+            ISystemDataDataAccess systemDataDataAccess, 
+            IGenericDataAccess genericDataAccess, 
+            IAatfDataAccess aatfDataAccess)
         {
             this.authorization = authorization;
             this.evidenceDataAccess = evidenceDataAccess;
-            this.schemeDataAccess = schemeDataAccess;
             this.systemDataDataAccess = systemDataDataAccess;
+            this.genericDataAccess = genericDataAccess;
+            this.aatfDataAccess = aatfDataAccess;
         }
 
         public async Task<Guid> HandleAsync(EditEvidenceNoteRequest message)
@@ -47,17 +52,18 @@
             {
                 throw new InvalidOperationException($"Evidence note {evidenceNote.Id} has incorrect Recipient Id to be saved");
             }
-            
-            var scheme = await schemeDataAccess.GetSchemeOrDefault(message.RecipientId);
 
-            Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme {message.RecipientId} not found");
+            var recipientOrganisation = await genericDataAccess.GetById<Organisation>(message.RecipientId);
+            Condition.Requires(recipientOrganisation).IsNotNull($"Could not find a recipient organisation with Id {message.RecipientId}");
 
             if (!evidenceNote.Status.Equals(NoteStatus.Draft) && !evidenceNote.Status.Equals(NoteStatus.Returned))
             {
                 throw new InvalidOperationException($"Evidence note {evidenceNote.Id} is incorrect state to be edited");
             }
 
-            AatfIsValidToSave(evidenceNote.Aatf, currentDate);
+            var complianceYearAatf = await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(evidenceNote.Aatf.AatfId, message.StartDate.Year);
+
+            AatfIsValidToSave(complianceYearAatf, currentDate);
 
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
                 (WeeeCategory)t.CategoryId,
@@ -65,7 +71,7 @@
                 t.SecondTonnage)).ToList();
 
             await evidenceDataAccess.Update(evidenceNote,
-                scheme.Organisation,
+                recipientOrganisation,
                 message.StartDate,
                 message.EndDate,
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
@@ -77,11 +83,11 @@
             return evidenceNote.Id;
         }
 
-        private bool EnsureTheSchemeNotChanged(Note note, Guid schemeIdFromModel)
+        private bool EnsureTheSchemeNotChanged(Note note, Guid recipientOrganisationId)
         {
             if (note.Status == NoteStatus.Returned)
             {
-                return note.RecipientId.Equals(schemeIdFromModel);
+                return note.RecipientId.Equals(recipientOrganisationId);
             }
             return true;
         }

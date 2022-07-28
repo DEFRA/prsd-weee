@@ -23,6 +23,7 @@
     using Web.Extensions;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerReviewEvidenceNoteTests : SimpleUnitTestBase
@@ -35,6 +36,7 @@
         protected readonly Guid RecipientId;
         protected readonly Guid OrganisationId;
         protected readonly Guid EvidenceNoteId;
+        protected readonly ISessionService SessionService;
 
         public ManageEvidenceNotesControllerReviewEvidenceNoteTests()
         {
@@ -42,10 +44,11 @@
             Breadcrumb = A.Fake<BreadcrumbService>();
             Cache = A.Fake<IWeeeCache>();
             Mapper = A.Fake<IMapper>();
+            SessionService = A.Fake<ISessionService>();
             RecipientId = Guid.NewGuid();
             OrganisationId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService);
 
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(
                 new ReviewEvidenceNoteViewModel()
@@ -60,16 +63,16 @@
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
              .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
-                .BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
+
         [Fact]
         public void ReviewEvidenceNotePost_ShouldHaveAntiForgeryAttribute()
         {
@@ -94,7 +97,7 @@
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await ManageEvidenceController.DownloadEvidenceNote(organisationId, EvidenceNoteId, TestFixture.Create<int>());
+            await ManageEvidenceController.DownloadEvidenceNote(organisationId, EvidenceNoteId);
 
             // assert
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -105,7 +108,7 @@
         public async Task DownloadEvidenceGet_GivenEvidenceNoteId_ShouldRetrieveNote()
         {
             // act
-            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>());
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
@@ -118,19 +121,17 @@
         {
             //arrange
             var noteData = TestFixture.Create<EvidenceNoteData>();
-            var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
 
             // act
-            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId, complianceYear);
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
 
             // assert
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
-                                                                 v.SchemeId.Equals(OrganisationId) && 
-                                                                 v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+                                                                 v.SchemeId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -144,50 +145,62 @@
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Approved;
 
             // act
-            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>());
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
 
             // assert
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
                                                                  v.SchemeId.Equals(OrganisationId) &&
-                                                                 v.NoteStatus.Equals(NoteStatus.Approved)))).MustHaveHappenedOnceExactly();
+                                                                 v.NoteStatus.Equals(NoteStatus.Approved) &&
+                                                                 v.RedirectTab == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenEvidenceNoteDataAndRedirectTab_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            var noteData = TestFixture.Create<EvidenceNoteData>();
+            var redirectTab = TestFixture.Create<string>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Approved;
+
+            // act
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId, redirectTab);
+
+            // assert
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
+                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
+                                                                 v.SchemeId.Equals(OrganisationId) &&
+                                                                 v.NoteStatus.Equals(NoteStatus.Approved) &&
+                                                                 v.RedirectTab.Equals(redirectTab)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task DownloadEvidenceGet_GivenModelIsBuilt_ModelShouldBeReturned()
         {
             //arrange
-            var model = TestFixture.Create<ViewEvidenceNoteViewModel>();
+            var model = TestFixture.Build<ViewEvidenceNoteViewModel>().With(m => m.RedirectTab, string.Empty).Create();
 
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
             // act
-            var result = await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
+            var result = await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             // assert
             result.Model.Should().Be(model);
+            ((ViewEvidenceNoteViewModel)result.Model).RedirectTab.Should().BeEmpty();
         }
 
         [Fact]
         public async Task DownloadEvidenceGet_GivenModelIsBuilt_DefaultViewShouldBeReturned()
         {
             // act
-            var result = await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
+            var result = await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             // assert
             result.ViewName.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task DownloadEvidenceNoteGet_ShouldReturnModel()
-        {
-            //arrange
-
-            //act
-            var result = await ManageEvidenceController.DownloadEvidenceNote(RecipientId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
-
-            // assert
-            result.Model.GetType().BaseType.Should().Be(typeof(ViewEvidenceNoteViewModel));
         }
 
         [Fact]
@@ -199,7 +212,7 @@
             var model = GetValidModel();
 
             //act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
+            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             // assert
             result.ViewName.Should().Be("ReviewEvidenceNote");
@@ -214,7 +227,7 @@
             A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
             // act
-            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>());
+            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId);
 
             // assert
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -225,7 +238,7 @@
         public async Task ReviewEvidenceNoteGet_GivenEvidenceNoteId_ShouldRetrieveNote()
         {
             // act
-            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>());
+            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
@@ -244,13 +257,12 @@
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
 
             // act
-            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, complianceYear);
+            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId);
 
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
-                                                                 v.SchemeId.Equals(OrganisationId) &&
-                                                                 v.SelectedComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+                                                                 v.SchemeId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -263,19 +275,17 @@
             }
 
             //arrange
-            var complianceYear = TestFixture.Create<int>();
             var model = TestFixture.Build<ReviewEvidenceNoteViewModel>()
                 .With(m => m.ViewEvidenceNoteViewModel, TestFixture.Build<ViewEvidenceNoteViewModel>().With(v => v.Status, status).Create()).Create();
 
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
             // act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, complianceYear) as RedirectToRouteResult;
+            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as RedirectToRouteResult;
 
             //assert
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
-            result.RouteValues["selectedComplianceYear"].Should().Be(complianceYear);
             result.RouteValues["pcsId"].Should().Be(OrganisationId);
             result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString());
         }
@@ -293,7 +303,7 @@
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
             // act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
+            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             // assert
             result.Model.Should().Be(model);
@@ -303,7 +313,7 @@
         public async Task ReviewEvidenceNoteGet_GivenANewModelIsCreated_ModelWithPossibleValuesIsCreated()
         {
             // act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
+            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
             var model = result.Model as ReviewEvidenceNoteViewModel;
             var expected = new List<string> { "Approve evidence note", "Reject evidence note", "Return evidence note" };
 
@@ -315,7 +325,7 @@
         public async Task ReviewEvidenceNoteGet_GivenApprovedSelectedValueIsSet_ModelWithSelectedEnumValueIsCreated()
         {
             // act
-            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, TestFixture.Create<int>()) as ViewResult;
+            var result = await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId) as ViewResult;
 
             var model = result.Model as ReviewEvidenceNoteViewModel;
             model.SelectedValue = "Approve evidence note";
@@ -457,7 +467,7 @@
 
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
-                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && v.SchemeId.Equals(model.ViewEvidenceNoteViewModel.SchemeId) && v.SelectedComplianceYear.Equals(model.ViewEvidenceNoteViewModel.SelectedComplianceYear)))).MustHaveHappenedOnceExactly();
+                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && v.SchemeId.Equals(model.ViewEvidenceNoteViewModel.SchemeId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

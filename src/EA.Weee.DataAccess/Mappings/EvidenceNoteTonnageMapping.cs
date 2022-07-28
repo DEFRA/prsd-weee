@@ -13,6 +13,8 @@
             Property(n => n.NoteId).IsRequired();
             Property(n => n.Received).IsOptional().HasPrecision(28, 3);
             Property(n => n.Reused).IsOptional().HasPrecision(28, 3);
+            Property(n => n.ReceivedUsed).IsOptional().HasPrecision(28, 3);
+            Property(n => n.ReusedUsed).IsOptional().HasPrecision(28, 3);
 
             HasRequired(a => a.Note).WithMany(n => n.NoteTonnage).HasForeignKey(n => n.NoteId);
 

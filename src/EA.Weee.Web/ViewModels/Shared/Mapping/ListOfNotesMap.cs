@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
     using System.Collections.Generic;
-    using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Prsd.Core;
     using Prsd.Core.Mapper;

@@ -4,19 +4,22 @@
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
+
 @{
-    var hideButton = false;
-    if (ViewData["hideButton"] != null)
-    {
-        hideButton = (bool)ViewData["hideButton"];
-    }
+    var action = ViewData["action"] as string;
+    var controller = ViewData["controller"] as string;
 }
 
-@using (Html.BeginForm(actionName: "TransferTonnage", controllerName: "TransferEvidence", method: FormMethod.Post))
+@using (Html.BeginForm(actionName: action, controllerName: controller, method: FormMethod.Post, htmlAttributes: new { id = "tonnages-form-partial" }))
 {
     @Html.AntiForgeryToken()
-
+    @Html.HiddenFor(m => m.ComplianceYear)
     @Html.HiddenFor(m => m.PcsId)
+    if (Model.ViewTransferNoteViewModel != null)
+    {
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
+        @Html.HiddenFor(m => m.RecipientId)
+    }
 
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues)">
         <label for="TransferCategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="TransferCategoryValues" class="govuk-visually-hidden" />
@@ -35,7 +38,6 @@
         }
 
         <div class="govuk-panel-grey-background govuk-!-margin-bottom-5 govuk-!-padding-left-2 govuk-!-padding-right-2">
-
 
             <span class="govuk-label--s" id="reference-label-@i.ToString()">Reference ID&nbsp;</span><span class="govuk-body" aria-labelledby="reference-label-@i.ToString()">@note.ReferenceDisplay</span><br />
             <span class="govuk-label--s" id="received-label-@i.ToString()">WEEE received between&nbsp;</span><span class="govuk-body" aria-labelledby="received-label-@i.ToString()">@note.StartDate.Value.ToShortDateString() - @note.EndDate.Value.ToShortDateString()</span>
@@ -71,7 +73,7 @@
 
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell govuk-!-padding-left-0 govuk-!-padding-right-0">
-                           
+
                                 @category.CategoryId. @category.CategoryDisplay
 
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryId)
@@ -154,17 +156,16 @@
             }
         </tbody>
     </table>
-    if (!hideButton)
-    {
-        <div class="govuk-!-margin-top-3">
-            <div class="govuk-button-group">
 
-                @this.WeeeGds().Button("Submit transfer", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
-                @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { id = "transfer-tonnage-button", name = "Action", value = ActionEnum.Save, @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
+ 
+    <div class="govuk-!-margin-top-3">
+        <div class="govuk-button-group">
 
-            </div>
+            @this.WeeeGds().Button("Submit transfer", new { name = "Action", value = ActionEnum.Submit, id = "submit-note", @class = "govuk-!-width-one-quarter" })
+            @this.WeeeGds().Button(!Model.Edit ? "Save as draft" : "Save", new { name = "Action", value = ActionEnum.Save, id = "transfer-tonnage-button", @class = "govuk-!-width-one-quarter" }, secondaryButton: true)
+
         </div>
-    }
+    </div>
 }
 @Scripts.Render("~/bundles/weee_tonnage_totals")
 <script type="text/javascript">

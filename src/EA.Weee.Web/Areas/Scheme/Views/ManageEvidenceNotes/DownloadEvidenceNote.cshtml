@@ -1,13 +1,17 @@
 ﻿@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Areas.Aatf.ViewModels
-@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 @{
 
-    var navigateBackToSelectedTab = Model.DisplayMessage ? ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() : ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+    var navigateBackToSelectedTab = Model.RedirectTab;
+    if (string.IsNullOrWhiteSpace(navigateBackToSelectedTab))
+    {
+        navigateBackToSelectedTab = Model.DisplayMessage ?
+            ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() :
+            ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString();
+    }
+
 
     string title;
     if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Approved))
@@ -35,17 +39,17 @@
     @if (Model.DisplayMessage)
     {
     @(this.WeeeGds().BackLink(
-            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }),
+            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear }),
             "Manage evidence notes")
             )
-    @(this.WeeeGds().Panel(Model.SuccessMessage))
+        @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-    @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear=Model.SelectedComplianceYear }))
-            )
-    }
+        @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear }))
+                )
+        }
     <div class="govuk-!-margin-top-3"></div>
     @Html.Partial("_ViewEvidenceNotePartial", Model)
 }

@@ -75,8 +75,8 @@
             }
             catch (ApiException ex)
             {
-                string message = string.Format("{0}: {1}", ex.Message, ex.ErrorData.ExceptionMessage);
-                throw new Exception(message);
+                string message = $"{ex.Message}: {ex.ErrorData.ExceptionMessage}";
+                throw;
             }
 
             return result;

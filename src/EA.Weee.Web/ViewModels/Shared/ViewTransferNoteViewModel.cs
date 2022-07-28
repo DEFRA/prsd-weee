@@ -3,10 +3,9 @@
     using System;
     using System.Collections.Generic;
     using Core.AatfEvidence;
-    using Core.Helpers;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
-    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
+    [Serializable]
     public class ViewTransferNoteViewModel : ViewEvidenceNoteViewModel
     {
         public Guid EvidenceNoteId { get; set; }
@@ -16,8 +15,6 @@
         public IList<TotalCategoryValue> TotalCategoryValues { get; set; }
 
         public IList<ViewTransferEvidenceAatfDataViewModel> Summary { get; set; }
-
-        public string RedirectTab { get; set; }
 
         public bool EditMode { get; set; }
 

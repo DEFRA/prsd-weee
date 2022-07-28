@@ -9,6 +9,7 @@
     using Requests.Scheme;
     using System;
     using System.Threading.Tasks;
+    using Core.Helpers;
     using Xunit;
 
     public class GetSchemePublicInfoBySchemeIdHandlerTests
@@ -16,7 +17,7 @@
         [Fact]
         public async void GetSchemeByIdHandler_HappyPath_ReturnsSchemeData()
         {
-            // Arrage
+            // Arrange
             var dataAccess = A.Fake<ISchemeDataAccess>();
             var scheme = A.Fake<Scheme>();
 
@@ -24,6 +25,7 @@
             A.CallTo(() => scheme.OrganisationId).Returns(Guid.NewGuid());
             A.CallTo(() => scheme.SchemeName).Returns("scheme");
             A.CallTo(() => scheme.ApprovalNumber).Returns("approval");
+            A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Approved);
             A.CallTo(() => dataAccess.GetSchemeOrDefault(scheme.Id)).Returns(scheme);
 
             var handler = new GetSchemePublicInfoBySchemeIdHandler(dataAccess);
@@ -37,6 +39,7 @@
             result.Name.Should().Be(scheme.SchemeName);
             result.ApprovalNo.Should().Be(scheme.ApprovalNumber);
             result.SchemeId.Should().Be(scheme.Id);
+            result.Status.Should().Be(Core.Shared.SchemeStatus.Approved);
         }
 
         [Fact]

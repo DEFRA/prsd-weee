@@ -15,7 +15,7 @@
     using System.Threading.Tasks;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class GetAatfNotesRequestHandler : IRequestHandler<GetAatfNotesRequest, List<EvidenceNoteData>>
+    public class GetAatfNotesRequestHandler : IRequestHandler<GetAatfNotesRequest, EvidenceNoteSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
@@ -30,19 +30,19 @@
             this.mapper = mapper;
         }
 
-        public async Task<List<EvidenceNoteData>> HandleAsync(GetAatfNotesRequest message)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetAatfNotesRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var filter = new NoteFilter(message.ComplianceYear)
+            var filter = new NoteFilter(message.ComplianceYear, int.MaxValue, 1)
             {
                 AatfId = message.AatfId,
                 NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                 OrganisationId = message.OrganisationId,
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList(),
                 SearchRef = message.SearchRef,
-                SchemeId = message.RecipientId,
+                RecipientId = message.RecipientId,
                 WasteTypeId = (int?)message.WasteTypeId,
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,
@@ -50,9 +50,13 @@
                 ComplianceYear = message.ComplianceYear
             };
 
-            var notes = await noteDataAccess.GetAllNotes(filter);
+            var noteData = await noteDataAccess.GetAllNotes(filter);
 
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(n => n.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+            var mappedNotes = mapper
+                .Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(noteData.Notes.OrderByDescending(n => n.CreatedDate).ToList(),
+                    false)).ListOfEvidenceNoteData;
+
+            return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults);
         }
     }
 }

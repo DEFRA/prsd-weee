@@ -19,7 +19,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(null, TestFixture.Create<TransferEvidenceNoteRequest>(),
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), null, TestFixture.Create<TransferEvidenceNoteRequest>(),
                     TestFixture.Create<Guid>()));
 
             //assert
@@ -45,7 +45,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
                     null,
                     TestFixture.Create<Guid>()));
 
@@ -86,7 +86,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
                     TestFixture.Create<TransferEvidenceNoteRequest>(), 
                     Guid.Empty));
 
@@ -101,14 +101,15 @@
             var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
             var request = TestFixture.Create<TransferEvidenceNoteRequest>();
             var organisationId = TestFixture.Create<Guid>();
-
+            var complianceYear = TestFixture.Create<int>();
             //act
-            var result = new TransferEvidenceNotesViewModelMapTransfer(notes, request, organisationId);
+            var result = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, notes, request, organisationId);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
             result.Notes.ToList().Should().BeEquivalentTo(notes);
             result.Request.Should().Be(request);
+            result.ComplianceYear.Should().Be(complianceYear);
         }
 
         [Fact]
@@ -133,16 +134,16 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenTransferCategoryConstructorValues_PropertiesShouldBeSet()
         {
             //arrange
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             var organisationId = TestFixture.Create<Guid>();
 
             //act
-            var result = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemeData, organisationId, null);
+            var result = new TransferEvidenceNotesViewModelMapTransfer(noteData, recipientData, organisationId, null);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.SchemeData.Should().BeEquivalentTo(schemeData);
+            result.RecipientData.Should().BeEquivalentTo(recipientData);
             result.TransferEvidenceNoteData.Should().Be(noteData);
             result.ExistingTransferEvidenceNoteCategoriesViewModel.Should().BeNull();
         }
@@ -151,18 +152,18 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenTransferCategoryConstructorValuesWithExistingModel_PropertiesShouldBeSet()
         {
             //arrange
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             var organisationId = TestFixture.Create<Guid>();
             var model = TestFixture.Build<TransferEvidenceNoteCategoriesViewModel>()
                 .With(t => t.CategoryBooleanViewModels, new CategoryValues<CategoryBooleanViewModel>()).Create();
 
             //act
-            var result = new TransferEvidenceNotesViewModelMapTransfer(noteData, schemeData, organisationId, model);
+            var result = new TransferEvidenceNotesViewModelMapTransfer(noteData, recipientData, organisationId, model);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.SchemeData.Should().BeEquivalentTo(schemeData);
+            result.RecipientData.Should().BeEquivalentTo(recipientData);
             result.TransferEvidenceNoteData.Should().Be(noteData);
             result.ExistingTransferEvidenceNoteCategoriesViewModel.Should().Be(model);
         }
@@ -171,11 +172,11 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenCategoryConstructorAndTransferNoteDataIsNull_ArgumentNullExceptionExpected()
         {
             //arrange
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var organisationId = TestFixture.Create<Guid>();
 
             //act
-            var exception = Record.Exception(() => new TransferEvidenceNotesViewModelMapTransfer(null, schemeData, organisationId, null));
+            var exception = Record.Exception(() => new TransferEvidenceNotesViewModelMapTransfer(null, recipientData, organisationId, null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -199,11 +200,11 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenCategoryConstructorAndOrganisationIdIsEmpty_ArgumentExceptionExpected()
         {
             //arrange
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
 
             //act
-            var exception = Record.Exception(() => new TransferEvidenceNotesViewModelMapTransfer(noteData, schemeData, Guid.Empty, null));
+            var exception = Record.Exception(() => new TransferEvidenceNotesViewModelMapTransfer(noteData, recipientData, Guid.Empty, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();

@@ -160,7 +160,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\EditTransferEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />
@@ -173,6 +175,7 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\CreateEvidenceNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetAatfNotesRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\GetEvidenceNoteByPbsOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesByOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandlerTests.cs" />
@@ -346,8 +349,10 @@
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
     <Compile Include="Mapping\OrganisationMapTests.cs" />
+    <Compile Include="Mapping\OrganisationProducerBalancingSchemeMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationDataMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationUploadDataTests.cs" />
+    <Compile Include="Mapping\SchemeOrganisationMapTests.cs" />
     <Compile Include="Mapping\TransferEvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
@@ -381,6 +386,8 @@
     <Compile Include="Organisations\OrganisationBySchemeIdHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationDetailsHandlerTests.cs" />
     <Compile Include="Scheme\AddSchemeHandlerTests.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfoHandlerTests.cs" />
+    <Compile Include="Scheme\GetOrganisationSchemeHandlerTests.cs" />
     <Compile Include="Scheme\UpdateSchemeContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />

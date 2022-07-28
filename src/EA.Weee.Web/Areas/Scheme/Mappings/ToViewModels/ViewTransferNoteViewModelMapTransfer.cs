@@ -12,13 +12,13 @@
 
         public object DisplayNotification { get; private set; }
 
-        public int? SelectedComplianceYear { get; set; }
-
         public bool Edit { get; set; }
 
         public bool? ReturnToView { get; set; }
 
         public string RedirectTab { get; set; }
+
+        public DateTime SystemDateTime { get; set; }
 
         public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification)
         {
@@ -28,7 +28,6 @@
             OrganisationId = organisationId;
             TransferEvidenceNoteData = transferEvidenceNoteData;
             DisplayNotification = displayNotification;
-            SelectedComplianceYear = transferEvidenceNoteData.ComplianceYear;
         }
     }
 }

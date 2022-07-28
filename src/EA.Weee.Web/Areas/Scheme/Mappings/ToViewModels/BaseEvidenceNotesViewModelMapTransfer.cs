@@ -2,35 +2,35 @@
 {
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
-    using EA.Weee.Web.ViewModels.Shared;
 
     public abstract class BaseEvidenceNotesViewModelMapTransfer
     {
         public Guid OrganisationId { get; protected set; }
 
-        public string SchemeName { get; protected set; }
+        public SchemePublicInfo Scheme { get; protected set; }
 
-        public List<EvidenceNoteData> Notes { get; protected set; }
+        public EvidenceNoteSearchDataResult NoteData { get; protected set; }
 
         public DateTime CurrentDate { get; protected set; }
 
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; protected set; }
 
-        protected BaseEvidenceNotesViewModelMapTransfer(Guid organisationId, 
-            List<EvidenceNoteData> notes, 
-            string schemeName,
+        protected BaseEvidenceNotesViewModelMapTransfer(Guid organisationId,
+            EvidenceNoteSearchDataResult noteData,
+            SchemePublicInfo scheme,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-            Guard.ArgumentNotNull(() => notes, notes);
-            Guard.ArgumentNotNull(() => schemeName, schemeName);
+            Guard.ArgumentNotNull(() => noteData, noteData);
 
             OrganisationId = organisationId;
-            Notes = notes;
-            SchemeName = schemeName;
+            NoteData = noteData;
+            Scheme = scheme;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
         }

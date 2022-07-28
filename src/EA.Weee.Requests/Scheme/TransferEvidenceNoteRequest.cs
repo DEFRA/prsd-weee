@@ -10,60 +10,62 @@
     public class TransferEvidenceNoteRequest : IRequest<Guid>
     {
         public TransferEvidenceNoteRequest()
-        { 
+        {
+            EvidenceNoteIds = new List<Guid>();
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
-            Guid schemeId, 
+            Guid recipientId, 
             List<int> categoryIds)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
 
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            RecipientId = recipientId;
             CategoryIds = categoryIds;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
-            Guid schemeId,
+            Guid recipientId,
             List<int> categoryIds,
             List<Guid> evidenceNoteIds)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
-            Condition.Requires(evidenceNoteIds).IsNotEmpty().IsNotNull();
 
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            RecipientId = recipientId;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
-            Guid schemeId,
+            Guid recipientId,
             List<int> categoryIds,
             List<TransferTonnageValue> transferValues,
             List<Guid> evidenceNoteIds,
-            Core.AatfEvidence.NoteStatus status)
+            Core.AatfEvidence.NoteStatus status,
+            int complianceYear)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(schemeId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
             Condition.Requires(transferValues).IsNotNull();
             Condition.Requires(evidenceNoteIds).IsNotNull();
 
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            RecipientId = recipientId;
             TransferValues = transferValues;
             Status = status;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
+            ComplianceYear = complianceYear;
         }
 
-        public Guid SchemeId { get; set; } 
+        public Guid RecipientId { get; set; } 
 
         public List<int> CategoryIds { get; set; }
 
@@ -74,5 +76,7 @@
         public EA.Weee.Core.AatfEvidence.NoteStatus Status { get; set; }
 
         public List<TransferTonnageValue> TransferValues { get; set; }
+
+        public int ComplianceYear { get; set; }
     }
 }

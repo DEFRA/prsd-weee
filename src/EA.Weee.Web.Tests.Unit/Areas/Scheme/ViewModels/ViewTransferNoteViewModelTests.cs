@@ -1,17 +1,20 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
+    using System;
     using System.ComponentModel;
     using Core.AatfEvidence;
-    using Core.Helpers;
-    using Core.Tests.Unit.Helpers;
     using FluentAssertions;
-    using Web.Areas.Scheme.ViewModels;
-    using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared;
     using Xunit;
 
     public class ViewTransferNoteViewModelTests
     {
+        [Fact]
+        public void ViewTransferNoteViewModel_ShouldHaveSerializableAttribute()
+        {
+            typeof(ViewTransferNoteViewModel).Should().BeDecoratedWith<SerializableAttribute>();
+        }
+
         [Fact]
         public void ViewTransferNoteViewModel_ReferenceDisplay_ShouldHaveDisplayAttribute()
         {

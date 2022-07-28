@@ -16,7 +16,7 @@
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
-                        @Html.Hidden("tab", Model.ActiveDisplayOption)
+                        @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
                     }
 
                     <h2 class="govuk-heading-m govuk-!-padding-bottom-8">

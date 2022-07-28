@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using CuttingEdge.Conditions;
+    using EA.Weee.Core.Scheme;
     using Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
@@ -20,8 +21,8 @@
 
             var model = MapBaseProperties(source);
 
-            var schemeData = source.SchemeData.ToList();
-            schemeData.RemoveAll(s => s.OrganisationId == source.OrganisationId);
+            var schemeData = source.RecipientData.ToList();
+            schemeData.RemoveAll(s => s.Id == source.OrganisationId);
             model.SchemasToDisplay = schemeData;
 
             if (source.ExistingTransferEvidenceNoteCategoriesViewModel != null)
@@ -33,7 +34,7 @@
             else
             {
                 model.OrganisationId = source.OrganisationId;
-                model.SelectedSchema = source.TransferEvidenceNoteData.RecipientSchemeData.Id;
+                model.SelectedSchema = source.TransferEvidenceNoteData.RecipientOrganisationData.Id;
 
                 SetCategoryValues(source.TransferEvidenceNoteData.CategoryIds, model);
             }

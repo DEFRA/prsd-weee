@@ -235,14 +235,7 @@
 
         public async Task<Aatf> GetAatfByAatfIdAndComplianceYear(Guid aatfId, int complianceYear)
         {
-            var aatf = await context.Aatfs.FirstOrDefaultAsync(p => p.AatfId == aatfId && p.ComplianceYear == complianceYear);
-
-            if (aatf == null)
-            {
-                throw new ArgumentException($"Aatf with aatfId {aatfId} and compliance year {complianceYear} not found");
-            }
-
-            return aatf;
+            return await context.Aatfs.FirstOrDefaultAsync(p => p.AatfId == aatfId && p.ComplianceYear == complianceYear);
         }
 
         public async Task<bool> IsLatestAatf(Guid id, Guid aatfId)

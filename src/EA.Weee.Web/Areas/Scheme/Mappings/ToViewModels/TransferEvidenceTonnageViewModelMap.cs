@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
@@ -35,9 +36,31 @@
 
             SetupTonnages(source, model, model.EvidenceNotesDataList);
 
+            SetupExistingValues(source, model);
+
             SetupTotals(source, model);
 
             return model;
+        }
+
+        private void SetupExistingValues(TransferEvidenceNotesViewModelMapTransfer source,
+            TransferEvidenceTonnageViewModel model)
+        {
+            if (source.ExistingTransferTonnageViewModel != null)
+            {
+                foreach (var transferEvidenceCategoryValue in model.TransferCategoryValues)
+                {
+                    var existingValue =
+                        source.ExistingTransferTonnageViewModel.TransferCategoryValues.FirstOrDefault(t =>
+                            t.Id == transferEvidenceCategoryValue.Id);
+
+                    if (existingValue != null)
+                    {
+                        transferEvidenceCategoryValue.Received = existingValue.Received;
+                        transferEvidenceCategoryValue.Reused = existingValue.Reused;
+                    }
+                }
+            }
         }
 
         private void SetupTotals(TransferEvidenceNotesViewModelMapTransfer source,
@@ -87,7 +110,8 @@
                         var availableReceived = evidenceTonnageData.AvailableReceived;
                         var availableReused = evidenceTonnageData.AvailableReused;
 
-                        var id = evidenceTonnageData.Id;
+                        var existingTonnageId = evidenceTonnageData.Id;
+                        var transferNoteTonnageId = Guid.Empty;
 
                         if (source.TransferAllTonnage)
                         {
@@ -123,16 +147,19 @@
                                     ? transferTonnageData.EvidenceTonnageData.TransferredReused.ToTonnageDisplay()
                                     : string.Empty;
 
-                                id = transferTonnageData.EvidenceTonnageData.Id;
+                                transferNoteTonnageId = transferTonnageData.EvidenceTonnageData.Id;
                             }
                         }
 
                         var tonnage = new TransferEvidenceCategoryValue(evidenceTonnageData.CategoryId,
-                            id,
+                            transferNoteTonnageId,
                             availableReceived,
                             availableReused,
                             receivedTonnage,
-                            reusedTonnage);
+                            reusedTonnage)
+                        {
+                            Id = existingTonnageId
+                        };
 
                         model.TransferCategoryValues.Add(tonnage);
                     }

@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
+    using System;
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FluentAssertions;
     using System.Collections.Generic;
-    using Core.Tests.Unit.Helpers;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewTransferEvidenceNoteTonnageDataViewModelTests
@@ -15,6 +16,12 @@
         public ViewTransferEvidenceNoteTonnageDataViewModelTests()
         {
             fixture = new Fixture();
+        }
+
+        [Fact]
+        public void ViewTransferEvidenceNoteTonnageDataViewModel_ShouldHaveSerializableAttribute()
+        {
+            typeof(ViewTransferEvidenceNoteTonnageDataViewModel).Should().BeDecoratedWith<SerializableAttribute>();
         }
 
         [Fact]

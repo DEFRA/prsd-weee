@@ -318,7 +318,7 @@
     <Compile Include="Areas\Aatf\Attributes\CheckCanCreateEvidenceNoteAttribute.cs" />
     <Compile Include="Areas\Aatf\Helpers\AatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
-    <Compile Include="Areas\Aatf\Comparers\SchemeDataComparer.cs" />
+    <Compile Include="Areas\Aatf\Comparers\SchemeOrganisationDataComparer.cs" />
     <Compile Include="Areas\Aatf\Controllers\EvidenceTonnageValueCopyPasteController.cs" />
     <Compile Include="Areas\Aatf\Helpers\IAatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\AatfEvidenceSelectYourAatfViewModelMap.cs" />
@@ -335,6 +335,7 @@
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMapModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
@@ -346,13 +347,19 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttribute.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttribute.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckTransferNoteAttributeBase.cs" />
     <Compile Include="Areas\Scheme\Attributes\ValidatePBSEvidenceNotesEnabledAttribute.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesController.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\BalancingSchemeEvidenceBaseController.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ISchemeManageEvidenceViewModel.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ListOfSchemeNotesViewModelBase.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\SchemeDataOrganisationMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceCategoriesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceNotesViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
@@ -360,6 +367,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
+    <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
@@ -777,7 +785,6 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_HeaderEvidenceNotePartial.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\OutgoingTransfers.cshtml" />
-    <Content Include="Areas\Scheme\Views\TransferEvidence\EditTransferTonnage.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_TransferTonnagesPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTonnages.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />
@@ -795,6 +802,11 @@
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewEvidenceNoteTransfer.cshtml" />
     <Content Include="Areas\Aatf\Views\ChooseSite\IndexNoAatf.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_AddressOnly.cshtml" />
+    <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_ChooseSite.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageTransferNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageTransferNotes\ReviewSubmittedEvidence.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageTransferNotes\_ReviewSubmittedTransferEvidencePartial.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\ViewObligationAndEvidenceSummary.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
@@ -1725,7 +1737,7 @@
       <Name>EA.Weee.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
-      <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
+      <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">

@@ -47,27 +47,27 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var organisation = await genericDataAccess.GetById<Organisation>(message.OrganisationId);
-            var scheme = await genericDataAccess.GetById<Domain.Scheme.Scheme>(message.RecipientId);
+            var recipientOrganisation = await genericDataAccess.GetById<Organisation>(message.RecipientId);
 
-            Guard.ArgumentNotNull(() => organisation, organisation, $"Could not find an organisation with Id {message.OrganisationId}");
-            Guard.ArgumentNotNull(() => scheme, scheme, $"Could not find an scheme with Id {message.RecipientId}");
+            Condition.Requires(organisation).IsNotNull($"Could not find an organisation with Id {message.OrganisationId}");
+            Condition.Requires(recipientOrganisation).IsNotNull($"Could not find a recipient organisation with Id {message.RecipientId}");
+
+            if (!recipientOrganisation.IsBalancingScheme)
+            {
+                Condition.Requires(recipientOrganisation.Scheme).IsNotNull($"Could not find an scheme for organisation with Id {message.RecipientId}");
+            }
 
             var currentDate = await systemDataAccess.GetSystemDateTime();
 
             var aatf = await aatfDataAccess.GetDetails(message.AatfId);
 
-            var complianceYearAatf =
-                await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, message.StartDate.Year);
-
-            Condition.Requires(complianceYearAatf)
-                .IsNotNull($"Aatf not found for compliance year {message.StartDate.Year} and aatf {message.AatfId}");
+            var complianceYearAatf = await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, message.StartDate.Year);
 
             AatfIsValidToSave(complianceYearAatf, currentDate);
 
             if (aatf.Organisation.Id != message.OrganisationId)
             {
-                throw new InvalidOperationException(
-                    $"Aatf with Id {message.AatfId} does not belong to Organisation with Id {message.OrganisationId}");
+                throw new InvalidOperationException($"Aatf with Id {message.AatfId} does not belong to Organisation with Id {message.OrganisationId}");
             }
 
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
@@ -76,7 +76,7 @@
                 t.SecondTonnage));
 
             var evidenceNote = new Note(organisation,
-                scheme.Organisation,
+                recipientOrganisation,
                 message.StartDate,
                 message.EndDate,
                 message.WasteType != null ? (WasteType?)message.WasteType.Value : null,

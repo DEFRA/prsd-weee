@@ -102,8 +102,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AatfEvidence\EditTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandler.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandler.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
     <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\SaveEvidenceNoteRequestBase.cs" />
+    <Compile Include="AatfEvidence\SaveTransferNoteRequestBase.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\TransferTonnagesValidator.cs" />
@@ -124,7 +127,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
-    <Compile Include="Admin\GetAllNotesRequestHandler.cs" />
+    <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
@@ -145,8 +148,10 @@
     <Compile Include="Mappings\AatfWithSystemDateMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteDataMapBase.cs" />
     <Compile Include="Mappings\EvidenceNoteWithCriteriaMap.cs" />
+    <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Mappings\SchemeObligationDataMap.cs" />
     <Compile Include="Mappings\SchemeObligationUploadDataMap.cs" />
+    <Compile Include="Mappings\SchemeOrganisationMap.cs" />
     <Compile Include="Mappings\TransferEvidenceNoteMap.cs" />
     <Compile Include="Admin\Obligations\GetPcsObligationsCsvHandler.cs" />
     <Compile Include="Admin\Obligations\ObligationCsvConstants.cs" />
@@ -190,6 +195,7 @@
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandler.cs" />
     <Compile Include="ReportConstants.cs" />
     <Compile Include="Scheme\AddSchemeHandler.cs" />
+    <Compile Include="Scheme\GetOrganisationSchemeHandler.cs" />
     <Compile Include="Shared\DataTableCsvHelper.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandler.cs" />
