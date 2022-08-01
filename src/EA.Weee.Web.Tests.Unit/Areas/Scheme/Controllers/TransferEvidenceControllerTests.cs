@@ -23,6 +23,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Prsd.Core.Mediator;
+    using Web.Areas.Scheme.Attributes;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -60,10 +61,17 @@
         }
 
         [Fact]
-        public void TransferEvidenceController_ActionsShouldHaveHttpGetAttribute()
+        public void TransferEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
             typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
              .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void TransferEvidenceNoteGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
+                .BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
         }
 
         [Fact]
@@ -74,10 +82,23 @@
         }
 
         [Fact]
+        public void TransferTonnageGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(Guid), typeof(int), typeof(bool) }).Should().BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
+        }
+
+        [Fact]
         public void TransferFromGet_ShouldHaveHttpGetAttribute()
         {
             typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void TransferFromGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int) }).Should()
+                .BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
         }
 
         [Fact]
