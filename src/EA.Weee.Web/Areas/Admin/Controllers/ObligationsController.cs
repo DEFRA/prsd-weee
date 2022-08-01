@@ -150,8 +150,29 @@
         [HttpGet]
         public async Task<ActionResult> ViewObligationAndEvidenceSummary()
         {
-            //GetSchemeObligationHandler 
-            return View();
+            using (var client = apiClient())
+            {
+                // TODO Replace hard codings with view data
+                var pcsId = new Guid("458F9739-79D2-4EFE-A6C2-AEA0010817AC");
+                var orgId = new Guid("C3A80FEC-7244-40EE-B6DE-AEA00106CCC1");
+
+                /*TODO Use below requests or create new requests to return appropriate Compliance Year and Scheme Data to populate dropdowns
+                 * This will then be used to pass to GetObligationSummaryRequest
+                 */
+                //var complianceYears = await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(authority));
+                //var complianceYear = selectedComplianceYear ?? complianceYears.ElementAt(0);
+
+                //var schemeObligationData =
+                //    await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(authority, complianceYear));
+
+                var request = new GetObligationSummaryRequest(pcsId, orgId, 2022);
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var summaryModel = mapper.Map<ViewObligationsAndEvidenceSummaryViewModel>(new ViewObligationsAndEvidenceSummaryViewModelMapTransfer(orgId, pcsId, result));
+                Breadcrumb.InternalActivity = "View PCS obligation and evidence summary";
+
+                return View(summaryModel);
+            }
         }
     }
 }
