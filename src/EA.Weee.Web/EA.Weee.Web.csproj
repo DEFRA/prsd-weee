@@ -1227,7 +1227,6 @@
     <Content Include="Views\Shared\_WeeeHead.cshtml" />
     <Content Include="Views\Shared\_WeeeHeader.cshtml" />
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
-    <Content Include="Views\Shared\_WeeeTracking.cshtml" />
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
@@ -1271,6 +1270,7 @@
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
     <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <Content Include="Views\Errors\Maintenance.cshtml" />
+    <Content Include="Views\NewUser\Accessibility.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
