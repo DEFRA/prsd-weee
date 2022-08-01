@@ -185,7 +185,7 @@
         }
 
         [Fact]
-        public void Map_GivenNoApprovedEvidenceNotes_DisplayTransferButtonShouldBeSetToFalse()
+        public void Map_GivenNoApprovedEvidenceNotesAndSchemeCanManageEvidence_DisplayTransferButtonShouldBeSetToFalse()
         {
             //arrange
             var notes = new List<EvidenceNoteData>
@@ -196,13 +196,16 @@
                 TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).Create()
             };
             var noteData = new EvidenceNoteSearchDataResult(notes, notes.Count);
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>().With(m => m.SelectedComplianceYear, currentDate.Year).Create();
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(TestFixture.Create<Guid>(),
                 noteData,
-                TestFixture.Create<SchemePublicInfo>(),
-                TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>()));
+                schemeInfo,
+                currentDate,
+                model));
 
             //assert
             result.DisplayTransferButton.Should().BeFalse();
@@ -287,10 +290,33 @@
             {
                 TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
             };
-            var scheme = TestFixture.Build<SchemePublicInfo>()
-                .With(s => s.Status, SchemeStatus.Withdrawn).Create();
-            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
-                .With(e => e.Results, notes).Create();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();
+
+            //act
+            var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(TestFixture.Create<Guid>(),
+                noteData,
+                scheme,
+                currentDate,
+                manageEvidenceModel));
+
+            //assert
+            result.DisplayTransferButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [MemberData(nameof(OutOfComplianceYear))]
+        public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithDrawnButComplianceYearIsClosed_DisplayTransferButtonShouldBeSetToFalse(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var manageEvidenceModel = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, complianceYear).Create();
+            var notes = new List<EvidenceNoteData>
+            {
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+            };
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(new ViewAndTransferEvidenceViewModelMapTransfer(TestFixture.Create<Guid>(),
