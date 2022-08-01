@@ -109,7 +109,7 @@
         public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
         {
             //arrange
-            Func<IEnumerable<int>> func = () => new List<int>();
+            Func<IEnumerable<int>> func = () => new List<int> { 2019, 2018, 2017 };
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var date = new DateTime(2019, 1, 1);
