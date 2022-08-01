@@ -28,19 +28,39 @@
 
         public async Task<List<int>> GetObligationComplianceYears(UKCompetentAuthority authority)
         {
-            return await weeeContext.ObligationSchemes
-                .Where(s => s.Scheme.CompetentAuthority.Id == authority.Id)
+            var obligationSchemes = weeeContext.ObligationSchemes.AsQueryable();
+
+            if (authority != null)
+            {
+                obligationSchemes = obligationSchemes.Where(s => s.Scheme.CompetentAuthority.Id == authority.Id);
+            }
+
+            return await obligationSchemes
                 .Select(s => s.ComplianceYear)
                 .Distinct()
                 .OrderByDescending(y => y)
                 .ToListAsync();
         }
 
-        public async Task<List<Scheme>> GetObligationScheme(UKCompetentAuthority authority, int complianceYear)
+        public async Task<List<Scheme>> GetObligationSchemeData(UKCompetentAuthority authority, int complianceYear)
         {
-            return await weeeContext.Schemes
-                .Where(s => s.SchemeStatus.Value == SchemeStatus.Approved.Value && s.CompetentAuthority.Id == authority.Id)
+            var schemes = weeeContext.Schemes.Where(s => s.SchemeStatus.Value != SchemeStatus.Approved.Value);
+
+            if (authority != null)
+            {
+                schemes = schemes.Where(s => s.CompetentAuthority.Id == authority.Id);
+            }
+
+            return await schemes
                 .IncludeFilter(s => s.ObligationSchemes.Where(s1 => s1.ComplianceYear == complianceYear))
+                .ToListAsync();
+        }
+
+        public async Task<List<Scheme>> GetSchemesWithObligations(int complianceYear)
+        {
+            return await weeeContext.ObligationSchemes.Where(os => os.ComplianceYear == complianceYear)
+                .Select(s => s.Scheme)
+                .Distinct()
                 .ToListAsync();
         }
 
