@@ -125,6 +125,26 @@
             result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2017);
         }
 
+        [Fact]
+        public void Map_GivenCurrentDate_WhenGetComplianceYearFilterFuncIsNull_ComplianceYearsListShouldBeReturned()
+        {
+            //arrange
+            Func<IEnumerable<int>> func = null;
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var date = new DateTime(2022, 1, 1);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, date, func);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(0).Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(1).Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2020);
+        }
+
         [Theory]
         [InlineData(2021)]
         [InlineData(2020)]
