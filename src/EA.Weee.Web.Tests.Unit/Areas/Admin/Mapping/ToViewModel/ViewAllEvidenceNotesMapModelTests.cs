@@ -32,10 +32,11 @@
         public void ViewAllEvidenceNotesMapModel_Constructor_PropertiesShouldBeSet()
         {
             // arrange
+            Func<IEnumerable<int>> func = () => new List<int>();
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, func);
 
             //assert
             model.Should().NotBeNull();
@@ -48,7 +49,8 @@
         public void ViewAllEvidenceNotesMapModel_Constructor_NotesIsNull_ShouldThrowAnException()
         {
             //act
-            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel, SystemTime.Now));
+            Func<IEnumerable<int>> func = () => new List<int>();
+            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel, SystemTime.Now, func));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -58,10 +60,11 @@
         public void ViewAllEvidenceNotesMapModel_Constructor_ManageEvidenceNoteViewModelIsNull_PropertiesShouldBeSet()
         {
             // arrange 
+            Func<IEnumerable<int>> func = () => new List<int>();
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate, func);
 
             //assert
             model.Should().NotBeNull();
