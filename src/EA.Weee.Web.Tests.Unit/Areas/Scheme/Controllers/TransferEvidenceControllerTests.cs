@@ -29,6 +29,7 @@
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
+    using Weee.Requests.Shared;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -1331,6 +1332,16 @@
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
         }
 
+        [Fact]
+        public async Task TransferredEvidenceGet_CurrentDateTimeShouldBeRetrieved()
+        {
+            // act
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<int>(), TestFixture.Create<string>());
+
+            // assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData(2022)]
@@ -1338,8 +1349,9 @@
         {
             // arrange 
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
-                .Returns(noteData);
+            var currentDate = TestFixture.Create<DateTime>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(noteData);
 
             var redirectTab = TestFixture.Create<string>();
             // act
@@ -1350,7 +1362,8 @@
                     t => t.OrganisationId.Equals(organisationId) && 
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification == null &&
-                         t.RedirectTab == redirectTab)))
+                         t.RedirectTab == redirectTab &&
+                         t.SystemDateTime == currentDate)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1391,12 +1404,13 @@
         {
             // arrange 
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
-                .Returns(noteData);
-            transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] =
-                displayNotification;
-
             var redirectTab = TestFixture.Create<string>();
+            var currentDate = TestFixture.Create<DateTime>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(noteData);
+            transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = displayNotification;
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            
             // act
             await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, redirectTab);
 
@@ -1405,7 +1419,8 @@
                     t => t.OrganisationId.Equals(organisationId) &&
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification.Equals(displayNotification) &&
-                         t.RedirectTab == redirectTab)))
+                         t.RedirectTab == redirectTab &&
+                         t.SystemDateTime == currentDate)))
                 .MustHaveHappenedOnceExactly();
         }
 
