@@ -3,64 +3,17 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Routing;
-    using Core.Helpers;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Web.Filters;
-    using EA.Weee.Web.Services.Caching;
-    using Services;
 
-    public class CheckCanCreateTransferNoteAttribute : CheckTransferNoteAttributeBase
+    public class CheckCanCreateTransferNoteAttribute : CheckSchemeNoteAttributeBase
     {
-        public IWeeeCache Cache { get; set; }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid pcsId)
         {
-            if (!context.ActionParameters.TryGetValue("pcsId", out var idActionParameter))
-            {
-                throw new ArgumentException("No pcs ID was specified.");
-            }
-            
-            if (!(Guid.TryParse(idActionParameter.ToString(), out var pcsIdActionParameter)))
-            {
-                throw new ArgumentException("The specified organisation ID is not valid.");
-            }
+            var complianceYear = TryGetComplianceYear(filterContext);
 
-            if (!context.ActionParameters.TryGetValue("complianceYear", out idActionParameter))
-            {
-                throw new ArgumentException("No compliance year was specified.");
-            }
+            var scheme = await Cache.FetchSchemePublicInfo(pcsId);
+            var currentDate = await Cache.FetchCurrentDate();
 
-            if (!(int.TryParse(idActionParameter.ToString(), out var complianceYearIdActionParameter)))
-            {
-                throw new ArgumentException("The specified compliance year is not valid.");
-            }
-
-            AsyncHelpers.RunSync(() => OnAuthorizationAsync(context, pcsIdActionParameter, complianceYearIdActionParameter));
-        }
-
-        private static void RedirectToManageEvidence(ActionExecutingContext context)
-        {
-            context.Result = new RedirectToRouteResult(new RouteValueDictionary()
-            {
-                { "action", "Index" },
-                { "controller", "ManageEvidenceNotes" }
-            });
-        }
-
-        private async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid pcsId, int complianceYear)
-        {
-            try
-            {
-                var scheme = await Cache.FetchSchemePublicInfo(pcsId);
-                var currentDate = await Cache.FetchCurrentDate();
-
-                ValidateSchemeAndWindow(scheme, complianceYear, currentDate);
-            }
-            catch (InvalidOperationException)
-            {
-                RedirectToManageEvidence(filterContext);
-            }
+            ValidateSchemeAndWindow(scheme, complianceYear, currentDate);
         }
     }
 }

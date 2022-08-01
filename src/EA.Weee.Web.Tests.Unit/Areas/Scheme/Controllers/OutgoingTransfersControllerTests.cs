@@ -21,6 +21,7 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Web.Areas.Scheme.Attributes;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
@@ -93,11 +94,19 @@
         }
 
         [Fact]
-        public void EditTransferFrom_ShouldHaveHttpGetAttribute()
+        public void EditTransferFromGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid) })
                 .Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditTransferFromGet_ShouldHaveCheckCanEditTransferNoteAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid) })
+                .Should()
+                .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
         [Fact]
@@ -108,11 +117,24 @@
         }
 
         [Fact]
+        public void EditTonnagesGet_ShouldHaveCheckCanEditTransferNoteAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
+        }
+
+        [Fact]
         public void EditCategoriesGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
-                .Should()
-                .BeDecoratedWith<HttpGetAttribute>();
+                .Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditCategoriesGet_ShouldHaveCheckCanEditTransferNoteAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+                .Should().BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
         [Fact]
@@ -121,6 +143,14 @@
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
                     new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void SubmittedTransferGet_ShouldHaveCheckCanEditTransferNoteAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
+                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
+                .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
         [Fact]
@@ -140,7 +170,7 @@
         }
 
         [Fact]
-        public void EditTransferFrom_ShouldHaveHttpPostAttribute()
+        public void EditTransferFromPost_ShouldHaveHttpPostAttribute()
         {
             typeof(OutgoingTransfersController)
                 .GetMethod("EditTransferFrom", new[] { typeof(TransferEvidenceNotesViewModel) }).Should()
@@ -148,11 +178,19 @@
         }
 
         [Fact]
-        public void EditDraftTransfer_ShouldHaveHttpGetAttribute()
+        public void EditDraftTransferGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
                     new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditDraftTransfer_ShouldHaveCheckCanEditTransferNoteAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
         [Fact]

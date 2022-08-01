@@ -6,7 +6,7 @@
     using Infrastructure;
     using Weee.Requests.AatfEvidence;
 
-    public class CheckCanEditTransferNoteAttribute : CheckSchemeNoteAttributeBase
+    public class CheckCanApproveNoteAttribute : CheckSchemeNoteAttributeBase
     {
         public override async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid pcsId)
         {
@@ -15,7 +15,7 @@
             using (var client = Client())
             {
                 var note = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), 
-                    new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+                    new GetEvidenceNoteForSchemeRequest(evidenceNoteId));
 
                 var scheme = await Cache.FetchSchemePublicInfo(pcsId);
                 var currentDate = await Cache.FetchCurrentDate();
