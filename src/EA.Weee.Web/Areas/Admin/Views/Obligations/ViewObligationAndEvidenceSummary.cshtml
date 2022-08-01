@@ -1,13 +1,133 @@
-﻿
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+
+@model EA.Weee.Web.Areas.Admin.ViewModels.Obligations.ViewObligationsAndEvidenceSummaryViewModel
+
 @{
     ViewBag.Title = "Obligations Summary Holding";
 }
-<header class="hgroup">
-    <div>
-        <h1 class="govuk-heading-l">Obligations Summary Holding</h1>
+
+<section id="main-content">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity())))
+
+            <header class="hgroup">
+                <h1 class="govuk-heading-l">
+                    View obligation and evidence summary
+                </h1>
+            </header>
+
+            <table id="evidence-summary-table" class="govuk-table">
+                <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">
+                            Category
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right">
+                            Obligation (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right">
+                            Evidence (tonnes)
+                        </th>
+                        <th class="govuk-table__header">
+                            Reuse (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right">
+                            Transferred out (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right">
+                            Transferred in (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-right">
+                            Difference (tonnes)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @for (var i = 0; i < Model.ObligationEvidenceValues.Count; i++)
+                    {
+                        var category = Model.ObligationEvidenceValues[i];
+
+                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                            <td class="govuk-table__cell">
+                                <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Obligation
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Evidence
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Reused
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.TransferredOut
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.TransferredIn
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Difference
+                            </td>
+                        </tr>
+                    }
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body"><strong>Total (tonnes)</strong></p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ObligationTotal">@Model.ObligationTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="EvidenceTotal">@Model.EvidenceTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReuseTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredInTotal">@Model.TransferredInTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="DifferenceTotal">@Model.DifferenceTotal</p>
+                        </td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="Obligation2To10Total">@Model.Obligation210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="Evidence2To10Total">@Model.Evidence210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="Reused2To10Total">@Model.Reuse210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="Difference2To10Total">@Model.Difference210Total</p>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
     </div>
-</header>
-            
-<p>
-    @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "govuk-button" })
-</p>
+</section>
