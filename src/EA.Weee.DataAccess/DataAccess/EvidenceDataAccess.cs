@@ -146,8 +146,7 @@
 
         public async Task<IEnumerable<int>> GetComplianceYearsForNotes(List<int> allowedStatuses)
         {
-            var notes = context.Notes
-                 .Where(n => allowedStatuses.Contains(n.Status.Value));
+            var notes = context.Notes.Where(n => allowedStatuses.Contains(n.Status.Value));
 
             var complianceYearsList = await notes.Select(x => x.ComplianceYear).Distinct().OrderByDescending(y => y).ToListAsync();
 

@@ -82,5 +82,51 @@
                 updatedNote.NoteTonnage.ElementAt(1).Reused.Should().Be(1);
             }
         }
+
+        [Fact]
+        public async Task GetComplianceYearsForNotes_ForAllowedStatuses_ShouldReturnAListOfComplianceYears()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var note1 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year);
+                note1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                
+                var note2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year - 1);
+                note1.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
+
+                var note3 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year - 2);
+                note1.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
+
+                var note4 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year - 3);
+                note1.UpdateStatus(NoteStatus.Returned, context.GetCurrentUser(), SystemTime.UtcNow);
+
+                var note5 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year - 4);
+                note1.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.UtcNow);
+
+                context.Notes.Add(note1);
+                context.Notes.Add(note2);
+                context.Notes.Add(note3);
+                context.Notes.Add(note4);
+                context.Notes.Add(note5);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var allowedStatuses = new List<int> { 2, 3, 4, 5, 6 };
+
+                var complianceYearEnumerable = await dataAccess.GetComplianceYearsForNotes(allowedStatuses);
+
+                var complianceYearList = complianceYearEnumerable.ToList();
+
+                complianceYearList.Should().NotBeNull();
+                complianceYearList[0].Should().Be(SystemTime.Now.Year);
+                complianceYearList[1].Should().Be(SystemTime.Now.Year - 1);
+                complianceYearList[2].Should().Be(SystemTime.Now.Year - 2);
+                complianceYearList[3].Should().Be(SystemTime.Now.Year - 3);
+                complianceYearList[4].Should().Be(SystemTime.Now.Year - 4);
+            }
+        }
     }
 }
