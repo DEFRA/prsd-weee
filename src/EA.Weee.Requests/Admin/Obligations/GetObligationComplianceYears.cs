@@ -6,11 +6,14 @@
 
     public class GetObligationComplianceYears : IRequest<List<int>>
     {
-        public CompetentAuthority Authority { get; }
+        public CompetentAuthority? Authority { get; }
 
-        public GetObligationComplianceYears(CompetentAuthority authority)
+        public bool IncludeCurrentYear { get; }
+
+        public GetObligationComplianceYears(CompetentAuthority? authority, bool includeCurrentYear)
         {
             Authority = authority;
+            IncludeCurrentYear = includeCurrentYear;
         }
     }
 }
