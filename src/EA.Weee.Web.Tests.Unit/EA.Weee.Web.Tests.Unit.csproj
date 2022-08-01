@@ -398,7 +398,7 @@
     <Compile Include="Areas\Admin\Controllers\CopyAatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsBaseControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeReportsControllerTests.cs" />
-    <Compile Include="Areas\Admin\Helper\AatfHelperTests.cs" />
+    <Compile Include="Extensions\ComplianceYearHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests.cs" />
@@ -612,6 +612,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\DataAnnotations\" />
+    <Folder Include="Areas\Admin\Helper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

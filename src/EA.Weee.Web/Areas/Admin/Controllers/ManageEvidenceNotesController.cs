@@ -22,6 +22,7 @@
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared;
     using EA.Weee.Web.ViewModels.Shared.Mapping;
+    using Extensions;
 
     public class ManageEvidenceNotesController : AdminBreadcrumbBaseController
     {
@@ -128,9 +129,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
-
-            return complianceYear;
+            return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, null, currentDate);
         }
     }
 }
