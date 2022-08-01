@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Scheme;
     using DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
@@ -10,14 +11,14 @@
     using Shared;
     using Weee.Security;
 
-    public class GetObligationComplianceYearsHandler : IRequestHandler<GetObligationComplianceYears, List<int>>
+    public class GetSchemesWithObligationHandler : IRequestHandler<GetSchemesWithObligation, List<SchemeData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IObligationDataAccess obligationDataAccess;
         private readonly ICommonDataAccess commonDataAccess;
         private readonly ISystemDataDataAccess systemDataAccess;
 
-        public GetObligationComplianceYearsHandler(IWeeeAuthorization authorization,
+        public GetSchemesWithObligationHandler(IWeeeAuthorization authorization,
             IObligationDataAccess obligationDataAccess,
             ICommonDataAccess commonDataAccess, 
             ISystemDataDataAccess systemDataAccess)
@@ -28,25 +29,11 @@
             this.systemDataAccess = systemDataAccess;
         }
 
-        public async Task<List<int>> HandleAsync(GetObligationComplianceYears request)
+        public async Task<List<SchemeData>> HandleAsync(GetSchemesWithObligation request)
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            Domain.UKCompetentAuthority authority = null;
-            if (request.Authority.HasValue)
-            {
-                authority = await commonDataAccess.FetchCompetentAuthority(request.Authority.Value);
-            }
-            
-            var systemDateTime = await systemDataAccess.GetSystemDateTime();
-
-            var complianceYears = await obligationDataAccess.GetObligationComplianceYears(authority);
-
-            if (!complianceYears.Contains(systemDateTime.Year) && request.IncludeCurrentYear)
-            {
-                complianceYears.Insert(0, systemDateTime.Year);
-            }
+            var schemesWithObligation = await obligationDataAccess.GetSchemesWithObligations(request.ComplianceYear);
 
             return complianceYears.OrderByDescending(c => c).ToList();
         }
