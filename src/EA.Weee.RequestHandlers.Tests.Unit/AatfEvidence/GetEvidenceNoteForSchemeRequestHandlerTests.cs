@@ -31,7 +31,6 @@
         private readonly GetEvidenceNoteForSchemeRequest request;
         private readonly Note note;
         private readonly Guid evidenceNoteId;
-        private readonly Guid recipientId;
 
         public GetEvidenceNoteForSchemeRequestHandlerTests()
         {
@@ -42,12 +41,8 @@
             note = A.Fake<Note>();
             fixture.Create<Guid>();
             evidenceNoteId = fixture.Create<Guid>();
-            recipientId = fixture.Create<Guid>();
-
+            
             var recipientOrganisation = A.Fake<Organisation>();
-            var recipientScheme = A.Fake<Scheme>();
-            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
-            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
 
             request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
@@ -73,10 +68,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyProducerBalancingSchemeAccess().Build();
            
             handler = new GetEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
 
@@ -88,6 +83,31 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckBalancingSchemeAccess()
+        {
+            //arrange
+            var recipient = A.Fake<Organisation>();
+            A.CallTo(() => note.Recipient).Returns(recipient);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureProducerBalancingSchemeAccess(recipient)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckExternalAccess()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenRequest_EvidenceNoteShouldBeRetrieved()
         {
             //act
@@ -95,17 +115,6 @@
 
             //assert
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(recipientId))
-                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -21,29 +21,26 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
-        private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
 
         public GetEvidenceNotesByOrganisationRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess,
             IMapper mapper, 
-            ISchemeDataAccess schemeDataAccess)
+            IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
-            this.schemeDataAccess = schemeDataAccess;
+            this.organisationDataAccess = organisationDataAccess;
         }
 
         public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesByOrganisationRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
-            authorization.EnsureOrganisationAccess(request.OrganisationId);
 
-            var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId);
+            var organisation = await organisationDataAccess.GetById(request.OrganisationId);
 
-            Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {request.OrganisationId}");
-
-            authorization.EnsureSchemeAccess(scheme.Id);
+            authorization.EnsureProducerBalancingSchemeAccess(organisation);
 
             Guid? organisationId = null;
             Guid? recipientId = request.OrganisationId;

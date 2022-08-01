@@ -5,6 +5,7 @@
     using Security;
     using System;
     using System.Security;
+    using Domain.Organisation;
 
     /// <summary>
     /// This helper class creates a fake instance of an IWeeeAutorization
@@ -140,6 +141,12 @@
             A.CallTo(() => fake.EnsureCanAccessInternalArea(A<bool>._)).Throws<SecurityException>();
             A.CallTo(() => fake.CheckCanAccessInternalArea()).Returns(false);
             A.CallTo(() => fake.CheckCanAccessInternalArea(A<bool>._)).Returns(false);
+            return this;
+        }
+
+        public AuthorizationBuilder DenyProducerBalancingSchemeAccess()
+        {
+            A.CallTo(() => fake.EnsureProducerBalancingSchemeAccess(A<Organisation>._)).Throws<SecurityException>();
             return this;
         }
 

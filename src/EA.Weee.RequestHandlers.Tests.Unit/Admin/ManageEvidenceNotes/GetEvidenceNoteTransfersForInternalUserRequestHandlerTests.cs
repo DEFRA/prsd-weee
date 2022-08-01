@@ -4,8 +4,6 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Domain.Scheme;
-    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
@@ -22,37 +20,25 @@
     public class GetEvidenceNoteTransfersForInternalUserRequestHandlerTests : SimpleUnitTestBase
     {
         private GetEvidenceNoteTransfersForInternalUserRequestHandler handler;
-        private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
-        private readonly ISchemeDataAccess schemeDataAccess;
         private readonly GetEvidenceNoteTransfersForInternalUserRequest request;
         private readonly Note note;
-        private readonly Scheme scheme;
         private readonly Guid evidenceNoteId;
-        private readonly Guid organisationId;
 
         public GetEvidenceNoteTransfersForInternalUserRequestHandlerTests()
         {
-            weeeAuthorization = A.Fake<IWeeeAuthorization>();
+            var weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             mapper = A.Fake<IMapper>();
-            schemeDataAccess = A.Fake<ISchemeDataAccess>();
-
-            A.Fake<IUserContext>();
-
             note = A.Fake<Note>();
-            scheme = A.Fake<Scheme>();
-
             evidenceNoteId = TestFixture.Create<Guid>();
-            organisationId = TestFixture.Create<Guid>();
 
             request = new GetEvidenceNoteTransfersForInternalUserRequest(evidenceNoteId);
 
             handler = new GetEvidenceNoteTransfersForInternalUserRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
-                mapper,
-                schemeDataAccess);
+                mapper);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
@@ -65,8 +51,7 @@
 
             handler = new GetEvidenceNoteTransfersForInternalUserRequestHandler(authorization,
               evidenceDataAccess,
-              mapper,
-              schemeDataAccess);
+              mapper);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -86,48 +71,17 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenTransferNote_SchemeShouldBeRetrieved()
-        {
-            //arrange
-            A.CallTo(() => note.OrganisationId).Returns(organisationId);
-            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
-
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenTransferNoteAndSchemeIsNull_ArgumentNullExceptionExpected()
-        {
-            //arrange
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns((Scheme)null);
-
-            //act
-            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenRequest_NoteShouldBeMapped()
         {
             //arrange
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(A<TransferNoteMapTransfer>.That.Matches(t =>
-                t.Note.Equals(note) && t.Scheme.Equals(scheme)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(
+                A<TransferNoteMapTransfer>.That.Matches(t => t.Note.Equals(note)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

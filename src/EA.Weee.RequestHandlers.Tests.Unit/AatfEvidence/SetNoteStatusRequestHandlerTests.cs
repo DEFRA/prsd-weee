@@ -29,7 +29,6 @@
         private readonly IWeeeAuthorization authorization;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly Note note;
-        private Guid recipientId;
 
         public SetNoteStatusRequestHandlerTests()
         {
@@ -37,12 +36,10 @@
             userContext = A.Fake<IUserContext>();
             authorization = A.Fake<IWeeeAuthorization>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
-            recipientId = TestFixture.Create<Guid>();
             note = A.Fake<Note>();
 
             var recipientOrganisation = A.Fake<Organisation>();
             var recipientScheme = A.Fake<Scheme>();
-            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
             A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
         }
@@ -83,11 +80,10 @@
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
+        [Fact] public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyProducerBalancingSchemeAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
@@ -98,6 +94,24 @@
 
             //assert
             result.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckBalancingSchemeAccess()
+        {
+            //arrange
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => note.Recipient).Returns(organisation);
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => authorization.EnsureProducerBalancingSchemeAccess(organisation)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -114,23 +128,6 @@
 
             //assert
             A.CallTo(() => authorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
-        {
-            //arrange
-            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
-
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
-
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => authorization.EnsureSchemeAccess(recipientId))
-                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
