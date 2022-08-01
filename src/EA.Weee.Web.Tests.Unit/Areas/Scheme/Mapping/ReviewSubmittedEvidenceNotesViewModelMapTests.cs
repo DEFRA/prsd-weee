@@ -315,5 +315,92 @@
             //assert
             result.IsWithdrawn.Should().BeFalse();
         }
+
+        [Theory]
+        [ClassData(typeof(SchemeStatusCoreData))]
+        public void Map_GivenSourceWithNotWithdrawnSchemeAndComplianceYearIsNotClosed_CanSchemeManageEvidenceShouldBeTrue(SchemeStatus status)
+        {
+            if (status == SchemeStatus.Withdrawn)
+            {
+                return;
+            }
+
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, status).Create();
+
+            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model);
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
+
+            //assert
+            result.CanSchemeManageEvidence.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithWithdrawnSchemeAndComplianceYearIsNotClosed_CanSchemeManageEvidenceShouldBeFalse()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
+
+            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model);
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
+
+            //assert
+            result.CanSchemeManageEvidence.Should().BeFalse();
+        }
+
+        public static IEnumerable<object[]> OutOfComplianceYear =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2020, 2, 1), 2019 },
+                new object[] { new DateTime(2020, 1, 1), 2022 },
+                new object[] { new DateTime(2020, 2, 1), 2019 },
+                new object[] { new DateTime(2020, 1, 1), 2022 },
+            };
+
+        [Theory]
+        [MemberData(nameof(OutOfComplianceYear))]
+        public void Map_GivenSourceWithNotWithdrawnSchemeAndComplianceYearIsClosed_CanSchemeManageEvidenceShouldBeFalse(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, complianceYear).Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+
+            var transfer = new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model);
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
+
+            //assert
+            result.CanSchemeManageEvidence.Should().BeFalse();
+        }
     }
 }
