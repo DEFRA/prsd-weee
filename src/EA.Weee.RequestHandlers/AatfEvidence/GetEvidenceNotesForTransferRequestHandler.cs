@@ -18,34 +18,31 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
-        private readonly ISchemeDataAccess schemeDataAccess;
         private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
 
         public GetEvidenceNotesForTransferRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess,
             IMapper mapper, 
-            ISchemeDataAccess schemeDataAccess, 
-            ISystemDataDataAccess systemDataDataAccess)
+            ISystemDataDataAccess systemDataDataAccess, 
+            IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
-            this.schemeDataAccess = schemeDataAccess;
             this.systemDataDataAccess = systemDataDataAccess;
+            this.organisationDataAccess = organisationDataAccess;
         }
 
         public async Task<IList<EvidenceNoteData>> HandleAsync(GetEvidenceNotesForTransferRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(message.OrganisationId);
+            var organisation = await organisationDataAccess.GetById(message.OrganisationId);
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
 
-            Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {message.OrganisationId}");
-
-            authorization.EnsureSchemeAccess(scheme.Id);
+            authorization.EnsureProducerBalancingSchemeAccess(organisation);
 
             var notes = await noteDataAccess.GetNotesToTransfer(message.OrganisationId, 
                 message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, message.ComplianceYear);

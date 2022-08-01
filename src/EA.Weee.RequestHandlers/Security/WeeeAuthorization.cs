@@ -9,6 +9,7 @@
     using System.Security;
     using System.Security.Claims;
     using CuttingEdge.Conditions;
+    using Domain.Organisation;
     using Weee.Security;
 
     /// <summary>
@@ -111,6 +112,23 @@
                     organisationId);
 
                 throw new SecurityException(message);
+            }
+        }
+
+        public void EnsureProducerBalancingSchemeAccess(Organisation organisation)
+        {
+            var access = CheckOrganisationAccess(organisation.Id);
+
+            if (!access)
+            {
+                string message = $"The user does not have access to the organisation with ID \"{organisation.Id}\".";
+
+                throw new SecurityException(message);
+            }
+
+            if (!organisation.IsBalancingScheme)
+            {
+                EnsureSchemeAccess(organisation.Scheme.Id);
             }
         }
 

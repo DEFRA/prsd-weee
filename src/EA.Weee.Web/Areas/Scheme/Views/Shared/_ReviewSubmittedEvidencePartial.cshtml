@@ -24,9 +24,12 @@
                 <th class="govuk-table__header" style="width: 35%;">
                     Submitted by
                 </th>
-                <th class="govuk-table__header">
-                    Type of waste
-                </th>
+                @if (!Model.SchemeInfo.IsBalancingScheme)
+                {
+                    <th class="govuk-table__header">
+                        Type of waste
+                    </th>
+                }
                 <th class="govuk-table__header">
                     @Html.Gds().VisuallyHidden("actions")
                 </th>
@@ -41,15 +44,18 @@
                         <td class="govuk-table__cell">@note.ReferenceDisplay</td>
                         <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
                         <td class="govuk-table__cell">@note.SubmittedBy</td>
-                        @if (note.TypeOfWaste.HasValue)
+                        @if (!Model.SchemeInfo.IsBalancingScheme)
                         {
-                            <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                            if (note.TypeOfWaste.HasValue)
+                            {
+                                <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                            }
+                            else
+                            {
+                                <td class="govuk-table__cell"> </td>
+                            }
                         }
-                        else
-                        {
-                            <td class="govuk-table__cell"> </td>
-                        }
-                    <td class="govuk-table__cell">
+                        <td class="govuk-table__cell">
                         @if (note.Type == NoteType.Evidence)
                         {
                             if (Model.CanSchemeManageEvidence)

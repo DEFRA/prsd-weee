@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Security
 {
     using System;
+    using Domain.Organisation;
     using Weee.Security;
 
     /// <summary>
@@ -100,5 +101,7 @@
         bool CheckInternalOrSchemeAccess(Guid schemeId);
 
         void EnsureAatfHasOrganisationAccess(Guid aatfId);
+
+        void EnsureProducerBalancingSchemeAccess(Organisation organisation);
     }
 }
