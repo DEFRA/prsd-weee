@@ -15,6 +15,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Extensions;
     using Web.ViewModels.Shared;
     using Weee.Requests.Shared;
 
@@ -198,7 +199,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            return manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+            return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, null, currentDate);
         }
 
         //private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)
