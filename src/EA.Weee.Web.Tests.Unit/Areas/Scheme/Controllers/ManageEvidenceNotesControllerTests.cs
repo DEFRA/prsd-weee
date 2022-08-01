@@ -98,15 +98,14 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
-        public async Task IndexGet_BreadcrumbShouldBeSet(string tab)
+        public async Task IndexGet_GivenOrganisationIsNotBalancingScheme_BreadcrumbShouldBeSet(string tab)
         {
             //arrange
             var schemeName = Faker.Company.Name();
             var organisationId = Guid.NewGuid();
-
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(TestFixture.Create<EvidenceNoteSearchDataResult>());
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedManageEvidenceNotesSchemeViewModel());
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             //act
             await ManageEvidenceController.Index(organisationId, tab);
@@ -123,13 +122,37 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
+        public async Task IndexGet_GivenOrganisationIsBalancingScheme_BreadcrumbShouldBeSet(string tab)
+        {
+            //arrange
+            var schemeName = Faker.Company.Name();
+            var organisationId = Guid.NewGuid();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            //act
+            await ManageEvidenceController.Index(organisationId, tab);
+
+            //assert
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
+            Breadcrumb.ExternalOrganisation.Should().Be(schemeName);
+            Breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("outgoing-transfers")]
         public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
 
             //asset
-            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).MustHaveHappenedTwiceExactly();
         }
 
         [Theory]
