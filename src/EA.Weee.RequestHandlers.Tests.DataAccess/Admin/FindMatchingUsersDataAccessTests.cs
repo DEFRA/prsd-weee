@@ -354,8 +354,8 @@
                 dbWrapper.Model.SaveChanges();
 
                 // Add organisations
-                var organisationOneName = "Waste";
-                var organisationTwoName = "Trash";
+                var organisationOneName = "Waste Disposal";
+                var organisationTwoName = "Waste Recycling";
                 var organisationThreeName = "Recycling";
                 var organisationOne = Organisation.CreateSoleTrader(organisationOneName);
                 var organisationTwo = Organisation.CreatePartnership(organisationTwoName);
@@ -381,7 +381,7 @@
 
                 var dataAccess = new FindMatchingUsersDataAccess(dbWrapper.WeeeContext);
 
-                var filter = new UserFilter { OrganisationName = "as" };
+                var filter = new UserFilter { OrganisationName = "Waste" };
 
                 var result = await dataAccess.GetOrganisationUsers(filter);
 
