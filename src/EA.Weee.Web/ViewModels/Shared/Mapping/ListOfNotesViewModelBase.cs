@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Core.Helpers;
@@ -23,7 +24,8 @@
 
         public T MapBase(EvidenceNoteSearchDataResult notes, 
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            Func<IEnumerable<int>> getComplianceYearList = null)
         {
             Condition.Requires(notes).IsNotNull();
 
@@ -37,7 +39,7 @@
                 EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes.Results.ToList()),
                 ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel
                 {
-                    ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
+                    ComplianceYearList = getComplianceYearList != null ? getComplianceYearList() : ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
                     SelectedComplianceYear = complianceYear,
                     ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(complianceYear, currentDate)
                 }
