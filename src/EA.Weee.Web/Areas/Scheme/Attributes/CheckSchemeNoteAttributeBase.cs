@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Attributes
 {
     using System;
-    using System.Web.Mvc;
     using Core.Helpers;
     using Core.Scheme;
     using Core.Shared;
 
-    public abstract class CheckTransferNoteAttributeBase : ActionFilterAttribute
+    public abstract class CheckSchemeNoteAttributeBase : CheckNoteAttributeBase
     {
         public void ValidateSchemeAndWindow(SchemePublicInfo scheme, int complianceYear, DateTime date)
         {
