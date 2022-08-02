@@ -97,7 +97,7 @@
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
 
                 var note1 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year);
-                var note2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year -1);
+                var note2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1);
                 var note3 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2);
                 
                 var alreadyExistingNotes = GetExistingNotesInDb(context);
