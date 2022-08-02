@@ -95,6 +95,7 @@
                 note1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 
                 var note2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year - 1);
+                note2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 note2.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
 
                 var note3 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year - 2);
@@ -138,10 +139,8 @@
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
 
                 var note1 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year);
-                note1.UpdateStatus(NoteStatus.Draft, context.GetCurrentUser(), SystemTime.UtcNow);
                 var note2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.Now.Year - 1);
-                note2.UpdateStatus(NoteStatus.Draft, context.GetCurrentUser(), SystemTime.UtcNow);
-
+               
                 context.Notes.Add(note1);
                 context.Notes.Add(note2);
   
