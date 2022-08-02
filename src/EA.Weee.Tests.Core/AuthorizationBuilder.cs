@@ -144,12 +144,6 @@
             return this;
         }
 
-        public AuthorizationBuilder DenyProducerBalancingSchemeAccess()
-        {
-            A.CallTo(() => fake.EnsureProducerBalancingSchemeAccess(A<Organisation>._)).Throws<SecurityException>();
-            return this;
-        }
-
         public AuthorizationBuilder AllowExternalAreaAccess()
         {
             A.CallTo(() => fake.EnsureCanAccessExternalArea()).DoesNothing();
