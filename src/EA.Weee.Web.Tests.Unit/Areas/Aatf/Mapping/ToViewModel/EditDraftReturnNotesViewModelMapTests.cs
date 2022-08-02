@@ -14,6 +14,7 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class EditDraftReturnNotesViewModelMapTests : SimpleUnitTestBase
@@ -196,17 +197,8 @@
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year - 1);
         }
 
-        public static IEnumerable<object[]> OutOfComplianceYear =>
-            new List<object[]>
-            {
-                new object[] { new DateTime(2020, 2, 1), 2019 },
-                new object[] { new DateTime(2020, 1, 1), 2022 },
-                new object[] { new DateTime(2020, 2, 1), 2019 },
-                new object[] { new DateTime(2020, 1, 1), 2022 },
-            };
-
         [Theory]
-        [MemberData(nameof(OutOfComplianceYear))]
+        [ClassData(typeof(OutOfComplianceYearData))]
         public void Map_GivenComplianceYearIsClosed_ComplianceYearClosedShouldBeTrue(DateTime currentDate, int complianceYear)
         {
             //arrange
