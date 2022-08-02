@@ -83,7 +83,7 @@
         [Fact] public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyProducerBalancingSchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
@@ -104,6 +104,8 @@
             var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             var organisation = A.Fake<Organisation>();
+            var organisationId = TestFixture.Create<Guid>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.Recipient).Returns(organisation);
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
@@ -111,7 +113,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => authorization.EnsureProducerBalancingSchemeAccess(organisation)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => authorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -134,7 +136,7 @@
         public async Task HandleAsync_ExternalUser_WithNoteNotFound_ThrowArgumentNullException()
         {
             // Arrange
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns((Note)null);
@@ -152,7 +154,7 @@
         public async Task HandleAsync_ExternalUser_WithNoteFound_ReturnsCorrectNoteId()
         {
             // Arrange
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var id = TestFixture.Create<Guid>();
             A.CallTo(() => note.Id).Returns(id);
@@ -174,7 +176,7 @@
         {
             // Arrange
             SystemTime.Freeze(DateTime.UtcNow);
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
 
@@ -204,7 +206,7 @@
         {
             // Arrange
             SystemTime.Freeze(DateTime.UtcNow);
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
 

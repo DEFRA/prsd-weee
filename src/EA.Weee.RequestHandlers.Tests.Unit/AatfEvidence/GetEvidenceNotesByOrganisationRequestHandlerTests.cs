@@ -24,10 +24,9 @@
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
 
-    public class GetEvidenceNotesByOrganisationRequestHandlerTests
+    public class GetEvidenceNotesByOrganisationRequestHandlerTests : SimpleUnitTestBase
     {
         private GetEvidenceNotesByOrganisationRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
@@ -37,7 +36,6 @@
 
         public GetEvidenceNotesByOrganisationRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             organisationDataAccess = A.Fake<IOrganisationDataAccess>();
@@ -45,7 +43,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -71,7 +69,7 @@
         public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyProducerBalancingSchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
             handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
 
             //act
@@ -86,13 +84,15 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
+            var organisationId = TestFixture.Create<Guid>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureProducerBalancingSchemeAccess(organisation)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -134,7 +134,7 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
 
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
@@ -208,7 +208,7 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>(2).ToList();
+            var noteList = TestFixture.CreateMany<Note>(2).ToList();
 
             var mappedNoteData = new List<EvidenceNoteData>()
             {
@@ -232,7 +232,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
         }
     }
 }

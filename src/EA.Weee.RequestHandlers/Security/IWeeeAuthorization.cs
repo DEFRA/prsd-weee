@@ -101,7 +101,5 @@
         bool CheckInternalOrSchemeAccess(Guid schemeId);
 
         void EnsureAatfHasOrganisationAccess(Guid aatfId);
-
-        void EnsureProducerBalancingSchemeAccess(Organisation organisation);
     }
 }

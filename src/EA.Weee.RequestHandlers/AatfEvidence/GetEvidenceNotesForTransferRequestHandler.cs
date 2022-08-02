@@ -42,7 +42,7 @@
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
 
-            authorization.EnsureProducerBalancingSchemeAccess(organisation);
+            authorization.EnsureOrganisationAccess(organisation.Id);
 
             var notes = await noteDataAccess.GetNotesToTransfer(message.OrganisationId, 
                 message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, message.ComplianceYear);

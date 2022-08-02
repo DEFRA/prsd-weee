@@ -69,7 +69,7 @@
         public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyProducerBalancingSchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
            
             handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, systemDataDataAccess, organisationDataAccess);
 
@@ -94,13 +94,14 @@
         public async Task HandleAsync_GivenRequest_ShouldCheckBalancingSchemeAccess()
         {
             //arrange
+            A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureProducerBalancingSchemeAccess(organisation)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

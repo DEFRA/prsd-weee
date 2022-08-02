@@ -40,7 +40,7 @@
 
             var organisation = await organisationDataAccess.GetById(request.OrganisationId);
 
-            authorization.EnsureProducerBalancingSchemeAccess(organisation);
+            authorization.EnsureOrganisationAccess(organisation.Id);
 
             Guid? organisationId = null;
             Guid? recipientId = request.OrganisationId;

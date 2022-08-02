@@ -38,7 +38,7 @@
 
             Condition.Requires(organisation).IsNotNull();
 
-            authorization.EnsureProducerBalancingSchemeAccess(organisation);
+            authorization.EnsureOrganisationAccess(organisation.Id);
 
             var transferNote = mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(new TransferNoteMapTransfer(evidenceNote));
 
