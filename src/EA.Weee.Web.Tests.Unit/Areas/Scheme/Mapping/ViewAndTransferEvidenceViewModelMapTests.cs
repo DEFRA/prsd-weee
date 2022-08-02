@@ -305,7 +305,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(OutOfComplianceYear))]
+        [ClassData(typeof(OutOfComplianceYearData))]
         public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithDrawnButComplianceYearIsClosed_DisplayTransferButtonShouldBeSetToFalse(DateTime currentDate, int complianceYear)
         {
             //arrange
@@ -551,17 +551,8 @@
             result.CanSchemeManageEvidence.Should().BeFalse();
         }
 
-        public static IEnumerable<object[]> OutOfComplianceYear =>
-            new List<object[]>
-            {
-                new object[] { new DateTime(2020, 2, 1), 2019 },
-                new object[] { new DateTime(2020, 1, 1), 2022 },
-                new object[] { new DateTime(2020, 2, 1), 2019 },
-                new object[] { new DateTime(2020, 1, 1), 2022 },
-            };
-
         [Theory]
-        [MemberData(nameof(OutOfComplianceYear))]
+        [ClassData(typeof(OutOfComplianceYearData))]
         public void Map_GivenSourceWithNotWithdrawnSchemeAndComplianceYearIsClosed_CanSchemeManageEvidenceShouldBeFalse(DateTime currentDate, int complianceYear)
         {
             //arrange
@@ -585,7 +576,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(OutOfComplianceYear))]
+        [ClassData(typeof(OutOfComplianceYearData))]
         public void Map_GivenComplianceYearIsClosed_ComplianceYearClosedShouldBeTrue(DateTime currentDate, int complianceYear)
         {
             //arrange
