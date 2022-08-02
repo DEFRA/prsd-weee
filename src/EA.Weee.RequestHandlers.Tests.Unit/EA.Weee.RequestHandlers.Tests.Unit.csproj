@@ -219,6 +219,7 @@
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\Helpers\ReportHelperTests.cs" />
+    <Compile Include="Admin\ManageEvidenceNotes\GetComplianceYearsFilterHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteForInternalUserRequestHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteTransfersForInternalUserRequestHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetAllNotesTests.cs" />
