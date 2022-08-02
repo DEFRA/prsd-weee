@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
     using EA.Weee.Web.Extensions;
@@ -36,6 +37,25 @@
                 ? source.TransferEvidenceNoteData.TransferredOrganisationData.BusinessAddress
                 : source.TransferEvidenceNoteData.TransferredOrganisationData.NotificationAddress;
 
+            string transferredByFormattedAddress;
+
+            if (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme)
+            {
+                transferredByFormattedAddress =
+                    source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName;
+            }
+            else
+            {
+                transferredByFormattedAddress = addressUtilities.FormattedCompanyPcsAddress(
+                    source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
+                    source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName,
+                    transferOrganisationAddress.Address1,
+                    transferOrganisationAddress.Address2,
+                    transferOrganisationAddress.TownOrCity,
+                    transferOrganisationAddress.CountyOrRegion,
+                    transferOrganisationAddress.Postcode);
+            }
+
             var model = new ViewTransferNoteViewModel
             {
                 RedirectTab = source.RedirectTab,
@@ -68,14 +88,7 @@
                     recipientOrganisationAddress.CountyOrRegion,
                     recipientOrganisationAddress.Postcode,
                     null),
-                TransferredByAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
-                    source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName,
-                    transferOrganisationAddress.Address1,
-                    transferOrganisationAddress.Address2,
-                    transferOrganisationAddress.TownOrCity,
-                    transferOrganisationAddress.CountyOrRegion,
-                    transferOrganisationAddress.Postcode,
-                    null),
+                TransferredByAddress = transferredByFormattedAddress,
                 Summary = GenerateNotesModel(source),
                 DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) 
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId

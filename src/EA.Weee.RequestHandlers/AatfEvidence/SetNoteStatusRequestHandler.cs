@@ -40,7 +40,7 @@
 
             Condition.Requires(evidenceNote).IsNotNull();
             
-            authorization.EnsureProducerBalancingSchemeAccess(evidenceNote.Recipient);
+            authorization.EnsureOrganisationAccess(evidenceNote.Recipient.Id);
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
             var changedBy = userContext.UserId.ToString();

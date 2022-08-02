@@ -85,13 +85,13 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureProducerBalancingSchemeAccess(organisation)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisation.Id)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
-            A.CallTo(() => weeeAuthorization.EnsureProducerBalancingSchemeAccess(A<Organisation>._))
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(A<Guid>._))
                 .Throws<SecurityException>();
 
             //act

@@ -115,23 +115,6 @@
             }
         }
 
-        public void EnsureProducerBalancingSchemeAccess(Organisation organisation)
-        {
-            var access = CheckOrganisationAccess(organisation.Id);
-
-            if (!access)
-            {
-                string message = $"The user does not have access to the organisation with ID \"{organisation.Id}\".";
-
-                throw new SecurityException(message);
-            }
-
-            if (!organisation.IsBalancingScheme)
-            {
-                EnsureSchemeAccess(organisation.Scheme.Id);
-            }
-        }
-
         public void EnsureAatfHasOrganisationAccess(Guid aatfId)
         {
             var aatf = context.Aatfs.FirstOrDefault(a => a.Id.Equals(aatfId));
