@@ -96,18 +96,18 @@
 
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
 
-                var note1 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year);
-                var note2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1);
-                var note3 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2);
+                var draftNote1 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year);
+                var draftNote2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1);
+                var draftNote3 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2);
                 
                 var alreadyExistingNotes = GetExistingNotesInDb(context);
 
                 var listOfExistingComplianceYears = alreadyExistingNotes?.Result.Select(x => x.ComplianceYear).Distinct().ToList();
 
                 // act
-                context.Notes.Add(note1);
-                context.Notes.Add(note2);
-                context.Notes.Add(note3);
+                context.Notes.Add(draftNote1);
+                context.Notes.Add(draftNote2);
+                context.Notes.Add(draftNote3);
 
                 await context.SaveChangesAsync();
 
