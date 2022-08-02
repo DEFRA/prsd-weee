@@ -12,6 +12,7 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Helpers;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using AatfStatus = Core.AatfReturn.AatfStatus;
     using FacilityType = Core.AatfReturn.FacilityType;
@@ -276,15 +277,8 @@
             result.CanCreateEditEvidence.Should().BeFalse();
         }
 
-        public static IEnumerable<object[]> OutOfComplianceYear =>
-            new List<object[]>
-            {
-                new object[] { new DateTime(2020, 2, 1), 2019 },
-                new object[] { new DateTime(2020, 1, 1), 2022 },
-            };
-
         [Theory]
-        [MemberData(nameof(OutOfComplianceYear))]
+        [ClassData(typeof(OutOfComplianceYearData))]
         public void Map_GivenAatfApprovalDateIsValidAndNotInComplianceYear_CanCreateEditEvidenceShouldBeFalse(DateTime currentDate, int complianceYear)
         {
             var aatfData = TestFixture.Build<AatfData>()

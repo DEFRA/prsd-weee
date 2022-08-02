@@ -20,6 +20,7 @@
     using RequestHandlers.Security;
     using Weee.Requests.Note;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class SetNoteStatusRequestHandlerTests : SimpleUnitTestBase
@@ -62,17 +63,8 @@
             typeof(SetNoteStatusRequestHandler).Should().BeDerivedFrom<SaveTransferNoteRequestBase>();
         }
 
-        public static IEnumerable<object[]> OutOfComplianceYear =>
-            new List<object[]>
-            {
-                new object[] { new DateTime(2020, 2, 1), 2019, true },
-                new object[] { new DateTime(2020, 1, 1), 2022, false },
-                new object[] { new DateTime(2020, 2, 1), 2019, false },
-                new object[] { new DateTime(2020, 1, 1), 2022, true },
-            };
-
         [Theory]
-        [MemberData(nameof(OutOfComplianceYear))]
+        [ClassData(typeof(OutOfComplianceYearDataWithBalancingScheme))]
         public async Task HandleAsync_GivenRequestedYearIsClosed_InvalidOperationExceptionExpected(DateTime currentDate, int complianceYear, bool balancingScheme)
         {
             //arrange
