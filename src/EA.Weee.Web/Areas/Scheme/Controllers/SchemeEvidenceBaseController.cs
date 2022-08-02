@@ -10,7 +10,7 @@
     using Services;
     using Services.Caching;
 
-    [ValidatePcsEvidenceEnabled]
+    [ValidateSchemeEvidenceEnabled]
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public abstract class SchemeEvidenceBaseController : ExternalSiteController
     {
