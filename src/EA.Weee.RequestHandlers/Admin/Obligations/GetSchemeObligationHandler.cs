@@ -35,12 +35,8 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            Domain.UKCompetentAuthority authority = null;
-            if (request.Authority.HasValue)
-            {
-                authority = await commonDataAccess.FetchCompetentAuthority(request.Authority.Value);
-            }
-
+            var authority = await commonDataAccess.FetchCompetentAuthority(request.Authority);
+           
             var obligationData = await obligationDataAccess.GetObligationSchemeData(authority, request.ComplianceYear);
 
             return mapper.Map<List<Scheme>, List<SchemeObligationData>>(obligationData);
