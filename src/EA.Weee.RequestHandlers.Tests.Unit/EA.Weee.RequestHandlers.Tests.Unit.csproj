@@ -223,6 +223,7 @@
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteForInternalUserRequestHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteTransfersForInternalUserRequestHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetAllNotesTests.cs" />
+    <Compile Include="Admin\ManageEvidenceNotes\Requests\GetComplianceYearsFilterTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetEvidenceNoteForInternalUserRequestTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetEvidenceNoteTransfersForInternalUserRequestTests.cs" />
     <Compile Include="Admin\Obligations\GetObligationSchemeTests.cs" />
