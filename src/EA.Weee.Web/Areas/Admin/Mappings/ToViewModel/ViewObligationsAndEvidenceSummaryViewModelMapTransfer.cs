@@ -9,6 +9,8 @@
     {
         public Guid? SchemeId { get; private set; }
 
+        public Guid PcsId { get; private set; }
+
         public ObligationEvidenceSummaryData ObligationEvidenceSummaryData { get; private set; }
 
         public List<int> ComplianceYears { get; private set; }

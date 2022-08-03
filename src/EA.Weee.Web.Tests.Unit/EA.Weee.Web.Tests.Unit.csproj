@@ -585,10 +585,6 @@
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
       <Name>EA.Weee.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
-      <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
-      <Name>EA.Weee.Requests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>
       <Name>EA.Weee.Security</Name>
