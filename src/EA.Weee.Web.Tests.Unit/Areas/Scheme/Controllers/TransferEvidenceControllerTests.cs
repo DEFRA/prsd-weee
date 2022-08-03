@@ -1310,7 +1310,7 @@
             var id = TestFixture.Create<Guid>();
 
             //act
-            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), id, null, TestFixture.Create<string>());
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), id, TestFixture.Create<string>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId.Equals(id)))).MustHaveHappenedOnceExactly();
@@ -1325,7 +1325,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, TestFixture.Create<string>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<string>());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -1336,7 +1336,7 @@
         public async Task TransferredEvidenceGet_CurrentDateTimeShouldBeRetrieved()
         {
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<int>(), TestFixture.Create<string>());
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<string>());
 
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
@@ -1355,7 +1355,7 @@
 
             var redirectTab = TestFixture.Create<string>();
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), complianceYear, redirectTab);
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
@@ -1376,7 +1376,7 @@
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, TestFixture.Create<string>()) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<string>()) as ViewResult;
 
             // assert
             result.Model.Should().Be(viewModel);
@@ -1391,7 +1391,7 @@
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewModel);
 
             // act
-            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, TestFixture.Create<string>()) as ViewResult;
+            var result = await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<string>()) as ViewResult;
 
             // assert
             result.ViewName.Should().Be("TransferredEvidence");
@@ -1412,7 +1412,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), null, redirectTab);
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(

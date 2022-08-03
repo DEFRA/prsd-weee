@@ -18,7 +18,7 @@
                     new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
                 var scheme = await Cache.FetchSchemePublicInfo(pcsId);
-                var currentDate = await Cache.FetchCurrentDate();
+                var currentDate = await GetCurrentDate(filterContext.HttpContext);
 
                 ValidateSchemeAndWindow(scheme, note.ComplianceYear, currentDate);
             }
