@@ -206,7 +206,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, string redirectTab)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab)
         {
             await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
 
