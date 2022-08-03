@@ -4,10 +4,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
@@ -18,18 +20,21 @@
     {
         private readonly ViewAllTransferNotesMap map;
         private readonly IMapper mapper;
+        private readonly DateTime currentDate;
 
         public ViewAllTransferNotesMapTests()
         {
             mapper = A.Fake<IMapper>();
 
             map = new ViewAllTransferNotesMap(mapper);
+
+            currentDate = TestFixture.Create<DateTime>();
         }
 
         [Fact]
         public void ShouldBeDerivedFromViewAllEvidenceNotesMapBase()
         {
-            typeof(ViewAllTransferNotesMap).Should().BeDerivedFrom<ViewAllNotesMapBase<ViewAllTransferNotesViewModel>>();
+            typeof(ViewAllTransferNotesMap).Should().BeDerivedFrom<ListOfNotesViewModelBase<ViewAllTransferNotesViewModel>>();
         }
 
         [Fact]
@@ -46,8 +51,9 @@
         public void Map_GivenViewAllEvidenceNotesMapModelWithNoteData_MapperShouldBeCalled()
         {
             //arrange
+            Func<IEnumerable<int>> func = () => new List<int>();
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
-            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, SystemTime.Now, func);
 
             //act
             map.Map(source);
@@ -60,10 +66,11 @@
         public void Map_GivenViewAllEvidenceNotesMapModelWithEmptyNotes_MustReturnAnEmptyModel()
         {
             //arrange
+            Func<IEnumerable<int>> func = () => new List<int>();
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
                 .With(e => e.Results, new List<EvidenceNoteData>()).Create();
 
-            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, SystemTime.Now, func);
 
             //act
             var result = map.Map(source);
@@ -73,35 +80,126 @@
         }
 
         [Fact]
-        public void Map_GivenManageEvidenceNoteViewModel_PropertiesShouldBeMapped()
+        public void Map_GivenListOfEvidenceNoteData_PropertiesShouldBeMapped()
         {
             //arrange
+            Func<IEnumerable<int>> func = () => new List<int>();
             var managedEvidenceNoteViewModel = TestFixture.Create<ManageEvidenceNoteViewModel>();
-            var source = TestFixture.Build<ViewAllEvidenceNotesMapTransfer>()
-                .With(s => s.ManageEvidenceNoteViewModel, managedEvidenceNoteViewModel)
-                .Create();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                 TestFixture.Create<EvidenceNoteRowViewModel>(),
+                 TestFixture.Create<EvidenceNoteRowViewModel>(),
+                 TestFixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, managedEvidenceNoteViewModel, currentDate, func);
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
             var result = map.Map(source);
 
             // assert 
-            result.ManageEvidenceNoteViewModel.Should().BeEquivalentTo(managedEvidenceNoteViewModel);
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
         }
 
         [Fact]
-        public void Map_GivenNullManageEvidenceNoteViewModel_ManageEvidenceNoteViewModelResultShouldBeNull()
+        public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
         {
             //arrange
-            var managedEvidenceNoteViewModel = (ManageEvidenceNoteViewModel)null;
-            var source = TestFixture.Build<ViewAllEvidenceNotesMapTransfer>()
-                .With(s => s.ManageEvidenceNoteViewModel, managedEvidenceNoteViewModel)
-                .Create();
+            Func<IEnumerable<int>> func = () => new List<int> { 2019, 2018, 2017 };
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var date = new DateTime(2019, 1, 1);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, date, func);
 
             //act
             var result = map.Map(source);
 
-            // assert 
-            result.ManageEvidenceNoteViewModel.Should().BeNull();
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(0).Should().Be(2019);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(1).Should().Be(2018);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2017);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDate_WhenGetComplianceYearFilterFuncIsNull_ComplianceYearsListShouldBeReturned()
+        {
+            //arrange
+            Func<IEnumerable<int>> func = null;
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var date = new DateTime(2022, 1, 1);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, date, func);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(0).Should().Be(2022);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(1).Should().Be(2021);
+            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2020);
+        }
+
+        [Theory]
+        [InlineData(2021)]
+        [InlineData(2020)]
+        [InlineData(2022)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
+        {
+            //arrange
+            Func<IEnumerable<int>> func = () => new List<int>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var date = new DateTime(year, 1, 1);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, date, func);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
+        {
+            //arrange
+            Func<IEnumerable<int>> func = () => new List<int>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, func);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            Func<IEnumerable<int>> func = () => new List<int>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year - 1).Create();
+
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, func);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year - 1);
         }
     }
 }

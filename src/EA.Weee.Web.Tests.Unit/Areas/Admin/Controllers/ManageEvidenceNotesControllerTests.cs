@@ -8,6 +8,7 @@
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -20,6 +21,14 @@
 
     public class ManageEvidenceNotesControllerTests : ManageEvidenceNotesControllerTestsBase
     {
+        private readonly DateTime currentDate;
+
+        public ManageEvidenceNotesControllerTests()
+        {
+            currentDate = new DateTime(2019, 1, 1);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+        }
+
         [Fact]
         public void ManageEvidenceNotesControllerInheritsAdminBreadcrumbBaseController()
         {

@@ -10,6 +10,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
@@ -50,14 +51,16 @@
 
             using (var client = this.apiClient())
             {
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+               
                 switch (value)
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate);
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel);
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate);
                     default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate);
                 }
             }
         }
@@ -97,26 +100,41 @@
             }
         }
 
-        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
-            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses));
+            var selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
-            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel));
+            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear));
+
+            Func<IEnumerable<int>> action = () => client.SendAsync(User.GetAccessToken(), new GetComplianceYearsFilter(allowedStatuses)).Result;
+
+            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, action));
 
             return View("ViewAllEvidenceNotes", model);
         }
 
-        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
-            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses));
+            var selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
-            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel));
+            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear));
+
+            Func<IEnumerable<int>> action = () => client.SendAsync(User.GetAccessToken(), new GetComplianceYearsFilter(allowedStatuses)).Result;
+
+            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, action));
 
             return View("ViewAllTransferNotes", model);
+        }
+
+        private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        {
+            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
+
+            return complianceYear;
         }
     }
 }
