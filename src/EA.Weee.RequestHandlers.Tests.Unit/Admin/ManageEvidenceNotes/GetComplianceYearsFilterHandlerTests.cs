@@ -4,10 +4,7 @@
     using Core.Helpers;
     using DataAccess.DataAccess;
     using Domain.Evidence;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.RequestHandlers.Admin;
-    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Tests.Core;
@@ -20,7 +17,6 @@
     using System.Threading.Tasks;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
 
     public class GetComplianceYearsFilterHandlerTests : SimpleUnitTestBase
     {
@@ -81,7 +77,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
+        public async void HandleAsync_GivenNotesWithComplianceYear_ShouldReturnOrderedListOfComplianceYears()
         {
             // arrange
             var note1 = A.Fake<Note>();
@@ -91,10 +87,10 @@
             var complianceYearNote2 = DateTime.Now.Year + 1;
 
             var note3 = A.Fake<Note>();
-            var complianceYearNote3 = DateTime.Now.Year - 1;
+            var complianceYearNote3 = DateTime.Now.Year - 2;
 
             var note4 = A.Fake<Note>();
-            var complianceYearNote4 = DateTime.Now.Year - 3;
+            var complianceYearNote4 = DateTime.Now.Year - 1;
 
             A.CallTo(() => note1.Reference).Returns(1);
             A.CallTo(() => note1.ComplianceYear).Returns(complianceYearNote1);
@@ -102,32 +98,45 @@
             A.CallTo(() => note2.ComplianceYear).Returns(complianceYearNote2);
             A.CallTo(() => note3.Reference).Returns(3);
             A.CallTo(() => note3.ComplianceYear).Returns(complianceYearNote3);
-            A.CallTo(() => note3.Reference).Returns(4);
-            A.CallTo(() => note3.ComplianceYear).Returns(complianceYearNote4);
+            A.CallTo(() => note4.Reference).Returns(4);
+            A.CallTo(() => note4.ComplianceYear).Returns(complianceYearNote4);
 
             var complianceYearList = new List<int>()
             {
                 complianceYearNote2,
                 complianceYearNote1,
-
-
+                complianceYearNote4,
+                complianceYearNote3
             };
-            var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            A.CallTo(() => evidenceDataAccess.GetComplianceYearsForNotes(A<List<int>>._)).Returns(noteData);
+            A.CallTo(() => evidenceDataAccess.GetComplianceYearsForNotes(A<List<int>>._)).Returns(complianceYearList);
 
             // act
-            await handler.HandleAsync(message);
+            var result = await handler.HandleAsync(request);
+            var resultToList = result.ToList();
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a =>
-                a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
-                a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
-                a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
-                a.ListOfNotes.Count.Equals(3) &&
-                a.IncludeTonnage == false))).MustHaveHappenedOnceExactly();
+            resultToList.Should().NotBeEmpty();
+            resultToList[0].Should().Be(note2.ComplianceYear);
+            resultToList[1].Should().Be(note1.ComplianceYear);
+            resultToList[2].Should().Be(note4.ComplianceYear);
+            resultToList[3].Should().Be(note3.ComplianceYear);
+        }
 
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
+        [Fact]
+        public async void HandleAsync_GivenNoComplianceYears_ShouldReturnEmptyList()
+        {
+            // arrange
+            var newRequest = new GetComplianceYearsFilter(new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Returned});
+
+            A.CallTo(() => evidenceDataAccess.GetComplianceYearsForNotes(A<List<int>>._)).Returns(new List<int>());
+
+            // act
+            var result = await handler.HandleAsync(request);
+
+            // assert
+            result.Should().BeEmpty();
+            result.Should().NotBeNull();
         }
     }
 }
