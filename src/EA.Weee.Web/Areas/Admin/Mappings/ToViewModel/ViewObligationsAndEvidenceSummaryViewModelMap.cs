@@ -23,14 +23,15 @@
             Condition.Requires(source).IsNotNull();
 
             var schemeList = new List<Core.Scheme.OrganisationSchemeData>();
-            if (source.SchemeObligationData != null)
+            if (source.SchemeData != null)
             {
-                schemeList = source.SchemeObligationData.Select(s => new Core.Scheme.OrganisationSchemeData()
+                schemeList = source.SchemeData.Select(s => new Core.Scheme.OrganisationSchemeData()
                 {
                     DisplayName = s.SchemeName,
-                    Id = s.SchemeId
+                    Id = s.Id
                 }).GroupBy(s => s.Id).Select(s => s.First()).ToList();
             }
+
             var model = new ViewObligationsAndEvidenceSummaryViewModel
             {
                 ObligationEvidenceValues = new List<ObligationEvidenceValue>(),
