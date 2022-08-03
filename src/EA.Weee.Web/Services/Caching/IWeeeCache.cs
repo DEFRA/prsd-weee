@@ -23,8 +23,6 @@
 
         Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultList();
 
-        Task<DateTime> FetchCurrentDate();
-
         Task InvalidateProducerSearch();
 
         Task InvalidateOrganisationSearch();
@@ -32,8 +30,6 @@
         Task InvalidateAatfCache(Guid id);
 
         Task InvalidateSchemeCache(Guid id);
-
-        Task InvalidateCurrentDate();
 
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
     }
