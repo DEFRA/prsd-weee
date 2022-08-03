@@ -2,11 +2,14 @@
 {
     using System;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Api.Client;
     using Filters;
+    using Infrastructure;
     using Services.Caching;
+    using Weee.Requests.Shared;
 
     public abstract class CheckNoteAttributeBase : ActionFilterAttribute
     {
@@ -82,6 +85,14 @@
             }
 
             return complianceYearIdActionParameter;
+        }
+
+        public async Task<DateTime> GetCurrentDate(HttpContextBase httpContext)
+        {
+            using (var c = Client())
+            {
+                return await c.SendAsync(httpContext.User.GetAccessToken(), new GetApiUtcDate());
+            }
         }
     }
 }
