@@ -347,11 +347,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            var selectedComplianceYear = sessionService.GetTransferSessionObject<object>(Session, SessionKeyConstant.AatfSelectedComplianceYear);
-
-            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, selectedComplianceYear, currentDate);
-
-            sessionService.SetTransferSessionObject(Session, complianceYear, SessionKeyConstant.AatfSelectedComplianceYear);
+            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
 
             return complianceYear;
         }
