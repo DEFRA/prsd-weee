@@ -27,6 +27,7 @@
 
         private readonly Guid organisationId;
         private readonly Guid aatfId;
+        private readonly int complianceYear;
 
         public CheckCanCreateEvidenceAttributeTests()
         {
@@ -39,8 +40,9 @@
 
             organisationId = TestFixture.Create<Guid>();
             aatfId = TestFixture.Create<Guid>();
+            complianceYear = TestFixture.Create<int>();
 
-            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId }, { "aatfId", aatfId } };
+            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId }, { "aatfId", aatfId }, { "complianceYear", complianceYear } };
             A.CallTo(() => context.ActionParameters).Returns(actionParameters);
         }
 
@@ -48,7 +50,7 @@
         public void OnActionExecuting_GivenNoAatfId_ArgumentExceptionExpected()
         {
             //arrange
-            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId } };
+            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId }, { "complianceYear", complianceYear } };
             A.CallTo(() => context.ActionParameters).Returns(actionParameters);
 
             //act
@@ -62,7 +64,7 @@
         public void OnActionExecuting_GivenNoOrganisationId_ArgumentExceptionExpected()
         {
             //arrange
-            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId } };
+            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId }, { "complianceYear", complianceYear } };
             A.CallTo(() => context.ActionParameters).Returns(actionParameters);
 
             //act
@@ -101,14 +103,38 @@
         }
 
         [Fact]
+        public void OnActionExecuting_GivenNoComplianceYear_ArgumentExceptionExpected()
+        {
+            //arrange
+            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId }, { "organisationId", organisationId } };
+            A.CallTo(() => context.ActionParameters).Returns(actionParameters);
+
+            //act
+            Action action = () => attribute.OnActionExecuting(context);
+
+            //assert
+            action.Should().Throw<ArgumentException>().WithMessage("No compliance year was specified.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenComplianceYearIsNotValid_ArgumentExceptionExpected()
+        {
+            //arrange
+            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId }, { "organisationId", organisationId }, { "complianceYear", "AA" } };
+            A.CallTo(() => context.ActionParameters).Returns(actionParameters);
+
+            //act
+            Action action = () => attribute.OnActionExecuting(context);
+
+            //assert
+            action.Should().Throw<ArgumentException>().WithMessage("The specified compliance year is not valid.");
+        }
+
+        [Fact]
         public void OnActionExecuting_GivenAatfCannotCreateEditNotes_ExceptionShouldBeThrown()
         {
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
-            var complianceYear = TestFixture.Create<int>();
-
-            A.CallTo(() => sessionService.GetTransferSessionObject<object>(context.HttpContext.Session,
-                SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                     A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == organisationId))).Returns(aatfs);
@@ -130,7 +156,6 @@
         {
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
-            var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == organisationId))).Returns(aatfs);

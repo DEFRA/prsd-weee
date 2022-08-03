@@ -119,7 +119,7 @@
         public void SubmittedTransferGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -650,8 +650,9 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int>(), TestFixture.Create<bool>(),
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, 
+                TestFixture.Create<Guid>(), 
+                TestFixture.Create<bool>(),
                 DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             // assert
@@ -667,8 +668,9 @@
             var evidenceNoteId = TestFixture.Create<Guid>();
 
             //act
-            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, evidenceNoteId,
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, 
+                evidenceNoteId,
+                TestFixture.Create<bool?>(),
                 DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             //assert
@@ -700,7 +702,7 @@
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
                     TestFixture.Create<Guid>(),
-                    TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+                    TestFixture.Create<bool?>(),
                     redirectTab) as
                 RedirectToRouteResult;
 
@@ -719,8 +721,9 @@
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
             //act
-            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, 
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(),
                 DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             //assert
@@ -741,7 +744,8 @@
 
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                    TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+                    TestFixture.Create<Guid>(),
+                    TestFixture.Create<bool?>(),
                     DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as
                 ViewResult;
 
@@ -754,9 +758,9 @@
         {
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                    TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
-                    DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as
-                ViewResult;
+                    TestFixture.Create<Guid>(), 
+                    TestFixture.Create<bool?>(),
+                    DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as ViewResult;
 
             //assert
             result.ViewName.Should().Be("SubmittedTransfer");
