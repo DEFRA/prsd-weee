@@ -333,7 +333,6 @@
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
-    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllNotesMapBase.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMapTransfer.cs" />
@@ -345,9 +344,11 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllTransferNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttribute.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBase.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttribute.cs" />
-    <Compile Include="Areas\Scheme\Attributes\CheckTransferNoteAttributeBase.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckSchemeNoteAttributeBase.cs" />
     <Compile Include="Areas\Scheme\Attributes\ValidatePBSEvidenceNotesEnabledAttribute.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesController.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />

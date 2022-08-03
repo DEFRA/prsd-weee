@@ -20,6 +20,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.Tests.Unit.Helpers;
+    using Web.Areas.Scheme.Attributes;
     using Web.Extensions;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
@@ -65,6 +66,13 @@
         {
             typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
              .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void ReviewEvidenceNoteGet_ShouldHaveCheckCanApproveNoteAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<CheckCanApproveNoteAttribute>();
         }
 
         [Fact]
