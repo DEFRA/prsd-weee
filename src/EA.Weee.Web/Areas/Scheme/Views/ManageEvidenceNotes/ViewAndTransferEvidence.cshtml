@@ -76,7 +76,7 @@
                                     @if (@note.Type == NoteType.Transfer)
                                     {
                                         @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString() }, null)
-                                        //#48724
+
                                         if (note.DisplayEditLink)
                                         {
                                             <br />
