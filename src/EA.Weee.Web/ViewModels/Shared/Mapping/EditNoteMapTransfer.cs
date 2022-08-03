@@ -6,7 +6,7 @@
     using Areas.Aatf.ViewModels;
     using Core.AatfEvidence;
     using Core.Scheme;
-    using Shared;
+    using CuttingEdge.Conditions;
 
     public class EditNoteMapTransfer : ModifyNoteTransfer
     {
@@ -14,8 +14,9 @@
 
         public EditNoteMapTransfer(List<OrganisationSchemeData> schemes,
             EditEvidenceNoteViewModel existingModel,
-            Guid organisationId, Guid aatfId, EvidenceNoteData noteData) : base(schemes, existingModel, organisationId, aatfId)
+            Guid organisationId, Guid aatfId, EvidenceNoteData noteData, int complianceYear) : base(schemes, existingModel, organisationId, aatfId)
         {
+            ComplianceYear = complianceYear;
             NoteData = noteData;
         }
     }

@@ -11,25 +11,23 @@
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class CreateNoteViewModelMapTests
+    public class CreateNoteViewModelMapTests : SimpleUnitTestBase
     {
         private readonly CreateNoteViewModelMap map;
-        private readonly Fixture fixture;
 
         public CreateNoteViewModelMapTests()
         {
             map = new CreateNoteViewModelMap();
-
-            fixture = new Fixture();
         }
 
         [Fact]
         public void Map_GiveSchemesIsNull_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(null, null, Guid.NewGuid(), Guid.NewGuid()));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(null, null, Guid.NewGuid(), Guid.NewGuid(), TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -39,7 +37,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.Empty, Guid.NewGuid()));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(TestFixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.Empty, Guid.NewGuid(), TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -49,7 +47,7 @@
         public void Map_GivenAatfIdGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(fixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.NewGuid(), Guid.Empty));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(TestFixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.NewGuid(), Guid.Empty, TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -59,17 +57,19 @@
         public void Map_GivenTransferWithoutViewModel_CreateNoteViewModelShouldBeReturned()
         {
             //arrange
-            var schemes = fixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
+            var complianceYear = TestFixture.Create<int>();
 
-            var transfer = new CreateNoteMapTransfer(schemes, null, organisationId, aatfId);
+            var transfer = new CreateNoteMapTransfer(schemes, null, organisationId, aatfId, complianceYear);
 
             //act
             var result = map.Map(transfer);
 
             //assert
             result.Should().NotBeNull();
+            result.ComplianceYear.Should().Be(complianceYear);
             result.OrganisationId.Should().Be(organisationId);
             result.AatfId.Should().Be(aatfId);
             result.SchemeList.Should().BeEquivalentTo(schemes);
@@ -83,21 +83,23 @@
         public void Map_GivenTransferWithViewModel_CreateNoteViewModelShouldBeReturned()
         {
             //arrange
-            var schemes = fixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
+            var complianceYear = TestFixture.Create<int>();
             var model = new EditEvidenceNoteViewModel()
             {
-                CategoryValues = fixture.CreateMany<EvidenceCategoryValue>().ToList()
+                CategoryValues = TestFixture.CreateMany<EvidenceCategoryValue>().ToList()
             };
 
-            var transfer = new CreateNoteMapTransfer(schemes, model, organisationId, aatfId);
+            var transfer = new CreateNoteMapTransfer(schemes, model, organisationId, aatfId, complianceYear);
 
             //act
             var result = map.Map(transfer);
 
             //assert
             result.Should().NotBeNull();
+            result.ComplianceYear.Should().Be(complianceYear);
             result.OrganisationId.Should().Be(organisationId);
             result.AatfId.Should().Be(aatfId);
             result.CategoryValues.Should().BeEquivalentTo(model.CategoryValues);

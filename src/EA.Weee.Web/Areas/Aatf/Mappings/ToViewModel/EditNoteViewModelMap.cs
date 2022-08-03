@@ -39,7 +39,8 @@
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
                 RejectedReason = rejectedReason,
                 ReturnedReason = returnedReason,
-                SelectedSchemeName = recipientName == null ? string.Empty : recipientName.DisplayName
+                SelectedSchemeName = recipientName == null ? string.Empty : recipientName.DisplayName,
+                ComplianceYear = source.ExistingModel?.ComplianceYear ?? source.NoteData.ComplianceYear
             };
 
             if (source.ExistingModel != null)
