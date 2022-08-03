@@ -132,19 +132,16 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model)
         {
-            if (ModelState.IsValid)
+            if (model.Action == ActionEnum.Back)
             {
-                var transferRequest =
-                    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                        SessionKeyConstant.TransferNoteKey);
+                UpdateAndSetSelectedNotesInSession(model);
 
-                var selectedEvidenceNotes =
-                    model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
+                return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
+            }
 
-                var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
-
-                sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
+           if (ModelState.IsValid)
+            {
+                UpdateAndSetSelectedNotesInSession(model);
 
                 return RedirectToAction("TransferTonnage", "TransferEvidence", 
                     new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
@@ -295,6 +292,24 @@
                 tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(),
                 selectedComplianceYear = complianceYear
             });
+        }
+
+        private void UpdateAndSetSelectedNotesInSession(TransferEvidenceNotesViewModel model)
+        {
+            var transferRequest =
+               sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                   SessionKeyConstant.TransferNoteKey);
+
+            if (transferRequest != null)
+            {
+                var selectedEvidenceNotes =
+                model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key);
+
+                var updatedTransferRequest =
+                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, selectedEvidenceNotes.ToList());
+
+                sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
+            }
         }
     }
 }
