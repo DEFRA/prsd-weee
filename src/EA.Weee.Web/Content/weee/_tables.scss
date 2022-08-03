@@ -151,3 +151,11 @@
     word-break: break-all; // Fix IE & Firefox <68 issues
     word-break: break-word;
 }
+
+/* #47330: fix for data column outside the table on iOS */
+@media only screen and (min-width: 640px) and (max-width: 860px) {
+    .govuk-table, table {
+        font-size: 1rem;
+        width: 100%;
+    }
+}
