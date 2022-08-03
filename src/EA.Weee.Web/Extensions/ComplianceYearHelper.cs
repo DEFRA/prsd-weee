@@ -40,9 +40,12 @@
             return listYears.OrderByDescending(x => x).ToList();
         }
 
-        public static int GetSelectedComplianceYear(ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, object selectedComplianceYear, DateTime currentDateTime)
+        public static int GetSelectedComplianceYear(ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDateTime)
         {
-            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : (selectedComplianceYear == null ? currentDateTime.Year : (int)selectedComplianceYear);
+            var complianceYear =
+                manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0
+                    ? manageEvidenceNoteViewModel.SelectedComplianceYear
+                    : currentDateTime.Year;
 
             return complianceYear;
         }

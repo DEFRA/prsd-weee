@@ -199,7 +199,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, null, currentDate);
+            return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
         }
 
         //private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, int complianceYear)

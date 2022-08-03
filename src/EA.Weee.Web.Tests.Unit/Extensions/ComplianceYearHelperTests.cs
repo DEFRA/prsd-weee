@@ -50,24 +50,10 @@
             var currentDate = new DateTime(2022, 1, 1);
 
             //act
-            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(null, null, currentDate);
+            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(null, currentDate);
 
             //assert
             complianceYear.Should().Be(2022);
-        }
-
-        [Fact]
-        public void GetSelectedComplianceYear_GivenModelIsNullAndSelectedComplianceYearIsNotNull_ComplianceYearShouldBeSelectedYear()
-        {
-            //arrange
-            var currentDate = new DateTime(2022, 1, 1);
-            const int selectedYear = 2023;
-
-            //act
-            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(null, selectedYear, currentDate);
-
-            //assert
-            complianceYear.Should().Be(2023);
         }
 
         [Fact]
@@ -75,12 +61,11 @@
         {
             //arrange
             var currentDate = new DateTime(2022, 1, 1);
-            const int selectedYear = 2023;
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, 2024).Create();
 
             //act
-            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(model, selectedYear, currentDate);
+            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(model, currentDate);
 
             //assert
             complianceYear.Should().Be(2024);
