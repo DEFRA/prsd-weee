@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Core.Scheme;
-    using Core.Shared;
     using Prsd.Core.Mediator;
 
     public class GetSchemesWithObligation : IRequest<List<SchemeData>>

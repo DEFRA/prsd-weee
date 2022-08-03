@@ -141,9 +141,17 @@
         $("#ComplianceYearForm").submit();
     });
 
+    var myEvent = new CustomEvent("myevent", {
+        detail: {},
+        bubbles: true,
+        cancelable: true,
+        composed: false
+    });
+
     var selectElements = document.querySelectorAll(".gds-auto-complete");
 
     selectElements.forEach(function (element) {
+
         var items = Array.from(element.options).map(el => el.textContent || el.innerText);
 
         // get the default selected value
@@ -188,6 +196,8 @@
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
                         if (text === selected) {
                             postBackElement.value = findSelectedOption.value;
+                            postBackElement.dispatchEvent(myEvent);
+
                         }
                     }
                 } else {
