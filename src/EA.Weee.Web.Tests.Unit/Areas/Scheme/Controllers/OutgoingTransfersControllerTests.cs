@@ -149,7 +149,7 @@
         public void SubmittedTransferGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
