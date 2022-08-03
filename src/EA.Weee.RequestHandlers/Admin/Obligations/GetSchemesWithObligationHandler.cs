@@ -5,6 +5,8 @@
     using System.Threading.Tasks;
     using Core.Scheme;
     using DataAccess.DataAccess;
+    using Domain.Scheme;
+    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
     using Security;
@@ -15,18 +17,15 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IObligationDataAccess obligationDataAccess;
-        private readonly ICommonDataAccess commonDataAccess;
-        private readonly ISystemDataDataAccess systemDataAccess;
+        private readonly IMap<Scheme, SchemeData> schemeMap;
 
         public GetSchemesWithObligationHandler(IWeeeAuthorization authorization,
             IObligationDataAccess obligationDataAccess,
-            ICommonDataAccess commonDataAccess, 
-            ISystemDataDataAccess systemDataAccess)
+            IMap<Scheme, SchemeData> schemeMap)
         {
             this.authorization = authorization;
             this.obligationDataAccess = obligationDataAccess;
-            this.commonDataAccess = commonDataAccess;
-            this.systemDataAccess = systemDataAccess;
+            this.schemeMap = schemeMap;
         }
 
         public async Task<List<SchemeData>> HandleAsync(GetSchemesWithObligation request)
@@ -35,7 +34,9 @@
 
             var schemesWithObligation = await obligationDataAccess.GetSchemesWithObligations(request.ComplianceYear);
 
-            return complianceYears.OrderByDescending(c => c).ToList();
+            var mappedSchemes = schemesWithObligation.Select(s => schemeMap.Map(s)).ToList();
+
+            return mappedSchemes;
         }
     }
 }
