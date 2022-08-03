@@ -72,7 +72,6 @@
         <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
     </div>
 
-    <!-- #48724 -->
     @if (Model.EditMode && Model.HasBeenReturned)
     {
         if (Model.HasBeenReturned)
@@ -209,20 +208,4 @@
             }
         </tbody>
     </table>
-}
-
-<!-- #48724 -->
-@if (Model.EditMode && Model.HasBeenReturned)
-{
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-    <div class="govuk-!-margin-top-3">
-        @using (Html.BeginForm(actionName: "SubmittedTransfer", controllerName: "OutgoingTransfers", method: FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.OrganisationId)
-            @Html.HiddenFor(m => m.EvidenceNoteId)
-            @Html.Hidden("complianceYear", Model.SelectedComplianceYear, new { id = "transfer-compliance-year" })
-            @(this.WeeeGds().Submit("Submit transfer"))
-        }
-    </div>
 }
