@@ -16,9 +16,10 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class EvidenceTonnageValueCopyPasteControllerTests
+    public class EvidenceTonnageValueCopyPasteControllerTests : SimpleUnitTestBase
     {
         private readonly EvidenceTonnageValueCopyPasteController evidenceTonnageValueCopyPasteController;
         private readonly BreadcrumbService breadcrumb;
@@ -26,7 +27,6 @@
         private readonly ISessionService sessionService;
         private readonly IPasteProcessor pasteProcessor;
         private readonly Guid organisationId;
-        private readonly Fixture fixture;
 
         public EvidenceTonnageValueCopyPasteControllerTests()
         {
@@ -35,7 +35,6 @@
             sessionService = A.Fake<ISessionService>();
             pasteProcessor = A.Fake<IPasteProcessor>();
 
-            fixture = new Fixture();
             organisationId = new Guid();
 
             evidenceTonnageValueCopyPasteController = new EvidenceTonnageValueCopyPasteController(breadcrumb, cache, sessionService, pasteProcessor);
@@ -50,7 +49,8 @@
         [Fact]
         public void IndexGet_IsDecoratedWith_HttpGetAttribute()
         {
-            typeof(EvidenceTonnageValueCopyPasteController).GetMethod("Index", new[] { typeof(Guid), typeof(string), typeof(bool) }).Should()
+            typeof(EvidenceTonnageValueCopyPasteController).GetMethod("Index", new[] { typeof(Guid), typeof(string), typeof(int), typeof(bool) })
+                .Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -77,7 +77,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //Act
-            await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, true);
+            await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, TestFixture.Create<int>(), true);
 
             //Assert
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
@@ -89,7 +89,7 @@
         public async Task IndexGet_RetrievesEvidenceModelSessionObject()
         {
             //Act
-            await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, true);
+            await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, TestFixture.Create<int>(), true);
 
             //Assert
             A.CallTo(() => sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(evidenceTonnageValueCopyPasteController.Session,
@@ -99,21 +99,29 @@
         [Fact]
         public async Task IndexGet_OnRedirectIsFalse_CreatesModelAndReturnsView()
         {
+            //arrange
+            var complianceYear = TestFixture.Create<int>();
+
             //Act
-            var result = await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, false) as ViewResult;
+            var result = await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, complianceYear, false) as ViewResult;
 
             //Assert
             result.Model.Should().BeOfType<EvidenceTonnageValueCopyPasteViewModel>();
+            var convertedModel = (EvidenceTonnageValueCopyPasteViewModel)result.Model;
+            convertedModel.ComplianceYear.Should().Be(complianceYear);
         }
 
         [Theory]
         [InlineData(EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction, "CreateEvidenceNote", "ManageEvidenceNotes")]
         [InlineData(EvidenceCopyPasteActionConstants.EditEvidenceNoteAction, "AATF_EditEvidence", "ManageEvidenceNotes")]
-        [InlineData(EvidenceCopyPasteActionConstants.ReturnedEvidenceNoteAction, "CreateEvidenceNote", "ManageEvidenceNotes")] // TODO UPDATE once returned page ready
+        [InlineData(EvidenceCopyPasteActionConstants.ReturnedEvidenceNoteAction, "CreateEvidenceNote", "ManageEvidenceNotes")] 
         public async Task IndexGet_OnRedirectIsTrue_RedirectsToCorrectPage(string returnAction, string expectedAction, string expectedController)
         {
+            //arrange
+            var complianceYear = TestFixture.Create<int>();
+
             //Act
-            var result = await evidenceTonnageValueCopyPasteController.Index(organisationId, returnAction, true) as RedirectToRouteResult;
+            var result = await evidenceTonnageValueCopyPasteController.Index(organisationId, returnAction, complianceYear, true) as RedirectToRouteResult;
 
             //Assert
             if (returnAction == EvidenceCopyPasteActionConstants.EditEvidenceNoteAction)
@@ -127,6 +135,7 @@
             }
 
             result.RouteValues["returnFromCopyPaste"].Should().Be(true);
+            result.RouteValues["complianceYear"].Should().Be(complianceYear);
         }
 
         [Theory]
@@ -218,7 +227,7 @@
         }
 
         [Fact]
-        public void IndexPost_Retrieves_EvidenceModelSessionOject()
+        public void IndexPost_Retrieves_EvidenceModelSessionObject()
         {
             //Arrange
             var model = CreateValidModel(string.Empty);
@@ -234,8 +243,8 @@
         {
             var model = new EvidenceTonnageValueCopyPasteViewModel();
             model.Action = action;
-            model.ReusedPastedValues = fixture.Create<string[]>();
-            model.ReceievedPastedValues = fixture.Create<string[]>();
+            model.ReusedPastedValues = TestFixture.Create<string[]>();
+            model.ReceievedPastedValues = TestFixture.Create<string[]>();
 
             return model;
         }

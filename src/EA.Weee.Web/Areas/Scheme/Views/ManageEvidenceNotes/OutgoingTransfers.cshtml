@@ -48,10 +48,10 @@
                                 <td class="govuk-table__cell">@note.Recipient</td>
                                 <td class="govuk-table__cell">@note.Status</td>
                                 <td class="govuk-table__cell">
-                                    @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString() }, null)
+                                    @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, redirectTab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString() }, null)
                                     @if (note.DisplayEditLink)
                                     {
-                                        @Html.NavigationRouteLink("Edit", "Edit transfer note " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                        @Html.NavigationRouteLink("Edit", "Edit transfer note " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id }, null)
                                     }
                                 </td>
                             </tr>

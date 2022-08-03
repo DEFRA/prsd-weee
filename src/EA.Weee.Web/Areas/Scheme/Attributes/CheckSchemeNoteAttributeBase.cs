@@ -4,6 +4,10 @@
     using Core.Helpers;
     using Core.Scheme;
     using Core.Shared;
+    using Filters;
+    using Infrastructure;
+    using Services.Caching;
+    using Weee.Requests.Shared;
 
     public abstract class CheckSchemeNoteAttributeBase : CheckNoteAttributeBase
     {
