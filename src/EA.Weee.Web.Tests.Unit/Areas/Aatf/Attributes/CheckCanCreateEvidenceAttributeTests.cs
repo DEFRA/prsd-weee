@@ -23,7 +23,6 @@
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
-        private readonly ISessionService sessionService;
 
         private readonly Guid organisationId;
         private readonly Guid aatfId;
@@ -33,9 +32,8 @@
         {
             client = A.Fake<IWeeeClient>();
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
-            sessionService = A.Fake<ISessionService>();
 
-            attribute = new CheckCanCreateEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper, SessionService = sessionService };
+            attribute = new CheckCanCreateEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
             context = A.Fake<ActionExecutingContext>();
 
             organisationId = TestFixture.Create<Guid>();

@@ -18,8 +18,6 @@
 
         public IAatfEvidenceHelper AatfEvidenceHelper { get; set; }
 
-        public ISessionService SessionService { get; set; }
-
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ActionParameters.TryGetValue("organisationId", out var idActionParameter))
