@@ -25,7 +25,7 @@
 
         public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid pcsId, int complianceYear)
         {
-            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @PCSId, @OrgId, @ComplianceYear";
+            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @SchemeId, @ComplianceYear";
             SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", pcsId);
             SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
 

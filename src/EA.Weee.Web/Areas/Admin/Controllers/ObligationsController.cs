@@ -155,18 +155,16 @@
             using (var client = apiClient())
             {
                 ObligationEvidenceSummaryData obligationEvidenceSummaryData = null;
-                List<SchemeObligationData> schemeData = new List<SchemeObligationData>();
-
-                //var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                var schemeData = new List<SchemeData>();
 
                 var complianceYears =
                     await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(null, false));
 
-                var complianceYear = selectedComplianceYear == null ? (complianceYears.Any() ? complianceYears.ElementAt(0) : (int?)null) : null;
+                var complianceYear = selectedComplianceYear ?? (complianceYears.Any() ? complianceYears.ElementAt(0) : (int?)null);
 
                 if (complianceYear.HasValue)
                 {
-                    schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeObligation(null, complianceYear.Value));
+                    schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemesWithObligation(complianceYear.Value));
 
                     if (schemeId.HasValue)
                     {
