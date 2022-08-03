@@ -35,6 +35,7 @@
 
         Task InvalidateCurrentDate();
 
+        Task InvalidateSchemePublicInfoCache(Guid organisationId);
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
     }
 }
