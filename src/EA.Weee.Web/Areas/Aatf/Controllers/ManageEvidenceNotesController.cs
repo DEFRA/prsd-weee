@@ -109,13 +109,13 @@
         [ValidateAntiForgeryToken]
         public ActionResult Index(ManageEvidenceNoteViewModel model)
         {
-            return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId });
+            return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId, complianceYear = model.SelectedComplianceYear });
         }
 
         [HttpGet]
         [CheckCanCreateEvidenceNote]
 
-        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId, bool returnFromCopyPaste = false)
+        public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId, int complianceYear, bool returnFromCopyPaste = false)
         { 
             using (var client = apiClient())
             {
@@ -125,8 +125,8 @@
 
                 sessionService.SetTransferSessionObject(Session, null, SessionKeyConstant.EditEvidenceViewModelKey);
 
-                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, null, organisationId, aatfId)) 
-                    : mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, existingModel, organisationId, aatfId));
+                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, null, organisationId, aatfId, complianceYear)) 
+                    : mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, existingModel, organisationId, aatfId, complianceYear));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
             
@@ -136,7 +136,6 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CheckCanCreateEvidenceNote]
         public async Task<ActionResult> CreateEvidenceNote(EditEvidenceNoteViewModel viewModel, Guid organisationId, Guid aatfId)
         {
             using (var client = apiClient())
@@ -144,7 +143,7 @@
                 if (viewModel.Action == ActionEnum.CopyAndPaste)
                 {
                     sessionService.SetTransferSessionObject(Session, viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
-                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, new { organisationId, returnAction = EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction });
+                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, new { organisationId, returnAction = EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction, complianceYear = viewModel.ComplianceYear });
                 }
 
                 if (ModelState.IsValid)
@@ -174,7 +173,7 @@
 
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
                 
-                var model = mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, viewModel, organisationId, aatfId));
+                var model = mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, viewModel, organisationId, aatfId, viewModel.ComplianceYear));
 
                 ModelState.ApplyCustomValidationSummaryOrdering(EditEvidenceNoteViewModel.ValidationMessageDisplayOrder);
 
@@ -215,8 +214,8 @@
                 var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, null, organisationId, result.AatfData.Id, result))
-                    : mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, existingModel, organisationId, result.AatfData.Id, result));
+                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, null, organisationId, result.AatfData.Id, result, result.ComplianceYear))
+                    : mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, existingModel, organisationId, result.AatfData.Id, result, result.ComplianceYear));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -265,7 +264,7 @@
 
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
 
-                var model = mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, viewModel, organisationId, aatfId, null));
+                var model = mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, viewModel, organisationId, aatfId, null, viewModel.ComplianceYear));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 

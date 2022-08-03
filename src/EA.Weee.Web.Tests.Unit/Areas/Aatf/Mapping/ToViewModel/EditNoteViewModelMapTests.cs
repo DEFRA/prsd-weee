@@ -65,6 +65,7 @@
             result.ReturnedReason.Should().Be(source.NoteData.ReturnedReason);
             result.RejectedReason.Should().Be(source.NoteData.RejectedReason);
             result.SelectedSchemeName.Should().BeNullOrEmpty();
+            result.ComplianceYear.Should().Be(source.NoteData.ComplianceYear);
         }
 
         [Fact]
@@ -135,6 +136,7 @@
             result.ReturnedReason.Should().Be(source.ExistingModel.ReturnedReason);
             result.RejectedReason.Should().Be(source.ExistingModel.RejectedReason);
             result.SelectedSchemeName.Should().BeNullOrEmpty();
+            result.ComplianceYear.Should().Be(source.ExistingModel.ComplianceYear);
         }
         [Fact]
         public void Map_GivenSourceContainRecipientId_SelectedSchemeNameShouldBeMapped()

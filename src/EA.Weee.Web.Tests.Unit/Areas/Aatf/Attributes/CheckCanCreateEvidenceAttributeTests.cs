@@ -23,49 +23,32 @@
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
-        private readonly ISessionService sessionService;
 
         private readonly Guid organisationId;
         private readonly Guid aatfId;
+        private readonly int complianceYear;
 
         public CheckCanCreateEvidenceAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
-            sessionService = A.Fake<ISessionService>();
 
-            attribute = new CheckCanCreateEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper, SessionService = sessionService };
+            attribute = new CheckCanCreateEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
             context = A.Fake<ActionExecutingContext>();
 
             organisationId = TestFixture.Create<Guid>();
             aatfId = TestFixture.Create<Guid>();
+            complianceYear = TestFixture.Create<int>();
 
-            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId }, { "aatfId", aatfId } };
+            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId }, { "aatfId", aatfId }, { "complianceYear", complianceYear } };
             A.CallTo(() => context.ActionParameters).Returns(actionParameters);
-        }
-
-        [Fact]
-        public void OnActionExecuting_GivenSelectedComplianceYearSessionIsNull_ShouldRedirectToManageEvidenceNotes()
-        {
-            //arrange
-            A.CallTo(() => sessionService.GetTransferSessionObject<object>(context.HttpContext.Session,
-                SessionKeyConstant.AatfSelectedComplianceYear)).Returns(null);
-
-            //act
-            attribute.OnActionExecuting(context);
-
-            var result = context.Result as RedirectToRouteResult;
-
-            //assert
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
         }
 
         [Fact]
         public void OnActionExecuting_GivenNoAatfId_ArgumentExceptionExpected()
         {
             //arrange
-            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId } };
+            var actionParameters = new Dictionary<string, object> { { "organisationId", organisationId }, { "complianceYear", complianceYear } };
             A.CallTo(() => context.ActionParameters).Returns(actionParameters);
 
             //act
@@ -79,7 +62,7 @@
         public void OnActionExecuting_GivenNoOrganisationId_ArgumentExceptionExpected()
         {
             //arrange
-            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId } };
+            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId }, { "complianceYear", complianceYear } };
             A.CallTo(() => context.ActionParameters).Returns(actionParameters);
 
             //act
@@ -118,14 +101,38 @@
         }
 
         [Fact]
+        public void OnActionExecuting_GivenNoComplianceYear_ArgumentExceptionExpected()
+        {
+            //arrange
+            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId }, { "organisationId", organisationId } };
+            A.CallTo(() => context.ActionParameters).Returns(actionParameters);
+
+            //act
+            Action action = () => attribute.OnActionExecuting(context);
+
+            //assert
+            action.Should().Throw<ArgumentException>().WithMessage("No compliance year was specified.");
+        }
+
+        [Fact]
+        public void OnActionExecuting_GivenComplianceYearIsNotValid_ArgumentExceptionExpected()
+        {
+            //arrange
+            var actionParameters = new Dictionary<string, object> { { "aatfId", aatfId }, { "organisationId", organisationId }, { "complianceYear", "AA" } };
+            A.CallTo(() => context.ActionParameters).Returns(actionParameters);
+
+            //act
+            Action action = () => attribute.OnActionExecuting(context);
+
+            //assert
+            action.Should().Throw<ArgumentException>().WithMessage("The specified compliance year is not valid.");
+        }
+
+        [Fact]
         public void OnActionExecuting_GivenAatfCannotCreateEditNotes_ExceptionShouldBeThrown()
         {
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
-            var complianceYear = TestFixture.Create<int>();
-
-            A.CallTo(() => sessionService.GetTransferSessionObject<object>(context.HttpContext.Session,
-                SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                     A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == organisationId))).Returns(aatfs);
@@ -147,10 +154,6 @@
         {
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
-            var complianceYear = TestFixture.Create<int>();
-
-            A.CallTo(() => sessionService.GetTransferSessionObject<object>(context.HttpContext.Session,
-                SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == organisationId))).Returns(aatfs);
