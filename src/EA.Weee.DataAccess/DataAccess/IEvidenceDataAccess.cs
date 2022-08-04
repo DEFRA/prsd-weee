@@ -23,6 +23,8 @@
 
         Task<EvidenceNoteResults> GetAllNotes(NoteFilter filter);
 
+        Task<IEnumerable<int>> GetComplianceYearsForNotes(List<int> allowedStatuses);
+
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear);
 
         Task<IEnumerable<Note>> GetNotesToTransfer(Guid recipientOrganisationId, List<int> categories, List<Guid> evidenceNotes, int complianceYear);

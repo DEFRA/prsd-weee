@@ -18,7 +18,7 @@
     </h1>
 </header>
 
-@{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }, { "width", "107px" } });}
+@{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }});}
 
 <!-- injected Withdrawn scheme message when applicable -->
 @if (Model.IsWithdrawn)

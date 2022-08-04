@@ -4,6 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
     using Filters;
+    using Weee.Requests.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteEndDateAttribute : EvidenceDateValidationBase
@@ -20,7 +21,7 @@
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var currentDate = AsyncHelpers.RunSync(async () => await Cache.FetchCurrentDate());
+            var currentDate = GetCurrentDateTime();
 
             if (value == null)
             {

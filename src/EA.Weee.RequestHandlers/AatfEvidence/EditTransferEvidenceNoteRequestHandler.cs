@@ -10,7 +10,6 @@
     using Domain.Evidence;
     using Domain.Organisation;
     using Factories;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
     using Security;
@@ -26,7 +25,6 @@
 
         public EditTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
-            IUserContext userContext, 
             IEvidenceDataAccess evidenceDataAccess, 
             ITransferTonnagesValidator transferTonnagesValidator, 
             IWeeeTransactionAdapter transactionAdapter, 

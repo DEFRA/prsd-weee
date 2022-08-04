@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Attributes
 {
     using System;
-    using System.Collections.Generic;
     using System.Web.Mvc;
     using System.Web.Routing;
     using AutoFixture;
@@ -15,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Weee.Requests.AatfEvidence;
+    using Weee.Requests.Shared;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
@@ -102,7 +102,7 @@
             attribute.OnActionExecuting(context);
 
             //assert
-            A.CallTo(() => cache.FetchCurrentDate()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -141,7 +141,7 @@
             var currentDate = new DateTime(2023, 2, 1);
             var note = TestFixture.Build<TransferEvidenceNoteData>().With(e => e.ComplianceYear, 2022).Create();
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => cache.FetchSchemePublicInfo(A<Guid>._)).Returns(schemeInfo);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(note);
 
@@ -168,7 +168,7 @@
             var note = TestFixture.Build<TransferEvidenceNoteData>().With(e => e.ComplianceYear, 2022).Create();
             A.CallTo(() => client.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(note);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
             A.CallTo(() => cache.FetchSchemePublicInfo(A<Guid>._)).Returns(schemeInfo);
 
             //act
