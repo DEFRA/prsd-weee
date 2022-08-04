@@ -7,10 +7,9 @@
     using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfEvidence;
-    using Core.DataReturns;
     using DataAccess.DataAccess;
     using Domain.Evidence;
-    using Domain.Scheme;
+    using Domain.Organisation;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -26,32 +25,29 @@
         private GetEvidenceNotesForTransferRequestHandler handler;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
-        private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly IMapper mapper;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly GetEvidenceNotesForTransferRequest request;
-        private readonly Scheme scheme;
-        private readonly Guid schemeId;
+        private readonly Organisation organisation;
         private readonly Guid organisationId;
 
         public GetEvidenceNotesForTransferRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
-            schemeDataAccess = A.Fake<ISchemeDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
             mapper = A.Fake<IMapper>();
             TestFixture.Create<Guid>();
-            schemeId = TestFixture.Create<Guid>();
-            scheme = A.Fake<Scheme>();
+            organisation = A.Fake<Organisation>();
             organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => scheme.Id).Returns(schemeId);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
+            A.CallTo(() => organisationDataAccess.GetById(organisationId)).Returns(organisation);
 
             request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(), TestFixture.Create<int>());
 
-            handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess, systemDataDataAccess);
+            handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, systemDataDataAccess, organisationDataAccess);
         }
 
         [Fact]
@@ -60,7 +56,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess, systemDataDataAccess);
+            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, systemDataDataAccess, organisationDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -70,12 +66,12 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
            
-            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess, systemDataDataAccess);
+            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, systemDataDataAccess, organisationDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -85,27 +81,37 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
+        public async Task HandleAsync_GivenRequest_ShouldCheckExternalAccess()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckBalancingSchemeAccess()
         {
             //arrange
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(schemeId))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_SchemeDataAccessShouldBeCalledOnce()
+        public async void HandleAsync_GivenRequest_OrganisationDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -139,8 +145,8 @@
             var request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(),
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<Guid>().ToList());
-            
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
+
+            A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).Returns(organisation);
             var date = TestFixture.Create<DateTime>();
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(date);
 
@@ -149,7 +155,8 @@
 
             //assert
             A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), request.ComplianceYear)).MustHaveHappenedOnceExactly();
+                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), 
+                A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), request.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -174,8 +181,7 @@
                 note3
             };
 
-            A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._, A<int>._)).Returns(noteList);
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, A<List<int>>._, A<List<Guid>>._, A<int>._)).Returns(noteList);
 
             // act
             await handler.HandleAsync(request);
