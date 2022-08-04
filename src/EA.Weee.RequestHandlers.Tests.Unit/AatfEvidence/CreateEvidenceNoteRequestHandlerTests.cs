@@ -22,6 +22,7 @@
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using Protocol = Core.AatfEvidence.Protocol;
     using WasteType = Core.AatfEvidence.WasteType;
@@ -444,15 +445,8 @@
             exception.Message.Should().Be(Error);
         }
 
-        public static IEnumerable<object[]> OutOfComplianceYear =>
-            new List<object[]>
-            {
-                new object[] { new DateTime(2020, 2, 1), 2019 },
-                new object[] { new DateTime(2020, 1, 1), 2022 },
-            };
-
         [Theory]
-        [MemberData(nameof(OutOfComplianceYear))]
+        [ClassData(typeof(OutOfComplianceYearData))]
         public async Task HandleAsync_GivenRequestWhereComplianceYearInvalid_InvalidOperationExceptionExpected(DateTime systemDateTime, int complianceYear)
         {
             //arrange
