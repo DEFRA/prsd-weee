@@ -15,6 +15,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using Prsd.Core.Domain;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Factories;
     using RequestHandlers.Security;
@@ -67,7 +68,9 @@
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess, 
+                A.Fake<WeeeContext>(),
+                A.Fake<IUserContext>());
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(recipientOrganisation);
@@ -76,7 +79,7 @@
         [Fact]
         public void EditTransferEvidenceNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
         {
-            typeof(EditTransferEvidenceNoteRequestHandler).Should().BeDerivedFrom<SaveTransferNoteRequestBase>();
+            typeof(EditTransferEvidenceNoteRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
         }
 
         [Theory]
@@ -166,7 +169,9 @@
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                A.Fake<WeeeContext>(),
+                A.Fake<IUserContext>());
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -218,7 +223,9 @@
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                A.Fake<WeeeContext>(),
+                A.Fake<IUserContext>());
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
