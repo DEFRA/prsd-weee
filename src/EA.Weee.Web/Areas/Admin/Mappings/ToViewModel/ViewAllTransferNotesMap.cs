@@ -15,7 +15,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.GetCurrentComplianceList);
+            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.ComplianceYearList);
 
             return model;
         }
