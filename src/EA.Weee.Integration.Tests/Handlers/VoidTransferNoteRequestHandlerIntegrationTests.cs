@@ -26,12 +26,10 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
-
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
 
-                note = EvidenceNoteDbSetup.Init()
+                note = TransferEvidenceNoteDbSetup.Init()
                     .WithRecipient(recipientOrganisation.Id)
                     .With(n =>
                     {
@@ -80,7 +78,12 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithInternalUserAccess(true);
+                    .WithInternalUserAccess();
+
+                var authority = Query.GetEaCompetentAuthority();
+                var role = Query.GetAdminRole();
+
+                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<VoidTransferNoteRequest, Guid>>();
