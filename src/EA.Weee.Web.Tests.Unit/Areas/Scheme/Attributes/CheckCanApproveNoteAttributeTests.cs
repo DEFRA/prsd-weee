@@ -102,7 +102,7 @@
             attribute.OnActionExecuting(context);
 
             //assert
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -168,7 +168,7 @@
             var note = TestFixture.Build<EvidenceNoteData>().With(e => e.ComplianceYear, 2022).Create();
             A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForSchemeRequest>._)).Returns(note);
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
             A.CallTo(() => cache.FetchSchemePublicInfo(A<Guid>._)).Returns(schemeInfo);
 
             //act

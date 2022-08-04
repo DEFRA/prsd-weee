@@ -95,7 +95,7 @@
             attribute.OnActionExecuting(context);
 
             //assert
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -122,7 +122,7 @@
                 .With(s => s.Status, SchemeStatus.Approved).Create();
             var currentDate = new DateTime(2023, 2, 1);
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
             A.CallTo(() => cache.FetchSchemePublicInfo(A<Guid>._)).Returns(schemeInfo);
 
             //act
@@ -146,7 +146,7 @@
                 .With(s => s.Status, status).Create();
             var currentDate = new DateTime(2022, 1, 31);
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
             A.CallTo(() => cache.FetchSchemePublicInfo(A<Guid>._)).Returns(schemeInfo);
 
             //act
