@@ -8,27 +8,22 @@
     using Core.Helpers;
     using Core.Scheme;
     using FluentAssertions;
-    using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
-    using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class EditNoteMapTransferTests
+    public class EditNoteMapTransferTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
-
-        public EditNoteMapTransferTests()
-        {
-            fixture = new Fixture();
-        }
-
         [Fact]
         public void GivenNullSchemes_ArgumentNullExceptionExpected()
         {
             //arrange
+            var noteData = TestFixture.Create<EvidenceNoteData>();
+            
+            //act
             var exception = Record.Exception(() => new EditNoteMapTransfer(null,
-                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.NewGuid(), null));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.NewGuid(), noteData, TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -38,8 +33,11 @@
         public void GivenEmptyOrganisationId_ArgumentExceptionExpected()
         {
             //arrange
+            var noteData = TestFixture.Create<EvidenceNoteData>();
+
+            //act
             var exception = Record.Exception(() => new EditNoteMapTransfer(new List<OrganisationSchemeData>(),
-                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), null));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), noteData, TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -49,8 +47,11 @@
         public void GivenEmptyAatfId_ArgumentExceptionExpected()
         {
             //arrange
+            var noteData = TestFixture.Create<EvidenceNoteData>();
+
+            //act
             var exception = Record.Exception(() => new EditNoteMapTransfer(new List<OrganisationSchemeData>(),
-                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, null));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, noteData, TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -60,14 +61,15 @@
         public void GivenValues_PropertiesShouldBeSet()
         {
             //arrange
-            var schemes = fixture.CreateMany<OrganisationSchemeData>().ToList();
-            var evidenceModel = fixture.Create<EditEvidenceNoteViewModel>();
-            var organisationId = fixture.Create<Guid>();
-            var aatfId = fixture.Create<Guid>();
-            var noteData = fixture.Create<EvidenceNoteData>();
+            var schemes = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var evidenceModel = TestFixture.Create<EditEvidenceNoteViewModel>();
+            var organisationId = TestFixture.Create<Guid>();
+            var aatfId = TestFixture.Create<Guid>();
+            var noteData = TestFixture.Create<EvidenceNoteData>();
+            var complianceYear = TestFixture.Create<int>();
 
             //act
-            var result = new EditNoteMapTransfer(schemes, evidenceModel, organisationId, aatfId, noteData);
+            var result = new EditNoteMapTransfer(schemes, evidenceModel, organisationId, aatfId, noteData, complianceYear);
 
             //assert
             result.Schemes.Should().BeEquivalentTo(schemes);
@@ -75,6 +77,7 @@
             result.OrganisationId.Should().Be(organisationId);
             result.AatfId.Should().Be(aatfId);
             result.NoteData.Should().Be(noteData);
+            result.ComplianceYear.Should().Be(complianceYear);
         }
     }
 }
