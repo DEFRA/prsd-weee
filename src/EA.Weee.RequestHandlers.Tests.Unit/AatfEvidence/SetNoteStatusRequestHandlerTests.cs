@@ -182,7 +182,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckBalancingSchemeAccess()
+        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);

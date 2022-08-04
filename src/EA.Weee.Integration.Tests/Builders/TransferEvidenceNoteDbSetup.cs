@@ -52,6 +52,13 @@
             return this;
         }
 
+        public TransferEvidenceNoteDbSetup WithRecipient(Guid organisationId)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.Recipient, null, instance);
+            ObjectInstantiator<Note>.SetProperty(o => o.RecipientId, organisationId, instance);
+            return this;
+        }
+
         public TransferEvidenceNoteDbSetup WithComplianceYear(int complianceYear)
         {
             instance.ComplianceYear = complianceYear;
