@@ -6,14 +6,13 @@
     using Security;
     using System;
     using System.Threading.Tasks;
-    using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
-    using Domain.Evidence;
     using Requests.AatfEvidence;
+    using Weee.Security;
 
-    public class SetNoteStatusRequestHandler : SaveNoteRequestBase, IRequestHandler<SetNoteStatusRequest, Guid>
+    public class VoidTransferNoteRequestHandler : SaveNoteRequestBase, IRequestHandler<VoidTransferNoteRequest, Guid>
     {
-        public SetNoteStatusRequestHandler(
+        public VoidTransferNoteRequestHandler(
             WeeeContext context,
             IUserContext userContext,
             IWeeeAuthorization authorization, 
@@ -21,17 +20,19 @@
         {
         }
 
-        public async Task<Guid> HandleAsync(SetNoteStatusRequest message)
+        public async Task<Guid> HandleAsync(VoidTransferNoteRequest message)
         {
-            Authorization.EnsureCanAccessExternalArea();
+            Authorization.EnsureCanAccessInternalArea();
+            Authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var evidenceNote = await EvidenceNote(message.NoteId);
 
-            Authorization.EnsureSchemeAccess(evidenceNote.Recipient.Scheme.Id);
+            if (evidenceNote.Status != Domain.Evidence.NoteStatus.Approved || evidenceNote.NoteType != Domain.Evidence.NoteType.TransferNote)
+            {
+                throw new InvalidOperationException($"Cannot void note with id {message.NoteId}");
+            }
 
             var currentDate = await SystemDataDataAccess.GetSystemDateTime();
-
-            ValidToSave(evidenceNote.Recipient, evidenceNote.ComplianceYear, currentDate);
 
             return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);
         }

@@ -5,6 +5,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.AatfEvidence;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -18,10 +19,11 @@
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Factories;
     using RequestHandlers.Security;
-    using Weee.Requests.Note;
+    using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
+    using NoteStatus = Domain.Evidence.NoteStatus;
 
     public class SetNoteStatusRequestHandlerTests : SimpleUnitTestBase
     {
@@ -58,7 +60,7 @@
         [Fact]
         public void SetNoteStatusRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
         {
-            typeof(SetNoteStatusRequestHandler).Should().BeDerivedFrom<SaveTransferNoteRequestBase>();
+            typeof(SetNoteStatusRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
         }
 
         [Theory]
@@ -67,7 +69,7 @@
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
@@ -87,7 +89,7 @@
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
@@ -110,7 +112,7 @@
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
@@ -138,7 +140,7 @@
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var noteId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
-            var message = new SetNoteStatus(noteId, Core.AatfEvidence.NoteStatus.Submitted);
+            var message = new SetNoteStatusRequest(noteId, Core.AatfEvidence.NoteStatus.Submitted);
 
             //act
             var exception = await Record.ExceptionAsync(() => handler.HandleAsync(message));
@@ -152,7 +154,7 @@
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var message = new SetNoteStatus(TestFixture.Create<Guid>(), TestFixture.Create<EA.Weee.Core.AatfEvidence.NoteStatus>());
+            var message = new SetNoteStatusRequest(TestFixture.Create<Guid>(), TestFixture.Create<EA.Weee.Core.AatfEvidence.NoteStatus>());
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
@@ -168,7 +170,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
@@ -184,7 +186,7 @@
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             var organisation = A.Fake<Organisation>();
             var organisationId = TestFixture.Create<Guid>();
@@ -204,7 +206,7 @@
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
@@ -224,7 +226,7 @@
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns((Note)null);
 
-            var message = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var message = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             // Act
             var exception = await Record.ExceptionAsync(() => handler.HandleAsync(message));
@@ -242,7 +244,7 @@
             var id = TestFixture.Create<Guid>();
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
-            var message = new SetNoteStatus(id, Core.AatfEvidence.NoteStatus.Approved);
+            var message = new SetNoteStatusRequest(id, Core.AatfEvidence.NoteStatus.Approved);
 
             // Act
             var result = await handler.HandleAsync(message);
@@ -263,7 +265,7 @@
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
 
-            var message = new SetNoteStatus(note.Id, status);
+            var message = new SetNoteStatusRequest(note.Id, status);
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => userContext.UserId).Returns(userId);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
@@ -291,7 +293,7 @@
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
 
-            var message = new SetNoteStatus(note.Id, status, "reason passed as parameter");
+            var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => userContext.UserId).Returns(userId);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);

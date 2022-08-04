@@ -15,15 +15,12 @@
     using Requests.Scheme;
     using Security;
 
-    public class CreateTransferEvidenceNoteRequestHandler : SaveTransferNoteRequestBase, IRequestHandler<TransferEvidenceNoteRequest, Guid>
+    public class CreateTransferEvidenceNoteRequestHandler : SaveNoteRequestBase, IRequestHandler<TransferEvidenceNoteRequest, Guid>
     {
-        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly IUserContext userContext;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ITransferTonnagesValidator transferTonnagesValidator;
         private readonly IWeeeTransactionAdapter transactionAdapter;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public CreateTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
@@ -31,26 +28,23 @@
             IEvidenceDataAccess evidenceDataAccess, 
             ITransferTonnagesValidator transferTonnagesValidator, 
             IWeeeTransactionAdapter transactionAdapter, 
-            ISystemDataDataAccess systemDataDataAccess)
+            ISystemDataDataAccess systemDataDataAccess, WeeeContext context) : base(context, userContext, authorization, systemDataDataAccess)
         {
-            this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
-            this.userContext = userContext;
             this.evidenceDataAccess = evidenceDataAccess;
             this.transferTonnagesValidator = transferTonnagesValidator;
             this.transactionAdapter = transactionAdapter;
-            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<Guid> HandleAsync(TransferEvidenceNoteRequest request)
         {
-            authorization.EnsureCanAccessExternalArea();
-            authorization.EnsureOrganisationAccess(request.OrganisationId);
+            Authorization.EnsureCanAccessExternalArea();
+            Authorization.EnsureOrganisationAccess(request.OrganisationId);
 
             Condition.Requires(request.Status)
                 .IsInRange(Core.AatfEvidence.NoteStatus.Draft, Core.AatfEvidence.NoteStatus.Submitted);
 
-            var currentDate = await systemDataDataAccess.GetSystemDateTime();
+            var currentDate = await SystemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
             var recipientOrganisation = await genericDataAccess.GetById<Organisation>(request.RecipientId);
 
@@ -72,7 +66,7 @@
 
                     note = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), request.ComplianceYear,
-                        userContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
+                        UserContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
 
                     transactionAdapter.Commit(transaction);
                 }
