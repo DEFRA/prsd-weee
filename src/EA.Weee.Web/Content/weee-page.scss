@@ -644,3 +644,7 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     opacity: .3;
     pointer-events: all;
 }
+
+.compliance-year-filter {
+    min-width: 107px;
+}

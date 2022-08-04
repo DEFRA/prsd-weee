@@ -8,7 +8,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Tests.Unit.Helpers;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
@@ -335,7 +334,7 @@
         }
 
         [Fact]
-        public void Map_GivenSource_TransferredByAddressShouldBeSet()
+        public void Map_GivenSource_TransferredByAddressIsNotBalancingSchemeAddressShouldBeSet()
         {
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
@@ -359,6 +358,41 @@
 
             //assert
             result.TransferredByAddress.Should().Be(siteAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSource_TransferredByAddressIsBalancingSchemeAddressShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
+                    .Create(),
+                false);
+            
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TransferredByAddress.Should().Be(source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName);
+        }
+
+        [Fact]
+        public void Map_GivenSource_TransferredByAddress_SchemeAddressShouldOnlyBeMappedOnce()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
+                    .Create(),
+                false);
+           
+            //act
+            var result = map.Map(source);
+
+            //assert
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -686,7 +720,7 @@
             model.DisplayEditButton.Should().BeTrue();
         }
 
-        private OrganisationData CreateOrganisationData()
+        private OrganisationData CreateOrganisationData(bool balancingScheme = false)
         {
             return new OrganisationData()
             {
@@ -706,7 +740,8 @@
                     Postcode = "GU22 7UY",
                     Telephone = "987654",
                     Email = "test@test.com"
-                }
+                },
+                IsBalancingScheme = balancingScheme
             };
         }
         private IList<TransferEvidenceNoteTonnageData> CreateTransferEvidenceNoteTonnageData()

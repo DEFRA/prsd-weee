@@ -19,6 +19,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Scheme;
     using Core.Tests.Unit.Helpers;
     using Web.Areas.Scheme.Attributes;
     using Web.Extensions;
@@ -96,20 +97,50 @@
         }
 
         [Fact]
-        public async Task DownloadEvidenceGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        public async Task DownloadEvidenceGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
-            var organisationId = TestFixture.Create<Guid>();
-            
-            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
+
+            A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(organisationName);
 
             // act
-            await ManageEvidenceController.DownloadEvidenceNote(organisationId, EvidenceNoteId);
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
 
             // assert
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            Breadcrumb.OrganisationId.Should().Be(OrganisationId);
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
+            A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(organisationName);
+
+            // act
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            // assert
+            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
+            Breadcrumb.OrganisationId.Should().Be(OrganisationId);
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
+        {
+            //act
+            await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, TestFixture.Create<Guid>());
+
+            //asset
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -227,11 +258,12 @@
         }
 
         [Fact]
-        public async Task ReviewEvidenceNoteGet_GivenValidOrganisation_and_GivenValidNoteId_BreadcrumbShouldBeSet()
+        public async Task ReviewEvidenceNoteGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
-
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
             A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
             // act
@@ -240,6 +272,25 @@
             // assert
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            Breadcrumb.OrganisationId.Should().Be(OrganisationId);
+        }
+
+        [Fact]
+        public async Task ReviewEvidenceNoteGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
+            A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
+
+            // act
+            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            // assert
+            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
+            Breadcrumb.OrganisationId.Should().Be(OrganisationId);
         }
 
         [Fact]
@@ -343,15 +394,16 @@
         }
 
         [Fact]
-        public async Task ReviewEvidenceNotePost_GivenInvalidModel_BreadcrumbShouldBeSet()
+        public async Task ReviewEvidenceNotePost_GivenInvalidModelAndSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var model = TestFixture.Create<ReviewEvidenceNoteViewModel>();
             var organisationId = model.OrganisationId;
             var organisationName = Faker.Company.Name();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
-            EvidenceNoteData note = TestFixture.Create<EvidenceNoteData>();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForSchemeRequest>._)).Returns(note);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
             AddModelError();
 
             // act
@@ -359,6 +411,28 @@
 
             // asset
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            Breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task ReviewEvidenceNotePost_GivenInvalidModelAndSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var model = TestFixture.Create<ReviewEvidenceNoteViewModel>();
+            var organisationId = model.OrganisationId;
+            var organisationName = Faker.Company.Name();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            AddModelError();
+
+            // act
+            await ManageEvidenceController.ReviewEvidenceNote(model);
+
+            // asset
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             Breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             Breadcrumb.OrganisationId.Should().Be(organisationId);
         }
@@ -376,7 +450,6 @@
             model.OrganisationId = organisationId;
             model.ViewEvidenceNoteViewModel.Id = evidenceNoteId;
             model.ViewEvidenceNoteViewModel.ComplianceYear = complianceYear;
-            model.ViewEvidenceNoteViewModel.SelectedComplianceYear = selectedComplianceYear;
 
             //act
             var result = await ManageEvidenceController.ReviewEvidenceNote(model) as RedirectToRouteResult;

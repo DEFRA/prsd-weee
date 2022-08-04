@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
     using System;
-    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
@@ -9,7 +8,6 @@
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Organisation;
-    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -17,7 +15,6 @@
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence;
-    using Weee.Tests.Core;
     using Xunit;
 
     public class GetTransferEvidenceNoteForSchemeRequestHandlerTests
@@ -26,12 +23,11 @@
         private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
-        private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly IMapper mapper;
         private readonly GetTransferEvidenceNoteForSchemeRequest request;
         private readonly Note note;
-        private readonly Scheme scheme;
-        private readonly Guid recipientId;
+        private readonly Organisation organisation;
         private readonly Guid evidenceNoteId;
         private readonly Guid organisationId;
 
@@ -40,57 +36,63 @@
             fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
-            schemeDataAccess = A.Fake<ISchemeDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
 
             mapper = A.Fake<IMapper>();
             note = A.Fake<Note>();
-            scheme = A.Fake<Scheme>();
-            recipientId = fixture.Create<Guid>();
             evidenceNoteId = fixture.Create<Guid>();
             organisationId = fixture.Create<Guid>();
+            organisation = A.Fake<Organisation>();
 
+            A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(true);
-            var recipientOrganisation = A.Fake<Organisation>();
-            var recipientScheme = A.Fake<Scheme>();
-            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
-            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
-            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
 
             request = new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId);
 
-            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, schemeDataAccess);
+            handler = new GetTransferEvidenceNoteForSchemeRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, organisationDataAccess);
 
             A.CallTo(() => evidenceDataAccess.GetNoteById(evidenceNoteId)).Returns(note);
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
+        public async Task HandleAsync_GivenRequest_ShouldEnsureCanAccessExternalArea()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(recipientId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        public async Task HandleAsync_GivenNoExternalAccess_ShouldThrowSecurityException()
         {
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea()).Throws<SecurityException>();
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_EnsureProducerBalancingSchemeAccess()
+        {
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisation.Id)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoOrganisationOrSchemeAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
-            //arrange
-            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(A<Guid>._)).Returns(false);
-            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(false);
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(A<Guid>._))
+                .Throws<SecurityException>();
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -141,27 +143,26 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenTransferNote_SchemeShouldBeRetrieved()
+        public async Task HandleAsync_GivenTransferNote_OrganisationShouldBeRetrieved()
         {
             //arrange
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
             A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId)).Returns(scheme);
+            A.CallTo(() => organisationDataAccess.GetById(organisationId)).Returns(organisation);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(organisationId))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => organisationDataAccess.GetById(organisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenTransferNoteAndSchemeIsNull_ArgumentNullExceptionExpected()
+        public async Task HandleAsync_GivenOrganisationIsNull_ArgumentNullExceptionExpected()
         {
             //arrange
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns((Scheme)null);
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns((Organisation)null);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -175,15 +176,12 @@
         {
             //arrange
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(A<Guid>._)).Returns(scheme);
 
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(A<TransferNoteMapTransfer>.That.Matches(t => 
-                t.Note.Equals(note) && t.Scheme.Equals(scheme)))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(A<TransferNoteMapTransfer>.That.Matches(t => t.Note.Equals(note)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -192,7 +190,6 @@
             //arrange
             var evidenceNote = fixture.Create<TransferEvidenceNoteData>();
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
-            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisationId)).Returns(true);
             A.CallTo(() => mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(A<TransferNoteMapTransfer>._)).Returns(evidenceNote);
 
             //act

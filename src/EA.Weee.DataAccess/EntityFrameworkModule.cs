@@ -33,6 +33,7 @@
             builder.RegisterTypeByEnvironment<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
             builder.RegisterTypeByEnvironment<SystemDataDataAccess, ISystemDataDataAccess>(environment);
             builder.RegisterTypeByEnvironment<ObligationDataAccess, IObligationDataAccess>(environment);
+            builder.RegisterTypeByEnvironment<OrganisationDataAccess, IOrganisationDataAccess>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 
@@ -42,9 +43,6 @@
             builder.RegisterTypeByEnvironment<QuarterWindowTemplateDataAccess, IQuarterWindowTemplateDataAccess>(environment);
 
             builder.RegisterType<ProducerSubmissionDataAccess>().As<IProducerSubmissionDataAccess>()
-                .InstancePerRequest();
-
-            builder.RegisterType<OrganisationDataAccess>().As<IOrganisationDataAccess>()
                 .InstancePerRequest();
 
             builder.RegisterTypeByEnvironment<SchemeDataAccess, ISchemeDataAccess>(environment);
