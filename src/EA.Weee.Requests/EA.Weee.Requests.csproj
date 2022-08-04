@@ -57,6 +57,9 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequest.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteFilterBaseRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequest.cs" />
+    <Compile Include="AatfEvidence\VoidTransferNoteRequest.cs" />
+    <Compile Include="AatfEvidence\SetNoteStatusRequest.cs" />
+    <Compile Include="AatfEvidence\SetNoteStatusBase.cs" />
     <Compile Include="AatfEvidence\TransferTonnageValue.cs" />
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
