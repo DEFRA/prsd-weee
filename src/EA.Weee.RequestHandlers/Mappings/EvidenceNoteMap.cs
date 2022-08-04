@@ -62,7 +62,7 @@
             if (source.IncludeHistory)
             {
                 var transferredNotes = source.Note.NoteTonnage.SelectMany(nt => nt.NoteTransferTonnage)
-                    .Select(nt1 => nt1.TransferNote).ToList();
+                    .Select(nt1 => nt1.TransferNote).Distinct().ToList();
 
                 history = transferredNotes.Select(n => new EvidenceNoteHistoryData(n.Id, n.Status.ToCoreEnumeration<NoteStatus>(), n.Reference, n.NoteType.ToCoreEnumeration<NoteType>(), 
                     n.NoteStatusHistory
