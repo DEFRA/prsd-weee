@@ -6,11 +6,27 @@
 @Html.HiddenFor(m => m.OrganisationId)
 @Html.HiddenFor(m => m.ComplianceYear)
 
-<div class="govuk-form-group govuk-!-width-one-half @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
-    @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m" })
-    @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
-    @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
+<!-- ---------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- #48724 need to replace this listbox for a row of text for Recipient in NoteType.Transfer + Model.EditMode && Model.HasBeenReturned -->
+<!-- ---------------------------------------------------------------------------------------------------------------------------------- -->
+<div class="govuk-form-group govuk-!-width-one-full @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
+    @if (Model.ViewTransferNoteViewModel.HasBeenReturned)
+    {
+        <div class="govuk-grid-row govuk-!-padding-left-0" style="margin-top: -24px;">
+            <span id="recipient" class="govuk-grid-column-one-quarter govuk-label--s">Recipient</span>
+            <p aria-labelledby="recipient" class="govuk-body govuk-!-padding-left-0">@Html.Raw(Model.RecipientName)</p>
+        </div>
+    }
+    else
+    {
+        <div class="govuk-form-group govuk-!-width-one-quarter @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
+            @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m" })
+            @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
+            @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
+        </div>
+    }
 </div>
+<!-- ---------------------------------------------------------------------------------------------------------------------------------- -->
 
 <div class="govuk-!-padding-top-5 govuk-form-group @Html.Gds().FormGroupClass(m => m.HasSelectedAtLeastOneCategory)">
 
