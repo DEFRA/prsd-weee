@@ -145,12 +145,12 @@
         [InlineData(2021)]
         [InlineData(2020)]
         [InlineData(2022)]
-        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNullAndComplianceYearListIsNull_SelectedComplianceYearShouldBeSet(int year)
         {
             //arrange
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(year, 1, 1);
-            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, date, TestFixture.CreateMany<int>());
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, date, null);
 
             //act
             var result = map.Map(source);
@@ -159,17 +159,55 @@
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
         }
 
+        [Fact]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNullAndComplianceYearListIsNotNull_SelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var complianceYearList = new List<int>() { 2020, 2019 };
+
+            var currentDate = new DateTime(2018, 1, 1);
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate, complianceYearList);
+            
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2020);
+        }
+
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZeroAndComplianceYearListIsNotNull_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
+        {
+            //arrange
+            var complianceYearList = new List<int>() { 2020, 2019 };
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
+            var currentDate = new DateTime(2018, 1, 1);
+
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, complianceYearList);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2020);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZeroAndComplianceYearListIsNull_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
         {
             //arrange
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
-            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.CreateMany<int>());
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, null);
 
             //act
             var result = map.Map(source);
@@ -179,14 +217,33 @@
         }
 
         [Fact]
-        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYearAndComplianceYearIsNull_SelectedComplianceYearShouldBeSet()
         {
             //arrange
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, currentDate.Year - 1).Create();
 
-            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.CreateMany<int>());
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year - 1);
+        }
+
+        [Fact]
+        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYearAndComplianceYearIsNotNull_SelectedComplianceYearShouldBeSet()
+        {
+            //arrange
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var complianceYearList = new List<int>() { 2020, 2019 };
+            var currentDate = new DateTime(2018, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year - 1).Create();
+
+            var source = new ViewAllEvidenceNotesMapTransfer(noteData, model, currentDate, complianceYearList);
 
             //act
             var result = map.Map(source);
