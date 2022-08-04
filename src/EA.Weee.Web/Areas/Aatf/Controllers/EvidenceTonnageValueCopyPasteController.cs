@@ -29,7 +29,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(Guid organisationId, string returnAction, bool redirect = false)
+        public async Task<ActionResult> Index(Guid organisationId, string returnAction, int complianceYear, bool redirect = false)
         { 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -37,10 +37,17 @@
 
             if (redirect)
             {
-                return ReturnLinkCase(returnAction, evidenceModel);
+                return ReturnLinkCase(returnAction, evidenceModel, complianceYear);
             }
 
-            var model = new EvidenceTonnageValueCopyPasteViewModel() { OrganisationId = evidenceModel.OrganisationId, AatfId = evidenceModel.AatfId, Action = returnAction, EvidenceId = evidenceModel.Id };
+            var model = new EvidenceTonnageValueCopyPasteViewModel() 
+                { 
+                    OrganisationId = evidenceModel.OrganisationId, 
+                    AatfId = evidenceModel.AatfId, 
+                    Action = returnAction, 
+                    EvidenceId = evidenceModel.Id,
+                    ComplianceYear = complianceYear
+            };
 
             return View(model);
         }
@@ -64,17 +71,17 @@
 
                 sessionService.SetTransferSessionObject(Session, evidenceModel, SessionKeyConstant.EditEvidenceViewModelKey);
             }
-            return ReturnLinkCase(model.Action, evidenceModel);
+            return ReturnLinkCase(model.Action, evidenceModel, evidenceModel.ComplianceYear);
         }
 
-        private ActionResult ReturnLinkCase(string returnAction, EditEvidenceNoteViewModel evidenceModel)
+        private ActionResult ReturnLinkCase(string returnAction, EditEvidenceNoteViewModel evidenceModel, int complianceYear)
         {
             switch (returnAction)
             {
                 case EvidenceCopyPasteActionConstants.EditEvidenceNoteAction:
-                    return RedirectToRoute(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true });
+                    return RedirectToRoute(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true, complianceYear });
                 default: 
-                    return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { evidenceModel.OrganisationId, evidenceModel.AatfId, returnFromCopyPaste = true });
+                    return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { evidenceModel.OrganisationId, evidenceModel.AatfId, complianceYear, returnFromCopyPaste = true });
             }
         }
 
