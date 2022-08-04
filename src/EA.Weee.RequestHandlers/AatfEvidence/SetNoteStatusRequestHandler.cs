@@ -6,9 +6,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
-    using CuttingEdge.Conditions;
     using DataAccess.DataAccess;
-    using Domain.Evidence;
     using Requests.AatfEvidence;
 
     public class SetNoteStatusRequestHandler : SaveNoteRequestBase, IRequestHandler<SetNoteStatusRequest, Guid>
@@ -27,7 +25,7 @@
 
             var evidenceNote = await EvidenceNote(message.NoteId);
 
-            Authorization.EnsureSchemeAccess(evidenceNote.Recipient.Scheme.Id);
+            Authorization.EnsureOrganisationAccess(evidenceNote.Recipient.Id);
 
             var currentDate = await SystemDataDataAccess.GetSystemDateTime();
 
