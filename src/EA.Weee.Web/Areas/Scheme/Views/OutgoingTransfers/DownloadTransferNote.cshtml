@@ -34,7 +34,7 @@
     @if (Model.ViewTransferNoteViewModel.DisplayMessage)
     {
         @(this.WeeeGds().BackLink(
-                Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.SelectedComplianceYear }),
+                Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.ComplianceYear }),
                 "Manage evidence notes")
                 )
         @(this.WeeeGds().Panel(Model.ViewTransferNoteViewModel.SuccessMessage))
@@ -42,7 +42,7 @@
     else
     {
         @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
-                new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.SelectedComplianceYear }))
+                new { @pcsId = Model.ViewTransferNoteViewModel.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear= Model.ViewTransferNoteViewModel.ComplianceYear }))
                 )
     }
     <div class="govuk-!-margin-top-3"></div>
