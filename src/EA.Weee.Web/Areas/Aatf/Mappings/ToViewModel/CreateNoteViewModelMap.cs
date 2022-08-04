@@ -19,7 +19,8 @@
                 AatfId = source.AatfId,
                 SchemeList = source.Schemes,
                 ProtocolList = new SelectList(EnumHelper.GetValues(typeof(Protocol)), "Key", "Value"),
-                WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value")
+                WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
+                ComplianceYear = source.ComplianceYear
             };
 
             if (source.ExistingModel != null)

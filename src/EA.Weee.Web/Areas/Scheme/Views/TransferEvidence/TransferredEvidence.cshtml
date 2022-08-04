@@ -35,7 +35,7 @@
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3">
-            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.SelectedComplianceYear, redirectTab = Model.RedirectTab }, new { @class = "govuk-button" })
+            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab }, new { @class = "govuk-button" })
         </div>
     }
 }

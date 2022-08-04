@@ -3,12 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Common;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.Tests.Unit.Helpers;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -42,8 +40,8 @@
         private readonly Organisation recipientOrganisation;
         private readonly Scheme scheme;
         private readonly Guid userId;
-        private readonly short complianceYear;
-
+        private const string Error = "You cannot manage evidence as scheme is not in a valid state";
+        
         public CreateTransferEvidenceNoteRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
@@ -58,11 +56,11 @@
             organisation = A.Fake<Organisation>();
             scheme = A.Fake<Scheme>();
             userId = TestFixture.Create<Guid>();
-            complianceYear = TestFixture.Create<short>();
 
-            A.CallTo(() => scheme.Organisation).Returns(recipientOrganisation);
-            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { scheme });
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(new DateTime(2020, 1, 1));
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
             A.CallTo(() => scheme.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Approved);
             A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
 
             request = Request();
@@ -78,6 +76,63 @@
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
             A.CallTo(() => userContext.UserId).Returns(userId);
+        }
+
+        [Fact]
+        public void CreateTransferEvidenceNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
+        {
+            typeof(CreateTransferEvidenceNoteRequestHandler).Should().BeDerivedFrom<SaveTransferNoteRequestBase>();
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearDataWithBalancingScheme))]
+        public async Task HandleAsync_GivenRequestedYearIsClosed_InvalidOperationExceptionExpected(DateTime currentDate, int complianceYear, bool balancingScheme)
+        {
+            //arrange
+            var request = Request();
+            request.ComplianceYear = complianceYear;
+            var note = A.Fake<Note>();
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(balancingScheme ? A.Fake<ProducerBalancingScheme>() : null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
+            A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(Error);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationIsNotBalancingSchemeAndSchemeIsWithdrawn_InvalidOperationExceptionExpected()
+        {
+            var request = Request();
+            A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Withdrawn);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(Error);
+        }
+
+        //Not a valid scenario but in as a check against the balancing scheme
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationIsBalancingSchemeAndSchemeIsWithdrawn_NoExceptionExpected()
+        {
+            var request = Request();
+            A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Withdrawn);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeNull();
         }
 
         [Theory]
@@ -211,12 +266,19 @@
             A.CallTo(() => transferTonnagesValidator.Validate(request.TransferValues, null)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenValidRequest_TransferNoteShouldBeAdded()
+        [Theory]
+        [ClassData(typeof(SchemeStatusData))]
+        public async Task HandleAsync_GivenValidRequest_TransferNoteShouldBeAdded(SchemeStatus status)
         {
+            if (status == SchemeStatus.Withdrawn)
+            {
+                return;
+            }
+
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2020, 1, 1);
             SystemTime.Freeze(currentDate);
+            A.CallTo(() => scheme.SchemeStatus).Returns(status);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(recipientOrganisation);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
@@ -314,7 +376,7 @@
                 TestFixture.CreateMany<TransferTonnageValue>().ToList(), 
                 TestFixture.CreateMany<Guid>().ToList(),
                 Core.AatfEvidence.NoteStatus.Draft,
-                TestFixture.Create<int>());
+                2020);
         }
     }
 }

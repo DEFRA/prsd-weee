@@ -14,6 +14,7 @@
     using FluentAssertions;
     using Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ViewAllEvidenceNotesMapTests : SimpleUnitTestBase
@@ -250,6 +251,48 @@
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year - 1);
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenComplianceYearIsClosed_ComplianceYearClosedShouldBeTrue(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, complianceYear).Create();
+            
+            var transfer = new ViewAllEvidenceNotesMapTransfer(
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                model,
+                currentDate,
+                TestFixture.CreateMany<int>().ToList());
+
+            //act
+            var result = map.Map(transfer);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenComplianceYearIsNotClosed_ComplianceYearClosedShouldBeFalse()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+
+            var transfer = new ViewAllEvidenceNotesMapTransfer(
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                model,
+                currentDate,
+                TestFixture.CreateMany<int>().ToList());
+
+            //act
+            var result = map.Map(transfer);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
         }
     }
 }
