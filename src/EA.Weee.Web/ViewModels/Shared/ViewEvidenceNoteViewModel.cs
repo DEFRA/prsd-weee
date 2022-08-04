@@ -21,8 +21,6 @@
         [DisplayName("Compliance year")]
         public string ComplianceYearDisplay => ComplianceYear.ToString();
 
-        public int ComplianceYear { get; set; }
-
         public string SiteAddress { get; set; }
 
         public string OperatorAddress { get; set; }
@@ -50,8 +48,6 @@
         public bool DisplayAatfName { get; set; }
 
         public bool DisplayH2Title { get; set; }
-
-        public int SelectedComplianceYear { get; set; }
 
         public virtual string TabName
         {

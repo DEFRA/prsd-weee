@@ -108,7 +108,8 @@
                      v.NoteData.Equals(noteData) &&
                      v.OrganisationId.Equals(OrganisationId) &&
                      v.AatfId.Equals(noteData.AatfData.Id) && 
-                     v.ExistingModel == null))).MustHaveHappenedOnceExactly();
+                     v.ExistingModel == null &&
+                     v.ComplianceYear == noteData.ComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -183,8 +184,9 @@
                 A<EditNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes)
                                                          && c.ExistingModel.Equals(model)
                                                          && c.OrganisationId.Equals(OrganisationId)
-                                                         && c.AatfId.Equals(AatfId) &&
-                                                         c.NoteData == null))).MustHaveHappenedOnceExactly();
+                                                         && c.AatfId.Equals(AatfId) 
+                                                         && c.NoteData == null 
+                                                         && c.ComplianceYear == model.ComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -346,14 +348,16 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) })
+                .Should()
                 .BeDecoratedWith<CheckCanEditEvidenceNoteAttribute>();
         }
 
         [Fact]
         public void EditDraftEvidenceNotePost_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) })
+                .Should()
                 .BeDecoratedWith<CheckCanEditEvidenceNoteAttribute>();
         }
 
@@ -466,7 +470,6 @@
 
             var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(noteData);
 
             //Act
@@ -485,7 +488,6 @@
             //Arrange
             var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(noteData);
 
             //Act
