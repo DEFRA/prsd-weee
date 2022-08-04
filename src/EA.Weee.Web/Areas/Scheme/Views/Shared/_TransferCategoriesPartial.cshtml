@@ -12,6 +12,7 @@
 <div class="govuk-form-group govuk-!-width-one-full @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
     @if (Model.ViewTransferNoteViewModel.HasBeenReturned)
     {
+        @Html.HiddenFor(m => m.SelectedSchema)
         <div class="govuk-grid-row govuk-!-padding-left-0" style="margin-top: -24px;">
             <span id="recipient" class="govuk-grid-column-one-quarter govuk-label--s">Recipient</span>
             <p aria-labelledby="recipient" class="govuk-body govuk-!-padding-left-0">@Html.Raw(Model.RecipientName)</p>
@@ -19,11 +20,11 @@
     }
     else
     {
-        <div class="govuk-form-group govuk-!-width-one-quarter @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
-            @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m" })
-            @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
-            @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
-        </div>
+    <div class="govuk-form-group govuk-!-width-one-quarter @Html.Gds().FormGroupClass(m => m.SelectedSchema)">
+        @Html.Gds().LabelFor(m => m.SelectedSchema, new { @class = "govuk-label--m" })
+        @Html.Gds().ValidationMessageFor(m => m.SelectedSchema)
+        @Html.Gds().DropDownListFor(m => m.SelectedSchema, new SelectList(Model.SchemasToDisplay, "Id", "DisplayName"), string.Empty, new { @class = "govuk-!-width-one-quarter", autocomplete = "false" }, useHalfWidth: false, withLookAhead: true)
+    </div>
     }
 </div>
 <!-- ---------------------------------------------------------------------------------------------------------------------------------- -->
