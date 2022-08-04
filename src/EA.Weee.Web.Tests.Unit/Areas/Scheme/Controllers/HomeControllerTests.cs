@@ -1654,7 +1654,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManagePBSEvidenceNotes_RedirectsHoldingIndex()
+        public async void PostChooseActivity_ManagePBSEvidenceNotes_RedirectsToManageEvidenceNotes()
         {
             var organisationId = Guid.NewGuid();
 
@@ -1669,7 +1669,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Index", routeValues["action"]);
-            Assert.Equal("ManageTransferNotes", routeValues["controller"]);
+            Assert.Equal("ManageEvidenceNotes", routeValues["controller"]);
             Assert.Equal(organisationId, routeValues["pcsId"]);
         }
 

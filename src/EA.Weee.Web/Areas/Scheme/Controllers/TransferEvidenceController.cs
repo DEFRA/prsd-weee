@@ -42,7 +42,7 @@
         [CheckCanCreateTransferNote]
         public async Task<ActionResult> TransferEvidenceNote(Guid pcsId, int complianceYear)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             var model = new TransferEvidenceNoteCategoriesViewModel
             {
@@ -84,7 +84,7 @@
                 return RedirectToAction("TransferFrom", "TransferEvidence", new { area = "Scheme", pcsId = model.OrganisationId, complianceYear = model.ComplianceYear });
             }
 
-            await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(model.OrganisationId);
 
             model.AddCategoryValues();
             CheckedCategoryIds(model, selectedCategoryIds);
@@ -99,7 +99,7 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId);
                 
                 var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                     SessionKeyConstant.TransferNoteKey);
@@ -146,7 +146,7 @@
                     new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
             }
 
-            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(model.PcsId);
 
             return View("TransferFrom", model);
         }
@@ -204,7 +204,7 @@
         [HttpGet]
         public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
@@ -226,7 +226,7 @@
 
         private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, bool transferAllTonnage, int complianceYear, IWeeeClient client)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                 SessionKeyConstant.TransferNoteKey);
