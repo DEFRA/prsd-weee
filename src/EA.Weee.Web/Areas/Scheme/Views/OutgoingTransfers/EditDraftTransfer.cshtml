@@ -14,7 +14,7 @@
 {
     @if (Model.ReturnToView)
     {
-        @(this.WeeeGds().BackLink(Url.RouteUrl(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.SelectedComplianceYear, redirectTab = Model.RedirectTab, })))
+        @(this.WeeeGds().BackLink(Url.RouteUrl(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, })))
     }
     else
     {

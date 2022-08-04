@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Domain.Evidence;
     using Domain.Lookup;
+    using EA.Weee.DataAccess.Tests.Integration.Base;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -15,7 +16,7 @@
     using Weee.Tests.Core.Model;
     using Xunit;
 
-    public class EvidenceDataAccessIntegration
+    public class EvidenceDataAccessIntegration : EvidenceNoteBaseDataAccess
     {
         [Fact]
         public async Task Update_ShouldUpdateNote()
@@ -80,6 +81,43 @@
                 updatedNote.NoteTonnage.ElementAt(0).Reused.Should().Be(null);
                 updatedNote.NoteTonnage.ElementAt(1).Received.Should().Be(2);
                 updatedNote.NoteTonnage.ElementAt(1).Reused.Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public async Task GetComplianceYearsForNotes_WithNotesDraftStatusAndStatusNotAccepted_EmptyListShouldBeReturn()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var draftNote1 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year);
+                var draftNote2 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1);
+                var draftNote3 = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2);
+                
+                var alreadyExistingNotes = GetExistingNotesInDb(context);
+
+                var listOfExistingComplianceYears = alreadyExistingNotes?.Result.Select(x => x.ComplianceYear).Distinct().ToList();
+
+                // act
+                context.Notes.Add(draftNote1);
+                context.Notes.Add(draftNote2);
+                context.Notes.Add(draftNote3);
+
+                await context.SaveChangesAsync();
+
+                var actionList = await dataAccess.GetComplianceYearsForNotes(new List<int> { 2, 3, 4, 5, 6 });
+
+                // asset
+                var result = actionList.Except(listOfExistingComplianceYears).ToList();
+
+                result.Should().BeEmpty();
+                result.Should().NotBeNull();
             }
         }
     }
