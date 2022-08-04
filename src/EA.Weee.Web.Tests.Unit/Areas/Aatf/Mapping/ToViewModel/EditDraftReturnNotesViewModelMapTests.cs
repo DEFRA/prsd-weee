@@ -14,6 +14,7 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class EditDraftReturnNotesViewModelMapTests : SimpleUnitTestBase
@@ -194,6 +195,50 @@
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(currentDate.Year - 1);
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenComplianceYearIsClosed_ComplianceYearClosedShouldBeTrue(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, complianceYear).Create();
+            var organisationId = TestFixture.Create<Guid>();
+
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId,
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                currentDate,
+                model);
+
+            //act
+            var result = editDraftReturnNotesViewModelMap.Map(transfer);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenComplianceYearIsNotClosed_ComplianceYearClosedShouldBeFalse()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+            var organisationId = TestFixture.Create<Guid>();
+
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId,
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                currentDate,
+                model);
+
+            //act
+            var result = editDraftReturnNotesViewModelMap.Map(transfer);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
         }
     }
 }
