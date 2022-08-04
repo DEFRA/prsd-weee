@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
     using System;
+    using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
@@ -8,6 +9,7 @@
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Organisation;
+    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -28,8 +30,11 @@
         private readonly GetTransferEvidenceNoteForSchemeRequest request;
         private readonly Note note;
         private readonly Organisation organisation;
+        private readonly Organisation recipientOrganisation;
+        private readonly Scheme recipientScheme;
         private readonly Guid evidenceNoteId;
         private readonly Guid organisationId;
+        private readonly Guid recipientSchemeId;
 
         public GetTransferEvidenceNoteForSchemeRequestHandlerTests()
         {
@@ -42,10 +47,16 @@
             note = A.Fake<Note>();
             evidenceNoteId = fixture.Create<Guid>();
             organisationId = fixture.Create<Guid>();
+            recipientSchemeId = fixture.Create<Guid>();
             organisation = A.Fake<Organisation>();
+            recipientScheme = A.Fake<Scheme>();
+            recipientOrganisation = A.Fake<Organisation>();
 
+            A.CallTo(() => recipientScheme.Id).Returns(recipientSchemeId);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
             A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.OrganisationId).Returns(organisationId);
+            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
             A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(true);
 
             request = new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId);
@@ -78,21 +89,33 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_EnsureProducerBalancingSchemeAccess()
+        public async Task HandleAsync_GivenRequest_EnsureOrganisationAccess()
         {
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisation.Id)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(organisation.Id)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenRequest_EnsureSchemeAccess()
         {
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(A<Guid>._))
-                .Throws<SecurityException>();
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(note.Recipient.Scheme.Id)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoOrganisationOrSchemeAccess_ShouldThrowSecurityException()
+        {
+            //arrange
+            A.CallTo(() => weeeAuthorization.CheckOrganisationAccess(A<Guid>._)).Returns(false);
+            A.CallTo(() => weeeAuthorization.CheckSchemeAccess(A<Guid>._)).Returns(false);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
