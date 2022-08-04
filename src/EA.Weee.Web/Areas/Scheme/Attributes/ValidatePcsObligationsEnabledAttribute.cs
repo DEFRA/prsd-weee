@@ -7,8 +7,6 @@
 
     public class ValidatePcsObligationsEnabledAttribute : ActionFilterAttribute
     {
-        public Func<IWeeeClient> Client { get; set; }
-
         public ConfigurationService ConfigService { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)

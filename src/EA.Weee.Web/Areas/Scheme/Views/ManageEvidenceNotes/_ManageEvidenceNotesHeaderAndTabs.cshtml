@@ -1,5 +1,4 @@
 ﻿@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
@@ -7,15 +6,15 @@
 
 @model ManageEvidenceNoteSchemeViewModel
 @{
-    var title = String.Format("Manage evidence notes for {0}", Model.SchemeInfo.Name);
-    ViewBag.Title = title + " - GOV.UK";
+    var mainTitle = Model.SchemeInfo.IsBalancingScheme ? "Manage PBS evidence notes" : string.Format("Manage evidence notes for {0}", Model.SchemeInfo.Name);
+    ViewBag.Title = mainTitle + " - GOV.UK";
 }
 
 @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">
-        @title
+        @mainTitle
     </h1>
 </header>
 
