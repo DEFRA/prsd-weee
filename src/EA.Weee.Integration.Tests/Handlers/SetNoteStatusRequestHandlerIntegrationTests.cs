@@ -21,7 +21,6 @@
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
-    using Requests.Note;
     using NoteStatus = Domain.Evidence.NoteStatus;
 
     public class SetNoteStatusRequestHandlerIntegrationTests : IntegrationTestBase
@@ -48,7 +47,7 @@
                     })
                     .Create();
 
-                request = new SetNoteStatus(note.Id, Core.AatfEvidence.NoteStatus.Approved);
+                request = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved);
             };
 
             private readonly Because of = () =>
@@ -95,7 +94,7 @@
                     })
                     .Create();
 
-                request = new SetNoteStatus(note.Id, Core.AatfEvidence.NoteStatus.Returned, "reason returned");
+                request = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Returned, "reason returned");
             };
 
             private readonly Because of = () =>
@@ -123,9 +122,9 @@
 
         public class SetNoteStatusRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<SetNoteStatus, Guid> handler;
+            protected static IRequestHandler<SetNoteStatusRequest, Guid> handler;
             protected static Organisation organisation;
-            protected static SetNoteStatus request;
+            protected static SetNoteStatusRequest request;
             protected static Guid result;
             protected static Note note;
             protected static Fixture fixture;
@@ -138,7 +137,7 @@
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<SetNoteStatus, Guid>>();
+                handler = Container.Resolve<IRequestHandler<SetNoteStatusRequest, Guid>>();
 
                 return setup;
             }

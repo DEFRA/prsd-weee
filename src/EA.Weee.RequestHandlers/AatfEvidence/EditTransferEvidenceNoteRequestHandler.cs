@@ -10,38 +10,36 @@
     using Domain.Evidence;
     using Domain.Organisation;
     using Factories;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
     using Security;
 
-    public class EditTransferEvidenceNoteRequestHandler : SaveTransferNoteRequestBase, IRequestHandler<EditTransferEvidenceNoteRequest, Guid>
+    public class EditTransferEvidenceNoteRequestHandler : SaveNoteRequestBase, IRequestHandler<EditTransferEvidenceNoteRequest, Guid>
     {
-        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly ITransferTonnagesValidator transferTonnagesValidator;
         private readonly IWeeeTransactionAdapter transactionAdapter;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public EditTransferEvidenceNoteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, 
             IEvidenceDataAccess evidenceDataAccess, 
             ITransferTonnagesValidator transferTonnagesValidator, 
             IWeeeTransactionAdapter transactionAdapter, 
-            ISystemDataDataAccess systemDataDataAccess)
+            ISystemDataDataAccess systemDataDataAccess, WeeeContext context, IUserContext userContext) : base(context, userContext, authorization, systemDataDataAccess)
         {
-            this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.evidenceDataAccess = evidenceDataAccess;
             this.transferTonnagesValidator = transferTonnagesValidator;
             this.transactionAdapter = transactionAdapter;
-            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<Guid> HandleAsync(EditTransferEvidenceNoteRequest request)
         {
-            authorization.EnsureCanAccessExternalArea();
-            authorization.EnsureOrganisationAccess(request.OrganisationId);
+            Authorization.EnsureCanAccessExternalArea();
+            Authorization.EnsureOrganisationAccess(request.OrganisationId);
+
             var transferNote = await evidenceDataAccess.GetNoteById(request.TransferNoteId);
             if (!EnsureTheSchemeNotChanged(transferNote, request.RecipientId))
             {
@@ -51,7 +49,7 @@
             Condition.Requires(request.Status)
                 .IsInRange(Core.AatfEvidence.NoteStatus.Draft, Core.AatfEvidence.NoteStatus.Submitted);
 
-            var currentDate = await systemDataDataAccess.GetSystemDateTime();
+            var currentDate = await SystemDataDataAccess.GetSystemDateTime();
             var organisation = await genericDataAccess.GetById<Organisation>(request.OrganisationId);
             var recipientOrganisation = await genericDataAccess.GetById<Organisation>(request.RecipientId);
             

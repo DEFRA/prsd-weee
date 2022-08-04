@@ -71,7 +71,8 @@
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                A.Fake<WeeeContext>());
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
             A.CallTo(() => genericDataAccess.GetById<Scheme>(request.RecipientId)).Returns(scheme);
@@ -81,7 +82,7 @@
         [Fact]
         public void CreateTransferEvidenceNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
         {
-            typeof(CreateTransferEvidenceNoteRequestHandler).Should().BeDerivedFrom<SaveTransferNoteRequestBase>();
+            typeof(CreateTransferEvidenceNoteRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
         }
 
         [Theory]
@@ -168,7 +169,8 @@
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                A.Fake<WeeeContext>());
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -221,7 +223,8 @@
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                A.Fake<WeeeContext>());
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
