@@ -17,6 +17,8 @@
 
         public Guid AatfId { get; set; }
 
+        public int ComplianceYear { get; protected set; }
+
         protected ModifyNoteTransfer(List<OrganisationSchemeData> schemes,
             EditEvidenceNoteViewModel existingModel,
             Guid organisationId,

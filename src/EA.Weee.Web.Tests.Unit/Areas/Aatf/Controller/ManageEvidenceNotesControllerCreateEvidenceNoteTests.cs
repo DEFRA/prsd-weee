@@ -35,14 +35,16 @@
         [Fact]
         public void CreateEvidenceNoteGet_ShouldHaveCheckCanCreateEvidenceNoteAttributeAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(bool) })
+                .Should()
                 .BeDecoratedWith<CheckCanCreateEvidenceNoteAttribute>();
         }
 
         [Fact]
         public void CreateEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(bool) })
+                .Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -50,7 +52,7 @@
         public async Task CreateEvidenceNoteGet_DefaultViewShouldBeReturned()
         {
             //act
-            var result = await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId) as ViewResult;
+            var result = await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, Fixture.Create<int>()) as ViewResult;
 
             //assert
             result.ViewName.Should().BeEmpty();
@@ -66,7 +68,7 @@
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             //act
-            await ManageEvidenceController.CreateEvidenceNote(organisationId, AatfId);
+            await ManageEvidenceController.CreateEvidenceNote(organisationId, AatfId, Fixture.Create<int>());
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
@@ -78,7 +80,7 @@
         public async Task CreateEvidenceNoteGet_OrganisationSchemesListShouldBeRetrieved()
         {
             //act
-            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId);
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, Fixture.Create<int>());
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
@@ -89,15 +91,20 @@
         public async Task CreateEvidenceNoteGet_ViewModelMapperShouldBeCalled()
         {
             //arrange
+            var complianceYear = Fixture.Create<int>();
             var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //act
-            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId);
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, complianceYear);
 
             //assert
             A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(
-                A<CreateNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes) && c.ExistingModel == null && c.AatfId.Equals(AatfId)))).MustHaveHappenedOnceExactly();
+                A<CreateNoteMapTransfer>.That.Matches(c => 
+                    c.Schemes.Equals(schemes) && 
+                    c.ExistingModel == null && 
+                    c.AatfId.Equals(AatfId) &&
+                    c.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -108,7 +115,7 @@
             A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<CreateNoteMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId) as ViewResult;
+            var result = await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, Fixture.Create<int>()) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -117,15 +124,9 @@
         [Fact]
         public void CreateEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) })
+                .Should()
                 .BeDecoratedWith<HttpPostAttribute>();
-        }
-
-        [Fact]
-        public void CreateEvidenceNotePost_ShouldHaveCheckCanCreateEvidenceNoteAttributeAttribute()
-        {
-            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
-                .BeDecoratedWith<CheckCanCreateEvidenceNoteAttribute>();
         }
 
         [Fact]
@@ -379,7 +380,7 @@
         public async Task CreateEvidenceNoteGet_Should_CallAndClearSessionService()
         {
             //Act
-            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, true);
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, Fixture.Create<int>(), true);
 
             //Assert
             A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(A<HttpSessionStateBase>._, A<string>._)).MustHaveHappenedOnceExactly();
@@ -396,14 +397,17 @@
             var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
+            var complianceYear = Fixture.Create<int>();
+
             //Act
-            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, true);
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, complianceYear, true);
 
             //Assert
             A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<CreateNoteMapTransfer>.That.Matches(x => x.AatfId == AatfId
                 && x.ExistingModel == model
                 && x.OrganisationId == OrganisationId
-                && x.Schemes == schemes))).MustHaveHappenedOnceExactly();
+                && x.Schemes == schemes 
+                && x.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -413,14 +417,17 @@
             var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
+            var complianceYear = Fixture.Create<int>();
+
             //Act
-            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, false);
+            await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, complianceYear, false);
 
             //Assert
             A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<CreateNoteMapTransfer>.That.Matches(x => x.AatfId == AatfId
                 && x.ExistingModel == null
                 && x.OrganisationId == OrganisationId
-                && x.Schemes == schemes))).MustHaveHappenedOnceExactly();
+                && x.Schemes == schemes 
+                && x.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

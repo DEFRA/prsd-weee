@@ -12,6 +12,7 @@
     using FluentAssertions;
     using Web.ViewModels.Shared;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ListOfNotesViewModelBaseTests : SimpleUnitTestBase
@@ -165,6 +166,36 @@
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
+        }
+
+        [Fact]
+        public void Map_GivenComplianceYearIsNotClosed_ComplianceYearClosedShouldBeFalse()
+        {
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var date = new DateTime(2022, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2021).Create();
+
+            //act
+            var result = testClass.MapBase(noteData, date, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenComplianceYearIsClosed_ComplianceYearClosedShouldBeTrue(DateTime currentDate, int complianceYear)
+        {
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, complianceYear).Create();
+
+            //act
+            var result = testClass.MapBase(noteData, currentDate, model);
+
+            //assert
+            result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeTrue();
         }
     }
 }

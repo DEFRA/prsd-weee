@@ -5,6 +5,7 @@
     using Core.Helpers;
     using EA.Prsd.Core;
     using Filters;
+    using Weee.Requests.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteStartDateAttribute : EvidenceDateValidationBase
@@ -21,7 +22,7 @@
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var currentDate = AsyncHelpers.RunSync(async () => await Cache.FetchCurrentDate());
+            var currentDate = GetCurrentDateTime();
 
             if (value == null)
             {

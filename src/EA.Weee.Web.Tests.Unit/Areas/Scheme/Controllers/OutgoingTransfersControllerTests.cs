@@ -141,7 +141,7 @@
         public void SubmittedTransferGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -149,7 +149,7 @@
         public void SubmittedTransferGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(int?), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
@@ -218,11 +218,22 @@
         }
 
         [Fact]
-        public async Task EditTonnagesGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        public async Task EditTonnagesGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTonnagesGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
-
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
@@ -235,11 +246,40 @@
         }
 
         [Fact]
-        public async Task EditDraftTransfer_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        public async Task EditTonnagesGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
+            // act
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task EditDraftTransfer_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null, null);
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditDraftTransfer_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
@@ -249,6 +289,25 @@
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task EditDraftTransfer_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            // act
+            await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null,
+                null);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
@@ -681,20 +740,54 @@
         }
 
         [Fact]
-        public async Task SubmittedTransferGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        public async Task SubmittedTransferGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
+        {
+            //act
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool>(), null);
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SubmittedTransferGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             // act
-            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int>(), TestFixture.Create<bool>(),
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, 
+                TestFixture.Create<Guid>(), 
+                TestFixture.Create<bool>(),
                 DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task SubmittedTransferGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            // act
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, 
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<bool>(),
+                DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
@@ -705,8 +798,9 @@
             var evidenceNoteId = TestFixture.Create<Guid>();
 
             //act
-            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, evidenceNoteId,
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, 
+                evidenceNoteId,
+                TestFixture.Create<bool?>(),
                 DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             //assert
@@ -738,7 +832,7 @@
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
                     TestFixture.Create<Guid>(),
-                    TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+                    TestFixture.Create<bool?>(),
                     redirectTab) as
                 RedirectToRouteResult;
 
@@ -757,8 +851,9 @@
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
             //act
-            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId, 
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(),
                 DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence));
 
             //assert
@@ -779,7 +874,8 @@
 
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                    TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
+                    TestFixture.Create<Guid>(),
+                    TestFixture.Create<bool?>(),
                     DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as
                 ViewResult;
 
@@ -792,22 +888,38 @@
         {
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
-                    TestFixture.Create<Guid>(), TestFixture.Create<int?>(), TestFixture.Create<bool?>(),
-                    DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as
-                ViewResult;
+                    TestFixture.Create<Guid>(), 
+                    TestFixture.Create<bool?>(),
+                    DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)) as ViewResult;
 
             //assert
             result.ViewName.Should().Be("SubmittedTransfer");
         }
 
         [Fact]
-        public async Task SubmittedTransferPost_GivenModel_BreadCrumbShouldBeSet()
+        public async Task SubmittedTransferPost_GivenModel_SchemeShouldBeRetrievedFromCache()
+        {
+            //arrange
+            var model = TestFixture.Build<ReviewTransferNoteViewModel>()
+                .With(s => s.SelectedValue, "Approve evidence note transfer").Create();
+
+            //act
+            await outgoingTransferEvidenceController.SubmittedTransfer(model);
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.OrganisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SubmittedTransferPost_GivenModelAndSchemeIsNotBalancingScheme_BreadCrumbShouldBeSet()
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             model.SelectedValue = "Approve evidence note transfer";
             var organisationName = "OrganisationName";
             A.CallTo(() => cache.FetchOrganisationName(model.OrganisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.OrganisationId)).Returns(schemeInfo);
 
             //act
             await outgoingTransferEvidenceController.SubmittedTransfer(model);
@@ -815,6 +927,26 @@
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(model.OrganisationId);
+        }
+
+        [Fact]
+        public async Task SubmittedTransferPost_GivenModelAndSchemeIsBalancingScheme_BreadCrumbShouldBeSet()
+        {
+            //arrange
+            var model = TestFixture.Create<ReviewTransferNoteViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            model.SelectedValue = "Approve evidence note transfer";
+            var organisationName = "OrganisationName";
+            A.CallTo(() => cache.FetchOrganisationName(model.OrganisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.OrganisationId)).Returns(schemeInfo);
+
+            //act
+            await outgoingTransferEvidenceController.SubmittedTransfer(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(model.OrganisationId);
         }
 
@@ -929,12 +1061,23 @@
         }
 
         [Fact]
-        public async Task EditTransferFromGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        public async Task EditTransferFromGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
-
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             // act
             await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
@@ -942,6 +1085,24 @@
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            // act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
@@ -964,8 +1125,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTransferFromGet_GivenTransferSessionTransferRequestIsNull_ShouldRedirectToManageEvidenceNotes()
+        public async Task EditTransferFromGet_GivenTransferSessionTransferRequestIsNull_ShouldRedirectToManageEvidenceNotes()
         {
             //arrange
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -1067,14 +1227,29 @@
         }
 
         [Fact]
-        public async Task EditTransferFromPost_GivenInvalidModel_BreadcrumbShouldBeSet()
+        public async Task EditTransferFromPost_GivenInvalidModel_SchemeShouldBeRetrievedFromCache()
+        {
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(model);
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenInvalidModelAndSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
             var organisationName = "OrganisationName";
 
             A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
 
             //act
             await outgoingTransferEvidenceController.EditTransferFrom(model);
@@ -1082,6 +1257,27 @@
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(model.PcsId);
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenInvalidModelAndSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(model.PcsId);
         }
 
@@ -1122,8 +1318,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTransferFromPost_GivenValidViewModelAndNullSessionTransferRequest_ShouldRedirectToManageEvidenceNotes()
+        public async Task EditTransferFromPost_GivenValidViewModelAndNullSessionTransferRequest_ShouldRedirectToManageEvidenceNotes()
         {
             //arrange
             var model = TestFixture.Build<TransferEvidenceNotesViewModel>().Create();
@@ -1162,12 +1357,23 @@
         }
 
         [Fact]
-        public async Task EditCategoriesGet_GivenValidOrganisation_BreadcrumbShouldBeSet()
+        public async Task EditCategoriesGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditCategories(organisationId, TestFixture.Create<Guid>());
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
-
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             // act
             await outgoingTransferEvidenceController.EditCategories(organisationId, TestFixture.Create<Guid>());
@@ -1175,6 +1381,24 @@
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task EditCategoriesGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            // act
+            await outgoingTransferEvidenceController.EditCategories(organisationId, TestFixture.Create<Guid>());
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
@@ -1259,14 +1483,29 @@
         }
 
         [Fact]
-        public async Task EditCategoriesPost_ShouldSetBreadcrumb()
+        public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenSchemeIsNotBalancingScheme_ShouldSetBreadcrumb()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
             var organisationName = "OrganisationName";
 
             A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
 
             //act
             await outgoingTransferEvidenceController.EditCategories(model);
@@ -1274,6 +1513,27 @@
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(model.PcsId);
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenSchemeIsBalancingScheme_ShouldSetBreadcrumb()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(model.PcsId);
         }
 
@@ -1418,14 +1678,30 @@
         }
 
         [Fact]
-        public async Task EditTonnagesPost_GivenModel_BreadcrumbShouldBeSet()
+        public async Task EditTonnagesPost_GivenModel_SchemeShouldBeRetrievedFromCache()
+        {
+            //arrange
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(m => m.PcsId, organisationId).Create();
+
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(model);
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTonnagesPost_GivenModelAndSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
             var organisationName = "OrganisationName";
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(m => m.PcsId, organisationId).Create();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
 
-            A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
 
             // act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -1433,6 +1709,27 @@
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task EditTonnagesPost_GivenModelAndSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            // arrange 
+            var organisationName = "OrganisationName";
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(m => m.PcsId, organisationId).Create();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
+
+            // act
+            await outgoingTransferEvidenceController.EditTonnages(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
@@ -1475,8 +1772,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesPost_GivenGivenInvalidModelAndExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesPost_GivenGivenInvalidModelAndExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var evidenceNoteId1 = TestFixture.Create<Guid>();
@@ -1540,7 +1836,7 @@
         }
 
         [Fact]
-        public async Task
+        public async Task 
             EditTonnagesPost_GivenInvalidViewModelAndExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndSessionTransferRequest_TransferNotesShouldBeRetrieved()
         {
             //arrange

@@ -50,8 +50,9 @@
 
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
                 var scheme = await Cache.FetchSchemePublicInfo(pcsId);
+
+                await SetBreadcrumb(pcsId);
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
@@ -155,7 +156,7 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId);
 
                 // create the new evidence note schemeName request from note's Guid
                 ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
@@ -190,7 +191,7 @@
                         new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.ComplianceYear });
                 }
 
-                await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(model.OrganisationId);
 
                 model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
 
@@ -203,7 +204,7 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId);
 
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -221,9 +222,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
-
-            return complianceYear;
+            return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
         }
 
         private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
