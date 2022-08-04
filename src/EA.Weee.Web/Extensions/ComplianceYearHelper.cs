@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using ViewModels.Shared;
 
     public class ComplianceYearHelper
     {
@@ -37,6 +38,16 @@
             var listYears = new List<int>() { currentYear, currentYear - 1, currentYear - 2 };
 
             return listYears.OrderByDescending(x => x).ToList();
+        }
+
+        public static int GetSelectedComplianceYear(ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDateTime)
+        {
+            var complianceYear =
+                manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0
+                    ? manageEvidenceNoteViewModel.SelectedComplianceYear
+                    : currentDateTime.Year;
+
+            return complianceYear;
         }
     }
 }

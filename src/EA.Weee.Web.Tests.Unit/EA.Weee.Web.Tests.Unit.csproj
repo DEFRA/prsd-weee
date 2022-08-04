@@ -344,9 +344,7 @@
     <Compile Include="Areas\Admin\ViewModels\ViewAllTransferNotesViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ViewAllEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerReviewEvidenceNoteTests.cs" />
-    <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersControllerTests.cs" />
-    <Compile Include="Areas\Scheme\Controllers\BalancingSchemeEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewEvidenceNotesViewModelMapTests.cs" />
@@ -398,7 +396,7 @@
     <Compile Include="Areas\Admin\Controllers\CopyAatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsBaseControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeReportsControllerTests.cs" />
-    <Compile Include="Areas\Admin\Helper\AatfHelperTests.cs" />
+    <Compile Include="Extensions\ComplianceYearHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests.cs" />
@@ -612,6 +610,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\DataAnnotations\" />
+    <Folder Include="Areas\Admin\Helper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -5,6 +5,7 @@
     using Security;
     using System;
     using System.Security;
+    using Domain.Organisation;
 
     /// <summary>
     /// This helper class creates a fake instance of an IWeeeAutorization

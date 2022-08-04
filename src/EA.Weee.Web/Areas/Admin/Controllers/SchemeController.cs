@@ -239,6 +239,10 @@
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> EditScheme(Guid schemeId, SchemeViewModelBase model)
         {
+            await cache.InvalidateSchemeCache(schemeId);
+            await cache.InvalidateSchemePublicInfoCache(model.OrganisationId);
+            await cache.InvalidateOrganisationSearch();
+
             if (model.Status == SchemeStatus.Rejected)
             {
                 return RedirectToAction("ConfirmRejection", new { schemeId });
@@ -250,7 +254,7 @@
             }
 
             model.CompetentAuthorities = await GetCompetentAuthorities();
-
+            
             if (!ModelState.IsValid)
             {
                 model = await SetSchemeStatusAndCompetentAuthorities(schemeId, model);
@@ -271,9 +275,6 @@
                     model.Status);
 
                 result = await client.SendAsync(User.GetAccessToken(), request);
-
-                await cache.InvalidateSchemeCache(schemeId);
-                await cache.InvalidateOrganisationSearch();
             }
 
             switch (result.Result)
