@@ -108,11 +108,16 @@
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear));
 
-            Func<IEnumerable<int>> action = () => client.SendAsync(User.GetAccessToken(), new GetComplianceYearsFilter(allowedStatuses)).Result;
+            var complianceYearsList = await ComplianceYearsList(client, allowedStatuses);
 
-            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, action));
+            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, complianceYearsList));
 
             return View("ViewAllEvidenceNotes", model);
+        }
+
+        private async Task<IEnumerable<int>> ComplianceYearsList(IWeeeClient client, List<NoteStatus> allowedStatuses)
+        {
+            return await client.SendAsync(User.GetAccessToken(), new GetComplianceYearsFilter(allowedStatuses));
         }
 
         private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate)
@@ -123,9 +128,9 @@
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear));
 
-            Func<IEnumerable<int>> action = () => client.SendAsync(User.GetAccessToken(), new GetComplianceYearsFilter(allowedStatuses)).Result;
+            var complianceYearsList = await ComplianceYearsList(client, allowedStatuses);
 
-            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, action));
+            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, complianceYearsList));
 
             return View("ViewAllTransferNotes", model);
         }

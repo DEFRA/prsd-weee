@@ -14,17 +14,17 @@
 
         public DateTime CurrentDate { get; protected set; }
 
-        public Func<IEnumerable<int>> GetCurrentComplianceList { get; set; }
+        public IEnumerable<int> ComplianceYearList { get; set; }
 
         public ViewAllEvidenceNotesMapTransfer(EvidenceNoteSearchDataResult noteData,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, Func<IEnumerable<int>> getCurrentComplianceList)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, IEnumerable<int> complianceYearList)
         {
             Condition.Requires(noteData).IsNotNull();
 
             NoteData = noteData;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
-            GetCurrentComplianceList = getCurrentComplianceList;
+            ComplianceYearList = complianceYearList;
         }
     }
 }

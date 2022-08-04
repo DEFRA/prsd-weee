@@ -83,7 +83,7 @@
                      types.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory(Skip = "TODO: be fixed")]
+        [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GetComplianceYearsFilterShouldBeCalled(string tab)
@@ -180,7 +180,7 @@
                 g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded)))).MustNotHaveHappened();
         }
 
-        [Fact(Skip = "TODO: be fixed")]
+        [Fact]
         public async Task IndexGet_GivenViewAllEvidenceTransfersTab_GetComplianceYearsFilterShouldBeCalled()
         {
             // Arrange
@@ -277,7 +277,7 @@
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory(Skip = "TODO: be fixed")]
+        [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTabWithReturnedDataAndComplianceYearsList_ViewModelShouldBeBuilt(string tab)
@@ -297,7 +297,7 @@
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.GetCurrentComplianceList.Equals(complianceYearList)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.ComplianceYearList.Equals(complianceYearList)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -378,7 +378,7 @@
                          a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory(Skip = "TODO: be fixed")]
+        [Fact]
         public async Task IndexGet_GivenViewAllEvidenceTransfersTabWithReturnedDataWithComplianceYearList_ViewModelShouldBeBuilt()
         {
             // arrange
@@ -398,7 +398,7 @@
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
                    a => a.NoteData == noteData && a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)
-                   && a.GetCurrentComplianceList.Equals(complianceYearList)))).MustHaveHappenedOnceExactly();
+                   && a.ComplianceYearList.Equals(complianceYearList)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
