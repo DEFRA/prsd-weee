@@ -35,7 +35,7 @@
             };
 
             currentDate = new DateTime(2020, 1, 1);
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
         }
 
         [Fact]
@@ -59,7 +59,7 @@
             attribute.Validate(target.EndDate, context);
 
             //assert
-            A.CallTo(() => client.SendAsync(userToken, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => client.SendAsync(userToken, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -71,7 +71,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = currentDate.AddDays(-1) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
@@ -114,7 +114,7 @@
 
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = endDate.AddDays(-1), EndDate = endDate };
             var context = new ValidationContext(target);
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
@@ -158,7 +158,7 @@
 
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = endDate.AddDays(-1), EndDate = endDate };
             var context = new ValidationContext(target);
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
@@ -208,7 +208,7 @@
         {
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = DateTime.MinValue, EndDate = currentDate };
             var context = new ValidationContext(target);
 

@@ -91,7 +91,7 @@
         {
             using (var c = Client())
             {
-                return await c.SendAsync(httpContext.User.GetAccessToken(), new GetApiUtcDate());
+                return await c.SendAsync(httpContext.User.GetAccessToken(), new GetApiDate());
             }
         }
     }

@@ -31,7 +31,7 @@
             {
                 using (var c = Client())
                 {
-                    return await c.SendAsync(HttpContextService.GetAccessToken(), new GetApiUtcDate());
+                    return await c.SendAsync(HttpContextService.GetAccessToken(), new GetApiDate());
                 }
             });
         }
