@@ -21,21 +21,21 @@
         public T MapBase(EvidenceNoteSearchDataResult notes, 
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
-            Func<IEnumerable<int>> getComplianceYearList = null)
+            IEnumerable<int> complianceYearList = null)
         {
             Condition.Requires(notes).IsNotNull();
 
             var complianceYear =
                 manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0
                     ? manageEvidenceNoteViewModel.SelectedComplianceYear
-                    : currentDate.Year;
+                    : (complianceYearList != null && complianceYearList.Any() ? complianceYearList.ElementAt(0) : currentDate.Year);
 
             var m = new T
             {
                 EvidenceNotesDataList = Mapper.Map<List<EvidenceNoteRowViewModel>>(notes.Results.ToList()),
                 ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel
                 {
-                    ComplianceYearList = getComplianceYearList != null ? getComplianceYearList() : ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
+                    ComplianceYearList = complianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
                     SelectedComplianceYear = complianceYear,
                     ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(complianceYear, currentDate)
                 }
