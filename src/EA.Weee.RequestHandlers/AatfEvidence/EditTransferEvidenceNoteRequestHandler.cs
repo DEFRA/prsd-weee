@@ -40,6 +40,12 @@
             Authorization.EnsureCanAccessExternalArea();
             Authorization.EnsureOrganisationAccess(request.OrganisationId);
 
+            var transferNote = await evidenceDataAccess.GetNoteById(request.TransferNoteId);
+            if (!EnsureTheSchemeNotChanged(transferNote, request.RecipientId))
+            {
+                throw new InvalidOperationException($"Transfer Evidence note {transferNote.Id} has incorrect Recipient Id to be saved");
+            }
+
             Condition.Requires(request.Status)
                 .IsInRange(Core.AatfEvidence.NoteStatus.Draft, Core.AatfEvidence.NoteStatus.Submitted);
 
@@ -50,9 +56,7 @@
             Condition.Requires(organisation).IsNotNull();
             Condition.Requires(recipientOrganisation).IsNotNull();
 
-            var note = await evidenceDataAccess.GetNoteById(request.TransferNoteId);
-
-            ValidToSave(organisation, note.ComplianceYear, currentDate);
+            ValidToSave(organisation, transferNote.ComplianceYear, currentDate);
 
             using (var transaction = transactionAdapter.BeginTransaction())
             {
@@ -62,7 +66,7 @@
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
-                    await evidenceDataAccess.UpdateTransfer(note,
+                    await evidenceDataAccess.UpdateTransfer(transferNote,
                         recipientOrganisation,
                         newNoteTonnages,
                         request.Status.ToDomainEnumeration<NoteStatus>(),
@@ -78,8 +82,17 @@
                     throw;
                 }
 
-                return note.Id;
+                return transferNote.Id;
             }
+        }
+
+        private bool EnsureTheSchemeNotChanged(Note transferNote, Guid recipientOrganisationId)
+        {
+            if (transferNote.Status == NoteStatus.Returned)
+            {
+                return transferNote.RecipientId.Equals(recipientOrganisationId);
+            }
+            return true;
         }
     }
 }
