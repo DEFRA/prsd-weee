@@ -121,7 +121,6 @@
     <Compile Include="AatfEvidence\EvidenceNoteData.cs" />
     <Compile Include="AatfEvidence\Protocol.cs" />
     <Compile Include="AatfEvidence\EvidenceTonnageData.cs" />
-    <Compile Include="AatfEvidence\SetNoteStatus.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceNoteTonnageData.cs" />
     <Compile Include="AatfEvidence\WasteType.cs" />
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
