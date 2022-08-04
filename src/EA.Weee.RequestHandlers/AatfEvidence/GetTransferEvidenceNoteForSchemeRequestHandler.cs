@@ -38,7 +38,12 @@
 
             Condition.Requires(organisation).IsNotNull();
 
-            authorization.EnsureOrganisationAccess(organisation.Id);
+            var allowedAccess = authorization.CheckOrganisationAccess(evidenceNote.OrganisationId) || authorization.CheckSchemeAccess(evidenceNote.Recipient.Scheme.Id);
+
+            if (!allowedAccess)
+            {
+                throw new SecurityException($"The user does not have access to the organisation or scheme with note ID {request.EvidenceNoteId}");
+            }
 
             var transferNote = mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(new TransferNoteMapTransfer(evidenceNote));
 

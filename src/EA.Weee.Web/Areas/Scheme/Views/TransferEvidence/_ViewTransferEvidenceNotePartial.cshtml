@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Core.Helpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
 
 <h1 class="govuk-heading-l">Evidence note (transfer)</h1>
@@ -71,16 +72,23 @@
         <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
     </div>
 
-    @if (Model.EditMode)
-    {
-        <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
-            @Html.NavigationRouteLink("Edit recipient and categories", "Edit recipient and categories for transfer note" + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
-        </div>
-    }
-    else
-    {
-        <div class="govuk-grid-column-one-third">&nbsp;</div>
-    }
+   
+        @if (Model.EditMode && Model.HasBeenReturned)
+        {
+            <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
+                @Html.NavigationRouteLink("Edit categories", "Edit categories for transfer note" + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
+            </div>
+        }
+        else if (Model.EditMode)
+        {
+            <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
+                @Html.NavigationRouteLink("Edit recipient and categories", "Edit recipient and categories for transfer note" + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
+            </div>
+        }
+        else
+        {
+            <div class="govuk-grid-column-one-third">&nbsp;</div>
+        }
 </div>
 <div class="ui-helper-clearfix"></div>
 <h2 class="govuk-heading-m govuk-!-padding-top-5 govuk-!-margin-bottom-2">Total transferred (tonnes)</h2>
@@ -105,7 +113,7 @@
         @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
         {
             var item = categoryCount;
-           
+
             <tr class="govuk-table__row govuk-panel-grey-background">
                 <td class="govuk-table__cell govuk-!-padding-left-2">
                     @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
@@ -183,20 +191,19 @@
                 for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
                 {
                     var category = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount).CategoryValues.ElementAt(categoryCount);
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-text-align-left">
-                        @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
-                    </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-4">
-                        @category.Received
-                    </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right">
-                        @category.Reused
-                    </td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-text-align-left">
+                            @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-4">
+                            @category.Received
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right">
+                            @category.Reused
+                        </td>
+                    </tr>
                 }
             }
         </tbody>
     </table>
 }
-
