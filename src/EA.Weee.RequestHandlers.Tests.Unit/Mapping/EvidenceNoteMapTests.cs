@@ -17,6 +17,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
@@ -980,6 +981,72 @@
 
             //assert
             result.OrganisationSchemaData.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithRelatedTransferNotesAndIncludeHistoryIsTrue_EvidenceNoteHistoryShouldBeCreated()
+        {
+            //arrange
+            var date = new DateTime(2022, 1, 1);
+            var transferNote1 = A.Fake<Note>();
+            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
+            var historyList = new List<NoteStatusHistory>();
+            
+            var history = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Submitted);
+            historyList.Add(history);
+
+            A.CallTo(() => transferNote1.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote1.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote1.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote1.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => transferNote1.NoteStatusHistory).Returns(historyList);
+            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(transferNote1);
+
+            var transferNote2 = A.Fake<Note>();
+            var noteTransferTonnage2 = A.Fake<NoteTransferTonnage>();
+
+            A.CallTo(() => transferNote2.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote2.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote2.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote2.Status).Returns(NoteStatus.Draft);
+            A.CallTo(() => noteTransferTonnage2.TransferNote).Returns(transferNote2);
+
+            var transferNote3 = A.Fake<Note>();
+            var noteTransferTonnage3 = A.Fake<NoteTransferTonnage>();
+
+            A.CallTo(() => transferNote3.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote3.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote3.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote3.Status).Returns(NoteStatus.Void);
+            A.CallTo(() => noteTransferTonnage3.TransferNote).Returns(transferNote2);
+
+            var note = A.Fake<Note>();
+            var noteTransferTonnageList1 = new List<NoteTransferTonnage>() { noteTransferTonnage1, noteTransferTonnage2 };
+            var noteTonnage1 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnageList1);
+
+            var noteTransferTonnageList2 = new List<NoteTransferTonnage>() { noteTransferTonnage3 };
+            var noteTonnage2 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage2.NoteTransferTonnage).Returns(noteTransferTonnageList2);
+            A.CallTo(() => note.NoteTonnage).Returns(new List<NoteTonnage>() { noteTonnage1, noteTonnage2 });
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeHistory = true;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceNoteHistoryData.Count.Should().Be(3);
+            result.EvidenceNoteHistoryData.Should().Contain(e => e.Reference == transferNote1.Reference
+                                                                 && e.Id == transferNote1.Id
+                                                                 && e.SubmittedDate.Equals(date)
+                                                                 && e.Status == transferNote1.Status
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteStatus>()
+                                                                 && e.Type == transferNote1.NoteType
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteType>());
         }
 
         private EvidenceNoteWithCriteriaMap EvidenceNoteWithCriteriaMap(Note note)
