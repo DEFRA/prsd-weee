@@ -4,6 +4,7 @@
     using System.Linq;
     using Core.AatfReturn;
     using Core.DataReturns;
+    using Core.Helpers;
     using Core.Organisations;
     using Core.Scheme;
     using Domain.AatfReturn;
@@ -11,6 +12,8 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.Organisation;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using NoteType = Core.AatfEvidence.NoteType;
     using Protocol = Core.AatfEvidence.Protocol;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -32,9 +35,10 @@
             var noteTonnage = new List<NoteTonnage>();
             if (source.IncludeTonnage)
             {
-                noteTonnage = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter).ToList() : source.Note.NoteTonnage.ToList();
+                noteTonnage = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter).ToList() : 
+                    source.Note.NoteTonnage.ToList();
             }
-            
+
             data.StartDate = source.Note.StartDate;
             data.EndDate = source.Note.EndDate;
             data.Protocol = source.Note.Protocol.HasValue ? (Protocol?)source.Note.Protocol.Value : null;
@@ -53,6 +57,20 @@
                 data.OrganisationSchemaData = mapper.Map<Scheme, SchemeData>(source.Note.Organisation.Scheme);
             }
             data.RecipientId = source.Note.Recipient.Id;
+
+            var history = new List<EvidenceNoteHistoryData>();
+            if (source.IncludeHistory)
+            {
+                var transferredNotes = source.Note.NoteTonnage.SelectMany(nt => nt.NoteTransferTonnage)
+                    .Select(nt1 => nt1.TransferNote).ToList();
+
+                history = transferredNotes.Select(n => new EvidenceNoteHistoryData(n.Id, n.Status.ToCoreEnumeration<NoteStatus>(), n.Reference, n.NoteType.ToCoreEnumeration<NoteType>(), 
+                    n.NoteStatusHistory
+                    .Where(n1 => n1.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
+                    .OrderByDescending(n1 => n1.ChangedDate).FirstOrDefault()?.ChangedDate)).ToList();
+            }
+
+            data.EvidenceNoteHistoryData = history;
 
             return data;
         }

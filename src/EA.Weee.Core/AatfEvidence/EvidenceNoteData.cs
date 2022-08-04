@@ -29,6 +29,8 @@
 
         public OrganisationData RecipientOrganisationData { get; set; }
 
+        public List<EvidenceNoteHistoryData> EvidenceNoteHistoryData { get; set; }
+
         public EvidenceNoteData()
         {
         }
