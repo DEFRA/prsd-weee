@@ -28,7 +28,7 @@
             var complianceYear =
                 manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0
                     ? manageEvidenceNoteViewModel.SelectedComplianceYear
-                    : currentDate.Year;
+                    : (complianceYearList != null && complianceYearList.Any() ? complianceYearList.ElementAt(0) : currentDate.Year);
 
             var m = new T
             {
