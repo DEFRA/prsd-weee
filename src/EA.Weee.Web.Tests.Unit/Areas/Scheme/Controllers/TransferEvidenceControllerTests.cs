@@ -846,6 +846,44 @@
             result.RouteValues["complianceYear"].Should().Be(complianceYear);
         }
 
+        [Fact]
+        public async Task TransferFromPost_GivenModelActionIsBack_ShouldRedirectToTransferEvidenceNoteAction()
+        {
+            // arrange 
+            var complianceYear = TestFixture.Create<int>();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.ComplianceYear, complianceYear)
+                .With(t => t.Action, ActionEnum.Back)
+                .Create();
+
+            AddModelError();
+
+            // act
+            var result = await transferEvidenceController.TransferFrom(model) as RedirectToRouteResult;
+
+            // assert
+            result.RouteValues["action"].Should().Be("TransferEvidenceNote");
+            result.RouteValues["controller"].Should().Be("TransferEvidence");
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["complianceYear"].Should().Be(model.ComplianceYear);
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenModelActionIsBack_NoViewResultShouldBeReturned()
+        {
+            // arrange 
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(t => t.Action, ActionEnum.Back).Create();
+
+            AddModelError();
+
+            // act
+            var result = await transferEvidenceController.TransferTonnage(model) as ViewResult;
+
+            // assert
+            result.Should().BeNull();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
