@@ -15,6 +15,8 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.ComplianceYear)
     @Html.HiddenFor(m => m.PcsId)
+    @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "transfer-tonnage-status" })
+
     @Html.HiddenFor(m => m.ReturnToEditDraftTransfer)
 
     if (Model.ViewTransferNoteViewModel != null)
