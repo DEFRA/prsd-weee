@@ -1518,18 +1518,27 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task TransferTonnagePost_GivenValidModel_TempDataDisplayNotificationShouldBeSet()
+        [Theory]
+        [InlineData(ActionEnum.Submit, NoteUpdatedStatusEnum.Submitted)]
+        [InlineData(ActionEnum.Save, NoteUpdatedStatusEnum.Draft)]
+        public async Task TransferTonnagePost_GivenValidModel_TempDataDisplayNotificationShouldBeSet(ActionEnum action, NoteUpdatedStatusEnum expectedStatus)
         {
             //arrange
-            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>().Create();
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(m => m.Action, action)
+                .Create();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.Status, (NoteStatus)expectedStatus).Create();
+
+            A.CallTo(() => transferNoteRequestCreator.SelectTonnageToRequest(A<TransferEvidenceNoteRequest>._, A<TransferEvidenceTonnageViewModel>._))
+                .Returns(request);
 
             //act
             await transferEvidenceController.TransferTonnage(model);
 
             // assert
-            transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should()
-                .Be(true);
+            transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(expectedStatus);
         }
 
         [Fact]
