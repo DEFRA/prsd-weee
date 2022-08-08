@@ -1003,8 +1003,11 @@
             result.Model.Should().Be(model);
         }
 
-        [Fact]
-        public async Task SubmittedTransferPost_GivenValidModelMappedModel_TempDataShouldBeSet()
+        [Theory]
+        [InlineData("Approve evidence note transfer", NoteUpdatedStatusEnum.Approved)]
+        [InlineData("Reject evidence note transfer", NoteUpdatedStatusEnum.Rejected)]
+        [InlineData("Return evidence note transfer", NoteUpdatedStatusEnum.Returned)]
+        public async Task SubmittedTransferPost_GivenValidModelMappedModel_TempDataShouldBeSet(string selectedValue, NoteUpdatedStatusEnum expectedStatus)
         {
             //arrange
             var model = A.Fake<ReviewTransferNoteViewModel>();
@@ -1013,7 +1016,7 @@
                 .Returns(model);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
                 .Returns(transferEvidenceNoteData);
-            A.CallTo(() => model.SelectedValue).Returns("Approve evidence note transfer");
+            A.CallTo(() => model.SelectedValue).Returns(selectedValue);
             A.CallTo(() => model.Reason).Returns(null);
             A.CallTo(() => model.OrganisationId).Returns(Guid.NewGuid());
 
@@ -1021,8 +1024,7 @@
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(model) as ViewResult;
 
             //assert
-            result.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteUpdatedStatusEnum.Approved);
-            result.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(true);
+            result.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(expectedStatus);
         }
 
         [Fact]
@@ -2104,6 +2106,9 @@
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                     outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey)).Returns(request);
 
+            A.CallTo(() => transferEvidenceRequestCreator.EditSelectTonnageToRequest(A<TransferEvidenceNoteRequest>._,
+                A<TransferEvidenceTonnageViewModel>._)).Returns(TestFixture.Create<EditTransferEvidenceNoteRequest>());
+
             //act
             await outgoingTransferEvidenceController.EditTonnages(transferEvidenceTonnageViewModel);
 
@@ -2129,13 +2134,63 @@
         }
 
         [Fact]
-        public async Task EditTonnagesPost_GivenValidModel_TempDataNotificationShouldBeSet()
+        public async Task EditTonnagesPost_GivenValidModelAndActionIsSaveAndNoteIsReturned_TempDataNotificationShouldBeSetToReturnedSaved()
         {
+            //arrange
+            transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.Status = NoteStatus.Returned;
+            transferEvidenceTonnageViewModel.Action = ActionEnum.Save;
+
             //act
             await outgoingTransferEvidenceController.EditTonnages(transferEvidenceTonnageViewModel);
 
             //assert
-            outgoingTransferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(true);
+            outgoingTransferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(NoteUpdatedStatusEnum.ReturnedSaved);
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft)]
+        [InlineData(NoteStatus.Submitted)]
+        public async Task EditTonnagesPost_GivenValidModelAndActionIsSubmitAndNoteIsReturned_TempDataNotificationShouldBeSetToRequestAction(NoteStatus status)
+        {
+            //arrange
+            var request = TestFixture.Build<EditTransferEvidenceNoteRequest>().With(r => r.Status, status).Create();
+
+            A.CallTo(() => transferEvidenceRequestCreator.EditSelectTonnageToRequest(A<EditTransferEvidenceNoteRequest>._,
+                        A<TransferEvidenceTonnageViewModel>._)).Returns(request);
+
+            transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.Status = NoteStatus.Returned;
+            transferEvidenceTonnageViewModel.Action = ActionEnum.Submit;
+
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(transferEvidenceTonnageViewModel);
+
+            //assert
+            outgoingTransferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be((NoteUpdatedStatusEnum)status);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task EditTonnagesPost_GivenValidModelAndActionIsSaveAndNoteIsNotReturned_TempDataNotificationShouldBeSetToRequestAction(NoteStatus status)
+        {
+            if (status == NoteStatus.Returned)
+            {
+                return;
+            }
+
+            //arrange
+            var request = TestFixture.Build<EditTransferEvidenceNoteRequest>().With(r => r.Status, status).Create();
+
+            A.CallTo(() => transferEvidenceRequestCreator.EditSelectTonnageToRequest(A<EditTransferEvidenceNoteRequest>._,
+                A<TransferEvidenceTonnageViewModel>._)).Returns(request);
+
+            transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.Status = status;
+            transferEvidenceTonnageViewModel.Action = ActionEnum.Save;
+
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(transferEvidenceTonnageViewModel);
+
+            //assert
+            outgoingTransferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be((NoteUpdatedStatusEnum)status);
         }
 
         [Fact]
