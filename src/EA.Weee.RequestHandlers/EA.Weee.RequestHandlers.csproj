@@ -105,7 +105,6 @@
     <Compile Include="AatfEvidence\EditTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandler.cs" />
-    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandler.cs" />
@@ -115,7 +114,8 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
     <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\SaveEvidenceNoteRequestBase.cs" />
-    <Compile Include="AatfEvidence\SaveTransferNoteRequestBase.cs" />
+    <Compile Include="AatfEvidence\SaveNoteRequestBase.cs" />
+    <Compile Include="AatfEvidence\VoidTransferNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\TransferTonnagesValidator.cs" />
@@ -128,6 +128,7 @@
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
+    <Compile Include="Admin\GetComplianceYearsFilterHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />

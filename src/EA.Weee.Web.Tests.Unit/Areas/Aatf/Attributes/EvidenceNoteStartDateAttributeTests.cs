@@ -3,34 +3,42 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Api.Client;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
-    using Services.Caching;
+    using Services;
     using Web.Areas.Aatf.Attributes;
+    using Weee.Requests.Shared;
     using Xunit;
 
     public class EvidenceNoteStartDateAttributeTests
     {
-        private readonly IWeeeCache cache;
+        private readonly IWeeeClient client;
+        private readonly IHttpContextService httpContextService;
         private readonly EvidenceNoteStartDateAttribute attribute;
         private readonly EvidenceNoteStartDateAttribute attributeWithNoComplianceYearCheck;
+        private readonly DateTime currentDate;
 
         public EvidenceNoteStartDateAttributeTests()
         {
-            cache = A.Fake<IWeeeCache>();
+            client = A.Fake<IWeeeClient>();
+            httpContextService = A.Fake<IHttpContextService>();
 
             attribute = new EvidenceNoteStartDateAttribute("EndDate", true)
             {
-                Cache = cache
+                Client = () => client,
+                HttpContextService = httpContextService
             };
 
             attributeWithNoComplianceYearCheck = new EvidenceNoteStartDateAttribute("EndDate", false)
             {
-                Cache = cache
+                Client = () => client,
+                HttpContextService = httpContextService
             };
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(SystemTime.Now);
+            currentDate = new DateTime(2020, 1, 1);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
         }
 
         [Fact]
@@ -44,14 +52,17 @@
         public void EvidenceNoteStartDateAttribute_CurrentDateShouldBeRetrievedFromCache()
         {
             //arrange
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
+            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = currentDate.AddDays(1) };
             var context = new ValidationContext(target);
+
+            var userToken = "token";
+            A.CallTo(() => httpContextService.GetAccessToken()).Returns(userToken);
 
             //act
             attribute.Validate(target.StartDate, context);
 
             //assert
-            A.CallTo(() => cache.FetchCurrentDate()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => client.SendAsync(userToken, A<GetApiDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -63,7 +74,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() {StartDate = currentDate.AddDays(1), EndDate = currentDate.AddDays(2) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -92,7 +103,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = startDate, EndDate = startDate.AddDays(1) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -121,7 +132,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = date, EndDate = date.AddDays(1) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -144,7 +155,7 @@
             var target = new ValidationTargetWithoutComplianceYearCheck() { StartDate = date, EndDate = date.AddDays(1) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attributeWithNoComplianceYearCheck.Validate(target.StartDate, context)) as ValidationException;
@@ -165,7 +176,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate.AddDays(-1), EndDate = currentDate.AddDays(-2) };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -187,7 +198,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = currentDate };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -208,7 +219,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = DateTime.MinValue };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
@@ -229,7 +240,7 @@
             var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = null };
             var context = new ValidationContext(target);
 
-            A.CallTo(() => cache.FetchCurrentDate()).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             //act
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;

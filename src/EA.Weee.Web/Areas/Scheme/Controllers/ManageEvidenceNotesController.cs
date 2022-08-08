@@ -5,7 +5,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -50,8 +49,9 @@
 
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
                 var scheme = await Cache.FetchSchemePublicInfo(pcsId);
+
+                await SetBreadcrumb(pcsId);
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
@@ -150,11 +150,12 @@
         }
         
         [HttpGet]
+        [CheckCanApproveNote]
         public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId);
 
                 // create the new evidence note schemeName request from note's Guid
                 ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
@@ -179,7 +180,7 @@
                 {
                     var status = model.SelectedEnumValue;
 
-                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status, model.Reason);
+                    var request = new SetNoteStatusRequest(model.ViewEvidenceNoteViewModel.Id, status, model.Reason);
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
@@ -189,7 +190,7 @@
                         new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.ComplianceYear });
                 }
 
-                await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(model.OrganisationId);
 
                 model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
 
@@ -202,7 +203,7 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId);
 
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -220,9 +221,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
-
-            return complianceYear;
+            return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
         }
 
         private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
