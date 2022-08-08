@@ -77,6 +77,25 @@
         }
 
         [Fact]
+        public async Task HandleAsync_EnsureTheSchemeNotChanged_GivenNoteStatusIsReturnedAndSchemeChanged_ShouldThrowInvalidOperationException()
+        {
+            //arrange 
+            Note transferNote = A.Fake<Note>();
+            Guid transferId = TestFixture.Create<Guid>();
+            Guid organisationId = TestFixture.Create<Guid>();
+            A.CallTo(() => transferNote.Status).Returns(NoteStatus.Returned);
+            A.CallTo(() => transferNote.RecipientId).Returns(transferId);
+            A.CallTo(() => transferNote.OrganisationId).Returns(organisationId);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(transferNote);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be($"Transfer Evidence note {transferNote.Id} has incorrect Recipient Id to be saved");
+        }
+
+        [Fact]
         public void EditTransferEvidenceNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
         {
             typeof(EditTransferEvidenceNoteRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();

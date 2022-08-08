@@ -88,7 +88,8 @@
                 StartDate = DateTime.Now,
                 RecipientId = Guid.NewGuid(),
                 AatfId = Guid.NewGuid(),
-                OrganisationId = Guid.NewGuid()
+                OrganisationId = Guid.NewGuid(),
+                ComplianceYear = 2022
             };
             return model;
         }
