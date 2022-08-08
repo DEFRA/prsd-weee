@@ -75,9 +75,11 @@
                         ? SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName :
                             SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
 
-                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
-
                     await client.SendAsync(User.GetAccessToken(), updatedRequest);
+
+                    var updateStatus = model.ViewTransferNoteViewModel.Status == NoteStatus.Returned && model.Action == ActionEnum.Save ? NoteUpdatedStatusEnum.ReturnedSaved : (NoteUpdatedStatusEnum)updatedRequest.Status;
+
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
                     return new RedirectToRouteResult(route, new RouteValueDictionary()
                     {
@@ -85,8 +87,7 @@
                         { "evidenceNoteId", model.ViewTransferNoteViewModel.EvidenceNoteId },
                         {
                             "redirectTab",
-                            Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions
-                                .OutgoingTransfers)
+                            Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
                         }
                     });
                 }
@@ -165,8 +166,7 @@
 
                     var request = new SetNoteStatusRequest(model.ViewTransferNoteViewModel.EvidenceNoteId, status, model.Reason);
 
-                    TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
-                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = (NoteUpdatedStatusEnum)request.Status;
 
                     await client.SendAsync(User.GetAccessToken(), request);
 

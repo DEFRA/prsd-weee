@@ -15,6 +15,7 @@
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.ViewModels.Shared;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
@@ -151,10 +152,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Draft)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Draft);
 
             //act
             var model = map.Map(source);
@@ -170,10 +170,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Submitted)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Submitted);
 
             //act
             var model = map.Map(source);
@@ -184,15 +183,32 @@
         }
 
         [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsReturnedSaved_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.ReturnedSaved);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should()
+                .Be($"You have successfully saved the returned evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
+        [Fact]
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsApproved_SuccessMessageShouldBeSet()
         {
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Approved)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Approved);
 
             //act
             var model = map.Map(source);
@@ -207,10 +223,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Rejected)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Rejected);
 
             //act
             var model = map.Map(source);
@@ -225,10 +240,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Returned)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Returned);
 
             //act
             var model = map.Map(source);
