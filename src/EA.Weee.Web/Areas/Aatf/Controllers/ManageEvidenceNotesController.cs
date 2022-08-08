@@ -233,7 +233,8 @@
                 if (viewModel.Action == ActionEnum.CopyAndPaste)
                 {
                     sessionService.SetTransferSessionObject(Session, viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
-                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, new { organisationId, returnAction = EvidenceCopyPasteActionConstants.EditEvidenceNoteAction });
+                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, 
+                        new { organisationId, returnAction = EvidenceCopyPasteActionConstants.EditEvidenceNoteAction, complianceYear = viewModel.ComplianceYear });
                 }
                 if (ModelState.IsValid)
                 {

@@ -376,6 +376,7 @@
             result.RouteValues["controller"].Should().Be(EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName);
             result.RouteValues["organisationId"].Should().Be(OrganisationId);
             result.RouteValues["returnAction"].Should().Be(EvidenceCopyPasteActionConstants.EditEvidenceNoteAction);
+            result.RouteValues["complianceYear"].Should().Be(model.ComplianceYear);
         }
 
         [Fact]
