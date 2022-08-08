@@ -45,13 +45,13 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
-        public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId, bool? returnToEditDraftTransfer)
         {
             await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
-                var model = await TransferEvidenceTonnageViewModel(pcsId, evidenceNoteId, client);
+                var model = await TransferEvidenceTonnageViewModel(pcsId, evidenceNoteId, client, returnToEditDraftTransfer);
 
                 return this.View("EditTonnages", model);
             }
@@ -62,6 +62,19 @@
         public async Task<ActionResult> EditTonnages(TransferEvidenceTonnageViewModel model)
         {
             await SetBreadcrumb(model.PcsId);
+
+            if (model.Action == ActionEnum.Back && model.ReturnToEditDraftTransfer.Value)
+            {
+                sessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+
+                return RedirectToAction("EditDraftTransfer", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToView = false });
+            }
+            else if (model.Action == ActionEnum.Back && !model.ReturnToEditDraftTransfer.Value) 
+            {
+                sessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+
+                return RedirectToAction("EditTransferFrom", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
+            }
 
             using (var client = this.apiClient())
             {
@@ -91,7 +104,7 @@
                     });
                 }
 
-                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, client);
+                var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, client, false);
 
                 return this.View("EditTonnages", updatedModel);
             }
@@ -288,7 +301,7 @@
                     SessionKeyConstant.TransferNoteKey);
 
                 return RedirectToRoute("Scheme_edit_transfer_tonnages",
-                    new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
+                    new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
             }
 
             return this.View("EditTransferFrom", model);
@@ -311,13 +324,16 @@
             return model;
         }
 
-        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
+        private async Task<TransferEvidenceTonnageViewModel> TransferEvidenceTonnageViewModel(Guid pcsId, Guid evidenceNoteId, IWeeeClient client, bool? returnToEditDraftTransfer)
         {
             var noteData =
                 await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var request =
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.TransferNoteKey);
+
+            var existingModel = sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
 
             var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
 
@@ -332,9 +348,22 @@
             var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesForTransferRequest(pcsId, noteIds, noteData.ComplianceYear, existingEvidenceNoteIds));
 
-            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId);
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId)
+            {
+                ExistingTransferTonnageViewModel = existingModel
+            };
 
             var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
+
+            if (!returnToEditDraftTransfer.HasValue)
+            {
+                model.ReturnToEditDraftTransfer = true;
+            }
+            else
+            {
+                model.ReturnToEditDraftTransfer = returnToEditDraftTransfer.Value;
+            }
+
             return model;
         }
 
