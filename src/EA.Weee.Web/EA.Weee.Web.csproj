@@ -841,6 +841,7 @@
     <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
+    <Content Include="Scripts\govuk_frontend\govuk-frontend-legacy-cookie.js" />
     <Content Include="Scripts\jquery-ui-date-picker.js" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-4.0.1.min.js" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
@@ -1473,7 +1474,6 @@
     <Content Include="Views\Shared\_WeeeHead.cshtml" />
     <Content Include="Views\Shared\_WeeeHeader.cshtml" />
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
-    <Content Include="Views\Shared\_WeeeTracking.cshtml" />
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
@@ -1517,6 +1517,7 @@
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
     <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <Content Include="Views\Errors\Maintenance.cshtml" />
+    <Content Include="Views\NewUser\Accessibility.cshtml" />
     <Content Include="Views\Shared\_ViewEvidenceNotePartial.cshtml" />
     <Content Include="Views\Shared\_DisplayReturnedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayRejectedReasonPartial.cshtml" />
