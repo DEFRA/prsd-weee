@@ -1,8 +1,11 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
     using Prsd.Core;
     using Prsd.Core.Mapper;
@@ -13,12 +16,15 @@
     {
         private readonly ITonnageUtilities tonnageUtilities;
         private readonly IAddressUtilities addressUtilities;
-        
-        public ViewEvidenceNoteViewModelMap(ITonnageUtilities tonnageUtilities, 
-            IAddressUtilities addressUtilities)
+        private readonly IMapper mapper;
+
+        public ViewEvidenceNoteViewModelMap(ITonnageUtilities tonnageUtilities,
+            IAddressUtilities addressUtilities,
+            IMapper mapper)
         {
             this.tonnageUtilities = tonnageUtilities;
             this.addressUtilities = addressUtilities;
+            this.mapper = mapper;
         }
 
         public ViewEvidenceNoteViewModel Map(ViewEvidenceNoteMapTransfer source)
@@ -74,7 +80,8 @@
                 SchemeId = source.SchemeId,
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
-                RedirectTab = source.RedirectTab
+                RedirectTab = source.RedirectTab,
+                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(new EvidenceNoteHistoryDataViewModelMapTransfer(source.EvidenceNoteData.EvidenceNoteHistoryData)),
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
