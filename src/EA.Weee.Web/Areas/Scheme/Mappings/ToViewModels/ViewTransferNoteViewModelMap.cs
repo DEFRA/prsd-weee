@@ -101,30 +101,30 @@
             return model;
         }
 
-        private void SetSuccessMessage(TransferEvidenceNoteData note, object displayMessage, ViewTransferNoteViewModel model)
+        private void SetSuccessMessage(TransferEvidenceNoteData note, object displayMessageStatus, ViewTransferNoteViewModel model)
         {
-            if (displayMessage is bool display)
+            if (displayMessageStatus is NoteUpdatedStatusEnum status)
             {
-                if (display)
+                switch (status)
                 {
-                    switch (note.Status)
-                    {
-                        case NoteStatus.Submitted:
-                            model.SuccessMessage = $"You have successfully submitted the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
-                            break;
-                        case NoteStatus.Draft:
-                            model.SuccessMessage = $"You have successfully saved the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference} as a draft";
-                            break;
-                        case NoteStatus.Approved:
-                            model.SuccessMessage = $"You have approved the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
-                            break;
-                        case NoteStatus.Rejected:
-                            model.SuccessMessage = $"You have rejected the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
-                            break;
-                        case NoteStatus.Returned:
-                            model.SuccessMessage = $"You have returned the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
-                            break;
-                    }
+                    case NoteUpdatedStatusEnum.Submitted:
+                        model.SuccessMessage = $"You have successfully submitted the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.Draft:
+                        model.SuccessMessage = $"You have successfully saved the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference} as a draft";
+                        break;
+                    case NoteUpdatedStatusEnum.Approved:
+                        model.SuccessMessage = $"You have approved the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.Rejected:
+                        model.SuccessMessage = $"You have rejected the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.Returned:
+                        model.SuccessMessage = $"You have returned the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.ReturnedSaved:
+                        model.SuccessMessage = $"You have successfully saved the returned evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
                 }
             }
         }
