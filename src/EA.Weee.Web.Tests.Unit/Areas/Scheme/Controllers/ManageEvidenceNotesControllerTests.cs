@@ -67,7 +67,8 @@
                 {
                     typeof(Guid), 
                     typeof(string),
-                    typeof(ManageEvidenceNoteViewModel)
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -276,7 +277,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) &&
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
@@ -304,7 +305,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && 
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
@@ -329,7 +330,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
-                A<ViewAndTransferEvidenceViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) 
                          && a.NoteData.Equals(noteData) &&
                          a.Scheme.Equals(scheme) &&
@@ -354,7 +355,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
-                A<ViewAndTransferEvidenceViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && 
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
@@ -370,7 +371,7 @@
             //arrange
             var model = TestFixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
@@ -460,7 +461,7 @@
 
             var model = TestFixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
@@ -477,7 +478,7 @@
             var manageEvidenceNoteViewModel = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var model = TestFixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, tab, manageEvidenceNoteViewModel) as ViewResult;
@@ -610,7 +611,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
-                A<TransferredOutEvidenceNotesViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && 
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
@@ -624,7 +625,7 @@
             //arrange
             var model = TestFixture.Create<TransferredOutEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<TransferredOutEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers") as ViewResult;

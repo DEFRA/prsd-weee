@@ -62,7 +62,8 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
             string tab = null,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
+            int pageNumber = 1)
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
             
@@ -92,11 +93,12 @@
                             allAatfsAndAes,
                             currentDate,
                             selectedComplianceYear,
-                            manageEvidenceNoteViewModel);
+                            manageEvidenceNoteViewModel,
+                            pageNumber);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
-                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, allAatfsAndAes, currentDate, selectedComplianceYear, manageEvidenceNoteViewModel);
+                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, allAatfsAndAes, currentDate, selectedComplianceYear, manageEvidenceNoteViewModel, pageNumber);
 
                     case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
@@ -295,7 +297,7 @@
         }
         
         private async Task<ActionResult> ViewAllOtherEvidenceNotesCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf,
-            List<AatfData> allAatfs, DateTime currentDate, int selectedComplianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel)
+            List<AatfData> allAatfs, DateTime currentDate, int selectedComplianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel, int pageNumber)
         {
             EvidenceNoteSearchDataResult resultAllNotes = new EvidenceNoteSearchDataResult();
 
@@ -311,7 +313,7 @@
                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
             }
 
-            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel));
+            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber));
 
             var schemeData = resultAllNotes.Results.ToList().CreateOrganisationSchemeDataList();
 
@@ -360,13 +362,14 @@
             List<AatfData> allAatfs,
             DateTime currentDate,
             int complianceYear,
-            ManageEvidenceNoteViewModel manageEvidenceViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceViewModel,
+            int pageNumber)
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
                 manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null));
 
-            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel));
+            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));
