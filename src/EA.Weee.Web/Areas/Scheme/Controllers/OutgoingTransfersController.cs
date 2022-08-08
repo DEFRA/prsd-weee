@@ -63,17 +63,18 @@
         {
             await SetBreadcrumb(model.PcsId);
 
-            if (model.Action == ActionEnum.Back && model.ReturnToEditDraftTransfer.Value)
+            if (model.Action == ActionEnum.Back)
             {
                 sessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
 
-                return RedirectToAction("EditDraftTransfer", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToView = false });
-            }
-            else if (model.Action == ActionEnum.Back && !model.ReturnToEditDraftTransfer.Value) 
-            {
-                sessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
-
-                return RedirectToAction("EditTransferFrom", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
+                if (model.ReturnToEditDraftTransfer.Value)
+                {
+                    return RedirectToAction("EditDraftTransfer", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToView = false });
+                }
+                else
+                {
+                    return RedirectToAction("EditTransferFrom", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
+                }
             }
 
             using (var client = this.apiClient())
@@ -350,19 +351,11 @@
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId)
             {
-                ExistingTransferTonnageViewModel = existingModel
+                ExistingTransferTonnageViewModel = existingModel,
+                ReturnToEditDraftTransfer = returnToEditDraftTransfer
             };
 
             var model = mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(mapperObject);
-
-            if (!returnToEditDraftTransfer.HasValue)
-            {
-                model.ReturnToEditDraftTransfer = true;
-            }
-            else
-            {
-                model.ReturnToEditDraftTransfer = returnToEditDraftTransfer.Value;
-            }
 
             return model;
         }

@@ -32,6 +32,8 @@
 
         public int ComplianceYear { get; set; }
 
+        public bool? ReturnToEditDraftTransfer { get; set; }
+
         public TransferEvidenceNotesViewModelMapTransfer(
             IList<EvidenceNoteData> notes,
             TransferEvidenceNoteRequest request,
