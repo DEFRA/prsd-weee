@@ -7,6 +7,11 @@
 
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(
+        Url.Action("EditCategories", "OutgoingTransfers",
+            new {
+                @pcsId = Model.ViewTransferNoteViewModel.SchemeId,
+                @evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId})))
     @(this.WeeeGds().Warning("Unselecting notes may remove data you have previously input"))
 
     <h1 class="govuk-heading-l">
