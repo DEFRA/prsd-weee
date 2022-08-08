@@ -4,12 +4,13 @@
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using Prsd.Core.Mapper;
+    using Services;
     using ViewModels;
     using Web.ViewModels.Shared.Mapping;
 
     public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherManageEvidenceNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, AllOtherManageEvidenceNotesViewModel>
     {
-        public AllOtherNotesViewModelMap(IMapper mapper) : base(mapper)
+        public AllOtherNotesViewModelMap(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
         {
         }
 
@@ -17,7 +18,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel);
+            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.PageNumber);
 
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {

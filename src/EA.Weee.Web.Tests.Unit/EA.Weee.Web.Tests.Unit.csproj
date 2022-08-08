@@ -354,7 +354,6 @@
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferredOutEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
-    <Compile Include="Areas\Scheme\Mapping\TransferredOutEvidenceNotesViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModelTests.cs" />
@@ -441,8 +440,7 @@
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\SchemeEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewSubmittedEvidenceNotesViewModelMapTests.cs" />
-    <Compile Include="Areas\Scheme\Mapping\ReviewSubmittedEvidenceNotesViewModelMapTransferTests.cs" />
-    <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTransferTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\SchemeTabViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewSubmittedEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewAndTransferEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Test\CreatePcsDataReturnXmlFileControllerTests.cs" />
