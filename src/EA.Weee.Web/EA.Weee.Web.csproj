@@ -353,7 +353,6 @@
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\EvidenceNoteHistoryDataViewModelMap.cs" />
-    <Compile Include="Areas\Scheme\Mappings\ToViewModels\EvidenceNoteHistoryDataViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ISchemeManageEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ListOfSchemeNotesViewModelBase.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
