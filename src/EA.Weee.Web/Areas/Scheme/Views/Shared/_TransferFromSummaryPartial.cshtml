@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 
 @Html.AntiForgeryToken()
@@ -91,6 +92,6 @@
 
 <div class="govuk-!-margin-top-3">
     <div class="govuk-button-group">
-        @this.WeeeGds().Button("Continue", new { id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
+        @this.WeeeGds().Button("Continue", new { name = "Action", value = ActionEnum.Continue, id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
     </div>
 </div>

@@ -31,7 +31,6 @@
         private EditTransferEvidenceNoteRequestHandler handler;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly IUserContext userContext;
         private readonly ITransferTonnagesValidator transferTonnagesValidator;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IWeeeTransactionAdapter transactionAdapter;
@@ -39,14 +38,14 @@
         private readonly EditTransferEvidenceNoteRequest request;
         private readonly Organisation organisation;
         private readonly Organisation recipientOrganisation;
-        private readonly Guid userId;
+        private readonly Scheme scheme;
+        private const string Error = "You cannot manage evidence as scheme is not in a valid state";
         private Guid transferNoteId;
 
         public EditTransferEvidenceNoteRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
-            userContext = A.Fake<IUserContext>();
             transferTonnagesValidator = A.Fake<ITransferTonnagesValidator>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             transactionAdapter = A.Fake<IWeeeTransactionAdapter>();
@@ -54,9 +53,10 @@
 
             recipientOrganisation = A.Fake<Organisation>();
             organisation = A.Fake<Organisation>();
-            userId = TestFixture.Create<Guid>();
+            scheme = A.Fake<Scheme>();
             transferNoteId = TestFixture.Create<Guid>();
 
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
             A.CallTo(() => recipientOrganisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(A.Fake<Note>());
@@ -65,15 +65,76 @@
 
             handler = new EditTransferEvidenceNoteRequestHandler(weeeAuthorization,
                 genericDataAccess,
-                userContext,
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess, 
+                A.Fake<WeeeContext>(),
+                A.Fake<IUserContext>());
 
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
-            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(organisation);
-            A.CallTo(() => userContext.UserId).Returns(userId);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).Returns(recipientOrganisation);
+        }
+
+        [Fact]
+        public void EditTransferEvidenceNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
+        {
+            typeof(EditTransferEvidenceNoteRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearDataWithBalancingScheme))]
+        public async Task HandleAsync_GivenRequestedYearIsClosed_InvalidOperationExceptionExpected(DateTime currentDate, int complianceYear, bool balancingScheme)
+        {
+            //arrange
+            var request = Request();
+            var note = A.Fake<Note>();
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(balancingScheme ? A.Fake<ProducerBalancingScheme>() : null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
+            A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(request.TransferNoteId)).Returns(note);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(Error);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationIsNotBalancingSchemeAndSchemeIsWithdrawn_InvalidOperationExceptionExpected()
+        {
+            var request = Request();
+            var note = A.Fake<Note>();
+            A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Withdrawn);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(null);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(request.TransferNoteId)).Returns(note);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(Error);
+        }
+
+        //Not a valid scenario but in as a check against the balancing scheme
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationIsBalancingSchemeAndSchemeIsWithdrawn_NoExceptionExpected()
+        {
+            var request = Request();
+            var note = A.Fake<Note>();
+            A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Withdrawn);
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(request.OrganisationId)).Returns(organisation);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(request.TransferNoteId)).Returns(note);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeNull();
         }
 
         [Theory]
@@ -105,11 +166,12 @@
 
             handler = new EditTransferEvidenceNoteRequestHandler(authorization,
                 genericDataAccess,
-                userContext,
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                A.Fake<WeeeContext>(),
+                A.Fake<IUserContext>());
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -158,11 +220,12 @@
 
             handler = new EditTransferEvidenceNoteRequestHandler(authorization,
                 genericDataAccess,
-                userContext,
                 evidenceDataAccess,
                 transferTonnagesValidator,
                 transactionAdapter,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                A.Fake<WeeeContext>(),
+                A.Fake<IUserContext>());
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(Request()));
@@ -217,13 +280,21 @@
             A.CallTo(() => genericDataAccess.GetById<Organisation>(request.RecipientId)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenRequest_TransferNoteShouldBeUpdated()
+        [Theory]
+        [ClassData(typeof(SchemeStatusData))]
+        public async Task HandleAsync_GivenRequest_TransferNoteShouldBeUpdated(SchemeStatus status)
         {
+            if (status == SchemeStatus.Withdrawn)
+            {
+                return;
+            }
+
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2020, 1, 1);
             SystemTime.Freeze(currentDate);
             var note = A.Fake<Note>();
+            A.CallTo(() => note.ComplianceYear).Returns(currentDate.Year);
+            A.CallTo(() => scheme.SchemeStatus).Returns(status);
             A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).ReturnsNextFromSequence(organisation, recipientOrganisation);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
             A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);

@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.Base
 {
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain.Evidence;
     using Prsd.Core;
@@ -51,6 +54,16 @@
 
             await database.WeeeContext.SaveChangesAsync();
             return note;
+        }
+
+        protected async Task<List<Note>> GetExistingNotesInDb(WeeeContext context, int pageSize = int.MaxValue, int pageNumber = 1)
+        {
+            var notes = await context.Notes.OrderByDescending(n => n.Reference)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return notes;
         }
     }
 }

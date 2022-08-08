@@ -28,11 +28,11 @@
         public async Task<EvidenceNoteData> HandleAsync(GetEvidenceNoteForSchemeRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
-
+            
             var evidenceNote = await evidenceDataAccess.GetNoteById(message.EvidenceNoteId);
 
-            authorization.EnsureSchemeAccess(evidenceNote.Recipient.Scheme.Id);
-
+            authorization.EnsureOrganisationAccess(evidenceNote.Recipient.Id);
+            
             var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
             {
                 IncludeTonnage = true

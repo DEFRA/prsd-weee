@@ -32,23 +32,25 @@
         public void ViewAllEvidenceNotesMapModel_Constructor_PropertiesShouldBeSet()
         {
             // arrange
+            var complianceYearsList = TestFixture.CreateMany<int>();
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, complianceYearsList);
 
             //assert
             model.Should().NotBeNull();
             model.ManageEvidenceNoteViewModel.Should().BeEquivalentTo(manageEvidenceNoteViewModel);
             model.NoteData.Should().Be(noteData);
             model.CurrentDate.Should().Be(currentDate);
+            model.ComplianceYearList.Should().BeEquivalentTo(complianceYearsList);
         }
 
         [Fact]
         public void ViewAllEvidenceNotesMapModel_Constructor_NotesIsNull_ShouldThrowAnException()
         {
             //act
-            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel, SystemTime.Now));
+            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel, SystemTime.Now, TestFixture.CreateMany<int>()));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -61,7 +63,7 @@
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate);
+            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate, TestFixture.CreateMany<int>());
 
             //assert
             model.Should().NotBeNull();
