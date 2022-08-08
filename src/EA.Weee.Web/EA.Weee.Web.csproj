@@ -841,6 +841,7 @@
     <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
+    <Content Include="Scripts\govuk_frontend\govuk-frontend-legacy-cookie.js" />
     <Content Include="Scripts\jquery-ui-date-picker.js" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-4.0.1.min.js" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />

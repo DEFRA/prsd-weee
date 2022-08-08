@@ -55,7 +55,7 @@
         <p id="#global-cookie-message-p4">
             <input type="submit" id="acceptCookies" value="Accept additional cookies" class="govuk-cookie-button">
             <input type="submit" id="rejectCookies" value="Reject additional cookies" class="govuk-cookie-button">
-            @Html.ActionLink("View cookies", "Cookies", "NewUser", new { area = string.Empty }, null)
+            @Html.ActionLink("View cookies", "Cookies", "NewUser", new { area = string.Empty }, new { @class = "govuk-link" })
         </p>
     </div>
 
