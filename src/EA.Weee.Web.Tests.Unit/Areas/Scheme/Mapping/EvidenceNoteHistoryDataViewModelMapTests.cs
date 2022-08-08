@@ -28,10 +28,8 @@
                 fixture.Create<EvidenceNoteHistoryData>(),
             };
 
-            var transfer = new EvidenceNoteHistoryDataViewModelMapTransfer(data);
-
             //act
-            var result = map.Map(transfer);
+            var result = map.Map(data);
 
             //assert
             result.First().Id.Should().Be(data.First().Id);

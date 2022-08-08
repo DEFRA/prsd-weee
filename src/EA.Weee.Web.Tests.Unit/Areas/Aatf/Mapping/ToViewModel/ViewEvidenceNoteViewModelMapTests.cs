@@ -642,7 +642,7 @@
             };
             source.EvidenceNoteData.EvidenceNoteHistoryData = history;
 
-            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(A<EvidenceNoteHistoryDataViewModelMapTransfer>._)).Returns(new List<EvidenceNoteHistoryViewModel>()
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).Returns(new List<EvidenceNoteHistoryViewModel>()
             {
                 new EvidenceNoteHistoryViewModel(data.Id, data.Reference, data.TransferredTo, data.Type, data.Status, data.SubmittedDate),
             });
@@ -658,7 +658,7 @@
             result.EvidenceNoteHistoryData.First().SubmittedDate.Should().Be(history.First().SubmittedDate);
             result.EvidenceNoteHistoryData.First().TransferredTo.Should().Be(history.First().TransferredTo);
 
-            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(A<EvidenceNoteHistoryDataViewModelMapTransfer>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).MustHaveHappenedOnceExactly();
         }
     }
 }
