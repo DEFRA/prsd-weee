@@ -4,15 +4,14 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Shared;
-    using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.Admin.Obligations;
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Prsd.Core;
     using Weee.Security;
 
     public class GetPcsObligationsCsvHandler : IRequestHandler<GetPcsObligationsCsv, CSVFileData>
@@ -55,7 +54,7 @@
             csvWriter.DefineColumn(ObligationCsvConstants.Cat14ColumnName, x => string.Empty);
 
             var fileContent = csvWriter.Write(authority.Schemes.OrderBy(s => s.SchemeName));
-            var timestamp = DateTime.Now;
+            var timestamp = SystemTime.Now;
             var fileName = $"{authority.Abbreviation}_pcsobligationuploadtemplate{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv";
 
             return new CSVFileData

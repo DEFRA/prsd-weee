@@ -41,7 +41,5 @@
         }
 
         public bool ReturnToView { get; set; }
-
-        public new int? SelectedComplianceYear { get; set; }
     }
 }

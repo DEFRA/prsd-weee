@@ -10,6 +10,7 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.OrganisationId)
     @Html.HiddenFor(m => m.AatfId)
+    @Html.HiddenFor(m => m.SelectedComplianceYear, new { id = "evidence-compliance-year" })
 
     if (Model.CanCreateEdit)
     {
@@ -19,7 +20,7 @@
     {
         if (Model.ComplianceYearClosed)
         {
-<p class="govuk-details__text">This compliance year has now closed and therefore you are unable to create a new evidence note or edit an existing one</p>
+            <p class="govuk-details__text">This compliance year has now closed and therefore you are unable to create a new evidence note or edit an existing one</p>
         }
         else
         {

@@ -19,38 +19,36 @@
     using System.Threading.Tasks;
     using Castle.Core.Internal;
     using Core.Helpers;
-    using Domain.Scheme;
+    using Domain.Organisation;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
 
-    public class GetEvidenceNotesByOrganisationRequestHandlerTests
+    public class GetEvidenceNotesByOrganisationRequestHandlerTests : SimpleUnitTestBase
     {
         private GetEvidenceNotesByOrganisationRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
-        private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly IMapper mapper;
         private readonly Guid organisationId;
         private readonly GetEvidenceNotesByOrganisationRequest request;
 
         public GetEvidenceNotesByOrganisationRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
-            schemeDataAccess = A.Fake<ISchemeDataAccess>();
+            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
             mapper = A.Fake<IMapper>();
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
                 mapper,
-                schemeDataAccess);
+                organisationDataAccess);
         }
 
         [Fact]
@@ -58,7 +56,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNotesByOrganisationRequest()));
@@ -68,11 +66,11 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, schemeDataAccess);
+            handler = new GetEvidenceNotesByOrganisationRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(GetEvidenceNotesByOrganisationRequest()));
@@ -82,14 +80,19 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        public async Task HandleAsync_GivenRequest_ShouldCheckBalancingSchemeAccessAccess()
         {
+            //arrange
+            var organisation = A.Fake<Organisation>();
+            var organisationId = TestFixture.Create<Guid>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
+
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -99,18 +102,16 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea())
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            var scheme = A.Fake<Scheme>();
+            var organisation = A.Fake<Organisation>();
             var status = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
-
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
             // act
             await handler.HandleAsync(request);
@@ -132,15 +133,13 @@
         public async void HandleAsync_GivenTransferredOutRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            var scheme = A.Fake<Scheme>();
-            var schemeId = fixture.Create<Guid>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
+            var organisation = A.Fake<Organisation>();
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
 
-            A.CallTo(() => scheme.Id).Returns(schemeId);
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
 
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).Returns(scheme);
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
             // act
             await handler.HandleAsync(request);
@@ -157,13 +156,13 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_SchemeDataAccessShouldBeCalledOnce()
+        public async void HandleAsync_GivenRequest_OrganisationDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => schemeDataAccess.GetSchemeOrDefaultByOrganisationId(request.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -209,7 +208,7 @@
         public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
-            var noteList = fixture.CreateMany<Note>(2).ToList();
+            var noteList = TestFixture.CreateMany<Note>(2).ToList();
 
             var mappedNoteData = new List<EvidenceNoteData>()
             {
@@ -233,7 +232,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, fixture.CreateMany<NoteStatus>().ToList(), fixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
         }
     }
 }

@@ -4,7 +4,6 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -48,7 +47,7 @@
         [CheckCanEditTransferNote]
         public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
@@ -62,7 +61,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditTonnages(TransferEvidenceTonnageViewModel model)
         {
-            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(model.PcsId);
 
             using (var client = this.apiClient())
             {
@@ -102,7 +101,7 @@
         [CheckCanEditTransferNote]
         public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             redirectTab = redirectTab ?? ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
 
@@ -128,9 +127,9 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
-        public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, int? selectedComplianceYear, bool? returnToView, string redirectTab)
+        public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
@@ -156,7 +155,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmittedTransfer(ReviewTransferNoteViewModel model)
         {
-            await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(model.OrganisationId);
 
             using (var client = this.apiClient())
             {
@@ -164,7 +163,7 @@
                 {
                     var status = model.SelectedEnumValue;
 
-                    var request = new SetNoteStatus(model.ViewTransferNoteViewModel.EvidenceNoteId, status, model.Reason);
+                    var request = new SetNoteStatusRequest(model.ViewTransferNoteViewModel.EvidenceNoteId, status, model.Reason);
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
@@ -198,7 +197,7 @@
         [CheckCanEditTransferNote]
         public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
@@ -228,7 +227,7 @@
         [CheckCanEditTransferNote]
         public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId)
         {
-            await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
@@ -242,7 +241,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditCategories(TransferEvidenceNoteCategoriesViewModel model)
         {
-            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(model.PcsId);
 
             if (ModelState.IsValid)
             {
@@ -266,7 +265,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditTransferFrom(TransferEvidenceNotesViewModel model)
         {
-            await SetBreadcrumb(model.PcsId, BreadCrumbConstant.SchemeManageEvidence);
+            await SetBreadcrumb(model.PcsId);
 
             if (ModelState.IsValid)
             {

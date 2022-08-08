@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\EditEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteBaseRequest.cs" />
-    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequest.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForAatfRequest.cs" />
@@ -58,6 +57,9 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequest.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteFilterBaseRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequest.cs" />
+    <Compile Include="AatfEvidence\VoidTransferNoteRequest.cs" />
+    <Compile Include="AatfEvidence\SetNoteStatusRequest.cs" />
+    <Compile Include="AatfEvidence\SetNoteStatusBase.cs" />
     <Compile Include="AatfEvidence\TransferTonnageValue.cs" />
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
@@ -126,6 +128,7 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYears.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYears.cs" />
     <Compile Include="Admin\GetAllNotesInternal.cs" />
+    <Compile Include="Admin\GetComplianceYearsFilter.cs" />
     <Compile Include="Admin\GetDataReturnSubmissionChanges\GetDataReturnSubmissionEeeChangesCsv.cs" />
     <Compile Include="Admin\GetEEEWEEEDataReturnSchemesByComplianceYear.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequest.cs" />
