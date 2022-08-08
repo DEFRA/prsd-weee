@@ -41,7 +41,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
                 {
                     typeof(string),
-                    typeof(ManageEvidenceNoteViewModel)
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -265,7 +266,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
         }
 
@@ -282,7 +283,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
         }
 
@@ -302,7 +303,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData && 
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
         }
@@ -325,7 +326,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)))).MustHaveHappenedOnceExactly();
         }
@@ -348,7 +349,7 @@
 
             //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && 
                     a.ComplianceYearList.SequenceEqual(complianceYearList)))).MustHaveHappenedOnceExactly();
@@ -368,7 +369,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
         }
@@ -389,7 +390,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)))).MustHaveHappenedOnceExactly();
         }
@@ -408,7 +409,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                          a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
         }
@@ -427,7 +428,7 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                          a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
         }
@@ -450,7 +451,7 @@
 
             //assert
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-               A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+               A<ViewEvidenceNotesMapTransfer>.That.Matches(
                    a => a.NoteData == noteData 
                         && a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) 
                         && a.CurrentDate.Equals(date)
@@ -465,7 +466,7 @@
             //arrange
             var viewModel = TestFixture.Create<ViewAllEvidenceNotesViewModel>();
 
-            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewAllEvidenceNotesMapTransfer>._)).Returns(viewModel);
+            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewEvidenceNotesMapTransfer>._)).Returns(viewModel);
 
             //act
             var result = await ManageEvidenceController.Index(tab) as ViewResult;
@@ -480,7 +481,7 @@
             //arrange
             var viewModel = TestFixture.Create<ViewAllTransferNotesViewModel>();
 
-            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewAllEvidenceNotesMapTransfer>._)).Returns(viewModel);
+            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewEvidenceNotesMapTransfer>._)).Returns(viewModel);
 
             //act
             var result = await ManageEvidenceController.Index("view-all-evidence-transfers") as ViewResult;
