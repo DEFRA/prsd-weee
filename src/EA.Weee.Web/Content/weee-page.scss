@@ -73,100 +73,6 @@ a {
     margin-bottom: 10px !important;
 }
 
-// Example boxes
-// ==========================================================================
-.example {
-    @include govuk-clearfix;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid govuk-colour('mid-grey');
-    margin-top: $govuk-gutter-half;
-    margin-bottom: $govuk-gutter*1.5;
-    padding-top: $govuk-gutter;
-    padding-right: $govuk-gutter-half;
-    padding-bottom: $govuk-gutter-half;
-    padding-left: $govuk-gutter-half;
-
-    @include govuk-media-query($from: tablet) {
-        padding-top: $govuk-gutter*1.5;
-        padding-right: $govuk-gutter;
-        padding-bottom: $govuk-gutter;
-        padding-left: $govuk-gutter;
-    }
-
-    &:before {
-        content: "EXAMPLE";
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding: em(4) em(15) em(4) em(15);
-
-        @include govuk-font(14);
-        background: govuk-colour('mid-grey');
-        color: white;
-    }
-    // Blue text for heading sizes
-    .highlight {
-        font-style: normal;
-        color: govuk-colour-organisations('hm-government');
-    }
-    // Fix grid layout within example boxes for IE7 and below
-    // where box-sizing isn't supported: http://caniuse.com/#search=box-sizing
-    @mixin example-box-column($width) {
-        width: (($govuk-page-width - $govuk-gutter) * $width) - $govuk-gutter;
-    }
-
-    @include ie-lte(7) {
-        // Set example box width to 900px (removing left and right padding)
-        $example-box-width: $govuk-page-width - ($govuk-gutter * 2);
-        width: $example-box-width;
-        // Recalculate grid column widths
-        .column-quarter {
-            @include example-box-column( 1/4 );
-        }
-
-        .column-one-half {
-            @include example-box-column( 1/2 );
-        }
-
-        .column-third {
-            @include example-box-column( 1/3 );
-        }
-
-        .column-two-thirds {
-            @include example-box-column( 2/3 );
-        }
-        // Scale images to fit grid columns
-        img {
-            width: 100%;
-        }
-    }
-}
-
-
-// 1. Layout
-// ==========================================================================
-
-.example-grid p {
-    width: 100%;
-    background: file-url("examples/grid.png") 0 0 repeat;
-    margin-bottom: 0;
-    height: 30px;
-
-    @include govuk-media-query($from: tablet) {
-        height: 60px;
-    }
-
-    overflow: hidden;
-    text-indent: -999em;
-}
-
-// 2. Typography
-// ==========================================================================
-
-
-// 3. Colour
-// ==========================================================================
 
 // Colour swatches
 .swatch {
@@ -186,7 +92,7 @@ a {
     }
 }
 
-$palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-purple')), ("fuschia", govuk-colour('bright-purple')), ("pink", govuk-colour('pink')), ("baby-pink", govuk-colour('light-pink')), ("red", govuk-colour('red')), ("mellow-red", govuk-colour('bright-red')), ("orange", govuk-colour('orange')), ("brown", govuk-colour('brown')), ("yellow", govuk-colour('yellow')), ("green", govuk-colour('green')), ("grass-green", govuk-colour('light-green')), ("turquoise", govuk-colour('turquoise')), ("light-blue", govuk-colour('light-blue')) );
+$palette: ( ("purple", govuk-colour('purple')), ("mauve", govuk-colour('light-purple')), ("fuschia", govuk-colour('bright-purple')), ("pink", govuk-colour('pink')), ("baby-pink", govuk-colour('light-pink')), ("red", govuk-colour('red')), ("orange", govuk-colour('orange')), ("brown", govuk-colour('brown')), ("yellow", govuk-colour('yellow')), ("green", govuk-colour('green')), ("grass-green", govuk-colour('light-green')), ("turquoise", govuk-colour('turquoise')), ("light-blue", govuk-colour('light-blue')) );
 
 @mixin color-swatches {
     @each $color in $palette {
