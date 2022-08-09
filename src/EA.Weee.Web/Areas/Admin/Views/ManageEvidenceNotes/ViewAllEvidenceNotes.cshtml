@@ -1,6 +1,8 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfEvidence
+@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.Infrastructure.Paging
 
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllEvidenceNotesViewModel
 
@@ -52,50 +54,44 @@
                             {
                                 foreach (var note in Model.EvidenceNotesDataList)
                                 {
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                @if (note.SubmittedDate.HasValue)
-                                {
-                                    <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
-                                }
-                                else
-                                {
-                                    <td class="govuk-table__cell"></td>
-                                }
-                                <td class="govuk-table__cell">@note.SubmittedBy</td>
-                                <td class="govuk-table__cell">@note.Recipient</td>
-                                <td class="govuk-table__cell">@note.Status.ToString() </td>
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                        @if (note.SubmittedDate.HasValue)
+                                        {
+                                            <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="govuk-table__cell"></td>
+                                        }
+                                        <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                        <td class="govuk-table__cell">@note.Recipient</td>
+                                        <td class="govuk-table__cell">@note.Status.ToString() </td>
 
-                                @if (!note.Status.Equals(NoteStatus.Void))
-                                {
-                                    <td class="govuk-table__cell">
-                                        @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "admin_view_evidence_note_details", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id }, null)
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td class="govuk-table__cell"> </td>
-                                }
-                            </tr>
+                                        @if (!note.Status.Equals(NoteStatus.Void))
+                                        {
+                                            <td class="govuk-table__cell">
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "admin_view_evidence_note_details", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id }, null)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="govuk-table__cell"> </td>
+                                        }
+                                    </tr>
                                 }
                             }
                             else
                             {
-                                <tr>
-                                    <td colspan="6">
-                                        <p>There are currently no evidence notes to view </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p> Showing 0 - 0 of 0 </p>
-                                    </td>
-                                </tr>
+                                Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml");
                             }
-
                         </tbody>
                     </table>
                     <br />
+                    @{
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary() { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(), selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
+                    }
+
                 </section>
             </div>
         </div>

@@ -40,7 +40,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int pageNumber = 1)
+        public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -58,11 +58,11 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, pageNumber);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, pageNumber);
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, page);
                     default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, pageNumber);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
                 }
             }
         }
