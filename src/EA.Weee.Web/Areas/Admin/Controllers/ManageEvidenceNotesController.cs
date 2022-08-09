@@ -40,7 +40,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
+        public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -58,11 +58,11 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate);
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, page);
                     default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
                 }
             }
         }
@@ -102,7 +102,7 @@
             }
         }
 
-        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate)
+        private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
@@ -112,7 +112,7 @@
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear));
 
-            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, complianceYearsList));
+            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, complianceYearsList));
 
             return View("ViewAllEvidenceNotes", model);
         }
@@ -122,7 +122,7 @@
             return await client.SendAsync(User.GetAccessToken(), new GetComplianceYearsFilter(allowedStatuses));
         }
 
-        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate)
+        private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
@@ -132,7 +132,7 @@
 
             var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear));
 
-            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewAllEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, complianceYearsList));
+            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, complianceYearsList));
 
             return View("ViewAllTransferNotes", model);
         }

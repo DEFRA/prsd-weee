@@ -4,12 +4,12 @@
     using FluentAssertions;
     using Xunit;
 
-    public class ViewAndTransferEvidenceViewModelMapTransferTests
+    public class SchemeTabViewModelMapTransferTests
     {
         [Fact]
         public void CheckViewAndTransferEvidenceViewModelMapTransferInheritsBaseEvidenceNotesViewModelMapTransfer()
         {
-            typeof(ViewAndTransferEvidenceViewModelMapTransfer).BaseType.Name.Should().Be(nameof(BaseEvidenceNotesViewModelMapTransfer));
+            typeof(SchemeTabViewModelMapTransfer).BaseType.Name.Should().Be(nameof(BaseEvidenceNotesViewModelMapTransfer));
         }
     }
 }
