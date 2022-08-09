@@ -33,7 +33,8 @@
 
             var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
             {
-                IncludeTonnage = true
+                IncludeTonnage = true,
+                IncludeHistory = false
             });
 
             return evidenceNoteData;
