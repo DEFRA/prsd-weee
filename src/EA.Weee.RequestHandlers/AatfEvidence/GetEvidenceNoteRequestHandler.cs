@@ -42,7 +42,8 @@
             var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
             {
                 IncludeTonnage = true,
-                SystemDateTime = currentDateTime
+                SystemDateTime = currentDateTime,
+                IncludeHistory = false
             });
 
             return evidenceNoteData;

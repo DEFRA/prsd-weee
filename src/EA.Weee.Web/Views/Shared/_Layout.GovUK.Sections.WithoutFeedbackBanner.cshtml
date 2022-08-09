@@ -14,7 +14,6 @@
 
 @section head {
     @Html.Partial("_WeeeHead")
-    @Html.Partial("_WeeeTracking")
     @RenderSection("head", required: false)
 }
 
@@ -32,10 +31,7 @@
 
 @section footer_top {
     <div class="footer_agencies">
-        @if (ViewBag.ShowLinksToAgencies ?? true)
-        {
-            @Html.Partial("_WeeeFooter")
-        }
+        @Html.Partial("_WeeeFooter")
     </div>
 }
 
