@@ -187,9 +187,11 @@
 
                     var updatedRequest = transferNoteRequestCreator.SelectTonnageToRequest(transferRequest, model);
 
-                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
-
                     var id = await client.SendAsync(User.GetAccessToken(), updatedRequest);
+
+                    var updateStatus = (NoteUpdatedStatusEnum)updatedRequest.Status;
+
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
                     return RedirectToAction("TransferredEvidence", "TransferEvidence",
                         new { pcsId = model.PcsId, evidenceNoteId = id, redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers) });
