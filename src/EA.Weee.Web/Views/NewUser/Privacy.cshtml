@@ -2,13 +2,11 @@
     ViewBag.Title = "Privacy policy";
 }
 
-@section main_content
-{
-    <header class="hgroup">
-        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
-    </header>
+<header class="hgroup">
+    <h1 class="govuk-heading-l">@ViewBag.Title</h1>
+</header>
 
-    <div class='text'>
-        @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml")
-    </div>
-}
+<div class='text'>
+    @Html.Partial("~/Views/Shared/_PrivacyPolicy.cshtml")
+</div>
+
