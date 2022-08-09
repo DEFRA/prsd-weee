@@ -281,7 +281,8 @@
                     a => a.OrganisationId.Equals(OrganisationId) &&
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
-                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -310,7 +311,8 @@
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel.Equals(model) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -334,7 +336,8 @@
                     a => a.OrganisationId.Equals(OrganisationId) 
                          && a.NoteData.Equals(noteData) &&
                          a.Scheme.Equals(scheme) &&
-                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -360,7 +363,8 @@
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel.Equals(model) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -616,7 +620,8 @@
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel == model &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -63,6 +63,35 @@
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
+        //[InlineData("view-all-evidence-transfers")]
+        public async Task IndexGet_GivenPageNumber_ViewAllEvidenceNotesViewModelMapperShouldBeCalled(string tab)
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index(tab, null, pageNumber);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewEvidenceNotesMapTransfer>.That
+                .Matches(v => v.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenPageNumber_ViewAllTransferNotesViewModelModelMapperShouldBeCalled()
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index("view-all-evidence-transfers", null, pageNumber);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewEvidenceNotesMapTransfer>.That
+                .Matches(v => v.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
         [InlineData("view-all-evidence-transfers")]
         public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(string tab)
         {
@@ -267,7 +296,8 @@
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
-                    a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
+                    a => a.NoteData == noteData &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -284,7 +314,8 @@
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
-                    a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
+                    a => a.NoteData == noteData &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -305,7 +336,8 @@
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData && 
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -328,7 +360,9 @@
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && 
+                    a.CurrentDate.Equals(date) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -352,7 +386,8 @@
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && 
-                    a.ComplianceYearList.SequenceEqual(complianceYearList)))).MustHaveHappenedOnceExactly();
+                    a.ComplianceYearList.SequenceEqual(complianceYearList) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -371,7 +406,8 @@
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -392,7 +428,9 @@
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && 
+                    a.CurrentDate.Equals(date) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -411,7 +449,8 @@
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel == model &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -430,7 +469,8 @@
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel == model &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -455,7 +495,8 @@
                    a => a.NoteData == noteData 
                         && a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) 
                         && a.CurrentDate.Equals(date)
-                   && a.ComplianceYearList.SequenceEqual(complianceYearList)))).MustHaveHappenedOnceExactly();
+                   && a.ComplianceYearList.SequenceEqual(complianceYearList) &&
+                        a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
