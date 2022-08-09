@@ -127,11 +127,9 @@
                     case NoteUpdatedStatusEnum.ReturnedSaved:
                         model.SuccessMessage = $"You have successfully saved the returned evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                         break;
-
-                        case NoteStatus.Void:
-                            model.SuccessMessage = $"You have voided the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
-                            break;
-                    }
+                    case NoteUpdatedStatusEnum.Void:
+                        model.SuccessMessage = $"You have voided the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
                 }
             }
         }
