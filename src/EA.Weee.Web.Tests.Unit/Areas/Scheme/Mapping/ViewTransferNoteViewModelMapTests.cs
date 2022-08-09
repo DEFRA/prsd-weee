@@ -5,6 +5,7 @@
     using AutoFixture;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -119,15 +120,20 @@
         public void ViewTransferNoteViewModelMap_GivenSourceNoteType_PropertiesShouldBeSet()
         {
             //arrange
+            var justNow = SystemTime.UtcNow;
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>().With(t1 => t1.Type, NoteType.Transfer).Create(),
                     null);
+            source.TransferEvidenceNoteData.VoidedDate = justNow;
+            source.TransferEvidenceNoteData.VoidedReason = "some wonderful reason";
 
             //act
             var model = map.Map(source);
 
             //assert
             model.Type.Should().Be(source.TransferEvidenceNoteData.Type);
+            model.VoidedReason.Should().Be(source.TransferEvidenceNoteData.VoidedReason);
+            model.VoidedDate.Should().Be(source.TransferEvidenceNoteData.VoidedDate.ToDisplayGMTDateTimeString());
         }
 
         [Theory]
@@ -249,6 +255,23 @@
 
             //assert
             model.SuccessMessage.Should().Be($"You have returned the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsVoided_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.Void);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should().Be($"You have successfully voided the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
         }
 
         [Theory]
