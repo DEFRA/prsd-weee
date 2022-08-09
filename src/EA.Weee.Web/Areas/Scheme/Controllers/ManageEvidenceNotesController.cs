@@ -43,7 +43,7 @@
         public async Task<ActionResult> Index(Guid pcsId, 
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
-            int pageNumber = 1)
+            int page = 1)
         {
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.TransferNoteKey);
@@ -65,13 +65,13 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
-                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber);
+                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                 }
             }
         }

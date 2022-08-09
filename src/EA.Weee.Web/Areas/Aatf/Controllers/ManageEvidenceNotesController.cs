@@ -63,7 +63,7 @@
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
-            int pageNumber = 1)
+            int page = 1)
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
             
@@ -94,11 +94,11 @@
                             currentDate,
                             selectedComplianceYear,
                             manageEvidenceNoteViewModel,
-                            pageNumber);
+                            page);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
 
-                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, allAatfsAndAes, currentDate, selectedComplianceYear, manageEvidenceNoteViewModel, pageNumber);
+                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, allAatfsAndAes, currentDate, selectedComplianceYear, manageEvidenceNoteViewModel, page);
 
                     case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:

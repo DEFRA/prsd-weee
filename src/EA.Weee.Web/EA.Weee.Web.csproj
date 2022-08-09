@@ -800,6 +800,7 @@
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_AddressOnly.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_ChooseSite.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ViewAllNotesEmptyPartial.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1524,6 +1525,7 @@
     <Content Include="Views\Shared\_ComplianceYearPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\_ViewTransferEvidenceNotePartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceTransferProgressiveDisclosurePartial.cshtml" />
+    <Content Include="Views\Shared\_EvidenceNotesPagerPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
