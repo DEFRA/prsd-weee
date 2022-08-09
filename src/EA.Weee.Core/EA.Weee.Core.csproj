@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfEvidence\AatfEvidenceSummaryData.cs" />
+    <Compile Include="AatfEvidence\EvidenceNoteHistoryData.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteDataBase.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteDataListResult.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteSearchDataResult.cs" />
