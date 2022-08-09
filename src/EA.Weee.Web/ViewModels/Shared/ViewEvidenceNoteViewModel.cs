@@ -37,6 +37,8 @@
 
         public bool HasBeenReturned => Status.Equals(NoteStatus.Returned);
 
+        public bool HasBeenVoided => Status.Equals(NoteStatus.Void);
+
         public Guid SchemeId { get; set; }
 
         public string SubmittedBy { get; set; }
@@ -65,6 +67,8 @@
                         return "Returned evidence note";
                     case NoteStatus.Submitted:
                         return "Submitted evidence note";
+                    case NoteStatus.Void:
+                        return "Voided evidence note";
                     default:
                         return string.Empty;
                 }
