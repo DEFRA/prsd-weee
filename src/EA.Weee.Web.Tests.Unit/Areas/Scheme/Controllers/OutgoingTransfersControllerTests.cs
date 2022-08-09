@@ -334,7 +334,7 @@
 
             //assert
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                    outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey))
+                    outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1342,7 +1342,7 @@
                                             ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(selectedId) &&
                                             !((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(notSelectedId) &&
                                             ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Count() == 1),
-                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+                SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1596,7 +1596,7 @@
 
             //assert
             A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session, request,
-                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+                SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1795,7 +1795,7 @@
 
             //assert
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                    outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey))
+                    outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -2101,7 +2101,7 @@
             //assert
             A.CallTo(() =>
                     sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                        outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey))
+                        outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -2130,7 +2130,7 @@
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                    outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey)).Returns(request);
+                    outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey)).Returns(request);
 
             A.CallTo(() => transferEvidenceRequestCreator.EditSelectTonnageToRequest(A<TransferEvidenceNoteRequest>._,
                 A<TransferEvidenceTonnageViewModel>._)).Returns(TestFixture.Create<EditTransferEvidenceNoteRequest>());
@@ -2251,6 +2251,38 @@
             result.RouteValues["evidenceNoteId"].Should().Be(transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.EvidenceNoteId);
             result.RouteValues["redirectTab"].Should().Be(DisplayExtensions.ToDisplayString(
                 ManageEvidenceNotesDisplayOptions.OutgoingTransfers));
+        }
+
+        [Fact]
+        public async Task EditTonnagesPost_GivenModelActionIsBack_ShouldSetTransferSessionObject()
+        {
+            // arrange 
+            var complianceYear = TestFixture.Create<int>();
+            var recipientId = TestFixture.Create<Guid>();
+            var pcsIds = TestFixture.Create<Guid>();
+            var transferCategoryValues = TestFixture.CreateMany<TransferEvidenceCategoryValue>().ToList();
+
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(t => t.ComplianceYear, complianceYear)
+                .With(t => t.RecipientId, recipientId)
+                .With(t => t.PcsId, pcsIds)
+                .With(t => t.TransferCategoryValues, transferCategoryValues)
+                .With(t => t.Action, ActionEnum.Back)
+                .Create();
+
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            // act
+            await outgoingTransferEvidenceController.EditTonnages(model);
+
+            // assert
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session,
+          A<object>.That.Matches(o => ((TransferEvidenceTonnageViewModel)o).TransferCategoryValues.SequenceEqual(transferCategoryValues) &&
+                                      ((TransferEvidenceTonnageViewModel)o).RecipientId == recipientId &&
+                                      ((TransferEvidenceTonnageViewModel)o).PcsId == pcsIds &&
+                                      ((TransferEvidenceTonnageViewModel)o).ComplianceYear == complianceYear &&
+                                      ((TransferEvidenceTonnageViewModel)o).Action == ActionEnum.Back),
+          SessionKeyConstant.EditTransferEvidenceTonnageViewModel)).MustHaveHappenedOnceExactly();
         }
     }
 }
