@@ -83,7 +83,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty() && e.IncludeTonnage == true))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty() && e.IncludeTonnage == true && e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
