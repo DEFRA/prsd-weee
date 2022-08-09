@@ -3,7 +3,6 @@
     using EA.Weee.Web.ViewModels.Shared;
     using Shared;
     using System;
-    using System.Collections.Generic;
     using Core.Shared.Paging;
 
     public abstract class ManageEvidenceNotesViewModel : IManageEvidenceViewModel
