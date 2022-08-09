@@ -77,7 +77,26 @@
 
                     await client.SendAsync(User.GetAccessToken(), updatedRequest);
 
-                    var updateStatus = model.ViewTransferNoteViewModel.Status == NoteStatus.Returned && model.Action == ActionEnum.Save ? NoteUpdatedStatusEnum.ReturnedSaved : (NoteUpdatedStatusEnum)updatedRequest.Status;
+                    NoteUpdatedStatusEnum updateStatus;
+                    if (model.ViewTransferNoteViewModel.Status == NoteStatus.Returned)
+                    {
+                        switch (model.Action)
+                        {
+                            case ActionEnum.Save:
+                                updateStatus = NoteUpdatedStatusEnum.ReturnedSaved;
+                                break;
+                            case ActionEnum.Submit:
+                                updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
+                                break;
+                            default:
+                                updateStatus = (NoteUpdatedStatusEnum)updatedRequest.Status;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        updateStatus = (NoteUpdatedStatusEnum)updatedRequest.Status;
+                    }
 
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
