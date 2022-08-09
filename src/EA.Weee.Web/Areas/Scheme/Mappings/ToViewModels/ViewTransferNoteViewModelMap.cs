@@ -70,8 +70,10 @@
                 ApprovedDate = source.TransferEvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 RejectedDate = source.TransferEvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(),
                 ReturnedDate = source.TransferEvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(), 
+                VoidedDate = source.TransferEvidenceNoteData.VoidedDate.ToDisplayGMTDateTimeString(),
                 RejectedReason = source.TransferEvidenceNoteData.RejectedReason, 
-                ReturnedReason = source.TransferEvidenceNoteData.ReturnedReason,
+                ReturnedReason = source.TransferEvidenceNoteData.ReturnedReason, 
+                VoidedReason = source.TransferEvidenceNoteData.VoidedReason,
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear, 
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
@@ -123,6 +125,9 @@
                             break;
                         case NoteStatus.Returned:
                             model.SuccessMessage = $"You have returned the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                            break;
+                        case NoteStatus.Void:
+                            model.SuccessMessage = $"You have voided the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                             break;
                     }
                 }

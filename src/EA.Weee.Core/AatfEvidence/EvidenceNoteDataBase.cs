@@ -26,6 +26,10 @@
 
         public string RejectedReason { get; set; }
 
+        public DateTime? VoidedDate { get; set; }
+
+        public string VoidedReason { get; set; }
+
         public WasteType? WasteType { get; set; }
     }
 }

@@ -1,12 +1,18 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
+    using System.Security.Claims;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using AutoFixture;
+    using EA.Weee.Api.Client.Actions;
+    using EA.Weee.Api.Client.Entities;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
@@ -29,11 +35,32 @@
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
+        private void SetUpControllerContext(bool hasInternalAdminUserClaims)
+        {
+            var httpContextBase = A.Fake<HttpContextBase>();
+            var principal = new ClaimsPrincipal(httpContextBase.User);
+            var claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
+
+            if (hasInternalAdminUserClaims)
+            {
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
+            }
+            principal.AddIdentity(claimsIdentity);
+
+            A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
+
+            var context = new ControllerContext(httpContextBase, new RouteData(), ManageEvidenceController);
+            ManageEvidenceController.ControllerContext = context;
+        }
+
         [Fact]
         public async Task ViewEvidenceNoteTransferGet_BreadcrumbShouldBeSet()
         {
             //act
+            SetUpControllerContext(true);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+
+            //act
             await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId);
            
             //assert
@@ -44,7 +71,10 @@
         public async Task ViewEvidenceNoteTransferGet_GivenEvidenceId_TransferEvidenceNoteShouldBeRetrieved()
         {
             //act
+            SetUpControllerContext(true);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+
+            //act
             await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId);
 
             //asset
@@ -56,8 +86,8 @@
         public async Task ViewEvidenceNoteTransferGet_GivenRequestDat_TransferEvidenceNoteModelShouldBeBuilt()
         {
             //arrange
+            SetUpControllerContext(true);
             ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
 
             //act
@@ -75,8 +105,8 @@
         public async Task ViewEvidenceNoteTransferGet_GivenNoteDataAndDisplayNotification_ModelMapperShouldBeCalled(bool displayNotification)
         {
             // arrange 
+            SetUpControllerContext(true);
             ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = displayNotification;
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
 
             // act
@@ -93,8 +123,8 @@
         public async Task ViewEvidenceNoteTransferGet_GivenViewModel_ModelShouldBeReturned()
         {
             //arrange
+            SetUpControllerContext(true);
             var model = TestFixture.Create<ViewTransferNoteViewModel>();
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
             A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
 
@@ -109,10 +139,11 @@
         public async Task ViewEvidenceNoteTransferGet_WhenNoteTypeIsTransfer_ModelWithRedirectTabIsCreated()
         {
             // act
+            SetUpControllerContext(true);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
-            var result = await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId) as ViewResult;
 
-            // act
+            //act
+            var result = await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId) as ViewResult;
             var model = result.Model as ViewTransferNoteViewModel;
             model.Type = NoteType.Transfer;
 
