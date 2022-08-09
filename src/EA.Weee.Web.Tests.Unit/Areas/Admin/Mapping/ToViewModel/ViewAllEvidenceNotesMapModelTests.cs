@@ -36,7 +36,7 @@
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, complianceYearsList);
+            var model = new ViewEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, TestFixture.Create<int>(), complianceYearsList);
 
             //assert
             model.Should().NotBeNull();
@@ -50,7 +50,11 @@
         public void ViewAllEvidenceNotesMapModel_Constructor_NotesIsNull_ShouldThrowAnException()
         {
             //act
-            var result = Record.Exception(() => new ViewAllEvidenceNotesMapTransfer(null, manageEvidenceNoteViewModel, SystemTime.Now, TestFixture.CreateMany<int>()));
+            var result = Record.Exception(() => new ViewEvidenceNotesMapTransfer(null, 
+                manageEvidenceNoteViewModel, 
+                SystemTime.Now,
+                TestFixture.Create<int>(),
+                TestFixture.CreateMany<int>()));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -63,7 +67,11 @@
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewAllEvidenceNotesMapTransfer(noteData, null, currentDate, TestFixture.CreateMany<int>());
+            var model = new ViewEvidenceNotesMapTransfer(noteData, 
+                null, 
+                currentDate, 
+                TestFixture.Create<int>(), 
+                TestFixture.CreateMany<int>());
 
             //assert
             model.Should().NotBeNull();
