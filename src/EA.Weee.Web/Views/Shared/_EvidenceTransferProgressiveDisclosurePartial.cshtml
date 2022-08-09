@@ -1,0 +1,38 @@
+﻿@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-visually-hidden">Transfer history summary</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Reference ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Date submitted</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Transferred to</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Status</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">@Html.Gds().VisuallyHidden("actions")</th>
+        </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+        @foreach (var historyData in Model.EvidenceNoteHistoryData)
+        {
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-text-align-left">
+                    <p class="govuk-body">@historyData.ReferenceDisplay</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                    <p class="govuk-body" id="ReceivedTotal">@historyData.SubmittedDateDisplay</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                    <p class="govuk-body" id="ReusedTotal">@historyData.TransferredTo</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                    <p class="govuk-body" id="ReusedTotal">@historyData.Status</p>
+                </td>
+                <td class="govuk-table__cell">
+                    @*View Link To Be Added*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
