@@ -2148,27 +2148,6 @@
         }
 
         [Theory]
-        [InlineData(NoteStatus.Draft)]
-        [InlineData(NoteStatus.Submitted)]
-        public async Task EditTonnagesPost_GivenValidModelAndActionIsSubmitAndNoteIsReturned_TempDataNotificationShouldBeSetToRequestAction(NoteStatus status)
-        {
-            //arrange
-            var request = TestFixture.Build<EditTransferEvidenceNoteRequest>().With(r => r.Status, status).Create();
-
-            A.CallTo(() => transferEvidenceRequestCreator.EditSelectTonnageToRequest(A<EditTransferEvidenceNoteRequest>._,
-                        A<TransferEvidenceTonnageViewModel>._)).Returns(request);
-
-            transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.Status = NoteStatus.Returned;
-            transferEvidenceTonnageViewModel.Action = ActionEnum.Submit;
-
-            //act
-            await outgoingTransferEvidenceController.EditTonnages(transferEvidenceTonnageViewModel);
-
-            //assert
-            outgoingTransferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be((NoteUpdatedStatusEnum)status);
-        }
-
-        [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
         public async Task EditTonnagesPost_GivenValidModelAndActionIsSaveAndNoteIsNotReturned_TempDataNotificationShouldBeSetToRequestAction(NoteStatus status)
         {
@@ -2225,6 +2204,22 @@
             result.RouteValues["evidenceNoteId"].Should().Be(transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.EvidenceNoteId);
             result.RouteValues["redirectTab"].Should().Be(DisplayExtensions.ToDisplayString(
                 ManageEvidenceNotesDisplayOptions.OutgoingTransfers));
+        }
+
+        [Theory]
+        [InlineData(ActionEnum.Save, NoteUpdatedStatusEnum.ReturnedSaved)]
+        [InlineData(ActionEnum.Submit, NoteUpdatedStatusEnum.ReturnedSubmitted)]
+        public async Task EditTonnagesPost_GivenValidModel_AndReturnedNote_AndAction_ShouldSetCorrectStatus(ActionEnum action, NoteUpdatedStatusEnum expectedStatus)
+        {
+            //arrange
+            transferEvidenceTonnageViewModel.Action = action;
+            transferEvidenceTonnageViewModel.ViewTransferNoteViewModel.Status = NoteStatus.Returned;
+
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(transferEvidenceTonnageViewModel);
+
+            //assert
+            outgoingTransferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(expectedStatus);
         }
     }
 }

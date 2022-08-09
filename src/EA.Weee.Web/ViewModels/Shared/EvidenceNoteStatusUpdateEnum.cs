@@ -10,6 +10,7 @@
         Rejected = 4,
         Void = 5,
         Returned = 6,
-        ReturnedSaved = 7
+        ReturnedSaved = 7,
+        ReturnedSubmitted = 8
     }
 }

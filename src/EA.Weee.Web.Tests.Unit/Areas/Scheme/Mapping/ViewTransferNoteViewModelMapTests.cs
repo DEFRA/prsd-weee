@@ -251,6 +251,24 @@
             model.SuccessMessage.Should().Be($"You have returned the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
         }
 
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsReturnedSubmitted_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.ReturnedSubmitted);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should()
+                .Be($"You have successfully submitted the returned evidence note with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
         [Theory]
         [InlineData(null, NoteStatus.Draft)]
         [InlineData(false, NoteStatus.Draft)]
