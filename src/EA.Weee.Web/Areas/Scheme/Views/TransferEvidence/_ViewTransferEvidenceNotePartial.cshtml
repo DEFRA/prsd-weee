@@ -74,6 +74,22 @@
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 }
 
+<!-- screen 6.07a -->
+<!-- --------------------------- -->
+<!-- Void transfer note button   -->
+<!-- --------------------------- -->
+@if (Model.Status.Equals(NoteStatus.Approved))
+{
+    using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("transferEvidenceNoteId", Model.EvidenceNoteId);
+        @(this.WeeeGds().Submit("Void evidence note transfer", new { id = "voidTransferNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
+    }
+}
+<!-- screen 6.07a -->
+
+
 <div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
         <span id="site" class="govuk-label--s">Transferred by</span><br />
@@ -220,16 +236,3 @@
     </table>
 }
 
-<!-- --------------------------- -->
-<!-- Void transfer note button   -->
-<!-- --------------------------- -->
-@if (Model.Status.Equals(NoteStatus.Approved))
-{
-    using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Hidden("transferEvidenceNoteId", Model.EvidenceNoteId);
-        @(this.WeeeGds().Submit("Void evidence note transfer", new { id = "voidTransferNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
-    }
-}
-<!-- screen 6.07a -->
