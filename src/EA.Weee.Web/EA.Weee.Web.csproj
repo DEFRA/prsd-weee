@@ -352,12 +352,14 @@
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\EvidenceNoteHistoryDataViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ISchemeManageEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ListOfSchemeNotesViewModelBase.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\SchemeDataOrganisationMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceCategoriesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\EvidenceNoteHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
@@ -839,6 +841,7 @@
     <Content Include="Areas\Admin\Views\Aatf\UpdateApproval.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\AddScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
+    <Content Include="Scripts\govuk_frontend\govuk-frontend-legacy-cookie.js" />
     <Content Include="Scripts\jquery-ui-date-picker.js" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-4.0.1.min.js" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
@@ -1471,7 +1474,6 @@
     <Content Include="Views\Shared\_WeeeHead.cshtml" />
     <Content Include="Views\Shared\_WeeeHeader.cshtml" />
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
-    <Content Include="Views\Shared\_WeeeTracking.cshtml" />
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
@@ -1515,11 +1517,13 @@
     <Content Include="Views\Shared\_WeeeFooterSupportLinks.cshtml" />
     <Content Include="Views\Errors\QuarterClosed.cshtml" />
     <Content Include="Views\Errors\Maintenance.cshtml" />
+    <Content Include="Views\NewUser\Accessibility.cshtml" />
     <Content Include="Views\Shared\_ViewEvidenceNotePartial.cshtml" />
     <Content Include="Views\Shared\_DisplayReturnedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayRejectedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_ComplianceYearPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\_ViewTransferEvidenceNotePartial.cshtml" />
+    <Content Include="Views\Shared\_EvidenceTransferProgressiveDisclosurePartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
