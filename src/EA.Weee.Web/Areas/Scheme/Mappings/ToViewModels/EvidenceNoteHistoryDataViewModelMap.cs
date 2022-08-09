@@ -5,9 +5,9 @@
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using System.Collections.Generic;
 
-    public class EvidenceNoteHistoryDataViewModelMap : IMap<IList<EvidenceNoteHistoryData>, IList<EvidenceNoteHistoryViewModel>>
+    public class EvidenceNoteHistoryDataViewModelMap : IMap<List<EvidenceNoteHistoryData>, IList<EvidenceNoteHistoryViewModel>>
     {
-        public IList<EvidenceNoteHistoryViewModel> Map(IList<EvidenceNoteHistoryData> source)
+        public IList<EvidenceNoteHistoryViewModel> Map(List<EvidenceNoteHistoryData> source)
         {
             var model = new List<EvidenceNoteHistoryViewModel>();
 
