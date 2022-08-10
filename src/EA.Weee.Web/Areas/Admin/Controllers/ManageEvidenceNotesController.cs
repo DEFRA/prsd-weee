@@ -90,7 +90,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -125,9 +124,9 @@
                 if (transferNoteData.Type == NoteType.Transfer && transferNoteData.Status == NoteStatus.Approved)
                 {
                     var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
-                       transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
+                       transferNoteData, null));
 
-                    model.CanVoid = IsInternalAdminUser();
+                    //model.CanVoid = IsInternalAdminUser();
 
                     return View("VoidTransferNote", model);
                 }
@@ -155,7 +154,7 @@
                 {
                     model.CanVoid = IsInternalAdminUser();
 
-                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = true;
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = NoteUpdatedStatusEnum.Void;
 
                     model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
                        transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
@@ -168,7 +167,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ViewTransferNote(Guid transferNoteId)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -182,7 +180,7 @@
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(noteData.TransferredOrganisationData.Id, 
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
 
-                return View(model);
+                return View("ViewEvidenceNoteTransfer", model);
             }
         }
 
