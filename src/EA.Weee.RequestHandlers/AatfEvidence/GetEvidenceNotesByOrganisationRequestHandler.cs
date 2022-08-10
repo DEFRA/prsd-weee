@@ -51,7 +51,7 @@
                 recipientId = null;
             }
 
-            var filter = new NoteFilter(request.ComplianceYear, int.MaxValue, 1)
+            var filter = new NoteFilter(request.ComplianceYear, request.PageSize, request.PageNumber)
             {
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 RecipientId = recipientId,
