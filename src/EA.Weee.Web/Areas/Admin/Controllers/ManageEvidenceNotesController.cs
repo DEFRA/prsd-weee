@@ -94,7 +94,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId)
+        public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -106,6 +106,8 @@
 
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(result.TransferredOrganisationData.Id,
                    result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
+
+                ViewBag.Page = page;
 
                 return View(model);
             }

@@ -1,18 +1,18 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using AutoFixture;
+    using Core.AatfEvidence;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
     using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
@@ -58,7 +58,7 @@
             //arrange
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var source = new ViewEvidenceNotesMapTransfer(noteData, 
-                null, 
+                null,
                 SystemTime.Now,
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<int>());
@@ -78,7 +78,7 @@
                 .With(e => e.Results, new List<EvidenceNoteData>()).Create();
 
             var source = new ViewEvidenceNotesMapTransfer(noteData, 
-                null, 
+                null,
                 SystemTime.Now,
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<int>());
@@ -105,7 +105,7 @@
             };
 
             var source = new ViewEvidenceNotesMapTransfer(noteData, 
-                managedEvidenceNoteViewModel, 
+                managedEvidenceNoteViewModel,
                 currentDate,
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<int>());
@@ -117,6 +117,41 @@
 
             // assert 
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+        }
+
+        [Fact]
+        public void Map_GivenListOfEvidenceNoteData_PropertiesShouldBeMappedAsPagedList()
+        {
+            //arrange
+            var managedEvidenceNoteViewModel = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var pageNumber = TestFixture.Create<int>();
+            var pageSize = TestFixture.Create<int>();
+
+            var source = new ViewEvidenceNotesMapTransfer(noteData,
+                managedEvidenceNoteViewModel,
+                currentDate,
+                pageNumber,
+                TestFixture.CreateMany<int>());
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
+
+            //act
+            var result = map.Map(source);
+
+            // assert 
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+            result.EvidenceNotesDataList.PageNumber.Should().Be(pageNumber);
+            result.EvidenceNotesDataList.PageSize.Should().Be(pageSize);
         }
 
         [Fact]
