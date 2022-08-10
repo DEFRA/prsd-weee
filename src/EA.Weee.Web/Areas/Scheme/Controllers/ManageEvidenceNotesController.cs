@@ -42,7 +42,8 @@
         [HttpGet]
         public async Task<ActionResult> Index(Guid pcsId, 
             string tab = null,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
+            int page = 1)
         {
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.TransferNoteKey);
@@ -64,13 +65,13 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
-                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                 }
             }
         }
@@ -85,7 +86,8 @@
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int pageNumber)
         {
             using (var client = this.apiClient())
             {
@@ -95,7 +97,7 @@
                     SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                    new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel));
+                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
 
                 return View("ReviewSubmittedEvidence", model);
             }
@@ -104,7 +106,8 @@
         private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int pageNumber)
         {
             using (var client = this.apiClient())
             {
@@ -118,7 +121,7 @@
                     }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
-                 new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel));
+                 new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
 
                 return View("ViewAndTransferEvidence", model);
             }
@@ -127,7 +130,8 @@
         private async Task<ActionResult> CreateAndPopulateOutgoingTransfersEvidenceViewModel(Guid pcsId,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int pageNumber)
         {
             using (var client = this.apiClient())
             {
@@ -143,7 +147,7 @@
                     }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Transfer }, true));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
-                      new TransferredOutEvidenceNotesViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel));
+                      new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
 
                 return View("OutgoingTransfers", model);
             }

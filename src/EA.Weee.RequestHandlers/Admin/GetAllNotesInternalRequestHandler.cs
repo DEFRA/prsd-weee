@@ -37,7 +37,7 @@
 
             var currentDate = await systemDataDataAccess.GetSystemDateTime();
 
-            var noteFilter = new NoteFilter(currentDate.Year, int.MaxValue, 1)
+            var noteFilter = new NoteFilter(currentDate.Year, message.PageSize, message.PageNumber)
             {
                 NoteTypeFilter = message.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),

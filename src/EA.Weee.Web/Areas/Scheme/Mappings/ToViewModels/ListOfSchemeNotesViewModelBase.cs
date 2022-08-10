@@ -6,24 +6,26 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
+    using Services;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
 
     public abstract class ListOfSchemeNotesViewModelBase<T> : ListOfNotesViewModelBase<T> where T : ISchemeManageEvidenceViewModel, 
         IManageEvidenceViewModel, new()
     {
-        protected ListOfSchemeNotesViewModelBase(IMapper mapper) : base(mapper)
+        protected ListOfSchemeNotesViewModelBase(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
         {
         }
 
         public T MapSchemeBase(EvidenceNoteSearchDataResult noteData,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
-            SchemePublicInfo scheme)
+            SchemePublicInfo scheme,
+            int pageNumber)
         {
             Condition.Requires(noteData).IsNotNull();
 
-            var model = MapBase(noteData, currentDate, manageEvidenceNoteViewModel);
+            var model = MapBase(noteData, currentDate, manageEvidenceNoteViewModel, pageNumber);
             model.SchemeInfo = scheme;
             model.CanSchemeManageEvidence = scheme != null && 
                                             scheme.Status != SchemeStatus.Withdrawn && 
