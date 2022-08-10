@@ -1,5 +1,9 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
+
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceTonnageViewModel
 @{
     ViewBag.Title = "Edit transfer tonnage - GOV.UK";
@@ -13,6 +17,8 @@
 
 @section full_main_content
 {
+    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="tonnages-form-partial">Back</button>
+
     @Html.Gds().ValidationSummary()
     <h1 class="govuk-heading-l">
         Edit tonnages to transfer to @Model.RecipientName
