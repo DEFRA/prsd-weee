@@ -41,7 +41,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
                 {
                     typeof(string),
-                    typeof(ManageEvidenceNoteViewModel)
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -57,6 +58,64 @@
 
             //assert
             Breadcrumb.InternalActivity.Should().Be(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async Task IndexGet_GivenPageNumber_ViewAllEvidenceNotesViewModelMapperShouldBeCalled(string tab)
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index(tab, null, pageNumber);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewEvidenceNotesMapTransfer>.That
+                .Matches(v => v.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async Task IndexGet_GivenPageNumberAndViewAllEvidenceNotes_NotesShouldBeRetrieved(string tab)
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index(tab, null, pageNumber);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
+                .Matches(g => g.PageNumber == pageNumber &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenPageNumberAndViewAllEvidenceTransfers_NotesShouldBeRetrieved()
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index("view-all-evidence-transfers", null, pageNumber);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
+                .Matches(g => g.PageNumber == pageNumber &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenPageNumber_ViewAllTransferNotesViewModelModelMapperShouldBeCalled()
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index("view-all-evidence-transfers", null, pageNumber);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewEvidenceNotesMapTransfer>.That
+                .Matches(v => v.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -89,7 +148,11 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
-                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && types.SequenceEqual(g.NoteTypeFilterList) && g.ComplianceYear == complianceYears.ElementAt(0)))).MustHaveHappenedOnceExactly();
+                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
+                              types.SequenceEqual(g.NoteTypeFilterList) && 
+                              g.ComplianceYear == complianceYears.ElementAt(0) &&
+                              g.PageNumber == 1 &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -111,7 +174,11 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
-                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && types.SequenceEqual(g.NoteTypeFilterList) && g.ComplianceYear == dateTime.Year))).MustHaveHappenedOnceExactly();
+                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
+                              types.SequenceEqual(g.NoteTypeFilterList) && 
+                              g.ComplianceYear == dateTime.Year &&
+                              g.PageNumber == 1 &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
             SystemTime.Unfreeze();
         }
 
@@ -134,7 +201,11 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
-                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && types.SequenceEqual(g.NoteTypeFilterList) && g.ComplianceYear == manageEvidenceNoteModel.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
+                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
+                              types.SequenceEqual(g.NoteTypeFilterList) && 
+                              g.ComplianceYear == manageEvidenceNoteModel.SelectedComplianceYear &&
+                              g.PageNumber == 1 &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -168,7 +239,9 @@
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => statuses.SequenceEqual(g.AllowedStatuses) &&
-                     types.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
+                     types.SequenceEqual(g.NoteTypeFilterList) &&
+                     g.PageSize == PageSize &&
+                     g.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -185,7 +258,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.AllowedStatuses.Contains(statusNotIncluded)))).MustNotHaveHappened();
+                g => g.AllowedStatuses.Contains(statusNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Fact]
@@ -199,7 +274,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.AllowedStatuses.Contains(statusNotIncluded)))).MustNotHaveHappened();
+                g => g.AllowedStatuses.Contains(statusNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Theory]
@@ -216,7 +293,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded)))).MustNotHaveHappened();
+                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Fact]
@@ -230,7 +309,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded)))).MustNotHaveHappened();
+                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Fact]
@@ -265,8 +346,9 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
-                    a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -282,8 +364,9 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
-                    a => a.NoteData == noteData))).MustHaveHappenedOnceExactly();
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
+                    a => a.NoteData == noteData &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -302,9 +385,10 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData && 
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -325,9 +409,11 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && 
+                    a.CurrentDate.Equals(date) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -348,10 +434,11 @@
 
             //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
                     a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && 
-                    a.ComplianceYearList.SequenceEqual(complianceYearList)))).MustHaveHappenedOnceExactly();
+                    a.ComplianceYearList.SequenceEqual(complianceYearList) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -368,9 +455,10 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -389,9 +477,11 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && a.CurrentDate.Equals(date)))).MustHaveHappenedOnceExactly();
+                    a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) && 
+                    a.CurrentDate.Equals(date) &&
+                    a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -408,9 +498,10 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel == model &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -427,9 +518,10 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-                A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+                A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
-                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel == model &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -450,11 +542,12 @@
 
             //assert
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
-               A<ViewAllEvidenceNotesMapTransfer>.That.Matches(
+               A<ViewEvidenceNotesMapTransfer>.That.Matches(
                    a => a.NoteData == noteData 
                         && a.ManageEvidenceNoteViewModel.Equals(manageEvidenceNote) 
                         && a.CurrentDate.Equals(date)
-                   && a.ComplianceYearList.SequenceEqual(complianceYearList)))).MustHaveHappenedOnceExactly();
+                   && a.ComplianceYearList.SequenceEqual(complianceYearList) &&
+                        a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -465,7 +558,7 @@
             //arrange
             var viewModel = TestFixture.Create<ViewAllEvidenceNotesViewModel>();
 
-            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewAllEvidenceNotesMapTransfer>._)).Returns(viewModel);
+            A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewEvidenceNotesMapTransfer>._)).Returns(viewModel);
 
             //act
             var result = await ManageEvidenceController.Index(tab) as ViewResult;
@@ -480,7 +573,7 @@
             //arrange
             var viewModel = TestFixture.Create<ViewAllTransferNotesViewModel>();
 
-            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewAllEvidenceNotesMapTransfer>._)).Returns(viewModel);
+            A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewEvidenceNotesMapTransfer>._)).Returns(viewModel);
 
             //act
             var result = await ManageEvidenceController.Index("view-all-evidence-transfers") as ViewResult;

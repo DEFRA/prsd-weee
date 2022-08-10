@@ -4,6 +4,7 @@
     using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
+    using Core.Shared.Paging;
     using Mappings.ToViewModels;
     using Web.ViewModels.Shared;
 
@@ -12,7 +13,7 @@
         public Guid OrganisationId { get; set; }
 
         public string OrganisationName { get; set; }
-        public IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
+        public PagedList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
         public ManageEvidenceNotesDisplayOptions ActiveDisplayOption { get; set; }
 
@@ -27,7 +28,7 @@
         protected ManageEvidenceNoteSchemeViewModel(ManageEvidenceNotesDisplayOptions activeDisplayOption)
         {
             ActiveDisplayOption = activeDisplayOption;
-            EvidenceNotesDataList = new List<EvidenceNoteRowViewModel>();
+            EvidenceNotesDataList = new PagedList<EvidenceNoteRowViewModel>();
             ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel();
         }
     }
