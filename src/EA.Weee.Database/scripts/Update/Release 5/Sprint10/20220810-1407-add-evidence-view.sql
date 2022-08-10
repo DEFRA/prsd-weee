@@ -16,7 +16,7 @@ FROM
 	LEFT JOIN [Evidence].Note n ON n.Id = nt.NoteId
 WHERE
 	n.Status = 3 AND 
-	n.NoteType = 2 AND
+	n.NoteType = 1 AND
 	n.WasteType = 1
 GROUP BY 
 	nt.CategoryId,
