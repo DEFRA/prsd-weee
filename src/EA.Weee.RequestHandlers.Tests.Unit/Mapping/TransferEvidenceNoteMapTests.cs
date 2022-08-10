@@ -13,6 +13,7 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
+    using EA.Prsd.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -997,6 +998,57 @@
 
             //assert
             result.WasteType.ToInt().Should().Be(wasteType.ToInt());
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithVoidedHistory_VoidedDateShouldBeSet()
+        {
+            //arrange
+            var date = SystemTime.UtcNow;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Void);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(note));
+
+            //assert
+            result.VoidedDate.Should().BeSameDateAs(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithVoidedHistory_VoidedReasonShouldBeSet()
+        {
+            //arrange
+            var date = SystemTime.UtcNow;
+            var reason = "voided reason text";
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var id = Guid.NewGuid();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Void);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+            A.CallTo(() => note.Status).Returns(Domain.Evidence.NoteStatus.Void);
+            A.CallTo(() => note.Id).Returns(id);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(note));
+
+            //assert
+            result.VoidedReason.Should().BeSameAs(reason);
         }
     }
 }
