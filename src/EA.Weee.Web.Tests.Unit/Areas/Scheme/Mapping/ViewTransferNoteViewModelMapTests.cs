@@ -8,7 +8,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Tests.Unit.Helpers;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
@@ -16,6 +15,7 @@
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.ViewModels.Shared;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
@@ -152,10 +152,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Draft)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Draft);
 
             //act
             var model = map.Map(source);
@@ -171,10 +170,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Submitted)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Submitted);
 
             //act
             var model = map.Map(source);
@@ -185,15 +183,32 @@
         }
 
         [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsReturnedSaved_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.ReturnedSaved);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should()
+                .Be($"You have successfully saved the returned evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
+        [Fact]
         public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsApproved_SuccessMessageShouldBeSet()
         {
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Approved)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Approved);
 
             //act
             var model = map.Map(source);
@@ -208,10 +223,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Rejected)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Rejected);
 
             //act
             var model = map.Map(source);
@@ -226,16 +240,33 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(t => t.Status, NoteStatus.Returned)
                     .With(t => t.Type, NoteType.Transfer)
                     .With(t => t.Reference, 1).Create(),
-                true);
+                NoteUpdatedStatusEnum.Returned);
 
             //act
             var model = map.Map(source);
 
             //assert
             model.SuccessMessage.Should().Be($"You have returned the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenDisplayNotificationAndNoteIsReturnedSubmitted_SuccessMessageShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.ReturnedSubmitted);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.SuccessMessage.Should()
+                .Be($"You have successfully submitted the returned evidence note with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
         }
 
         [Theory]
@@ -335,7 +366,7 @@
         }
 
         [Fact]
-        public void Map_GivenSource_TransferredByAddressShouldBeSet()
+        public void Map_GivenSource_TransferredByAddressIsNotBalancingSchemeAddressShouldBeSet()
         {
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
@@ -359,6 +390,41 @@
 
             //assert
             result.TransferredByAddress.Should().Be(siteAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSource_TransferredByAddressIsBalancingSchemeAddressShouldBeSet()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
+                    .Create(),
+                false);
+            
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TransferredByAddress.Should().Be(source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName);
+        }
+
+        [Fact]
+        public void Map_GivenSource_TransferredByAddress_SchemeAddressShouldOnlyBeMappedOnce()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
+                    .Create(),
+                false);
+           
+            //act
+            var result = map.Map(source);
+
+            //assert
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -686,7 +752,7 @@
             model.DisplayEditButton.Should().BeTrue();
         }
 
-        private OrganisationData CreateOrganisationData()
+        private OrganisationData CreateOrganisationData(bool balancingScheme = false)
         {
             return new OrganisationData()
             {
@@ -706,7 +772,8 @@
                     Postcode = "GU22 7UY",
                     Telephone = "987654",
                     Email = "test@test.com"
-                }
+                },
+                IsBalancingScheme = balancingScheme
             };
         }
         private IList<TransferEvidenceNoteTonnageData> CreateTransferEvidenceNoteTonnageData()

@@ -2,6 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Web.ViewModels.Shared
 @using EA.Weee.Web.Areas.Scheme.Controllers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
@@ -10,7 +11,8 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<TransferEvidenceController>(a => a.TransferEvidenceNote(Model.PcsId, Model.ComplianceYear))))
+    <button class="govuk-visually-hidden" aria-hidden="true" style="z-index: -1" name="Action" value="@ActionEnum.Continue" form="transfer-summary-partial-form"></button>
+    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="transfer-summary-partial-form">Back</button>
 
     <h1 class="govuk-heading-l">
         From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
@@ -18,7 +20,7 @@
 
     @Html.Gds().ValidationSummary()
 
-    @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post, htmlAttributes: new { id = "transfer-summary-partial-form" }))
     {
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
     }

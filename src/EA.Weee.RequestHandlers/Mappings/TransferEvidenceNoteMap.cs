@@ -10,7 +10,6 @@
     using Domain.Organisation;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -26,15 +25,16 @@
         public TransferEvidenceNoteData Map(TransferNoteMapTransfer source)
         {
             Condition.Requires(source.Note).IsNotNull();
-            Condition.Requires(source.Scheme).IsNotNull();
 
             var data = MapCommonProperties(source.Note);
 
             data.TransferredOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation);
-            data.RecipientOrganisationData =
-                mapper.Map<Organisation, OrganisationData>(source.Note.Recipient);
+            data.RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Recipient);
             data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient.Scheme);
-            data.TransferredSchemeData = mapper.Map<Scheme, SchemeData>(source.Scheme);
+            if (!source.Note.Organisation.IsBalancingScheme)
+            {
+                data.TransferredSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Organisation.Scheme);
+            }
             data.TransferEvidenceNoteTonnageData = source.Note.NoteTransferTonnage.Select(nt =>
                 new TransferEvidenceNoteTonnageData()
                 {

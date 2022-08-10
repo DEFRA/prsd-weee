@@ -1,18 +1,14 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.Areas.Aatf.Controllers
-@using EA.Weee.Web.Areas.Aatf.ViewModels
-@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
-@using EA.Weee.Web.Areas.AatfEvidence.Controllers;
 @model EA.Weee.Web.ViewModels.Shared.EvidenceNoteViewModel
 @{
-    ViewBag.Title = "Create evidence note";
+    ViewBag.Title = "Create evidence note - GOV.UK";
 }
 
 @section full_main_content{
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, null, null))))
+    @(this.WeeeGds().BackLink(
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { oranisationId = Model.OrganisationId, aatfId = Model.AatfId, @selectedComplianceYear = Model.ComplianceYear })))
 
     @using (Html.BeginForm("CreateEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {

@@ -105,7 +105,6 @@
     <Compile Include="AatfEvidence\EditTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandler.cs" />
-    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandler.cs" />
@@ -115,7 +114,8 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
     <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\SaveEvidenceNoteRequestBase.cs" />
-    <Compile Include="AatfEvidence\SaveTransferNoteRequestBase.cs" />
+    <Compile Include="AatfEvidence\SaveNoteRequestBase.cs" />
+    <Compile Include="AatfEvidence\VoidTransferNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\TransferTonnagesValidator.cs" />
@@ -128,6 +128,7 @@
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
+    <Compile Include="Admin\GetComplianceYearsFilterHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
@@ -609,10 +610,6 @@
     <ProjectReference Include="..\EA.Weee.Ibis\EA.Weee.Ibis.csproj">
       <Project>{c3c69bf6-3716-4123-83ee-4c64b19c5377}</Project>
       <Name>EA.Weee.Ibis</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
-      <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
-      <Name>EA.Weee.Requests</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Security\EA.Weee.Security.csproj">
       <Project>{99377736-a123-4823-bc63-e9afc9c0a25c}</Project>

@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using Extensions;
 
     [Serializable]
@@ -20,8 +22,6 @@
 
         [DisplayName("Compliance year")]
         public string ComplianceYearDisplay => ComplianceYear.ToString();
-
-        public int ComplianceYear { get; set; }
 
         public string SiteAddress { get; set; }
 
@@ -51,7 +51,9 @@
 
         public bool DisplayH2Title { get; set; }
 
-        public int SelectedComplianceYear { get; set; }
+        public IList<EvidenceNoteHistoryViewModel> EvidenceNoteHistoryData { get; set; }
+
+        public bool DisplayEvidenceNoteHistoryData => EvidenceNoteHistoryData != null && EvidenceNoteHistoryData.Count > 0;
 
         public virtual string TabName
         {

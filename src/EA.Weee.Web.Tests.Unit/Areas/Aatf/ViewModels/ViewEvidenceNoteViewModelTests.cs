@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using AutoFixture;
     using Core.AatfEvidence;
-    using Core.Tests.Unit.Helpers;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FluentAssertions;
     using Prsd.Core.Helpers;
     using Web.ViewModels.Shared;
@@ -12,6 +14,13 @@
 
     public class ViewEvidenceNoteViewModelTests
     {
+        private readonly Fixture fixture;
+
+        public ViewEvidenceNoteViewModelTests()
+        {
+            fixture = new Fixture();
+        }
+
         [Fact]
         public void ViewEvidenceNoteViewModel_ShouldHaveSerializableAttribute()
         {
@@ -264,6 +273,32 @@
 
             //assert
             result.Should().Be(expected);
+        }
+
+        [Fact]
+        public void DisplayEvidenceNoteHistoryData_ShouldBeTrue_IfEvidenceNoteHistoryViewModel_IsPresent()
+        {
+            //Act
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                EvidenceNoteHistoryData = fixture.Create<IList<EvidenceNoteHistoryViewModel>>(),
+            };
+
+            //Assert
+            model.DisplayEvidenceNoteHistoryData.Should().BeTrue();
+        }
+
+        [Fact]
+        public void DisplayEvidenceNoteHistoryData_ShouldBeFalse_IfEvidenceNoteHistoryViewModel_IsNotPresent()
+        {
+            //Act
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                EvidenceNoteHistoryData = null,
+            };
+
+            //Assert
+            model.DisplayEvidenceNoteHistoryData.Should().BeFalse();
         }
     }
 }

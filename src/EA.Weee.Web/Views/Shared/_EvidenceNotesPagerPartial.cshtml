@@ -1,0 +1,15 @@
+﻿@using EA.Weee.Web.Infrastructure.Paging
+
+@model EA.Weee.Core.Shared.Paging.PagedList<EA.Weee.Web.ViewModels.Shared.EvidenceNoteRowViewModel>
+@{
+    var routesValues = ViewData["pagerRouteValues"];
+}
+
+@if (@Model.PageCount > 1)
+{
+    <div class="pager govuk-body">
+        @Html.Pager(@Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.Action("Index").RouteValues(routesValues))
+    </div>
+
+    <p class="govuk-body">Showing @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</p>
+}

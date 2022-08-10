@@ -310,5 +310,10 @@
         {
             await SchemeNames.InvalidateCache(id);
         }
+
+        public async Task InvalidateSchemePublicInfoCache(Guid organisationId)
+        {
+            await SchemePublicInfos.InvalidateCache(organisationId);
+        }
     }
 }

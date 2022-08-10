@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "Accessibility statement for WEEE Online";
+}
+
+<header class="hgroup" style="margin-top:30px;">
+    <h1 class="govuk-heading-xl" style="margin-bottom:30px !important">Accessibility statement for Waste Electrical and Electronic Equipment (WEEE)</h1>
+</header>
+
+<div id="dvAccessbility" class="govuk-body">
+    <p>
+        This accessibility statement applies to the WEEE online service at <a href="https://weee.service.gov.uk" target="_blank" class="accessibility-link">https://weee.service.gov.uk</a> and primarily applies to the customer facing elements of this service.
+        Some accessibility issues may be present on screens only visible to the UK’s environmental regulators’ internal service which may not have been flagged yet so won’t be mentioned in this statement.
+    </p>
+
+    <p>
+        This website is run by the Environment Agency. We want as many people as possible to be able to use this website.
+    </p>
+
+    <p>
+        For example, that means you should be able to:
+        <div id="dvAccessibility1">
+            <ul>
+                <li>change colours, contrast levels and fonts</li>
+                <li>zoom in up to 300% without the text spilling off the screen or losing functionality</li>
+                <li>navigate most of the website using just a keyboard</li>
+                <li>listen to most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)</li>
+            </ul>
+        </div>
+        We’ve also made the website text as simple as possible to understand. <br /> <br />
+        <a href="https://mcmw.abilitynet.org.uk" target="_blank" class="accessibility-link">AbilityNet</a> has advice on making your device easier to use if you have a disability.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">How accessible this website is</h2>
+    <p>
+        We know some parts of this website are not fully accessible:
+        <div id="dvAccessibility2">
+            <ul>
+                <li>some tables are not coded in a way to support accurate interpretation by screen readers</li>
+                <li>some content does not have accessible content-to-background colour contrast</li>
+                <li>zooming in causes some loss of functionality of certain dropdowns</li>
+                <li>the login timeout feature present on the service is not obvious or adjustable</li>
+                <li>some content cannot be navigated using just a keyboard </li>
+                <li>some links are not adequately labelled and/or have supporting aria labels</li>
+                <li>applying focus to some components does not trigger an obvious visual cue to identify the focused state</li>
+                <li>there are some duplicated IDs throughout the website which can cause issues with screen readers</li>
+                <li>some error summaries/feedback elements are missing the appropriate aria role which would allow screen readers to properly notify users of the error</li>
+            </ul>
+        </div>
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">What to do if you cannot access parts of this website</h2>
+    <p>
+        If you need information on this website in a different format like accessible PDF, large print, easy read, audio recording or braille, email <a href="mailto:weee@environment-agency.gov.uk" class="accessibility-link">weee@environment-agency.gov.uk</a>. We’ll consider your request and get back to you in 10 working days.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">Reporting accessibility problems with this website</h2>
+    <p>
+        We’re always looking to improve the accessibility of this website. If you find any problems not listed on this page or think we’re not meeting accessibility requirements, email <a href="mailto:weee@environment-agency.gov.uk" class="accessibility-link">weee@environment-agency.gov.uk</a>.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">Enforcement Procedure</h2>
+    <p>
+        The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ’accessibility regulations’).
+        If you’re not happy with how we respond to your complaint, contact the <a href="https://www.equalityadvisoryservice.com/app/ask" target="_blank" class="accessibility-link">Equality Advisory and Support Service (EASS)</a>.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">Contacting us by phone or visiting us in person</h2>
+    <p>
+        It is possible to visit our offices in person. Our offices have audio induction loops, or if you contact us before your visit, we can arrange a British Sign Language (BSL) interpreter. Find out <a href="https://www.gov.uk/government/organisations/environment-agency/about/access-and-opening" target="_blank" class="accessibility-link">how to contact us</a> to arrange a visit.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">Technical information about this website’s accessibility</h2>
+    <p>
+        The Environment Agency is committed to making its website accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">Compliance status</h2>
+    <p>
+        This website is partially compliant with the <a href="https://www.w3.org/TR/WCAG21/" target="_blank" class="accessibility-link">Web Content Accessibility Guidelines</a> version 2.1 AA standard, due to the non-compliances listed below.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">Non-accessible content</h2>
+    <p>
+        The content listed below is non-accessible for the following reasons.
+    </p>
+    <h2 class="govuk-heading-m">Non-compliance with the accessibility regulations</h2>
+    <div id="dvAccessibility3">
+        <ul>
+            <li>
+                some tables, form inputs and other features on the site do not have adequate semantic mark-up and/or ARIA labelling. This means that people using screen readers, other assistive technology or without CSS may not be able to correctly identify features/formatting and may struggle to understand the content as intended.
+                This fails WCAG 2.1 success criterion 1.3.1 (Info and Relationships).
+            </li>
+            <li>
+                on some pages, when zooming in to 400% (to simulate a mobile display), users are unable to access the autocomplete dropdown menu when using both mouse and keyboard to navigate therefore this criterion fails primarily for those accessing the service using a mobile device.
+                This fails WCAG 2.1 success criterion 1.3.4 (Orientation).
+            </li>
+            <li>
+                some pages when zoomed into 400% display content (to simulate a mobile device) incorrectly and causes the screen to scroll in multiple axes.
+                This means that some users with visual impairments are unable to resize text to read comfortably.
+                This fails WCAG 2.1 success criterion 1.4.10 (Reflow).
+            </li>
+            <li>
+                some features and components do not feature a high enough colour contrast of a minimum of 3:1. This means that some users with visual impairments may struggle to distinguish and use features or components.
+                This fails WCAG 2.1 success criterion 1.4.11 (Non-text contrast) and 1.4.3 (Contrast (Minimum)).
+            </li>
+            <li>
+                on some pages, users are unable to use a keyboard only to operate all the components and features. This means that users with visual or motor impairments that navigate websites/services using only their keyboard or through assistive technology may not be able to use the service properly.
+                This fails WCAG 2.1 success criterion 2.1.1 (Keyboard).
+            </li>
+            <li>
+                the service has a time-out feature which users are unable to see, adjust or disable. This means that users with visual, motor and/or cognitive impairments that require more time than others to understand and use the service are unable to use the service fully and may be logged out without warning.
+                This fails WCAG 2.1 success criterion 2.2.1 (Timing adjustable).
+            </li>
+            <li>
+                some pages feature links that do not have adequate descriptors or context. This means that users using assistive technology, such as screen readers, may be unable to identify the function or destination of the link easily. This fails WCAG 2.1 success criterion 2.4.4 (Link purpose (in context)).
+            </li>
+            <li>
+                some components do not clearly display focus/active states when they are selected using the tab key. This means some users that use keyboard only or assistive technology may not easily identify the function or option they are trying to select. This fails WCAG 2.1 success criterion 2.4.7 (Focus Visible).
+            </li>
+            <li>
+                some links have been implemented as labels without the use of ARIA labelling. This means some users that use assistive technology, such as screen readers, will not be able to access or identify links as what they are to navigate the service. This fails WCAG 2.1 success criterion 2.5.3 (Label in name).
+            </li>
+            <li>
+                when using a screen reader, some are unable to identify that some auto complete dropdown components are present and functional meaning that there could be an automated input that the user isn’t aware of. This means that users using assistive technology may not be able to use the service as intended. This fails WCAG 2.1 success criterion 3.2.2 (On input).
+            </li>
+            <li>
+                some error summaries are missing the appropriate ‘alert’ ARIA role which prevents screen readers from automatically reading out the error summaries. This means that users using screen readers may become confused as the errors are not automatically read out loud to them. This fails WCAG 2.1 success criterion 3.3.1 (Error identification).
+            </li>
+            <li>
+                there are some duplicated IDs for components across the service. This means that users using screen readers or assistive technology may become confused or disorientated as multiple different components use that same ID and therefore cannot identify the difference between them. This fails WCAG 2.1 success criterion 4.1.1 (Parsing).
+            </li>
+            <li>
+                some feedback features, such as a loading wheel, do not use an appropriate ARIA label to alert users using screen readers that something is happening. This means that users using screen readers may be unaware that an action is taking place. This fails WCAG 2.1 success criterion 4.1.3 (Status messages).
+            </li>
+        </ul>
+    </div>
+
+    <h2 class="govuk-heading-m">Disproportionate burden</h2>
+    <p>
+        There are currently no issues that would be deemed disproportionate burden to rectify but we will update this section should this change.
+    </p>
+
+    <h2 class="govuk-heading-m">Content that’s not within scope of the accessibility regulations</h2>
+    <p>
+        All currently identified accessibility issues currently fall within scope, but we will update this section should this change.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">What we’re doing to improve accessibility</h2>
+    <p>
+        We will review what audit recommendations we can fix during 2022/23, and we will update this page when issues are fixed. We will also look to undertake an accessibility audit of the UK’s environmental regulators’ internal service.
+    </p>
+
+    <h2 class="govuk-heading-l accessibility-l">Preparation of this accessibility statement</h2>
+    <p>
+        This website was last tested on 24 December 2021. The test was carried out by Civica.
+    </p>
+    <p>
+        The sample of pages tested was chosen based on usage as well as complexity. We wanted to include a range of pages that encompassed most of the user journeys and actions that would most frequently be taken by users, as well as ensuring that all components present throughout the service would be audited at least once in one page.
+    </p>
+    <p>
+        This allowed us to ensure that any accessibility issues present in individual components would be identified and hence the fix could be applied to all components across the service.
+    </p>
+    <p>
+        This statement was prepared on 14 July 2022. It was last reviewed on 14 July 2022.
+    </p>
+</div>

@@ -1,11 +1,15 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Helper
+﻿namespace EA.Weee.Web.Tests.Unit.Extensions
 {
-    using System;
+    using AutoFixture;
     using EA.Prsd.Core;
-    using Web.Extensions;
+    using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Extensions;
+    using FluentAssertions;
+    using System;
+    using Web.ViewModels.Shared;
     using Xunit;
 
-    public class AatfHelperTests
+    public class ComplianceYearHelperTests : SimpleUnitTestBase
     {
         [Theory]
         [InlineData("01/01/2020", new int[] { 2021, 2020, 2019 })]
@@ -37,6 +41,34 @@
             var value = ComplianceYearHelper.FetchCurrentComplianceYears(currentDate, true);
             SystemTime.Unfreeze();
             Assert.Equal(yearList, value.ToArray());
+        }
+
+        [Fact]
+        public void GetSelectedComplianceYear_GivenModelIsNullAndSelectedComplianceYearIsNull_ComplianceYearShouldBeCurrentDateYear()
+        {
+            //arrange
+            var currentDate = new DateTime(2022, 1, 1);
+
+            //act
+            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(null, currentDate);
+
+            //assert
+            complianceYear.Should().Be(2022);
+        }
+
+        [Fact]
+        public void GetSelectedComplianceYear_GivenModelIsNotNullAndSelectedComplianceYearIsNull_ComplianceYearShouldBeModelSelectedYear()
+        {
+            //arrange
+            var currentDate = new DateTime(2022, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2024).Create();
+
+            //act
+            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(model, currentDate);
+
+            //assert
+            complianceYear.Should().Be(2024);
         }
     }
 }

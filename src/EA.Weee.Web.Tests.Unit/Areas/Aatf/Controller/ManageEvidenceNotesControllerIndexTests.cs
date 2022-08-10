@@ -42,8 +42,6 @@
 
             currentDate = new DateTime(2019, 1, 1);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
-
-            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(null);
         }
 
         [Theory]
@@ -72,14 +70,13 @@
         {
             //arrange
             var currentDate = Fixture.Create<DateTime>();
-            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(null);
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
             await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
 
-            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => m.ComplianceYear == currentDate.Year))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => 
+                m.ComplianceYear == currentDate.Year))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -91,55 +88,16 @@
         {
             //arrange
             var currentDate = Fixture.Create<DateTime>();
-            var complianceYear = Fixture.Create<int>();
-            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
             await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
 
-            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => m.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => 
+                m.ComplianceYear == currentDate.Year))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearIsNull_SessionShouldBeUpdatedWithCorrectYear(ManageEvidenceOverviewDisplayOption selectedTab)
-        {
-            //arrange
-            var currentDate = Fixture.Create<DateTime>();
-            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(null);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
-
-            //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
-
-            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, currentDate.Year,
-                SessionKeyConstant.AatfSelectedComplianceYear)).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
-        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearHasValue_SessionShouldBeUpdatedWithCorrectYear(ManageEvidenceOverviewDisplayOption selectedTab)
-        {
-            //arrange
-            var complianceYear = Fixture.Create<int>();
-            var currentDate = Fixture.Create<DateTime>();
-            A.CallTo(() => SessionService.GetTransferSessionObject<object>(ManageEvidenceController.Session, SessionKeyConstant.AatfSelectedComplianceYear)).Returns(complianceYear);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
-
-            //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null);
-
-            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, complianceYear,
-                SessionKeyConstant.AatfSelectedComplianceYear)).MustHaveHappenedOnceExactly();
-        }
         [Theory]
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
@@ -251,7 +209,8 @@
                      && m.OrganisationId.Equals(organisationId) 
                      && m.FilterViewModel.Equals(filter.FilterViewModel) 
                      && m.CurrentDate == currentDate
-                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
+                     && m.Aatfs.SequenceEqual(aatfs) 
+                     && m.ComplianceYear == filter.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -285,7 +244,8 @@
                      && m.OrganisationId.Equals(organisationId)
                      && m.RecipientWasteStatusFilterViewModel.Equals(recipientFilter)
                      && m.CurrentDate == currentDate
-                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
+                     && m.Aatfs.SequenceEqual(aatfs)
+                     && m.ComplianceYear == viewModel.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -319,7 +279,8 @@
                      && m.OrganisationId.Equals(organisationId)
                      && m.SubmittedDatesFilterViewModel.Equals(submittedDateFilter)
                      && m.CurrentDate == currentDate
-                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
+                     && m.Aatfs.SequenceEqual(aatfs) 
+                     && m.ComplianceYear == viewModel.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -347,7 +308,8 @@
                      && m.OrganisationId.Equals(organisationId)
                      && m.FilterViewModel.Equals(filter.FilterViewModel)
                      && m.CurrentDate == currentDate
-                     && m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
+                     && m.Aatfs.SequenceEqual(aatfs) 
+                     && m.ComplianceYear == filter.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -602,8 +564,7 @@
             var evidenceNoteViewModel = new AllOtherManageEvidenceNotesViewModel();
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(manageNoteViewModel);
-            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(
-                A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
+            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)) as ViewResult;
@@ -851,8 +812,7 @@
             var evidenceNoteViewModel = new EditDraftReturnedNotesViewModel();
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(manageNoteViewModel);
-            A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
-                A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
+            A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(evidenceNoteViewModel);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
@@ -890,7 +850,7 @@
         [Fact]
         public void IndexGet_ShouldBeDecoratedWith_HttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid), typeof(string), typeof(ManageEvidenceNoteViewModel) }, null)
+            typeof(ManageEvidenceNotesController).GetMethod("Index", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(Guid), typeof(Guid), typeof(string), typeof(ManageEvidenceNoteViewModel), typeof(int) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -982,8 +942,7 @@
             var evidenceNoteViewModel = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._)).Returns(model);
-            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._))
-                .Returns(evidenceNoteViewModel);
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(evidenceNoteViewModel);
 
             var result = await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
