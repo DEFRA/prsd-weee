@@ -11,12 +11,12 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class ViewAllEvidenceNotesMapModelTests : SimpleUnitTestBase
+    public class ViewEvidenceNotesMapTransferTests : SimpleUnitTestBase
     {
         private readonly EvidenceNoteSearchDataResult noteData;
         private readonly ManageEvidenceNoteViewModel manageEvidenceNoteViewModel;
 
-        public ViewAllEvidenceNotesMapModelTests()
+        public ViewEvidenceNotesMapTransferTests()
         {
             var evidenceNoteData1 = new EvidenceNoteData();
             var evidenceNoteData2 = new EvidenceNoteData();
@@ -36,7 +36,7 @@
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, TestFixture.Create<int>(), complianceYearsList);
+            var model = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, TestFixture.Create<int>(), complianceYearsList);
 
             //assert
             model.Should().NotBeNull();
@@ -50,8 +50,8 @@
         public void ViewAllEvidenceNotesMapModel_Constructor_NotesIsNull_ShouldThrowAnException()
         {
             //act
-            var result = Record.Exception(() => new ViewEvidenceNotesMapTransfer(null, 
-                manageEvidenceNoteViewModel, 
+            var result = Record.Exception(() => new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(null,
+                manageEvidenceNoteViewModel,
                 SystemTime.Now,
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<int>()));
@@ -67,10 +67,10 @@
             var currentDate = SystemTime.Now;
 
             //act
-            var model = new ViewEvidenceNotesMapTransfer(noteData, 
+            var model = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, 
                 null, 
-                currentDate, 
-                TestFixture.Create<int>(), 
+                currentDate,
+                TestFixture.Create<int>(),
                 TestFixture.CreateMany<int>());
 
             //assert
