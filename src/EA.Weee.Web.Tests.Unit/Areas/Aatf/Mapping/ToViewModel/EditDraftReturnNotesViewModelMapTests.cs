@@ -79,7 +79,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1);
 
             //act
             editDraftReturnNotesViewModelMap.Map(transfer);
@@ -129,6 +129,40 @@
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
             result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+        }
+
+        [Fact]
+        public void Map_GivenListOfEvidenceNoteData_ShouldReturnMappedDataAsPagedList()
+        {
+            //arrange
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var pageNumber = TestFixture.Create<int>();
+            var pageSize = TestFixture.Create<int>();
+
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, pageNumber);
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
+
+            //act
+            var result = editDraftReturnNotesViewModelMap.Map(transfer);
+
+            // assert
+            result.EvidenceNotesDataList.Should().NotBeEmpty();
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+            result.EvidenceNotesDataList.PageNumber.Should().Be(pageNumber);
+            result.EvidenceNotesDataList.PageSize.Should().Be(pageSize);
         }
 
         [Fact]
