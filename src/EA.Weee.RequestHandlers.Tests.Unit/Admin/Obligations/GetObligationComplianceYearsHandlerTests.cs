@@ -35,7 +35,7 @@
             obligationDataAccess = A.Fake<IObligationDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
-            request = new GetObligationComplianceYears(TestFixture.Create<CompetentAuthority>());
+            request = new GetObligationComplianceYears(TestFixture.Create<CompetentAuthority>(), false);
 
             handler = new GetObligationComplianceYearsHandler(authorization, obligationDataAccess, commonDataAccess, systemDataDataAccess);
         }
@@ -97,7 +97,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.Authority)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.Authority.Value)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
