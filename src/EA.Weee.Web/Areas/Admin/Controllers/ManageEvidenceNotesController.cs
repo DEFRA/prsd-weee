@@ -68,7 +68,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId)
+        public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -79,6 +79,8 @@
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+
+                ViewBag.Page = page;
 
                 return View(model);
             }
