@@ -25,6 +25,7 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNoteTransfer", new[]
                 {
                     typeof(Guid),
+                    typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
