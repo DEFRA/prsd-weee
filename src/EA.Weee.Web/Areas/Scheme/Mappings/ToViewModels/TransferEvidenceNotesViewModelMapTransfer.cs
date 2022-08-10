@@ -32,6 +32,10 @@
 
         public int ComplianceYear { get; set; }
 
+        public bool? ReturnToEditDraftTransfer { get; set; }
+
+        public List<Guid> ExcludeEvidenceNoteIds { get; set; }
+
         public TransferEvidenceNotesViewModelMapTransfer(
             EvidenceNoteSearchDataResult notes,
             TransferEvidenceNoteRequest request,

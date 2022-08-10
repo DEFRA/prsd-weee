@@ -114,14 +114,14 @@
         [Fact]
         public void EditTonnagesGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid), typeof(bool?) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void EditTonnagesGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid), typeof(bool?) }).Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
@@ -223,7 +223,7 @@
         public async Task EditTonnagesGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
         {
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //asset
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).MustHaveHappenedOnceExactly();
@@ -239,7 +239,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -257,7 +257,7 @@
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
 
             // act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             // assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
@@ -320,7 +320,7 @@
             var evidenceNoteId = TestFixture.Create<Guid>();
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, evidenceNoteId);
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, evidenceNoteId, TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -332,11 +332,34 @@
         public async Task EditTonnagesGet_ExistingSelectedEvidenceNotes_ShouldBeRetrievedFromSession()
         {
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                    outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey))
+                    outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTonnagesGet_WithExistingEditTransferEvidenceTonnageViewModel_ShouldBeRetrievedFromSession()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
+
+            //assert
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(
+                    outgoingTransferEvidenceController.Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTonnagesGet_WithExistingEditTransferEvidenceTonnageViewModel_ShouldClearTransferSessionObject()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
+
+            //assert
+            A.CallTo(() => sessionService.ClearTransferSessionObject(outgoingTransferEvidenceController.Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -383,7 +406,7 @@
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             var expectedEvidenceNoteIds = transferEvidence.TransferEvidenceNoteTonnageData
@@ -437,7 +460,7 @@
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -472,7 +495,7 @@
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -496,7 +519,7 @@
                 .ToList();
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -522,7 +545,7 @@
                 .ToList();
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -537,6 +560,8 @@
         public async Task EditTonnagesGet_GivenTransferNoteAndTransferNotes_ModelMapperShouldBeCalled()
         {
             //arrange
+            var returnToEditDraftTransfer = TestFixture.Create<bool?>();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
@@ -549,7 +574,7 @@
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), returnToEditDraftTransfer);
 
             //assert
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
@@ -557,7 +582,8 @@
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                         t.Notes.Equals(evidenceNoteData) &&
                         t.OrganisationId == organisationId &&
-                        t.Request == request)))
+                        t.Request == request &&
+                        t.ReturnToEditDraftTransfer == returnToEditDraftTransfer)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -570,7 +596,7 @@
 
             //act
             var result =
-                await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>()) as
+                await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>()) as
                     ViewResult;
 
             //assert
@@ -582,7 +608,7 @@
         {
             //act
             var result =
-                await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>()) as
+                await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>()) as
                     ViewResult;
 
             //assert
@@ -1318,7 +1344,7 @@
                                             ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(selectedId) &&
                                             !((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Contains(notSelectedId) &&
                                             ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.Count() == 1),
-                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+                SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1572,7 +1598,7 @@
 
             //assert
             A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session, request,
-                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+                SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1771,7 +1797,7 @@
 
             //assert
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                    outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey))
+                    outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -2077,7 +2103,7 @@
             //assert
             A.CallTo(() =>
                     sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                        outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey))
+                        outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -2106,7 +2132,7 @@
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                    outgoingTransferEvidenceController.Session, SessionKeyConstant.TransferNoteKey)).Returns(request);
+                    outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey)).Returns(request);
 
             A.CallTo(() => transferEvidenceRequestCreator.EditSelectTonnageToRequest(A<TransferEvidenceNoteRequest>._,
                 A<TransferEvidenceTonnageViewModel>._)).Returns(TestFixture.Create<EditTransferEvidenceNoteRequest>());
@@ -2222,6 +2248,38 @@
 
             //assert
             outgoingTransferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(expectedStatus);
+        }
+
+        [Fact]
+        public async Task EditTonnagesPost_GivenModelActionIsBack_ShouldSetTransferSessionObject()
+        {
+            // arrange 
+            var complianceYear = TestFixture.Create<int>();
+            var recipientId = TestFixture.Create<Guid>();
+            var pcsIds = TestFixture.Create<Guid>();
+            var transferCategoryValues = TestFixture.CreateMany<TransferEvidenceCategoryValue>().ToList();
+
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(t => t.ComplianceYear, complianceYear)
+                .With(t => t.RecipientId, recipientId)
+                .With(t => t.PcsId, pcsIds)
+                .With(t => t.TransferCategoryValues, transferCategoryValues)
+                .With(t => t.Action, ActionEnum.Back)
+                .Create();
+
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            // act
+            await outgoingTransferEvidenceController.EditTonnages(model);
+
+            // assert
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session,
+          A<object>.That.Matches(o => ((TransferEvidenceTonnageViewModel)o).TransferCategoryValues.SequenceEqual(transferCategoryValues) &&
+                                      ((TransferEvidenceTonnageViewModel)o).RecipientId == recipientId &&
+                                      ((TransferEvidenceTonnageViewModel)o).PcsId == pcsIds &&
+                                      ((TransferEvidenceTonnageViewModel)o).ComplianceYear == complianceYear &&
+                                      ((TransferEvidenceTonnageViewModel)o).Action == ActionEnum.Back),
+          SessionKeyConstant.EditTransferEvidenceTonnageViewModel)).MustHaveHappenedOnceExactly();
         }
     }
 }

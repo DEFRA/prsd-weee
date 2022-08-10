@@ -40,6 +40,8 @@
 
             SetupTotals(source, model);
 
+            SetUpReturnToEditDraftTransferValue(source, model);
+
             return model;
         }
 
@@ -177,6 +179,19 @@
             else
             {
                 model.EvidenceNotesDataList.ElementAt(i).DisplayAatfName = true;
+            }
+        }
+
+        private void SetUpReturnToEditDraftTransferValue(TransferEvidenceNotesViewModelMapTransfer source,
+            TransferEvidenceTonnageViewModel model)
+        {
+            if (!source.ReturnToEditDraftTransfer.HasValue)
+            {
+                model.ReturnToEditDraftTransfer = true;
+            }
+            else
+            {
+                model.ReturnToEditDraftTransfer = source.ReturnToEditDraftTransfer.Value;
             }
         }
     }
