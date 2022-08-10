@@ -25,6 +25,8 @@
         protected readonly TransferEvidenceNoteData TransferEvidenceNoteData;
         protected readonly ISessionService SessionService;
 
+        protected readonly int PageSize = 25;
+
         public ManageEvidenceNotesControllerTestsBase()
         {
             WeeeClient = A.Fake<IWeeeClient>();
@@ -37,7 +39,7 @@
 
             EvidenceNoteData = TestFixture.Create<EvidenceNoteData>();
             TransferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
-            A.CallTo(() => ConfigurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(25);
+            A.CallTo(() => ConfigurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(PageSize);
 
             ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, ConfigurationService);
 

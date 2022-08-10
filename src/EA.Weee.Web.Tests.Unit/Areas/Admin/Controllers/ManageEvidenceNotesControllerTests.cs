@@ -63,7 +63,6 @@
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        //[InlineData("view-all-evidence-transfers")]
         public async Task IndexGet_GivenPageNumber_ViewAllEvidenceNotesViewModelMapperShouldBeCalled(string tab)
         {
             const int pageNumber = 2;
@@ -74,6 +73,36 @@
             //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewEvidenceNotesMapTransfer>.That
                 .Matches(v => v.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async Task IndexGet_GivenPageNumberAndViewAllEvidenceNotes_NotesShouldBeRetrieved(string tab)
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index(tab, null, pageNumber);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
+                .Matches(g => g.PageNumber == pageNumber &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenPageNumberAndViewAllEvidenceTransfers_NotesShouldBeRetrieved()
+        {
+            const int pageNumber = 2;
+
+            //act
+            await ManageEvidenceController.Index("view-all-evidence-transfers", null, pageNumber);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
+                .Matches(g => g.PageNumber == pageNumber &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -119,7 +148,11 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
-                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && types.SequenceEqual(g.NoteTypeFilterList) && g.ComplianceYear == complianceYears.ElementAt(0)))).MustHaveHappenedOnceExactly();
+                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
+                              types.SequenceEqual(g.NoteTypeFilterList) && 
+                              g.ComplianceYear == complianceYears.ElementAt(0) &&
+                              g.PageNumber == 1 &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -141,7 +174,11 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
-                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && types.SequenceEqual(g.NoteTypeFilterList) && g.ComplianceYear == dateTime.Year))).MustHaveHappenedOnceExactly();
+                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
+                              types.SequenceEqual(g.NoteTypeFilterList) && 
+                              g.ComplianceYear == dateTime.Year &&
+                              g.PageNumber == 1 &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
             SystemTime.Unfreeze();
         }
 
@@ -164,7 +201,11 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
-                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && types.SequenceEqual(g.NoteTypeFilterList) && g.ComplianceYear == manageEvidenceNoteModel.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
+                .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
+                              types.SequenceEqual(g.NoteTypeFilterList) && 
+                              g.ComplianceYear == manageEvidenceNoteModel.SelectedComplianceYear &&
+                              g.PageNumber == 1 &&
+                              g.PageSize == PageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -198,7 +239,9 @@
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => statuses.SequenceEqual(g.AllowedStatuses) &&
-                     types.SequenceEqual(g.NoteTypeFilterList)))).MustHaveHappenedOnceExactly();
+                     types.SequenceEqual(g.NoteTypeFilterList) &&
+                     g.PageSize == PageSize &&
+                     g.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -215,7 +258,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.AllowedStatuses.Contains(statusNotIncluded)))).MustNotHaveHappened();
+                g => g.AllowedStatuses.Contains(statusNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Fact]
@@ -229,7 +274,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.AllowedStatuses.Contains(statusNotIncluded)))).MustNotHaveHappened();
+                g => g.AllowedStatuses.Contains(statusNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Theory]
@@ -246,7 +293,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded)))).MustNotHaveHappened();
+                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Fact]
@@ -260,7 +309,9 @@
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
-                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded)))).MustNotHaveHappened();
+                g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded) &&
+                     g.PageNumber == 1 &&
+                     g.PageSize == PageSize))).MustNotHaveHappened();
         }
 
         [Fact]

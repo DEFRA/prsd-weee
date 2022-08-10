@@ -1,5 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
+
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "From which evidence notes would you like to transfer tonnage to? - GOV.UK";
@@ -7,6 +9,10 @@
 
 @section full_main_content
 {
+   
+    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="edit-transfer-notes-post-form" >Back</button>
+
+
     @(this.WeeeGds().Warning("Unselecting notes may remove data you have previously input"))
 
     <h1 class="govuk-heading-l">
@@ -17,7 +23,7 @@
 
     @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferSummaryPartial.cshtml", Model.ViewTransferNoteViewModel); }
 
-    @using (Html.BeginRouteForm("Scheme_edit_transfer_notes", FormMethod.Post))
+    @using (Html.BeginRouteForm("Scheme_edit_transfer_notes", FormMethod.Post, new { id = "edit-transfer-notes-post-form" }))
     {
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Reference)
