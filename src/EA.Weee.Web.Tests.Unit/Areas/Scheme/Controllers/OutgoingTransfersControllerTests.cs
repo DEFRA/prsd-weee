@@ -43,7 +43,7 @@
         private readonly IWeeeCache cache;
         private readonly Guid organisationId;
         private readonly TransferEvidenceNoteData transferEvidenceNoteData;
-        private readonly List<EvidenceNoteData> evidenceNoteData;
+        private readonly EvidenceNoteSearchDataResult evidenceNoteData;
         private readonly TransferEvidenceTonnageViewModel transferEvidenceTonnageViewModel;
 
         public OutgoingTransfersControllerTests()
@@ -64,7 +64,9 @@
             transferEvidenceNoteData = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(n => n.Status, NoteStatus.Submitted).Create();
 
-            evidenceNoteData = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            evidenceNoteData =
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+
             transferEvidenceTonnageViewModel =
                 TestFixture.Build<TransferEvidenceTonnageViewModel>()
                     .With(t => t.PcsId, Guid.NewGuid())
@@ -553,7 +555,7 @@
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                        t.Notes.SequenceEqual(evidenceNoteData) &&
+                        t.Notes.Equals(evidenceNoteData) &&
                         t.OrganisationId == organisationId &&
                         t.Request == request)))
                 .MustHaveHappenedOnceExactly();
@@ -1173,7 +1175,7 @@
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                         t.Request == request &&
-                        t.Notes.SequenceEqual(evidenceNoteData) &&
+                        t.Notes.Equals(evidenceNoteData) &&
                         t.OrganisationId == organisationId)))
                 .MustHaveHappenedOnceExactly();
         }
@@ -2023,7 +2025,7 @@
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
                     A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                        t.Notes.SequenceEqual(evidenceNoteData) &&
+                        t.Notes.Equals(evidenceNoteData) &&
                         t.OrganisationId == organisationId &&
                         t.Request == request)))
                 .MustHaveHappenedOnceExactly();
