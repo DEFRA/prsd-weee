@@ -15,7 +15,6 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.ComplianceYear)
     @Html.HiddenFor(m => m.PcsId)
-    @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "transfer-tonnage-status" })
 
     @Html.HiddenFor(m => m.ReturnToEditDraftTransfer)
 
@@ -23,6 +22,7 @@
     {
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
         @Html.HiddenFor(m => m.RecipientId)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status, new { id = "transfer-tonnage-status" })
     }
 
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.TransferCategoryValues)">

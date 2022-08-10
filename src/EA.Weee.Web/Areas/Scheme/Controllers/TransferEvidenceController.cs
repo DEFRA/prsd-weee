@@ -138,7 +138,7 @@
                 return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
             }
 
-           if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 UpdateAndSetSelectedNotesInSession(model);
 

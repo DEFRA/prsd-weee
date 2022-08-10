@@ -15,6 +15,7 @@
     public class ManageEvidenceNotesControllerTestsBase : SimpleUnitTestBase
     {
         protected readonly ManageEvidenceNotesController ManageEvidenceController;
+        protected readonly ConfigurationService ConfigurationService;
         protected readonly IWeeeClient WeeeClient;
         protected readonly IMapper Mapper;
         protected readonly BreadcrumbService Breadcrumb;
@@ -24,10 +25,13 @@
         protected readonly TransferEvidenceNoteData TransferEvidenceNoteData;
         protected readonly ISessionService SessionService;
 
+        protected readonly int PageSize = 25;
+
         public ManageEvidenceNotesControllerTestsBase()
         {
             WeeeClient = A.Fake<IWeeeClient>();
             Breadcrumb = A.Fake<BreadcrumbService>();
+            ConfigurationService = A.Fake<ConfigurationService>();
             Mapper = A.Fake<IMapper>();
             Cache = A.Fake<IWeeeCache>();
             SessionService = A.Fake<ISessionService>();
@@ -35,8 +39,9 @@
 
             EvidenceNoteData = TestFixture.Create<EvidenceNoteData>();
             TransferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            A.CallTo(() => ConfigurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(PageSize);
 
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, ConfigurationService);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
         }
