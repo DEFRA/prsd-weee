@@ -12,19 +12,25 @@
             List<NoteStatus> allowedStatuses,
             int complianceYear,
             List<NoteType> noteTypeFilterList,
-            bool transferredOut)
+            bool transferredOut,
+            int pageNumber,
+            int pageSize)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
             Condition.Requires(complianceYear).IsGreaterThan(0);
             Condition.Requires(noteTypeFilterList);
+            Condition.Requires(pageNumber).IsGreaterThan(0);
+            Condition.Requires(pageSize).IsGreaterThan(0);
 
             OrganisationId = organisationId;
             AllowedStatuses = allowedStatuses;
             ComplianceYear = complianceYear;
             NoteTypeFilterList = noteTypeFilterList;
             TransferredOut = transferredOut;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }
