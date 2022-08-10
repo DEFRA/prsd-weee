@@ -38,11 +38,19 @@
                 evidenceNoteIds.AddRange(existingEvidenceNoteRequest.EvidenceNoteIds.ToList());
             }
 
+            var excludeEvidenceNoteIds = new List<Guid>();
+
+            if (existingEvidenceNoteRequest?.ExcludeEvidenceNoteIds != null && existingEvidenceNoteRequest.ExcludeEvidenceNoteIds.Any())
+            {
+                excludeEvidenceNoteIds.AddRange(existingEvidenceNoteRequest.ExcludeEvidenceNoteIds.ToList());
+            }
+
             var newRequest = new TransferEvidenceNoteRequest(
                 viewModel.OrganisationId,
                 viewModel.SelectedSchema.Value,
                 selectedIds,
-                evidenceNoteIds);
+                evidenceNoteIds,
+                excludeEvidenceNoteIds);
 
             return newRequest;
         }
