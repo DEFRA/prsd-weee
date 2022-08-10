@@ -347,6 +347,8 @@
     <Content Include="scripts\Update\Release 5\Sprint09\20220806-1020-remove-transfer-category-table.sql" />
     <Content Include="scripts\Update\Release 5\Sprint09\20220706-1742-add-balancing-scheme-indicator.sql" />
     <Content Include="scripts\Update\Release 5\Sprint10\20220721-1148-fix-aatf-summary-query.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint10\20220810-1407-add-evidence-view.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint10\20220810-1407-add-transfer-view.sql" />
     <Content Include="scripts\Update\Release 5\Sprint10\20220729-1618-add-obligation-evidence-summary-query.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
