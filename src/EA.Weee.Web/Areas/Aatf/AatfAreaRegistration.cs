@@ -32,6 +32,12 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: "DownLoad",
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/download/{evidenceNoteId}",
+                defaults: new { action = "DownloadDraftEvidenceNote", controller = "ManageEvidenceNotes" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfEvidenceRedirect.EditEvidenceRouteName,
                 url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/edit-evidence-note/{evidenceNoteId}",
                 defaults: new { action = "EditEvidenceNote", controller = "ManageEvidenceNotes" },
