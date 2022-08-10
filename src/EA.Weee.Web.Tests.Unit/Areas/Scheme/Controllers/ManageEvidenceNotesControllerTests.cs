@@ -67,7 +67,8 @@
                 {
                     typeof(Guid), 
                     typeof(string),
-                    typeof(ManageEvidenceNoteViewModel)
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -98,15 +99,14 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
-        public async Task IndexGet_BreadcrumbShouldBeSet(string tab)
+        public async Task IndexGet_GivenOrganisationIsNotBalancingScheme_BreadcrumbShouldBeSet(string tab)
         {
             //arrange
             var schemeName = Faker.Company.Name();
             var organisationId = Guid.NewGuid();
-
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(TestFixture.Create<EvidenceNoteSearchDataResult>());
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(new ReviewSubmittedManageEvidenceNotesSchemeViewModel());
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
             //act
             await ManageEvidenceController.Index(organisationId, tab);
@@ -123,13 +123,37 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
+        public async Task IndexGet_GivenOrganisationIsBalancingScheme_BreadcrumbShouldBeSet(string tab)
+        {
+            //arrange
+            var schemeName = Faker.Company.Name();
+            var organisationId = Guid.NewGuid();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+
+            //act
+            await ManageEvidenceController.Index(organisationId, tab);
+
+            //assert
+            Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
+            Breadcrumb.ExternalOrganisation.Should().Be(schemeName);
+            Breadcrumb.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("outgoing-transfers")]
         public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
 
             //asset
-            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).MustHaveHappenedTwiceExactly();
         }
 
         [Theory]
@@ -253,11 +277,12 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) &&
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
-                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -281,12 +306,13 @@
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && 
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel.Equals(model) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -306,11 +332,12 @@
 
             //asset
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
-                A<ViewAndTransferEvidenceViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) 
                          && a.NoteData.Equals(noteData) &&
                          a.Scheme.Equals(scheme) &&
-                         a.CurrentDate.Equals(currentDate)))).MustHaveHappenedOnceExactly();
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -331,12 +358,13 @@
 
             //asset
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
-                A<ViewAndTransferEvidenceViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && 
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel.Equals(model) &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -347,7 +375,7 @@
             //arrange
             var model = TestFixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<ReviewSubmittedEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
@@ -437,7 +465,7 @@
 
             var model = TestFixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
@@ -454,7 +482,7 @@
             var manageEvidenceNoteViewModel = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var model = TestFixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<ViewAndTransferEvidenceViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, tab, manageEvidenceNoteViewModel) as ViewResult;
@@ -587,12 +615,13 @@
 
             //asset
             A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
-                A<TransferredOutEvidenceNotesViewModelMapTransfer>.That.Matches(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) && 
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel == model))).MustHaveHappenedOnceExactly();
+                         a.ManageEvidenceNoteViewModel == model &&
+                         a.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -601,7 +630,7 @@
             //arrange
             var model = TestFixture.Create<TransferredOutEvidenceNotesSchemeViewModel>();
 
-            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<TransferredOutEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers") as ViewResult;

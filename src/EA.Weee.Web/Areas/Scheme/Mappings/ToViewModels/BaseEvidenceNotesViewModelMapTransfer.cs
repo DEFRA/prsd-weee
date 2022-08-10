@@ -5,7 +5,6 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
     using System;
-    using System.Collections.Generic;
 
     public abstract class BaseEvidenceNotesViewModelMapTransfer
     {
@@ -19,11 +18,14 @@
 
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; protected set; }
 
+        public int PageNumber { get; protected set; }
+
         protected BaseEvidenceNotesViewModelMapTransfer(Guid organisationId,
             EvidenceNoteSearchDataResult noteData,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int pageNumber)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => noteData, noteData);
@@ -33,6 +35,7 @@
             Scheme = scheme;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
+            PageNumber = pageNumber;
         }
     }
 }

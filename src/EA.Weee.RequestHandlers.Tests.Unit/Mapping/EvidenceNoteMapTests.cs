@@ -13,7 +13,6 @@
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Organisation;
-    using EA.Weee.Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -980,6 +979,225 @@
 
             //assert
             result.OrganisationSchemaData.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithRelatedTransferNotesAndIncludeHistoryIsTrue_EvidenceNoteHistoryShouldBeCreated()
+        {
+            //arrange
+            var date = new DateTime(2022, 1, 1);
+            var transferNote1 = A.Fake<Note>();
+            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
+            var historyList = new List<NoteStatusHistory>();
+            
+            var history = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Submitted);
+            historyList.Add(history);
+
+            A.CallTo(() => transferNote1.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote1.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote1.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote1.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => transferNote1.NoteStatusHistory).Returns(historyList);
+            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(transferNote1);
+
+            var transferNote2 = A.Fake<Note>();
+            var noteTransferTonnage2 = A.Fake<NoteTransferTonnage>();
+
+            A.CallTo(() => transferNote2.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote2.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote2.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote2.Status).Returns(NoteStatus.Draft);
+            A.CallTo(() => noteTransferTonnage2.TransferNote).Returns(transferNote2);
+
+            var transferNote3 = A.Fake<Note>();
+            var noteTransferTonnage3 = A.Fake<NoteTransferTonnage>();
+
+            A.CallTo(() => transferNote3.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote3.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote3.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote3.Status).Returns(NoteStatus.Void);
+            A.CallTo(() => noteTransferTonnage3.TransferNote).Returns(transferNote3);
+
+            // add to check for distinct
+            var noteTransferTonnage4 = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnage4.TransferNote).Returns(transferNote1);
+
+            var note = A.Fake<Note>();
+            var noteTransferTonnageList1 = new List<NoteTransferTonnage>() { noteTransferTonnage1, noteTransferTonnage2 };
+            var noteTonnage1 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnageList1);
+
+            var noteTransferTonnageList2 = new List<NoteTransferTonnage>() { noteTransferTonnage3, noteTransferTonnage4 };
+            var noteTonnage2 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage2.NoteTransferTonnage).Returns(noteTransferTonnageList2);
+            A.CallTo(() => note.NoteTonnage).Returns(new List<NoteTonnage>() { noteTonnage1, noteTonnage2 });
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeHistory = true;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceNoteHistoryData.Count.Should().Be(3);
+            result.EvidenceNoteHistoryData.Should().Contain(e => e.Reference == transferNote1.Reference
+                                                                 && e.Id == transferNote1.Id
+                                                                 && e.SubmittedDate.Equals(date)
+                                                                 && e.Status == transferNote1.Status
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteStatus>()
+                                                                 && e.Type == transferNote1.NoteType
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteType>());
+            result.EvidenceNoteHistoryData.Should().Contain(e => e.Reference == transferNote2.Reference
+                                                                 && e.Id == transferNote2.Id
+                                                                 && e.SubmittedDate == null 
+                                                                 && e.Status == transferNote2.Status
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteStatus>()
+                                                                 && e.Type == transferNote2.NoteType
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteType>());
+            result.EvidenceNoteHistoryData.Should().Contain(e => e.Reference == transferNote3.Reference
+                                                                 && e.Id == transferNote3.Id
+                                                                 && e.SubmittedDate == null
+                                                                 && e.Status == transferNote3.Status
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteStatus>()
+                                                                 && e.Type == transferNote3.NoteType
+                                                                     .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteType>());
+            result.EvidenceNoteHistoryData.Should().BeInDescendingOrder(e => e.Reference);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithNoTransferNotesAndIncludeHistoryIsTrue_EvidenceNoteHistoryShouldBeEmpty()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var noteTransferTonnageList1 = new List<NoteTransferTonnage>();
+            var noteTonnage1 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnageList1);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeHistory = true;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceNoteHistoryData.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithRelatedTransferNotesAndIncludeHistoryIsFalse_EvidenceNoteHistoryShouldBeEmpty()
+        {
+            //arrange
+            var date = new DateTime(2022, 1, 1);
+            var transferNote1 = A.Fake<Note>();
+            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
+
+            A.CallTo(() => transferNote1.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote1.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote1.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote1.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(transferNote1);
+
+            var note = A.Fake<Note>();
+            var noteTransferTonnageList1 = new List<NoteTransferTonnage>() { noteTransferTonnage1 };
+            var noteTonnage1 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnageList1);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeHistory = false;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceNoteHistoryData.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithTransferHistoryWithRecipientScheme_TransferredToPropertyShouldBeMapped()
+        {
+            //arrange
+            var date = new DateTime(2022, 1, 1);
+            var transferNote1 = A.Fake<Note>();
+            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
+            var historyList = new List<NoteStatusHistory>();
+
+            var history = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Submitted);
+            historyList.Add(history);
+
+            A.CallTo(() => transferNote1.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote1.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote1.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote1.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => transferNote1.NoteStatusHistory).Returns(historyList);
+            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(transferNote1);
+
+            var organisation = A.Fake<Organisation>();
+            var scheme = A.Fake<Scheme>();
+            var schemeData = TestFixture.Create<SchemeData>();
+
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
+            A.CallTo(() => transferNote1.Recipient).Returns(organisation);
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).Returns(schemeData);
+
+            var note = A.Fake<Note>();
+            var noteTransferTonnageList1 = new List<NoteTransferTonnage>() { noteTransferTonnage1 };
+            var noteTonnage1 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnageList1);
+            A.CallTo(() => note.NoteTonnage).Returns(new List<NoteTonnage>() { noteTonnage1 });
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeHistory = true;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceNoteHistoryData.First().TransferredTo.Should().Be(scheme.SchemeName);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithTransferHistoryWithNoRecipientScheme_TransferredToPropertyShouldBeEmptyString()
+        {
+            //arrange
+            var date = new DateTime(2022, 1, 1);
+            var transferNote1 = A.Fake<Note>();
+            var noteTransferTonnage1 = A.Fake<NoteTransferTonnage>();
+            var historyList = new List<NoteStatusHistory>();
+
+            var history = A.Fake<NoteStatusHistory>();
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(NoteStatus.Submitted);
+            historyList.Add(history);
+
+            A.CallTo(() => transferNote1.Id).Returns(TestFixture.Create<Guid>());
+            A.CallTo(() => transferNote1.Reference).Returns(TestFixture.Create<int>());
+            A.CallTo(() => transferNote1.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => transferNote1.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => transferNote1.NoteStatusHistory).Returns(historyList);
+            A.CallTo(() => noteTransferTonnage1.TransferNote).Returns(transferNote1);
+
+            var organisation = A.Fake<Organisation>();
+            var scheme = A.Fake<Scheme>();
+            var schemeData = TestFixture.Create<SchemeData>();
+
+            var note = A.Fake<Note>();
+            var noteTransferTonnageList1 = new List<NoteTransferTonnage>() { noteTransferTonnage1 };
+            var noteTonnage1 = A.Fake<NoteTonnage>();
+            A.CallTo(() => noteTonnage1.NoteTransferTonnage).Returns(noteTransferTonnageList1);
+            A.CallTo(() => note.NoteTonnage).Returns(new List<NoteTonnage>() { noteTonnage1 });
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeHistory = true;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.EvidenceNoteHistoryData.First().TransferredTo.Should().Be(string.Empty);
         }
 
         private EvidenceNoteWithCriteriaMap EvidenceNoteWithCriteriaMap(Note note)

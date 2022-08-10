@@ -263,7 +263,7 @@
 
                 note = EvidenceNoteDbSetup.Init().Create();
 
-                request = new GetEvidenceNotesForTransferRequest(Guid.NewGuid(),
+                request = new GetEvidenceNotesForTransferRequest(note.OrganisationId,
                     new List<int>() {1}, note.ComplianceYear);
             };
 

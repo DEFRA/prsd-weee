@@ -322,6 +322,7 @@
     <Content Include="scripts\Update\Release 2\Support01\20191029-1059-alter-getNonObligatedWeeeReceived.sql" />
     <Content Include="scripts\Update\Release 2\Support01\20191112-1554-alter-getAllAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 4\20210706-1645-missing-producer-data-report-changes.sql" />
+    <Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220401-1056-status-history.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220325-1311-schema-updates.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220314-1536-schema.sql" />

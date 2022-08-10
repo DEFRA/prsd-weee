@@ -162,7 +162,6 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\EditTransferEvidenceNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandlerTests.cs" />
-    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandlerTests.cs" />
@@ -178,6 +177,9 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteByPbsOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesByOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\SetNoteStatusRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\VoidTransferNoteRequestTests.cs" />
+    <Compile Include="AatfEvidence\VoidTransferNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\TransferTonnagesValidatorTests.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
@@ -219,9 +221,11 @@
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\Helpers\ReportHelperTests.cs" />
+    <Compile Include="Admin\ManageEvidenceNotes\GetComplianceYearsFilterHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteForInternalUserRequestHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteTransfersForInternalUserRequestHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetAllNotesTests.cs" />
+    <Compile Include="Admin\ManageEvidenceNotes\Requests\GetComplianceYearsFilterTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetEvidenceNoteForInternalUserRequestTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetEvidenceNoteTransfersForInternalUserRequestTests.cs" />
     <Compile Include="Admin\Obligations\GetObligationSchemeTests.cs" />

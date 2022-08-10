@@ -145,7 +145,8 @@
             A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && 
                 e.CategoryFilter.IsNullOrEmpty() && 
                 e.IncludeTonnage == true &&
-                e.SystemDateTime == dateTime))).MustHaveHappenedOnceExactly();
+                e.SystemDateTime == dateTime &&
+                e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -11,12 +11,17 @@
 
     @if (Model.DisplayMessage)
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, Model.AatfRedirectTab, null)), "Manage evidence notes"))
+        @(this.WeeeGds().BackLink(
+            Url.Action("Index", "ManageEvidenceNotes",
+                new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear }), "Manage evidence notes"))
+			
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.OrganisationId, Model.AatfId, Model.AatfRedirectTab, null))))
+        @(this.WeeeGds().BackLink(
+            Url.Action("Index", "ManageEvidenceNotes",
+                new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear })))
     }
 
 

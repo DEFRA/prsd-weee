@@ -16,12 +16,12 @@
 
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.OrganisationId, @tab = Model.RedirectTabName, @selectedComplianceYear = Model.ViewTransferNoteViewModel.SelectedComplianceYear })))
+            new { @pcsId = Model.OrganisationId, @tab = Model.RedirectTabName, @selectedComplianceYear = Model.ViewTransferNoteViewModel.ComplianceYear })))
 
         @Html.AntiForgeryToken()
 
         @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.SelectedComplianceYear)
+        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.ComplianceYear)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.SchemeId)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Reference)

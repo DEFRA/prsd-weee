@@ -5,6 +5,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.AatfEvidence;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -18,9 +19,11 @@
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Factories;
     using RequestHandlers.Security;
-    using Weee.Requests.Note;
+    using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
+    using NoteStatus = Domain.Evidence.NoteStatus;
 
     public class SetNoteStatusRequestHandlerTests : SimpleUnitTestBase
     {
@@ -29,7 +32,10 @@
         private readonly IWeeeAuthorization authorization;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly Note note;
-        private Guid recipientId;
+        private readonly Scheme recipientScheme;
+        private readonly Organisation recipientOrganisation;
+        private readonly DateTime currentDate;
+        private const string Error = "You cannot manage evidence as scheme is not in a valid state";
 
         public SetNoteStatusRequestHandlerTests()
         {
@@ -37,14 +43,90 @@
             userContext = A.Fake<IUserContext>();
             authorization = A.Fake<IWeeeAuthorization>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
-            recipientId = TestFixture.Create<Guid>();
             note = A.Fake<Note>();
+            currentDate = new DateTime(2020, 1, 1);
 
-            var recipientOrganisation = A.Fake<Organisation>();
-            var recipientScheme = A.Fake<Scheme>();
-            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
+            recipientOrganisation = A.Fake<Organisation>();
+            recipientScheme = A.Fake<Scheme>();
+
+            A.CallTo(() => recipientScheme.SchemeStatus).Returns(SchemeStatus.Approved);
+            A.CallTo(() => recipientScheme.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
+            A.CallTo(() => note.ComplianceYear).Returns(currentDate.Year);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+        }
+
+        [Fact]
+        public void SetNoteStatusRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
+        {
+            typeof(SetNoteStatusRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearDataWithBalancingScheme))]
+        public async Task HandleAsync_GivenRequestedYearIsClosed_InvalidOperationExceptionExpected(DateTime currentDate, int complianceYear, bool balancingScheme)
+        {
+            //arrange
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
+            A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(balancingScheme ? A.Fake<ProducerBalancingScheme>() : null);
+            A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(Error);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationIsNotBalancingSchemeAndSchemeIsWithdrawn_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
+            A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(null);
+            A.CallTo(() => note.ComplianceYear).Returns(currentDate.Year);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+            A.CallTo(() => recipientScheme.SchemeStatus).Returns(SchemeStatus.Withdrawn);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be(Error);
+        }
+
+        //Not a valid scenario but in as a check against the balancing scheme
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationIsBalancingSchemeAndSchemeIsWithdrawn_NoExceptionExpected()
+        {
+            //arrange
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+            A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
+            A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
+            A.CallTo(() => note.ComplianceYear).Returns(currentDate.Year);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+            A.CallTo(() => recipientScheme.SchemeStatus).Returns(SchemeStatus.Withdrawn);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeNull();
         }
 
         [Theory]
@@ -58,7 +140,7 @@
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var noteId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
-            var message = new SetNoteStatus(noteId, Core.AatfEvidence.NoteStatus.Submitted);
+            var message = new SetNoteStatusRequest(noteId, Core.AatfEvidence.NoteStatus.Submitted);
 
             //act
             var exception = await Record.ExceptionAsync(() => handler.HandleAsync(message));
@@ -72,7 +154,7 @@
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var message = new SetNoteStatus(TestFixture.Create<Guid>(), TestFixture.Create<EA.Weee.Core.AatfEvidence.NoteStatus>());
+            var message = new SetNoteStatusRequest(TestFixture.Create<Guid>(), TestFixture.Create<EA.Weee.Core.AatfEvidence.NoteStatus>());
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
@@ -83,13 +165,12 @@
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
+        [Fact] public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
@@ -101,11 +182,31 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        {
+            //arrange
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+
+            var organisation = A.Fake<Organisation>();
+            var organisationId = TestFixture.Create<Guid>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => note.Recipient).Returns(organisation);
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => authorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenRequest_ShouldCheckExternalAccess()
         {
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
@@ -117,32 +218,15 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
-        {
-            //arrange
-            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
-
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
-
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => authorization.EnsureSchemeAccess(recipientId))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task HandleAsync_ExternalUser_WithNoteNotFound_ThrowArgumentNullException()
         {
             // Arrange
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns((Note)null);
 
-            var message = new SetNoteStatus(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var message = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             // Act
             var exception = await Record.ExceptionAsync(() => handler.HandleAsync(message));
@@ -155,12 +239,12 @@
         public async Task HandleAsync_ExternalUser_WithNoteFound_ReturnsCorrectNoteId()
         {
             // Arrange
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var id = TestFixture.Create<Guid>();
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
-            var message = new SetNoteStatus(id, Core.AatfEvidence.NoteStatus.Approved);
+            var message = new SetNoteStatusRequest(id, Core.AatfEvidence.NoteStatus.Approved);
 
             // Act
             var result = await handler.HandleAsync(message);
@@ -177,15 +261,13 @@
         {
             // Arrange
             SystemTime.Freeze(DateTime.UtcNow);
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
 
-            var message = new SetNoteStatus(note.Id, status);
+            var message = new SetNoteStatusRequest(note.Id, status);
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => userContext.UserId).Returns(userId);
-
-            var currentDate = TestFixture.Create<DateTime>();
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             // Act
@@ -207,15 +289,13 @@
         {
             // Arrange
             SystemTime.Freeze(DateTime.UtcNow);
-            var authorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.External);
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
             var userId = TestFixture.Create<Guid>();
 
-            var message = new SetNoteStatus(note.Id, status, "reason passed as parameter");
+            var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
             A.CallTo(() => userContext.UserId).Returns(userId);
-
-            var currentDate = TestFixture.Create<DateTime>();
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
             // Act
