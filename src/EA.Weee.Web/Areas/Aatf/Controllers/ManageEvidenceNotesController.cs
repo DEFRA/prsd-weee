@@ -19,11 +19,14 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Prsd.Email;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -41,6 +44,8 @@
         private readonly IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator;
         private readonly IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
         private readonly ISessionService sessionService;
+        private readonly ITemplateExecutor templateExecutor;
+        private readonly IPdfDocumentProvider2 pdfDocumentProvider;
 
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
@@ -48,7 +53,7 @@
             Func<IWeeeClient> apiClient, 
             IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
             IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator,
-            ISessionService sessionService)
+            ISessionService sessionService, ITemplateExecutor templateExecutor, IPdfDocumentProvider2 pdfDocumentProvider)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -57,6 +62,8 @@
             this.createRequestCreator = createRequestCreator;
             this.editRequestCreator = editRequestCreator;
             this.sessionService = sessionService;
+            this.templateExecutor = templateExecutor;
+            this.pdfDocumentProvider = pdfDocumentProvider;
         }
 
         [HttpGet]
@@ -199,6 +206,42 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
 
                 return View(model);
+            }
+        }
+
+        public string RenderRazorView(ControllerContext context, string viewName, object model)
+        {
+            IView viewEngineResult = ViewEngines.Engines.FindView(context, viewName, null).View;
+            var sb = new StringBuilder();
+
+            using (TextWriter tr = new StringWriter(sb))
+            {
+                context.Controller.ViewData.Model = model;
+                var viewContext = new ViewContext(context, viewEngineResult, context.Controller.ViewData,
+                    context.Controller.TempData, tr);
+                viewEngineResult.Render(viewContext, tr);
+            }
+            return sb.ToString();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+
+                var content = RenderRazorView(ControllerContext, "test", model);
+
+                //var content = templateExecutor.Execute(HttpContext.Server.MapPath(@"~\\Views\\NewUser\\test.cshtml"), new object());
+
+                var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+                return File(pdf, "application/pdf", "Grid.pdf");
             }
         }
 
