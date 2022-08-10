@@ -44,7 +44,7 @@
 
         public async Task<List<Scheme>> GetObligationSchemeData(UKCompetentAuthority authority, int complianceYear)
         {
-            var schemes = weeeContext.Schemes.Where(s => s.SchemeStatus.Value != SchemeStatus.Approved.Value && s.CompetentAuthority.Id == authority.Id);
+            var schemes = weeeContext.Schemes.Where(s => s.SchemeStatus.Value == SchemeStatus.Approved.Value && s.CompetentAuthority.Id == authority.Id);
 
             return await schemes
                 .IncludeFilter(s => s.ObligationSchemes.Where(s1 => s1.ComplianceYear == complianceYear))

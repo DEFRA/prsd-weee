@@ -13,41 +13,52 @@ IF OBJECT_ID('tempdb..#EvidenceSummary') IS NOT NULL
 BEGIN
 	DROP TABLE #EvidenceSummary
 END
-	CREATE TABLE #EvidenceSummary(
-		CategoryId INT NOT NULL,
-		CategoryName NVARCHAR(60),
-		Obligation DECIMAL,
-		EvidenceReceivedInTotal DECIMAL,
-		EvidenceReuseInTotal DECIMAL,
-		TransferEvidenceReceivedIn DECIMAL,
-		TransferEvidenceReuseIn DECIMAL,
-		TransferEvidenceReceivedOut DECIMAL,
-		TransferEvidenceReuseOut DECIMAL
-	)
 
-INSERT INTO #EvidenceSummary (CategoryId, CategoryName)
+CREATE TABLE #EvidenceSummary(
+	CategoryId INT NOT NULL,
+	CategoryName NVARCHAR(60),
+	Obligation DECIMAL,
+	EvidenceReceivedInTotal DECIMAL,
+	EvidenceReuseInTotal DECIMAL,
+	TransferEvidenceReceivedIn DECIMAL,
+	TransferEvidenceReuseIn DECIMAL,
+	TransferEvidenceReceivedOut DECIMAL,
+	TransferEvidenceReuseOut DECIMAL
+)
+
+INSERT INTO #EvidenceSummary (CategoryId, CategoryName, Obligation, EvidenceReceivedInTotal, EvidenceReuseInTotal, 
+TransferEvidenceReceivedIn, TransferEvidenceReuseIn, TransferEvidenceReceivedOut, TransferEvidenceReuseOut)
 SELECT
 	c.Id,
-	c.[Name]
+	c.[Name],
+	0, 
+	0, 
+	0,
+	0, 
+	0, 
+	0,
+	0
 FROM
 	Lookup.WeeeCategory c
 	
+
 UPDATE s
 SET 
-	s.Obligation = osa.Obligation
+	s.Obligation = ISNULL(osa.Obligation, 0)
 FROM
 	#EvidenceSummary s
 	LEFT JOIN [PCS].ObligationSchemeAmount osa ON s.CategoryId = osa.CategoryId 
 	LEFT JOIN [PCS].ObligationScheme os ON os.Id = osa.ObligationSchemeId
-	LEFT JOIN [PCS].Scheme sc ON sc.Id = os.SchemeId
+	LEFT JOIN [PCS].Scheme sc ON sc.Id = os.SchemeId AND sc.Id = @SchemeId
 WHERE
 	os.ComplianceYear = @ComplianceYear
+	AND os.SchemeId = @SchemeId
 
 UPDATE 
 	s
 SET
-	s.EvidenceReceivedInTotal = evc.Received,
-	s.EvidenceReuseInTotal =  evc.Reused
+	s.EvidenceReceivedInTotal = ISNULL(evc.Received, 0),
+	s.EvidenceReuseInTotal = ISNULL(evc.Reused, 0)
 FROM
 	#EvidenceSummary s
 	INNER JOIN Evidence.vwEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
@@ -56,24 +67,25 @@ FROM
 UPDATE 
 	s
 SET
-	s.TransferEvidenceReceivedIn = evc.TransferredReceived,
-	s.TransferEvidenceReuseIn =  evc.TransferredReused
-FROM
-	#EvidenceSummary s
-	INNER JOIN Evidence.vwTransferEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
-	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.Id = @SchemeId
-
-UPDATE 
-	s
-SET
-	s.TransferEvidenceReceivedOut = evc.TransferredReceived,
-	s.TransferEvidenceReuseOut =  evc.TransferredReused
+	s.TransferEvidenceReceivedIn = ISNULL(evc.TransferredReceived, 0),
+	s.TransferEvidenceReuseIn =  ISNULL(evc.TransferredReused, 0)
 FROM
 	#EvidenceSummary s
 	INNER JOIN Evidence.vwTransferEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
 	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
 
+UPDATE 
+	s
+SET
+	s.TransferEvidenceReceivedOut = ISNULL(evc.TransferredReceived, 0),
+	s.TransferEvidenceReuseOut =  ISNULL(evc.TransferredReused, 0)
+FROM
+	#EvidenceSummary s
+	INNER JOIN Evidence.vwTransferEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.Id = @SchemeId
+
 SELECT 
+	CategoryId,
 	Obligation,
 	EvidenceReceivedInTotal + (TransferEvidenceReceivedIn - TransferEvidenceReceivedOut) AS Evidence,
 	EvidenceReuseInTotal + (TransferEvidenceReuseIn - TransferEvidenceReuseOut) AS Reuse,
