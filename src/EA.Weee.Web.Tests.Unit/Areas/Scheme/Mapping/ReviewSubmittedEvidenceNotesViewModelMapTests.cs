@@ -165,6 +165,41 @@
         }
 
         [Fact]
+        public void Map_GivenListOfEvidenceNoteData_ShouldReturnMappedDataAsPagedList()
+        {
+            //arrange
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var notes = TestFixture.Create<EvidenceNoteSearchDataResult>();
+            var organisationId = Guid.NewGuid();
+            var pageNumber = TestFixture.Create<int>();
+            var pageSize = TestFixture.Create<int>();
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                notes,
+                TestFixture.Create<SchemePublicInfo>(),
+                TestFixture.Create<DateTime>(),
+                TestFixture.Create<ManageEvidenceNoteViewModel>(), pageNumber);
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
+
+            // assert
+            result.EvidenceNotesDataList.Should().NotBeEmpty();
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+            result.EvidenceNotesDataList.PageNumber.Should().Be(pageNumber);
+            result.EvidenceNotesDataList.PageSize.Should().Be(pageSize);
+        }
+
+        [Fact]
         public void Map_GivenSource_PropertiesShouldBeSet()
         {
             //arrange

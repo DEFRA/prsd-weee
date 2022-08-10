@@ -1,18 +1,18 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using AutoFixture;
+    using Core.AatfEvidence;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
     using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
@@ -57,7 +57,7 @@
         {
             //arrange
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, 
+            var source = new ViewEvidenceNotesMapTransfer(noteData, 
                 null,
                 SystemTime.Now,
                 TestFixture.Create<int>(),
@@ -77,7 +77,7 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
                 .With(e => e.Results, new List<EvidenceNoteData>()).Create();
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, 
+            var source = new ViewEvidenceNotesMapTransfer(noteData, 
                 null,
                 SystemTime.Now,
                 TestFixture.Create<int>(),
@@ -104,7 +104,7 @@
                  TestFixture.Create<EvidenceNoteRowViewModel>()
             };
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, 
+            var source = new ViewEvidenceNotesMapTransfer(noteData, 
                 managedEvidenceNoteViewModel,
                 currentDate,
                 TestFixture.Create<int>(),
@@ -120,6 +120,41 @@
         }
 
         [Fact]
+        public void Map_GivenListOfEvidenceNoteData_PropertiesShouldBeMappedAsPagedList()
+        {
+            //arrange
+            var managedEvidenceNoteViewModel = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>()
+            };
+
+            var pageNumber = TestFixture.Create<int>();
+            var pageSize = TestFixture.Create<int>();
+
+            var source = new ViewEvidenceNotesMapTransfer(noteData,
+                managedEvidenceNoteViewModel,
+                currentDate,
+                pageNumber,
+                TestFixture.CreateMany<int>());
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
+
+            //act
+            var result = map.Map(source);
+
+            // assert 
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+            result.EvidenceNotesDataList.PageNumber.Should().Be(pageNumber);
+            result.EvidenceNotesDataList.PageSize.Should().Be(pageSize);
+        }
+
+        [Fact]
         public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
         {
             //arrange
@@ -128,7 +163,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var date = new DateTime(2019, 1, 1);
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, model, date, TestFixture.Create<int>(), complianceYearList);
+            var source = new ViewEvidenceNotesMapTransfer(noteData, model, date, TestFixture.Create<int>(), complianceYearList);
 
             //act
             var result = map.Map(source);
@@ -148,7 +183,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var date = new DateTime(2022, 1, 1);
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, model, date, TestFixture.Create<int>(), null);
+            var source = new ViewEvidenceNotesMapTransfer(noteData, model, date, TestFixture.Create<int>(), null);
 
             //act
             var result = map.Map(source);
@@ -170,7 +205,7 @@
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(year, 1, 1);
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, null, date, TestFixture.Create<int>(), null);
+            var source = new ViewEvidenceNotesMapTransfer(noteData, null, date, TestFixture.Create<int>(), null);
 
             //act
             var result = map.Map(source);
@@ -190,7 +225,7 @@
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(year, 1, 1);
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, null, date, TestFixture.Create<int>(), complianceYearList);
+            var source = new ViewEvidenceNotesMapTransfer(noteData, null, date, TestFixture.Create<int>(), complianceYearList);
 
             //act
             var result = map.Map(source);
@@ -209,7 +244,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), new List<int>());
+            var source = new ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), new List<int>());
 
             //act
             var result = map.Map(source);
@@ -229,7 +264,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), complianceYearList);
+            var source = new ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), complianceYearList);
 
             //act
             var result = map.Map(source);
@@ -246,7 +281,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, currentDate.Year - 1).Create();
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), new List<int>());
+            var source = new ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), new List<int>());
 
             //act
             var result = map.Map(source);
@@ -263,7 +298,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, currentDate.Year - 1).Create();
 
-            var source = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), new List<int>() { 2017});
+            var source = new ViewEvidenceNotesMapTransfer(noteData, model, currentDate, TestFixture.Create<int>(), new List<int>() { 2017});
 
             //act
             var result = map.Map(source);
@@ -280,7 +315,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, complianceYear).Create();
 
-            var transfer = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(
+            var transfer = new ViewEvidenceNotesMapTransfer(
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 model,
                 currentDate,
@@ -302,7 +337,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
 
-            var transfer = new Web.Areas.Admin.Mappings.ToViewModel.ViewEvidenceNotesMapTransfer(
+            var transfer = new ViewEvidenceNotesMapTransfer(
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 model,
                 currentDate,
