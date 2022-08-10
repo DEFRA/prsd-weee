@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Mapping.ToViewModel
 {
     using AutoFixture;
+    using Core.AatfEvidence;
     using EA.Prsd.Core;
-    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
     using FluentAssertions;
@@ -11,12 +11,13 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class ViewAllEvidenceNotesMapModelTests : SimpleUnitTestBase
+    public class ViewEvidenceNotesMapTransferTests : SimpleUnitTestBase
     {
         private readonly EvidenceNoteSearchDataResult noteData;
         private readonly ManageEvidenceNoteViewModel manageEvidenceNoteViewModel;
+        private const int PageNumber = 2;
 
-        public ViewAllEvidenceNotesMapModelTests()
+        public ViewEvidenceNotesMapTransferTests()
         {
             var evidenceNoteData1 = new EvidenceNoteData();
             var evidenceNoteData2 = new EvidenceNoteData();
@@ -34,9 +35,9 @@
             // arrange
             var complianceYearsList = TestFixture.CreateMany<int>();
             var currentDate = SystemTime.Now;
-
+           
             //act
-            var model = new ViewEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, TestFixture.Create<int>(), complianceYearsList);
+            var model = new ViewEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, PageNumber, complianceYearsList);
 
             //assert
             model.Should().NotBeNull();
@@ -44,20 +45,37 @@
             model.NoteData.Should().Be(noteData);
             model.CurrentDate.Should().Be(currentDate);
             model.ComplianceYearList.Should().BeEquivalentTo(complianceYearsList);
+            model.PageNumber.Should().Be(PageNumber);
         }
 
         [Fact]
         public void ViewAllEvidenceNotesMapModel_Constructor_NotesIsNull_ShouldThrowAnException()
         {
             //act
-            var result = Record.Exception(() => new ViewEvidenceNotesMapTransfer(null, 
-                manageEvidenceNoteViewModel, 
+            var result = Record.Exception(() => new ViewEvidenceNotesMapTransfer(null,
+                manageEvidenceNoteViewModel,
                 SystemTime.Now,
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<int>()));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void ViewAllEvidenceNotesMapModel_Constructor_GivenPageNumberIsLessThanOne_ShouldThrowAnException(int pageNumber)
+        {
+            //act
+            var result = Record.Exception(() => new ViewEvidenceNotesMapTransfer(noteData,
+                manageEvidenceNoteViewModel,
+                SystemTime.Now,
+                pageNumber,
+                TestFixture.CreateMany<int>()));
+
+            // assert
+            result.Should().BeOfType<ArgumentOutOfRangeException>();
         }
 
         [Fact]
@@ -69,14 +87,15 @@
             //act
             var model = new ViewEvidenceNotesMapTransfer(noteData, 
                 null, 
-                currentDate, 
-                TestFixture.Create<int>(), 
+                currentDate,
+                PageNumber,
                 TestFixture.CreateMany<int>());
 
             //assert
             model.Should().NotBeNull();
             model.ManageEvidenceNoteViewModel.Should().BeNull();
             model.CurrentDate.Should().Be(currentDate);
+            model.PageNumber.Should().Be(PageNumber);
         }
     }
 }

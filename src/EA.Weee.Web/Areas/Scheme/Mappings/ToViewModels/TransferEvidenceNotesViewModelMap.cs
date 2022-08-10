@@ -21,7 +21,7 @@
             
             var model = MapBaseProperties(source);
 
-            foreach (var evidenceNoteData in source.Notes.OrderByDescending(e => e.Reference))
+            foreach (var evidenceNoteData in source.Notes.Results.OrderByDescending(e => e.Reference))
             {
                 var selected = false;
                 if (source.TransferEvidenceNoteData != null)
