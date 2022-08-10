@@ -23,7 +23,7 @@
         {
             Condition.Requires(noteData).IsNotNull();
             Condition.Requires(pageNumber).IsNotLessOrEqual(0);
-
+            
             NoteData = noteData;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
