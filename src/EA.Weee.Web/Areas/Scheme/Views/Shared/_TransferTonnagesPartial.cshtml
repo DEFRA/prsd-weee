@@ -16,6 +16,8 @@
     @Html.HiddenFor(m => m.ComplianceYear)
     @Html.HiddenFor(m => m.PcsId)
 
+    @Html.HiddenFor(m => m.ReturnToEditDraftTransfer)
+
     if (Model.ViewTransferNoteViewModel != null)
     {
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)

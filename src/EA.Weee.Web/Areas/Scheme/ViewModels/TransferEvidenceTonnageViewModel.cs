@@ -19,6 +19,8 @@
 
         public ActionEnum Action { get; set; }
 
+        public bool? ReturnToEditDraftTransfer { get; set; }
+
         public bool Edit => ViewTransferNoteViewModel != null && ViewTransferNoteViewModel.EvidenceNoteId != Guid.Empty;
 
         public TransferEvidenceTonnageViewModel()
