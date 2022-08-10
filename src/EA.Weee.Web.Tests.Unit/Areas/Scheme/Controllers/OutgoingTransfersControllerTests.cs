@@ -586,6 +586,27 @@
         }
 
         [Fact]
+        public async Task EditTonnagesGet_GivenNullReturnEditDraftTransfer_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), null);
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => 
+                        t.OrganisationId == organisationId &&
+                        t.Request == request &&
+                        t.ReturnToEditDraftTransfer == null)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task EditTonnagesGet_GivenMappedModel_ModelShouldBeReturned()
         {
             //arrange
@@ -763,6 +784,28 @@
 
             //assert
             result.ViewName.Should().Be("EditDraftTransfer");
+        }
+
+        [Fact]
+        public async Task EditDraftTransferGet_ShouldCallClearTransferSessionObjectForOutgoingTransferKey()
+        {
+            //act
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null) as ViewResult;
+
+            //assert
+            A.CallTo(() => sessionService.ClearTransferSessionObject(outgoingTransferEvidenceController.Session, 
+                SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditDraftTransferGet_ShouldCallClearTransferSessionObjectForEditTransferEvidenceTonnageViewModel()
+        {
+            //act
+            var result = await outgoingTransferEvidenceController.EditDraftTransfer(organisationId, TestFixture.Create<Guid>(), null) as ViewResult;
+
+            //assert
+            A.CallTo(() => sessionService.ClearTransferSessionObject(outgoingTransferEvidenceController.Session,
+                SessionKeyConstant.EditTransferEvidenceTonnageViewModel)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -981,7 +1024,7 @@
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.SubmittedTransfer(model);
@@ -1001,7 +1044,8 @@
             Guid schemeId = model.ViewTransferNoteViewModel.SchemeId;
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
                 .Returns(transferEvidenceNoteData);
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.SubmittedTransfer(model);
@@ -1020,7 +1064,8 @@
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._))
                 .Returns(model);
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(model) as ViewResult;
@@ -1079,7 +1124,8 @@
         {
             //arrange
             var model = TestFixture.Create<ReviewTransferNoteViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             //act
             var result = await outgoingTransferEvidenceController.SubmittedTransfer(model) as ViewResult;
@@ -1205,6 +1251,100 @@
         }
 
         [Fact]
+        public async Task EditTransferFromGet_GivenEvidenceNoteIds_ModelMapperShouldBeCalledWithSessionValues()
+        {
+            //arrange
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => 
+                        t.Request == request &&
+                        t.SessionEvidenceNotesId.SequenceEqual(evidenceNoteIds))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_GivenNullEvidenceNoteIds_ModelMapperShouldBeCalledWithNullSessionValues()
+        {
+            //arrange
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+            request.EvidenceNoteIds = null;
+           
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
+                        t.Request == request &&
+                        t.SessionEvidenceNotesId == null)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_GivenExcludedEvidenceNoteIds_ModelMapperShouldBeCalledWithSessionValues()
+        {
+            //arrange
+            var excludeEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.ExcludeEvidenceNoteIds, excludeEvidenceNoteIds)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
+                        t.Request == request &&
+                        t.ExcludeEvidenceNoteIds.SequenceEqual(excludeEvidenceNoteIds))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_GivenNullExcludeEvidenceNoteIds_ModelMapperShouldBeCalledWithNullSessionValues()
+        {
+            //arrange
+            var excludeEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+            request.ExcludeEvidenceNoteIds = null;
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
+                        t.Request == request &&
+                        t.ExcludeEvidenceNoteIds == null)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task EditTransferFromGet_GivenMappedModel_ModelShouldBeReturned()
         {
             //arrange
@@ -1245,7 +1385,8 @@
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             //act
             var result = await outgoingTransferEvidenceController.EditTransferFrom(model) as ViewResult;
@@ -1258,7 +1399,8 @@
         public async Task EditTransferFromPost_GivenInvalidModel_SchemeShouldBeRetrievedFromCache()
         {
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTransferFrom(model);
@@ -1273,7 +1415,9 @@
             //arrange
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
+
             var organisationName = "OrganisationName";
 
             A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
@@ -1294,7 +1438,9 @@
             //arrange
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
+            
             var organisationName = "OrganisationName";
 
             A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
@@ -1481,6 +1627,105 @@
         }
 
         [Fact]
+        public async Task EditCategoriesGet_GivenTransferNote_ShouldCallGetTransferSession()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditCategories(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+               outgoingTransferEvidenceController.Session, SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesGet_GivenCategoryValues_ShouldSetSelectedCategoryIdsInSession()
+        {
+            //arrange
+            var recipientId = TestFixture.Create<Guid>();
+
+            var selectedCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.MedicalDevices.ToInt(),
+                Core.DataReturns.WeeeCategory.ToysLeisureAndSports.ToInt(),
+                Core.DataReturns.WeeeCategory.PhotovoltaicPanels.ToInt()
+            };
+
+            var alreadyExistingCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.MedicalDevices.ToInt(),
+                Core.DataReturns.WeeeCategory.ToysLeisureAndSports.ToInt()
+            };
+
+            var totalCategory1 = TestFixture.Build<TotalCategoryValue>().With(c => c.CategoryId, 2).Create();
+            var totalCategory2 = TestFixture.Build<TotalCategoryValue>().With(c => c.CategoryId, 4).Create();
+            var totalCategory3 = TestFixture.Build<TotalCategoryValue>().With(c => c.CategoryId, 9).Create();
+
+            var categoryValues = new List<TotalCategoryValue> { totalCategory1, totalCategory2, totalCategory3 };
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(c => c.CategoryIds, selectedCategories)
+                .With(c => c.RecipientId, recipientId)
+                .Create();
+
+            var model = TestFixture.Build<TransferEvidenceNoteCategoriesViewModel>()
+                .With(t => t.CategoryValues, categoryValues)
+                .Create();
+
+            A.CallTo(() =>
+                mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditCategories(organisationId, TestFixture.Create<Guid>()) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+
+            var viewModel = (TransferEvidenceNoteCategoriesViewModel)result.Model;
+
+            viewModel.CategoryBooleanViewModels.Where(c => c.CategoryId == totalCategory1.CategoryId).Select(c => c.Selected)
+                .First().Should().BeFalse();
+            viewModel.CategoryBooleanViewModels.Where(c => c.CategoryId == totalCategory2.CategoryId).Select(c => c.Selected)
+                .First().Should().BeFalse();
+            viewModel.CategoryBooleanViewModels.Where(c => c.CategoryId == totalCategory3.CategoryId).Select(c => c.Selected)
+               .First().Should().BeFalse();
+            viewModel.CategoryBooleanViewModels.Where(c => c.CategoryId == selectedCategories[0]).Select(c => c.Selected)
+               .First().Should().BeTrue();
+            viewModel.CategoryBooleanViewModels.Where(c => c.CategoryId == selectedCategories[1]).Select(c => c.Selected)
+               .First().Should().BeTrue();
+            viewModel.CategoryBooleanViewModels.Where(c => c.CategoryId == selectedCategories[2]).Select(c => c.Selected)
+              .First().Should().BeTrue();
+            viewModel.SelectedSchema.Should().Be(recipientId);
+        }
+
+        [Fact]
+        public async Task EditCategoriesGet_GivenTransferSessionIsNull_ShouldNotSetSelectedCategoryIdsInSession()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+
+            A.CallTo(() =>
+                mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNoteCategoriesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(null);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditCategories(organisationId, TestFixture.Create<Guid>()) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+
+            var viewModel = (TransferEvidenceNoteCategoriesViewModel)result.Model;
+
+            viewModel.CategoryBooleanViewModels.All(c => c.Selected == false).Should().BeTrue();
+        }
+
+        [Fact]
         public async Task EditCategoriesGet_GivenMappedModel_ModelShouldBeReturned()
         {
             //arrange
@@ -1529,7 +1774,9 @@
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            
+            AddModelError();
+            
             var organisationName = "OrganisationName";
 
             A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
@@ -1550,7 +1797,9 @@
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
+            
             var organisationName = "OrganisationName";
 
             A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
@@ -1600,6 +1849,29 @@
         }
 
         [Fact]
+        public async Task EditCategoriesPost_GivenValidModelAndNullSessionTransferObject_TransferRequestShouldBeSetInSession()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+                .Returns(null);
+
+            A.CallTo(() =>
+                    transferEvidenceRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>
+                        ._, null))
+                .Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session, request,
+                SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task EditCategoriesPost_GivenValidModel_ShouldBeRedirectedToEditNotes()
         {
             //arrange
@@ -1619,7 +1891,8 @@
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             //act
             var result = await outgoingTransferEvidenceController.EditCategories(model) as ViewResult;
@@ -1633,7 +1906,8 @@
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditCategories(model);
@@ -1649,7 +1923,7 @@
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditCategories(model);
@@ -1664,7 +1938,8 @@
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
@@ -1691,7 +1966,8 @@
         {
             //arrange
             var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+
+            AddModelError();
 
             var refreshedModel = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
             A.CallTo(() =>
@@ -1769,7 +2045,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -1788,7 +2064,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -1844,7 +2120,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -1904,7 +2180,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -1944,7 +2220,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -1974,7 +2250,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -2007,7 +2283,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -2040,7 +2316,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -2051,6 +2327,7 @@
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                         t.Notes.SequenceEqual(evidenceNoteData) &&
                         t.OrganisationId == organisationId &&
+                        t.ReturnToEditDraftTransfer == false &&
                         t.Request == request)))
                 .MustHaveHappenedOnceExactly();
         }
@@ -2066,7 +2343,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             var result = await outgoingTransferEvidenceController.EditTonnages(model) as ViewResult;
@@ -2083,7 +2360,7 @@
                 .With(m => m.PcsId, organisationId)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             //act
             var result = await outgoingTransferEvidenceController.EditTonnages(model) as ViewResult;
@@ -2249,7 +2526,7 @@
         }
 
         [Fact]
-        public async Task EditTonnagesPost_GivenModelActionIsBack_ShouldSetTransferSessionObject()
+        public async Task EditTonnagesPost_GivenModelActionIsBack_ShouldSetTransferSessionObjectWithGivenProperties()
         {
             // arrange 
             var complianceYear = TestFixture.Create<int>();
@@ -2265,7 +2542,7 @@
                 .With(t => t.Action, ActionEnum.Back)
                 .Create();
 
-            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+            AddModelError();
 
             // act
             await outgoingTransferEvidenceController.EditTonnages(model);
@@ -2278,6 +2555,60 @@
                                       ((TransferEvidenceTonnageViewModel)o).ComplianceYear == complianceYear &&
                                       ((TransferEvidenceTonnageViewModel)o).Action == ActionEnum.Back),
           SessionKeyConstant.EditTransferEvidenceTonnageViewModel)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTonnagesPost_GivenModelActionIsBackAndReturnToEditDraftTransferIsTrue_ShouldRedirectToEditDraftTransfer()
+        {
+            // arrange 
+            var pcsIds = TestFixture.Create<Guid>();
+
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(t => t.Action, ActionEnum.Back)
+                .With(t => t.ReturnToEditDraftTransfer, true)
+                .With(t => t.PcsId, pcsIds)
+                .Create();
+
+            AddModelError();
+
+            // act
+            var result = await outgoingTransferEvidenceController.EditTonnages(model) as RedirectToRouteResult;
+
+            // assert
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["evidenceNoteId"].Should().Be(model.ViewTransferNoteViewModel.EvidenceNoteId);
+            result.RouteValues["returnToView"].Should().Be(false);
+            result.RouteValues["action"].Should().Be("EditDraftTransfer");
+            result.RouteValues["controller"].Should().Be("OutgoingTransfers");
+        }
+
+        [Fact]
+        public async Task EditTonnagesPost_GivenModelActionIsBackAndReturnToEditDraftTransferIsFalse_ShouldRedirectToEditDraftTransfer()
+        {
+            // arrange 
+            var pcsIds = TestFixture.Create<Guid>();
+
+            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
+                .With(t => t.Action, ActionEnum.Back)
+                .With(t => t.ReturnToEditDraftTransfer, false)
+                .With(t => t.PcsId, pcsIds)
+                .Create();
+
+            AddModelError();
+
+            // act
+            var result = await outgoingTransferEvidenceController.EditTonnages(model) as RedirectToRouteResult;
+
+            // assert
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["evidenceNoteId"].Should().Be(model.ViewTransferNoteViewModel.EvidenceNoteId);
+            result.RouteValues["action"].Should().Be("EditTransferFrom");
+            result.RouteValues["controller"].Should().Be("OutgoingTransfers");
+        }
+
+        private void AddModelError()
+        {
+            outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
         }
     }
 }
