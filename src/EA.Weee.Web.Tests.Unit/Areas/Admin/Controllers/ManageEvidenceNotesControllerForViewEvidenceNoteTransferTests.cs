@@ -25,6 +25,7 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNoteTransfer", new[]
                 {
                     typeof(Guid),
+                    typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -38,6 +39,63 @@
            
             //assert
             Breadcrumb.InternalActivity.Should().Be(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteTransferGet_GivenDefaultPageSize_PageSizeShouldBeSetInViewBag()
+        {
+            //arrange
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId);
+
+            //assert
+            var page = (int)ManageEvidenceController.ViewBag.Page;
+            page.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteTransferGet_GivenPageSize_PageSizeShouldBeSetInViewBag()
+        {
+            //arrange
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+
+            const int pageSize = 10;
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId, pageSize);
+
+            //assert
+            var page = (int)ManageEvidenceController.ViewBag.Page;
+            page.Should().Be(pageSize);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_GivenDefaultPageSize_PageSizeShouldBeSetInViewBag()
+        {
+            //arrange
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId);
+
+            //assert
+            var page = (int)ManageEvidenceController.ViewBag.Page;
+            page.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_GivenPageSize_PageSizeShouldBeSetInViewBag()
+        {
+            //arrange
+            const int pageSize = 10;
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId, pageSize);
+
+            //assert
+            var page = (int)ManageEvidenceController.ViewBag.Page;
+            page.Should().Be(pageSize);
         }
 
         [Fact]
