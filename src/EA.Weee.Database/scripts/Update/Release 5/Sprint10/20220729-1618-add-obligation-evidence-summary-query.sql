@@ -13,25 +13,25 @@ IF OBJECT_ID('tempdb..#EvidenceSummary') IS NOT NULL
 BEGIN
 	DROP TABLE #EvidenceSummary
 END
-
-CREATE TABLE #EvidenceSummary(
-	CategoryId INT NOT NULL,
-	CategoryName NVARCHAR(60),
-	Obligation DECIMAL,
-	Evidence DECIMAL,
-	Reuse DECIMAL,
-	TransferredOut DECIMAL,
-	TransferredIn DECIMAL,
-	ObligationDifference DECIMAL
-);
+	CREATE TABLE #EvidenceSummary(
+		CategoryId INT NOT NULL,
+		CategoryName NVARCHAR(60),
+		Obligation DECIMAL,
+		EvidenceReceivedInTotal DECIMAL,
+		EvidenceReuseInTotal DECIMAL,
+		TransferEvidenceReceivedIn DECIMAL,
+		TransferEvidenceReuseIn DECIMAL,
+		TransferEvidenceReceivedOut DECIMAL,
+		TransferEvidenceReuseOut DECIMAL
+	)
 
 INSERT INTO #EvidenceSummary (CategoryId, CategoryName)
 SELECT
 	c.Id,
 	c.[Name]
 FROM
-	Lookup.WeeeCategory c;
-
+	Lookup.WeeeCategory c
+	
 UPDATE s
 SET 
 	s.Obligation = osa.Obligation
@@ -41,97 +41,48 @@ FROM
 	LEFT JOIN [PCS].ObligationScheme os ON os.Id = osa.ObligationSchemeId
 	LEFT JOIN [PCS].Scheme sc ON sc.Id = os.SchemeId
 WHERE
-	os.ComplianceYear = @ComplianceYear;
-
-WITH transfer_out_totals_cte AS
-(
-	SELECT 
-		nt.CategoryId AS CategoryId, SUM(ntt.Received) AS TransferredEvidence
-	FROM 
-		[Evidence].NoteTonnage nt
-		LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
-		LEFT JOIN [Evidence].Note n ON n.Id = ntt.TransferNoteId
-		LEFT JOIN [Organisation].Organisation o ON o.Id = n.OrganisationId
-		LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = o.Id
-	WHERE
-		n.Status = 3 AND 
-		n.NoteType = 2 AND
-		sc.Id = @SchemeId AND 
-		n.ComplianceYear = @ComplianceYear AND
-		n.WasteType = 1
-	GROUP BY 
-		nt.CategoryId
-)
+	os.ComplianceYear = @ComplianceYear
 
 UPDATE 
 	s
 SET
-	s.TransferredOut = t.TransferredEvidence
+	s.EvidenceReceivedInTotal = evc.Received,
+	s.EvidenceReuseInTotal =  evc.Reused
 FROM
 	#EvidenceSummary s
-	INNER JOIN transfer_out_totals_cte t ON t.CategoryId = s.CategoryId;
-
-WITH transfer_in_totals_cte AS
-(
-	SELECT 
-		nt.CategoryId, SUM(ntt.Received) AS TransferredIn
-	FROM 
-		[Evidence].NoteTonnage nt 
-		LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
-		LEFT JOIN [Evidence].Note n ON n.Id = ntt.TransferNoteId
-		LEFT JOIN [Organisation].Organisation o ON o.Id = n.RecipientId
-		LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = o.Id
-	WHERE
-		n.Status = 3 AND 
-		n.NoteType = 2 AND
-		sc.Id = @SchemeId AND 
-		n.ComplianceYear = @ComplianceYear AND
-		n.WasteType = 1
-	GROUP BY 
-		nt.CategoryId
-)
+	INNER JOIN Evidence.vwEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
 
 UPDATE 
 	s
 SET
-	s.TransferredIn = t.TransferredIn,
-	s.ObligationDifference = (Obligation - Evidence)
+	s.TransferEvidenceReceivedIn = evc.TransferredReceived,
+	s.TransferEvidenceReuseIn =  evc.TransferredReused
 FROM
 	#EvidenceSummary s
-	INNER JOIN transfer_in_totals_cte t ON t.CategoryId = s.CategoryId;
-
-WITH evidence_totals_cte AS
-(
-	SELECT
-		s.CategoryID,
-		SUM(nt.Received) AS Evidence,
-		SUM(nt.Reused) AS Reused
-	FROM
-		#EvidenceSummary s
-		LEFT JOIN [Evidence].NoteTonnage nt ON s.CategoryId = nt.CategoryId 
-		LEFT JOIN [Evidence].Note n ON n.Id = nt.NoteId
-		LEFT JOIN [Organisation].Organisation o ON o.Id = n.OrganisationId
-		LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = o.Id
-	WHERE
-		n.Status = 3 AND 
-		sc.Id = @SchemeId AND 
-		n.ComplianceYear = @ComplianceYear AND
-		n.WasteType = 1
-	GROUP BY
-		s.CategoryId
-)
+	INNER JOIN Evidence.vwTransferEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.Id = @SchemeId
 
 UPDATE 
 	s
 SET
-	s.Evidence = t.Evidence,
-	s.Reuse = t.Reused
+	s.TransferEvidenceReceivedOut = evc.TransferredReceived,
+	s.TransferEvidenceReuseOut =  evc.TransferredReused
 FROM
 	#EvidenceSummary s
-	INNER JOIN evidence_totals_cte t ON t.CategoryId = s.CategoryId;
+	INNER JOIN Evidence.vwTransferEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
 
-SELECT * FROM #EvidenceSummary;
+SELECT 
+	Obligation,
+	EvidenceReceivedInTotal + (TransferEvidenceReceivedIn - TransferEvidenceReceivedOut) AS Evidence,
+	EvidenceReuseInTotal + (TransferEvidenceReuseIn - TransferEvidenceReuseOut) AS Reuse,
+	TransferEvidenceReceivedOut AS TransferredOut,
+	TransferEvidenceReceivedIn AS TransferredIn,
+	Obligation - (EvidenceReceivedInTotal + (TransferEvidenceReceivedIn - TransferEvidenceReceivedOut)) AS ObligationDifference
+FROM 
+	#EvidenceSummary
 
-
+END
 
 
