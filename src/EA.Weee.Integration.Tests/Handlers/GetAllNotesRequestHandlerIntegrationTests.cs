@@ -77,7 +77,7 @@
                 notesSet.Add(evidenceWithRejectedStatus);
                 notesSet.Add(evidenceWithVoidStatus);
 
-                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear);
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue);
             };
 
             private readonly Because of = () =>
@@ -122,7 +122,7 @@
                 notesSet.Add(evidenceWithDraftStatus1);
                 notesSet.Add(evidenceWithDraftStatus2);
 
-                request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year);
+                request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue);
             };
 
             private readonly Because of = () =>

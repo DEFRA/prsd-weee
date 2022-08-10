@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -75,7 +76,7 @@
                 notesSet.Add(noteReturnedStatus);
                 notesSet.Add(noteVoidStatus);
 
-                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear);
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue);
             };
 
             private readonly Because of = () =>
@@ -120,7 +121,7 @@
                 notesSet.Add(noteWithDraftStatus1);
                 notesSet.Add(noteWithDraftStatus2);
 
-                request = new GetAllNotesInternal(noteTypeFilterForEvidenceNote, notAllowedStatuses, SystemTime.UtcNow.Year);
+                request = new GetAllNotesInternal(noteTypeFilterForEvidenceNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue);
             };
 
             private readonly Because of = () =>
