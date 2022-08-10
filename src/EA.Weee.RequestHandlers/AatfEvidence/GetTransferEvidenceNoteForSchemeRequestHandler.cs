@@ -16,17 +16,17 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
-        private readonly ISchemeDataAccess schemeDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
 
         public GetTransferEvidenceNoteForSchemeRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess evidenceDataAccess,
-            IMapper mapper, 
-            ISchemeDataAccess schemeDataAccess)
+            IMapper mapper,
+            IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
             this.evidenceDataAccess = evidenceDataAccess;
             this.mapper = mapper;
-            this.schemeDataAccess = schemeDataAccess;
+            this.organisationDataAccess = organisationDataAccess;
         }
 
         public async Task<TransferEvidenceNoteData> HandleAsync(GetTransferEvidenceNoteForSchemeRequest request)
@@ -34,10 +34,9 @@
             authorization.EnsureCanAccessExternalArea();
 
             var evidenceNote = await evidenceDataAccess.GetNoteById(request.EvidenceNoteId);
+            var organisation = await organisationDataAccess.GetById(evidenceNote.OrganisationId);
 
-            var transferredScheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(evidenceNote.OrganisationId);
-
-            Condition.Requires(transferredScheme).IsNotNull();
+            Condition.Requires(organisation).IsNotNull();
 
             var allowedAccess = authorization.CheckOrganisationAccess(evidenceNote.OrganisationId) || authorization.CheckSchemeAccess(evidenceNote.Recipient.Scheme.Id);
 
@@ -46,7 +45,7 @@
                 throw new SecurityException($"The user does not have access to the organisation or scheme with note ID {request.EvidenceNoteId}");
             }
 
-            var transferNote = mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(new TransferNoteMapTransfer(transferredScheme, evidenceNote));
+            var transferNote = mapper.Map<TransferNoteMapTransfer, TransferEvidenceNoteData>(new TransferNoteMapTransfer(evidenceNote));
 
             return transferNote;
         }

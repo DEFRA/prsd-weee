@@ -9,6 +9,7 @@
     using System.Security;
     using System.Security.Claims;
     using CuttingEdge.Conditions;
+    using Domain.Organisation;
     using Weee.Security;
 
     /// <summary>
