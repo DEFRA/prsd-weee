@@ -43,6 +43,23 @@
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
+           Guid recipientId,
+           List<int> categoryIds,
+           List<Guid> evidenceNoteIds,
+           List<Guid> excludeEvidenceNoteIds)
+        {
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
+
+            OrganisationId = organisationId;
+            RecipientId = recipientId;
+            CategoryIds = categoryIds;
+            EvidenceNoteIds = evidenceNoteIds;
+            ExcludeEvidenceNoteIds = excludeEvidenceNoteIds;
+        }
+
+        public TransferEvidenceNoteRequest(Guid organisationId,
             Guid recipientId,
             List<int> categoryIds,
             List<TransferTonnageValue> transferValues,
@@ -70,6 +87,8 @@
         public List<int> CategoryIds { get; set; }
 
         public List<Guid> EvidenceNoteIds { get; set; }
+
+        public List<Guid> ExcludeEvidenceNoteIds { get; set; }
 
         public Guid OrganisationId { get; set; }
 

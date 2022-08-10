@@ -34,6 +34,8 @@
 
         public bool? ReturnToEditDraftTransfer { get; set; }
 
+        public List<Guid> ExcludeEvidenceNoteIds { get; set; }
+
         public TransferEvidenceNotesViewModelMapTransfer(
             IList<EvidenceNoteData> notes,
             TransferEvidenceNoteRequest request,
