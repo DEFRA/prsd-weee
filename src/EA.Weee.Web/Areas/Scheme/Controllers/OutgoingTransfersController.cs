@@ -47,8 +47,6 @@
         [CheckCanEditTransferNote]
         public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId, bool? returnToEditDraftTransfer)
         {
-            ClearSessionValues();
-
             await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
@@ -138,6 +136,8 @@
         public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null)
         {
             await SetBreadcrumb(pcsId);
+
+            ClearSessionValues();
 
             redirectTab = redirectTab ?? ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString();
 
