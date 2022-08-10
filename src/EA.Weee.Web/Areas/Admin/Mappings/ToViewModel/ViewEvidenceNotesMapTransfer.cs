@@ -6,7 +6,7 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.ViewModels.Shared;
 
-    public class ViewAllEvidenceNotesMapTransfer
+    public class ViewEvidenceNotesMapTransfer
     {
         public EvidenceNoteSearchDataResult NoteData { get; set; }
 
@@ -16,8 +16,10 @@
 
         public IEnumerable<int> ComplianceYearList { get; set; }
 
-        public ViewAllEvidenceNotesMapTransfer(EvidenceNoteSearchDataResult noteData,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, IEnumerable<int> complianceYearList)
+        public int PageNumber { get; private set; }
+
+        public ViewEvidenceNotesMapTransfer(EvidenceNoteSearchDataResult noteData,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber, IEnumerable<int> complianceYearList)
         {
             Condition.Requires(noteData).IsNotNull();
 
@@ -25,6 +27,7 @@
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
             ComplianceYearList = complianceYearList;
+            PageNumber = pageNumber;
         }
     }
 }

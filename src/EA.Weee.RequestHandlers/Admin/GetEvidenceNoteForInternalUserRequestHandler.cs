@@ -5,7 +5,6 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.Evidence;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
     using Mappings;
@@ -33,7 +32,8 @@
 
             var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
             {
-                IncludeTonnage = true
+                IncludeTonnage = true,
+                IncludeHistory = true
             });
 
             return evidenceNoteData;

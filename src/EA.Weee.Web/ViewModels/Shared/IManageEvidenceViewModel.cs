@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
-    using System.Collections.Generic;
+    using Core.Shared.Paging;
 
     public interface IManageEvidenceViewModel
     {
-        IList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
+        PagedList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
         ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
     }

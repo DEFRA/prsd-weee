@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
     using EA.Weee.Web.Extensions;
@@ -126,6 +125,9 @@
                         break;
                     case NoteUpdatedStatusEnum.ReturnedSaved:
                         model.SuccessMessage = $"You have successfully saved the returned evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.ReturnedSubmitted:
+                        model.SuccessMessage = $"You have successfully submitted the returned evidence note with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                         break;
                     case NoteUpdatedStatusEnum.Void:
                         model.SuccessMessage = $"You have successfully voided the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
