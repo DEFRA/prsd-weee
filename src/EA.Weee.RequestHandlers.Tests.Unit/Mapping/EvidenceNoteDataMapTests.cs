@@ -67,7 +67,7 @@
             // assert
             result.Should().BeOfType<ListOfEvidenceNoteDataMap>();
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).MustNotHaveHappened();
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(evidenceNoteData) && e.CategoryFilter.IsNullOrEmpty()))).MustNotHaveHappened();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).MustNotHaveHappened();
         }
 
         [Theory]
@@ -88,9 +88,9 @@
             var evidenceData2 = TestFixture.Create<EvidenceNoteData>();
             var evidenceData3 = TestFixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(0))))).Returns(evidenceData1);
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(1))))).Returns(evidenceData2);
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(2))))).Returns(evidenceData3);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.IncludeHistory == false && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(0))))).Returns(evidenceData1);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.IncludeHistory == false && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(1))))).Returns(evidenceData2);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(a => a.IncludeTonnage == includeTonnages && a.IncludeHistory == false && a.CategoryFilter.SequenceEqual(categories) && a.Note.Equals(listOfNotes.ElementAt(2))))).Returns(evidenceData3);
 
             // act
             var result = map.Map(source);

@@ -69,8 +69,6 @@
 
                     await context.SaveChangesAsync();
 
-                    await RemoveAnyDuplicateNonObligatedAndSave(returnCopy);
-
                     transaction.Commit();
 
                     return @returnCopy.Id;
@@ -111,24 +109,6 @@
 
             context.WeeeReceivedAmount.RemoveRange(receivedToRemove.SelectMany(r => r.WeeeReceivedAmounts));
             context.WeeeReceived.RemoveRange(receivedToRemove);
-        }
-
-        private async Task RemoveAnyDuplicateNonObligatedAndSave(Return returnCopy)
-        {
-            var nonObligatedForReport = await context.NonObligatedWeee
-                .Where(n => n.ReturnId == returnCopy.Id)
-                .ToListAsync();
-
-            var nonObligatedToRemove = nonObligatedForReport
-                .GroupBy(n => n.CategoryId)
-                .Where(g => g.Count() > 1)
-                .SelectMany(g => g.Skip(1));
-
-            if (nonObligatedToRemove.Count() > 0)
-            {
-                context.NonObligatedWeee.RemoveRange(nonObligatedToRemove);
-                await context.SaveChangesAsync();
-            }
         }
 
         private static Expression<Func<T, bool>> Predicate<T>(QuarterWindow quarterWindow, Return returnCopy) where T : AatfEntity

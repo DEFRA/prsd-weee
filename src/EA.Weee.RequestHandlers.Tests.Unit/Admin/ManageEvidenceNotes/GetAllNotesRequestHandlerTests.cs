@@ -39,8 +39,8 @@
             mapper = A.Fake<IMapper>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
-            message = new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>());
-            messageWithEmptyNoteInternalTypeList = new GetAllNotesInternal(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>());
+            message = new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3);
+            messageWithEmptyNoteInternalTypeList = new GetAllNotesInternal(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3);
 
             handler = new GetAllNotesInternalRequestHandler(weeeAuthorization, noteDataAccess, mapper, systemDataDataAccess);
         }
@@ -87,8 +87,8 @@
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.AllowedStatuses.SequenceEqual(allowedStatuses) &&
                 e.NoteTypeFilter.SequenceEqual(noteTypeFilter) &&
-                e.PageNumber == 1 &&
-                e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                e.PageNumber == message.PageNumber &&
+                e.PageSize == message.PageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -106,8 +106,8 @@
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
                 e.AllowedStatuses.SequenceEqual(allowedStatuses) &&
                 e.NoteTypeFilter.SequenceEqual(noteTypeFilter) &&
-                e.PageSize == int.MaxValue &&
-                e.PageNumber == 1))).MustHaveHappenedOnceExactly();
+                e.PageSize == messageWithEmptyNoteInternalTypeList.PageSize &&
+                e.PageNumber == messageWithEmptyNoteInternalTypeList.PageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -182,7 +182,7 @@
 
         private GetAllNotesInternal GetAllNotes()
         {
-            return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>());    
+            return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 1, 2);    
         }
     }
 }
