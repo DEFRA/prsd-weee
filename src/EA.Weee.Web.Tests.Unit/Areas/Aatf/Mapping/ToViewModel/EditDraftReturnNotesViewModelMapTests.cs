@@ -79,7 +79,7 @@
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1);
 
             //act
             editDraftReturnNotesViewModelMap.Map(transfer);
