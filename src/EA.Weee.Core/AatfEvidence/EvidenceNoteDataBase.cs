@@ -4,11 +4,11 @@
 
     public abstract class EvidenceNoteDataBase
     {
-        public Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
 
-        public NoteType Type { get; set; }
+        public virtual NoteType Type { get; set; }
 
-        public NoteStatus Status { get; set; }
+        public virtual NoteStatus Status { get; set; }
 
         public int Reference { get; set; }
 

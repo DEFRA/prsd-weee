@@ -107,8 +107,6 @@
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(result.TransferredOrganisationData.Id,
                    result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
 
-                model.CanVoid = IsInternalAdminUser();
-
                 return View(model);
             }
         }
@@ -129,8 +127,6 @@
                 {
                     var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
                        transferNoteData, null));
-
-                    //model.CanVoid = IsInternalAdminUser();
 
                     return View("VoidTransferNote", model);
                 }
@@ -156,42 +152,16 @@
 
                 if (transferNoteData.Type == NoteType.Transfer && transferNoteData.Status == NoteStatus.Void)
                 {
-                    model.CanVoid = IsInternalAdminUser();
-
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = NoteUpdatedStatusEnum.Void;
 
                     model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
                        transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
 
-                    return RedirectToAction("ViewTransferNote", "ManageEvidenceNotes", new { transferNoteId = model.EvidenceNoteId });
+                    return RedirectToAction("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { transferNoteId = model.EvidenceNoteId });
                 }
             }
 
             return View("VoidTransferNote", model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> ViewTransferNote(Guid transferNoteId)
-        {
-            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
-
-            using (var client = apiClient())
-            {
-                var request = new GetEvidenceNoteTransfersForInternalUserRequest(transferNoteId);
-
-                var noteData = await client.SendAsync(User.GetAccessToken(), request);
-
-                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(noteData.TransferredOrganisationData.Id, 
-                    noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
-
-                return View("ViewEvidenceNoteTransfer", model);
-            }
-        }
-
-        private bool IsInternalAdminUser()
-        {
-            var claimsPrincipal = new ClaimsPrincipal(this.User);
-            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
         }
 
         private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber)
