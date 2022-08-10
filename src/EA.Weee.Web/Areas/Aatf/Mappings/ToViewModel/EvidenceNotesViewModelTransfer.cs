@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
 {
     using System;
-    using System.Collections.Generic;
     using Core.AatfEvidence;
     using EA.Weee.Web.ViewModels.Shared;
     using Prsd.Core;
@@ -18,20 +17,23 @@
 
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; private set; }
 
+        public int PageNumber { get; private set; }
+
         public EvidenceNotesViewModelTransfer(Guid organisationId, 
-            Guid aatfId, EvidenceNoteSearchDataResult noteData, 
+            Guid aatfId, EvidenceNoteSearchDataResult noteData,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int pageNumber = 1)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => noteData, noteData);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
-
+            
             OrganisationId = organisationId;
             AatfId = aatfId;
             NoteData = noteData;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
+            PageNumber = pageNumber;
         }
     }
 }

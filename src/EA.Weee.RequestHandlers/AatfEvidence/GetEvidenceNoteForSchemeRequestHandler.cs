@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using System.Threading.Tasks;
-    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.DataAccess.DataAccess;
