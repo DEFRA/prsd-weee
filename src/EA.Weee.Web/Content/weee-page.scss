@@ -916,9 +916,10 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     color: #005ea5 !important;
 }
 
-#tbSessionCookies th, #tbSessionCookies td,
+#tbSessionCookiesPRSD th, #tbSessionCookiesPRSD td,
+#tbSessionCookiesARRA th, #tbSessionCookiesARRA td,
 #tbGoogleAnalytics th, #tbGoogleAnalytics td,
-#tbIntroductoryCookies th, #tbIntroductoryCookies td{
+#tbIntroductoryCookies th, #tbIntroductoryCookies td {
     line-height: 1.31579 !important;
     font-size: 16px !important;
 }
