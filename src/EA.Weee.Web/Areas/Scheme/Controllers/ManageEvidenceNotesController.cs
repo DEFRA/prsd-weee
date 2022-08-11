@@ -206,7 +206,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1)
         {
             using (var client = this.apiClient())
             {
@@ -221,6 +221,8 @@
                     SchemeId = pcsId,
                     RedirectTab = redirectTab
                 });
+
+                ViewBag.Page = page;
 
                 return View(model);
             }

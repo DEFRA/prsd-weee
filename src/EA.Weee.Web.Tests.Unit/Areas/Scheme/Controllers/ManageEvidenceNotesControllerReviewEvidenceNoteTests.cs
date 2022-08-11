@@ -38,6 +38,7 @@
         protected readonly Guid OrganisationId;
         protected readonly Guid EvidenceNoteId;
         protected readonly ISessionService SessionService;
+        private readonly ConfigurationService configurationService;
 
         public ManageEvidenceNotesControllerReviewEvidenceNoteTests()
         {
@@ -49,7 +50,8 @@
             RecipientId = Guid.NewGuid();
             OrganisationId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService);
+            configurationService = A.Fake<ConfigurationService>();
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, configurationService);
 
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(
                 new ReviewEvidenceNoteViewModel()
