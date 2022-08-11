@@ -242,7 +242,15 @@
                 {
                     var request = editRequestCreator.ViewModelToRequest(viewModel);
 
-                    var updateStatus = request.Status == NoteStatus.Returned && viewModel.Action == ActionEnum.Save ? NoteUpdatedStatusEnum.ReturnedSaved : (NoteUpdatedStatusEnum)request.Status;
+                    NoteUpdatedStatusEnum updateStatus;
+                    if (viewModel.Status == NoteStatus.Returned)
+                    {
+                        updateStatus = viewModel.Action == ActionEnum.Save ? NoteUpdatedStatusEnum.ReturnedSaved : NoteUpdatedStatusEnum.ReturnedSubmitted;
+                    }
+                    else
+                    {
+                        updateStatus = (NoteUpdatedStatusEnum)request.Status;
+                    }
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = updateStatus;
 
