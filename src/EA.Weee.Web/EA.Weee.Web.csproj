@@ -804,7 +804,6 @@
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_AddressOnly.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_ChooseSite.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
-    <Content Include="Areas\Scheme\Views\ManageTransferNotes\_ReviewSubmittedTransferEvidencePartial.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\ViewObligationAndEvidenceSummary.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ViewAllNotesEmptyPartial.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
