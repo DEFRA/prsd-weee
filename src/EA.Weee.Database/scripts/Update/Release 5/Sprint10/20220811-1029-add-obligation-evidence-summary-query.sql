@@ -17,13 +17,13 @@ END
 CREATE TABLE #EvidenceSummary(
 	CategoryId INT NOT NULL PRIMARY KEY,
 	CategoryName NVARCHAR(60),
-	Obligation DECIMAL,
-	EvidenceReceivedInTotal DECIMAL,
-	EvidenceReuseInTotal DECIMAL,
-	TransferEvidenceReceivedIn DECIMAL,
-	TransferEvidenceReuseIn DECIMAL,
-	TransferEvidenceReceivedOut DECIMAL,
-	TransferEvidenceReuseOut DECIMAL
+	Obligation DECIMAL(28, 3),
+	EvidenceReceivedInTotal DECIMAL(28, 3),
+	EvidenceReuseInTotal DECIMAL(28, 3),
+	TransferEvidenceReceivedIn DECIMAL(28, 3),
+	TransferEvidenceReuseIn DECIMAL(28, 3),
+	TransferEvidenceReceivedOut DECIMAL(28, 3),
+	TransferEvidenceReuseOut DECIMAL(28, 3)
 )
 
 INSERT INTO #EvidenceSummary (CategoryId, CategoryName, Obligation, EvidenceReceivedInTotal, EvidenceReuseInTotal, 
