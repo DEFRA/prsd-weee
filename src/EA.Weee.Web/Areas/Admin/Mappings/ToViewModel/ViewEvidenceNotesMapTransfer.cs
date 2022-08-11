@@ -22,7 +22,8 @@
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber, IEnumerable<int> complianceYearList)
         {
             Condition.Requires(noteData).IsNotNull();
-
+            Condition.Requires(pageNumber).IsNotLessOrEqual(0);
+            
             NoteData = noteData;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
