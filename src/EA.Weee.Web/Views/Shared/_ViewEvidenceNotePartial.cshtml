@@ -89,23 +89,23 @@ else
         @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay, "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-!-padding-bottom-6">
         @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay, "govuk-grid-column-one-quarter")
     </div>
 
     @if (Model.DisplayEvidenceNoteHistoryData)
     {
-        <div class="govuk-width-container govuk-!-padding-top-5 govuk-!-padding-left-0">
-            @(this.WeeeGds().CreateProgressiveDisclosure("Transfer History",
+        <div class="govuk-width-container govuk-!-padding-left-0">
+            @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
                         @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
                         "Hidden content",
                         "Progressive disclosure",
-                        "Transfer History"))
+                        "Transfer history"))
         </div>
     }
 </div>
 
-<div class="govuk-width-container govuk-!-padding-top-7 govuk-!-padding-left-0">
+<div class="govuk-width-container govuk-!-padding-left-0">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
         <span id="site" class="govuk-label--s">Site</span><br />
         <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>

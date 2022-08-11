@@ -720,7 +720,7 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationButOrganisationIsBalancignScheme_DisplayEditButtonShouldBeTrue(NoteStatus status)
+        public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationButOrganisationIsBalancingScheme_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
             if (status != NoteStatus.Draft && status != NoteStatus.Returned)
             {
