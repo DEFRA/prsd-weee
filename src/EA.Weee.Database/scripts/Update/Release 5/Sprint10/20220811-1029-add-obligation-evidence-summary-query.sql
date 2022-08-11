@@ -15,7 +15,7 @@ BEGIN
 END
 
 CREATE TABLE #EvidenceSummary(
-	CategoryId INT NOT NULL,
+	CategoryId INT NOT NULL PRIMARY KEY,
 	CategoryName NVARCHAR(60),
 	Obligation DECIMAL,
 	EvidenceReceivedInTotal DECIMAL,

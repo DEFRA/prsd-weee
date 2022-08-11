@@ -18,8 +18,6 @@
 
         public List<OrganisationSchemeData> SchemeList { get; set; }
 
-        public Guid SelectedSchemeId { get; set; }
-
         public IList<ObligationEvidenceValue> ObligationEvidenceValues { get; set; }
 
         public bool DisplayNoDataMessage { get; set; }

@@ -141,7 +141,7 @@
         $("#ComplianceYearForm").submit();
     });
 
-    var myEvent = new CustomEvent("myevent", {
+    var myEvent = new CustomEvent("gds-auto-complete-event", {
         detail: {},
         bubbles: true,
         cancelable: true,
@@ -195,9 +195,10 @@
                         var findSelectedOption = postBackElement.options[postBackOptions];
                         var text = findSelectedOption.textContent || findSelectedOption.innerText;
                         if (text === selected) {
-                            postBackElement.value = findSelectedOption.value;
-                            postBackElement.dispatchEvent(myEvent);
-
+                            if (postBackElement.value !== findSelectedOption.value) {
+                                postBackElement.value = findSelectedOption.value;
+                                postBackElement.dispatchEvent(myEvent);
+                            }
                         }
                     }
                 } else {

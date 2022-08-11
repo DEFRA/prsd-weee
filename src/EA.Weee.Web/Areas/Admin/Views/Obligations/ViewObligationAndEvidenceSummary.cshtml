@@ -113,7 +113,7 @@
                         </tr>
                     }
 
-                    <tr class="govuk-table__row">
+                    <tr class="govuk-table__row govuk-panel-grey-background">
                         <td class="govuk-table__cell">
                             <p class="govuk-body"><strong>Total (tonnes)</strong></p>
                         </td>
@@ -137,7 +137,7 @@
                         </td>
                     </tr>
 
-                    <tr class="govuk-table__row">
+                    <tr class="govuk-table__row govuk-panel-grey-background">
                         <td class="govuk-table__cell">
                             <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
                         </td>
@@ -173,7 +173,10 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            document.querySelector("#SchemeId-select").addEventListener("myevent", (event) => {
+            document.querySelector("#SchemeId-select").addEventListener("gds-auto-complete-event", (event) => {
+                $("#ViewObligationAndEvidenceSummaryForm").submit();
+            });
+            document.querySelector("#SelectedComplianceYear").addEventListener("change", (event) => {
                 $("#ViewObligationAndEvidenceSummaryForm").submit();
             });
         });
