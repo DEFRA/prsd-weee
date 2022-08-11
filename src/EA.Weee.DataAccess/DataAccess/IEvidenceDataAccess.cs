@@ -27,7 +27,12 @@
 
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear);
 
-        Task<IEnumerable<Note>> GetNotesToTransfer(Guid recipientOrganisationId, List<int> categories, List<Guid> evidenceNotes, int complianceYear);
+        Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
+            List<int> categories, 
+            List<Guid> evidenceNotes, 
+            int complianceYear,
+            int pageNumber,
+            int pageSize);
 
         Task<Note> AddTransferNote(Organisation organisation,
             Organisation scheme,
