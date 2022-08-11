@@ -9,7 +9,7 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(Url.RouteUrl(SchemeTransferEvidenceRedirect.EditDraftTransferEvidenceRouteName, new { pcsId = Model.PcsId, evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId })))
+    @(this.WeeeGds().BackLink(Url.RouteUrl(SchemeTransferEvidenceRedirect.EditDraftTransferEvidenceRouteName, new { pcsId = Model.PcsId, evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId, page = ViewBag.Page })))
     
     <div class="govuk-!-padding-bottom-2"></div>
 

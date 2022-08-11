@@ -38,6 +38,7 @@
         protected readonly Guid OrganisationId;
         protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
         protected readonly ISessionService SessionService;
+        private readonly ConfigurationService configurationService;
 
         public ManageEvidenceNotesControllerTests()
         {
@@ -47,8 +48,9 @@
             Mapper = A.Fake<IMapper>();
             OrganisationId = Guid.NewGuid();
             SessionService = A.Fake<ISessionService>();
+            configurationService = A.Fake<ConfigurationService>();
             TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, configurationService);
         
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = TestFixture.Create<string>() });
