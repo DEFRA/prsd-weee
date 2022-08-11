@@ -191,7 +191,7 @@
 
             if (selection == InternalUserActivity.ViewPCSObligationAndEvidenceSummary)
             {
-                Assert.Equal("AdminHolding", redirectToRouteResult.RouteValues["controller"]);
+                Assert.Equal("Obligations", redirectToRouteResult.RouteValues["controller"]);
             }
 
             if (selection == InternalUserActivity.ManagePcsObligations)

@@ -10,7 +10,7 @@
 
         public bool IncludeCurrentYear { get; }
 
-        public GetObligationComplianceYears(CompetentAuthority? authority, bool includeCurrentYear)
+        public GetObligationComplianceYears(CompetentAuthority? authority, bool includeCurrentYear = true)
         {
             Authority = authority;
             IncludeCurrentYear = includeCurrentYear;

@@ -37,7 +37,8 @@
                 ObligationEvidenceValues = new List<ObligationEvidenceValue>(),
                 DisplayNoDataMessage = !source.ComplianceYears.Any(),
                 ComplianceYearList = source.ComplianceYears,
-                SchemeList = schemeList
+                SchemeList = schemeList,
+                SchemeId = source.SchemeId
             };
 
             var excludedCategories = new List<WeeeCategory>()

@@ -4,9 +4,8 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin.Obligation;
     using EA.Weee.DataAccess.StoredProcedure;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.Obligations;
-    using EA.Weee.Security;
+    using Security;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
