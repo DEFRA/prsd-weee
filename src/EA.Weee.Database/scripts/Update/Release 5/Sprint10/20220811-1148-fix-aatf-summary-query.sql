@@ -22,8 +22,8 @@ END
 CREATE TABLE #CategoryTotals(
 	CategoryId INT NOT NULL,
 	CategoryName NVARCHAR(60) NOT NULL,
-	Received DECIMAL NULL,
-	Reused DECIMAL NULL
+	Received DECIMAL(28, 3) NULL,
+	Reused DECIMAL(28, 3) NULL
 )
 
 INSERT INTO #CategoryTotals (CategoryId, CategoryName)
