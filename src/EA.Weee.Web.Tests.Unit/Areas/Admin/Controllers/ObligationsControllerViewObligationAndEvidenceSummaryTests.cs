@@ -1,14 +1,17 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using AutoFixture;
     using EA.Weee.Api.Client;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Web.Mvc;
     using Prsd.Core.Mapper;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using Weee.Requests.Admin.Obligations;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -42,13 +45,15 @@
         }
 
         [Fact]
-        public void ViewObligationAndEvidenceSummaryGet_ObligationComplianceYearsShouldBeRetrieved()
+        public async Task ViewObligationAndEvidenceSummaryGet_ObligationComplianceYearsShouldBeRetrieved()
         {
-            //arrange
-
             //act
+            await controller.ViewObligationAndEvidenceSummary(TestFixture.Create<int>(), TestFixture.Create<Guid>());
 
             //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                    A<GetObligationComplianceYears>.That.Matches(g => g.IncludeCurrentYear == false &&
+                                                                      g.Authority == null))).MustHaveHappenedOnceExactly();
         }
     }
 }
