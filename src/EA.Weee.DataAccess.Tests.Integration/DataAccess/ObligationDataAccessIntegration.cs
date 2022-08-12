@@ -640,14 +640,15 @@
                 var schemeNotBelongingToAuthority2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
                 ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, nonMatchingAuthority.Id, schemeNotBelongingToAuthority2);
 
-                var obligationScheme2020 = new ObligationScheme(schemeBelongingToAuthority1, 2020);
-                var obligationScheme2020Duplicate = new ObligationScheme(schemeBelongingToAuthority2, 2020);
-                var obligationScheme2021 = new ObligationScheme(schemeBelongingToAuthority1, 2021);
-                var obligationSchemeNotMatchingAuthority = new ObligationScheme(schemeNotBelongingToAuthority2, 2000);
+                var obligationScheme2020 = new ObligationScheme(schemeBelongingToAuthority1, 1);
+                var obligationScheme2020Duplicate = new ObligationScheme(schemeBelongingToAuthority2, 1);
+                var obligationScheme2021 = new ObligationScheme(schemeBelongingToAuthority1, 2);
+                var obligationSchemeNotMatchingAuthority = new ObligationScheme(schemeNotBelongingToAuthority2, 3);
 
                 obligatedUpload.ObligationSchemes.Add(obligationScheme2020);
                 obligatedUpload.ObligationSchemes.Add(obligationScheme2021);
                 obligatedUpload.ObligationSchemes.Add(obligationScheme2020Duplicate);
+                obligatedUpload.ObligationSchemes.Add(obligationSchemeNotMatchingAuthority);
 
                 context.ObligationUploads.Add(obligatedUpload);
 
@@ -655,10 +656,62 @@
 
                 var results = await dataAccess.GetObligationComplianceYears(matchingAuthority);
 
-                results.Should().ContainInOrder(new List<int>() { 2021, 2020 });
+                results.Should().ContainInOrder(new List<int>() { 2, 1 });
                 results.Should().OnlyHaveUniqueItems();
                 results.Should().BeInDescendingOrder();
-                results.Should().NotContain(2000);
+                results.Should().NotContain(3);
+            }
+        }
+
+        [Fact]
+        public async Task GetObligationComplianceYears_GivenNullAuthority_ShouldReturnComplianceYears()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var dataAccess =
+                    new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
+                var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+
+                var authority1 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var authority2 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.NorthernIreland);
+
+                var obligatedUpload =
+                    new ObligationUpload(authority1, context.GetCurrentUser(), "data", "filename");
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+
+                var schemeBelongingToAuthority1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority1.Id, schemeBelongingToAuthority1);
+
+                var schemeBelongingToAuthority2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority1.Id, schemeBelongingToAuthority2);
+
+                var schemeNotBelongingToAuthority2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority2.Id, schemeNotBelongingToAuthority2);
+
+                var obligationScheme2020 = new ObligationScheme(schemeBelongingToAuthority1, 10);
+                var obligationScheme2020Duplicate = new ObligationScheme(schemeBelongingToAuthority2, 10);
+                var obligationScheme2021 = new ObligationScheme(schemeBelongingToAuthority1, 11);
+                var obligationScheme2022 = new ObligationScheme(schemeNotBelongingToAuthority2, 12);
+
+                obligatedUpload.ObligationSchemes.Add(obligationScheme2020);
+                obligatedUpload.ObligationSchemes.Add(obligationScheme2021);
+                obligatedUpload.ObligationSchemes.Add(obligationScheme2020Duplicate); 
+                obligatedUpload.ObligationSchemes.Add(obligationScheme2022);
+
+                context.ObligationUploads.Add(obligatedUpload);
+
+                await context.SaveChangesAsync();
+
+                var results = await dataAccess.GetObligationComplianceYears(null);
+
+                results.Should().ContainInOrder(new List<int>() { 12, 11, 10 });
+                results.Should().OnlyHaveUniqueItems();
+                results.Should().BeInDescendingOrder();
             }
         }
     }
