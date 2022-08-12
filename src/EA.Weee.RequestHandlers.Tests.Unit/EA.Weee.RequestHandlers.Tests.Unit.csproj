@@ -233,6 +233,7 @@
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandlerUnitTests.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandlerUnitTests.cs" />
+    <Compile Include="Admin\Obligations\GetSchemesWithObligationHandlerTests.cs" />
     <Compile Include="Admin\Obligations\ObligationCsvReaderTests.cs" />
     <Compile Include="Admin\Obligations\ObligationDataAccessUnitTests.cs" />
     <Compile Include="Admin\Obligations\ObligationUploadValidatorTests.cs" />
