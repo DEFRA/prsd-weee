@@ -714,5 +714,54 @@
                 results.Should().BeInDescendingOrder();
             }
         }
+
+        [Fact]
+        public async Task GetSchemesWithObligations_ShouldReturnSchemes()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
+                var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+
+                var authority1 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
+                var authority2 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.NorthernIreland);
+
+                var obligatedUpload = new ObligationUpload(authority1, context.GetCurrentUser(), "data", "filename");
+
+                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority1.Id, scheme1);
+
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority2.Id, scheme2);
+
+                var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority2.Id, scheme3);
+
+                var obligationScheme12020 = new ObligationScheme(scheme1, 2022);
+                var obligationScheme22020 = new ObligationScheme(scheme2, 2022);
+                var obligationSchemeNotFound = new ObligationScheme(scheme2, 2023);
+
+                obligatedUpload.ObligationSchemes.Add(obligationScheme12020);
+                obligatedUpload.ObligationSchemes.Add(obligationScheme22020);
+                obligatedUpload.ObligationSchemes.Add(obligationSchemeNotFound);
+
+                context.ObligationUploads.Add(obligatedUpload);
+
+                await context.SaveChangesAsync();
+
+                var results = await dataAccess.GetSchemesWithObligations(2022);
+
+                results.Should().OnlyHaveUniqueItems();
+                results.Should().Contain(scheme1);
+                results.Should().Contain(scheme2);
+                results.Should().NotContain(scheme3);
+            }
+        }
     }
 }
