@@ -126,14 +126,14 @@
         [Fact]
         public void EditCategoriesGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid), typeof(int) })
                 .Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void EditCategoriesGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid), typeof(int) })
                 .Should().BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
