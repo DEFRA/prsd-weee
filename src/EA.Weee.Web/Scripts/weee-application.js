@@ -151,7 +151,6 @@
     var selectElements = document.querySelectorAll(".gds-auto-complete");
 
     selectElements.forEach(function (element) {
-
         var items = Array.from(element.options).map(el => el.textContent || el.innerText);
 
         // get the default selected value
