@@ -335,6 +335,12 @@
             {
                 ShouldMapToNote();
                 data.Status.Should().Be(NoteStatus.Void);
+                data.VoidedReason.Should().Be(note.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(NoteStatus.Void))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
+                data.VoidedDate.Value.Date.Should().Be(note.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(NoteStatus.Void))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.Date);
             };
         }
 
