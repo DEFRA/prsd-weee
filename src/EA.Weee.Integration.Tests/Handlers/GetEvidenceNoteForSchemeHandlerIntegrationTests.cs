@@ -337,6 +337,60 @@
         }
 
         [Component]
+        public class WhenIGetOneVoidedEvidenceNote : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithOrganisation(organisation.Id)
+                    .WithRecipient(recipientOrganisation.Id)
+                     .With(n =>
+                     {
+                         n.UpdateStatus(NoteStatus.Void, UserId.ToString(), SystemTime.UtcNow, "reason voided");
+                     })
+                    .Create();
+
+                request = new GetEvidenceNoteForSchemeRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveCreatedVoidedEvidenceNote = () =>
+            {
+                result.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveCreatedTheVoidedEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Void);
+                result.VoidedReason.Should().Be("reason voided");
+                result.VoidedDate.Value.ToString("dd/MM/yyyy HH:mm:ss").Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Void)).ChangedDate.ToString("dd/MM/yyyy HH:mm:ss"));
+            };
+        }
+
+        [Component]
         public class WhenIGetOneNoteWhereNoteDoesNotExist : GetEvidenceNoteForSchemeHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
@@ -414,6 +468,15 @@
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
                 ((int)result.Type).Should().Be(note.NoteType.Value);
                 result.Id.Should().Be(note.Id);
+
+                result.VoidedReason.Should().Be(note.NoteStatusHistory
+                                                    .Where(n => n.ToStatus.Equals(NoteStatus.Void))
+                                                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
+
+                result.VoidedDate.Should().Be(note.NoteStatusHistory
+                                                  .Where(n => n.ToStatus.Equals(NoteStatus.Void))
+                                                  .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate);
+
                 result.ComplianceYear.Should().Be(note.ComplianceYear);
                 foreach (var noteTonnage in note.NoteTonnage)
                 {

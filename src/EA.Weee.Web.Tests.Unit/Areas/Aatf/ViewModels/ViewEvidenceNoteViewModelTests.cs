@@ -259,7 +259,7 @@
         [InlineData(NoteStatus.Approved, "Approved evidence note")]
         [InlineData(NoteStatus.Returned, "Returned evidence note")]
         [InlineData(NoteStatus.Submitted, "Submitted evidence note")]
-        [InlineData(NoteStatus.Void, "")]
+        [InlineData(NoteStatus.Void, "Voided evidence note")]
         public void TabName_GivenNoteStatus_ShouldHaveCorrectTabName(NoteStatus status, string expected)
         {
             //arrange

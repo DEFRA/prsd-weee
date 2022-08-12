@@ -28,6 +28,12 @@
                         .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
                     ?.Reason
                     : null, // Note: do not change the order of update between Returned and Rejected as the last update wins
+                VoidedReason = note.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Void)
+                    ? (note.NoteStatusHistory
+                        .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Void))
+                        .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
+                    ?.Reason
+                    : null,
                 SubmittedDate = note.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
@@ -42,6 +48,10 @@
                     ?.ChangedDate,
                 RejectedDate = note.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected))
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
+                    ?.ChangedDate,
+                VoidedDate = note.NoteStatusHistory
+                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Void))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate
             };
