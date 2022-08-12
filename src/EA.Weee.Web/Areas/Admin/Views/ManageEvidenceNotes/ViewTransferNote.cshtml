@@ -17,8 +17,8 @@
     {
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
+            new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear })))
+    }
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
 }
-

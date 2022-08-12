@@ -1,0 +1,17 @@
+﻿@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.ViewModels.Shared.EvidenceNoteViewModel
+
+@{
+    var width = ViewData["widthCss"];
+}
+
+@if (Model.DisplayVoidedReason)
+{
+    <span id="reason-label" class="govuk-label--s @width">
+        @Html.DisplayNameFor(m => m.VoidedReason)
+    </span>
+    <span aria-labelledby="reason-label" class="govuk-body govuk-!-padding-left-0 govuk-!-margin-bottom-0 weee-word-break weee-span-as-cell">
+        @Html.DisplayTextFor(m => m.VoidedReason)
+    </span>
+}
+
