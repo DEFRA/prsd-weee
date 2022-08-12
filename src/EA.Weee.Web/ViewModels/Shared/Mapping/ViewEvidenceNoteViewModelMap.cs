@@ -136,6 +136,9 @@
                         case NoteUpdatedStatusEnum.ReturnedSaved:
                             model.SuccessMessage = $"You have successfully saved the returned evidence note with reference ID E{note.Reference}";
                             break;
+                        case NoteUpdatedStatusEnum.ReturnedSubmitted:
+                            model.SuccessMessage = $"You have successfully submitted the returned evidence note with reference ID E{note.Reference}";
+                            break;
                     }
                 }
             }
