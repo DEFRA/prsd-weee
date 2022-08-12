@@ -473,9 +473,9 @@
                                                     .Where(n => n.ToStatus.Equals(NoteStatus.Void))
                                                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
 
-                result.VoidedDate.Should().Be(note.NoteStatusHistory
+                result.VoidedDate.Value.Date.Should().Be(note.NoteStatusHistory
                                                   .Where(n => n.ToStatus.Equals(NoteStatus.Void))
-                                                  .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate);
+                                                  .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.Date);
 
                 result.ComplianceYear.Should().Be(note.ComplianceYear);
                 foreach (var noteTonnage in note.NoteTonnage)
