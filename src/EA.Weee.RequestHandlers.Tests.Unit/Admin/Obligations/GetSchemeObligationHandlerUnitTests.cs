@@ -114,7 +114,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => obligationDataAccess.GetObligationScheme(A<UKCompetentAuthority>.That.IsSameAs(authority), request.ComplianceYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => obligationDataAccess.GetObligationSchemeData(A<UKCompetentAuthority>.That.IsSameAs(authority), request.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -122,7 +122,7 @@
         {
             //arrange
             var schemes = TestFixture.CreateMany<Scheme>().ToList();
-            A.CallTo(() => obligationDataAccess.GetObligationScheme(A<UKCompetentAuthority>._, A<int>._)).Returns(schemes);
+            A.CallTo(() => obligationDataAccess.GetObligationSchemeData(A<UKCompetentAuthority>._, A<int>._)).Returns(schemes);
 
             //act
             await handler.HandleAsync(request);
