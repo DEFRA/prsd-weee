@@ -386,7 +386,9 @@
                 ShouldMapToNote();
                 result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Void);
                 result.VoidedReason.Should().Be("reason voided");
-                result.VoidedDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Void)).ChangedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                var date1 = result.VoidedDate.Value.ToShortDateString();
+                var date2 = note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Void)).ChangedDate.ToShortDateString();
+                date1.Should().Be(date2);
             };
         }
 
@@ -473,9 +475,9 @@
                                                     .Where(n => n.ToStatus.Equals(NoteStatus.Void))
                                                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
 
-                result.VoidedDate.Value.Date.Should().Be(note.NoteStatusHistory
+                result.VoidedDate?.ToShortDateString().Should().Be(note.NoteStatusHistory
                                                   .Where(n => n.ToStatus.Equals(NoteStatus.Void))
-                                                  .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.Date);
+                                                  .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.ToShortDateString());
 
                 result.ComplianceYear.Should().Be(note.ComplianceYear);
                 foreach (var noteTonnage in note.NoteTonnage)
