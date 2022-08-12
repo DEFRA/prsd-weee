@@ -386,7 +386,7 @@
                 ShouldMapToNote();
                 result.Status.Should().Be(EA.Weee.Core.AatfEvidence.NoteStatus.Void);
                 result.VoidedReason.Should().Be("reason voided");
-                result.VoidedDate.Value.ToString("dd/MM/yyyy HH:mm:ss").Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Void)).ChangedDate.ToString("dd/MM/yyyy HH:mm:ss"));
+                result.VoidedDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Equals(NoteStatus.Void)).ChangedDate.ToString("yyyy-MM-dd HH:mm:ss"));
             };
         }
 

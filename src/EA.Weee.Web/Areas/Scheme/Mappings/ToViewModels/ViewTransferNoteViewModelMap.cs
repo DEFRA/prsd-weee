@@ -91,6 +91,9 @@
                     null),
                 TransferredByAddress = transferredByFormattedAddress,
                 Summary = GenerateNotesModel(source),
+
+                EvidenceNoteHistoryData = null,  //TODO: when transfer history appears at top of view page
+
                 DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) 
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)

@@ -24,12 +24,12 @@
             if (source.ListOfNotes.Any())
             {
                 foreach (var note in source.ListOfNotes)
-                { 
+                {
                     var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(note)
                     {
                         CategoryFilter = source.CategoryFilter,
                         IncludeTonnage = source.IncludeTonnage,
-                        IncludeHistory = false
+                        IncludeHistory = note.Status == Domain.Evidence.NoteStatus.Void
                     });
                     model.ListOfEvidenceNoteData.Add(evidenceNoteData);
                 }

@@ -77,6 +77,8 @@
                         return SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName;
                     case NoteStatus.Returned:
                         return SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName;
+                    case NoteStatus.Void:
+                        return SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName;
                 }
 
                 return string.Empty;
