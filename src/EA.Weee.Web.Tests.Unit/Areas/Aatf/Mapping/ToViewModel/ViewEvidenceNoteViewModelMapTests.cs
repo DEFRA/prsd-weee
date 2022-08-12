@@ -638,7 +638,7 @@
             var data = new EvidenceNoteHistoryData(TestFixture.Create<Guid>(), TestFixture.Create<NoteStatus>(), TestFixture.Create<int>(), TestFixture.Create<NoteType>(), TestFixture.Create<DateTime?>(), TestFixture.Create<string>());
             var history = new List<EvidenceNoteHistoryData>()
             {
-                data,
+                data
             };
             source.EvidenceNoteData.EvidenceNoteHistoryData = history;
 

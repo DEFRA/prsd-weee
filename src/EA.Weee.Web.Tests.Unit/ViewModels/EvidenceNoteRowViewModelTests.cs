@@ -220,7 +220,7 @@
             var route = model.SchemeViewRouteName;
 
             //assert
-            route.Should().BeEmpty();
+            route.Should().Be("Scheme_voided_transfer");
         }
     }
 }
