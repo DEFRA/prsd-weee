@@ -21,12 +21,13 @@
                 if (scheme.ObligationSchemes.Any())
                 {
                     returnData.Add(new SchemeObligationData(scheme.SchemeName,
+                        scheme.Id,
                         scheme.ObligationSchemes.First().UpdatedDate,
                         scheme.ObligationSchemes.First().ObligationSchemeAmounts.Select(os => new SchemeObligationAmountData((WeeeCategory)os.CategoryId, os.Obligation)).ToList()));
                 }
                 else
                 {
-                    returnData.Add(new SchemeObligationData(scheme.SchemeName, null,
+                    returnData.Add(new SchemeObligationData(scheme.SchemeName, scheme.Id, null,
                         new List<SchemeObligationAmountData>()));
                 }
             }

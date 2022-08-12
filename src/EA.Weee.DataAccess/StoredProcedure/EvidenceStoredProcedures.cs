@@ -22,5 +22,14 @@
 
             return await context.Database.SqlQuery<AatfEvidenceSummaryTotalsData>(queryString, aatfIdParameter, complianceYearParameter).ToListAsync();
         }
+
+        public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid pcsId, int complianceYear)
+        {
+            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @SchemeId, @ComplianceYear";
+            SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", pcsId);
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
+
+            return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, pcsIdParameter, complianceYearParameter).ToListAsync();
+        }
     }
 }

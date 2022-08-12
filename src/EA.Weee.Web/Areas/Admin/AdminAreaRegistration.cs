@@ -51,6 +51,12 @@
               url: "admin/{controller}/{action}/view-evidence-transfer-note/{evidenceNoteId}",
               defaults: new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes" },
               namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+              name: "admin_view_obligation_and_evidence_summary",
+              url: "admin/{controller}/{action}/view-obligation-and-evidence-summary",
+              defaults: new { action = "ViewObligationAndEvidenceSummary", controller = "Obligations" },
+              namespaces: new[] { typeof(ObligationsController).Namespace });
         }
     }
 }
