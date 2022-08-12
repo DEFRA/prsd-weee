@@ -15,8 +15,10 @@
             IList<ObligationUploadError> errors,
             IList<ObligationScheme> obligations);
 
-        Task<List<Scheme>> GetObligationScheme(UKCompetentAuthority authority, int complianceYear);
+        Task<List<Scheme>> GetObligationSchemeData(UKCompetentAuthority authority, int complianceYear);
 
         Task<List<int>> GetObligationComplianceYears(UKCompetentAuthority authority);
+
+        Task<List<Scheme>> GetSchemesWithObligations(int complianceYear);
     }
 }
