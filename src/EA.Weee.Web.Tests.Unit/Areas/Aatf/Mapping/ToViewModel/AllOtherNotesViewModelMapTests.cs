@@ -134,6 +134,42 @@
         }
 
         [Fact]
+        public void Map_GivenListOfEvidenceNoteData_ShouldReturnMappedDataAsPagedList()
+        {
+            //arrange
+            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
+
+            var returnedNotes = new List<EvidenceNoteRowViewModel>
+            {
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>(),
+                TestFixture.Create<EvidenceNoteRowViewModel>()
+            };
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var pageNumber = TestFixture.Create<int>();
+            var pageSize = TestFixture.Create<int>();
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
+
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, pageNumber);
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
+                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
+
+            //act
+            var result = allOtherNotesViewModelMap.Map(transfer);
+
+            // assert
+            result.EvidenceNotesDataList.Should().NotBeEmpty();
+            result.EvidenceNotesDataList.Should().BeEquivalentTo(returnedNotes);
+            result.EvidenceNotesDataList.PageNumber.Should().Be(pageNumber);
+            result.EvidenceNotesDataList.PageSize.Should().Be(pageSize);
+        }
+
+        [Fact]
         public void Map_GivenApprovedEvidenceNoteData_MappedDataDisplayViewLinkShouldBeTrue()
         {
             //arrange

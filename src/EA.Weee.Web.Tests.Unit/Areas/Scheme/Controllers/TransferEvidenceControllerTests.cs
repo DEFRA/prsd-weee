@@ -729,7 +729,7 @@
         {
             //arrange
             var request = GetRequest();
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
@@ -755,7 +755,7 @@
         public async Task TransferFromGet_GivenTransferNoteSessionObjectWithEvidenceNoteIds_ModelShouldBeMapped()
         {
             var request = GetRequest();
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
@@ -789,7 +789,7 @@
         {
             var request = GetRequest(evidenceIds);
  
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
@@ -1162,7 +1162,7 @@
         {
             //arrange
             var request = GetRequest();
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
@@ -1193,7 +1193,7 @@
         {
             //arrange
             var request = GetRequest();
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() =>
@@ -1431,7 +1431,7 @@
             var request = GetRequest();
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(m => m.TransferAllTonnage, false).Create();
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             AddModelError();
 
             A.CallTo(() =>
