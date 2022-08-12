@@ -5,7 +5,7 @@
     var routesValues = ViewData["pagerRouteValues"];
 }
 
-@if (@Model.PageCount > 1)
+@if (@Model.TotalItemCount > 0)
 {
     <div class="pager govuk-body">
         @Html.Pager(@Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.Action("Index").RouteValues(routesValues))

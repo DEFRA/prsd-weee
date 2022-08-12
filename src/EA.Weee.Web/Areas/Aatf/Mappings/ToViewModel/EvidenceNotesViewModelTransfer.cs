@@ -2,6 +2,7 @@
 {
     using System;
     using Core.AatfEvidence;
+    using CuttingEdge.Conditions;
     using EA.Weee.Web.ViewModels.Shared;
     using Prsd.Core;
 
@@ -15,19 +16,20 @@
 
         public DateTime CurrentDate { get; protected set; }
 
-        public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; private set; }
+        public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; protected set; }
 
-        public int PageNumber { get; private set; }
+        public int PageNumber { get; protected set; }
 
         public EvidenceNotesViewModelTransfer(Guid organisationId, 
             Guid aatfId, EvidenceNoteSearchDataResult noteData,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int pageNumber = 1)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int pageNumber)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => noteData, noteData);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
-            
+            Condition.Requires(pageNumber).IsNotLessOrEqual(0);
+
             OrganisationId = organisationId;
             AatfId = aatfId;
             NoteData = noteData;
