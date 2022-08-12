@@ -390,8 +390,8 @@
             //arrange
             var schemeObligationData = new List<SchemeObligationData>()
             {
-                new SchemeObligationData(TestFixture.Create<string>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
-                new SchemeObligationData(TestFixture.Create<string>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList())
+                new SchemeObligationData(TestFixture.Create<string>(), TestFixture.Create<Guid>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData(TestFixture.Create<string>(), TestFixture.Create<Guid>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList())
             };
 
             var source = new UploadObligationsViewModelMapTransfer()
@@ -439,11 +439,11 @@
             //arrange
             var schemeObligationData = new List<SchemeObligationData>()
             {
-                new SchemeObligationData("Z", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
-                new SchemeObligationData("R", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
-                new SchemeObligationData("A", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
-                new SchemeObligationData("C", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
-                new SchemeObligationData("B", TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList())
+                new SchemeObligationData("Z", TestFixture.Create<Guid>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("R", TestFixture.Create<Guid>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("A", TestFixture.Create<Guid>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("C", TestFixture.Create<Guid>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData("B", TestFixture.Create<Guid>(), TestFixture.Create<DateTime?>(), TestFixture.CreateMany<SchemeObligationAmountData>().ToList())
             };
 
             var source = new UploadObligationsViewModelMapTransfer()
@@ -466,7 +466,7 @@
             //arrange
             var schemeObligationData = new List<SchemeObligationData>()
             {
-                new SchemeObligationData(TestFixture.Create<string>(), null, TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
+                new SchemeObligationData(TestFixture.Create<string>(), TestFixture.Create<Guid>(), null, TestFixture.CreateMany<SchemeObligationAmountData>().ToList()),
             };
 
             var source = new UploadObligationsViewModelMapTransfer()

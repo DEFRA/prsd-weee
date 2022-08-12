@@ -287,7 +287,7 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings()
                     .WithInternalUserAccess(false);
 
                 var authority = Query.GetEaCompetentAuthority();
