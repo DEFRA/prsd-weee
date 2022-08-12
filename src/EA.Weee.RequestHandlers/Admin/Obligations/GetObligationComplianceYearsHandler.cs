@@ -33,13 +33,17 @@
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
-            var authority = await commonDataAccess.FetchCompetentAuthority(request.Authority);
-
+            Domain.UKCompetentAuthority authority = null;
+            if (request.Authority.HasValue)
+            {
+                authority = await commonDataAccess.FetchCompetentAuthority(request.Authority.Value);
+            }
+            
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
             var complianceYears = await obligationDataAccess.GetObligationComplianceYears(authority);
 
-            if (!complianceYears.Contains(systemDateTime.Year))
+            if (!complianceYears.Contains(systemDateTime.Year) && request.IncludeCurrentYear)
             {
                 complianceYears.Insert(0, systemDateTime.Year);
             }
