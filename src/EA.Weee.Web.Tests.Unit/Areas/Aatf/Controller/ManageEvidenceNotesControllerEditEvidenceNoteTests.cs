@@ -20,6 +20,7 @@
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerEditEvidenceNoteTests : ManageEvidenceNotesControllerTestsBase
@@ -293,12 +294,18 @@
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
         }
 
-        [Fact]
-        public async Task EditDraftEvidenceNotePost_GivenSaved_ViewDataShouldHaveNoteStatusAdded()
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task EditDraftEvidenceNotePost_GivenSaved_ViewDataShouldHaveNoteStatusAdded(NoteStatus status)
         {
+            if (status == NoteStatus.Returned)
+            {
+                return;
+            }
+
             //arrange
             var model = ValidModel();
-            model.Status = NoteStatus.Returned;
+            model.Status = status;
             model.Action = ActionEnum.Save;
             var request = EditRequest();
 
@@ -317,6 +324,7 @@
             //arrange
             var model = ValidModel();
             model.Action = ActionEnum.Save;
+            model.Status = NoteStatus.Returned;
             var request = EditRequest(NoteStatus.Returned);
 
             A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
@@ -329,10 +337,35 @@
         }
 
         [Fact]
-        public async Task EditDraftEvidenceNotePost_GivenSubmitted_ViewDataShouldHaveNoteStatusAdded()
+        public async Task EditDraftEvidenceNotePost_GivenReturnedRecordHasBeenSubmitted_ViewDataShouldHaveNoteStatusAdded()
         {
             //arrange
             var model = ValidModel();
+            model.Action = ActionEnum.Submit;
+            model.Status = NoteStatus.Returned;
+            var request = EditRequest(NoteStatus.Returned);
+
+            A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
+
+            //act
+            await ManageEvidenceController.EditEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            //assert
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteUpdatedStatusEnum.ReturnedSubmitted);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task EditDraftEvidenceNotePost_GivenSubmitted_ViewDataShouldHaveNoteStatusAdded(NoteStatus status)
+        {
+            if (status == NoteStatus.Returned)
+            {
+                return;
+            }
+            
+            //arrange
+            var model = ValidModel();
+            model.Status = status;
             model.Action = ActionEnum.Submit;
             var request = EditRequest(NoteStatus.Submitted);
 

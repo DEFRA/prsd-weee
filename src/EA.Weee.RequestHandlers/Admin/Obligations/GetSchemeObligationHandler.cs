@@ -36,8 +36,8 @@
             authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var authority = await commonDataAccess.FetchCompetentAuthority(request.Authority);
-
-            var obligationData = await obligationDataAccess.GetObligationScheme(authority, request.ComplianceYear);
+           
+            var obligationData = await obligationDataAccess.GetObligationSchemeData(authority, request.ComplianceYear);
 
             return mapper.Map<List<Scheme>, List<SchemeObligationData>>(obligationData);
         }
