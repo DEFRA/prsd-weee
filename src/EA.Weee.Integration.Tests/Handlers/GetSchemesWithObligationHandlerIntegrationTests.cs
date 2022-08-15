@@ -17,7 +17,7 @@
     using Requests.Admin.Obligations;
     using SchemeStatus = Domain.Scheme.SchemeStatus;
 
-    public class GetSchemesWithObligationHandlerTests : IntegrationTestBase
+    public class GetSchemesWithObligationHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
         public class WhenIGetSchemesWithObligations : GetSchemesWithObligationHandlerTestBase
