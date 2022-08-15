@@ -64,5 +64,12 @@
             instance.ComplianceYear = complianceYear;
             return this;
         }
+
+        public TransferEvidenceNoteDbSetup WithWasteType(WasteType wasteType)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.WasteType, wasteType, instance);
+
+            return this;
+        }
     }
 }

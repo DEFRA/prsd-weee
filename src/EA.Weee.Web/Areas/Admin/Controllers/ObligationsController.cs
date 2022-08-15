@@ -154,6 +154,8 @@
         {
             using (var client = apiClient())
             {
+                Breadcrumb.InternalActivity = "View PCS obligation and evidence summary";
+
                 ObligationEvidenceSummaryData obligationEvidenceSummaryData = null;
                 var schemeData = new List<SchemeData>();
 
@@ -172,8 +174,6 @@
                         obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
                     }
                 }
-
-                Breadcrumb.InternalActivity = "View PCS obligation and evidence summary";
 
                 var summaryModel = mapper.Map<ViewObligationsAndEvidenceSummaryViewModel>(new ViewObligationsAndEvidenceSummaryViewModelMapTransfer(schemeId, obligationEvidenceSummaryData, complianceYears, schemeData));
 

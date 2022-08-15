@@ -7,6 +7,7 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
@@ -358,10 +359,7 @@
                     .WithDefaultSettings()
                     .WithInternalUserAccess(false);
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetInternalUserRole();
-
-                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
+                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForInternalUserRequest, EvidenceNoteData>>();
