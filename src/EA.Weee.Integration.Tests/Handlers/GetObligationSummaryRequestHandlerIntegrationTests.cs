@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -7,11 +8,16 @@
     using Base;
     using Builders;
     using Core.Admin.Obligation;
+    using Core.Shared;
+    using Domain.AatfReturn;
     using Domain.Obligation;
+    using Domain.Organisation;
+    using Domain.Scheme;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Domain.Evidence;
     using EA.Weee.Domain.Lookup;
     using FluentAssertions;
+    using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core;
     using Prsd.Core.Autofac;
@@ -460,6 +466,153 @@
             };
         }
 
+        [Component]
+        [Ignore("Time consuming data set only use for seeding of data")]
+        public class WhenIGetASchemesObligationSummaryWithLotsOfData : GetObligationSummaryRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                // create some schemes for and some obligations over 20 years
+                var schemesList = new List<Scheme>();
+                var organisations = new List<Organisation>();
+                var aatfs = new List<Aatf>();
+                const int numberOfNotes = 2000;
+                const int numberOfTransfers = 250;
+                Random randomTransfer = new Random();
+                Random randomAatf = new Random();
+
+                for (var i = 0; i < 50; i++)
+                {
+                    var aatfOrganisation = OrganisationDbSetup.Init().Create();
+                    var aatf = AatfDbSetup.Init().WithOrganisation(aatfOrganisation.Id).Create();
+                    aatfs.Add(aatf);
+                }
+
+                for (int i = 0; i < 40; i++)
+                {
+                    var randomOrganisation = OrganisationDbSetup.Init().Create();
+                    var randomScheme = SchemeDbSetup.Init().WithOrganisation(randomOrganisation.Id).Create();
+                    organisations.Add(randomOrganisation);
+                    schemesList.Add(randomScheme);
+                }
+
+                // create 5 years of old data for each scheme
+                for (var year = 2020; year <= 2025; year++)
+                {
+                    foreach (var scheme in schemesList)
+                    {
+                        var randomObligationScheme = ObligationUploadDbSetup.Init().Create();
+
+                        var justSomeExtraYears = new List<ObligationSchemeAmount>()
+                        {
+                            new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 1000),
+                            new ObligationSchemeAmount(WeeeCategory.MedicalDevices, 800),
+                            new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, 0),
+                            new ObligationSchemeAmount(WeeeCategory.ElectricalAndElectronicTools, null),
+                            new ObligationSchemeAmount(WeeeCategory.ConsumerEquipment, 100),
+                            new ObligationSchemeAmount(WeeeCategory.ToysLeisureAndSports, 1000.235M),
+                            new ObligationSchemeAmount(WeeeCategory.AutomaticDispensers, 600),
+                            new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, 200),
+                            new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants, null),
+                            new ObligationSchemeAmount(WeeeCategory.SmallHouseholdAppliances, 20),
+                            new ObligationSchemeAmount(WeeeCategory.LargeHouseholdAppliances, 567),
+                            new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 150.5M),
+                            new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
+                            new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                        };
+
+                        ObligationSchemeDbSetup.Init().WithScheme(scheme.Id)
+                            .WithObligationUpload(randomObligationScheme.Id)
+                            .WithObligationAmounts(justSomeExtraYears)
+                            .WithComplianceYear(year).Create();
+                    }
+
+                    foreach (var organisation in organisations)
+                    {
+                        var notes = new List<Note>();
+                        for (int i = 0; i < numberOfNotes; i++)
+                        {
+                            var tonnages2 = new List<NoteTonnage>()
+                            {
+                                new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.MedicalDevices, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.ConsumerEquipment, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.ToysLeisureAndSports, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.AutomaticDispensers, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.DisplayEquipment, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.SmallHouseholdAppliances, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.LightingEquipment, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 500000, 500000),
+                            };
+
+                            var newNote = EvidenceNoteDbSetup.Init().WithRecipient(organisation.Id)
+                                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
+                                .WithWasteType(WasteType.HouseHold)
+                                .WithAatf(aatfs.ElementAt(randomAatf.Next(0, 49)).Id)
+                                .WithComplianceYear(year)
+                                .WithTonnages(tonnages2).Create();
+
+                            notes.Add(newNote);
+                        }
+
+                        for (int i = 0; i < numberOfTransfers; i++)
+                        {
+                            // create transfer in note 1
+                            var noteToTransfer = notes.ElementAt(randomTransfer.Next(0, numberOfNotes - 1));
+
+                            var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                            {
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.AutomaticDispensers)).Id, 10,
+                                    5),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.LightingEquipment)).Id, 50,
+                                    null),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ITAndTelecommsEquipment)).Id, 10,
+                                    5),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments)).Id, 50,
+                                    null),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports)).Id, 10,
+                                    5),
+                            };
+
+                            TransferEvidenceNoteDbSetup.Init().With(t =>
+                                {
+                                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                                }).WithTonnages(newTransferNoteTonnage1)
+                                .WithWasteType(WasteType.HouseHold)
+                                .WithComplianceYear(year)
+                                .WithRecipient(organisation.Id)
+                                .Create();
+                        }
+                    }
+                }
+
+                request = new GetObligationSummaryRequest(schemesList.ElementAt(0).Id, 2023);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldHaveTheExpectedData = () =>
+            {
+            };
+        }
+
         public class GetObligationSummaryRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<GetObligationSummaryRequest, ObligationEvidenceSummaryData> handler;
@@ -472,10 +625,7 @@
                     .WithDefaultSettings()
                     .WithInternalUserAccess(false);
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetInternalUserRole();
-
-                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
+                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 handler = Container.Resolve<IRequestHandler<GetObligationSummaryRequest, ObligationEvidenceSummaryData>>();
             }

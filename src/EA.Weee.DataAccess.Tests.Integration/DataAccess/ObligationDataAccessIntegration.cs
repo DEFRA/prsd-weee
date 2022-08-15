@@ -745,7 +745,7 @@
 
                 var obligationScheme12020 = new ObligationScheme(scheme1, 2022);
                 var obligationScheme22020 = new ObligationScheme(scheme2, 2022);
-                var obligationSchemeNotFound = new ObligationScheme(scheme2, 2023);
+                var obligationSchemeNotFound = new ObligationScheme(scheme3, 2023);
 
                 obligatedUpload.ObligationSchemes.Add(obligationScheme12020);
                 obligatedUpload.ObligationSchemes.Add(obligationScheme22020);
