@@ -355,7 +355,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.PhotovoltaicPanels.ToInt());
                 category.Obligation.Should().Be(1000);
                 category.Evidence.Should().Be(101);
-                category.Difference.Should().Be(899);
+                category.Difference.Should().Be(-899);
                 category.Reuse.Should().Be(51);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -363,7 +363,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.MedicalDevices.ToInt());
                 category.Obligation.Should().Be(800);
                 category.Evidence.Should().Be(51);
-                category.Difference.Should().Be(749);
+                category.Difference.Should().Be(-749);
                 category.Reuse.Should().Be(0);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -371,7 +371,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
                 category.Obligation.Should().Be(0);
                 category.Evidence.Should().Be(201);
-                category.Difference.Should().Be(-201);
+                category.Difference.Should().Be(201);
                 category.Reuse.Should().Be(11);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -379,7 +379,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.ElectricalAndElectronicTools.ToInt());
                 category.Obligation.Should().Be(0);
                 category.Evidence.Should().Be(251);
-                category.Difference.Should().Be(-251);
+                category.Difference.Should().Be(251);
                 category.Reuse.Should().Be(1);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -387,7 +387,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.ConsumerEquipment.ToInt());
                 category.Obligation.Should().Be(100);
                 category.Evidence.Should().Be(155);
-                category.Difference.Should().Be(-55);
+                category.Difference.Should().Be(55);
                 category.Reuse.Should().Be(2);
                 category.TransferredIn.Should().Be(5);
                 category.TransferredOut.Should().Be(1);
@@ -395,7 +395,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.ToysLeisureAndSports.ToInt());
                 category.Obligation.Should().Be(1000.235M);
                 category.Evidence.Should().Be(76);
-                category.Difference.Should().Be(924.235M);
+                category.Difference.Should().Be(-924.235M);
                 category.Reuse.Should().Be(21);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -403,7 +403,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt());
                 category.Obligation.Should().Be(600);
                 category.Evidence.Should().Be(21);
-                category.Difference.Should().Be(579);
+                category.Difference.Should().Be(-579);
                 category.Reuse.Should().Be(6);
                 category.TransferredIn.Should().Be(10);
                 category.TransferredOut.Should().Be(0);
@@ -411,7 +411,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.DisplayEquipment.ToInt());
                 category.Obligation.Should().Be(200);
                 category.Evidence.Should().Be(31);
-                category.Difference.Should().Be(169);
+                category.Difference.Should().Be(-169);
                 category.Reuse.Should().Be(1);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -419,7 +419,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.CoolingApplicancesContainingRefrigerants.ToInt());
                 category.Obligation.Should().Be(0);
                 category.Evidence.Should().Be(201.789M);
-                category.Difference.Should().Be(-201.789M);
+                category.Difference.Should().Be(201.789M);
                 category.Reuse.Should().Be(101);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -427,7 +427,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.SmallHouseholdAppliances.ToInt());
                 category.Obligation.Should().Be(20);
                 category.Evidence.Should().Be(26);
-                category.Difference.Should().Be(-6);
+                category.Difference.Should().Be(6);
                 category.Reuse.Should().Be(1);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(100);
@@ -435,7 +435,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.LargeHouseholdAppliances.ToInt());
                 category.Obligation.Should().Be(567);
                 category.Evidence.Should().Be(101);
-                category.Difference.Should().Be(466);
+                category.Difference.Should().Be(-466);
                 category.Reuse.Should().Be(1);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -443,7 +443,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.ITAndTelecommsEquipment.ToInt());
                 category.Obligation.Should().Be(150.5M);
                 category.Evidence.Should().Be(81);
-                category.Difference.Should().Be(69.500M);
+                category.Difference.Should().Be(-69.500M);
                 category.Reuse.Should().Be(71);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -451,7 +451,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.LightingEquipment.ToInt());
                 category.Obligation.Should().Be(0);
                 category.Evidence.Should().Be(68.280M);
-                category.Difference.Should().Be(-68.280M);
+                category.Difference.Should().Be(68.280M);
                 category.Reuse.Should().Be(1);
                 category.TransferredIn.Should().Be(57.280M);
                 category.TransferredOut.Should().Be(0);
@@ -459,7 +459,7 @@
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.MonitoringAndControlInstruments.ToInt());
                 category.Obligation.Should().Be(1);
                 category.Evidence.Should().Be(21);
-                category.Difference.Should().Be(-20);
+                category.Difference.Should().Be(20);
                 category.Reuse.Should().Be(0);
                 category.TransferredIn.Should().Be(0);
                 category.TransferredOut.Should().Be(0);
@@ -482,6 +482,7 @@
                 const int numberOfTransfers = 250;
                 Random randomTransfer = new Random();
                 Random randomAatf = new Random();
+                Random tonnageRandom = new Random();
 
                 for (var i = 0; i < 50; i++)
                 {
@@ -505,22 +506,37 @@
                     {
                         var randomObligationScheme = ObligationUploadDbSetup.Init().Create();
 
+                        var tonnage1 = NextTonnage(tonnageRandom);
+                        var tonnage2 = NextTonnage(tonnageRandom);
+                        var tonnage3 = NextTonnage(tonnageRandom);
+                        var tonnage4 = NextTonnage(tonnageRandom);
+                        var tonnage5 = NextTonnage(tonnageRandom);
+                        var tonnage6 = NextTonnage(tonnageRandom);
+                        var tonnage7 = NextTonnage(tonnageRandom);
+                        var tonnage8 = NextTonnage(tonnageRandom);
+                        var tonnage9 = NextTonnage(tonnageRandom);
+                        var tonnage10 = NextTonnage(tonnageRandom);
+                        var tonnage11 = NextTonnage(tonnageRandom);
+                        var tonnage12 = NextTonnage(tonnageRandom);
+                        var tonnage13 = NextTonnage(tonnageRandom);
+                        var tonnage14 = NextTonnage(tonnageRandom);
+
                         var justSomeExtraYears = new List<ObligationSchemeAmount>()
                         {
-                            new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 1000),
-                            new ObligationSchemeAmount(WeeeCategory.MedicalDevices, 800),
-                            new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, 0),
-                            new ObligationSchemeAmount(WeeeCategory.ElectricalAndElectronicTools, null),
-                            new ObligationSchemeAmount(WeeeCategory.ConsumerEquipment, 100),
-                            new ObligationSchemeAmount(WeeeCategory.ToysLeisureAndSports, 1000.235M),
-                            new ObligationSchemeAmount(WeeeCategory.AutomaticDispensers, 600),
-                            new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, 200),
-                            new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants, null),
-                            new ObligationSchemeAmount(WeeeCategory.SmallHouseholdAppliances, 20),
-                            new ObligationSchemeAmount(WeeeCategory.LargeHouseholdAppliances, 567),
-                            new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 150.5M),
-                            new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
-                            new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                            new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, tonnage1),
+                            new ObligationSchemeAmount(WeeeCategory.MedicalDevices, tonnage2),
+                            new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, tonnage3),
+                            new ObligationSchemeAmount(WeeeCategory.ElectricalAndElectronicTools, tonnage4),
+                            new ObligationSchemeAmount(WeeeCategory.ConsumerEquipment, tonnage5),
+                            new ObligationSchemeAmount(WeeeCategory.ToysLeisureAndSports, tonnage6),
+                            new ObligationSchemeAmount(WeeeCategory.AutomaticDispensers, tonnage7),
+                            new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, tonnage8),
+                            new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants, tonnage9),
+                            new ObligationSchemeAmount(WeeeCategory.SmallHouseholdAppliances, tonnage10),
+                            new ObligationSchemeAmount(WeeeCategory.LargeHouseholdAppliances, tonnage11),
+                            new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, tonnage12),
+                            new ObligationSchemeAmount(WeeeCategory.LightingEquipment, tonnage13),
+                            new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, tonnage14),
                         };
 
                         ObligationSchemeDbSetup.Init().WithScheme(scheme.Id)
@@ -534,22 +550,37 @@
                         var notes = new List<Note>();
                         for (int i = 0; i < numberOfNotes; i++)
                         {
+                            var tonnage1 = NextTonnage(tonnageRandom);
+                            var tonnage2 = NextTonnage(tonnageRandom);
+                            var tonnage3 = NextTonnage(tonnageRandom);
+                            var tonnage4 = NextTonnage(tonnageRandom);
+                            var tonnage5 = NextTonnage(tonnageRandom);
+                            var tonnage6 = NextTonnage(tonnageRandom);
+                            var tonnage7 = NextTonnage(tonnageRandom);
+                            var tonnage8 = NextTonnage(tonnageRandom);
+                            var tonnage9 = NextTonnage(tonnageRandom);
+                            var tonnage10 = NextTonnage(tonnageRandom);
+                            var tonnage11 = NextTonnage(tonnageRandom);
+                            var tonnage12 = NextTonnage(tonnageRandom);
+                            var tonnage13 = NextTonnage(tonnageRandom);
+                            var tonnage14 = NextTonnage(tonnageRandom);
+
                             var tonnages2 = new List<NoteTonnage>()
                             {
-                                new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.MedicalDevices, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.ConsumerEquipment, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.ToysLeisureAndSports, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.AutomaticDispensers, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.DisplayEquipment, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.SmallHouseholdAppliances, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.LightingEquipment, 500000, 500000),
-                                new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 500000, 500000),
+                                new NoteTonnage(WeeeCategory.PhotovoltaicPanels, tonnage1, NextTonnage(tonnageRandom, tonnage1)),
+                                new NoteTonnage(WeeeCategory.MedicalDevices, tonnage2, NextTonnage(tonnageRandom, tonnage2)),
+                                new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, tonnage3, NextTonnage(tonnageRandom, tonnage3)),
+                                new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, tonnage4, NextTonnage(tonnageRandom, tonnage4)),
+                                new NoteTonnage(WeeeCategory.ConsumerEquipment, tonnage5, NextTonnage(tonnageRandom, tonnage5)),
+                                new NoteTonnage(WeeeCategory.ToysLeisureAndSports, tonnage6, NextTonnage(tonnageRandom, tonnage6)),
+                                new NoteTonnage(WeeeCategory.AutomaticDispensers, tonnage7, NextTonnage(tonnageRandom, tonnage7)),
+                                new NoteTonnage(WeeeCategory.DisplayEquipment, tonnage8, NextTonnage(tonnageRandom, tonnage8)),
+                                new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, tonnage9, NextTonnage(tonnageRandom, tonnage9)),
+                                new NoteTonnage(WeeeCategory.SmallHouseholdAppliances, tonnage10, NextTonnage(tonnageRandom, tonnage10)),
+                                new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, tonnage11, NextTonnage(tonnageRandom, tonnage11)),
+                                new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, tonnage12, NextTonnage(tonnageRandom, tonnage12)),
+                                new NoteTonnage(WeeeCategory.LightingEquipment, tonnage13, NextTonnage(tonnageRandom, tonnage13)),
+                                new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, tonnage14, NextTonnage(tonnageRandom, tonnage14)),
                             };
 
                             var newNote = EvidenceNoteDbSetup.Init().WithRecipient(organisation.Id)
@@ -568,23 +599,65 @@
                             // create transfer in note 1
                             var noteToTransfer = notes.ElementAt(randomTransfer.Next(0, numberOfNotes - 1));
 
+                            var tonnage1 = NextTonnage(tonnageRandom);
+                            var tonnage2 = NextTonnage(tonnageRandom);
+                            var tonnage3 = NextTonnage(tonnageRandom);
+                            var tonnage4 = NextTonnage(tonnageRandom);
+                            var tonnage5 = NextTonnage(tonnageRandom);
+                            var tonnage6 = NextTonnage(tonnageRandom);
+                            var tonnage7 = NextTonnage(tonnageRandom);
+                            var tonnage8 = NextTonnage(tonnageRandom);
+                            var tonnage9 = NextTonnage(tonnageRandom);
+                            var tonnage10 = NextTonnage(tonnageRandom);
+                            var tonnage11 = NextTonnage(tonnageRandom);
+                            var tonnage12 = NextTonnage(tonnageRandom);
+                            var tonnage13 = NextTonnage(tonnageRandom);
+                            var tonnage14 = NextTonnage(tonnageRandom);
+
                             var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
                             {
                                 new NoteTransferTonnage(
-                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.AutomaticDispensers)).Id, 10,
-                                    5),
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.PhotovoltaicPanels)).Id, tonnage1,
+                                    NextTonnage(tonnageRandom, tonnage1)),
                                 new NoteTransferTonnage(
-                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.LightingEquipment)).Id, 50,
-                                    null),
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MedicalDevices)).Id, tonnage2,
+                                    NextTonnage(tonnageRandom, tonnage2)),
                                 new NoteTransferTonnage(
-                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ITAndTelecommsEquipment)).Id, 10,
-                                    5),
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.GasDischargeLampsAndLedLightSources)).Id, tonnage3,
+                                    NextTonnage(tonnageRandom, tonnage3)),
                                 new NoteTransferTonnage(
-                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments)).Id, 50,
-                                    null),
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ElectricalAndElectronicTools)).Id, tonnage4,
+                                    NextTonnage(tonnageRandom, tonnage4)),
                                 new NoteTransferTonnage(
-                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports)).Id, 10,
-                                    5),
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment)).Id, tonnage5,
+                                    NextTonnage(tonnageRandom, tonnage5)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports)).Id, tonnage6,
+                                    NextTonnage(tonnageRandom, tonnage6)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.AutomaticDispensers)).Id, tonnage7,
+                                    NextTonnage(tonnageRandom, tonnage7)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.DisplayEquipment)).Id, tonnage8,
+                                    NextTonnage(tonnageRandom, tonnage8)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.CoolingApplicancesContainingRefrigerants)).Id, tonnage9,
+                                    NextTonnage(tonnageRandom, tonnage9)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.SmallHouseholdAppliances)).Id, tonnage10,
+                                    NextTonnage(tonnageRandom, tonnage10)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, tonnage11,
+                                    NextTonnage(tonnageRandom, tonnage11)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ITAndTelecommsEquipment)).Id, tonnage12,
+                                    NextTonnage(tonnageRandom, tonnage12)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.LightingEquipment)).Id, tonnage13,
+                                    NextTonnage(tonnageRandom, tonnage13)),
+                                new NoteTransferTonnage(
+                                    noteToTransfer.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments)).Id, tonnage14,
+                                    NextTonnage(tonnageRandom, tonnage14)),
                             };
 
                             TransferEvidenceNoteDbSetup.Init().With(t =>
@@ -628,6 +701,26 @@
                 Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 handler = Container.Resolve<IRequestHandler<GetObligationSummaryRequest, ObligationEvidenceSummaryData>>();
+            }
+
+            public static decimal NextTonnage(Random rng)
+            {
+                double randH, randL;
+                do
+                {
+                    randH = rng.NextDouble();
+                    randL = rng.NextDouble();
+                } 
+                while (randH > 0.999d || randL > 0.999d);
+
+                var randValue = (decimal)randH + ((decimal)randL / 1E14m);
+
+                return randValue * ((25 - 1) + 1);
+            }
+
+            public static decimal NextTonnage(Random rng, decimal maxValue)
+            {
+                return NextTonnage(rng) * ((maxValue - 1) + 1);
             }
         }
     }

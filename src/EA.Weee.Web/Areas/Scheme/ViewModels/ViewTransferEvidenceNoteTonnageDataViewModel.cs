@@ -16,8 +16,6 @@
 
         public virtual IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        public virtual bool DisplayTransferNote => true;
-
         public NoteStatus Status { get; set; }
     }
 }
