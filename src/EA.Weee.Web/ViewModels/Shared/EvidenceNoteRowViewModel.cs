@@ -55,6 +55,8 @@
                         return AatfEvidenceRedirect.ViewReturnedEvidenceRouteName;
                     case NoteStatus.Submitted:
                         return AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    case NoteStatus.Void:
+                        return AatfEvidenceRedirect.ViewVoidedEvidenceRouteName;
                 }
 
                 throw new InvalidOperationException("Invalid route name");
@@ -77,6 +79,8 @@
                         return SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName;
                     case NoteStatus.Returned:
                         return SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName;
+                    case NoteStatus.Void:
+                        return SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName;
                 }
 
                 return string.Empty;
