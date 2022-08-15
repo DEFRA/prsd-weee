@@ -136,7 +136,7 @@
             var result = model.AatfViewRouteName;
 
             //assert
-            result.Should().Be(SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName);
+            result.Should().Be(AatfEvidenceRedirect.ViewVoidedEvidenceRouteName);
         }
 
         [Fact]
