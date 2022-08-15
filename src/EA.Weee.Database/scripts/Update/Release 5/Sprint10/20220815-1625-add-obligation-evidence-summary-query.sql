@@ -91,7 +91,7 @@ SELECT
 	EvidenceReuseInTotal + (TransferEvidenceReuseIn - TransferEvidenceReuseOut) AS Reuse,
 	TransferEvidenceReceivedOut AS TransferredOut,
 	TransferEvidenceReceivedIn AS TransferredIn,
-	Obligation - (EvidenceReceivedInTotal + (TransferEvidenceReceivedIn - TransferEvidenceReceivedOut)) AS ObligationDifference
+	(EvidenceReceivedInTotal + (TransferEvidenceReceivedIn - TransferEvidenceReceivedOut)) - Obligation AS ObligationDifference
 FROM 
 	#EvidenceSummary
 
