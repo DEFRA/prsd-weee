@@ -55,6 +55,8 @@
                         return AatfEvidenceRedirect.ViewReturnedEvidenceRouteName;
                     case NoteStatus.Submitted:
                         return AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    case NoteStatus.Void:
+                        return SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName;
                 }
 
                 throw new InvalidOperationException("Invalid route name");
