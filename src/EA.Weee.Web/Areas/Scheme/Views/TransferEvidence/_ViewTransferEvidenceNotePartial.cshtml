@@ -5,19 +5,6 @@
 @using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
 
-<!-- screen 6.09a: View Void Transfer History -->
-@if (Model.DisplayEvidenceNoteHistoryData)
-{
-    <div class="govuk-width-container govuk-!-padding-left-0">
-        @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
-                        @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
-                        "Hidden content",
-                        "Progressive disclosure",
-                        "Transfer history"))
-    </div>
-}
-<!-- screen 6.09a -->
-
 <h1 class="govuk-heading-l">Evidence note (transfer)</h1>
 
 <div class="govuk-width-container govuk-!-margin-top-3">

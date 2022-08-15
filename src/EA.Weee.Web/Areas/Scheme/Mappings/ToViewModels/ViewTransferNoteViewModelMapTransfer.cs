@@ -20,8 +20,6 @@
 
         public DateTime SystemDateTime { get; set; }
 
-        public bool IncludeHistory { get; internal set; }
-
         public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification)
         {
             Condition.Requires(transferEvidenceNoteData).IsNotNull();

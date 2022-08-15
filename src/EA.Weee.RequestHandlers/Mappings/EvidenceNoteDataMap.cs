@@ -29,7 +29,7 @@
                     {
                         CategoryFilter = source.CategoryFilter,
                         IncludeTonnage = source.IncludeTonnage,
-                        IncludeHistory = note.Status == Domain.Evidence.NoteStatus.Void
+                        IncludeHistory = false
                     });
                     model.ListOfEvidenceNoteData.Add(evidenceNoteData);
                 }

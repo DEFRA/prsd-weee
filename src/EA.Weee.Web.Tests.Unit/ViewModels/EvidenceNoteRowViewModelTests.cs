@@ -127,16 +127,16 @@
         }
 
         [Fact]
-        public void AatfViewRouteName_GivenStatusHasNoRoute_InvalidOperationExceptionExpected()
+        public void AatfViewRouteName_GivenVoidNoteStatus_VoidedViewShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Void;
 
             //act
-            var exception = Record.Exception(() => model.AatfViewRouteName);
+            var result = model.AatfViewRouteName;
 
             //assert
-            exception.Should().BeOfType<InvalidOperationException>();
+            result.Should().Be(SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName);
         }
 
         [Fact]
@@ -204,23 +204,17 @@
             result.Should().Be(SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName);
         }
 
-        [Theory]
-        [ClassData(typeof(NoteStatusCoreData))]
-        public void SchemeViewRouteName_GivenNotDraftOrSubmittedOrReviewedStatus_InvalidOperationExceptionExpected(NoteStatus status)
+        [Fact]
+        public void SchemeViewRouteName_GivenVoidNoteStatus_VoidedViewShouldBeReturned()
         {
-            if (status != NoteStatus.Void)
-            {
-                return;
-            }
-
             //arrange
-            model.Status = status;
+            model.Status = NoteStatus.Void;
 
             //act
             var route = model.SchemeViewRouteName;
 
             //assert
-            route.Should().Be("Scheme_voided_transfer");
+            route.Should().Be(SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName);
         }
     }
 }
