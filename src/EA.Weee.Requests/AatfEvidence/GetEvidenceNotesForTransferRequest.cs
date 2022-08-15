@@ -6,7 +6,7 @@
     using CuttingEdge.Conditions;
     using Prsd.Core.Mediator;
 
-    public class GetEvidenceNotesForTransferRequest : IRequest<IList<EvidenceNoteData>>
+    public class GetEvidenceNotesForTransferRequest : IRequest<EvidenceNoteSearchDataResult>
     {
         public Guid OrganisationId { get; protected set; }
 
@@ -16,7 +16,16 @@
 
         public int ComplianceYear { get; private set; }
 
-        public GetEvidenceNotesForTransferRequest(Guid organisationId, List<int> categories, int complianceYear, List<Guid> evidenceNotes = null)
+        public int PageNumber { get; private set; }
+
+        public int PageSize { get; private set; }
+
+        public GetEvidenceNotesForTransferRequest(Guid organisationId, 
+            List<int> categories, 
+            int complianceYear, 
+            List<Guid> evidenceNotes = null,
+            int pageNumber = 1,
+            int pageSize = 25)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categories).IsNotEmpty();
@@ -25,6 +34,8 @@
             Categories = categories;
             ComplianceYear = complianceYear;
             EvidenceNotes = evidenceNotes ?? new List<Guid>();
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }
