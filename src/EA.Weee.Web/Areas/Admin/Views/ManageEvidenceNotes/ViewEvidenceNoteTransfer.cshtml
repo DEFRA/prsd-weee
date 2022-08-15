@@ -9,16 +9,16 @@
     @if (Model.DisplayMessage)
     {
         @(this.WeeeGds().BackLink(
-        Url.Action("Index", "ManageEvidenceNotes",
-            new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear }), "Manage evidence notes"))
+                Url.Action("Index", "ManageEvidenceNotes",
+                    new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear }), "Manage evidence notes"))
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
         @(this.WeeeGds().BackLink(
-        Url.Action("Index", "ManageEvidenceNotes",
-            new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
-        
-    @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
-}
+                Url.Action("Index", "ManageEvidenceNotes",
+                    new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
 
+        @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
+    }
+}
