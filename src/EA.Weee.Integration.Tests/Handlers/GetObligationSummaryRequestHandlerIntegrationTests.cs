@@ -703,7 +703,7 @@
                 handler = Container.Resolve<IRequestHandler<GetObligationSummaryRequest, ObligationEvidenceSummaryData>>();
             }
 
-            public static decimal NextTonnage(Random rng)
+            public static decimal NextTonnage(Random rng, decimal maxValue = 25)
             {
                 double randH, randL;
                 do
@@ -715,12 +715,7 @@
 
                 var randValue = (decimal)randH + ((decimal)randL / 1E14m);
 
-                return randValue * ((25 - 1) + 1);
-            }
-
-            public static decimal NextTonnage(Random rng, decimal maxValue)
-            {
-                return NextTonnage(rng) * ((maxValue - 1) + 1);
+                return randValue * ((maxValue - 1) + 1);
             }
         }
     }
