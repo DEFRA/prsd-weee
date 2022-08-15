@@ -18,6 +18,8 @@
 
         public bool EditMode { get; set; }
 
+        public bool CanVoid { get; set; }
+
         public override string TabName
         {
             get
@@ -34,6 +36,8 @@
                         return "Returned evidence note transfer";
                     case NoteStatus.Submitted:
                         return "Submitted evidence note transfer";
+                    case NoteStatus.Void:
+                        return "Voided evidence note transfer";
                     default:
                         return string.Empty;
                 }

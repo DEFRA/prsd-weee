@@ -593,7 +593,7 @@
 
                 await context.SaveChangesAsync();
 
-                var results = await dataAccess.GetObligationScheme(matchingAuthority, 2022);
+                var results = await dataAccess.GetObligationSchemeData(matchingAuthority, 2022);
 
                 results.Should().AllSatisfy(s =>
                 {

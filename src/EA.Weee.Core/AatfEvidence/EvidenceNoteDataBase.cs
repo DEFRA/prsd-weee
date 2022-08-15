@@ -4,11 +4,11 @@
 
     public abstract class EvidenceNoteDataBase
     {
-        public Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
 
-        public NoteType Type { get; set; }
+        public virtual NoteType Type { get; set; }
 
-        public NoteStatus Status { get; set; }
+        public virtual NoteStatus Status { get; set; }
 
         public int Reference { get; set; }
 
@@ -25,6 +25,10 @@
         public DateTime? RejectedDate { get; set; }
 
         public string RejectedReason { get; set; }
+
+        public DateTime? VoidedDate { get; set; }
+
+        public string VoidedReason { get; set; }
 
         public WasteType? WasteType { get; set; }
     }
