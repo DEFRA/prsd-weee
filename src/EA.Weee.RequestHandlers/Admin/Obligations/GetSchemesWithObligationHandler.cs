@@ -10,8 +10,6 @@
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
     using Security;
-    using Shared;
-    using Weee.Security;
 
     public class GetSchemesWithObligationHandler : IRequestHandler<GetSchemesWithObligation, List<SchemeData>>
     {

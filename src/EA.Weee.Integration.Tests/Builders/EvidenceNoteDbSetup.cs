@@ -31,7 +31,7 @@
                 recipientOrganisation,
             DateTime.Now,
             DateTime.Now.AddDays(10),
-            Fixture.Create<WasteType>(),
+            WasteType.HouseHold,
             Fixture.Create<Protocol>(),
             aatf,
             user.UserId.ToString(),

@@ -4,10 +4,8 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Admin.Obligation;
     using EA.Weee.Core.DataReturns;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess.StoredProcedure;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class ObligationSummaryTotalsMap : IMap<List<ObligationEvidenceSummaryTotalsData>, ObligationEvidenceSummaryData>
     {
