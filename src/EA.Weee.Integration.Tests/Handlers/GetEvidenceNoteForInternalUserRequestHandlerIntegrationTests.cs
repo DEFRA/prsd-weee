@@ -293,6 +293,57 @@
             };
         }
 
+        [Component]
+        public class WhenIGetOneVoidedEvidenceNoteAsAppropriateAuthority : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.LightingEquipment, 10, 5)
+                };
+
+                note = EvidenceNoteDbSetup
+                .Init()
+                .WithTonnages(categories)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddHours(-1));
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddMinutes(-1));
+                    n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                })
+                .Create();
+
+                request = new GetEvidenceNoteForInternalUserRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                data = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveVoidedTheEvidenceNote = () =>
+            {
+                data.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveVoidedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                data.Status.Should().Be(NoteStatus.Void);
+                data.VoidedReason.Should().Be(note.NoteStatusHistory
+                    .Where(n => n.ToStatus.Value == NoteStatus.Void.ToInt())
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
+                data.VoidedDate.Value.Date.Should().Be(note.NoteStatusHistory
+                    .Where(n => n.ToStatus.Value == NoteStatus.Void.ToInt())
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.Date);
+            };
+        }
+
         public class GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<GetEvidenceNoteForInternalUserRequest, EvidenceNoteData> handler;
@@ -304,7 +355,7 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings()
                     .WithInternalUserAccess(false);
 
                 var authority = Query.GetEaCompetentAuthority();

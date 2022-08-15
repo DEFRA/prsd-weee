@@ -222,6 +222,56 @@
             };
         }
 
+        [Component]
+        public class WhenIGetOneVoidedTransferNoteAsAppropriateAuthority : GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                scheme = SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
+                };
+
+                note = EvidenceNoteDbSetup
+                        .Init()
+                        .WithTonnages(categories)
+                        .With(n =>
+                        {
+                            n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                            n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddMilliseconds(2));
+                            n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow.AddMilliseconds(400));
+                        }).Create();
+
+                request = new GetEvidenceNoteTransfersForInternalUserRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                data = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveVoidedTheTransferEvidenceNote = () =>
+            {
+                data.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveVoidedTheTransferEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                data.Status.Should().Be(NoteStatus.Void);
+                data.VoidedDate.Value.ToShortDateString().Should().Be(note.NoteStatusHistory.First(n => n.ToStatus.Value == EA.Weee.Domain.Evidence.NoteStatus.Void.Value).ChangedDate.ToShortDateString());
+            };
+        }
+
         public class GetEvidenceNoteTransfersForInternalUserRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<GetEvidenceNoteTransfersForInternalUserRequest, TransferEvidenceNoteData> handler;
@@ -237,7 +287,7 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings()
                     .WithInternalUserAccess(false);
 
                 var authority = Query.GetEaCompetentAuthority();
