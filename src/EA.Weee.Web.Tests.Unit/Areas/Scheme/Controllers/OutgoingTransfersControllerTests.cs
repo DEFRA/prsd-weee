@@ -2281,5 +2281,18 @@
                                       ((TransferEvidenceTonnageViewModel)o).Action == ActionEnum.Back),
           SessionKeyConstant.EditTransferEvidenceTonnageViewModel)).MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public async Task EditCategoriesGet_GivenPageNumber_ViewBagShouldBePopulatedWithPageNumber()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditCategories(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
+        }
     }
 }
