@@ -61,7 +61,7 @@ SET
 	s.EvidenceReuseInTotal = ISNULL(evc.Reused, 0)
 FROM
 	#EvidenceSummary s
-	INNER JOIN Evidence.vwEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	INNER JOIN Evidence.vwEvidenceByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
 	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
 
 UPDATE 
@@ -71,7 +71,7 @@ SET
 	s.TransferEvidenceReuseIn =  ISNULL(evc.TransferredReused, 0)
 FROM
 	#EvidenceSummary s
-	INNER JOIN Evidence.vwTransferEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	INNER JOIN Evidence.vwTransferEvidenceByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
 	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
 
 UPDATE 
@@ -81,7 +81,7 @@ SET
 	s.TransferEvidenceReuseOut =  ISNULL(evc.TransferredReused, 0)
 FROM
 	#EvidenceSummary s
-	INNER JOIN Evidence.vwTransferEvidenceByCategory evc ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	INNER JOIN Evidence.vwTransferEvidenceByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
 	INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.Id = @SchemeId
 
 SELECT 

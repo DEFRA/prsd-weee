@@ -82,12 +82,13 @@
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
-            private readonly It shouldHaveReturnedObligationYears = () =>
+            private readonly It shouldHaveReturnedSchemesWithObligations = () =>
             {
                 result.Should().NotBeNull();
                 result.Count.Should().Be(2);
                 result.Should().Contain(s => s.Id == scheme1.Id);
                 result.Should().Contain(s => s.Id == scheme2.Id);
+                result.Should().NotContain(s => s.Id == schemeNotMatchingComplianceYear.Id);
                 result.Should().OnlyHaveUniqueItems();
             };
         }
@@ -106,10 +107,7 @@
                     .WithTestData(true)
                     .WithInternalUserAccess();
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
+                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetSchemesWithObligation, List<SchemeData>>>();
