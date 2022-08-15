@@ -1726,6 +1726,19 @@
                 .MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task TransferredEvidenceGet_GivenPageNumber_ShouldPopulateViewBagWithPageNumber()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), "view-and-transfer-evidence", pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
+        }
+
         private void AddModelError()
         {
             transferEvidenceController.ModelState.AddModelError("error", "error");

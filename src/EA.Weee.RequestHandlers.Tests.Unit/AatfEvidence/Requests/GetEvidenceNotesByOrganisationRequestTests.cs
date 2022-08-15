@@ -72,6 +72,28 @@
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
         }
 
+        [Fact]
+        public async void GetEvidenceNotesByOrganisationRequest_GivenZeroPageSize_ShouldThrowArgumentOutOfRangeException()
+        {
+            //act
+            var exception = Record.Exception(() =>
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 1, 0));
+
+            //assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public async void GetEvidenceNotesByOrganisationRequest_GivenZeroPageNumber_ShouldThrowArgumentOutOfRangeException()
+        {
+            //act
+            var exception = Record.Exception(() =>
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 0, 25));
+
+            //assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
