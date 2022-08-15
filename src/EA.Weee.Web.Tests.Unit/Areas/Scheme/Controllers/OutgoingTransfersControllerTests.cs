@@ -1533,6 +1533,111 @@
         }
 
         [Fact]
+        public async Task EditTransferFromPost_GivenActionIsBack_ShouldCallGetTransferSessionObject()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            model.Action = ActionEnum.Back;
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(model);
+
+            //assert
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenActionIsBackAndSessionObjectIsNull_ShouldRedirectToManageEvidence()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            model.Action = ActionEnum.Back;
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+               .Returns(null);
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditTransferFrom(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["tab"].Should().Be("view-and-transfer-evidence");
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenActionIsBackAndValidSessionObject_ShouldCallSetTransferSessionObjectWithTheUpdatedRequest()
+        {
+            //arrange
+            var outgoingTransfer = TestFixture.Create<TransferEvidenceNoteRequest>();
+            var selectEvidence1 = new GenericControlPair<Guid, bool>();
+            selectEvidence1.Key = TestFixture.Create<Guid>();
+            selectEvidence1.Value = true;
+            var selectEvidence2 = new GenericControlPair<Guid, bool>();
+            selectEvidence2.Key = TestFixture.Create<Guid>();
+            selectEvidence2.Value = true;
+            var excludededEvidence1 = new GenericControlPair<Guid, bool>();
+            excludededEvidence1.Key = TestFixture.Create<Guid>();
+            excludededEvidence1.Value = false;
+            var excludededEvidence2 = new GenericControlPair<Guid, bool>();
+            excludededEvidence2.Key = TestFixture.Create<Guid>();
+            excludededEvidence2.Value = false;
+            var excludededEvidence3 = new GenericControlPair<Guid, bool>();
+            excludededEvidence3.Key = TestFixture.Create<Guid>();
+            excludededEvidence3.Value = false;
+            var selectedEvidenceNotePairs = new List<GenericControlPair<Guid, bool>> { selectEvidence1, selectEvidence2, excludededEvidence1, excludededEvidence2, excludededEvidence3 };
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(s => s.Action, ActionEnum.Back)
+                .With(s => s.SelectedEvidenceNotePairs, selectedEvidenceNotePairs)
+                .Create();
+            var evidenceNotesIds = new List<Guid>() { selectEvidence1.Key, selectEvidence2.Key};
+            var excludeNoteIds = new List<Guid>() { excludededEvidence1.Key, excludededEvidence2.Key, excludededEvidence3.Key };
+
+            var transferEvidenceNoteRequest = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(c => c.EvidenceNoteIds, evidenceNotesIds)
+                .With(c => c.ExcludeEvidenceNoteIds, excludeNoteIds)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+               .Returns(outgoingTransfer);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(model);
+
+            //assert
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session,
+               A<object>.That.Matches(o => ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.SequenceEqual(evidenceNotesIds) &&
+                      ((TransferEvidenceNoteRequest)o).ExcludeEvidenceNoteIds.SequenceEqual(excludeNoteIds)),
+            SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenActionIsBackAndSessionObjectIsNotNull_ShouldRedirectToEditCategories()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var outgoingTransfer = TestFixture.Create<TransferEvidenceNoteRequest>();
+            model.Action = ActionEnum.Back;
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+               .Returns(outgoingTransfer);
+
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session, outgoingTransfer,
+             SessionKeyConstant.OutgoingTransferKey));
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditTransferFrom(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("EditCategories");
+            result.RouteValues["controller"].Should().Be("OutgoingTransfers");
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["evidenceNoteId"].Should().Be(model.ViewTransferNoteViewModel.EvidenceNoteId);
+        }
+
+        [Fact]
         public async Task EditCategoriesGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
         {
             //act
@@ -1870,6 +1975,99 @@
 
             //assert
             A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session, request,
+                SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenValidModelAndValidSessionTransferObject_SelectCategoriesToRequestIsCalledWithTheRequest()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            var categoryIds = TestFixture.CreateMany<int>().ToList();
+            var recipientId = TestFixture.Create<Guid>();
+            var organisationId = TestFixture.Create<Guid>();
+            var status = NoteStatus.Approved;
+            var complianceYear = TestFixture.Create<int>();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var excludeEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var transferValues = TestFixture.CreateMany<TransferTonnageValue>().ToList();
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(c => c.CategoryIds, categoryIds)
+                .With(r => r.RecipientId, recipientId)
+                .With(e => e.EvidenceNoteIds, evidenceNoteIds)
+                .With(e => e.ExcludeEvidenceNoteIds, excludeEvidenceNoteIds)
+                .With(o => o.OrganisationId, organisationId)
+                .With(s => s.Status, status)
+                .With(t => t.TransferValues, transferValues)
+                .With(c => c.ComplianceYear, complianceYear)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+                .Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() =>
+               transferEvidenceRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._, A<TransferEvidenceNoteRequest>.That
+               .Matches(r => r.CategoryIds.SequenceEqual(categoryIds) && 
+               r.RecipientId.Equals(recipientId) && 
+               r.EvidenceNoteIds.SequenceEqual(evidenceNoteIds) &&
+               r.ExcludeEvidenceNoteIds.SequenceEqual(excludeEvidenceNoteIds) &&
+               r.OrganisationId.Equals(organisationId) && 
+               r.Status.Equals(status) &&
+               r.TransferValues.SequenceEqual(transferValues) &&
+               r.ComplianceYear.Equals(complianceYear))))
+               .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditCategoriesPost_GivenValidModelAndValidSessionTransferObject_SetTransferSessionObjectWithTheRequest()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNoteCategoriesViewModel>();
+            var existingRequest = TestFixture.Create<TransferEvidenceNoteRequest>();
+
+            var categoryIds = TestFixture.CreateMany<int>().ToList();
+            var recipientId = TestFixture.Create<Guid>();
+            var organisationId = TestFixture.Create<Guid>();
+            var status = NoteStatus.Approved;
+            var complianceYear = TestFixture.Create<int>();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var excludeEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var transferValues = TestFixture.CreateMany<TransferTonnageValue>().ToList();
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(c => c.CategoryIds, categoryIds)
+                .With(r => r.RecipientId, recipientId)
+                .With(e => e.EvidenceNoteIds, evidenceNoteIds)
+                .With(e => e.ExcludeEvidenceNoteIds, excludeEvidenceNoteIds)
+                .With(o => o.OrganisationId, organisationId)
+                .With(s => s.Status, status)
+                .With(t => t.TransferValues, transferValues)
+                .With(c => c.ComplianceYear, complianceYear)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+                .Returns(existingRequest);
+
+            A.CallTo(() => transferEvidenceRequestCreator.SelectCategoriesToRequest(model, existingRequest))
+                 .Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditCategories(model);
+
+            //assert
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session,
+            A<object>.That.Matches(o => ((TransferEvidenceNoteRequest)o).CategoryIds.SequenceEqual(categoryIds) &&
+                          ((TransferEvidenceNoteRequest)o).RecipientId == recipientId &&
+                          ((TransferEvidenceNoteRequest)o).ComplianceYear == complianceYear &&
+                          ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.SequenceEqual(evidenceNoteIds) &&
+                          ((TransferEvidenceNoteRequest)o).ExcludeEvidenceNoteIds.SequenceEqual(excludeEvidenceNoteIds) &&
+                          ((TransferEvidenceNoteRequest)o).OrganisationId == organisationId &&
+                          ((TransferEvidenceNoteRequest)o).CategoryIds.SequenceEqual(categoryIds) &&
+                          ((TransferEvidenceNoteRequest)o).Status == status &&
+                          ((TransferEvidenceNoteRequest)o).TransferValues.SequenceEqual(transferValues)),
                 SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
         }
 
