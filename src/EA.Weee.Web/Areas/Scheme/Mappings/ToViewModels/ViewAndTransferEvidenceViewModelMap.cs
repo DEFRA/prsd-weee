@@ -19,7 +19,8 @@
             var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme, source.PageNumber);
             model.OrganisationId = source.OrganisationId;
             model.DisplayTransferButton = model.CanSchemeManageEvidence
-                                          && source.NoteData.Results.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved);
+                                          && source.NoteData.Results.Any(x => x.Status == Core.AatfEvidence.NoteStatus.Approved 
+                                          && x.WasteType == Core.AatfEvidence.WasteType.Household);
             return model;
         }
     }
