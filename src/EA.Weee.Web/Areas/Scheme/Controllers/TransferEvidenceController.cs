@@ -219,8 +219,7 @@
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
                     RedirectTab = redirectTab,
-                    SystemDateTime = currentDateTime, 
-                    IncludeHistory = true
+                    SystemDateTime = currentDateTime
                 });
 
                 return this.View("TransferredEvidence", model);
