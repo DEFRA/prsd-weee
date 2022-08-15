@@ -133,7 +133,7 @@
             private readonly It shouldHaveReturnedObligationYears = () =>
             {
                 result.Should().NotBeNull();
-                result.Count.Should().Be(2);
+                result.Count.Should().Be(3);
                 result.Should().BeEquivalentTo(new List<int>() { SystemTime.UtcNow.Year, SystemTime.UtcNow.Year - 1, SystemTime.UtcNow.Year - 2 });
             };
         }
@@ -152,10 +152,7 @@
                     .WithTestData(true)
                     .WithInternalUserAccess();
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
+                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetObligationComplianceYears, List<int>>>();

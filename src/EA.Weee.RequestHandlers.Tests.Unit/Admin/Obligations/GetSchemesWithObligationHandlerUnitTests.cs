@@ -17,7 +17,7 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetSchemesWithObligationHandlerTests : SimpleUnitTestBase
+    public class GetSchemesWithObligationHandlerUnitTests : SimpleUnitTestBase
     {
         private GetSchemesWithObligationHandler handler;
         private readonly GetSchemesWithObligation request;
@@ -25,7 +25,7 @@
         private readonly IObligationDataAccess obligationDataAccess;
         private readonly IMap<Scheme, SchemeData> schemeMap;
 
-        public GetSchemesWithObligationHandlerTests()
+        public GetSchemesWithObligationHandlerUnitTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
             obligationDataAccess = A.Fake<IObligationDataAccess>();

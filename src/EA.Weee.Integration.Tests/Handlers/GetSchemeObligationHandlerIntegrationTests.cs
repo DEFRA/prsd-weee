@@ -141,10 +141,7 @@
                     .WithTestData()
                     .WithInternalUserAccess();
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
+                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetSchemeObligation, List<SchemeObligationData>>>();
