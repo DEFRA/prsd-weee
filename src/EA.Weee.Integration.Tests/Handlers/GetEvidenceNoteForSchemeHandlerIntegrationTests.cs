@@ -388,9 +388,9 @@
                 result.VoidedReason.Should().Be(note.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(NoteStatus.Void))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
-                result.VoidedDate.Value.Date.Should().Be(note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(NoteStatus.Void))
-                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.Date);
+                result.VoidedDate.Value.Date.ToString("d").Should().Be(note.NoteStatusHistory
+                                                  .Where(n => n.ToStatus.Equals(NoteStatus.Void))
+                                                  .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.Date.ToString("d"));
             };
         }
 
@@ -472,6 +472,18 @@
                 result.OrganisationData.Id.Should().Be(note.Organisation.Id);
                 ((int)result.Type).Should().Be(note.NoteType.Value);
                 result.Id.Should().Be(note.Id);
+
+                result.VoidedReason.Should().Be(note.NoteStatusHistory
+                                                    .Where(n => n.ToStatus.Equals(NoteStatus.Void))
+                                                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
+
+                // bug fix
+                DateTime? date2 = note.NoteStatusHistory
+                                      .Where(n => n.ToStatus.Equals(NoteStatus.Void))
+                                      .OrderByDescending(n => n.ChangedDate)
+                                      .FirstOrDefault()?.ChangedDate;
+                result.VoidedDate?.Date.ToString("d").Should().Be(date2?.Date.ToString("d"));
+
                 result.ComplianceYear.Should().Be(note.ComplianceYear);
                 foreach (var noteTonnage in note.NoteTonnage)
                 {

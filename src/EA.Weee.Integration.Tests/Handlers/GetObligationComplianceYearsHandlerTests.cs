@@ -1,18 +1,12 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Autofac;
     using AutoFixture;
     using Base;
     using Builders;
-    using Core.Admin.Obligation;
-    using Core.Helpers;
     using Core.Shared;
-    using Domain.Lookup;
-    using Domain.Obligation;
     using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
@@ -84,6 +78,66 @@
             };
         }
 
+        [Component]
+        public class WhenIGetSchemeObligationYearsWithoutSpecifyingAnAuthority : GetObligationComplianceYearsHandlerTestBase
+        {
+            private static Scheme scheme1;
+            private static Scheme scheme2;
+
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var authority1 = Query.GetCompetentAuthorityByName("Environment Agency");
+                var authority2 = Query.GetCompetentAuthorityByName("Northern Ireland Environment Agency");
+                var organisation = OrganisationDbSetup.Init().Create();
+                scheme1 = SchemeDbSetup.Init()
+                    .WithAuthority(authority1.Id)
+                    .WithOrganisation(organisation.Id)
+                    .WithStatus(SchemeStatus.Approved)
+                    .Create();
+
+                scheme2 = SchemeDbSetup.Init()
+                    .WithAuthority(authority2.Id)
+                    .WithOrganisation(organisation.Id)
+                    .WithStatus(SchemeStatus.Approved)
+                    .Create();
+
+                var obligationUploadCurrentYear = ObligationUploadDbSetup.Init().Create();
+                var obligationUploadPreviousYear = ObligationUploadDbSetup.Init().Create();
+                var obligationUploadNotMatchingAuthority = ObligationUploadDbSetup.Init().Create();
+
+                ObligationSchemeDbSetup.Init().WithScheme(scheme1.Id)
+                    .WithObligationUpload(obligationUploadCurrentYear.Id)
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
+                    .Create();
+
+                ObligationSchemeDbSetup.Init().WithScheme(scheme1.Id)
+                    .WithObligationUpload(obligationUploadPreviousYear.Id)
+                    .WithComplianceYear(SystemTime.UtcNow.Year - 1)
+                    .Create();
+
+                ObligationSchemeDbSetup.Init().WithScheme(scheme2.Id)
+                    .WithObligationUpload(obligationUploadNotMatchingAuthority.Id)
+                    .WithComplianceYear(SystemTime.UtcNow.Year - 2)
+                    .Create();
+
+                request = new GetObligationComplianceYears(null, false);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldHaveReturnedObligationYears = () =>
+            {
+                result.Should().NotBeNull();
+                result.Count.Should().Be(3);
+                result.Should().BeEquivalentTo(new List<int>() { SystemTime.UtcNow.Year, SystemTime.UtcNow.Year - 1, SystemTime.UtcNow.Year - 2 });
+            };
+        }
+
         public class GetObligationComplianceYearsHandlerTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<GetObligationComplianceYears, List<int>> handler;
@@ -98,14 +152,7 @@
                     .WithTestData(true)
                     .WithInternalUserAccess();
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString(), role.Id))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
+                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetObligationComplianceYears, List<int>>>();
