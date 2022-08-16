@@ -553,6 +553,8 @@
                 var nonMatchingAuthority =
                     await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.NorthernIreland);
 
+                var obligatedUpload =
+                    new ObligationUpload(matchingAuthority, context.GetCurrentUser(), "data", "filename");
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
                 var pendingSchemeMatchingAuthority = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
@@ -585,11 +587,71 @@
                 ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthority,
                     nonMatchingAuthority, nonMatchingAuthorityScheme);
 
+                var pendingSchemeMatchingAuthorityWithData = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.SchemeStatus, SchemeStatus.Pending,
+                    pendingSchemeMatchingAuthorityWithData);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthority,
+                    matchingAuthority, pendingSchemeMatchingAuthorityWithData);
+                var obligationScheme1 = new ObligationScheme(pendingSchemeMatchingAuthorityWithData, 2022);
+                obligationScheme1.UpdateObligationUpload(obligatedUpload);
+                pendingSchemeMatchingAuthorityWithData.ObligationSchemes.Add(obligationScheme1);
+
+                var rejectedSchemeMatchingAuthorityWithData = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.SchemeStatus, SchemeStatus.Rejected,
+                    rejectedSchemeMatchingAuthorityWithData);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthority,
+                    matchingAuthority, rejectedSchemeMatchingAuthorityWithData);
+                var obligationScheme2 = new ObligationScheme(rejectedSchemeMatchingAuthorityWithData, 2022);
+                obligationScheme2.UpdateObligationUpload(obligatedUpload);
+                rejectedSchemeMatchingAuthorityWithData.ObligationSchemes.Add(obligationScheme2);
+
+                var withdrawnSchemeMatchingAuthorityWithData = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.SchemeStatus,
+                    SchemeStatus.Withdrawn, withdrawnSchemeMatchingAuthorityWithData);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthority,
+                    matchingAuthority, withdrawnSchemeMatchingAuthorityWithData);
+                var obligationScheme3 = new ObligationScheme(withdrawnSchemeMatchingAuthorityWithData, 2022);
+                obligationScheme3.UpdateObligationUpload(obligatedUpload);
+                withdrawnSchemeMatchingAuthorityWithData.ObligationSchemes.Add(obligationScheme3);
+
+                var pendingSchemeMatchingAuthorityWithDataNotInComplianceYear = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.SchemeStatus, SchemeStatus.Pending,
+                    pendingSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthority,
+                    matchingAuthority, pendingSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                var obligationScheme4NotInComplianceYear = new ObligationScheme(pendingSchemeMatchingAuthorityWithDataNotInComplianceYear, 2023);
+                obligationScheme4NotInComplianceYear.UpdateObligationUpload(obligatedUpload);
+                pendingSchemeMatchingAuthorityWithDataNotInComplianceYear.ObligationSchemes.Add(obligationScheme4NotInComplianceYear);
+
+                var rejectedSchemeMatchingAuthorityWithDataNotInComplianceYear = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.SchemeStatus, SchemeStatus.Rejected,
+                    rejectedSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthority,
+                    matchingAuthority, rejectedSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                var obligationScheme5NotInComplianceYear = new ObligationScheme(rejectedSchemeMatchingAuthorityWithDataNotInComplianceYear, 2021);
+                obligationScheme5NotInComplianceYear.UpdateObligationUpload(obligatedUpload);
+                rejectedSchemeMatchingAuthorityWithDataNotInComplianceYear.ObligationSchemes.Add(obligationScheme5NotInComplianceYear);
+
+                var withdrawnSchemeMatchingAuthorityWithDataNotInComplianceYear = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.SchemeStatus,
+                    SchemeStatus.Withdrawn, withdrawnSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                ObjectInstantiator<EA.Weee.Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthority,
+                    matchingAuthority, withdrawnSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                var obligationScheme6NotInComplianceYear = new ObligationScheme(withdrawnSchemeMatchingAuthorityWithDataNotInComplianceYear, 2019);
+                obligationScheme6NotInComplianceYear.UpdateObligationUpload(obligatedUpload);
+                withdrawnSchemeMatchingAuthorityWithDataNotInComplianceYear.ObligationSchemes.Add(obligationScheme6NotInComplianceYear);
+
                 context.Schemes.Add(rejectedSchemeMatchingAuthority);
                 context.Schemes.Add(pendingSchemeMatchingAuthority);
                 context.Schemes.Add(withdrawnSchemeMatchingAuthority);
                 context.Schemes.Add(matchingSchemeMatchingAuthority);
                 context.Schemes.Add(nonMatchingAuthorityScheme);
+                context.Schemes.Add(pendingSchemeMatchingAuthorityWithData);
+                context.Schemes.Add(rejectedSchemeMatchingAuthorityWithData);
+                context.Schemes.Add(withdrawnSchemeMatchingAuthorityWithData);
+                context.Schemes.Add(pendingSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                context.Schemes.Add(rejectedSchemeMatchingAuthorityWithDataNotInComplianceYear);
+                context.Schemes.Add(withdrawnSchemeMatchingAuthorityWithDataNotInComplianceYear);
 
                 await context.SaveChangesAsync();
 
@@ -600,11 +662,16 @@
                     s.CompetentAuthority.Id.Should().Be(matchingAuthority.Id);
                 });
 
-                results.Should().Contain(s => s.Id == pendingSchemeMatchingAuthority.Id);
-                results.Should().Contain(s => s.Id == rejectedSchemeMatchingAuthority.Id);
-                results.Should().Contain(s => s.Id == withdrawnSchemeMatchingAuthority.Id);
-                results.Should().Contain(s => s.Id == matchingSchemeMatchingAuthority.Id);
+                results.Should().NotContain(s => s.Id == pendingSchemeMatchingAuthority.Id);
+                results.Should().NotContain(s => s.Id == rejectedSchemeMatchingAuthority.Id);
+                results.Should().NotContain(s => s.Id == withdrawnSchemeMatchingAuthority.Id);
                 results.Should().NotContain(s => s.CompetentAuthority.Id != matchingAuthority.Id);
+                results.Should().Contain(s => s.Id == pendingSchemeMatchingAuthorityWithData.Id);
+                results.Should().Contain(s => s.Id == rejectedSchemeMatchingAuthorityWithData.Id);
+                results.Should().Contain(s => s.Id == withdrawnSchemeMatchingAuthorityWithData.Id);
+                results.Should().NotContain(s => s.Id == pendingSchemeMatchingAuthorityWithDataNotInComplianceYear.Id);
+                results.Should().NotContain(s => s.Id == rejectedSchemeMatchingAuthorityWithDataNotInComplianceYear.Id);
+                results.Should().NotContain(s => s.Id == withdrawnSchemeMatchingAuthorityWithDataNotInComplianceYear.Id);
             }
         }
 
@@ -627,7 +694,7 @@
 
                 var obligatedUpload =
                     new ObligationUpload(matchingAuthority, context.GetCurrentUser(), "data", "filename");
-                
+
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
                 var schemeBelongingToAuthority1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
@@ -699,7 +766,7 @@
 
                 obligatedUpload.ObligationSchemes.Add(obligationScheme2020);
                 obligatedUpload.ObligationSchemes.Add(obligationScheme2021);
-                obligatedUpload.ObligationSchemes.Add(obligationScheme2020Duplicate); 
+                obligatedUpload.ObligationSchemes.Add(obligationScheme2020Duplicate);
                 obligatedUpload.ObligationSchemes.Add(obligationScheme2022);
 
                 context.ObligationUploads.Add(obligatedUpload);
