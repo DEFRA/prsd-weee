@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.Extensions
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 
@@ -16,7 +17,7 @@
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
-                        @Html.Hidden("tab", Model.ActiveOverviewDisplayOption, new { id = "tab-hidden"} )
+                        @Html.Hidden("tab", Model.ActiveOverviewDisplayOption, new { id = "tab-hidden" })
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
                         <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
 
@@ -37,12 +38,12 @@
                                             </div>
                                             <div class="govuk-grid-column-one-quarter govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0">
                                                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                                    new ViewDataDictionary() { new KeyValuePair<string, object>("tab", Model.ActiveOverviewDisplayOption) })
-                                            </div>
+                                                                   new ViewDataDictionary() { new KeyValuePair<string, object>("tab", Model.ActiveOverviewDisplayOption) })
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                </div>
+
                             </div>
                         </div>
                     }
@@ -99,7 +100,7 @@
                                         @if (note.DisplayViewLink)
                                         {
                                             <td class="govuk-table__cell">
-                                                @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id }, null)<br />
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, page = Model.EvidenceNotesDataList.PageNumber }, null)<br />
                                             </td>
                                         }
                                         else
@@ -126,6 +127,9 @@
                         </tbody>
                     </table>
                     <br />
+                    @{
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary() { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(), selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
+                    }
                 </section>
             </div>
         </div>
