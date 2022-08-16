@@ -24,7 +24,10 @@
         {
             private static Scheme scheme1;
             private static Scheme scheme2;
-            private static Scheme schemeNotMatchingComplianceYear;
+            private static Scheme schemeApprovedOutOfComplianceYear;
+            private static Scheme schemeRejectedInComplianceYear;
+            private static Scheme schemeWithdrawnInComplianceYear;
+            private static Scheme schemePendingInComplianceYear;
 
             private readonly Establish context = () =>
             {
@@ -45,10 +48,29 @@
                     .WithStatus(SchemeStatus.Approved)
                     .Create();
 
-                schemeNotMatchingComplianceYear = SchemeDbSetup.Init()
+                schemeApprovedOutOfComplianceYear = SchemeDbSetup.Init()
                     .WithAuthority(authority1.Id)
                     .WithOrganisation(organisation.Id)
                     .WithStatus(SchemeStatus.Approved)
+                    .Create();
+
+                schemeRejectedInComplianceYear = SchemeDbSetup.Init()
+                    .WithAuthority(authority1.Id)
+                    .WithOrganisation(organisation.Id)
+                    .WithStatus(SchemeStatus.Rejected)
+                    .Create();
+
+                schemeWithdrawnInComplianceYear = SchemeDbSetup.Init()
+                    .WithAuthority(authority1.Id)
+                    .WithOrganisation(organisation.Id)
+                    .WithStatus(SchemeStatus.Approved)
+                    .WithStatus(SchemeStatus.Withdrawn)
+                    .Create();
+
+                schemePendingInComplianceYear = SchemeDbSetup.Init()
+                    .WithAuthority(authority1.Id)
+                    .WithOrganisation(organisation.Id)
+                    .WithStatus(SchemeStatus.Pending)
                     .Create();
 
                 var obligationUploadCurrentYear = ObligationUploadDbSetup.Init().Create();
@@ -64,12 +86,12 @@
                     .WithComplianceYear(SystemTime.UtcNow.Year)
                     .Create();
 
-                ObligationSchemeDbSetup.Init().WithScheme(schemeNotMatchingComplianceYear.Id)
+                ObligationSchemeDbSetup.Init().WithScheme(schemeApprovedOutOfComplianceYear.Id)
                     .WithObligationUpload(obligationUploadNotMatchingYear.Id)
                     .WithComplianceYear(SystemTime.UtcNow.Year - 1)
                     .Create();
 
-                ObligationSchemeDbSetup.Init().WithScheme(schemeNotMatchingComplianceYear.Id)
+                ObligationSchemeDbSetup.Init().WithScheme(schemeApprovedOutOfComplianceYear.Id)
                     .WithObligationUpload(obligationUploadNotMatchingYear.Id)
                     .WithComplianceYear(SystemTime.UtcNow.Year + 1)
                     .Create();
@@ -85,10 +107,13 @@
             private readonly It shouldHaveReturnedSchemesWithObligations = () =>
             {
                 result.Should().NotBeNull();
-                result.Count.Should().Be(2);
+                result.Count.Should().Be(3);
                 result.Should().Contain(s => s.Id == scheme1.Id);
                 result.Should().Contain(s => s.Id == scheme2.Id);
-                result.Should().NotContain(s => s.Id == schemeNotMatchingComplianceYear.Id);
+                result.Should().Contain(s => s.Id == schemeApprovedOutOfComplianceYear.Id); // included as scheme is approved
+                result.Should().NotContain(s => s.Id == schemeRejectedInComplianceYear.Id); // not included as rejected 
+                result.Should().NotContain(s => s.Id == schemeWithdrawnInComplianceYear.Id); // not included as rejected 
+                result.Should().NotContain(s => s.Id == schemePendingInComplianceYear.Id); // not included as rejected 
                 result.Should().OnlyHaveUniqueItems();
             };
         }
