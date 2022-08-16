@@ -68,7 +68,31 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => obligationDataAccess.GetSchemesWithObligations(request.ComplianceYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => obligationDataAccess.GetObligationSchemeData(null, request.ComplianceYear)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndSchemesWithObligations_OnlyDistinctSchemesShouldBeMapped()
+        {
+            //arrange
+            var scheme1 = A.Fake<Scheme>();
+            var scheme2 = A.Fake<Scheme>();
+            var schemes = new List<Scheme>()
+            {
+                scheme1,
+                scheme2,
+                scheme2
+            };
+
+            A.CallTo(() => obligationDataAccess.GetObligationSchemeData(null, A<int>._)).Returns(schemes);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => schemeMap.Map(scheme1)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => schemeMap.Map(scheme2)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => schemeMap.Map(A<Scheme>._)).MustHaveHappenedTwiceExactly();
         }
 
         [Fact]
@@ -81,7 +105,7 @@
                 A.Fake<Scheme>()
             };
 
-            A.CallTo(() => obligationDataAccess.GetSchemesWithObligations(A<int>._)).Returns(schemes);
+            A.CallTo(() => obligationDataAccess.GetObligationSchemeData(null, A<int>._)).Returns(schemes);
 
             //act
             await handler.HandleAsync(request);
@@ -107,7 +131,7 @@
                 A.Fake<SchemeData>()
             };
 
-            A.CallTo(() => obligationDataAccess.GetSchemesWithObligations(A<int>._)).Returns(schemes);
+            A.CallTo(() => obligationDataAccess.GetObligationSchemeData(null, A<int>._)).Returns(schemes);
             A.CallTo(() => schemeMap.Map(A<Scheme>._)).ReturnsNextFromSequence(schemeData.ToArray());
 
             //act
