@@ -5,7 +5,6 @@
     using EA.Weee.Core.Admin.Obligation;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using System.Collections.Generic;
     using System.Linq;
     using Core.Helpers;
@@ -35,7 +34,7 @@
                 DisplayNoDataMessage = !source.ComplianceYears.Any(),
                 ComplianceYearList = source.ComplianceYears,
                 SchemeList = schemeList,
-                SchemeId = source.SchemeId
+                SchemeId = source.SchemeData != null ? schemeList.Any(s => s.Id == source.SchemeId) ? source.SchemeId : null : source.SchemeId
             };
 
             var excludedCategories = new List<WeeeCategory>()
