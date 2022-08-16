@@ -51,6 +51,15 @@
 
             using (var client = apiClient())
             {
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                if (noteData.Status != NoteStatus.Returned && noteData.Status != NoteStatus.Draft)
+                {
+                    // we redirect to manage evidence notes tab if this note already has been processed (clicked on Browser Back Button)
+                    return RedirectToAction("Index", "ManageEvidenceNotes",
+                        new { pcsId, area = "Scheme", tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString() });
+                }
+
                 var model = await TransferEvidenceTonnageViewModel(pcsId, evidenceNoteId, client, returnToEditDraftTransfer);
 
                 return this.View("EditTonnages", model);
