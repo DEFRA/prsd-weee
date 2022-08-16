@@ -78,7 +78,7 @@
 <!-- --------------------------- -->
 <!-- Void transfer note button   -->
 <!-- --------------------------- -->
-@if (Model.Status.Equals(NoteStatus.Approved))
+@if (Model.Status.Equals(NoteStatus.Approved) && Model.CanVoid)
 {
     using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
     {

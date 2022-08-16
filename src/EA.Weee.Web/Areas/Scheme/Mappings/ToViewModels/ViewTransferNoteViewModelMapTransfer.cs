@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
     using System;
+    using System.Security.Principal;
     using Core.AatfEvidence;
     using CuttingEdge.Conditions;
 
@@ -20,7 +21,9 @@
 
         public DateTime SystemDateTime { get; set; }
 
-        public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification)
+        public IPrincipal User { get; private set; }
+
+        public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification, IPrincipal user = null)
         {
             Condition.Requires(transferEvidenceNoteData).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
@@ -28,6 +31,7 @@
             OrganisationId = organisationId;
             TransferEvidenceNoteData = transferEvidenceNoteData;
             DisplayNotification = displayNotification;
+            User = user;
         }
     }
 }
