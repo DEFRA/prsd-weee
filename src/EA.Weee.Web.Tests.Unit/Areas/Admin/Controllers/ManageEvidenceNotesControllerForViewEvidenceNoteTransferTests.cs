@@ -431,19 +431,18 @@
             A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).Returns(model.EvidenceNoteId);
+            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.VoidTransferNote(model);
-            RedirectToRouteResult vr = result as RedirectToRouteResult;
-
+            var result = await ManageEvidenceController.VoidTransferNote(model) as RedirectToRouteResult;
+        
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
-                    t => t.TransferEvidenceNoteData.Equals(transferNote))))
-                .MustHaveHappenedOnceExactly();
             ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Equals(NoteUpdatedStatusEnum.Void);
-            vr.RouteValues.Values.ToArray()[1].Should().Be("ViewEvidenceNoteTransfer");
-            vr.RouteValues.Values.ToArray()[2].Should().Be("ManageEvidenceNotes");
+
+            result.RouteValues["action"].Should().Be("ViewEvidenceNoteTransfer");
+            result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
+            result.RouteValues["evidenceNoteId"].Should().Be(model.EvidenceNoteId);
         }
 
         [Fact]
