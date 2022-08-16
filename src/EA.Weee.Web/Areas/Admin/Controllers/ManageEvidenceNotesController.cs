@@ -105,7 +105,7 @@
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(result.TransferredOrganisationData.Id,
-                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
+                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User));
 
                 ViewBag.Page = page;
 
@@ -128,7 +128,7 @@
                 if (transferNoteData.Type == NoteType.Transfer && transferNoteData.Status == NoteStatus.Approved)
                 {
                     var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
-                       transferNoteData, null));
+                       transferNoteData, null, this.User));
 
                     return View("VoidTransferNote", model);
                 }
@@ -155,9 +155,9 @@
                 if (transferNoteData.Type == NoteType.Transfer && transferNoteData.Status == NoteStatus.Void)
                 {
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = NoteUpdatedStatusEnum.Void;
-
+                   
                     model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
-                       transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
+                       transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User));
 
                     return RedirectToAction("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { evidenceNoteId = model.EvidenceNoteId });
                 }
