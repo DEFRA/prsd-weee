@@ -330,53 +330,50 @@
             if (model.Action == ActionEnum.Back)
             {
                 var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                  SessionKeyConstant.OutgoingTransferKey);
+               SessionKeyConstant.OutgoingTransferKey);
 
                 if (outgoingTransfer == null)
                 {
                     return RedirectToManageEvidence(model.PcsId);
                 }
 
-                var selectedEvidenceNotes =
-                   model.SelectedEvidenceNotePairs.Where(a => a.Value == true).Select(b => b.Key);
-
-                var unselectedEvidenceNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value == false).Select(b => b.Key);
-
-                var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, outgoingTransfer.CategoryIds,
-                        selectedEvidenceNotes.ToList(), unselectedEvidenceNotes.ToList());
-
-                sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
-                    SessionKeyConstant.OutgoingTransferKey);
+                SetEvidenceNotesInSession(model, outgoingTransfer);
 
                 return RedirectToAction("EditCategories", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId});
             }
 
             if (ModelState.IsValid)
             {
-                var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.OutgoingTransferKey);
+                var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+               SessionKeyConstant.OutgoingTransferKey);
 
-                if (transferRequest == null)
+                if (outgoingTransfer == null)
                 {
                     return RedirectToManageEvidence(model.PcsId);
                 }
 
-                var selectedEvidenceNotes =
-                    model.SelectedEvidenceNotePairs.Where(a => a.Value).Select(b => b.Key);
-
-                var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, transferRequest.CategoryIds,
-                        selectedEvidenceNotes.ToList());
-
-                sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
-                    SessionKeyConstant.OutgoingTransferKey);
+                SetEvidenceNotesInSession(model, outgoingTransfer);
 
                 return RedirectToRoute("Scheme_edit_transfer_tonnages",
                     new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
             }
 
             return this.View("EditTransferFrom", model);
+        }
+
+        private void SetEvidenceNotesInSession(TransferEvidenceNotesViewModel model, TransferEvidenceNoteRequest outgoingTransfer)
+        {
+            var selectedEvidenceNotes =
+               model.SelectedEvidenceNotePairs.Where(a => a.Value == true).Select(b => b.Key);
+
+            var unselectedEvidenceNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value == false).Select(b => b.Key);
+
+            var updatedTransferRequest =
+                new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, outgoingTransfer.CategoryIds,
+                    selectedEvidenceNotes.ToList(), unselectedEvidenceNotes.ToList());
+
+            sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
+                SessionKeyConstant.OutgoingTransferKey);
         }
 
         private async Task<TransferEvidenceNoteCategoriesViewModel> TransferEvidenceNoteCategoriesViewModel(Guid pcsId, 
