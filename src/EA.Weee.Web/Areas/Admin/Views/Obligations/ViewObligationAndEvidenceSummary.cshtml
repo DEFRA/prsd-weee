@@ -64,22 +64,22 @@
                         <th class="govuk-table__header">
                             Category
                         </th>
-                        <th class="govuk-table__header govuk-!-text-align-right">
+                        <th class="govuk-table__header govuk-!-text-align-left">
                             Obligation (tonnes)
                         </th>
-                        <th class="govuk-table__header govuk-!-text-align-right">
+                        <th class="govuk-table__header govuk-!-text-align-left">
                             Evidence (tonnes)
                         </th>
-                        <th class="govuk-table__header">
+                        <th class="govuk-table__header govuk-!-text-align-left">
                             Reuse (tonnes)
                         </th>
-                        <th class="govuk-table__header govuk-!-text-align-right">
+                        <th class="govuk-table__header govuk-!-text-align-left">
                             Transferred out (tonnes)
                         </th>
-                        <th class="govuk-table__header govuk-!-text-align-right">
+                        <th class="govuk-table__header govuk-!-text-align-left">
                             Transferred in (tonnes)
                         </th>
-                        <th class="govuk-table__header govuk-!-text-align-right">
+                        <th class="govuk-table__header govuk-!-text-align-left">
                             Difference (tonnes)
                         </th>
                     </tr>
@@ -116,30 +116,6 @@
 
                     <tr class="govuk-table__row govuk-panel-grey-background">
                         <td class="govuk-table__cell">
-                            <p class="govuk-body"><strong>Total (tonnes)</strong></p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ObligationTotal">@Model.ObligationTotal</p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body weee-tonnage-right-aligned-display" id="EvidenceTotal">@Model.EvidenceTotal</p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReuseTotal</p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredInTotal">@Model.TransferredInTotal</p>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <p class="govuk-body weee-tonnage-right-aligned-display" id="DifferenceTotal">@Model.DifferenceTotal</p>
-                        </td>
-                    </tr>
-
-                    <tr class="govuk-table__row govuk-panel-grey-background">
-                        <td class="govuk-table__cell">
                             <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
@@ -161,7 +137,30 @@
                             <p class="govuk-body weee-tonnage-right-aligned-display" id="Difference2To10Total">@Model.Difference210Total</p>
                         </td>
                     </tr>
-
+                    
+                    <tr class="govuk-table__row govuk-panel-grey-background">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body"><strong>Total (tonnes)</strong></p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ObligationTotal">@Model.ObligationTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="EvidenceTotal">@Model.EvidenceTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReuseTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredInTotal">@Model.TransferredInTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="DifferenceTotal">@Model.DifferenceTotal</p>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         }

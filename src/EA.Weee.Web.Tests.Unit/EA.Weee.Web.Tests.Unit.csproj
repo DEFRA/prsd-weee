@@ -309,7 +309,9 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\ObligationsControllerViewObligationAndEvidenceSummaryTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttributeTests.cs" />
