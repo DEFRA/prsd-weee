@@ -34,7 +34,6 @@
             private static Scheme scheme5;
             private static Scheme scheme6;
             private static Scheme scheme7;
-            private static Scheme scheme8;
             private static Scheme notMatchingScheme;
 
             private readonly Establish context = () =>
