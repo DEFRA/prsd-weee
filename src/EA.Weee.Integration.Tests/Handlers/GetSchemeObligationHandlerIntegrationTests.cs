@@ -29,6 +29,9 @@
         {
             private static Scheme scheme1;
             private static Scheme scheme2;
+            private static Scheme scheme3;
+            private static Scheme scheme4;
+            private static Scheme scheme5;
 
             private readonly Establish context = () =>
             {
@@ -54,21 +57,18 @@
                     .WithAuthority(nonMatchingAuthority.Id)
                     .WithOrganisation(organisation.Id).Create();
 
-                //not matching required status
-                var notMatchingSchemeStatus1 = SchemeDbSetup.Init()
+                scheme3 = SchemeDbSetup.Init()
                     .WithAuthority(nonMatchingAuthority.Id)
                     .WithStatus(SchemeStatus.Pending)
                     .WithOrganisation(organisation.Id).Create();
 
-                //not matching required status
-                var notMatchingSchemeStatus2 = SchemeDbSetup.Init()
+                scheme4 = SchemeDbSetup.Init()
                     .WithAuthority(nonMatchingAuthority.Id)
                     .WithStatus(SchemeStatus.Approved)
                     .WithStatus(SchemeStatus.Withdrawn)
                     .WithOrganisation(organisation.Id).Create();
 
-                //not matching required status
-                var notMatchingSchemeStatus3 = SchemeDbSetup.Init()
+                scheme5 = SchemeDbSetup.Init()
                     .WithAuthority(nonMatchingAuthority.Id)
                     .WithStatus(SchemeStatus.Rejected)
                     .WithOrganisation(organisation.Id).Create();
@@ -82,19 +82,35 @@
                     new ObligationSchemeAmount(WeeeCategory.SmallHouseholdAppliances, null)
                 };
 
-                ObligationSchemeDbSetup.Init().WithScheme(scheme1.Id).WithObligationUpload(obligationUpload.Id).WithObligationAmounts(amounts1).WithComplianceYear(2022).Create();
+                ObligationSchemeDbSetup.Init()
+                    .WithScheme(scheme1.Id)
+                    .WithObligationUpload(obligationUpload.Id)
+                    .WithObligationAmounts(amounts1)
+                    .WithComplianceYear(2022).Create();
                 
-                // should not be returned not matching authority
-                ObligationSchemeDbSetup.Init().WithScheme(notMatchingScheme.Id).WithObligationUpload(obligationUpload.Id).WithComplianceYear(2022).Create();
+                // should be returned
+                ObligationSchemeDbSetup.Init()
+                    .WithScheme(notMatchingScheme.Id)
+                    .WithObligationUpload(obligationUpload.Id)
+                    .WithComplianceYear(2022).Create();
 
-                // should not be returned not matching scheme status
-                ObligationSchemeDbSetup.Init().WithScheme(notMatchingSchemeStatus1.Id).WithObligationUpload(obligationUpload.Id).WithComplianceYear(2022).Create();
+                // should be returned
+                ObligationSchemeDbSetup.Init()
+                    .WithScheme(scheme3.Id)
+                    .WithObligationUpload(obligationUpload.Id)
+                    .WithComplianceYear(2022).Create();
 
-                // should not be returned not matching scheme status
-                ObligationSchemeDbSetup.Init().WithScheme(notMatchingSchemeStatus2.Id).WithObligationUpload(obligationUpload.Id).WithComplianceYear(2022).Create();
+                // should be 
+                ObligationSchemeDbSetup.Init()
+                    .WithScheme(scheme4.Id)
+                    .WithObligationUpload(obligationUpload.Id)
+                    .WithComplianceYear(2022).Create();
 
-                // should not be returned not matching scheme status
-                ObligationSchemeDbSetup.Init().WithScheme(notMatchingSchemeStatus3.Id).WithObligationUpload(obligationUpload.Id).WithComplianceYear(2022).Create();
+                // should be returned
+                ObligationSchemeDbSetup.Init()
+                    .WithScheme(scheme5.Id)
+                    .WithObligationUpload(obligationUpload.Id)
+                    .WithComplianceYear(2022).Create();
 
                 // should not be returned not matching compliance year
                 ObligationSchemeDbSetup.Init().WithScheme(scheme1.Id).WithObligationUpload(obligationUpload.Id).WithComplianceYear(2021).Create();
@@ -110,7 +126,6 @@
             private readonly It shouldHaveReturnedObligationData = () =>
             {
                 result.Should().NotBeNull();
-                result.Count.Should().Be(2);
                 var schemeData = result.Where(s => s.SchemeName.Equals(scheme1.SchemeName));
                 schemeData.Count().Should().Be(1);
                 schemeData.ElementAt(0).UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
