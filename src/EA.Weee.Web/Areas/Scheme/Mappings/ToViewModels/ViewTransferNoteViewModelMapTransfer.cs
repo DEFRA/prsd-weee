@@ -23,7 +23,8 @@
 
         public IPrincipal User { get; private set; }
 
-        public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData, object displayNotification, IPrincipal user = null)
+        public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData,
+            object displayNotification, IPrincipal user = null)
         {
             Condition.Requires(transferEvidenceNoteData).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);

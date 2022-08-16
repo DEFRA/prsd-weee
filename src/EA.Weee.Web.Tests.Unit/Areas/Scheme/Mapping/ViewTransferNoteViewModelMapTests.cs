@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Principal;
     using AutoFixture;
     using Core.Scheme;
     using Core.Shared;
@@ -47,7 +48,12 @@
         public void ViewTransferNoteViewModelMap_GivenSource_ViewTransferNoteViewModelShouldBeReturned()
         {
             //arrange
-            var source = TestFixture.Create<ViewTransferNoteViewModelMapTransfer>();
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var user = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, user);
 
             //act
             var model = map.Map(source);
@@ -63,7 +69,13 @@
         public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsFalse_PropertiesShouldBeSet(bool returnToView)
         {
             //arrange
-            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, returnToView).Create();
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal);
+            source.ReturnToView = returnToView;
 
             //act
             var model = map.Map(source);
@@ -76,7 +88,13 @@
         public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsTrue_ShouldSetReturnToView()
         {
             //arrange
-            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.ReturnToView, true).Create();
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var user = A.Fake<IPrincipal>();
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, user);
+            
+            source.ReturnToView = true;
 
             //act
             var model = map.Map(source);
@@ -90,7 +108,13 @@
         {
             //arrange
             var tab = TestFixture.Create<string>();
-            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.RedirectTab, tab).Create();
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var user = A.Fake<IPrincipal>();
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, user);
+
+            source.RedirectTab = tab;
 
             //act
             var model = map.Map(source);
@@ -105,7 +129,13 @@
         public void ViewTransferNoteViewModelMap_GivenSource_PropertiesShouldBeSet(bool editMode)
         {
             //arrange
-            var source = TestFixture.Build<ViewTransferNoteViewModelMapTransfer>().With(t => t.Edit, editMode).Create();
+            var user = A.Fake<IPrincipal>();
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, user);
+
+            source.Edit = editMode;
 
             //act
             var model = map.Map(source);
