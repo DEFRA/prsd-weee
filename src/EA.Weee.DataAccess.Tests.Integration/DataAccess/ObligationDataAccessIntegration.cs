@@ -597,15 +597,14 @@
 
                 results.Should().AllSatisfy(s =>
                 {
-                    s.SchemeStatus.Value.Should().Be(SchemeStatus.Approved.Value);
                     s.CompetentAuthority.Id.Should().Be(matchingAuthority.Id);
                 });
 
-                results.Should().NotContain(s => s.Id == pendingSchemeMatchingAuthority.Id);
-                results.Should().NotContain(s => s.Id == rejectedSchemeMatchingAuthority.Id);
-                results.Should().NotContain(s => s.Id == withdrawnSchemeMatchingAuthority.Id);
-                results.Should().NotContain(s => s.CompetentAuthority.Id != matchingAuthority.Id);
+                results.Should().Contain(s => s.Id == pendingSchemeMatchingAuthority.Id);
+                results.Should().Contain(s => s.Id == rejectedSchemeMatchingAuthority.Id);
+                results.Should().Contain(s => s.Id == withdrawnSchemeMatchingAuthority.Id);
                 results.Should().Contain(s => s.Id == matchingSchemeMatchingAuthority.Id);
+                results.Should().NotContain(s => s.CompetentAuthority.Id != matchingAuthority.Id);
             }
         }
 

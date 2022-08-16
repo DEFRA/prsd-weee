@@ -44,7 +44,9 @@
 
         public async Task<List<Scheme>> GetObligationSchemeData(UKCompetentAuthority authority, int complianceYear)
         {
-            var schemes = weeeContext.Schemes.Where(s => s.SchemeStatus.Value == SchemeStatus.Approved.Value && s.CompetentAuthority.Id == authority.Id);
+            //TO DO - need to check here. If the scheme has data for the year than always include it no matter the status, if it doesnt have data for the year only check for approved status
+            var schemes = weeeContext.Schemes.Where(s => 
+                (s.ObligationSchemes.Any(o => o.ComplianceYear == complianceYear) || s.SchemeStatus.Value == SchemeStatus.Approved.Value) && s.CompetentAuthority.Id == authority.Id);
 
             return await schemes
                 .IncludeFilter(s => s.ObligationSchemes.Where(s1 => s1.ComplianceYear == complianceYear))
