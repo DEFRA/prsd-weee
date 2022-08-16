@@ -1533,6 +1533,51 @@
         }
 
         [Fact]
+        public async Task EditTransferFromPost_GivenValidModel_ShouldCallSetTransferSessionObjectWithTheUpdatedRequest()
+        {
+            //arrange
+            var outgoingTransfer = TestFixture.Create<TransferEvidenceNoteRequest>();
+            var selectEvidence1 = new GenericControlPair<Guid, bool>();
+            selectEvidence1.Key = TestFixture.Create<Guid>();
+            selectEvidence1.Value = true;
+            var selectEvidence2 = new GenericControlPair<Guid, bool>();
+            selectEvidence2.Key = TestFixture.Create<Guid>();
+            selectEvidence2.Value = true;
+            var excludededEvidence1 = new GenericControlPair<Guid, bool>();
+            excludededEvidence1.Key = TestFixture.Create<Guid>();
+            excludededEvidence1.Value = false;
+            var excludededEvidence2 = new GenericControlPair<Guid, bool>();
+            excludededEvidence2.Key = TestFixture.Create<Guid>();
+            excludededEvidence2.Value = false;
+            var excludededEvidence3 = new GenericControlPair<Guid, bool>();
+            excludededEvidence3.Key = TestFixture.Create<Guid>();
+            excludededEvidence3.Value = false;
+            var selectedEvidenceNotePairs = new List<GenericControlPair<Guid, bool>> { selectEvidence1, selectEvidence2, excludededEvidence1, excludededEvidence2, excludededEvidence3 };
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(s => s.SelectedEvidenceNotePairs, selectedEvidenceNotePairs)
+                .Create();
+            var evidenceNotesIds = new List<Guid>() { selectEvidence1.Key, selectEvidence2.Key };
+            var excludeNoteIds = new List<Guid>() { excludededEvidence1.Key, excludededEvidence2.Key, excludededEvidence3.Key };
+
+            var transferEvidenceNoteRequest = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(c => c.EvidenceNoteIds, evidenceNotesIds)
+                .With(c => c.ExcludeEvidenceNoteIds, excludeNoteIds)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._, A<string>._))
+               .Returns(outgoingTransfer);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(model);
+
+            //assert
+            A.CallTo(() => sessionService.SetTransferSessionObject(outgoingTransferEvidenceController.Session,
+               A<object>.That.Matches(o => ((TransferEvidenceNoteRequest)o).EvidenceNoteIds.SequenceEqual(evidenceNotesIds) &&
+                      ((TransferEvidenceNoteRequest)o).ExcludeEvidenceNoteIds.SequenceEqual(excludeNoteIds)),
+            SessionKeyConstant.OutgoingTransferKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task EditTransferFromPost_GivenActionIsBack_ShouldCallGetTransferSessionObject()
         {
             //arrange
