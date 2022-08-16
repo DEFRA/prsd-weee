@@ -65,7 +65,7 @@
             A.CallTo(() => aatf.Organisation).Returns(organisation);
 
             request = new GetAatfNotesRequest(organisation.Id,
-                aatf.Id, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<string>(), currentYear, recipientId, wasteType, noteStatus, startDate, endDate);
+                aatf.Id, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<string>(), currentYear, recipientId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
 
             handler = new GetAatfNotesRequestHandler(weeeAuthorization,
                 noteDataAccess,
@@ -376,7 +376,7 @@
             return new GetAatfNotesRequest(organisation.Id, 
                 aatf.Id, 
                 TestFixture.CreateMany<NoteStatus>().ToList(),
-                searchRef, selectedComplianceYear, receivedId, wasteType, noteStatus, startDate, endDate);
+                searchRef, selectedComplianceYear, receivedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
         }
     }
 }
