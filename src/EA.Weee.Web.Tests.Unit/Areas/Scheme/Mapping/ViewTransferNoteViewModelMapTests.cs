@@ -2,14 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Security.Principal;
     using AutoFixture;
     using Core.Scheme;
     using Core.Shared;
     using EA.Prsd.Core;
+    using EA.Weee.Api.Client.Actions;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Security;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
@@ -17,6 +20,7 @@
     using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
+    using IdentityModel;
     using Web.ViewModels.Shared;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
@@ -198,6 +202,73 @@
             //assert
             model.SuccessMessage.Should()
                 .Be($"You have successfully saved the evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference} as a draft");
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_WithInternalAdmin_CanVoidShouldBeTrue()
+        {
+            //arrange
+            var user = A.Fake<IPrincipal>();
+            var principal = new ClaimsPrincipal(user);
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(user.Identity);
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
+            principal.AddIdentity(claimsIdentity);
+
+            A.CallTo(() => user.Identity).Returns(claimsIdentity);
+
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.Submitted, user);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.CanVoid.Should().BeTrue();
+         }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_WithExternalUser_CanVoidShouldBeFalse()
+        {
+            //arrange
+            var user = A.Fake<IPrincipal>();
+            var principal = new ClaimsPrincipal(user);
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(user.Identity);
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.CanAccessExternalArea));
+            principal.AddIdentity(claimsIdentity);
+
+            A.CallTo(() => user.Identity).Returns(claimsIdentity);
+
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.Submitted, user);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.CanVoid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_WithNullUser_CanVoidShouldBeFalse()
+        {
+            //arrange
+            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(t => t.Type, NoteType.Transfer)
+                    .With(t => t.Reference, 1).Create(),
+                NoteUpdatedStatusEnum.Submitted, null);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.CanVoid.Should().BeFalse();
         }
 
         [Fact]

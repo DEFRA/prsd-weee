@@ -253,7 +253,7 @@
         }
 
         [Fact]
-        public async Task ViewEvidenceNoteTransferGet_GivenRequestDat_TransferEvidenceNoteModelShouldBeBuilt()
+        public async Task ViewEvidenceNoteTransferGet_GivenRequestData_TransferEvidenceNoteModelShouldBeBuilt()
         {
             //arrange
             SetUpControllerContext(true);
@@ -349,6 +349,25 @@
                     t => t.TransferEvidenceNoteData.Equals(TransferEvidenceNoteData) &&
                          t.DisplayNotification.Equals(displayNotification))))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ViewEvidenceNoteTransferGet_ChecksUserIsAllowed_ViewModelSetCorrectly(bool userHasInternalAdminClaims)
+        {
+            // arrange 
+            SetUpControllerContext(userHasInternalAdminClaims);
+            var model = TestFixture.Build<ViewTransferNoteViewModel>().With(c => c.CanVoid, userHasInternalAdminClaims).Create();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
+
+            // act
+            var result = await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId) as ViewResult;
+            var resultViewModel = result.Model as ViewTransferNoteViewModel;
+
+            // assert
+            Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanVoid);
         }
 
         [Fact]
@@ -467,6 +486,30 @@
 
             //asset
             result.Model.Should().Be(model);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task VoidTransferNoteGet_CheckUserCanVoid_ViewModelShouldBeSetUpCorrectly(bool userHasInternalAdminClaims)
+        {
+            //arrange
+            SetUpControllerContext(userHasInternalAdminClaims);
+            var model = TestFixture.Build<ViewTransferNoteViewModel>().With(x => x.CanVoid, userHasInternalAdminClaims).Create();
+            var transferNote = A.Fake<TransferEvidenceNoteData>();
+            transferNote.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
+            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
+            A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
+            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId) as ViewResult;
+            var resultViewModel = result.Model as ViewTransferNoteViewModel;
+
+            //asset
+            Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanVoid);
         }
 
         [Fact]
