@@ -139,6 +139,62 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithNullSchemeData_SchemeIdShouldBeSet()
+        {
+            //arrange
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+            var schemeId = TestFixture.Create<Guid>();
+
+            var mapObject =
+                new ViewObligationsAndEvidenceSummaryViewModelMapTransfer(schemeId, null, complianceYears, null);
+
+            //act
+            var result = mapper.Map(mapObject);
+
+            //assert
+            result.SchemeId.Should().Be(schemeId);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSchemeDataAndSelectedSchemeIdExistsInSchemeData_SchemeIdShouldBeSet()
+        {
+            //arrange
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+            var schemeId = TestFixture.Create<Guid>();
+            var schemeData = new List<SchemeData>()
+            {
+                TestFixture.Build<SchemeData>().With(s => s.Id, schemeId).Create()
+            };
+
+            var mapObject =
+                new ViewObligationsAndEvidenceSummaryViewModelMapTransfer(schemeId, null, complianceYears, schemeData);
+
+            //act
+            var result = mapper.Map(mapObject);
+
+            //assert
+            result.SchemeId.Should().Be(schemeId);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSchemeDataAndSelectedSchemeIdDoesNotExistInSchemeData_SchemeIdShouldBeNull()
+        {
+            //arrange
+            var complianceYears = TestFixture.CreateMany<int>().ToList();
+            var schemeId = TestFixture.Create<Guid>();
+            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+
+            var mapObject =
+                new ViewObligationsAndEvidenceSummaryViewModelMapTransfer(schemeId, null, complianceYears, schemeData);
+
+            //act
+            var result = mapper.Map(mapObject);
+
+            //assert
+            result.SchemeId.Should().BeNull();
+        }
+
+        [Fact]
         public void Map_GivenSourceNullSchemeId_PropertiesShouldBeSet()
         {
             //arrange
