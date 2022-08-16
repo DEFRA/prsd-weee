@@ -7,8 +7,7 @@
 @section full_main_content{
 
     @(this.WeeeGds().BackLink(
-    Url.Action("Index", "ManageEvidenceNotes",
-        new { tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear })))
+    Url.Action("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { evidenceNoteId = Model.EvidenceNoteId })))
 
     <h1 class="govuk-heading-l">Are you sure you want to void evidence note transfer @Model.ReferenceDisplay?</h1>
 
