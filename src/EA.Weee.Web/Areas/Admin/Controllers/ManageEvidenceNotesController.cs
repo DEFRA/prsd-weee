@@ -159,7 +159,7 @@
                     model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
                        transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
 
-                    return RedirectToAction("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { transferNoteId = model.EvidenceNoteId });
+                    return RedirectToAction("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { evidenceNoteId = model.EvidenceNoteId });
                 }
             }
 

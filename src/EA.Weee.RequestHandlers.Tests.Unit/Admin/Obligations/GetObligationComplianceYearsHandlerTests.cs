@@ -101,6 +101,19 @@
         }
 
         [Fact]
+        public async Task HandleAsync_GivenRequestAndCompetentAuthorityIsNull_CompetentAuthorityShouldNotBeRetrieved()
+        {
+            //arrange
+            var request = new GetObligationComplianceYears(null, false);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
         public async Task HandleAsync_GivenRequest_SystemDataTimeShouldBeRetrieved()
         {
             //act
@@ -123,6 +136,19 @@
 
             //assert
             A.CallTo(() => obligationDataAccess.GetObligationComplianceYears(A<UKCompetentAuthority>.That.IsSameAs(authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndCompetentAuthorityIsNull_ObligationComplianceYearsShouldBeRetrieved()
+        {
+            //arrange
+            var request = new GetObligationComplianceYears(null, false);
+
+           //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => obligationDataAccess.GetObligationComplianceYears(null)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
