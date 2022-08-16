@@ -12,6 +12,7 @@
     using FluentAssertions;
     using System;
     using System.Linq;
+    using System.Security.Principal;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Tests.Core;
     using Xunit;
@@ -65,8 +66,12 @@
         public void Map_GivenATransferNote_MapperShouldBeCalled()
         {
             // arrange
-           var transfer = TestFixture.Create<ViewTransferNoteViewModelMapTransfer>();
-
+            var user = A.Fake<IPrincipal>();
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var transfer = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceData, displayNotification, user);
+      
             // act
             map.Map(transfer);
 
