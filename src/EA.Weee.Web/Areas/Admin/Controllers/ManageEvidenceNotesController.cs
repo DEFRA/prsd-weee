@@ -148,16 +148,16 @@
             {
                 var request = new GetEvidenceNoteTransfersForInternalUserRequest(model.EvidenceNoteId);
 
-                var result = await client.SendAsync(User.GetAccessToken(), new VoidTransferNoteRequest(model.EvidenceNoteId, model.VoidedReason));
+                await client.SendAsync(User.GetAccessToken(), new VoidTransferNoteRequest(model.EvidenceNoteId, model.VoidedReason));
 
                 var transferNoteData = await client.SendAsync(User.GetAccessToken(), request);
 
                 if (transferNoteData.Type == NoteType.Transfer && transferNoteData.Status == NoteStatus.Void)
                 {
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = NoteUpdatedStatusEnum.Void;
-                   
+
                     model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
-                       transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User));
+                        transferNoteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User));
 
                     return RedirectToAction("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { evidenceNoteId = model.EvidenceNoteId });
                 }
