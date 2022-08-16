@@ -9,8 +9,6 @@
     using System.Web.Mvc;
     using System.Web.Routing;
     using AutoFixture;
-    using EA.Weee.Api.Client.Actions;
-    using EA.Weee.Api.Client.Entities;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
