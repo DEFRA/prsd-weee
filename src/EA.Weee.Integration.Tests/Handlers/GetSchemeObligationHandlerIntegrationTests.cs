@@ -32,6 +32,10 @@
             private static Scheme scheme3;
             private static Scheme scheme4;
             private static Scheme scheme5;
+            private static Scheme scheme6;
+            private static Scheme scheme7;
+            private static Scheme scheme8;
+            private static Scheme notMatchingScheme;
 
             private readonly Establish context = () =>
             {
@@ -53,7 +57,7 @@
                     .Create();
 
                 //not matching authority scheme
-                var notMatchingScheme = SchemeDbSetup.Init()
+                notMatchingScheme = SchemeDbSetup.Init()
                     .WithAuthority(nonMatchingAuthority.Id)
                     .WithOrganisation(organisation.Id).Create();
 
@@ -69,8 +73,19 @@
                     .WithOrganisation(organisation.Id).Create();
 
                 scheme5 = SchemeDbSetup.Init()
-                    .WithAuthority(nonMatchingAuthority.Id)
+                    .WithAuthority(matchingAuthority.Id)
                     .WithStatus(SchemeStatus.Rejected)
+                    .WithOrganisation(organisation.Id).Create();
+
+                scheme6 = SchemeDbSetup.Init()
+                    .WithAuthority(matchingAuthority.Id)
+                    .WithStatus(SchemeStatus.Rejected)
+                    .WithOrganisation(organisation.Id).Create();
+
+                scheme7 = SchemeDbSetup.Init()
+                    .WithAuthority(matchingAuthority.Id)
+                    .WithStatus(SchemeStatus.Approved)
+                    .WithStatus(SchemeStatus.Withdrawn)
                     .WithOrganisation(organisation.Id).Create();
 
                 var obligationUpload = ObligationUploadDbSetup.Init().Create();
@@ -88,27 +103,33 @@
                     .WithObligationAmounts(amounts1)
                     .WithComplianceYear(2022).Create();
                 
-                // should be returned
                 ObligationSchemeDbSetup.Init()
                     .WithScheme(notMatchingScheme.Id)
                     .WithObligationUpload(obligationUpload.Id)
                     .WithComplianceYear(2022).Create();
 
-                // should be returned
                 ObligationSchemeDbSetup.Init()
                     .WithScheme(scheme3.Id)
                     .WithObligationUpload(obligationUpload.Id)
                     .WithComplianceYear(2022).Create();
 
-                // should be 
                 ObligationSchemeDbSetup.Init()
                     .WithScheme(scheme4.Id)
                     .WithObligationUpload(obligationUpload.Id)
                     .WithComplianceYear(2022).Create();
 
-                // should be returned
                 ObligationSchemeDbSetup.Init()
                     .WithScheme(scheme5.Id)
+                    .WithObligationUpload(obligationUpload.Id)
+                    .WithComplianceYear(2022).Create();
+
+                ObligationSchemeDbSetup.Init()
+                    .WithScheme(scheme6.Id)
+                    .WithObligationUpload(obligationUpload.Id)
+                    .WithComplianceYear(2023).Create();
+
+                ObligationSchemeDbSetup.Init()
+                    .WithScheme(scheme7.Id)
                     .WithObligationUpload(obligationUpload.Id)
                     .WithComplianceYear(2022).Create();
 
@@ -139,6 +160,18 @@
                 schemeData.Count().Should().Be(1);
                 schemeData.ElementAt(0).UpdatedDate.Should().BeNull();
                 schemeData.ElementAt(0).SchemeObligationAmountData.Should().BeEmpty();
+            };
+
+            private readonly It shouldHaveReturnedTheCorrectSchemes = () =>
+            {
+                result.Should().Contain(s => s.SchemeId == scheme1.Id);
+                result.Should().Contain(s => s.SchemeId == scheme2.Id);
+                result.Should().NotContain(s => s.SchemeId == scheme3.Id);
+                result.Should().Contain(s => s.SchemeId == scheme5.Id);
+                result.Should().Contain(s => s.SchemeId == scheme7.Id);
+                result.Should().NotContain(s => s.SchemeId == scheme6.Id); // not correct status but has data in anothe ryear
+                result.Should().NotContain(s => s.SchemeId == notMatchingScheme.Id); // not matching authority
+                result.Should().NotContain(s => s.SchemeId == scheme4.Id); // not matching authority
             };
         }
 
