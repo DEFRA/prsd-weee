@@ -40,6 +40,8 @@
 
             SetupTotals(source, model);
 
+            SetUpReturnToEditDraftTransferValue(source, model);
+
             return model;
         }
 
@@ -70,10 +72,10 @@
             {
                 if (source.Request != null && source.TransferAllTonnage)
                 {
-                    category.TotalReceived = source.Notes.SelectMany(n => n.EvidenceTonnageData)
+                    category.TotalReceived = source.Notes.Results.SelectMany(n => n.EvidenceTonnageData)
                         .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.AvailableReceived)
                         .ToTonnageDisplay();
-                    category.TotalReused = source.Notes.SelectMany(n => n.EvidenceTonnageData)
+                    category.TotalReused = source.Notes.Results.SelectMany(n => n.EvidenceTonnageData)
                         .Where(nt => nt.CategoryId.ToInt().Equals(category.CategoryId)).Sum(r => r.AvailableReused)
                         .ToTonnageDisplay();
                 }
@@ -99,7 +101,7 @@
         {
             foreach (var viewModel in models)
             {
-                var evidenceNoteData = source.Notes.FirstOrDefault(n => n.Id.Equals(viewModel.Id));
+                var evidenceNoteData = source.Notes.Results.FirstOrDefault(n => n.Id.Equals(viewModel.Id));
 
                 if (evidenceNoteData != null)
                 {
@@ -177,6 +179,19 @@
             else
             {
                 model.EvidenceNotesDataList.ElementAt(i).DisplayAatfName = true;
+            }
+        }
+
+        private void SetUpReturnToEditDraftTransferValue(TransferEvidenceNotesViewModelMapTransfer source,
+            TransferEvidenceTonnageViewModel model)
+        {
+            if (!source.ReturnToEditDraftTransfer.HasValue)
+            {
+                model.ReturnToEditDraftTransfer = true;
+            }
+            else
+            {
+                model.ReturnToEditDraftTransfer = source.ReturnToEditDraftTransfer.Value;
             }
         }
     }

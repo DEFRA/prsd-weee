@@ -309,7 +309,17 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\ObligationsControllerViewObligationAndEvidenceSummaryTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\VoidNoteViewModelBaseTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\VoidTransferNoteViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttributeTests.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttributeTests.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttributeTests.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBaseTests.cs" />
+    <Compile Include="Areas\Scheme\Attributes\CheckSchemeNoteAttributeBaseTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\EvidenceNoteHistoryDataViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\SchemeDataOrganisationMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTransferTests.cs" />
@@ -327,7 +337,7 @@
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesControllerTestsBase.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsBaseControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsControllerTests.cs" />
-    <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllEvidenceNotesMapModelTests.cs" />
+    <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewEvidenceNotesMapTransferTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllEvidenceNotesMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\UploadObligationsViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ChooseActivityViewModelTests.cs" />
@@ -339,9 +349,7 @@
     <Compile Include="Areas\Admin\ViewModels\ViewAllTransferNotesViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ViewAllEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerReviewEvidenceNoteTests.cs" />
-    <Compile Include="Areas\Scheme\Controllers\ManageTransferNotesControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersControllerTests.cs" />
-    <Compile Include="Areas\Scheme\Controllers\BalancingSchemeEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\TransferEvidenceControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewEvidenceNotesViewModelMapTests.cs" />
@@ -351,10 +359,10 @@
     <Compile Include="Areas\Scheme\Mapping\TransferEvidenceNotesViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\TransferredOutEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
-    <Compile Include="Areas\Scheme\Mapping\TransferredOutEvidenceNotesViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\EvidenceNoteHistoryViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotesDisplayOptionsTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewEvidenceNoteViewModelTests.cs" />
@@ -393,7 +401,7 @@
     <Compile Include="Areas\Admin\Controllers\CopyAatfControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsBaseControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeReportsControllerTests.cs" />
-    <Compile Include="Areas\Admin\Helper\AatfHelperTests.cs" />
+    <Compile Include="Extensions\ComplianceYearHelperTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAeEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfEditDetailsViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\AatfDataToAatfDetailsViewModelMapTests.cs" />
@@ -438,8 +446,7 @@
     <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\SchemeEvidenceBaseControllerTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ReviewSubmittedEvidenceNotesViewModelMapTests.cs" />
-    <Compile Include="Areas\Scheme\Mapping\ReviewSubmittedEvidenceNotesViewModelMapTransferTests.cs" />
-    <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTransferTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\SchemeTabViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewSubmittedEvidenceNotesViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewAndTransferEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Test\CreatePcsDataReturnXmlFileControllerTests.cs" />
@@ -607,6 +614,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\DataAnnotations\" />
+    <Folder Include="Areas\Admin\Helper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

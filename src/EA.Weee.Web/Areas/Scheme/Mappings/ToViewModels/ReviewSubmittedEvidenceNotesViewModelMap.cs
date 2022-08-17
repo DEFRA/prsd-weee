@@ -1,22 +1,21 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using Core.Shared;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
-    using Web.ViewModels.Shared.Mapping;
+    using Services;
 
-    public class ReviewSubmittedEvidenceNotesViewModelMap : ListOfSchemeNotesViewModelBase<ReviewSubmittedManageEvidenceNotesSchemeViewModel>, IMap<ReviewSubmittedEvidenceNotesViewModelMapTransfer, ReviewSubmittedManageEvidenceNotesSchemeViewModel>
+    public class ReviewSubmittedEvidenceNotesViewModelMap : ListOfSchemeNotesViewModelBase<ReviewSubmittedManageEvidenceNotesSchemeViewModel>, IMap<SchemeTabViewModelMapTransfer, ReviewSubmittedManageEvidenceNotesSchemeViewModel>
     {
-        public ReviewSubmittedEvidenceNotesViewModelMap(IMapper mapper) : base(mapper)
+        public ReviewSubmittedEvidenceNotesViewModelMap(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
         {
         }
 
-        public ReviewSubmittedManageEvidenceNotesSchemeViewModel Map(ReviewSubmittedEvidenceNotesViewModelMapTransfer source)
+        public ReviewSubmittedManageEvidenceNotesSchemeViewModel Map(SchemeTabViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme);
+            var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme, source.PageNumber);
             model.OrganisationId = source.OrganisationId;
 
             return model;

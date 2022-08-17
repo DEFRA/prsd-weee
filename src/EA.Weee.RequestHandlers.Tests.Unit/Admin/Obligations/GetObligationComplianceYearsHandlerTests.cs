@@ -35,7 +35,7 @@
             obligationDataAccess = A.Fake<IObligationDataAccess>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
-            request = new GetObligationComplianceYears(TestFixture.Create<CompetentAuthority>());
+            request = new GetObligationComplianceYears(TestFixture.Create<CompetentAuthority>(), false);
 
             handler = new GetObligationComplianceYearsHandler(authorization, obligationDataAccess, commonDataAccess, systemDataDataAccess);
         }
@@ -97,7 +97,20 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.Authority)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(request.Authority.Value)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndCompetentAuthorityIsNull_CompetentAuthorityShouldNotBeRetrieved()
+        {
+            //arrange
+            var request = new GetObligationComplianceYears(null, false);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => commonDataAccess.FetchCompetentAuthority(A<CompetentAuthority>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -123,6 +136,19 @@
 
             //assert
             A.CallTo(() => obligationDataAccess.GetObligationComplianceYears(A<UKCompetentAuthority>.That.IsSameAs(authority))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndCompetentAuthorityIsNull_ObligationComplianceYearsShouldBeRetrieved()
+        {
+            //arrange
+            var request = new GetObligationComplianceYears(null, false);
+
+           //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => obligationDataAccess.GetObligationComplianceYears(null)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -165,11 +191,32 @@
             A.CallTo(() => obligationDataAccess.GetObligationComplianceYears(A<UKCompetentAuthority>._)).Returns(years);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
+            var request = new GetObligationComplianceYears(TestFixture.Create<CompetentAuthority>(), true);
+
             //act
             var result = await handler.HandleAsync(request);
 
             //assert
             result.Should().BeEquivalentTo(new List<int>() { 2021, 2020, 2019 });
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestAndObligationYearsAndCurrentYearIsNotInListAndIsNotRequestedToBe_YearsShouldBeReturned()
+        {
+            //arrange
+            var years = new List<int>() { 2020, 2019 };
+            var currentDate = new DateTime(2021, 1, 1);
+
+            A.CallTo(() => obligationDataAccess.GetObligationComplianceYears(A<UKCompetentAuthority>._)).Returns(years);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+
+            var request = new GetObligationComplianceYears(TestFixture.Create<CompetentAuthority>(), false);
+
+            //act
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.Should().BeEquivalentTo(new List<int>() { 2020, 2019 });
         }
     }
 }

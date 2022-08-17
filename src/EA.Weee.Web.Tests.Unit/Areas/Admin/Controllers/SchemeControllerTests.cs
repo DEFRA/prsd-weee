@@ -410,11 +410,14 @@
             {
                 ObligationType = ObligationType.Both,
                 Status = SchemeStatus.Approved,
+                OrganisationId = Guid.NewGuid()
             };
+            var schemeId = Guid.NewGuid();
 
-            var result = await controller.EditScheme(A.Dummy<Guid>(), model);
+            var result = await controller.EditScheme(schemeId, model);
 
-            A.CallTo(() => weeeCache.InvalidateSchemeCache(A.Dummy<Guid>())).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeCache.InvalidateSchemeCache(schemeId)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => weeeCache.InvalidateSchemePublicInfoCache(model.OrganisationId)).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
 
             // Assert

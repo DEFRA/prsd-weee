@@ -7,6 +7,7 @@
     using Base;
     using Builders;
     using Core.Admin.Obligation;
+    using Core.Shared;
     using Domain.Error;
     using Domain.Obligation;
     using FluentAssertions;
@@ -76,14 +77,7 @@
                     .WithTestData()
                     .WithInternalUserAccess();
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString(), role.Id))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
+                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetSchemeObligationUpload, List<SchemeObligationUploadErrorData>>>();

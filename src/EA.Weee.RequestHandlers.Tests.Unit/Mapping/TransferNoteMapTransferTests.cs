@@ -13,20 +13,10 @@
     public class TransferNoteMapTransferTests : SimpleUnitTestBase
     {
         [Fact]
-        public void TransferNoteMapTransfer_GivenNullScheme_ArgumentNullExceptionExpected()
-        {
-            //act
-            var exception = Record.Exception(() => new TransferNoteMapTransfer(null, A.Dummy<Note>()));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void TransferNoteMapTransfer_GivenNullNote_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new TransferNoteMapTransfer(A.Dummy<Scheme>(), null));
+            var exception = Record.Exception(() => new TransferNoteMapTransfer(null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -36,15 +26,13 @@
         public void TransferNoteMapTransfer_GivenValues_PropertiesShouldBeSet()
         {
             //arrange
-            var scheme = TestFixture.Create<Scheme>();
             var note = TestFixture.Create<Note>();
 
             //act
-            var result = new TransferNoteMapTransfer(scheme, note);
+            var result = new TransferNoteMapTransfer(note);
 
             //assert
             result.Note.Should().Be(note);
-            result.Scheme.Should().Be(scheme);
         }
     }
 }

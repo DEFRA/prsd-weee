@@ -2,21 +2,40 @@
 {
     using System;
     using System.Web.Mvc;
-    using Api.Client;
+    using Filters;
     using Services;
+    using Services.Caching;
 
-    public class ValidatePcsEvidenceEnabledAttribute : ActionFilterAttribute
+    public class ValidateSchemeEvidenceEnabledAttribute : ActionFilterAttribute
     {
-        public Func<IWeeeClient> Client { get; set; }
-
         public ConfigurationService ConfigService { get; set; }
+
+        public IWeeeCache Cache { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes)
+            if (!context.RouteData.Values.TryGetValue("pcsId", out var idActionParameter))
             {
-                throw new InvalidOperationException("PCS evidence notes are not enabled.");
+                throw new ArgumentException("No pcsId specified");
             }
+
+            if (!(Guid.TryParse(idActionParameter.ToString(), out var pcsId)))
+            {
+                throw new ArgumentException("The specified pcsId is not valid");
+            }
+
+            AsyncHelpers.RunSync(async () =>
+            {
+                var schemeInfo = await Cache.FetchSchemePublicInfo(pcsId);
+
+                switch (schemeInfo.IsBalancingScheme)
+                {
+                    case false when !ConfigService.CurrentConfiguration.EnablePCSEvidenceNotes:
+                        throw new InvalidOperationException("PCS evidence notes are not enabled.");
+                    case true when !ConfigService.CurrentConfiguration.EnablePBSEvidenceNotes:
+                        throw new InvalidOperationException("PBS evidence notes are not enabled.");
+                }
+            });
 
             base.OnActionExecuting(context);
         }

@@ -145,6 +145,53 @@
             request.EvidenceNoteIds.Should().BeEquivalentTo(evidenceIds);
         }
 
+        [Fact]
+        public void SelectCategoriesToRequest_GivenValidModelAndExistingRequestWithExcludeEvidenceNotes_CreateTransferNoteRequestShouldBeCreated()
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var selectedScheme = Guid.NewGuid();
+
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
+            var evidenceIds = TestFixture.CreateMany<Guid>().ToList();
+            var excludedEvidenceIds = TestFixture.CreateMany<Guid>().ToList();
+
+            var existingRequest =
+                new TransferEvidenceNoteRequest(organisationId, selectedScheme, selectedIds, evidenceIds, excludedEvidenceIds);
+
+            //act
+            var request = requestCreator.SelectCategoriesToRequest(model, existingRequest);
+
+            //assert
+            request.CategoryIds.Should().BeEquivalentTo(selectedIds);
+            request.RecipientId.Should().Be(selectedScheme);
+            request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNoteIds.Should().BeEquivalentTo(evidenceIds);
+            request.ExcludeEvidenceNoteIds.Should().BeEquivalentTo(excludedEvidenceIds);
+        }
+
+        [Fact]
+        public void SelectCategoriesToRequest_GivenValidModelAndExistingRequestWithEmptyExcludeEvidenceNotes_CreateTransferNoteRequestShouldBeCreated()
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var selectedScheme = Guid.NewGuid();
+
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
+
+            //act
+            var request = requestCreator.SelectCategoriesToRequest(model, new TransferEvidenceNoteRequest());
+
+            //assert
+            request.CategoryIds.Should().BeEquivalentTo(selectedIds);
+            request.RecipientId.Should().Be(selectedScheme);
+            request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNoteIds.Should().BeEmpty();
+            request.ExcludeEvidenceNoteIds.Should().BeEmpty();
+        }
+
         [Theory]
         [InlineData(ActionEnum.Save, NoteStatus.Draft)]
         [InlineData(ActionEnum.Submit, NoteStatus.Submitted)]

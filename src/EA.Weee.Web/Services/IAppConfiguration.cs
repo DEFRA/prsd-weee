@@ -63,5 +63,7 @@
         bool MaintenanceMode { get; set; }
 
         DateTime EvidenceNotesSiteSelectionDateFrom { get; set; }
+
+        int DefaultPagingPageSize { get; set; }
     }
 }

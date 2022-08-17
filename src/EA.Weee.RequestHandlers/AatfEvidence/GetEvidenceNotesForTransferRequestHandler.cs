@@ -13,44 +13,42 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class GetEvidenceNotesForTransferRequestHandler : IRequestHandler<GetEvidenceNotesForTransferRequest, IList<EvidenceNoteData>>
+    public class GetEvidenceNotesForTransferRequestHandler : IRequestHandler<GetEvidenceNotesForTransferRequest, EvidenceNoteSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
-        private readonly ISchemeDataAccess schemeDataAccess;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
+        private readonly IOrganisationDataAccess organisationDataAccess;
 
         public GetEvidenceNotesForTransferRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess,
             IMapper mapper, 
-            ISchemeDataAccess schemeDataAccess, 
-            ISystemDataDataAccess systemDataDataAccess)
+            IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
             this.mapper = mapper;
-            this.schemeDataAccess = schemeDataAccess;
-            this.systemDataDataAccess = systemDataDataAccess;
+            this.organisationDataAccess = organisationDataAccess;
         }
 
-        public async Task<IList<EvidenceNoteData>> HandleAsync(GetEvidenceNotesForTransferRequest message)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesForTransferRequest message)
         {
             authorization.EnsureCanAccessExternalArea();
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var scheme = await schemeDataAccess.GetSchemeOrDefaultByOrganisationId(message.OrganisationId);
+            var organisation = await organisationDataAccess.GetById(message.OrganisationId);
 
-            var currentDate = await systemDataDataAccess.GetSystemDateTime();
+            authorization.EnsureOrganisationAccess(organisation.Id);
 
-            Guard.ArgumentNotNull(() => scheme, scheme, $"Scheme not found for organisation with id {message.OrganisationId}");
+            var noteData = await noteDataAccess.GetNotesToTransfer(message.OrganisationId, 
+                message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, message.ComplianceYear, message.PageNumber, message.PageSize);
 
-            authorization.EnsureSchemeAccess(scheme.Id);
+            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(
+                new ListOfNotesMap(noteData.Notes.OrderByDescending(x => x.CreatedDate).ToList(), true)
+                    {
+                        CategoryFilter = message.Categories
+                    }).ListOfEvidenceNoteData;
 
-            var notes = await noteDataAccess.GetNotesToTransfer(message.OrganisationId, 
-                message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, message.ComplianceYear);
-
-            return mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(notes.OrderByDescending(x => x.CreatedDate).ToList(), true) { CategoryFilter = message.Categories }).ListOfEvidenceNoteData;
+            return new EvidenceNoteSearchDataResult(mappedResults, noteData.NumberOfResults);
         }
     }
 }

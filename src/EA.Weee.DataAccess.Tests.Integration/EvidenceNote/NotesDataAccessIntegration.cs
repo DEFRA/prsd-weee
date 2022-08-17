@@ -769,6 +769,10 @@
         [Fact]
         public async Task GetAllNotes_GivenNoteStatusFilter_ShouldReturnSingleNote()
         {
+            //those two lines remove clashes between test and records in my db
+            int year = 1972;
+            DateTime now = new DateTime(1972, 7, 12);
+
             using (var database = new DatabaseWrapper())
             {
                 var context = database.WeeeContext;
@@ -777,13 +781,13 @@
                 var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 context.Organisations.Add(organisation);
 
-                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, year: SystemTime.UtcNow.Year);
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation, year: year);
                 context.Aatfs.Add(aatf);
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: SystemTime.UtcNow.Year);
-                noteShouldBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.UtcNow);
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: year);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), now);
                 context.Notes.Add(noteShouldBeFound);
 
                 var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
@@ -791,7 +795,7 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var filter = new NoteFilter(SystemTime.Now.Year, int.MaxValue, 1)
+                var filter = new NoteFilter(year, int.MaxValue, 1)
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     NoteStatusId = NoteStatus.Void.Value,
@@ -937,7 +941,7 @@
             }
         }
 
-        public static readonly object[][] EndDates =
+        public static readonly object[] EndDates =
         {
             new object[] { SystemTime.UtcNow },
             new object[] { SystemTime.UtcNow.AddDays(1) }
@@ -959,13 +963,13 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear);
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear, endDate: SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldBeFound);
 
-                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, endDate: date.AddDays(1));
                 context.Notes.Add(noteShouldNotBeFound);
                 await context.SaveChangesAsync();
 

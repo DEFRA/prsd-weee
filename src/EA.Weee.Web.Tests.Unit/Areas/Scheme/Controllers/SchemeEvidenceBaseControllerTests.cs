@@ -18,7 +18,7 @@
         [Fact]
         public void CheckSchemeEvidenceBaseControllerHasAttributeValidatePcsEvidenceEnabled()
         {
-            typeof(SchemeEvidenceBaseController).Should().BeDecoratedWith<ValidatePcsEvidenceEnabledAttribute>();
+            typeof(SchemeEvidenceBaseController).Should().BeDecoratedWith<ValidateSchemeEvidenceEnabledAttribute>();
         }
 
         [Fact]

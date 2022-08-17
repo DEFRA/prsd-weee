@@ -31,7 +31,7 @@
                 recipientOrganisation,
             DateTime.Now,
             DateTime.Now.AddDays(10),
-            Fixture.Create<WasteType>(),
+            WasteType.HouseHold,
             Fixture.Create<Protocol>(),
             aatf,
             user.UserId.ToString(),
@@ -74,6 +74,13 @@
         public EvidenceNoteDbSetup WithComplianceYear(int complianceYear)
         {
             instance.ComplianceYear = complianceYear;
+            return this;
+        }
+
+        public EvidenceNoteDbSetup WithWasteType(WasteType wasteType)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.WasteType, wasteType, instance);
+            
             return this;
         }
     }

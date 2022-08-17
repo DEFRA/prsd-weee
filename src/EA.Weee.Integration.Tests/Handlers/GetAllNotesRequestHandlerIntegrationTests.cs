@@ -28,12 +28,15 @@
             {
                 LocalSetup();
 
+                var complianceYear = fixture.Create<int>();
+
                 var evidenceWithApprovedStatus = EvidenceNoteDbSetup.Init()
                  .With(n =>
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var evidenceWithSubmittedStatus = EvidenceNoteDbSetup.Init()
@@ -41,6 +44,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 var evidenceWithReturnedStatus = EvidenceNoteDbSetup.Init()
@@ -48,6 +52,7 @@
                 {
                     n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 })
+                .WithComplianceYear(complianceYear)
                 .Create();
 
                 var evidenceWithRejectedStatus = EvidenceNoteDbSetup.Init()
@@ -55,6 +60,7 @@
                   {
                       n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
                   })
+                  .WithComplianceYear(complianceYear)
                   .Create();
 
                 var evidenceWithVoidStatus = EvidenceNoteDbSetup.Init()
@@ -62,6 +68,7 @@
                  {
                      n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                  })
+                 .WithComplianceYear(complianceYear)
                  .Create();
 
                 notesSet.Add(evidenceWithApprovedStatus);
@@ -69,11 +76,13 @@
                 notesSet.Add(evidenceWithReturnedStatus);
                 notesSet.Add(evidenceWithRejectedStatus);
                 notesSet.Add(evidenceWithVoidStatus);
+
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue);
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotesInternal(noteTypeFilter, allowedStatuses))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
             private readonly It shouldReturnListOfEvidenceNotes = () =>
@@ -112,11 +121,13 @@
 
                 notesSet.Add(evidenceWithDraftStatus1);
                 notesSet.Add(evidenceWithDraftStatus2);
+
+                request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue);
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
             };
 
             private readonly It shouldReturnEmptyListOfEvidenceNotes = () =>
@@ -141,6 +152,7 @@
             protected static List<NoteType> noteTypeFilterForTransferNote;
             protected static IRequestHandler<GetAllNotesInternal, EvidenceNoteSearchDataResult> handler;
             protected static Fixture fixture;
+            protected static GetAllNotesInternal request;
 
             public static void LocalSetup()
             {

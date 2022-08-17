@@ -24,5 +24,7 @@
         public AddressData Address { get; set; }
 
         public ContactData Contact { get; set; }
+
+        public bool IsBalancingScheme { get; set; }
     }
 }

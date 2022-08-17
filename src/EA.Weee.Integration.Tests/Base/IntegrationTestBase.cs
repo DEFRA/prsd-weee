@@ -153,11 +153,9 @@
 
                 try
                 {
-                    // check if DB exists before anything
-                    //RunSql($"USE master; SELECT * FROM sys.databases WHERE name = '{ConfigurationManager.AppSettings["aliaSqlConnectionDatabase"]}'");
-
                     if (hardReset || !TestingStatus.IsDbBuilt)
                     {
+                        Console.WriteLine("Rebuilding Test database");
                         new DatabaseSeeder().RebuildDatabase();
                     }
 
