@@ -1,0 +1,184 @@
+﻿@using System.Data.Entity.Core.Metadata.Edm
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+
+@model EA.Weee.Web.Areas.Admin.ViewModels.Obligations.ViewObligationsAndEvidenceSummaryViewModel
+
+@{
+    ViewBag.Title = "View obligation and evidence summary";
+}
+
+@section full_main_content
+{
+
+    @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity())))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            View obligation and evidence summary
+        </h1>
+    </header>
+
+    @if (Model.DisplayNoDataMessage)
+    {
+        <p class="govuk-body">No obligations have been uploaded into the service. Once obligations have been uploaded, you will be able to view the compliance year, the PCS and the obligation and evidence summary.</p>
+    }
+    else
+    {
+        using (Html.BeginForm("ViewObligationAndEvidenceSummary", "Obligations", new RouteValueDictionary() { }, FormMethod.Get,
+            new { id = "ViewObligationAndEvidenceSummaryForm" }))
+        {
+
+            <div style="min-width: 20%; display: inline-block">
+                <span class="govuk-body"><strong>@Html.LabelFor(m => m.SelectedComplianceYear)</strong></span>
+            </div>
+            <div style="min-width: 30%; display: inline-block">
+                @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear,
+                    new SelectList(Model.ComplianceYearList),
+                    new { autocomplete = "false" }, false, false)
+            </div>
+            <div class="left-cleared"></div>
+            <div style="min-width: 20%; display: inline-block">
+                <span class="govuk-body"><strong>@Html.LabelFor(m => m.SchemeId, new { @id = "SchemeId-label"})</strong></span>
+            </div>
+            <div style="min-width: 30%; display: inline-block">
+                @Html.Gds().DropDownListFor(m => m.SchemeId, new SelectList(Model.SchemeList, "Id", "DisplayName"), string.Empty, new { @class = "use-overlay" }, useHalfWidth: false, withLookAhead: true)
+            </div>
+
+            <noscript>
+                @(this.WeeeGds().Button("Apply", null, true))
+            </noscript>
+            <div class="govuk-!-padding-bottom-7"></div>
+
+        }
+
+        if (Model.SchemeId.HasValue)
+        {
+            <table id="evidence-summary-table" class="govuk-table">
+                <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header">
+                            Category
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-left">
+                            Obligation (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-left">
+                            Evidence (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-left">
+                            Reuse (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-left">
+                            Transferred out (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-left">
+                            Transferred in (tonnes)
+                        </th>
+                        <th class="govuk-table__header govuk-!-text-align-left">
+                            Difference (tonnes)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @for (var i = 0; i < Model.ObligationEvidenceValues.Count; i++)
+                    {
+                        var category = Model.ObligationEvidenceValues[i];
+
+                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                            <td class="govuk-table__cell">
+                                <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Obligation
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Evidence
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Reused
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.TransferredOut
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.TransferredIn
+                            </td>
+                            <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                @category.Difference
+                            </td>
+                        </tr>
+                    }
+
+                    <tr class="govuk-table__row govuk-panel-grey-background">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="Obligation2To10Total">@Model.Obligation210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="Evidence2To10Total">@Model.Evidence210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="Reused2To10Total">@Model.Reuse210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="Difference2To10Total">@Model.Difference210Total</p>
+                        </td>
+                    </tr>
+                    
+                    <tr class="govuk-table__row govuk-panel-grey-background">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body"><strong>Total (tonnes)</strong></p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ObligationTotal">@Model.ObligationTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="EvidenceTotal">@Model.EvidenceTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReuseTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredInTotal">@Model.TransferredInTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body weee-tonnage-right-aligned-display" id="DifferenceTotal">@Model.DifferenceTotal</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    }
+
+
+}
+
+@section scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            document.querySelector("#SchemeId-select").addEventListener("gds-auto-complete-event", (event) => {
+                $("#ViewObligationAndEvidenceSummaryForm").submit();
+            });
+            document.querySelector("#SelectedComplianceYear").addEventListener("change", (event) => {
+                $("#ViewObligationAndEvidenceSummaryForm").submit();
+            });
+        });
+    </script>
+}

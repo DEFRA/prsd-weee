@@ -392,6 +392,21 @@
         }
 
         [Fact]
+        public void Map_GivenNoteStatusReturnedSubmitted_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSubmitted);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be($"You have successfully submitted the returned evidence note with reference ID E{source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+        }
+
+        [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
             var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
@@ -638,7 +653,7 @@
             var data = new EvidenceNoteHistoryData(TestFixture.Create<Guid>(), TestFixture.Create<NoteStatus>(), TestFixture.Create<int>(), TestFixture.Create<NoteType>(), TestFixture.Create<DateTime?>(), TestFixture.Create<string>());
             var history = new List<EvidenceNoteHistoryData>()
             {
-                data,
+                data
             };
             source.EvidenceNoteData.EvidenceNoteHistoryData = history;
 

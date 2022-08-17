@@ -24,6 +24,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Filters;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Email;
@@ -67,6 +68,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
@@ -123,6 +125,7 @@
 
         [HttpGet]
         [CheckCanCreateEvidenceNote]
+        [NoCacheFilter]
 
         public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId, int complianceYear, bool returnFromCopyPaste = false)
         { 
@@ -193,6 +196,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
         {
             using (var client = apiClient())
@@ -247,6 +251,7 @@
 
         [HttpGet]
         [CheckCanEditEvidenceNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false)
         {
             using (var client = apiClient())
@@ -285,7 +290,15 @@
                 {
                     var request = editRequestCreator.ViewModelToRequest(viewModel);
 
-                    var updateStatus = request.Status == NoteStatus.Returned && viewModel.Action == ActionEnum.Save ? NoteUpdatedStatusEnum.ReturnedSaved : (NoteUpdatedStatusEnum)request.Status;
+                    NoteUpdatedStatusEnum updateStatus;
+                    if (viewModel.Status == NoteStatus.Returned)
+                    {
+                        updateStatus = viewModel.Action == ActionEnum.Save ? NoteUpdatedStatusEnum.ReturnedSaved : NoteUpdatedStatusEnum.ReturnedSubmitted;
+                    }
+                    else
+                    {
+                        updateStatus = (NoteUpdatedStatusEnum)request.Status;
+                    }
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = updateStatus;
 

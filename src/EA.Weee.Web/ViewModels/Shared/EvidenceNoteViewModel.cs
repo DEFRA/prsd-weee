@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     [Serializable]
@@ -45,6 +46,9 @@
         [DisplayName("Date approved")]
         public string ApprovedDate { get; set; }
 
+        [DisplayName("Date voided")]
+        public string VoidedDate { get; set; }
+
         public int Reference { get; set; }
 
         [DisplayName("Reason")]
@@ -53,9 +57,14 @@
         [DisplayName("Reason")]
         public string RejectedReason { get; set; }
 
+        [DisplayName("Reason")]
+        public string VoidedReason { get; set; }
+
         public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(ReturnedReason);
 
         public bool DisplayRejectedReason => Status.Equals(NoteStatus.Rejected) && !string.IsNullOrWhiteSpace(RejectedReason);
+
+        public bool DisplayVoidedReason => Status.Equals(NoteStatus.Void) && !string.IsNullOrWhiteSpace(VoidedReason);
 
         public EvidenceNoteViewModel()
         {

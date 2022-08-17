@@ -86,7 +86,7 @@
 
         [Theory]
         [InlineData(NoteStatus.Draft, "Draft evidence note transfer")]
-        [InlineData(NoteStatus.Void, "")]
+        [InlineData(NoteStatus.Void, "Voided evidence note transfer")]
         [InlineData(NoteStatus.Rejected, "Rejected evidence note transfer")]
         [InlineData(NoteStatus.Returned, "Returned evidence note transfer")]
         [InlineData(NoteStatus.Submitted, "Submitted evidence note transfer")]
