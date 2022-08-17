@@ -24,6 +24,7 @@
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.Extensions;
+    using Web.Filters;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;
@@ -949,6 +950,14 @@
             var resultModel = (ManageEvidenceSummaryViewModel)result.Model;
             resultModel.Should().Be(model);
             resultModel.ManageEvidenceNoteViewModel.Should().Be(evidenceNoteViewModel);
+        }
+
+        [Fact]
+        public void IndexGet_ShouldBeDecoratedWith_NoCacheAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(ManageEvidenceNoteViewModel), typeof(int) })
+                .Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
     }
 }

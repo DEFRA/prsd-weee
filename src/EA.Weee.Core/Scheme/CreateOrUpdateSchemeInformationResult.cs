@@ -41,6 +41,8 @@
             /// to a blank/null value, which is invalid for schemes within the Environment Agency.
             /// </summary>
             IbisCustomerReferenceMandatoryForEAFailure = 3,
+
+            SchemeAlreadyExists = 4
         }
 
         public class IbisCustomerReferenceUniquenessFailureInfo
