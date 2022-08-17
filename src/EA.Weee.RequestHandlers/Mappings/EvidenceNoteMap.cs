@@ -69,7 +69,6 @@
                     .Where(n1 => n1.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
                     .OrderByDescending(n1 => n1.ChangedDate).FirstOrDefault()?.ChangedDate, n.Recipient.Scheme != null ? n.Recipient.Scheme.SchemeName : string.Empty)).OrderByDescending(n => n.Reference).ToList();
             }
-
             data.EvidenceNoteHistoryData = history;
 
             return data;

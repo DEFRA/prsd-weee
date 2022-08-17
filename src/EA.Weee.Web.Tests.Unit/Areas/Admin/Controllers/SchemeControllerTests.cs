@@ -659,6 +659,50 @@
         }
 
         [Fact]
+        public async Task PostAddScheme_WithApiReturnsWithSchemeAlreadyExists_ReturnsViewWithModelError()
+        {
+            // Arrange
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            CreateOrUpdateSchemeInformationResult apiResult = new CreateOrUpdateSchemeInformationResult()
+            {
+                Result = CreateOrUpdateSchemeInformationResult.ResultType.SchemeAlreadyExists
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CreateScheme>._)).Returns(apiResult);
+
+            SchemeController controller = SchemeController();
+
+            // Act
+            AddSchemeViewModel model = new AddSchemeViewModel
+            {
+                ObligationType = ObligationType.Both,
+                Status = SchemeStatus.Approved,
+                OrganisationId = A.Dummy<Guid>(),
+                OrganisationAddress = A.Dummy<AddressData>()
+            };
+
+            model.OrganisationAddress.Countries = countries;
+
+            ActionResult result = await controller.AddScheme(model);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "AddScheme", StringComparison.InvariantCultureIgnoreCase));
+
+            Assert.Equal(1, controller.ModelState["SchemeExists"].Errors.Count);
+            Assert.Equal("Scheme has already been created for the organisation", controller.ModelState["SchemeExists"].Errors[0].ErrorMessage);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
         public async Task PostAddScheme_WithApiReturningIbisCustomerReferenceUniquenessFailure_ReturnsViewWithModelError()
         {
             // Arrange

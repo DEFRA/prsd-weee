@@ -18,6 +18,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Prsd.Core;
+    using Web.Filters;
     using Xunit;
 
     public class ManageEvidenceNotesControllerTests : ManageEvidenceNotesControllerTestsBase
@@ -35,6 +36,15 @@
         }
 
         [Fact]
+        public void ManageEvidenceNotesController_ShouldHaveNoCache()
+        {
+            typeof(ManageEvidenceNotesController).Should().BeDecoratedWith<OutputCacheAttribute>(a =>
+                a.NoStore == true &&
+                a.Duration == 0 &&
+                a.VaryByParam.Equals("None"));
+        }
+
+        [Fact]
         public void IndexGet_ShouldHaveHttpGetAttribute()
         {
             // assert
@@ -45,6 +55,19 @@
                     typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void IndexGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            // assert
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
+                {
+                    typeof(string),
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Theory]

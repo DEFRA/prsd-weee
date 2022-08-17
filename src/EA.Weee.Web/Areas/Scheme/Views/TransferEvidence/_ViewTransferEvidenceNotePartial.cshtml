@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.AatfEvidence
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.ViewModels.Shared
@@ -22,6 +23,10 @@
 
     <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+    </div>
+
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+        @Html.Partial("_DisplayVoidedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
     @if (Model.HasSubmittedDate)
@@ -52,6 +57,13 @@
         </div>
     }
 
+    @if (Model.HasBeenVoided)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
@@ -61,6 +73,21 @@
 {
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 }
+
+<!-- screen 6.07a -->
+<!-- --------------------------- -->
+<!-- Void transfer note button   -->
+<!-- --------------------------- -->
+@if (Model.Status.Equals(NoteStatus.Approved) && Model.CanVoid)
+{
+    using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
+    {
+        @Html.Hidden("transferEvidenceNoteId", Model.EvidenceNoteId);
+        @(this.WeeeGds().Submit("Void evidence note transfer", new { id = "voidTransferNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
+    }
+}
+<!-- screen 6.07a -->
+
 
 <div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
@@ -72,10 +99,11 @@
         <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
     </div>
 
+
     @if (Model.EditMode && !Model.HasBeenReturned)
     {
-        <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19 govuk-!-text-align-right govuk-!-padding-right-0">
-            @Html.NavigationRouteLink("Edit recipient and categories", "Edit recipient and categories for transfer note" + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
+        <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
+            @Html.NavigationRouteLink("Edit recipient and categories", "Edit recipient and categories for transfer note " + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
         </div>
     }
     else
@@ -216,3 +244,4 @@ else
         </tbody>
     </table>
 }
+
