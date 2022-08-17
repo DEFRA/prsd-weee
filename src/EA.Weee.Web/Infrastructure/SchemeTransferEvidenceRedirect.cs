@@ -9,5 +9,6 @@
         public static string EditDraftTransferEvidenceRouteName = "Scheme_edit_transfer";
         public static string ViewReturnedTransferEvidenceRouteName = "Scheme_returned_transfer";
         public static string ViewRejectedTransferEvidenceRouteName = "Scheme_rejected_transfer";
+        public static string ViewVoidedTransferEvidenceRouteName = "Scheme_voided_transfer";
     }
 }

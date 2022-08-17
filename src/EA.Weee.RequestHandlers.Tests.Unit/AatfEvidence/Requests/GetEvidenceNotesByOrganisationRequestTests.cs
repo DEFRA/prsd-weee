@@ -73,7 +73,7 @@
         }
 
         [Fact]
-        public async void GetEvidenceNotesByOrganisationRequest_GivenZeroPageSize_ShouldThrowArgumentOutOfRangeException()
+        public void GetEvidenceNotesByOrganisationRequest_GivenZeroPageSize_ShouldThrowArgumentOutOfRangeException()
         {
             //act
             var exception = Record.Exception(() =>
@@ -84,7 +84,7 @@
         }
 
         [Fact]
-        public async void GetEvidenceNotesByOrganisationRequest_GivenZeroPageNumber_ShouldThrowArgumentOutOfRangeException()
+        public void GetEvidenceNotesByOrganisationRequest_GivenZeroPageNumber_ShouldThrowArgumentOutOfRangeException()
         {
             //act
             var exception = Record.Exception(() =>

@@ -18,6 +18,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Attributes;
+    using Filters;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -43,6 +44,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(Guid pcsId, 
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
@@ -97,7 +99,7 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted }, 
-                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultPagingPageSize));
+                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
@@ -147,7 +149,7 @@
                         NoteStatus.Submitted,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Transfer }, true, pageNumber, configurationService.CurrentConfiguration.DefaultPagingPageSize));
+                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Transfer }, true, pageNumber, int.MaxValue));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
@@ -158,6 +160,7 @@
         
         [HttpGet]
         [CheckCanApproveNote]
+        [NoCacheFilter]
         public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
@@ -206,6 +209,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1)
         {
             using (var client = this.apiClient())

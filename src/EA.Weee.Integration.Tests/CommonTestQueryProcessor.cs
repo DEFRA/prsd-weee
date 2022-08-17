@@ -6,6 +6,8 @@
     using System.Reflection.Emit;
     using Autofac;
     using Builders;
+    using Core.Helpers;
+    using Core.Shared;
     using DataAccess;
     using Domain;
     using Domain.Admin;
@@ -13,8 +15,8 @@
     using Domain.Obligation;
     using Domain.Scheme;
     using Domain.Security;
-    using Domain.User;
     using Prsd.Core.Autofac;
+    using UserStatus = Domain.User.UserStatus;
 
     public class CommonTestQueryProcessor
     {
@@ -96,16 +98,19 @@
                 u.UserId == userId && u.UserStatus.Value == UserStatus.Active.Value && u.RoleId == roleId);
         }
 
-        public void SetupUserWithRole(string userId, Guid roleId, Guid authorityId)
+        public void SetupUserWithRole(string userId, string role, CompetentAuthority authority)
         {
             var user = dbContext.CompetentAuthorityUsers.FirstOrDefault(u => u.UserId == userId);
+            var authorityDisplayName = authority.ToDisplayString();
+            var competentAuthority = dbContext.UKCompetentAuthorities.First(c => c.Name.Equals(authorityDisplayName));
+            var userRole = dbContext.Roles.First(c => c.Description.Equals(role));
 
             if (user != null)
             {
                 dbContext.Database.ExecuteSqlCommand($"DELETE FROM [Admin].CompetentAuthorityUser WHERE UserId = '{userId}'");
             }
 
-            CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(userId, authorityId, roleId).Create();
+            CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(userId, competentAuthority.Id, userRole.Id).Create();
         }
     }
 }

@@ -81,7 +81,7 @@
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
-                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
+                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData)
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
