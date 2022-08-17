@@ -678,13 +678,19 @@
             result.ViewName.Should().Be("EditTonnages");
         }
 
-        [Fact]
-        public async Task EditTonnagesGet_ShouldReturnManageEvidenceView()
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task EditTonnagesGet_ShouldReturnManageEvidenceView(NoteStatus status)
         {
+            if (status.Equals(NoteStatus.Returned) || status.Equals(NoteStatus.Draft))
+            {
+                return;
+            }
+
             //act
             var evidenceNoteId = TestFixture.Create<Guid>();
             var note = TestFixture.Create<TransferEvidenceNoteData>();
-            note.Status = NoteStatus.Submitted;
+            note.Status = status;
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == evidenceNoteId))).Returns(note);
             var result =
