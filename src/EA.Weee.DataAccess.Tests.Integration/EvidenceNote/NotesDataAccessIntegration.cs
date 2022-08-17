@@ -941,7 +941,7 @@
             }
         }
 
-        public static readonly object[][] EndDates =
+        public static readonly object[] EndDates =
         {
             new object[] { SystemTime.UtcNow },
             new object[] { SystemTime.UtcNow.AddDays(1) }
@@ -963,13 +963,13 @@
 
                 await database.WeeeContext.SaveChangesAsync();
 
-                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear);
+                var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear, endDate: SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldBeFound);
 
-                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf);
+                var noteShouldNotBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, endDate: date.AddDays(1));
                 context.Notes.Add(noteShouldNotBeFound);
                 await context.SaveChangesAsync();
 
