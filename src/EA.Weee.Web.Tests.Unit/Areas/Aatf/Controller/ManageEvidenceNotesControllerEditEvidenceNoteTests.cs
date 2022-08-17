@@ -15,6 +15,7 @@
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.ViewModels;
+    using Web.Filters;
     using Web.Infrastructure;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
@@ -39,6 +40,13 @@
         {
             typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditDraftEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]

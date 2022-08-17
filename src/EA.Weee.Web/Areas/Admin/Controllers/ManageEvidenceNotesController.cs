@@ -48,6 +48,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -76,6 +77,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -95,6 +97,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -116,6 +119,7 @@
 
         [HttpGet]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [NoCacheFilter]
         public async Task<ActionResult> VoidTransferNote(Guid transferEvidenceNoteId)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
