@@ -1534,6 +1534,7 @@
     <Content Include="Views\Shared\_EvidenceTransferProgressiveDisclosurePartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotesPagerPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
+    <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
