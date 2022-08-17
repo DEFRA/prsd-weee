@@ -13,7 +13,6 @@
     using Core.Helpers;
     using Core.Organisations;
     using Core.Scheme;
-    using Core.Tests.Unit.Helpers;
     using EA.Prsd.Core;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
