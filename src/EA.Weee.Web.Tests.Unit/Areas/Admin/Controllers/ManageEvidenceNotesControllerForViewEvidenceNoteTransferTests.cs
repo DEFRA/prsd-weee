@@ -58,6 +58,18 @@
         }
 
         [Fact]
+        public void ViewEvidenceNoteTransferGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            // assert
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNoteTransfer", new[]
+                {
+                    typeof(Guid),
+                    typeof(int)
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
         public void VoidTransferNoteGet_ShouldHaveHttpGetAttribute()
         {
             // assert
@@ -66,6 +78,17 @@
                     typeof(Guid),
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void VoidTransferNoteGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            // assert
+            typeof(ManageEvidenceNotesController).GetMethod("VoidTransferNote", new[]
+                {
+                    typeof(Guid),
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
