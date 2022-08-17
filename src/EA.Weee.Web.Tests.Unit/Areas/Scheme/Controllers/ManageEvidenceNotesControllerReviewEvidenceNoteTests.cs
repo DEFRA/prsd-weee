@@ -22,6 +22,7 @@
     using Core.Tests.Unit.Helpers;
     using Web.Areas.Scheme.Attributes;
     using Web.Extensions;
+    using Web.Filters;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
@@ -71,6 +72,13 @@
         }
 
         [Fact]
+        public void ReviewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveCheckCanApproveNoteAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
@@ -81,6 +89,12 @@
         public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void DownloadEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]

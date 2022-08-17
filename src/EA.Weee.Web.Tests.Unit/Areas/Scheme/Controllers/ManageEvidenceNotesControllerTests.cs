@@ -25,6 +25,7 @@
     using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Filters;
     using Weee.Requests.Shared;
     using Xunit;
 
@@ -75,6 +76,19 @@
                     typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void IndexGet_ShouldHaveNoCacheAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
+                {
+                    typeof(Guid),
+                    typeof(string),
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]

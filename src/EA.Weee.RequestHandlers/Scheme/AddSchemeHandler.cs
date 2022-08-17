@@ -36,6 +36,15 @@
             authorization.EnsureCanAccessInternalArea();
 
             Scheme scheme = new Scheme(message.OrganisationId);
+            Organisation org = await organisationDataAccess.FetchOrganisationAsync(message.OrganisationId);
+
+            if (org.Scheme != null)
+            {
+                return new CreateOrUpdateSchemeInformationResult()
+                {
+                    Result = CreateOrUpdateSchemeInformationResult.ResultType.SchemeAlreadyExists
+                };
+            }
 
             this.dataAccess.AddScheme(scheme);
 
@@ -107,8 +116,6 @@
             scheme.SetStatus(status);
 
             await dataAccess.SaveAsync();
-
-            Organisation org = await organisationDataAccess.FetchOrganisationAsync(message.OrganisationId);
 
             if (org.OrganisationStatus == OrganisationStatus.Incomplete)
             {
