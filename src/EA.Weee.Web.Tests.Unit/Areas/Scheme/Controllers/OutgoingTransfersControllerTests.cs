@@ -151,7 +151,7 @@
         [Fact]
         public void EditCategoriesGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid), typeof(int) })
                 .Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
