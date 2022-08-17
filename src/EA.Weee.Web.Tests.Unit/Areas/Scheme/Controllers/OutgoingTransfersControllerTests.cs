@@ -585,17 +585,10 @@
         {
             //arrange
             transferEvidenceNoteData.Status = NoteStatus.Draft;
-
             var returnToEditDraftTransfer = TestFixture.Create<bool?>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
-
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNotesForTransferRequest>._)).Returns(evidenceNoteData);
-
-            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
-
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
 
@@ -664,12 +657,14 @@
         [Fact]
         public async Task EditTonnagesGet_ShouldReturnView()
         {
-            //act
+            //arrange
             var evidenceNoteId = TestFixture.Create<Guid>();
             var note = TestFixture.Create<TransferEvidenceNoteData>();
             note.Status = NoteStatus.Draft;
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == evidenceNoteId))).Returns(note);
+            
+            //act
             var result =
                 await outgoingTransferEvidenceController.EditTonnages(organisationId, evidenceNoteId, TestFixture.Create<bool?>()) as
                     ViewResult;
@@ -687,12 +682,14 @@
                 return;
             }
 
-            //act
+            //arrange
             var evidenceNoteId = TestFixture.Create<Guid>();
             var note = TestFixture.Create<TransferEvidenceNoteData>();
             note.Status = status;
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == evidenceNoteId))).Returns(note);
+
+            //act
             var result =
                 await outgoingTransferEvidenceController.EditTonnages(organisationId, evidenceNoteId, TestFixture.Create<bool?>()) as
                     RedirectToRouteResult;
