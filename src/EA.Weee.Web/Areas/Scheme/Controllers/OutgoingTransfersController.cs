@@ -46,6 +46,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId, bool? returnToEditDraftTransfer)
         {
             await SetBreadcrumb(pcsId);
@@ -174,6 +175,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab)
         {
             await SetBreadcrumb(pcsId);

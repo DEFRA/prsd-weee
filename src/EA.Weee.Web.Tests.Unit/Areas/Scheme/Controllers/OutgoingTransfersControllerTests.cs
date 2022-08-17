@@ -25,6 +25,7 @@
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
+    using Web.Filters;
     using Web.Infrastructure;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
@@ -104,6 +105,14 @@
         }
 
         [Fact]
+        public void EditTransferFromGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid) })
+                .Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
         public void EditTransferFromGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid) })
@@ -116,6 +125,13 @@
         {
             typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid), typeof(bool?) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditTonnagesGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditTonnages", new[] { typeof(Guid), typeof(Guid), typeof(bool?) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -133,6 +149,13 @@
         }
 
         [Fact]
+        public void EditCategoriesGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+                .Should().BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
         public void EditCategoriesGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
@@ -145,6 +168,14 @@
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
                     new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void SubmittedTransferGet_ShouldHaveNoCacheAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -185,6 +216,14 @@
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
                     new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditDraftTransferGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
