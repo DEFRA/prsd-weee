@@ -72,13 +72,13 @@
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -1758,6 +1758,19 @@
                          t.RedirectTab == redirectTab &&
                          t.SystemDateTime == currentDate)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferredEvidenceGet_GivenPageNumber_ShouldPopulateViewBagWithPageNumber()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), "view-and-transfer-evidence", pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
         }
 
         private void AddModelError()
