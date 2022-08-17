@@ -94,7 +94,7 @@
         [Fact]
         public void DownloadEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
