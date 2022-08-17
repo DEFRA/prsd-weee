@@ -10,8 +10,6 @@
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
     using Security;
-    using Shared;
-    using Weee.Security;
 
     public class GetSchemesWithObligationHandler : IRequestHandler<GetSchemesWithObligation, List<SchemeData>>
     {
@@ -32,9 +30,11 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var schemesWithObligation = await obligationDataAccess.GetSchemesWithObligations(request.ComplianceYear);
+            var schemesWithObligation = await obligationDataAccess.GetObligationSchemeData(null, request.ComplianceYear);
 
-            var mappedSchemes = schemesWithObligation.Select(s => schemeMap.Map(s)).ToList();
+            var distinctSchemes = schemesWithObligation.Distinct();
+
+            var mappedSchemes = distinctSchemes.Select(s => schemeMap.Map(s)).ToList();
 
             return mappedSchemes;
         }

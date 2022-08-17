@@ -5,19 +5,12 @@
     using EA.Weee.Core.Admin.Obligation;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Helpers;
 
     public class ViewObligationsAndEvidenceSummaryViewModelMap : IMap<ViewObligationsAndEvidenceSummaryViewModelMapTransfer, ViewObligationsAndEvidenceSummaryViewModel>
     {
-        private readonly ITonnageUtilities tonnageUtilities;
-
-        public ViewObligationsAndEvidenceSummaryViewModelMap(ITonnageUtilities tonnageUtilities)
-        {
-            this.tonnageUtilities = tonnageUtilities;
-        }
-
         public ViewObligationsAndEvidenceSummaryViewModel Map(ViewObligationsAndEvidenceSummaryViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
@@ -29,7 +22,10 @@
                 {
                     DisplayName = s.SchemeName,
                     Id = s.Id
-                }).GroupBy(s => s.Id).Select(s => s.First()).ToList();
+                }).GroupBy(s => s.Id)
+                    .Select(s => s.First())
+                    .OrderBy(s => s.DisplayName)
+                    .ToList();
             }
 
             var model = new ViewObligationsAndEvidenceSummaryViewModel
@@ -38,7 +34,7 @@
                 DisplayNoDataMessage = !source.ComplianceYears.Any(),
                 ComplianceYearList = source.ComplianceYears,
                 SchemeList = schemeList,
-                SchemeId = source.SchemeId
+                SchemeId = source.SchemeData != null ? schemeList.Any(s => s.Id == source.SchemeId) ? source.SchemeId : null : source.SchemeId
             };
 
             var excludedCategories = new List<WeeeCategory>()
@@ -56,27 +52,27 @@
                 {
                     model.ObligationEvidenceValues.Add(new ObligationEvidenceValue(summaryCategory.CategoryId)
                     {
-                        Obligation = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.Obligation),
-                        Evidence = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.Evidence),
-                        Reused = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.Reuse),
-                        TransferredOut = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.TransferredOut),
-                        TransferredIn = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.TransferredIn),
-                        Difference = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.Difference < 0 ? 0 : summaryCategory.Difference)
+                        Obligation = summaryCategory.Obligation.ToTonnageDisplay(),
+                        Evidence = summaryCategory.Evidence.ToTonnageDisplay(),
+                        Reused = summaryCategory.Reuse.ToTonnageDisplay(),
+                        TransferredOut = summaryCategory.TransferredOut.ToTonnageDisplay(),
+                        TransferredIn = summaryCategory.TransferredIn.ToTonnageDisplay(),
+                        Difference = summaryCategory.Difference.ToTonnageDisplay()
                     });
                 }
 
-                model.ObligationTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Obligation));
-                model.Obligation210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Obligation));
-                model.EvidenceTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Evidence));
-                model.Evidence210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Evidence));
-                model.ReuseTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Reuse));
-                model.Reuse210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Reuse));
-                model.TransferredOutTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.TransferredOut));
-                model.TransferredOut210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.TransferredOut));
-                model.TransferredInTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.TransferredIn));
-                model.TransferredIn210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.TransferredIn));
-                model.DifferenceTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Difference));
-                model.Difference210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Difference));
+                model.ObligationTotal = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Obligation).ToTonnageDisplay();
+                model.Obligation210Total = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Obligation).ToTonnageDisplay();
+                model.EvidenceTotal = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Evidence).ToTonnageDisplay();
+                model.Evidence210Total = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Evidence).ToTonnageDisplay();
+                model.ReuseTotal = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Reuse).ToTonnageDisplay();
+                model.Reuse210Total = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Reuse).ToTonnageDisplay();
+                model.TransferredOutTotal = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.TransferredOut).ToTonnageDisplay();
+                model.TransferredOut210Total = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.TransferredOut).ToTonnageDisplay();
+                model.TransferredInTotal = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.TransferredIn).ToTonnageDisplay();
+                model.TransferredIn210Total = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.TransferredIn).ToTonnageDisplay();
+                model.DifferenceTotal = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.Difference).ToTonnageDisplay();
+                model.Difference210Total = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains((WeeeCategory)x.CategoryId)).Sum(x => x.Difference).ToTonnageDisplay();
             }
 
             return model;

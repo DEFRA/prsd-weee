@@ -6,6 +6,7 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Shared;
     using Domain.Evidence;
     using Domain.Organisation;
     using FluentAssertions;
@@ -80,10 +81,7 @@
                     .WithTestData()
                     .WithInternalUserAccess();
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetAdminRole();
-
-                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
+                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<VoidTransferNoteRequest, Guid>>();

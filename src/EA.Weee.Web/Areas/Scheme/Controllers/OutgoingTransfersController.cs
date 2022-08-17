@@ -18,6 +18,7 @@
     using System.Web.Routing;
     using Attributes;
     using Core.Helpers;
+    using Filters;
     using Requests;
     using ViewModels;
     using Weee.Requests.Scheme;
@@ -45,12 +46,22 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId, bool? returnToEditDraftTransfer)
         {
             await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                if (noteData.Status != NoteStatus.Returned && noteData.Status != NoteStatus.Draft)
+                {
+                    // we redirect to manage evidence notes tab if this note already has been processed (clicked on Browser Back Button)
+                    return RedirectToAction("Index", "ManageEvidenceNotes",
+                        new { pcsId, area = "Scheme", tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString() });
+                }
+
                 var model = await TransferEvidenceTonnageViewModel(pcsId, evidenceNoteId, client, returnToEditDraftTransfer);
 
                 return this.View("EditTonnages", model);
@@ -133,6 +144,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null)
         {
             await SetBreadcrumb(pcsId);
@@ -163,6 +175,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab)
         {
             await SetBreadcrumb(pcsId);
@@ -230,6 +243,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId);
@@ -272,6 +286,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId, int page = 1)
         {
             await SetBreadcrumb(pcsId);
@@ -323,53 +338,50 @@
             if (model.Action == ActionEnum.Back)
             {
                 var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                  SessionKeyConstant.OutgoingTransferKey);
+               SessionKeyConstant.OutgoingTransferKey);
 
                 if (outgoingTransfer == null)
                 {
                     return RedirectToManageEvidence(model.PcsId);
                 }
 
-                var selectedEvidenceNotes =
-                   model.SelectedEvidenceNotePairs.Where(a => a.Value == true).Select(b => b.Key);
-
-                var unselectedEvidenceNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value == false).Select(b => b.Key);
-
-                var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, outgoingTransfer.CategoryIds,
-                        selectedEvidenceNotes.ToList(), unselectedEvidenceNotes.ToList());
-
-                sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
-                    SessionKeyConstant.OutgoingTransferKey);
+                SetEvidenceNotesInSession(model, outgoingTransfer);
 
                 return RedirectToAction("EditCategories", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId});
             }
 
             if (ModelState.IsValid)
             {
-                var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.OutgoingTransferKey);
+                var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+               SessionKeyConstant.OutgoingTransferKey);
 
-                if (transferRequest == null)
+                if (outgoingTransfer == null)
                 {
                     return RedirectToManageEvidence(model.PcsId);
                 }
 
-                var selectedEvidenceNotes =
-                    model.SelectedEvidenceNotePairs.Where(a => a.Value).Select(b => b.Key);
-
-                var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, transferRequest.CategoryIds,
-                        selectedEvidenceNotes.ToList());
-
-                sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
-                    SessionKeyConstant.OutgoingTransferKey);
+                SetEvidenceNotesInSession(model, outgoingTransfer);
 
                 return RedirectToRoute("Scheme_edit_transfer_tonnages",
                     new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
             }
 
             return this.View("EditTransferFrom", model);
+        }
+
+        private void SetEvidenceNotesInSession(TransferEvidenceNotesViewModel model, TransferEvidenceNoteRequest outgoingTransfer)
+        {
+            var selectedEvidenceNotes =
+               model.SelectedEvidenceNotePairs.Where(a => a.Value == true).Select(b => b.Key);
+
+            var unselectedEvidenceNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value == false).Select(b => b.Key);
+
+            var updatedTransferRequest =
+                new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, outgoingTransfer.CategoryIds,
+                    selectedEvidenceNotes.ToList(), unselectedEvidenceNotes.ToList());
+
+            sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
+                SessionKeyConstant.OutgoingTransferKey);
         }
 
         private async Task<TransferEvidenceNoteCategoriesViewModel> TransferEvidenceNoteCategoriesViewModel(Guid pcsId, 
