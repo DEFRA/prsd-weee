@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Autofac;
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
@@ -18,6 +20,7 @@
     using Prsd.Core.Mediator;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
+    using NoteType = Core.AatfEvidence.NoteType;
 
     public class GetEvidenceNoteForInternalUserRequestHandlerIntegrationTests : IntegrationTestBase
     {
@@ -199,6 +202,149 @@
             };
         }
 
+        [Component]
+        public class WhenIGetEvidenceNoteForInternalUserRequestThatHasTransferHistory : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
+        {
+            private static Note note1;
+            private static Note note2;
+
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 50, 1),
+                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 100, 1),
+                    new NoteTonnage(WeeeCategory.DisplayEquipment, 100, 1),
+                };
+
+                note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                     .With(n =>
+                     {
+                         n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                         n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                     })
+                    .Create();
+
+                var transferTonnage1 =
+                    note.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.AutomaticDispensers));
+
+                // create transfer from note 1
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 10, null)
+                };
+
+                note1 = TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                }).WithTonnages(newTransferNoteTonnage1).Create();
+
+                var transferTonnage2 =
+                    note.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.CoolingApplicancesContainingRefrigerants));
+                // create transfer from note 1
+                var newTransferNoteTonnage2 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage2.Id, 20, null)
+                };
+
+                note2 = TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage2).Create();
+
+                request = new GetEvidenceNoteForInternalUserRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                data = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveCreatedEvidenceNote = () =>
+            {
+                data.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveCreatedTheEvidenceNoteWithExpectedPropertyValues = ShouldMapToNote;
+
+            private readonly It shouldHaveCreatedTheEvidenceNoteTransferHistory = () =>
+            {
+                data.EvidenceNoteHistoryData.Count.Should().Be(2);
+
+                data.EvidenceNoteHistoryData.Should()
+                    .Contain(e => e.Id == note1.Id
+                                  && e.Status == note1.Status
+                                      .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteStatus>()
+                                  && e.Reference == note1.Reference &&
+                                  e.Type == NoteType.Transfer &&
+                                  e.SubmittedDate.GetValueOrDefault().Date == SystemTime.UtcNow.Date);
+
+                data.EvidenceNoteHistoryData.Should()
+                    .Contain(e => e.Id == note2.Id
+                                  && e.Status == note2.Status
+                                      .ToCoreEnumeration<EA.Weee.Core.AatfEvidence.NoteStatus>()
+                                  && e.Reference == note2.Reference &&
+                                  e.Type == NoteType.Transfer &&
+                                  e.SubmittedDate.GetValueOrDefault().Date == SystemTime.UtcNow.Date);
+            };
+        }
+
+        [Component]
+        public class WhenIGetOneVoidedEvidenceNoteAsAppropriateAuthority : GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var categories = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.LightingEquipment, 10, 5)
+                };
+
+                note = EvidenceNoteDbSetup
+                .Init()
+                .WithTonnages(categories)
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddHours(-1));
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddMinutes(-1));
+                    n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                })
+                .Create();
+
+                request = new GetEvidenceNoteForInternalUserRequest(note.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                data = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveVoidedTheEvidenceNote = () =>
+            {
+                data.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveVoidedTheEvidenceNoteWithExpectedPropertyValues = () =>
+            {
+                ShouldMapToNote();
+                data.Status.Should().Be(NoteStatus.Void);
+                data.VoidedReason.Should().Be(note.NoteStatusHistory
+                    .Where(n => n.ToStatus.Value == NoteStatus.Void.ToInt())
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.Reason);
+                data.VoidedDate.Value.Date.Should().Be(note.NoteStatusHistory
+                    .Where(n => n.ToStatus.Value == NoteStatus.Void.ToInt())
+                    .OrderByDescending(n => n.ChangedDate).FirstOrDefault()?.ChangedDate.Date);
+            };
+        }
+
         public class GetEvidenceNoteForInternalUserRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<GetEvidenceNoteForInternalUserRequest, EvidenceNoteData> handler;
@@ -210,13 +356,10 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings()
                     .WithInternalUserAccess(false);
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetInternalUserRole();
-
-                Query.SetupUserWithRole(UserId.ToString(), role.Id, authority.Id);
+                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<GetEvidenceNoteForInternalUserRequest, EvidenceNoteData>>();

@@ -465,7 +465,7 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings()
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();

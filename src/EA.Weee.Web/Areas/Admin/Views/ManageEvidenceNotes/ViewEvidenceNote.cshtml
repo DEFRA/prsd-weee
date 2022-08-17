@@ -1,15 +1,15 @@
-﻿@using EA.Weee.Web.Areas.Admin.Controllers
-@using EA.Weee.Web.Infrastructure
-@using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
+﻿@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 @{
     ViewBag.Title = Model.TabName + " - GOV.UK";
+    
 }
 
 @section full_main_content{
-
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ManageEvidenceNotesController>(a => a.Index(Model.InternalUserRedirectTab, null))))
+    
+    @(this.WeeeGds().BackLink(
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
 
     @Html.Partial("_ViewEvidenceNotePartial", Model)
 }

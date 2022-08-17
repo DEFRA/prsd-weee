@@ -123,8 +123,10 @@
 
             private readonly It shouldHaveReturnedCorrectEvidenceNotes = () =>
             {
-                result.Should().HaveCount(2);
-                foreach (var evidenceNoteData in result)
+                result.Results.Should().HaveCount(2);
+                result.NoteCount.Should().Be(2);
+
+                foreach (var evidenceNoteData in result.Results)
                 {
                     notesSetToBeIncluded.First(n => n.Id.Equals(evidenceNoteData.Id)).Should().NotBeNull();
 
@@ -135,7 +137,7 @@
 
                 // first note has null automatic dispensers so this should not be returned as tonnage
                 // first note has category ITAndTelecommsEquipment that is not in the category list so also shouldnt be in the tonnage data
-                var note1 = result.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(0).Id));
+                var note1 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(0).Id));
                 note1.EvidenceTonnageData.Count.Should().Be(1);
                 note1.EvidenceTonnageData.ElementAt(0).Received.Should().Be(1);
                 note1.EvidenceTonnageData.ElementAt(0).Reused.Should().Be(2);
@@ -144,7 +146,7 @@
                     .Be(Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools);
 
                 // second note has category MedicalDevices that is not in the category list so also shouldnt be in the tonnage data
-                var note2 = result.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(1).Id));
+                var note2 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(1).Id));
                 note2.EvidenceTonnageData.Count.Should().Be(2);
                 var categoryTonnage = note2.EvidenceTonnageData.First(e =>
                     e.CategoryId.Equals(Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools));
@@ -223,8 +225,9 @@
 
             private readonly It shouldHaveReturnedCorrectEvidenceNotes = () =>
             {
-                result.Should().HaveCount(2);
-                foreach (var evidenceNoteData in result)
+                result.Results.Should().HaveCount(2);
+                result.NoteCount.Should().Be(2);
+                foreach (var evidenceNoteData in result.Results)
                 {
                     notesSetToBeIncluded.First(n => n.Id.Equals(evidenceNoteData.Id)).Should().NotBeNull();
 
@@ -233,7 +236,7 @@
                     evidenceNoteData.ShouldMapToNote(refreshedNote);
                 }
 
-                var note1 = result.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(0).Id));
+                var note1 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(0).Id));
                 note1.EvidenceTonnageData.Count.Should().Be(1);
                 note1.EvidenceTonnageData.ElementAt(0).Received.Should().Be(1);
                 note1.EvidenceTonnageData.ElementAt(0).Reused.Should().Be(null);
@@ -241,7 +244,7 @@
                 note1.EvidenceTonnageData.ElementAt(0).CategoryId.Should()
                     .Be(Core.DataReturns.WeeeCategory.AutomaticDispensers);
 
-                var note2 = result.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(1).Id));
+                var note2 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(1).Id));
                 note2.EvidenceTonnageData.Count.Should().Be(1);
                 note2.EvidenceTonnageData.ElementAt(0).Received.Should().Be(2);
                 note2.EvidenceTonnageData.ElementAt(0).Reused.Should().Be(null);
@@ -249,7 +252,7 @@
                 note2.EvidenceTonnageData.ElementAt(0).CategoryId.Should()
                     .Be(Core.DataReturns.WeeeCategory.AutomaticDispensers);
 
-                var notIncluded = result.FirstOrDefault(r => r.Id.Equals(notesSetToNotBeIncluded.ElementAt(0).Id));
+                var notIncluded = result.Results.FirstOrDefault(r => r.Id.Equals(notesSetToNotBeIncluded.ElementAt(0).Id));
                 notIncluded.Should().BeNull();
             };
         }
@@ -263,7 +266,7 @@
 
                 note = EvidenceNoteDbSetup.Init().Create();
 
-                request = new GetEvidenceNotesForTransferRequest(Guid.NewGuid(),
+                request = new GetEvidenceNotesForTransferRequest(note.OrganisationId,
                     new List<int>() {1}, note.ComplianceYear);
             };
 
@@ -277,10 +280,10 @@
 
         public class GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetEvidenceNotesForTransferRequest, IList<EvidenceNoteData>> handler;
+            protected static IRequestHandler<GetEvidenceNotesForTransferRequest, EvidenceNoteSearchDataResult> handler;
             protected static Organisation organisation;
             protected static GetEvidenceNotesForTransferRequest request;
-            protected static IList<EvidenceNoteData> result;
+            protected static EvidenceNoteSearchDataResult result;
             protected static Scheme scheme;  
             protected static Note note;
             protected static Fixture fixture;
@@ -298,7 +301,7 @@
                 notesSetToNotBeIncluded = new List<Note>();
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<GetEvidenceNotesForTransferRequest, IList<EvidenceNoteData>>>();
+                handler = Container.Resolve<IRequestHandler<GetEvidenceNotesForTransferRequest, EvidenceNoteSearchDataResult>>();
 
                 return setup;
             }

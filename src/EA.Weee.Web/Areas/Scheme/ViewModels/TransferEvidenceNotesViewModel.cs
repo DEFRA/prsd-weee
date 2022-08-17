@@ -4,12 +4,13 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Core.Shared;
     using Web.ViewModels.Shared;
 
     public class TransferEvidenceNotesViewModel : TransferEvidenceViewModelBase, IValidatableObject
     {
         public List<GenericControlPair<Guid, bool>> SelectedEvidenceNotePairs { get; set; }
+
+        public ActionEnum Action { get; set; }
 
         public TransferEvidenceNotesViewModel()
         {

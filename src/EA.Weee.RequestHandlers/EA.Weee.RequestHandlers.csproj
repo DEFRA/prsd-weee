@@ -105,7 +105,6 @@
     <Compile Include="AatfEvidence\EditTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\CreateTransferEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandler.cs" />
-    <Compile Include="AatfEvidence\GetEvidenceNoteByPbsOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandler.cs" />
@@ -115,7 +114,8 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
     <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\SaveEvidenceNoteRequestBase.cs" />
-    <Compile Include="AatfEvidence\SaveTransferNoteRequestBase.cs" />
+    <Compile Include="AatfEvidence\SaveNoteRequestBase.cs" />
+    <Compile Include="AatfEvidence\VoidTransferNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesByOrganisationRequestHandler.cs" />
     <Compile Include="AatfEvidence\TransferTonnagesValidator.cs" />
@@ -128,11 +128,14 @@
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
+    <Compile Include="Admin\GetComplianceYearsFilterHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
+    <Compile Include="Admin\Obligations\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
     <Compile Include="Admin\Obligations\IObligationCsvReader.cs" />
@@ -148,6 +151,7 @@
     <Compile Include="Mappings\AatfWithSystemDateMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteDataMapBase.cs" />
     <Compile Include="Mappings\EvidenceNoteWithCriteriaMap.cs" />
+    <Compile Include="Mappings\ObligationSummaryTotalsMap.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Mappings\SchemeObligationDataMap.cs" />
     <Compile Include="Mappings\SchemeObligationUploadDataMap.cs" />

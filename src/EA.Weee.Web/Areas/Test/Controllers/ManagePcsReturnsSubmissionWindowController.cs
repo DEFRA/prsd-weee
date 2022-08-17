@@ -51,8 +51,6 @@
                     FixCurrentDate = settings.FixCurrentDate,
                     CurrentDate = settings.CurrentDate
                 });
-
-                await cache.InvalidateCurrentDate();
             }
 
             return RedirectToAction("SettingsUpdated", "ManagePcsReturnsSubmissionWindow");

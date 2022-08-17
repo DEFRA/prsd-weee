@@ -12,6 +12,8 @@
 
         public bool IncludeTonnage { get; set; }
 
+        public bool IncludeHistory { get; set; }
+
         public DateTime? SystemDateTime { get; set; }
 
         public EvidenceNoteWithCriteriaMap(Note note)

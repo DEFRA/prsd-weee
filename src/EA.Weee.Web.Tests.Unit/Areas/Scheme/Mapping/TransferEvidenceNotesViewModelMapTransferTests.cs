@@ -45,7 +45,8 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), 
+                    new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3), 
                     null,
                     TestFixture.Create<Guid>()));
 
@@ -58,7 +59,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(),
+                new TransferEvidenceNotesViewModelMapTransfer(new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
                     TestFixture.Create<TransferEvidenceNoteRequest>(),
                     null,
                     TestFixture.Create<Guid>()));
@@ -72,7 +73,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.CreateMany<EvidenceNoteData>().ToList(),
+                new TransferEvidenceNotesViewModelMapTransfer(new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
                     TestFixture.Create<TransferEvidenceNoteRequest>(),
                     TestFixture.Create<TransferEvidenceNoteData>(), 
                     Guid.Empty));
@@ -86,7 +87,8 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), TestFixture.CreateMany<EvidenceNoteData>().ToList(), 
+                new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), 
+                    new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3), 
                     TestFixture.Create<TransferEvidenceNoteRequest>(), 
                     Guid.Empty));
 
@@ -98,7 +100,7 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenRequestValues_PropertiesShouldBeSet()
         {
             //arrange
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             var request = TestFixture.Create<TransferEvidenceNoteRequest>();
             var organisationId = TestFixture.Create<Guid>();
             var complianceYear = TestFixture.Create<int>();
@@ -107,7 +109,7 @@
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.Notes.ToList().Should().BeEquivalentTo(notes);
+            result.Notes.Should().BeEquivalentTo(notes);
             result.Request.Should().Be(request);
             result.ComplianceYear.Should().Be(complianceYear);
         }
@@ -116,7 +118,7 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenTransferNoteDataValues_PropertiesShouldBeSet()
         {
             //arrange
-            var notes = TestFixture.CreateMany<EvidenceNoteData>().ToList();
+            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             var organisationId = TestFixture.Create<Guid>();
             var request = TestFixture.Create<TransferEvidenceNoteRequest>();
@@ -126,7 +128,7 @@
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.Notes.ToList().Should().BeEquivalentTo(notes);
+            result.Notes.Should().BeEquivalentTo(notes);
             result.TransferEvidenceNoteData.Should().Be(noteData);
         }
 

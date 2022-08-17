@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using Extensions;
 
     [Serializable]
@@ -21,8 +23,6 @@
         [DisplayName("Compliance year")]
         public string ComplianceYearDisplay => ComplianceYear.ToString();
 
-        public int ComplianceYear { get; set; }
-
         public string SiteAddress { get; set; }
 
         public string OperatorAddress { get; set; }
@@ -39,6 +39,8 @@
 
         public bool HasBeenReturned => Status.Equals(NoteStatus.Returned);
 
+        public bool HasBeenVoided => Status.Equals(NoteStatus.Void);
+
         public Guid SchemeId { get; set; }
 
         public string SubmittedBy { get; set; }
@@ -51,7 +53,9 @@
 
         public bool DisplayH2Title { get; set; }
 
-        public int SelectedComplianceYear { get; set; }
+        public IList<EvidenceNoteHistoryViewModel> EvidenceNoteHistoryData { get; set; }
+
+        public bool DisplayEvidenceNoteHistoryData => EvidenceNoteHistoryData != null && EvidenceNoteHistoryData.Count > 0;
 
         public virtual string TabName
         {
@@ -69,6 +73,8 @@
                         return "Returned evidence note";
                     case NoteStatus.Submitted:
                         return "Submitted evidence note";
+                    case NoteStatus.Void:
+                        return "Voided evidence note";
                     default:
                         return string.Empty;
                 }

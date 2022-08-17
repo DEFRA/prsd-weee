@@ -2,102 +2,194 @@
     ViewBag.Title = "Cookies";
 }
 
-@section main_content
-{
+
+<div id="dvSuccessMessage" class="cookie-settings-confirmation" style="display: none;">
+    <div class="gem-c-success-alert govuk-notification-banner govuk-notification-banner-success">
+        <div class="govuk-notification-banner-header">
+            <h2 class="govuk-notification-banner-title">Success</h2>
+        </div>
+        <div class="govuk-notification-banner-content">
+            <h3 class="govuk-notification-banner-heading">Your cookies settings were saved</h3>
+            <a id="previousPage" href="" class="previousPage" style="display: inline;">Go back to the page you were looking at</a>
+        </div>
+    </div>
+</div>
+<header class="hgroup" style="margin-top:30px;">
+    <h1 class="govuk-heading-xl" style="margin-bottom:30px !important">Details about cookies on WEEE</h1>
+</header>
+
+<div>
+    <p>
+        The WEEE service puts small files (known as ‘cookies’) onto your computer, tablet or phone to collect information about how you browse the site. Find out more about the cookies we use, what they’re for and when they expire.
+    </p>
+
     <header class="hgroup">
-        <h1 class="govuk-heading-xl">Cookies</h1>
+        <h1 class="govuk-heading-l">Strictly necessary cookies</h1>
     </header>
+    <p>
+        These are essential cookies which always need to be on.
+    </p>
 
-    <div class='text'>
-        <p>The WEEE service puts small files (known as ‘cookies’)  onto your computer to collect information about how you browse the site.</p>
-        <p>We use these cookies to:</p>
+    <h2 class="govuk-heading-m">Session cookies</h2>
+    <p>
+        We use cookies to record your session activity.
+    </p>
+    <table id="tbSessionCookiesPRSD" summary='Session cookies' role='presentation' class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header cookietbColumnWidth1">Name</th>
+                <th class="govuk-table__header cookietbColumnWidth2">Purpose</th>
+                <th class="govuk-table__header cookietbColumnWidth3">Expires</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">PRSD.request_verification_token</td>
+                <td class="govuk-table__cell">Helps us to manage and authenticate your session.</td>
+                <td class="govuk-table__cell">After 3 hours, when you sign out, or when you close your browser</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">PRSD.WEEE</td>
+                <td class="govuk-table__cell">Helps us to manage and authenticate your session.</td>
+                <td class="govuk-table__cell">After 3 hours, when you sign out, or when you close your browser</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <ul class="govuk-list--bullet govuk-body">
-            <li>help us understand how you use the service, so we can make improvements based on your needs</li>
-            <li>remember the notifications you’ve seen so that you’re not shown them again</li>
-            <li>temporarily store the information you enter</li>
-        </ul>
-        <p>We never use these cookies to identify you personally.</p>
-        <p>You’ll normally see a message on the site before a cookie is stored on your computer.</p>
-        <p>
-            Find out more about <a rel="external" href='http://www.aboutcookies.org/'>how to manage cookies.</a>
-        </p>
+    <h2 class="govuk-heading-m">Third Party cookies</h2>
+    <p>
+        The cookies detailed below are required for the service to run on the Windows Azure cloud platform.
+    </p>
+    <table id="tbSessionCookiesARRA" summary='Session cookies' role='presentation' class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header cookietbColumnWidth1">Name</th>
+                <th class="govuk-table__header cookietbColumnWidth2">Purpose</th>
+                <th class="govuk-table__header cookietbColumnWidth3">Expires</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">ARRAffinity</td>
+                <td class="govuk-table__cell">Used for load balancing to make sure the visitor page requests are routed to the same server in any browsing session.</td>
+                <td class="govuk-table__cell">When your session ends</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">ARRAffinitySameSite</td>
+                <td class="govuk-table__cell">Used for load balancing to make sure the visitor page requests are routed to the same server in any browsing session.</td>
+                <td class="govuk-table__cell">When your session ends</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <h2 class="govuk-heading-m">Google Analytics cookie</h2>
+    <h2 class="govuk-heading-m">Cookies message</h2>
+    <p>
+        You may see a banner when you visit WEEE inviting you to accept additional cookies or review your settings. We’ll set cookies so that your device knows you’ve seen it and not to show it again, and also to store your settings.
+    </p>
+    <table id="tbIntroductoryCookies" summary='Introductory message cookie' role='presentation' class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header cookietbColumnWidth1">Name</th>
+                <th class="govuk-table__header cookietbColumnWidth2">Purpose</th>
+                <th class="govuk-table__header cookietbColumnWidth3">Expires</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">weee-cookie-consent</td>
+                <td class="govuk-table__cell">Saves your cookies consent settings.</td>
+                <td class="govuk-table__cell">1 year</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">seen_cookie_message</td>
+                <td class="govuk-table__cell">Lets us know if you have been shown the cookies message and stops your browser showing the cookies banner after you’ve set your preferences.</td>
+                <td class="govuk-table__cell">1 year</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <p>We use Google Analytics to collect information about how you use the government’s digital service. We do this to help make sure the site is meeting the needs of its users and to help us make improvements.</p>
-        <p>Google analytics cookie collects and stores information about:</p>
+    <h2 class="govuk-heading-l">Cookies that measure website use (optional)</h2>
+    <p>
+        With your permission, we use Google Analytics to collect information about how you use the WEEE service. We do this to help make sure the site is meeting the needs of its users and to help us make improvements.
+    </p>
+    <p>
+        Google Analytics cookies collect and store information about:
+    </p>
 
-        <ul class="govuk-list--bullet govuk-body">
+    <div class="govuk-body">
+        <ul>
             <li>the pages you visit on the site</li>
             <li>how long you spend on each page</li>
             <li>how you got to the site</li>
             <li>what you click on while you’re visiting the site</li>
         </ul>
-        <p>We don’t allow Google to use or share our analytics data. Google Analytics sets the following cookie:</p>
-        <table summary='Google analytics cookie collection' role='presentation' class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header">Name</th>
-                    <th class="govuk-table__header">Purpose</th>
-                    <th class="govuk-table__header">Expires</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">_ga</td>
-                    <td class="govuk-table__cell">This helps us count how many people visit the site by tracking if you’ve visited before</td>
-                    <td class="govuk-table__cell">2 years</td>
-                </tr>
-            </tbody>
-        </table>
+    </div>
+    <p>
+        We don’t allow Google to use or share our analytics data.
+    </p>
+    <p>
+        We use the following Google Analytics  cookies on WEEE:
+    </p>
+    <table id="tbGoogleAnalytics" summary='Google analytics cookie collection' role='presentation' class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header cookietbColumnWidth1">Name</th>
+                <th class="govuk-table__header cookietbColumnWidth2">Purpose</th>
+                <th class="govuk-table__header cookietbColumnWidth3">Expires</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">_ga</td>
+                <td class="govuk-table__cell">Helps us count how many people visit the site by tracking if you’ve visited before.</td>
+                <td class="govuk-table__cell">2 years</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">_gid</td>
+                <td class="govuk-table__cell">Helps us count how many people visit the site by tracking us if you've visited before.</td>
+                <td class="govuk-table__cell">24 hours</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">_gat</td>
+                <td class="govuk-table__cell">Helps Google to manage the rate at which they track your site interactions (when high traffic occurs).</td>
+                <td class="govuk-table__cell">1 minute</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">_gat_govuk_shared</td>
+                <td class="govuk-table__cell">Helps Google to manage the rate at which they track your site interactions (when high traffic occurs).</td>
+                <td class="govuk-table__cell">1 minute</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <h2 class="govuk-heading-m">Session cookie</h2>
+    <div id="cookieSettings" style="margin-bottom:15px;">
+        <h2 class="govuk-heading-m">Do you want to accept analytics cookies?</h2>
+        <p>
+            You can change your selection at any time.
+        </p>
 
-        <p>We use cookies to record your session activity.</p>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset inline">
+                <div class="govuk-radios__item">
+                    <input name="cookieChoices" type="hidden" value="True">
+                    <input id="cookieChoiceYes" name="cookieChoices" class="govuk-radios__input" type="radio" value="True">
+                    <label class="govuk-label govuk-radios__label" for="yes">Yes</label>
+                </div>
+                <div class="govuk-radios__item">
+                    <input name="cookieChoices" type="hidden" value="False">
+                    <input id="cookieChoiceNo" name="cookieChoices" class="govuk-radios__input" type="radio" value="False">
+                    <label class="govuk-label govuk-radios__label" for="no">No</label>
+                </div>
+            </fieldset>
+        </div>
+    </div>
 
+    <div class="govuk-form-group">
+        <input id="saveCookieChoice" type="submit" value="Save cookies settings" class="govuk-button" onclick="setCookieChoice();">
+    </div>
+</div>
 
-        <table summary='Session cookies' role='presentation' class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header">Name</th>
-                    <th class="govuk-table__header">Purpose</th>
-                    <th class="govuk-table__header">Expires</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">PRSD.request_verification_token</td>
-                    <td class="govuk-table__cell">This helps us to manage and authenticate your session</td>
-                    <td class="govuk-table__cell">After 3 hours, when you sign out, or when you close your browser</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">PRSD.WEEE</td>
-                    <td class="govuk-table__cell">This helps us to manage and authenticate your session</td>
-                    <td class="govuk-table__cell">After 3 hours, when you sign out, or when you close your browser</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h2 class="govuk-heading-m">Our introductory message</h2>
-        <p>You may see a pop-up welcome message when you first visit. A cookie is stored so that your computer knows you’ve seen it and knows not to show it again.</p>
-
-        <table summary='Introductory message cookie' role='presentation' class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header">Name</th>
-                    <th class="govuk-table__header">Purpose</th>
-                    <th class="govuk-table__header">Expires</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">seen_cookie_message</td>
-                    <td class="govuk-table__cell">This saves a message to let us know that you have seen our cookie message</td>
-                    <td class="govuk-table__cell">1 month</td>
-                </tr>
-            </tbody>
-        </table>
-
-    </div><!-- end text -->
-}
+<script type="text/javascript">
+    var lastPageVisited = document.getElementById('previousPage');
+    lastPageVisited.href = document.referrer;
+</script>

@@ -20,6 +20,7 @@
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Scheme;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class ManageEvidenceNotesControllerEditEvidenceNoteTests : ManageEvidenceNotesControllerTestsBase
@@ -108,7 +109,8 @@
                      v.NoteData.Equals(noteData) &&
                      v.OrganisationId.Equals(OrganisationId) &&
                      v.AatfId.Equals(noteData.AatfData.Id) && 
-                     v.ExistingModel == null))).MustHaveHappenedOnceExactly();
+                     v.ExistingModel == null &&
+                     v.ComplianceYear == noteData.ComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -183,8 +185,9 @@
                 A<EditNoteMapTransfer>.That.Matches(c => c.Schemes.Equals(schemes)
                                                          && c.ExistingModel.Equals(model)
                                                          && c.OrganisationId.Equals(OrganisationId)
-                                                         && c.AatfId.Equals(AatfId) &&
-                                                         c.NoteData == null))).MustHaveHappenedOnceExactly();
+                                                         && c.AatfId.Equals(AatfId) 
+                                                         && c.NoteData == null 
+                                                         && c.ComplianceYear == model.ComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -291,12 +294,18 @@
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
         }
 
-        [Fact]
-        public async Task EditDraftEvidenceNotePost_GivenSaved_ViewDataShouldHaveNoteStatusAdded()
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task EditDraftEvidenceNotePost_GivenSaved_ViewDataShouldHaveNoteStatusAdded(NoteStatus status)
         {
+            if (status == NoteStatus.Returned)
+            {
+                return;
+            }
+
             //arrange
             var model = ValidModel();
-            model.Status = NoteStatus.Returned;
+            model.Status = status;
             model.Action = ActionEnum.Save;
             var request = EditRequest();
 
@@ -315,6 +324,7 @@
             //arrange
             var model = ValidModel();
             model.Action = ActionEnum.Save;
+            model.Status = NoteStatus.Returned;
             var request = EditRequest(NoteStatus.Returned);
 
             A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
@@ -327,10 +337,35 @@
         }
 
         [Fact]
-        public async Task EditDraftEvidenceNotePost_GivenSubmitted_ViewDataShouldHaveNoteStatusAdded()
+        public async Task EditDraftEvidenceNotePost_GivenReturnedRecordHasBeenSubmitted_ViewDataShouldHaveNoteStatusAdded()
         {
             //arrange
             var model = ValidModel();
+            model.Action = ActionEnum.Submit;
+            model.Status = NoteStatus.Returned;
+            var request = EditRequest(NoteStatus.Returned);
+
+            A.CallTo(() => EditRequestCreator.ViewModelToRequest(A<EvidenceNoteViewModel>._)).Returns(request);
+
+            //act
+            await ManageEvidenceController.EditEvidenceNote(model, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            //assert
+            ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus].Should().Be(NoteUpdatedStatusEnum.ReturnedSubmitted);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task EditDraftEvidenceNotePost_GivenSubmitted_ViewDataShouldHaveNoteStatusAdded(NoteStatus status)
+        {
+            if (status == NoteStatus.Returned)
+            {
+                return;
+            }
+            
+            //arrange
+            var model = ValidModel();
+            model.Status = status;
             model.Action = ActionEnum.Submit;
             var request = EditRequest(NoteStatus.Submitted);
 
@@ -346,14 +381,16 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) })
+                .Should()
                 .BeDecoratedWith<CheckCanEditEvidenceNoteAttribute>();
         }
 
         [Fact]
         public void EditDraftEvidenceNotePost_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(EditEvidenceNoteViewModel), typeof(Guid), typeof(Guid) })
+                .Should()
                 .BeDecoratedWith<CheckCanEditEvidenceNoteAttribute>();
         }
 
@@ -372,6 +409,7 @@
             result.RouteValues["controller"].Should().Be(EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName);
             result.RouteValues["organisationId"].Should().Be(OrganisationId);
             result.RouteValues["returnAction"].Should().Be(EvidenceCopyPasteActionConstants.EditEvidenceNoteAction);
+            result.RouteValues["complianceYear"].Should().Be(model.ComplianceYear);
         }
 
         [Fact]
@@ -466,7 +504,6 @@
 
             var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(noteData);
 
             //Act
@@ -485,7 +522,6 @@
             //Arrange
             var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
-
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(noteData);
 
             //Act

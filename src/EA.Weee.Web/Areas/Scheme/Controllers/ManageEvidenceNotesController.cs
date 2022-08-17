@@ -5,7 +5,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Requests.Note;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -45,15 +44,17 @@
         [NoCacheFilter]
         public async Task<ActionResult> Index(Guid pcsId, 
             string tab = null,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
+            int page = 1)
         {
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.TransferNoteKey);
 
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
                 var scheme = await Cache.FetchSchemePublicInfo(pcsId);
+
+                await SetBreadcrumb(pcsId);
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
@@ -66,13 +67,13 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
-                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                 }
             }
         }
@@ -87,7 +88,8 @@
         private async Task<ActionResult> CreateAndPopulateReviewSubmittedEvidenceViewModel(Guid organisationId,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int pageNumber)
         {
             using (var client = this.apiClient())
             {
@@ -97,7 +99,7 @@
                     SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                    new ReviewSubmittedEvidenceNotesViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel));
+                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
 
                 return View("ReviewSubmittedEvidence", model);
             }
@@ -106,7 +108,8 @@
         private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid pcsId,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int pageNumber)
         {
             using (var client = this.apiClient())
             {
@@ -120,7 +123,7 @@
                     }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
-                 new ViewAndTransferEvidenceViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel));
+                 new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
 
                 return View("ViewAndTransferEvidence", model);
             }
@@ -129,7 +132,8 @@
         private async Task<ActionResult> CreateAndPopulateOutgoingTransfersEvidenceViewModel(Guid pcsId,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int pageNumber)
         {
             using (var client = this.apiClient())
             {
@@ -145,20 +149,19 @@
                     }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Transfer }, true));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
-                      new TransferredOutEvidenceNotesViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel));
+                      new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber));
 
                 return View("OutgoingTransfers", model);
             }
         }
         
         [HttpGet]
-        [CheckCanEditTransferNote]
-        [NoCacheFilter]
+        [CheckCanApproveNote]
         public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId);
 
                 // create the new evidence note schemeName request from note's Guid
                 ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
@@ -183,7 +186,7 @@
                 {
                     var status = model.SelectedEnumValue;
 
-                    var request = new SetNoteStatus(model.ViewEvidenceNoteViewModel.Id, status, model.Reason);
+                    var request = new SetNoteStatusRequest(model.ViewEvidenceNoteViewModel.Id, status, model.Reason);
 
                     TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
@@ -193,7 +196,7 @@
                         new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.ComplianceYear });
                 }
 
-                await SetBreadcrumb(model.OrganisationId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(model.OrganisationId);
 
                 model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
 
@@ -207,7 +210,7 @@
         {
             using (var client = this.apiClient())
             {
-                await SetBreadcrumb(pcsId, BreadCrumbConstant.SchemeManageEvidence);
+                await SetBreadcrumb(pcsId);
 
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
@@ -225,9 +228,7 @@
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
-            var complianceYear = manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0 ? manageEvidenceNoteViewModel.SelectedComplianceYear : currentDate.Year;
-
-            return complianceYear;
+            return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
         }
 
         private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)

@@ -16,9 +16,9 @@
 
         public int ComplianceYear { get; protected set; }
 
-        public int PageNumber { get; private set; }
+        public int PageNumber { get; protected set; }
 
-        public int PageSize { get; private set; }
+        public int PageSize { get; protected set; }
 
         public NoteType NoteTypeFilter { get; protected set; }
 
