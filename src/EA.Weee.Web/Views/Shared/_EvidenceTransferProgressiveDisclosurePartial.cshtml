@@ -34,10 +34,7 @@
                     <p class="govuk-body" id="HistoryStatus">@historyData.Status</p>
                 </td>
                 <td class="govuk-table__cell">
-                    @if (historyData.Status.Equals(NoteStatus.Void))
-                    {
-                        @Html.NavigationRouteLink("View", "View evidence note with reference " + historyData.Reference, "admin_view_evidence_transfer_note_details", new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes", evidenceNoteId = historyData.Id, page = 1 }, null)
-                    }
+                    
                 </td>
             </tr>
         }
