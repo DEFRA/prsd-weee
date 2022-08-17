@@ -78,11 +78,10 @@
 <!-- --------------------------- -->
 <!-- Void transfer note button   -->
 <!-- --------------------------- -->
-@if (Model.Status.Equals(NoteStatus.Approved))
+@if (Model.Status.Equals(NoteStatus.Approved) && Model.CanVoid)
 {
     using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
     {
-        @Html.AntiForgeryToken()
         @Html.Hidden("transferEvidenceNoteId", Model.EvidenceNoteId);
         @(this.WeeeGds().Submit("Void evidence note transfer", new { id = "voidTransferNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
     }
@@ -101,13 +100,7 @@
     </div>
 
 
-    @if (Model.EditMode && Model.HasBeenReturned)
-    {
-        <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
-            @Html.NavigationRouteLink("Edit categories", "Edit categories for transfer note " + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
-        </div>
-    }
-    else if (Model.EditMode)
+    @if (Model.EditMode && !Model.HasBeenReturned)
     {
         <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
             @Html.NavigationRouteLink("Edit recipient and categories", "Edit recipient and categories for transfer note " + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
