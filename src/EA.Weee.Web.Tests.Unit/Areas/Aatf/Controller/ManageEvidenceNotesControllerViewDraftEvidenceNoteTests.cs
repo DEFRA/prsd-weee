@@ -126,5 +126,18 @@
             //asset
             result.Model.Should().Be(model);
         }
+
+        [Fact]
+        public async Task ViewDraftEvidenceNoteGet_GivenPageNumber_ShouldPopulateViewBagPage()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
+        }
     }
 }
