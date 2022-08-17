@@ -43,7 +43,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -134,7 +134,7 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true, 1, 25);
 
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
@@ -232,7 +232,7 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false);
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25);
         }
     }
 }

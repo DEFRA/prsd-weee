@@ -17,14 +17,14 @@
     {
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear }), "Manage evidence notes"))
+            new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }), "Manage evidence notes"))
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear })))
+            new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
 
     }
 
