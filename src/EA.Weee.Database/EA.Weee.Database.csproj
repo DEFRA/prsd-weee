@@ -55,6 +55,9 @@
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\0015-InsertEvidenceNoteProtocol.sql" />
+    <Content Include="scripts\Everytime\0014-InsertEvidenceNoteWasteType.sql" />
+    <Content Include="scripts\Everytime\0013-InsertEvidenceNoteStatus.sql" />
     <Content Include="scripts\Everytime\0012-InsertBalancingScheme.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
@@ -350,6 +353,10 @@
     <Content Include="scripts\Update\Release 5\Sprint10\20220810-1407-add-evidence-view.sql" />
     <Content Include="scripts\Update\Release 5\Sprint10\20220810-1407-add-transfer-view.sql" />
     <Content Include="scripts\Update\Release 5\Sprint10\20220815-1625-add-obligation-evidence-summary-query.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint12\20220817-1408-add-protocol.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint12\20220817-1742-reportingindex.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint12\20220817-1408-add-wastetype.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint12\20220817-1408-add-status-lookup.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
