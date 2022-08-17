@@ -45,7 +45,7 @@
         private readonly IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator;
         private readonly IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
         private readonly ISessionService sessionService;
-        private readonly ITemplateExecutor templateExecutor;
+        private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider2 pdfDocumentProvider;
 
         public ManageEvidenceNotesController(IMapper mapper, 
@@ -54,7 +54,7 @@
             Func<IWeeeClient> apiClient, 
             IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
             IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator,
-            ISessionService sessionService, ITemplateExecutor templateExecutor, IPdfDocumentProvider2 pdfDocumentProvider)
+            ISessionService sessionService, IMvcTemplateExecutor templateExecutor, IPdfDocumentProvider2 pdfDocumentProvider)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -239,9 +239,7 @@
 
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
 
-                var content = RenderRazorView(ControllerContext, "test", model);
-
-                //var content = templateExecutor.Execute(HttpContext.Server.MapPath(@"~\\Views\\NewUser\\test.cshtml"), new object());
+                var content = 
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 
