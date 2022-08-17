@@ -28,7 +28,7 @@
         protected readonly ISessionService SessionService;
         protected readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> CreateRequestCreator;
         protected readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> EditRequestCreator;
-        protected readonly ITemplateExecutor TemplateExecutor;
+        protected readonly IMvcTemplateExecutor TemplateExecutor;
         protected readonly IPdfDocumentProvider2 PdfDocumentProvider;
         protected readonly Fixture Fixture;
         protected readonly Guid OrganisationId;
@@ -44,7 +44,7 @@
             SessionService = A.Fake<ISessionService>();
             CreateRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest>>();
             EditRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest>>();
-            TemplateExecutor = A.Fake<ITemplateExecutor>();
+            TemplateExecutor = A.Fake<IMvcTemplateExecutor>();
             PdfDocumentProvider = A.Fake<IPdfDocumentProvider2>();
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
