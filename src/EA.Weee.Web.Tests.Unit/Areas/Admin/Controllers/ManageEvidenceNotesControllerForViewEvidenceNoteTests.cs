@@ -15,6 +15,7 @@
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Filters;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
@@ -30,6 +31,18 @@
                     typeof(int)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void ViewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            // assert
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[]
+                {
+                    typeof(Guid),
+                    typeof(int)
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
