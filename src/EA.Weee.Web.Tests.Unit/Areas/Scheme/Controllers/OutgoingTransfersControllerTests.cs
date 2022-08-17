@@ -144,21 +144,21 @@
         [Fact]
         public void EditCategoriesGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid), typeof(int) })
                 .Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void EditCategoriesGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid), typeof(int) })
                 .Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void EditCategoriesGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
-            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid) })
+            typeof(OutgoingTransfersController).GetMethod("EditCategories", new[] { typeof(Guid), typeof(Guid), typeof(int) })
                 .Should().BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
@@ -2956,6 +2956,19 @@
         private void AddModelError()
         {
             outgoingTransferEvidenceController.ModelState.AddModelError("error", "error");
+        }
+
+        [Fact]
+        public async Task EditCategoriesGet_GivenPageNumber_ViewBagShouldBePopulatedWithPageNumber()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await outgoingTransferEvidenceController.EditCategories(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
         }
     }
 }
