@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Mapping
 {
     using System;
+    using System.Security.Principal;
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
@@ -80,6 +82,43 @@
             result.TransferEvidenceNoteData.Should().Be(note);
             result.OrganisationId.Should().Be(schemeId);
             result.DisplayNotification.Should().BeNull();
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMapTransfer_GivenValuesAndNullUser_PropertiesShouldBeSet()
+        {
+            //arrange
+            var schemeId = fixture.Create<Guid>();
+            var note = fixture.Create<TransferEvidenceNoteData>();
+            var status = note.Status;
+
+            //act
+            var result = new ViewTransferNoteViewModelMapTransfer(schemeId, note, null, null);
+
+            //assert
+            result.TransferEvidenceNoteData.Should().Be(note);
+            result.OrganisationId.Should().Be(schemeId);
+            result.TransferEvidenceNoteData.Status.Should().Be(status);
+            result.User.Should().BeNull();
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMapTransfer_GivenValuesAndUser_PropertiesShouldBeSet()
+        {
+            //arrange
+            var schemeId = fixture.Create<Guid>();
+            var note = fixture.Create<TransferEvidenceNoteData>();
+            var status = note.Status;
+            var user = A.Fake<IPrincipal>();
+
+            //act
+            var result = new ViewTransferNoteViewModelMapTransfer(schemeId, note, null, user);
+
+            //assert
+            result.TransferEvidenceNoteData.Should().Be(note);
+            result.OrganisationId.Should().Be(schemeId);
+            result.TransferEvidenceNoteData.Status.Should().Be(status);
+            result.User.Should().Be(user);
         }
     }
 }

@@ -233,10 +233,10 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).Create()
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft).With(a => a.WasteType, WasteType.Household).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected).With(a => a.WasteType, WasteType.NonHousehold).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted).With(a => a.WasteType, WasteType.NonHousehold).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).With(a => a.WasteType, WasteType.Household).Create()
             };
             var noteData = new EvidenceNoteSearchDataResult(notes, notes.Count);
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
@@ -271,7 +271,7 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).With(a => a.WasteType, WasteType.Household).Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>()
                 .With(s => s.Status, status)
@@ -305,7 +305,10 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+                TestFixture.Build<EvidenceNoteData>()
+                .With(a => a.Status, NoteStatus.Approved)
+                .With(a => a.WasteType, WasteType.Household)
+                .Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>()
                 .With(s => s.Status, status)
@@ -325,6 +328,43 @@
             result.DisplayTransferButton.Should().BeTrue();
         }
 
+        [Theory]
+        [ClassData(typeof(SchemeStatusCoreData))]
+        public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithdrawnAndComplianceWindowIsOpenAndExistingModelIsNull_DisplayTransferButtonShouldBeSetToFalse(SchemeStatus status)
+        {
+            if (status == SchemeStatus.Withdrawn)
+            {
+                return;
+            }
+
+            var currentDate = new DateTime(2022, 1, 1);
+
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                TestFixture.Build<EvidenceNoteData>()
+                .With(a => a.Status, NoteStatus.Approved)
+                .With(a => a.WasteType, WasteType.NonHousehold)
+                .Create(),
+            };
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.Status, status)
+                .Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.Results, notes).Create();
+
+            //act
+            var result = viewAndTransferEvidenceViewModelMap.Map(new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
+                noteData,
+                scheme,
+                currentDate,
+                null,
+                TestFixture.Create<int>()));
+
+            //assert
+            result.DisplayTransferButton.Should().BeFalse();
+        }
+
         [Fact]
         public void Map_GivenApprovedEvidenceNotesAndSchemeIsWithDrawn_DisplayTransferButtonShouldBeSetToFalse()
         {
@@ -334,7 +374,9 @@
                 .With(m => m.SelectedComplianceYear, 2022).Create();
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+                TestFixture.Build<EvidenceNoteData>()
+                .With(a => a.Status, NoteStatus.Approved)
+                .With(a => a.WasteType, WasteType.Household).Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();
@@ -360,7 +402,7 @@
                 .With(m => m.SelectedComplianceYear, complianceYear).Create();
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).With(a => a.WasteType, WasteType.Household).Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();

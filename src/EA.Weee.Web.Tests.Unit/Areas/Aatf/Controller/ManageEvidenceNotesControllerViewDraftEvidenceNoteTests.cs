@@ -9,6 +9,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
+    using Web.Filters;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
@@ -22,6 +23,13 @@
         {
             typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void ViewDraftEvidenceNoteGet_ShouldHaveNoCacheAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
