@@ -107,8 +107,7 @@
             builder.RegisterType<TransferEvidenceNoteRequestCreator>().As<ITransferEvidenceRequestCreator>();
             builder.RegisterType<AatfEvidenceHelper>().As<IAatfEvidenceHelper>();
 
-            builder.RegisterType<MvcRazorTemplateLoader>().As<ITemplateLoader>();
-            builder.RegisterType<RazorTemplateExecutor>().As<ITemplateExecutor>();
+            builder.RegisterType<MvcTemplateExecutor>().As<IMvcTemplateExecutor>();
             builder.RegisterType<PdfDocumentProviderVersion2>().As<IPdfDocumentProvider2>();
 
             return builder.Build();
