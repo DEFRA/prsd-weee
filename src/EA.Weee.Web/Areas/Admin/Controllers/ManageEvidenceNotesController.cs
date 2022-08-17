@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.AatfEvidence;
@@ -10,14 +12,17 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -25,6 +30,7 @@
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using Prsd.Core;
 
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public class ManageEvidenceNotesController : AdminBreadcrumbBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -42,6 +48,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -70,6 +77,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -89,6 +97,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId, int page = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
@@ -100,11 +109,75 @@
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(result.TransferredOrganisationData.Id,
-                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification]));
+                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User));
 
                 ViewBag.Page = page;
 
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [NoCacheFilter]
+        public async Task<ActionResult> VoidTransferNote(Guid transferEvidenceNoteId)
+        {
+            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteTransfersForInternalUserRequest(transferEvidenceNoteId);
+
+                var transferNoteData = await client.SendAsync(User.GetAccessToken(), request);
+
+                if (transferNoteData.Type == NoteType.Transfer && transferNoteData.Status == NoteStatus.Approved)
+                {
+                    var model = VoidNoteViewModel(transferNoteData);
+
+                    return View("VoidTransferNote", model);
+                }
+
+                return RedirectToAction(nameof(Index),
+                    new { tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString() });
+            }
+        }
+
+        private VoidTransferNoteViewModel VoidNoteViewModel(TransferEvidenceNoteData transferNoteData)
+        {
+            var model = new VoidTransferNoteViewModel()
+            {
+                ViewTransferNoteViewModel = mapper.Map<ViewTransferNoteViewModel>(
+                    new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
+                        transferNoteData, null, this.User))
+            };
+            return model;
+        }
+
+        [HttpPost]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> VoidTransferNote(VoidTransferNoteViewModel model)
+        {
+            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            using (var client = apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    await client.SendAsync(User.GetAccessToken(), new VoidTransferNoteRequest(model.ViewTransferNoteViewModel.EvidenceNoteId, model.VoidedReason));
+
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = NoteUpdatedStatusEnum.Void;
+
+                    return RedirectToAction("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
+                }
+
+                var request = new GetEvidenceNoteTransfersForInternalUserRequest(model.ViewTransferNoteViewModel.EvidenceNoteId);
+
+                var transferNoteData = await client.SendAsync(User.GetAccessToken(), request);
+
+                var updatedModel = VoidNoteViewModel(transferNoteData);
+
+                return View("VoidTransferNote", updatedModel);
             }
         }
 

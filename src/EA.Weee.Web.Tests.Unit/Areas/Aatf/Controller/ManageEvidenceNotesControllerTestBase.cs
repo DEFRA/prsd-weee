@@ -7,10 +7,12 @@
     using Core.AatfEvidence;
     using FakeItEasy;
     using Prsd.Core.Mapper;
+    using Prsd.Email;
     using Services;
     using Services.Caching;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.ViewModels;
+    using Web.Infrastructure;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
     using Weee.Requests.Aatf;
@@ -26,6 +28,8 @@
         protected readonly ISessionService SessionService;
         protected readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> CreateRequestCreator;
         protected readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> EditRequestCreator;
+        protected readonly ITemplateExecutor TemplateExecutor;
+        protected readonly IPdfDocumentProvider2 PdfDocumentProvider;
         protected readonly Fixture Fixture;
         protected readonly Guid OrganisationId;
         protected readonly Guid AatfId;
@@ -40,11 +44,13 @@
             SessionService = A.Fake<ISessionService>();
             CreateRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest>>();
             EditRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest>>();
+            TemplateExecutor = A.Fake<ITemplateExecutor>();
+            PdfDocumentProvider = A.Fake<IPdfDocumentProvider2>();
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator, EditRequestCreator, SessionService);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator, EditRequestCreator, SessionService, TemplateExecutor, PdfDocumentProvider);
         }
 
         protected void AddModelError()

@@ -17,8 +17,10 @@
     using System.Web;
     using System.Web.Mvc;
     using Core.Admin.Obligation;
+    using Core.Scheme;
     using Extensions;
     using ViewModels.Obligations;
+    using Weee.Requests.Shared;
 
     public class ObligationsController : ObligationsBaseController
     {
@@ -83,7 +85,7 @@
         private async Task<UploadObligationsViewModel> UploadObligationsViewModel(CompetentAuthority authority, int? selectedComplianceYear,
             bool displayNotification, IWeeeClient client, List<SchemeObligationUploadErrorData> errorData)
         {
-            var complianceYears = await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(authority));
+            var complianceYears = await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(authority, true));
             var complianceYear = selectedComplianceYear ?? complianceYears.ElementAt(0);
 
             var schemeObligationData =
@@ -144,6 +146,38 @@
 
                 var data = new UTF8Encoding().GetBytes(fileData.FileContent);
                 return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewObligationAndEvidenceSummary(int? selectedComplianceYear = null, Guid? schemeId = null)
+        {
+            using (var client = apiClient())
+            {
+                Breadcrumb.InternalActivity = "View PCS obligation and evidence summary";
+
+                ObligationEvidenceSummaryData obligationEvidenceSummaryData = null;
+                var schemeData = new List<SchemeData>();
+
+                var complianceYears =
+                    await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(null, false));
+
+                var complianceYear = selectedComplianceYear ?? (complianceYears.Any() ? complianceYears.ElementAt(0) : (int?)null);
+
+                if (complianceYear.HasValue)
+                {
+                    schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemesWithObligation(complianceYear.Value));
+
+                    if (schemeId.HasValue)
+                    {
+                        var request = new GetObligationSummaryRequest(schemeId.Value, complianceYear.Value);
+                        obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
+                    }
+                }
+
+                var summaryModel = mapper.Map<ViewObligationsAndEvidenceSummaryViewModel>(new ViewObligationsAndEvidenceSummaryViewModelMapTransfer(schemeId, obligationEvidenceSummaryData, complianceYears, schemeData));
+
+                return View(summaryModel);
             }
         }
     }

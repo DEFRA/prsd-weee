@@ -1,0 +1,34 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.VoidTransferNoteViewModel
+@{
+    ViewBag.Title = string.Format("Are you sure you want to void evidence note transfer {0}?", @Model.ViewTransferNoteViewModel.ReferenceDisplay) + " - GOV.UK";
+}
+
+@section full_main_content{
+
+    @(this.WeeeGds().BackLink(
+    Url.Action("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId })))
+    @using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <h1 class="govuk-heading-l">Are you sure you want to void evidence note transfer @Model.ViewTransferNoteViewModel.ReferenceDisplay?</h1>
+
+        <p class="govuk-body">Voiding an evidence note transfer is permanent and cannot be undone. When voiding a transfer the tonnage will be re-distributed to the original notes.</p>
+
+        <p class="govuk-body" id="void-description">
+            Please provide a reason for voiding the note below. <br />
+            The reason entered here is displayed on the evidence note transfer and will be visible to the customers.
+        </p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.VoidedReason)">
+            @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
+            @Html.Gds().ValidationMessageFor(m => m.VoidedReason)
+            @Html.TextAreaFor(m => m.VoidedReason, htmlAttributes: new { @class = "govuk-textarea", @maxlength = "200", @rows = "4", @title = "Please provide a reason for voiding the note", @aria_labelledBy = "void-description"})
+        </div>
+
+        @(this.WeeeGds().Submit("Confirm void", new { id = "confirmVoidButton", @class = "govuk-button", style = "margin-top: 20px" }, true))
+    }
+}
+<!-- screen 6.08a -->

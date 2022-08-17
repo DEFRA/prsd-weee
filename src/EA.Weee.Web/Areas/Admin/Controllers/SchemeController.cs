@@ -423,6 +423,17 @@
                         model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
                         return View(model);
 
+                    case CreateOrUpdateSchemeInformationResult.ResultType.SchemeAlreadyExists:
+                    {
+                        ModelState.AddModelError("SchemeExists", "Scheme has already been created for the organisation");
+
+                        await SetBreadcrumb(null, InternalUserActivity.ManageScheme);
+                        model.CompetentAuthorities = await GetCompetentAuthorities();
+                        model.ComplianceYears = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(model.OrganisationId));
+                        model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                        return View(model);
+                    }
+
                     default:
                         throw new NotSupportedException();
                 }

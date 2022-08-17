@@ -12,6 +12,9 @@
     using Core.Helpers;
     using Core.Shared;
     using ViewModels;
+    using System.Security.Claims;
+    using EA.Weee.Security;
+    using System.Security.Principal;
 
     public class ViewTransferNoteViewModelMap : IMap<ViewTransferNoteViewModelMapTransfer, ViewTransferNoteViewModel>
     {
@@ -58,7 +61,7 @@
             var model = new ViewTransferNoteViewModel
             {
                 RedirectTab = source.RedirectTab,
-                ReturnToView = source.ReturnToView ?? false, 
+                ReturnToView = source.ReturnToView ?? false,
                 EditMode = source.Edit,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
@@ -68,10 +71,12 @@
                 SubmittedDate = source.TransferEvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.TransferEvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 RejectedDate = source.TransferEvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(),
-                ReturnedDate = source.TransferEvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(), 
-                RejectedReason = source.TransferEvidenceNoteData.RejectedReason, 
+                ReturnedDate = source.TransferEvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(),
+                VoidedDate = source.TransferEvidenceNoteData.VoidedDate.ToDisplayGMTDateTimeString(),
+                RejectedReason = source.TransferEvidenceNoteData.RejectedReason,
                 ReturnedReason = source.TransferEvidenceNoteData.ReturnedReason,
-                ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear, 
+                VoidedReason = source.TransferEvidenceNoteData.VoidedReason,
+                ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
                     new TotalCategoryValue(n.First().EvidenceTonnageData.CategoryId)
@@ -89,15 +94,26 @@
                     null),
                 TransferredByAddress = transferredByFormattedAddress,
                 Summary = GenerateNotesModel(source),
-                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned) 
+                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned)
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
-                                    && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime)
+                                    && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime),
+                CanVoid = InternalAdmin(source.User)
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
 
             return model;
+        }
+
+        private bool InternalAdmin(IPrincipal user)
+        {
+            if (user == null)
+            {
+                return false;
+            }
+            var claimsPrincipal = new ClaimsPrincipal(user);
+            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
         }
 
         private void SetSuccessMessage(TransferEvidenceNoteData note, object displayMessageStatus, ViewTransferNoteViewModel model)
@@ -126,6 +142,9 @@
                         break;
                     case NoteUpdatedStatusEnum.ReturnedSubmitted:
                         model.SuccessMessage = $"You have successfully submitted the returned evidence note with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.Void:
+                        model.SuccessMessage = $"You have successfully voided the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                         break;
                 }
             }

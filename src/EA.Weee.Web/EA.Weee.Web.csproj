@@ -398,6 +398,8 @@
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewEvidenceNotesMapTransfer.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
@@ -406,6 +408,9 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ManageEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllTransferNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidNoteViewModelBase.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidTransferNoteViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBase.cs" />
@@ -428,6 +433,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
+    <Compile Include="Filters\NoCacheFilterAttribute.cs" />
     <Compile Include="Infrastructure\IPdfDocumentProvider2.cs" />
     <Compile Include="Infrastructure\IPdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\MvcRazorTemplateLoader.cs" />
@@ -867,8 +873,10 @@
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_AddressOnly.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_ChooseSite.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
+    <Content Include="Areas\Admin\Views\Obligations\ViewObligationAndEvidenceSummary.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ViewAllNotesEmptyPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\test.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidTransferNote.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1594,6 +1602,7 @@
     <Content Include="Areas\Scheme\Views\TransferEvidence\_ViewTransferEvidenceNotePartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceTransferProgressiveDisclosurePartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotesPagerPartial.cshtml" />
+    <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1804,6 +1813,10 @@
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{A987FFF6-5386-419E-AF0A-E6C74E3323CF}</Project>
       <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.RequestHandlers\EA.Weee.RequestHandlers.csproj">
+      <Project>{575a5355-b008-422a-b9b6-535ca2b5cc26}</Project>
+      <Name>EA.Weee.RequestHandlers</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>

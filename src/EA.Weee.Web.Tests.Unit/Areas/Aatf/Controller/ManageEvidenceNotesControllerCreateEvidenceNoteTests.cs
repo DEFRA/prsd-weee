@@ -18,6 +18,7 @@
     using Web.Areas.Aatf.Mappings.ToViewModel;
     using Web.Areas.Aatf.ViewModels;
     using Web.Areas.AatfEvidence.Controllers;
+    using Web.Filters;
     using Web.Infrastructure;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
@@ -46,6 +47,14 @@
             typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(bool) })
                 .Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void CreateEvidenceNoteGet_ShouldHaveNoCacheAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("CreateEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(bool) })
+                .Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
