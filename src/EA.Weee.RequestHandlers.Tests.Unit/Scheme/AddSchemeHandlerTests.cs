@@ -130,6 +130,34 @@
         }
 
         [Fact]
+        public async Task HandleAsync_WhereSchemeAlreadyExistsForOrganisation_ReturnsFailureResult()
+        {
+            // Arrange
+            UKCompetentAuthority environmentAgency = A.Dummy<UKCompetentAuthority>();
+            typeof(UKCompetentAuthority).GetProperty("Id").SetValue(environmentAgency, new Guid("42D3130C-4CDB-4F74-866A-BFF839A347B5"));
+            Organisation organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
+
+            A.CallTo(() => organisationDataAccess.FetchOrganisationAsync(A<Guid>._)).Returns(organisation);
+
+            // Act
+            CreateScheme request = new CreateScheme(
+                A.Dummy<Guid>(),
+                "New scheme name",
+                "WEE/ZZ9999ZZ/SCH",
+                "WEE7453956",
+                ObligationType.B2B,
+                new Guid("559B69CE-865C-465F-89ED-D6A58AA8B0B9"),
+                SchemeStatus.Approved);
+
+            CreateOrUpdateSchemeInformationResult result = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(CreateOrUpdateSchemeInformationResult.ResultType.SchemeAlreadyExists, result.Result);
+        }
+
+        [Fact]
         public async Task HandleAsync_WhereApprovalNumberIsAValueThatAlreadyExists_ReturnsFailureResult()
         {
             // Arrange
