@@ -144,6 +144,15 @@
             return new EvidenceNoteResults(returnNotes.ToList(), notes.Count());
         }
 
+        public async Task<IEnumerable<int>> GetComplianceYearsForNotes(List<int> allowedStatuses)
+        {
+            var notes = context.Notes.Where(n => allowedStatuses.Contains(n.Status.Value));
+
+            var complianceYearsList = await notes.Select(x => x.ComplianceYear).Distinct().OrderByDescending(y => y).ToListAsync();
+
+            return complianceYearsList;
+        }
+
         public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
         {
             var note = await context.Notes.Where(n => evidenceNoteIds.Contains(n.Id))
@@ -152,9 +161,14 @@
             return note.ComplianceYear;
         }
 
-        public async Task<IEnumerable<Note>> GetNotesToTransfer(Guid recipientOrganisationId, List<int> categories, List<Guid> evidenceNotes, int complianceYear)
+        public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
+            List<int> categories, 
+            List<Guid> evidenceNotes, 
+            int complianceYear,
+            int pageNumber,
+            int pageSize)
         {
-            var notes = await context.Notes
+            var notes = context.Notes
                 .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
                 .Where(n => n.RecipientId == recipientOrganisationId &&
                             n.NoteType.Value == NoteType.EvidenceNote.Value &&
@@ -163,9 +177,14 @@
                             n.ComplianceYear == complianceYear &&
                             (evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)) &&
                             n.NoteTonnage.Where(nt => nt.Received != null)
-                                .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e))).ToListAsync();
+                                .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)));
 
-            return notes;
+            var pagedNotes = await notes.OrderByDescending(n => n.Reference)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new EvidenceNoteResults(pagedNotes, notes.Count());
         }
 
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear)

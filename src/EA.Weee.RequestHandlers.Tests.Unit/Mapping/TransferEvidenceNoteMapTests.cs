@@ -9,11 +9,11 @@
     using Core.Helpers;
     using Core.Organisations;
     using Core.Scheme;
-    using Core.Tests.Unit.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
+    using EA.Prsd.Core;
     using FakeItEasy;
     using FluentAssertions;
     using Mappings;
@@ -44,20 +44,10 @@
         }
 
         [Fact]
-        public void Map_GivenNullTransferScheme_ArgumentNullExceptionExpected()
-        {
-            //act
-            var exception = Record.Exception(() => map.Map(new TransferNoteMapTransfer(null, A.Dummy<Note>())));
-
-            //assert
-            exception.Should().BeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void Map_GivenNullTransferNote_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), null)));
+            var exception = Record.Exception(() => map.Map(new TransferNoteMapTransfer(null)));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -83,7 +73,7 @@
             A.CallTo(() => note.ComplianceYear).Returns(complianceYear);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.Id.Should().Be(id);
@@ -105,7 +95,7 @@
             A.CallTo(() => note.Organisation).Returns(organisation);
 
             //act
-            map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).MustHaveHappenedOnceExactly();
@@ -121,7 +111,7 @@
             A.CallTo(() => note.Recipient).Returns(organisation);
 
             //act
-            map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(organisation)).MustHaveHappenedOnceExactly();
@@ -139,27 +129,51 @@
             A.CallTo(() => note.Recipient).Returns(organisation);
 
             //act
-            map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public void Map_GivenTransferScheme_TransferSchemeShouldBeMapped()
+        public void Map_GivenTransferNoteOrganisationIsBalancingOrganisation_TransferSchemeShouldNotBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var scheme = A.Fake<Scheme>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
+            A.CallTo(() => note.Organisation).Returns(organisation);
+
+            //act
+            map.Map(new TransferNoteMapTransfer(note));
+
+            //assert
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(note.Organisation.Scheme)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Map_GivenTransferNoteOrganisationIsNotBalancingOrganisation_TransferSchemeShouldBeMapped()
         {
             //arrange
             var scheme = A.Fake<Scheme>();
+            var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(null);
+            A.CallTo(() => note.Recipient).Returns(organisation);
+            A.CallTo(() => organisation.Schemes).Returns(new List<Scheme>() { scheme });
 
             //act
-            map.Map(new TransferNoteMapTransfer(scheme, A.Dummy<Note>()));
+            map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public void Map_GivenMappedData_MappedDataShouldBeReturned()
+        public void Map_GivenMappedDataWhereOrganisationIsNotBalancingScheme_MappedDataShouldBeReturned()
         {
             //arrange
             var schemeData = A.Fake<SchemeData>();
@@ -169,15 +183,43 @@
             var recipientOrganisationData = A.Fake<OrganisationData>();
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(A<Organisation>._)).ReturnsNextFromSequence(transferredOrganisationData, recipientOrganisationData);
             var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(null);
+            A.CallTo(() => note.Organisation).Returns(organisation);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RecipientOrganisationData.Should().Be(recipientOrganisationData);
             result.TransferredOrganisationData.Should().Be(transferredOrganisationData);
             result.RecipientSchemeData.Should().Be(schemeData);
             result.TransferredSchemeData.Should().Be(transferredSchemeData);
+        }
+
+        [Fact]
+        public void Map_GivenMappedDataIsBalancingScheme_MappedDataShouldBeReturned()
+        {
+            //arrange
+            var schemeData = A.Fake<SchemeData>();
+            var transferredSchemeData = A.Fake<SchemeData>();
+            A.CallTo(() => mapper.Map<Scheme, SchemeData>(A<Scheme>._)).ReturnsNextFromSequence(schemeData, transferredSchemeData);
+            var transferredOrganisationData = A.Fake<OrganisationData>();
+            var recipientOrganisationData = A.Fake<OrganisationData>();
+            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(A<Organisation>._)).ReturnsNextFromSequence(transferredOrganisationData, recipientOrganisationData);
+            var note = A.Fake<Note>();
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
+            A.CallTo(() => note.Organisation).Returns(organisation);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(note));
+
+            //assert
+            result.RecipientOrganisationData.Should().Be(recipientOrganisationData);
+            result.TransferredOrganisationData.Should().Be(transferredOrganisationData);
+            result.RecipientSchemeData.Should().Be(schemeData);
+            result.TransferredSchemeData.Should().BeNull();
         }
 
         [Fact]
@@ -223,7 +265,7 @@
             A.CallTo(() => note.NoteTransferTonnage).Returns(noteTransferTonnages);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.TransferEvidenceNoteTonnageData.ElementAt(0).EvidenceTonnageData.Id.Should().Be(noteTransferTonnage1Id);
@@ -275,7 +317,7 @@
             A.CallTo(() => note.NoteTransferTonnage).Returns(noteTransferTonnages);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             A.CallTo(() => mapper.Map<Aatf, AatfData>(aatf1)).MustHaveHappenedOnceExactly();
@@ -303,7 +345,7 @@
             A.CallTo(() => mapper.Map<Aatf, AatfData>(A<Aatf>._)).ReturnsNextFromSequence(aatf1, aatf2);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.TransferEvidenceNoteTonnageData.ElementAt(0).OriginalAatf.Should().Be(aatf1);
@@ -347,7 +389,7 @@
             A.CallTo(() => note.NoteTransferTonnage).Returns(noteTransferTonnages);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.TransferEvidenceNoteTonnageData.ElementAt(0).OriginalReference.Should().Be(1);
@@ -380,7 +422,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.SubmittedDate.Should().BeNull();
@@ -408,7 +450,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ReturnedDate.Should().BeNull();
@@ -436,7 +478,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RejectedDate.Should().BeNull();
@@ -464,7 +506,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ReturnedReason.Should().BeNull();
@@ -492,7 +534,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RejectedReason.Should().BeNull();
@@ -515,7 +557,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.SubmittedDate.Should().Be(date);
@@ -538,7 +580,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ReturnedDate.Should().Be(date);
@@ -561,7 +603,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RejectedDate.Should().Be(date);
@@ -585,7 +627,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ReturnedReason.Should().Be(reason);
@@ -609,7 +651,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RejectedReason.Should().Be(reason);
@@ -639,7 +681,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ReturnedReason.Should().BeNull();
@@ -669,7 +711,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RejectedReason.Should().BeNull();
@@ -698,7 +740,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.SubmittedDate.Should().Be(latestDate);
@@ -727,7 +769,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ReturnedDate.Should().Be(latestDate);
@@ -756,7 +798,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RejectedDate.Should().Be(latestDate);
@@ -790,7 +832,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ReturnedReason.Should().Be(reasonLate);
@@ -824,7 +866,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.RejectedReason.Should().Be(reasonLate);
@@ -852,7 +894,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ApprovedDate.Should().BeNull();
@@ -875,7 +917,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ApprovedDate.Should().BeSameDateAs(date);
@@ -904,7 +946,7 @@
             A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.ApprovedDate.Should().Be(latestDate);
@@ -920,7 +962,7 @@
             A.CallTo(() => note.NoteType).Returns(noteType);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.Type.ToInt().Should().Be(noteType.Value);
@@ -936,7 +978,7 @@
             A.CallTo(() => note.Status).Returns(noteStatus);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.Status.ToInt().Should().Be(noteStatus.Value);
@@ -952,10 +994,61 @@
             A.CallTo(() => note.WasteType).Returns(wasteType);
 
             //act
-            var result = map.Map(new TransferNoteMapTransfer(A.Dummy<Scheme>(), note));
+            var result = map.Map(new TransferNoteMapTransfer(note));
 
             //assert
             result.WasteType.ToInt().Should().Be(wasteType.ToInt());
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithVoidedHistory_VoidedDateShouldBeSet()
+        {
+            //arrange
+            var date = SystemTime.UtcNow;
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Void);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(note));
+
+            //assert
+            result.VoidedDate.Should().BeSameDateAs(date);
+        }
+
+        [Fact]
+        public void Map_GivenNoteWithVoidedHistory_VoidedReasonShouldBeSet()
+        {
+            //arrange
+            var date = SystemTime.UtcNow;
+            var reason = "voided reason text";
+            var historyList = new List<NoteStatusHistory>();
+            var history = A.Fake<NoteStatusHistory>();
+            var id = Guid.NewGuid();
+
+            A.CallTo(() => history.Reason).Returns(reason);
+            A.CallTo(() => history.ChangedDate).Returns(date);
+            A.CallTo(() => history.ToStatus).Returns(Domain.Evidence.NoteStatus.Void);
+
+            historyList.Add(history);
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.NoteStatusHistory).Returns(historyList);
+            A.CallTo(() => note.Status).Returns(Domain.Evidence.NoteStatus.Void);
+            A.CallTo(() => note.Id).Returns(id);
+
+            //act
+            var result = map.Map(new TransferNoteMapTransfer(note));
+
+            //assert
+            result.VoidedReason.Should().BeSameAs(reason);
         }
     }
 }

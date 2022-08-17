@@ -7,6 +7,7 @@
         Edit = 3,
         CopyAndPaste = 4,
         Filter = 5,
-        Back = 6
+        Back = 6,
+        Continue = 7
     }
 }

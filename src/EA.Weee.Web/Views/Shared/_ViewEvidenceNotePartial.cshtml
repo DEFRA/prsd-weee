@@ -1,4 +1,6 @@
 ﻿@using EA.Weee.Core.Helpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 
 
@@ -15,15 +17,19 @@ else
     .category {
         display: table;
     }
-    .category span {
-        display: table-cell;
-    }
+
+        .category span {
+            display: table-cell;
+        }
+
     .category-id {
         width: 20px;
     }
+
     .category-column {
         width: 40%;
     }
+
     .received-column {
         width: 30%;
     }
@@ -83,12 +89,23 @@ else
         @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay, "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-!-padding-bottom-6">
         @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay, "govuk-grid-column-one-quarter")
     </div>
+
+    @if (Model.DisplayEvidenceNoteHistoryData)
+    {
+        <div class="govuk-width-container govuk-!-padding-left-0">
+            @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
+                        @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
+                        "Hidden content",
+                        "Progressive disclosure",
+                        "Transfer history"))
+        </div>
+    }
 </div>
 
-<div class="govuk-width-container govuk-!-padding-top-7 govuk-!-padding-left-0">
+<div class="govuk-width-container govuk-!-padding-left-0">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
         <span id="site" class="govuk-label--s">Site</span><br />
         <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>

@@ -14,7 +14,7 @@
 
         public TransferEvidenceNoteCategoriesViewModel ExistingTransferEvidenceNoteCategoriesViewModel { get; }
 
-        public IList<EvidenceNoteData> Notes { get; }
+        public EvidenceNoteSearchDataResult Notes { get; }
 
         public TransferEvidenceNoteRequest Request { get; }
 
@@ -32,8 +32,12 @@
 
         public int ComplianceYear { get; set; }
 
+        public bool? ReturnToEditDraftTransfer { get; set; }
+
+        public List<Guid> ExcludeEvidenceNoteIds { get; set; }
+
         public TransferEvidenceNotesViewModelMapTransfer(
-            IList<EvidenceNoteData> notes,
+            EvidenceNoteSearchDataResult notes,
             TransferEvidenceNoteRequest request,
             TransferEvidenceNoteData transferNoteData,
             Guid organisationId)
@@ -50,7 +54,7 @@
 
         public TransferEvidenceNotesViewModelMapTransfer(
             int complianceYear,
-            IList<EvidenceNoteData> notes,
+            EvidenceNoteSearchDataResult notes,
             TransferEvidenceNoteRequest request,
             Guid organisationId)
         {

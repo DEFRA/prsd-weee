@@ -9,7 +9,9 @@
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Organisations;
-    using Core.Tests.Unit.Helpers;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -24,14 +26,16 @@
     {
         private readonly ITonnageUtilities tonnageUtilities;
         private readonly IAddressUtilities addressUtilities;
+        private readonly IMapper mapper;
         private readonly ViewEvidenceNoteViewModelMap map;
 
         public ViewEvidenceNoteViewModelMapTests()
         {
             tonnageUtilities = A.Fake<ITonnageUtilities>();
             addressUtilities = A.Fake<IAddressUtilities>();
+            mapper = A.Fake<IMapper>();
 
-            map = new ViewEvidenceNoteViewModelMap(tonnageUtilities, addressUtilities);
+            map = new ViewEvidenceNoteViewModelMap(tonnageUtilities, addressUtilities, mapper);
         }
 
         [Fact]
@@ -388,6 +392,21 @@
         }
 
         [Fact]
+        public void Map_GivenNoteStatusReturnedSubmitted_SuccessMessageShouldBeShown()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSubmitted);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SuccessMessage.Should()
+                .Be($"You have successfully submitted the returned evidence note with reference ID E{source.EvidenceNoteData.Reference}");
+            result.DisplayMessage.Should().BeTrue();
+        }
+
+        [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
             var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
@@ -624,6 +643,37 @@
 
             //assert
             result.DisplayEditButton.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithHistoryNoteData_EvidenceNoteHistoryViewModelShouldBePopulated()
+        {
+            //arrange
+            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var data = new EvidenceNoteHistoryData(TestFixture.Create<Guid>(), TestFixture.Create<NoteStatus>(), TestFixture.Create<int>(), TestFixture.Create<NoteType>(), TestFixture.Create<DateTime?>(), TestFixture.Create<string>());
+            var history = new List<EvidenceNoteHistoryData>()
+            {
+                data
+            };
+            source.EvidenceNoteData.EvidenceNoteHistoryData = history;
+
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).Returns(new List<EvidenceNoteHistoryViewModel>()
+            {
+                new EvidenceNoteHistoryViewModel(data.Id, data.Reference, data.TransferredTo, data.Type, data.Status, data.SubmittedDate),
+            });
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.EvidenceNoteHistoryData.First().Id.Should().Be(history.First().Id);
+            result.EvidenceNoteHistoryData.First().Status.Should().Be(history.First().Status);
+            result.EvidenceNoteHistoryData.First().Reference.Should().Be(history.First().Reference);
+            result.EvidenceNoteHistoryData.First().Type.Should().Be(history.First().Type);
+            result.EvidenceNoteHistoryData.First().SubmittedDate.Should().Be(history.First().SubmittedDate);
+            result.EvidenceNoteHistoryData.First().TransferredTo.Should().Be(history.First().TransferredTo);
+
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).MustHaveHappenedOnceExactly();
         }
     }
 }

@@ -9,7 +9,7 @@
 
 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_HeaderEvidenceNotePartial.cshtml", Model.ManageEvidenceNoteViewModel)
 
-@Html.Partial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveOverviewDisplayOption.ToDisplayString() }, { "width", "107px" } })
+@Html.Partial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveOverviewDisplayOption.ToDisplayString() }})
 
 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_CreateEvidenceNotePartial.cshtml", Model.ManageEvidenceNoteViewModel)
 

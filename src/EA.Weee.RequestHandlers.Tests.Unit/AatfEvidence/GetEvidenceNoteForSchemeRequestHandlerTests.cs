@@ -21,33 +21,26 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNoteForSchemeRequestHandlerTests
+    public class GetEvidenceNoteForSchemeRequestHandlerTests : SimpleUnitTestBase
     {
         private GetEvidenceNoteForSchemeRequestHandler handler;
-        private readonly Fixture fixture;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IMapper mapper;
         private readonly GetEvidenceNoteForSchemeRequest request;
         private readonly Note note;
         private readonly Guid evidenceNoteId;
-        private readonly Guid recipientId;
 
         public GetEvidenceNoteForSchemeRequestHandlerTests()
         {
-            fixture = new Fixture();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             mapper = A.Fake<IMapper>();
             note = A.Fake<Note>();
-            fixture.Create<Guid>();
-            evidenceNoteId = fixture.Create<Guid>();
-            recipientId = fixture.Create<Guid>();
-
+            TestFixture.Create<Guid>();
+            evidenceNoteId = TestFixture.Create<Guid>();
+            
             var recipientOrganisation = A.Fake<Organisation>();
-            var recipientScheme = A.Fake<Scheme>();
-            A.CallTo(() => recipientScheme.Id).Returns(recipientId);
-            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);
 
             request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
@@ -73,10 +66,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNoSchemeAccess_ShouldThrowSecurityException()
+        public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenySchemeAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
            
             handler = new GetEvidenceNoteForSchemeRequestHandler(authorization, evidenceDataAccess, mapper);
 
@@ -85,6 +78,33 @@
 
             //assert
             result.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckBalancingSchemeAccess()
+        {
+            //arrange
+            var recipient = A.Fake<Organisation>();
+            var organisationId = TestFixture.Create<Guid>();
+            A.CallTo(() => recipient.Id).Returns(organisationId);
+            A.CallTo(() => note.Recipient).Returns(recipient);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequest_ShouldCheckExternalAccess()
+        {
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -98,31 +118,20 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckSchemeAccess()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => weeeAuthorization.EnsureSchemeAccess(recipientId))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenRequest_NoteShouldBeMapped()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty() && e.IncludeTonnage == true))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.IsNullOrEmpty() && e.IncludeTonnage == true && e.IncludeHistory == true))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenRequestAndNote_MappedNoteShouldBeReturned()
         {
             //arrange
-            var evidenceNote = fixture.Create<EvidenceNoteData>();
+            var evidenceNote = TestFixture.Create<EvidenceNoteData>();
 
             A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).Returns(evidenceNote);
 

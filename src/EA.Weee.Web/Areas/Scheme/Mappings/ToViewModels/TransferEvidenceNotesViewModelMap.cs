@@ -21,7 +21,7 @@
             
             var model = MapBaseProperties(source);
 
-            foreach (var evidenceNoteData in source.Notes.OrderByDescending(e => e.Reference))
+            foreach (var evidenceNoteData in source.Notes.Results.OrderByDescending(e => e.Reference))
             {
                 var selected = false;
                 if (source.TransferEvidenceNoteData != null)
@@ -31,7 +31,7 @@
                 }
                 model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, selected));
             }
-
+           
             if (source.SessionEvidenceNotesId != null)
             {
                 model.SelectedEvidenceNotePairs.Where(c => source.SessionEvidenceNotesId.Contains(c.Key)).ToList()
@@ -43,6 +43,12 @@
             if (source.TransferEvidenceNoteData != null)
             {
                 model.SelectedEvidenceNotePairs = ReorderAndGetSelectedEvidenceIds(model);
+            }
+
+            if (source.ExcludeEvidenceNoteIds != null)
+            {
+                model.SelectedEvidenceNotePairs.Where(c => source.ExcludeEvidenceNoteIds.Contains(c.Key)).ToList()
+                    .ForEach(c => c.Value = false);
             }
 
             return model;

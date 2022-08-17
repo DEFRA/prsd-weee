@@ -1,0 +1,45 @@
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.AatfEvidence
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
+@model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-visually-hidden">Transfer history summary</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Reference ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Date submitted</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Transferred to</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">Status</th>
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left">@Html.Gds().VisuallyHidden("actions")</th>
+        </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+        @foreach (var historyData in Model.EvidenceNoteHistoryData)
+        {
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-text-align-left">
+                    <p class="govuk-body">@historyData.ReferenceDisplay</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                    <p class="govuk-body" id="SubmittedDateDisplay">@historyData.SubmittedDateDisplay</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                    <p class="govuk-body" id="TransferredTo">@historyData.TransferredTo</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                    <p class="govuk-body" id="HistoryStatus">@historyData.Status</p>
+                </td>
+                <td class="govuk-table__cell">
+                    @if (historyData.Status.Equals(NoteStatus.Void))
+                    {
+                        @Html.NavigationRouteLink("View", "View evidence note with reference " + historyData.Reference, "admin_view_evidence_transfer_note_details", new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes", evidenceNoteId = historyData.Id, page = 1 }, null)
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

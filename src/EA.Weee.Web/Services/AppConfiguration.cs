@@ -89,5 +89,8 @@
 
         [DefaultValue("01/01/2023")]
         public DateTime EvidenceNotesSiteSelectionDateFrom { get; set; }
+
+        [DefaultValue("25")]
+        public int DefaultPagingPageSize { get; set; }
     }
 }

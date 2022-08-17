@@ -40,7 +40,7 @@
 
             if (source.Notes != null)
             {
-                foreach (var evidenceNoteData in source.Notes)
+                foreach (var evidenceNoteData in source.Notes.Results)
                 {
                     model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
                         new ViewEvidenceNoteMapTransfer(evidenceNoteData, null)

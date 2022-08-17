@@ -178,8 +178,8 @@
         public async Task HandleAsync_CsvFileData_HasCorrectlyFormattedFileName()
         {
             //arrange
-            SystemTime.Freeze(new DateTime(2019, 2, 1, 11, 1, 2));
-            var date = DateTime.Now;
+            var date = new DateTime(2019, 2, 1, 11, 1, 2);
+            SystemTime.Freeze(date);
 
             var competentAuthority = new UKCompetentAuthority(A.Dummy<Guid>(), "Test Auth", "AA", A.Dummy<Country>(), A.Dummy<string>(), null);
             A.CallTo(() => dataAccess.FetchCompetentAuthorityApprovedSchemes(request.Authority)).Returns(competentAuthority);
@@ -189,6 +189,7 @@
 
             //assert
             result.FileName.Should().Be($"{competentAuthority.Abbreviation}_pcsobligationuploadtemplate{date.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv");
+            SystemTime.Unfreeze();
         }
 
         [Fact]

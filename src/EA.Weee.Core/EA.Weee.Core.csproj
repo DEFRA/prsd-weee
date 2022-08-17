@@ -105,9 +105,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfEvidence\AatfEvidenceSummaryData.cs" />
+    <Compile Include="AatfEvidence\EvidenceNoteHistoryData.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteDataBase.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteDataListResult.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteSearchDataResult.cs" />
+    <Compile Include="Admin\Obligation\ObligationEvidenceTonnageData.cs" />
+    <Compile Include="Admin\Obligation\ObligationEvidenceSummaryData.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceCategoryValues.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceNoteData.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceCategoryValue.cs" />
@@ -121,7 +124,6 @@
     <Compile Include="AatfEvidence\EvidenceNoteData.cs" />
     <Compile Include="AatfEvidence\Protocol.cs" />
     <Compile Include="AatfEvidence\EvidenceTonnageData.cs" />
-    <Compile Include="AatfEvidence\SetNoteStatus.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceNoteTonnageData.cs" />
     <Compile Include="AatfEvidence\WasteType.cs" />
     <Compile Include="AatfReturn\PreviousQuarterReturnResult.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="Admin\AatfReports\ReportFacilityType.cs" />
     <Compile Include="Admin\CanApprovalDateBeChangedFlags.cs" />
     <Compile Include="Admin\CanOrganisationBeDeletedFlags.cs" />
+    <Compile Include="Admin\Obligation\ObligationEvidenceValue.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationAmountData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationUploadData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationData.cs" />

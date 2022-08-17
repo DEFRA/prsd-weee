@@ -7,7 +7,6 @@
     using Base;
     using Core.Helpers;
     using Domain.Evidence;
-    using Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Weee.Tests.Core;
@@ -50,6 +49,26 @@
         {
             ObjectInstantiator<Note>.SetProperty(o => o.Organisation, null, instance);
             ObjectInstantiator<Note>.SetProperty(o => o.OrganisationId, organisationId, instance);
+            return this;
+        }
+
+        public TransferEvidenceNoteDbSetup WithRecipient(Guid organisationId)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.Recipient, null, instance);
+            ObjectInstantiator<Note>.SetProperty(o => o.RecipientId, organisationId, instance);
+            return this;
+        }
+
+        public TransferEvidenceNoteDbSetup WithComplianceYear(int complianceYear)
+        {
+            instance.ComplianceYear = complianceYear;
+            return this;
+        }
+
+        public TransferEvidenceNoteDbSetup WithWasteType(WasteType wasteType)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.WasteType, wasteType, instance);
+
             return this;
         }
     }
