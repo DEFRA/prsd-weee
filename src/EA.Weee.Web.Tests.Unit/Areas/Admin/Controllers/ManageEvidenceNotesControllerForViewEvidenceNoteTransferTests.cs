@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.Linq;
     using System.Net;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -9,20 +8,21 @@
     using System.Web.Mvc;
     using System.Web.Routing;
     using AutoFixture;
+    using Core.Helpers;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
+    using Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
+    using Web.Areas.Admin.ViewModels.Shared;
     using Xunit;
 
     public class ManageEvidenceNotesControllerForViewEvidenceNoteTransferTests : ManageEvidenceNotesControllerTestsBase
@@ -58,6 +58,18 @@
         }
 
         [Fact]
+        public void ViewEvidenceNoteTransferGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            // assert
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNoteTransfer", new[]
+                {
+                    typeof(Guid),
+                    typeof(int)
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
         public void VoidTransferNoteGet_ShouldHaveHttpGetAttribute()
         {
             // assert
@@ -66,6 +78,17 @@
                     typeof(Guid),
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void VoidTransferNoteGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            // assert
+            typeof(ManageEvidenceNotesController).GetMethod("VoidTransferNote", new[]
+                {
+                    typeof(Guid),
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -85,7 +108,7 @@
             // assert
             typeof(ManageEvidenceNotesController).GetMethod("VoidTransferNote", new[]
                 {
-                    typeof(ViewTransferNoteViewModel),
+                    typeof(VoidTransferNoteViewModel),
                 }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
@@ -96,7 +119,7 @@
             // assert
             typeof(ManageEvidenceNotesController).GetMethod("VoidTransferNote", new[]
                 {
-                    typeof(ViewTransferNoteViewModel),
+                    typeof(VoidTransferNoteViewModel),
                 }).Should()
                 .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
@@ -191,7 +214,7 @@
         {
             //act
             SetUpControllerContext(true);
-            var model = TestFixture.Create<ViewTransferNoteViewModel>();
+            var model = TestFixture.Create<VoidTransferNoteViewModel>();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
 
             //act
@@ -200,6 +223,24 @@
 
             //assert
             Breadcrumb.InternalActivity.Should().Be(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+        }
+
+        [Fact]
+        public async Task VoidTransferNotePost_GivenInvalidModel_ViewShouldBeReturned()
+        {
+            //act
+            SetUpControllerContext(true);
+            var model = TestFixture.Create<VoidTransferNoteViewModel>();
+            TransferEvidenceNoteData.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+            
+            ManageEvidenceController.ModelState.AddModelError("error", "error");
+
+            //act
+            var result = await ManageEvidenceController.VoidTransferNote(model);
+            ViewResult vr = result as ViewResult;
+
+            //assert
             vr.ViewName.Should().Be("VoidTransferNote");
         }
 
@@ -219,20 +260,21 @@
         }
 
         [Fact]
-        public async Task ViewEvidenceNoteTransferPost_GivenEvidenceId_TransferEvidenceNoteShouldBeRetrieved()
+        public async Task ViewEvidenceNoteTransferPost_GivenInvalidModel_TransferEvidenceNoteShouldBeRetrieved()
         {
             //act
             SetUpControllerContext(true);
-            var model = TestFixture.Create<ViewTransferNoteViewModel>();
-            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = NoteUpdatedStatusEnum.Void;
+            var model = TestFixture.Create<VoidTransferNoteViewModel>();
+            
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+            ManageEvidenceController.ModelState.AddModelError("error", "error");
 
             //act
             await ManageEvidenceController.VoidTransferNote(model);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>.That.Matches(
-                g => g.EvidenceNoteId.Equals(model.EvidenceNoteId)))).MustHaveHappenedOnceExactly();
+                g => g.EvidenceNoteId.Equals(model.ViewTransferNoteViewModel.EvidenceNoteId)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -255,7 +297,6 @@
         {
             //arrange
             SetUpControllerContext(true);
-            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
 
             //act
@@ -268,7 +309,7 @@
         }
 
         [Fact]
-        public async Task VoidTransferNoteGet_GivenRequestDataIsNotApprovedStatus_RaisesHttpForbiddenError()
+        public async Task VoidTransferNoteGet_GivenRequestDataIsNotApprovedStatus_RedirectsToManageEvidenceNotes()
         {
             //arrange
             SetUpControllerContext(true);
@@ -280,16 +321,15 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
 
             //act
-            var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId);
+            var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId) as RedirectToRouteResult;
 
-            //asset
-            result.Should().BeOfType<HttpStatusCodeResult>();
-            ((HttpStatusCodeResult)result).StatusCode.Should().Be((int)HttpStatusCode.Forbidden);
-            ((HttpStatusCodeResult)result).StatusDescription.Should().Be("This note is not a transfer note or has not been approved.");
+            //assert
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString());
         }
 
         [Fact]
-        public async Task VoidTransferNoteGet_GivenRequestDataIsNotTransferType_RaisesHttpForbiddenError()
+        public async Task VoidTransferNoteGet_GivenRequestDataIsNotTransferType_RedirectsToManageEvidenceNotes()
         {
             //arrange
             SetUpControllerContext(true);
@@ -301,12 +341,11 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
 
             //act
-            var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId);
+            var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId) as RedirectToRouteResult;
 
-            //asset
-            result.Should().BeOfType<HttpStatusCodeResult>();
-            ((HttpStatusCodeResult)result).StatusCode.Should().Be((int)HttpStatusCode.Forbidden);
-            ((HttpStatusCodeResult)result).StatusDescription.Should().Be("This note is not a transfer note or has not been approved.");
+            //assert
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString());
         }
 
         [Fact]
@@ -316,8 +355,7 @@
             SetUpControllerContext(true);
             var transferNote = A.Fake<TransferEvidenceNoteData>();
             transferNote.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
-            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
-            A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
+                        A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
             A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
 
@@ -369,27 +407,6 @@
         }
 
         [Fact]
-        public async Task VoidTransferNoteGet_GivenNoteDataAndDisplayNotification_ModelMapperShouldBeCalled()
-        {
-            // arrange 
-            SetUpControllerContext(true);
-            var transferNote = A.Fake<TransferEvidenceNoteData>();
-            transferNote.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
-            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
-            A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
-            A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
-
-            // act
-            await ManageEvidenceController.VoidTransferNote(EvidenceNoteId);
-
-            // assert
-            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
-                    t => t.TransferEvidenceNoteData.Equals(transferNote))))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task ViewEvidenceNoteTransferGet_GivenViewModel_ModelShouldBeReturned()
         {
             //arrange
@@ -406,19 +423,42 @@
         }
 
         [Fact]
-        public async Task VoidTransferNotePost_GivenViewModel_ModelShouldBeReturned()
+        public async Task VoidTransferNotePost_GivenInvalidViewModel_ModelShouldBeBuilt()
         {
             //act
             SetUpControllerContext(true);
-            var model = TestFixture.Create<ViewTransferNoteViewModel>();
+            var model = TestFixture.Create<VoidTransferNoteViewModel>();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
 
+            ManageEvidenceController.ModelState.AddModelError("error", "error");
+
             //act
-            var result = await ManageEvidenceController.VoidTransferNote(model);
+            await ManageEvidenceController.VoidTransferNote(model);
+
+            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
+                v => v.TransferEvidenceNoteData.Equals(TransferEvidenceNoteData) &&
+                     v.DisplayNotification == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task VoidTransferNotePost_GivenInvalidViewModel_ModelShouldBeReturned()
+        {
+            //act
+            SetUpControllerContext(true);
+            var viewTransferNoteModel = TestFixture.Create<ViewTransferNoteViewModel>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._))
+                .Returns(viewTransferNoteModel);
+
+            ManageEvidenceController.ModelState.AddModelError("error", "error");
+
+            //act
+            var result = await ManageEvidenceController.VoidTransferNote(TestFixture.Create<VoidTransferNoteViewModel>());
             ViewResult vr = result as ViewResult;
 
             //assert
-            vr.Model.Should().BeOfType<ViewTransferNoteViewModel>();
+            var convertedModel = (VoidTransferNoteViewModel)vr.Model;
+            convertedModel.ViewTransferNoteViewModel.Should().Be(viewTransferNoteModel);
         }
 
         [Fact]
@@ -426,8 +466,8 @@
         {
             //act
             SetUpControllerContext(true);
-            var model = TestFixture.Create<ViewTransferNoteViewModel>();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).Returns(model.EvidenceNoteId);
+            var model = TestFixture.Create<VoidTransferNoteViewModel>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).Returns(model.ViewTransferNoteViewModel.EvidenceNoteId);
 
             //act
             var result = await ManageEvidenceController.VoidTransferNote(model);
@@ -441,16 +481,18 @@
         {
             //act
             SetUpControllerContext(true);
-            var model = TestFixture.Create<ViewTransferNoteViewModel>();
+            var model = TestFixture.Create<VoidTransferNoteViewModel>();
+            var viewEvidenceNoteModel = A.Fake<ViewTransferNoteViewModel>();
+
             var transferNote = A.Fake<TransferEvidenceNoteData>();
             transferNote.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
             ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
-            A.CallTo(() => transferNote.Id).Returns(model.EvidenceNoteId);
+            A.CallTo(() => transferNote.Id).Returns(model.ViewTransferNoteViewModel.EvidenceNoteId);
             A.CallTo(() => transferNote.Status).Returns(NoteStatus.Void);
             A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).Returns(model.EvidenceNoteId);
-            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).Returns(model.ViewTransferNoteViewModel.EvidenceNoteId);
+            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewEvidenceNoteModel);
 
             //act
             var result = await ManageEvidenceController.VoidTransferNote(model) as RedirectToRouteResult;
@@ -461,7 +503,7 @@
 
             result.RouteValues["action"].Should().Be("ViewEvidenceNoteTransfer");
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
-            result.RouteValues["evidenceNoteId"].Should().Be(model.EvidenceNoteId);
+            result.RouteValues["evidenceNoteId"].Should().Be(model.ViewTransferNoteViewModel.EvidenceNoteId);
         }
 
         [Fact]
@@ -472,7 +514,7 @@
             var model = TestFixture.Create<ViewTransferNoteViewModel>();
             var transferNote = A.Fake<TransferEvidenceNoteData>();
             transferNote.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
-            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
+
             A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
             A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
@@ -482,68 +524,8 @@
             var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId) as ViewResult;
 
             //asset
-            result.Model.Should().Be(model);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task VoidTransferNoteGet_CheckUserCanVoid_ViewModelShouldBeSetUpCorrectly(bool userHasInternalAdminClaims)
-        {
-            //arrange
-            SetUpControllerContext(userHasInternalAdminClaims);
-            var model = TestFixture.Build<ViewTransferNoteViewModel>().With(x => x.CanVoid, userHasInternalAdminClaims).Create();
-            var transferNote = A.Fake<TransferEvidenceNoteData>();
-            transferNote.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
-            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
-            A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
-            A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
-            A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
-
-            //act
-            var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId) as ViewResult;
-            var resultViewModel = result.Model as ViewTransferNoteViewModel;
-
-            //asset
-            Assert.Equal(userHasInternalAdminClaims, resultViewModel.CanVoid);
-        }
-
-        [Fact]
-        public async Task ViewEvidenceNoteTransferGet_WhenNoteTypeIsTransfer_ModelWithRedirectTabIsCreated()
-        {
-            // act
-            SetUpControllerContext(true);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
-
-            //act
-            var result = await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId) as ViewResult;
-            var model = result.Model as ViewTransferNoteViewModel;
-            model.Type = NoteType.Transfer;
-
-            //assert
-            model.InternalUserRedirectTab.Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString());
-        }
-
-        [Fact]
-        public async Task VoidTransferNoteGet_WhenNoteTypeIsTransfer_ModelWithRedirectTabIsCreated()
-        {
-            // act
-            SetUpControllerContext(true);
-            var transferNote = A.Fake<TransferEvidenceNoteData>();
-            transferNote.TransferredOrganisationData = TestFixture.Create<OrganisationData>();
-            ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = null;
-            A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
-            A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
-
-            //act
-            var result = await ManageEvidenceController.VoidTransferNote(EvidenceNoteId) as ViewResult;
-            var model = result.Model as ViewTransferNoteViewModel;
-            model.Type = NoteType.Transfer;
-
-            //assert
-            model.InternalUserRedirectTab.Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString());
+            var convertedModel = (VoidTransferNoteViewModel)result.Model;
+            convertedModel.ViewTransferNoteViewModel.Should().Be(model);
         }
     }
 }

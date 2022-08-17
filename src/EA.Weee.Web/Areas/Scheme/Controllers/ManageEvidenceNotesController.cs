@@ -18,6 +18,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Attributes;
+    using Filters;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -40,6 +41,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(Guid pcsId, 
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
@@ -155,6 +157,7 @@
         
         [HttpGet]
         [CheckCanApproveNote]
+        [NoCacheFilter]
         public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             using (var client = this.apiClient())
@@ -203,6 +206,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> DownloadEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null)
         {
             using (var client = this.apiClient())

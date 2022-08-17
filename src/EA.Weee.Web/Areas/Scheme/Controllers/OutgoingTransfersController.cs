@@ -18,6 +18,7 @@
     using System.Web.Routing;
     using Attributes;
     using Core.Helpers;
+    using Filters;
     using Requests;
     using ViewModels;
     using Weee.Requests.Scheme;
@@ -45,6 +46,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditTonnages(Guid pcsId, Guid evidenceNoteId, bool? returnToEditDraftTransfer)
         {
             await SetBreadcrumb(pcsId);
@@ -142,6 +144,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null)
         {
             await SetBreadcrumb(pcsId);
@@ -172,6 +175,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab)
         {
             await SetBreadcrumb(pcsId);
@@ -239,6 +243,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId);
@@ -281,6 +286,7 @@
 
         [HttpGet]
         [CheckCanEditTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId);

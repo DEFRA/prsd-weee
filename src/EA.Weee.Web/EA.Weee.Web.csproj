@@ -335,7 +335,6 @@
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
-
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewEvidenceNotesMapTransfer.cs" />
@@ -346,6 +345,8 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ManageEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllTransferNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidNoteViewModelBase.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidTransferNoteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttribute.cs" />
@@ -369,6 +370,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
+    <Compile Include="Filters\NoCacheFilterAttribute.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
