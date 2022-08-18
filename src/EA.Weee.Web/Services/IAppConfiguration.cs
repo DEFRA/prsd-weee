@@ -64,6 +64,8 @@
 
         DateTime EvidenceNotesSiteSelectionDateFrom { get; set; }
 
-        int DefaultPagingPageSize { get; set; }
+        int DefaultInternalPagingPageSize { get; set; }
+
+        int DefaultExternalPagingPageSize { get; set; }
     }
 }

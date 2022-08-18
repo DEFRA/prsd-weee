@@ -98,7 +98,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
         /// </summary>
         /// <param name="routeValues"></param>
         /// <returns></returns>
-        public new PagerOptionsBuilder<TModel> RouteValues(RouteValueDictionary routeValues)
+        public PagerOptionsBuilder<TModel> RouteValues(RouteValueDictionary routeValues)
         {
             base.RouteValues(routeValues);
             return this;

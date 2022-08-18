@@ -26,7 +26,7 @@
         {
             mapper = A.Fake<IMapper>();
             configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(25);
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(25);
 
             testClass = new TestListBase(mapper, configurationService);
         }

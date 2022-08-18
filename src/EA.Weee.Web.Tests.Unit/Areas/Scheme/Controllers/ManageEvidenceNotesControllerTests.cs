@@ -56,7 +56,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = TestFixture.Create<string>() });
             configurationService.CurrentConfiguration = A.Fake<IAppConfiguration>();
-            configurationService.CurrentConfiguration.DefaultPagingPageSize = 25;
+            configurationService.CurrentConfiguration.DefaultInternalPagingPageSize = 25;
         }
 
         [Fact]

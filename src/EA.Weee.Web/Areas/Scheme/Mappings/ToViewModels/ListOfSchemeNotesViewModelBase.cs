@@ -13,7 +13,7 @@
     public abstract class ListOfSchemeNotesViewModelBase<T> : ListOfNotesViewModelBase<T> where T : ISchemeManageEvidenceViewModel, 
         IManageEvidenceViewModel, new()
     {
-        protected ListOfSchemeNotesViewModelBase(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
+        protected ListOfSchemeNotesViewModelBase(IMapper mapper) : base(mapper)
         {
         }
 
@@ -21,11 +21,12 @@
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
             SchemePublicInfo scheme,
-            int pageNumber)
+            int pageNumber,
+            int pageSize)
         {
             Condition.Requires(noteData).IsNotNull();
 
-            var model = MapBase(noteData, currentDate, manageEvidenceNoteViewModel, pageNumber);
+            var model = MapBase(noteData, currentDate, manageEvidenceNoteViewModel, pageNumber, pageSize);
             model.SchemeInfo = scheme;
             model.CanSchemeManageEvidence = scheme != null && 
                                             scheme.Status != SchemeStatus.Withdrawn && 
