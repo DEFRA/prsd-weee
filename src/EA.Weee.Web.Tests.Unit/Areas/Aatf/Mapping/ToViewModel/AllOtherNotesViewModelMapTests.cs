@@ -29,7 +29,7 @@
         {
             mapper = A.Fake<IMapper>();
             configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(25);
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(25);
 
             allOtherNotesViewModelMap = new AllOtherNotesViewModelMap(mapper, configurationService);
 
@@ -152,7 +152,7 @@
             var pageNumber = TestFixture.Create<int>();
             var pageSize = TestFixture.Create<int>();
 
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(pageSize);
 
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, pageNumber);
 

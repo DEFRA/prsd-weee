@@ -42,7 +42,7 @@
             CreateRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest>>();
             EditRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest>>();
             ConfigurationService = A.Fake<ConfigurationService>();
-            ConfigurationService.CurrentConfiguration.DefaultPagingPageSize = int.MaxValue;
+            ConfigurationService.CurrentConfiguration.DefaultInternalPagingPageSize = int.MaxValue;
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();

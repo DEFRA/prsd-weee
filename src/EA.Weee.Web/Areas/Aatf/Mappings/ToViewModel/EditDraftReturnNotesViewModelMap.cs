@@ -8,7 +8,7 @@
 
     public class EditDraftReturnNotesViewModelMap : ListOfNotesViewModelBase<EditDraftReturnedNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, EditDraftReturnedNotesViewModel>
     {
-        public EditDraftReturnNotesViewModelMap(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
+        public EditDraftReturnNotesViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 
@@ -16,7 +16,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            return MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.PageNumber);
+            return MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.PageNumber, source.PageSize);
         }
     }
 }

@@ -329,10 +329,11 @@
                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate,
                pageNumber,
-               configurationService.CurrentConfiguration.DefaultPagingPageSize));
+               configurationService.CurrentConfiguration.DefaultInternalPagingPageSize));
             }
 
-            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber));
+            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var schemeData = resultAllNotes.Results.ToList().CreateOrganisationSchemeDataList();
 
@@ -388,7 +389,8 @@
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
                 manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, int.MaxValue));
 
-            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber));
+            var model = mapper.Map<EditDraftReturnedNotesViewModel>(
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));
