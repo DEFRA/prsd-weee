@@ -85,10 +85,11 @@ namespace EA.Weee.Web.Infrastructure.Paging
         /// Set custom route value parameters for the pager links.
         /// </summary>
         /// <param name="routeValues"></param>
+        /// <param name="replaceDashedRouteValues"></param>
         /// <returns></returns>
-        public new PagerOptionsBuilder<TModel> RouteValues(object routeValues)
+        public new PagerOptionsBuilder<TModel> RouteValues(object routeValues, bool replaceDashedRouteValues = false)
         {
-            base.RouteValues(routeValues);
+            base.RouteValues(routeValues, replaceDashedRouteValues);
             return this;
         }
 
@@ -97,7 +98,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
         /// </summary>
         /// <param name="routeValues"></param>
         /// <returns></returns>
-        public new PagerOptionsBuilder<TModel> RouteValues(RouteValueDictionary routeValues)
+        public PagerOptionsBuilder<TModel> RouteValues(RouteValueDictionary routeValues)
         {
             base.RouteValues(routeValues);
             return this;

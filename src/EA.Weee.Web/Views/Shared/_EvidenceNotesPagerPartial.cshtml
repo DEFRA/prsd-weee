@@ -8,7 +8,7 @@
 @if (@Model.TotalItemCount > 0)
 {
     <div class="pager govuk-body">
-        @Html.Pager(@Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.Action("Index").RouteValues(routesValues))
+        @Html.Pager(@Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.Action("Index").RouteValues(routesValues, true))
     </div>
 
     <p class="govuk-body">Showing @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</p>

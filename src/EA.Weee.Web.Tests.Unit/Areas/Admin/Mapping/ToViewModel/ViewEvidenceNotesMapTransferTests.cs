@@ -16,6 +16,7 @@
         private readonly EvidenceNoteSearchDataResult noteData;
         private readonly ManageEvidenceNoteViewModel manageEvidenceNoteViewModel;
         private const int PageNumber = 2;
+        private const int PageSize = 3;
 
         public ViewEvidenceNotesMapTransferTests()
         {
@@ -37,7 +38,7 @@
             var currentDate = SystemTime.Now;
            
             //act
-            var model = new ViewEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, PageNumber, complianceYearsList);
+            var model = new ViewEvidenceNotesMapTransfer(noteData, manageEvidenceNoteViewModel, currentDate, PageNumber, PageSize, complianceYearsList);
 
             //assert
             model.Should().NotBeNull();
@@ -46,6 +47,7 @@
             model.CurrentDate.Should().Be(currentDate);
             model.ComplianceYearList.Should().BeEquivalentTo(complianceYearsList);
             model.PageNumber.Should().Be(PageNumber);
+            model.PageSize.Should().Be(PageSize);
         }
 
         [Fact]
@@ -54,9 +56,7 @@
             //act
             var result = Record.Exception(() => new ViewEvidenceNotesMapTransfer(null,
                 manageEvidenceNoteViewModel,
-                SystemTime.Now,
-                TestFixture.Create<int>(),
-                TestFixture.CreateMany<int>()));
+                SystemTime.Now, PageNumber, PageSize, TestFixture.CreateMany<int>()));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -72,6 +72,24 @@
                 manageEvidenceNoteViewModel,
                 SystemTime.Now,
                 pageNumber,
+                2,
+                TestFixture.CreateMany<int>()));
+
+            // assert
+            result.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void ViewAllEvidenceNotesMapModel_Constructor_GivenPageSizeIsLessThanOne_ShouldThrowAnException(int pageSize)
+        {
+            //act
+            var result = Record.Exception(() => new ViewEvidenceNotesMapTransfer(noteData,
+                manageEvidenceNoteViewModel,
+                SystemTime.Now,
+                1,
+                pageSize,
                 TestFixture.CreateMany<int>()));
 
             // assert
@@ -89,6 +107,7 @@
                 null, 
                 currentDate,
                 PageNumber,
+                PageSize,
                 TestFixture.CreateMany<int>());
 
             //assert
@@ -96,6 +115,7 @@
             model.ManageEvidenceNoteViewModel.Should().BeNull();
             model.CurrentDate.Should().Be(currentDate);
             model.PageNumber.Should().Be(PageNumber);
+            model.PageSize.Should().Be(PageSize);
         }
     }
 }

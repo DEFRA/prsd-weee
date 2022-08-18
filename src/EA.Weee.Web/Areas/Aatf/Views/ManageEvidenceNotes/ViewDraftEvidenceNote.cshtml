@@ -13,7 +13,7 @@
     {
         @(this.WeeeGds().BackLink(
             Url.Action("Index", "ManageEvidenceNotes",
-                new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear }), "Manage evidence notes"))
+                new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }), "Manage evidence notes"))
 			
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
@@ -21,7 +21,7 @@
     {
         @(this.WeeeGds().BackLink(
             Url.Action("Index", "ManageEvidenceNotes",
-                new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear })))
+                new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
     }
 
 
