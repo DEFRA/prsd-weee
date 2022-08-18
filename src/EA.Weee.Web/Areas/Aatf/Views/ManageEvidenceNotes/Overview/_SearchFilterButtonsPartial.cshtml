@@ -10,7 +10,7 @@
 
 
     @Html.ActionLink("Clear filter", "Index", "ManageEvidenceNotes",
-    new { organisationId = Model.OrganisationId, aatfId = @Model.AatfId, tab = ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString() }, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
+    new { selectedComplianceYear = Model.SelectedComplianceYear, organisationId = Model.OrganisationId, aatfId = @Model.AatfId, tab = ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString() }, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
 
 </div>
 
