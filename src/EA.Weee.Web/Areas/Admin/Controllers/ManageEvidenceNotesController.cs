@@ -189,9 +189,10 @@
 
             var selectedComplianceYear = SelectedComplianceYear(complianceYearsList, manageEvidenceNoteViewModel);
 
-            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultPagingPageSize));
+            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize));
 
-            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, complianceYearsList));
+            var model = mapper.Map<ViewAllEvidenceNotesViewModel>(
+                new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
 
             return View("ViewAllEvidenceNotes", model);
         }
@@ -210,9 +211,10 @@
             var selectedComplianceYear = SelectedComplianceYear(complianceYearsList, manageEvidenceNoteViewModel);
 
             var notes = await client.SendAsync(User.GetAccessToken(), 
-                new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultPagingPageSize));
+                new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize));
 
-            var model = mapper.Map<ViewAllTransferNotesViewModel>(new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, complianceYearsList));
+            var model = mapper.Map<ViewAllTransferNotesViewModel>(
+                new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
 
             return View("ViewAllTransferNotes", model);
         }

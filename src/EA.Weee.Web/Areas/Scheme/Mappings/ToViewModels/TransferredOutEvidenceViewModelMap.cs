@@ -8,7 +8,7 @@
 
     public class TransferredOutEvidenceViewModelMap : ListOfSchemeNotesViewModelBase<TransferredOutEvidenceNotesSchemeViewModel>, IMap<SchemeTabViewModelMapTransfer, TransferredOutEvidenceNotesSchemeViewModel>
     {
-        public TransferredOutEvidenceViewModelMap(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
+        public TransferredOutEvidenceViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 
@@ -16,7 +16,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme, source.PageNumber);
+            var model = MapSchemeBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.Scheme, source.PageNumber, source.PageSize);
             model.OrganisationId = source.OrganisationId;
            
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)

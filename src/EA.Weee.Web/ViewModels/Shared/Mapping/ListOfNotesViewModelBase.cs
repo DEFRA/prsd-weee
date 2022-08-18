@@ -13,20 +13,18 @@
 
     public abstract class ListOfNotesViewModelBase<T> where T : IManageEvidenceViewModel, new()
     {
-        private readonly ConfigurationService configurationService;
-
         protected readonly IMapper Mapper;
         
-        protected ListOfNotesViewModelBase(IMapper mapper, ConfigurationService configurationService)
+        protected ListOfNotesViewModelBase(IMapper mapper)
         {
             this.Mapper = mapper;
-            this.configurationService = configurationService;
         }
 
         public T MapBase(EvidenceNoteSearchDataResult notes, 
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
             int pageNumber,
+            int pageSize,
             IEnumerable<int> complianceYearList = null)
         {
             Condition.Requires(notes).IsNotNull();
@@ -40,7 +38,7 @@
 
             var m = new T
             {
-                EvidenceNotesDataList = notesList.ToPagedList(pageNumber - 1, configurationService.CurrentConfiguration.DefaultPagingPageSize, notes.NoteCount) as PagedList<EvidenceNoteRowViewModel>,
+                EvidenceNotesDataList = notesList.ToPagedList(pageNumber - 1, pageSize, notes.NoteCount) as PagedList<EvidenceNoteRowViewModel>,
                 ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel
                 {
                     ComplianceYearList = complianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(currentDate),
