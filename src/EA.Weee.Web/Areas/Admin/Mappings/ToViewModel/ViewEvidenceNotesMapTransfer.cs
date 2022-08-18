@@ -18,17 +18,21 @@
 
         public int PageNumber { get; private set; }
 
+        public int PageSize { get; private set; }
+
         public ViewEvidenceNotesMapTransfer(EvidenceNoteSearchDataResult noteData,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber, IEnumerable<int> complianceYearList)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber, int pageSize, IEnumerable<int> complianceYearList)
         {
             Condition.Requires(noteData).IsNotNull();
             Condition.Requires(pageNumber).IsNotLessOrEqual(0);
-            
+            Condition.Requires(pageSize).IsNotLessOrEqual(0);
+
             NoteData = noteData;
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
             ComplianceYearList = complianceYearList;
             PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }
