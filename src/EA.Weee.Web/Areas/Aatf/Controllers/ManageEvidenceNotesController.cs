@@ -329,7 +329,7 @@
                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate,
                pageNumber,
-               configurationService.CurrentConfiguration.DefaultInternalPagingPageSize));
+               configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
             }
 
             var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(
@@ -390,7 +390,7 @@
                 manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, int.MaxValue));
 
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(
-                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, int.MaxValue));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));
