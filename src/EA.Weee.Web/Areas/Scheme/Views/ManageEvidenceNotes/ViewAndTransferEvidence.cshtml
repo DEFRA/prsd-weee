@@ -29,7 +29,7 @@
                         @(this.WeeeGds().Submit("Transfer evidence"))
                     }
                 }
-                else if (Model.CanSchemeManageEvidence)
+                else if (Model.CanSchemeManageEvidence && !Model.DisplayTransferButton)
                 { 
                     <p>
                         You are unable to transfer evidence at the moment as you do not have any approved evidence notes that contain household waste
