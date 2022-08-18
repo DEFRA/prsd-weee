@@ -29,7 +29,7 @@
         {
             mapper = A.Fake<IMapper>();
             configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(25);
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(25);
 
             reviewSubmittedEvidenceNotesViewModelMap = new ReviewSubmittedEvidenceNotesViewModelMap(mapper, configurationService);
         }
@@ -186,7 +186,7 @@
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), pageNumber);
 
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(pageSize);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
