@@ -110,7 +110,8 @@
 
             await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), null, 1);
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, 
+                A<GetAatfByIdExternal>.That.Matches(w => w.AatfId == aatfId))).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]
@@ -156,7 +157,6 @@
                      && m.CurrentDate == currentDate &&
                      m.Aatfs.SequenceEqual(aatfs)))).MustHaveHappenedOnceExactly();
         }
-
         [Theory]
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
@@ -319,8 +319,10 @@
             //arrange
             int complianceYear = 2018;
             ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { SelectedComplianceYear = complianceYear };
+            var pageNumber = Fixture.Create<int>();
+
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), vm);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), vm, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -328,7 +330,27 @@
                 g.OrganisationId.Equals(OrganisationId) &&
                 g.ComplianceYear.Equals(complianceYear) && 
                 g.AllowedStatuses.Contains(NoteStatus.Draft) &&
-                g.SearchRef == null))).MustHaveHappenedOnceExactly();
+                g.SearchRef == null &&
+                g.PageSize == int.MaxValue &&
+                g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        public async void IndexGetWithDefaultTab_GivenRequiredDataAndPageNumber_NotesShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            int complianceYear = 2018;
+            ManageEvidenceNoteViewModel vm = new ManageEvidenceNoteViewModel { SelectedComplianceYear = complianceYear };
+            const int pageNumber = 11;
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), vm, pageNumber);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
+                g.PageSize == int.MaxValue &&
+                g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -359,7 +381,7 @@
             var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
             
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null, 1);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null, 3);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -367,8 +389,8 @@
                 g.OrganisationId.Equals(OrganisationId) &&
                 allowedStatus.SequenceEqual(g.AllowedStatuses) &&
                 g.SearchRef == null &&
-                g.PageSize.Equals(int.MaxValue) &&
-                g.PageNumber.Equals(1)))).MustHaveHappenedOnceExactly();
+                g.PageSize.Equals(10) &&
+                g.PageNumber.Equals(3)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -379,7 +401,8 @@
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), filter, 1);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, 
+                Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), filter, 3);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -387,8 +410,8 @@
                 g.OrganisationId.Equals(OrganisationId) &&
                 g.AllowedStatuses.SequenceEqual(allowedStatus) &&
                 g.SearchRef.Equals(filter.FilterViewModel.SearchRef) &&
-                g.PageSize.Equals(int.MaxValue) &&
-                g.PageNumber.Equals(1)))).MustHaveHappenedOnceExactly();
+                g.PageSize.Equals(10) &&
+                g.PageNumber.Equals(3)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -408,7 +431,7 @@
                 .With(m => m.RecipientWasteStatusFilterViewModel, recipientWasteStatusFilter).Create();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), viewModel, 1);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), viewModel, 3);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -418,8 +441,8 @@
                 g.RecipientId.Value.Equals(recipientWasteStatusFilter.ReceivedId.Value) &&
                 g.WasteTypeId.Value.Equals(recipientWasteStatusFilter.WasteTypeValue.Value) &&
                 g.NoteStatusFilter.Equals(recipientWasteStatusFilter.NoteStatusValue) && 
-                g.PageSize.Equals(int.MaxValue) &&
-                g.PageNumber.Equals(1)))).MustHaveHappenedOnceExactly();
+                g.PageSize.Equals(10) &&
+                g.PageNumber.Equals(3)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -436,8 +459,10 @@
             var viewModel = Fixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SubmittedDatesFilterViewModel, submittedDatesFilter).Create();
 
+            const int pageNumber = 11;
+
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), viewModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), viewModel, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
@@ -445,7 +470,9 @@
                 g.OrganisationId.Equals(OrganisationId) &&
                 g.AllowedStatuses.SequenceEqual(allowedStatus) &&
                 g.StartDateSubmitted.Value.Equals(submittedDatesFilter.StartDate) &&
-                g.EndDateSubmitted.Value.Equals(submittedDatesFilter.EndDate)))).MustHaveHappenedOnceExactly();
+                g.EndDateSubmitted.Value.Equals(submittedDatesFilter.EndDate) &&
+                g.PageSize == 10 &&
+                g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -467,16 +494,19 @@
         public async void IndexGetWithEditDraftAndReturnedNotesTab_GivenSearchFilterParameters_NoteShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
+            const int pageNumber = 11;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), filter);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), filter, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
                 g.AatfId.Equals(AatfId) &&
                 g.OrganisationId.Equals(OrganisationId) &&
                 g.AllowedStatuses.Contains(NoteStatus.Draft) &&
-                g.SearchRef.Equals(filter.FilterViewModel.SearchRef)))).MustHaveHappenedOnceExactly();
+                g.SearchRef.Equals(filter.FilterViewModel.SearchRef) &&
+                g.PageSize == int.MaxValue &&
+                g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -499,7 +529,8 @@
                          && e.OrganisationId.Equals(OrganisationId) &&
                          e.NoteData.Equals(noteData) &&
                          e.CurrentDate == date &&
-                         e.PageNumber.Equals(pageNumber)))).MustHaveHappenedOnceExactly();
+                         e.PageNumber.Equals(pageNumber) &&
+                         e.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -524,7 +555,8 @@
                          e.NoteData.Equals(noteData) &&
                          e.CurrentDate == date &&
                          e.ManageEvidenceNoteViewModel == existingModel &&
-                         e.PageNumber.Equals(pageNumber)))).MustHaveHappenedOnceExactly();
+                         e.PageNumber.Equals(pageNumber) &&
+                         e.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -533,17 +565,20 @@
         {
             //arrange
             var noteData = Fixture.Create<EvidenceNoteSearchDataResult>();
+            var pageNumber = Fixture.Create<int>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(noteData);
-
+            
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab));
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), null, pageNumber);
 
             //assert
             A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
                 A<EvidenceNotesViewModelTransfer>.That.Matches(
                     e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
-                         e.NoteData.Equals(noteData)))).MustHaveHappenedOnceExactly();
+                         e.NoteData.Equals(noteData) &&
+                         e.PageSize == int.MaxValue &&
+                         e.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -553,17 +588,22 @@
             //arrange
             var noteData = Fixture.Create<EvidenceNoteSearchDataResult>();
             var existingModel = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var pageNumber = Fixture.Create<int>();
+
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(noteData);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), existingModel);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab), existingModel, pageNumber);
 
             //assert
             A.CallTo(() => Mapper.Map<EditDraftReturnedNotesViewModel>(
                 A<EvidenceNotesViewModelTransfer>.That.Matches(
-                    e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
+                    e => e.AatfId.Equals(AatfId) && 
+                         e.OrganisationId.Equals(OrganisationId) &&
                          e.NoteData.Equals(noteData) &&
-                         e.ManageEvidenceNoteViewModel == existingModel))).MustHaveHappenedOnceExactly();
+                         e.ManageEvidenceNoteViewModel == existingModel &&
+                         e.PageSize == int.MaxValue &&
+                         e.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -721,7 +761,7 @@
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null, 1);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             // assert
            A.CallTo(() => SessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(ManageEvidenceController.Session,
@@ -806,7 +846,7 @@
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null, 1);
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null);
 
             // assert
             A.CallTo(() =>
@@ -917,7 +957,9 @@
 
             A.CallTo(() =>
                     WeeeClient.SendAsync(A<string>._,
-                        A<GetAatfSummaryRequest>.That.Matches(g => g.AatfId.Equals(aatfId) && g.ComplianceYear.Equals(complianceYear))))
+                        A<GetAatfSummaryRequest>.That.Matches(g => 
+                            g.AatfId.Equals(aatfId) && 
+                            g.ComplianceYear.Equals(complianceYear))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -937,7 +979,8 @@
             await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab));
 
             A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>.That.Matches(e =>
-                e.AatfEvidenceSummaryData.Equals(summary) && e.AatfId.Equals(aatfId) &&
+                e.AatfEvidenceSummaryData.Equals(summary) && 
+                e.AatfId.Equals(aatfId) &&
                 e.OrganisationId.Equals(organisationId)))).MustHaveHappenedOnceExactly();
         }
 

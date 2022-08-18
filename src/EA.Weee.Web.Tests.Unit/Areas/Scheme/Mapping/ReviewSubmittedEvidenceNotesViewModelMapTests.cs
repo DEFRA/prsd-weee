@@ -12,7 +12,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Shared;
-    using Services;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
@@ -23,15 +22,12 @@
     {
         private readonly ReviewSubmittedEvidenceNotesViewModelMap reviewSubmittedEvidenceNotesViewModelMap;
         private readonly IMapper mapper;
-        private readonly ConfigurationService configurationService;
 
         public ReviewSubmittedEvidenceNotesViewModelMapTests()
         {
             mapper = A.Fake<IMapper>();
-            configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(25);
 
-            reviewSubmittedEvidenceNotesViewModelMap = new ReviewSubmittedEvidenceNotesViewModelMap(mapper, configurationService);
+            reviewSubmittedEvidenceNotesViewModelMap = new ReviewSubmittedEvidenceNotesViewModelMap(mapper);
         }
 
         [Fact]
@@ -48,7 +44,7 @@
             var exception = Record.Exception(() => new SchemeTabViewModelMapTransfer(Guid.NewGuid(),
                 null, TestFixture.Create<SchemePublicInfo>(), TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -61,7 +57,7 @@
             var exception = Record.Exception(() => new SchemeTabViewModelMapTransfer(Guid.Empty,
                 TestFixture.Create<EvidenceNoteSearchDataResult>(), TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -79,7 +75,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -101,7 +97,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -123,7 +119,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -151,7 +147,7 @@
                 notes,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(), TestFixture.Create<int>());
+                TestFixture.Create<ManageEvidenceNoteViewModel>(), 1, 3);
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._))
                 .Returns(returnedNotes);
@@ -177,16 +173,15 @@
 
             var notes = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var organisationId = Guid.NewGuid();
-            var pageNumber = TestFixture.Create<int>();
-            var pageSize = TestFixture.Create<int>();
+            var pageNumber = 1;
+            var pageSize = 3;
 
             var transfer = new SchemeTabViewModelMapTransfer(organisationId,
                 notes,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(), pageNumber);
+                TestFixture.Create<ManageEvidenceNoteViewModel>(), pageNumber, pageSize);
 
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(pageSize);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
@@ -210,7 +205,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -232,7 +227,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(source);
@@ -259,7 +254,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 null,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(source);
@@ -286,7 +281,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(source);
@@ -310,7 +305,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(source);
@@ -332,7 +327,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -354,7 +349,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -382,7 +377,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -413,7 +408,7 @@
                 scheme,
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -438,7 +433,7 @@
                 scheme,
                 currentDate,
                 model, 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -463,7 +458,7 @@
                 scheme,
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -486,7 +481,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
@@ -509,7 +504,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);

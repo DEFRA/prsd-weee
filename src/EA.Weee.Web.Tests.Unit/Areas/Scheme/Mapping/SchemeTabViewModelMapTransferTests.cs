@@ -14,6 +14,7 @@
     public class SchemeTabViewModelMapTransferTests : SimpleUnitTestBase
     {
         private const int PageNumber = 2;
+        private const int PageSize = 3;
 
         [Fact]
         public void SchemeTabViewModelMapTransfer_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
@@ -24,7 +25,8 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 SystemTime.Now,
                 null,
-                PageNumber));
+                PageNumber,
+                PageSize));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -39,7 +41,8 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 SystemTime.Now,
                 null,
-                PageNumber));
+                PageNumber,
+                PageSize));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -56,7 +59,26 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 SystemTime.Now,
                 null,
-                pageNumber));
+                pageNumber,
+                PageSize));
+
+            // assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void SchemeTabViewModelMapTransfer_Constructor_GivenPageSizeIsLessThanOne_ShouldThrowAnException(int pageSize)
+        {
+            //act
+            var exception = Record.Exception(() => new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                TestFixture.Create<SchemePublicInfo>(),
+                SystemTime.Now,
+                null,
+                PageNumber,
+                pageSize));
 
             // assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -74,7 +96,7 @@
             var schemeInfo = TestFixture.Create<SchemePublicInfo>();
 
             //act
-            var mapper = new SchemeTabViewModelMapTransfer(organisationId, noteData, schemeInfo, currentDate, model, PageNumber);
+            var mapper = new SchemeTabViewModelMapTransfer(organisationId, noteData, schemeInfo, currentDate, model, PageNumber, PageSize);
 
             //assert
             mapper.Scheme.Should().Be(schemeInfo);
@@ -82,6 +104,7 @@
             mapper.ManageEvidenceNoteViewModel.Should().Be(model);
             mapper.NoteData.Should().Be(noteData);
             mapper.PageNumber.Should().Be(PageNumber);
+            mapper.PageSize.Should().Be(PageSize);
         }
     }
 }

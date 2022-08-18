@@ -8,7 +8,7 @@
 
     public class ViewAllTransferNotesMap : ListOfNotesViewModelBase<ViewAllTransferNotesViewModel>, IMap<ViewEvidenceNotesMapTransfer, ViewAllTransferNotesViewModel>
     {
-        public ViewAllTransferNotesMap(IMapper mapper, ConfigurationService configurationService) : base(mapper)
+        public ViewAllTransferNotesMap(IMapper mapper) : base(mapper)
         {
         }
 
