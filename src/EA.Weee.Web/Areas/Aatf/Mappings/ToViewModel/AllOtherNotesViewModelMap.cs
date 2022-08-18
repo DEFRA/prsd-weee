@@ -10,7 +10,7 @@
 
     public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherManageEvidenceNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, AllOtherManageEvidenceNotesViewModel>
     {
-        public AllOtherNotesViewModelMap(IMapper mapper, ConfigurationService configurationService) : base(mapper)
+        public AllOtherNotesViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Mapping.ToViewModel
 {
     using AutoFixture;
-    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
@@ -11,7 +10,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Services;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
@@ -22,16 +20,13 @@
     {
         private readonly AllOtherNotesViewModelMap allOtherNotesViewModelMap;
         private readonly IMapper mapper;
-        private readonly ConfigurationService configurationService;
         private readonly DateTime currentDate;
 
         public AllOtherNotesViewModelMapTests()
         {
             mapper = A.Fake<IMapper>();
-            configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(25);
 
-            allOtherNotesViewModelMap = new AllOtherNotesViewModelMap(mapper, configurationService);
+            allOtherNotesViewModelMap = new AllOtherNotesViewModelMap(mapper);
 
             currentDate = TestFixture.Create<DateTime>();
         }
@@ -61,7 +56,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, TestFixture.Create<int>());
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
 
             //act
             allOtherNotesViewModelMap.Map(transfer);
@@ -79,7 +74,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, TestFixture.Create<int>());
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
 
             //act
             allOtherNotesViewModelMap.Map(transfer);
@@ -96,7 +91,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, TestFixture.Create<int>());
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -121,7 +116,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, TestFixture.Create<int>());
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 3);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
                 e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
@@ -149,12 +144,10 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var pageNumber = TestFixture.Create<int>();
-            var pageSize = TestFixture.Create<int>();
+            var pageNumber = 1;
+            var pageSize = 3;
 
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(pageSize);
-
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, pageNumber);
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, pageNumber, pageSize);
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
                 e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
@@ -188,7 +181,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, TestFixture.Create<int>());
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
                 e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
@@ -218,7 +211,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, TestFixture.Create<int>());
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
                 e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
@@ -249,7 +242,7 @@
 
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
-            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, TestFixture.Create<int>());
+            var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
                 e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
@@ -268,7 +261,7 @@
             var date = new DateTime(2019, 1, 1);
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var source = new EvidenceNotesViewModelTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                noteData, date, model, TestFixture.Create<int>());
+                noteData, date, model, 1, 2);
 
             //act
             var result = allOtherNotesViewModelMap.Map(source);
@@ -290,7 +283,7 @@
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var date = new DateTime(year, 1, 1);
             var source = new EvidenceNotesViewModelTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                noteData, date, null, TestFixture.Create<int>());
+                noteData, date, null, 1, 2);
 
             //act
             var result = allOtherNotesViewModelMap.Map(source);
@@ -308,7 +301,7 @@
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>().With(m => m.SelectedComplianceYear, complianceYear).Create();
             var source = new EvidenceNotesViewModelTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                noteData, currentDate, model, TestFixture.Create<int>());
+                noteData, currentDate, model, 1, 2);
 
             //act
             var result = allOtherNotesViewModelMap.Map(source);
@@ -326,7 +319,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(m => m.SelectedComplianceYear, 2021).Create();
             var source = new EvidenceNotesViewModelTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                noteData, date, model, TestFixture.Create<int>());
+                noteData, date, model, 1, 2);
 
             //act
             var result = allOtherNotesViewModelMap.Map(source);
@@ -347,9 +340,7 @@
             var transfer = new EvidenceNotesViewModelTransfer(organisationId,
                 TestFixture.Create<Guid>(),
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
-                currentDate,
-                model, 
-                TestFixture.Create<int>());
+                currentDate, model, 1, 2);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -370,9 +361,7 @@
             var transfer = new EvidenceNotesViewModelTransfer(organisationId,
                 TestFixture.Create<Guid>(),
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
-                currentDate,
-                model,
-                TestFixture.Create<int>());
+                currentDate, model, 1, 2);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
