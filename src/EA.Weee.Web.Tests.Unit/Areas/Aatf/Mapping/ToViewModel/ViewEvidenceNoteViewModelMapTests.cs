@@ -52,7 +52,7 @@
         public void Map_GivenSource_StandardPropertiesShouldBeMapped()
         {
             //arrange
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
 
             //act
             var result = map.Map(source);
@@ -78,7 +78,7 @@
         public void Map_GivenSource_OperatorAddressShouldBeSet()
         {
             //arrange
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
             const string operatorAddress = "operatorAddress";
 
             A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
@@ -100,7 +100,7 @@
         public void Map_GivenSource_SiteAddressShouldBeSet()
         {
             //arrange
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
             const string siteAddress = "siteAddress";
 
             A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.AatfData.SiteAddress.Name,
@@ -182,7 +182,8 @@
         public void Map_GivenTonnagesAndIncludeAllCategories_TonnagesShouldBeFormatted()
         {
             //arrange
-            var source = TestFixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, true).Create();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            source.IncludeAllCategories = true;
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
@@ -233,7 +234,8 @@
         public void Map_GivenTonnagesAndNotIncludeAllCategories_OnlyCategoriesThatNoteTonnageShouldBeIncluded()
         {
             //arrange
-            var source = TestFixture.Build<ViewEvidenceNoteMapTransfer>().With(v => v.IncludeAllCategories, false).Create();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            source.IncludeAllCategories = false;
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
@@ -263,7 +265,7 @@
         public void Map_GivenTonnages_TotalReceivedShouldBeSet()
         {
             //arrange
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
@@ -409,7 +411,7 @@
         [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
             source.EvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -420,7 +422,7 @@
         [Fact]
         public void Map_GivenNoSubmittedDateTime_FormatsToEmptyString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
             source.EvidenceNoteData.SubmittedDate = null;
 
             var result = map.Map(source);
@@ -431,7 +433,7 @@
         [Fact]
         public void Map_GivenNoSubmittedDateTime_SubmittedByShouldBeEmpty()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
             source.EvidenceNoteData.SubmittedDate = null;
 
             var result = map.Map(source);
@@ -442,18 +444,18 @@
         [Fact]
         public void Map_GivenApprovedDateTime_FormatsToGMTString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
-            source.EvidenceNoteData.ApprovedDate = DateTime.Parse("01/01/2001 13:30:30");
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
+            source.EvidenceNoteData.ApprovedDate = DateTime.Parse("21/01/2001 13:30:30");
 
             var result = map.Map(source);
 
-            result.ApprovedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
+            result.ApprovedDate.Should().Be("21/01/2001 13:30:30 (GMT)");
         }
 
         [Fact]
         public void Map_GivenNoApprovedDateTime_FormatsToEmptyString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
             source.EvidenceNoteData.ApprovedDate = null;
 
             var result = map.Map(source);
@@ -464,7 +466,7 @@
         [Fact]
         public void Map_GivenReturnedDateTime_FormatsToGMTString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
             source.EvidenceNoteData.ReturnedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -475,7 +477,7 @@
         [Fact]
         public void Map_GivenNoReturnedDateTime_FormatsToEmptyString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
             source.EvidenceNoteData.ReturnedDate = null;
 
             var result = map.Map(source);
@@ -486,8 +488,8 @@
         [Fact]
         public void Map_GivenSourceWithRedirectTab_RedirectTabShouldBeSet()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
-            
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+
             var result = map.Map(source);
 
             result.RedirectTab.Should().Be(source.RedirectTab);
@@ -496,8 +498,8 @@
         [Fact]
         public void Map_GivenSourceWithNoRedirectTab_RedirectTabShouldBeSet()
         {
-            var source = TestFixture.Build<ViewEvidenceNoteMapTransfer>()
-                .With(v => v.RedirectTab, (string)null).Create();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            source.RedirectTab = null;
 
             var result = map.Map(source);
 
@@ -507,7 +509,7 @@
         [Fact]
         public void Map_GivenReturnedReasonAndNoRejectedReason_ReasonMustBeSet()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
             var reason = TestFixture.Create<string>();
             source.EvidenceNoteData.ReturnedReason = reason;
             source.EvidenceNoteData.RejectedReason = null;
@@ -519,7 +521,7 @@
         [Fact]
         public void Map_GivenNoReturnedReasonAndNoRejectedReason_ReasonMustBeNullOrEmpty()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
             source.EvidenceNoteData.ReturnedReason = null;
             source.EvidenceNoteData.RejectedReason = null;
 
@@ -531,18 +533,18 @@
         [Fact]
         public void Map_GivenRejectedDateTime_FormatsToGMTString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
-            source.EvidenceNoteData.RejectedDate = DateTime.Parse("01/01/2001 13:30:30");
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
+            source.EvidenceNoteData.RejectedDate = DateTime.Parse("21/01/2001 13:30:30");
 
             var result = map.Map(source);
 
-            result.RejectedDate.Should().Be("01/01/2001 13:30:30 (GMT)");
+            result.RejectedDate.Should().Be("21/01/2001 13:30:30 (GMT)");
         }
 
         [Fact]
         public void Map_GivenNoRejectedDateTime_FormatsToEmptyString()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
             source.EvidenceNoteData.RejectedDate = null;
 
             var result = map.Map(source);
@@ -553,7 +555,7 @@
         [Fact]
         public void Map_GivenRejectedReason_ReasonMustBeSet()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
             var reason = TestFixture.Create<string>();
             source.EvidenceNoteData.RejectedReason = reason;
             var result = map.Map(source);
@@ -564,7 +566,7 @@
         [Fact]
         public void Map_GivenNoRejectedReasonAndNoReturnedReason_ReasonMustBeNullOrEmpty()
         {
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
             source.EvidenceNoteData.RejectedReason = null;
             source.EvidenceNoteData.ReturnedReason = null;
 
@@ -582,12 +584,12 @@
                 return;
             }
 
+            //arrange
             var evidenceNoteData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.Status, status)
                 .With(e => e.AatfData,
                     TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, true)
                         .Create()).Create();
-            //arrange
             var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null);
 
             //act
@@ -649,7 +651,7 @@
         public void Map_GivenSourceWithHistoryNoteData_EvidenceNoteHistoryViewModelShouldBePopulated()
         {
             //arrange
-            var source = TestFixture.Create<ViewEvidenceNoteMapTransfer>();
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
             var data = new EvidenceNoteHistoryData(TestFixture.Create<Guid>(), TestFixture.Create<NoteStatus>(), TestFixture.Create<int>(), TestFixture.Create<NoteType>(), TestFixture.Create<DateTime?>(), TestFixture.Create<string>());
             var history = new List<EvidenceNoteHistoryData>()
             {

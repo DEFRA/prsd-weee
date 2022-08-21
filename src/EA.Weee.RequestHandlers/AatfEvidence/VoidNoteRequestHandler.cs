@@ -1,18 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using DataAccess;
+    using DataAccess.DataAccess;
+    using EA.Weee.Requests.Shared;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Security;
     using System;
     using System.Threading.Tasks;
-    using DataAccess.DataAccess;
-    using Requests.AatfEvidence;
     using Weee.Security;
 
-    public class VoidTransferNoteRequestHandler : SaveNoteRequestBase, IRequestHandler<VoidTransferNoteRequest, Guid>
+    public class VoidNoteRequestHandler : SaveNoteRequestBase, IRequestHandler<VoidNoteRequest, Guid>
     {
-        public VoidTransferNoteRequestHandler(
+        public VoidNoteRequestHandler(
             WeeeContext context,
             IUserContext userContext,
             IWeeeAuthorization authorization, 
@@ -20,14 +20,14 @@
         {
         }
 
-        public async Task<Guid> HandleAsync(VoidTransferNoteRequest message)
+        public async Task<Guid> HandleAsync(VoidNoteRequest message)
         {
             Authorization.EnsureCanAccessInternalArea();
             Authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var evidenceNote = await EvidenceNote(message.NoteId);
 
-            if (evidenceNote.Status != Domain.Evidence.NoteStatus.Approved || evidenceNote.NoteType != Domain.Evidence.NoteType.TransferNote)
+            if (evidenceNote.Status != Domain.Evidence.NoteStatus.Approved)
             {
                 throw new InvalidOperationException($"Cannot void note with id {message.NoteId}");
             }
