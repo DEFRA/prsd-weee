@@ -13,6 +13,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
@@ -467,13 +468,13 @@
             //act
             SetUpControllerContext(true);
             var model = TestFixture.Create<VoidTransferNoteViewModel>();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).Returns(model.ViewTransferNoteViewModel.EvidenceNoteId);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidNoteRequest>._)).Returns(model.ViewTransferNoteViewModel.EvidenceNoteId);
 
             //act
             var result = await ManageEvidenceController.VoidTransferNote(model);
 
             //assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidNoteRequest>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -491,14 +492,14 @@
             A.CallTo(() => transferNote.Status).Returns(NoteStatus.Void);
             A.CallTo(() => transferNote.Type).Returns(NoteType.Transfer);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(transferNote);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).Returns(model.ViewTransferNoteViewModel.EvidenceNoteId);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidNoteRequest>._)).Returns(model.ViewTransferNoteViewModel.EvidenceNoteId);
             A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(viewEvidenceNoteModel);
 
             //act
             var result = await ManageEvidenceController.VoidTransferNote(model) as RedirectToRouteResult;
         
             //assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidTransferNoteRequest>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<VoidNoteRequest>._)).MustHaveHappenedOnceExactly();
             ManageEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Equals(NoteUpdatedStatusEnum.Void);
 
             result.RouteValues["action"].Should().Be("ViewEvidenceNoteTransfer");
