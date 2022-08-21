@@ -184,6 +184,8 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages9).Create();
@@ -291,6 +293,7 @@
                 TransferEvidenceNoteDbSetup.Init().With(t =>
                     {
                         t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                         t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                     }).WithTonnages(newTransferNoteTonnage7)
                     .WithRecipient(recipientOrganisation.Id)

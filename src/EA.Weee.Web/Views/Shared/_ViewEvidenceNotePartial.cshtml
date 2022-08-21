@@ -1,8 +1,9 @@
 ﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.AatfEvidence
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
-
 
 @if (Model.DisplayH2Title)
 {
@@ -14,23 +15,28 @@ else
 }
 
 <style>
-    .category {
+    .category
+    {
         display: table;
     }
 
-        .category span {
+        .category span
+        {
             display: table-cell;
         }
 
-    .category-id {
+    .category-id
+    {
         width: 20px;
     }
 
-    .category-column {
+    .category-column
+    {
         width: 40%;
     }
 
-    .received-column {
+    .received-column
+    {
         width: 30%;
     }
 </style>
@@ -81,6 +87,13 @@ else
         </div>
     }
 
+    @if (Model.HasBeenVoided)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+            @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
@@ -104,6 +117,27 @@ else
         </div>
     }
 </div>
+
+<!-- screen 6.07d -->
+<!-- --------------------------- -->
+<!-- Void Evidence note button   -->
+<!-- --------------------------- -->
+@if (Model.CanVoid && Model.Status.Equals(NoteStatus.Approved))
+{
+    using (Html.BeginForm("VoidEvidenceNote", "ManageEvidenceNotes", FormMethod.Get))  // perhaps area="admin" should be added
+    {
+        @Html.Hidden("evidenceNoteId", Model.Id);
+        @(this.WeeeGds().Submit("Void evidence note", new { id = "voidEvidenceNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
+    }
+}
+else
+{
+    <div class="govuk-width-container govuk-body govuk-!-padding-left-0">
+        in wireframe: <strong>This evidence note cannot be voided as it has not been approved, or it has been approved but has transfers associated with it. Ensure that the evidence note transfers are void or have been rejected before voiding this evidence note.</strong><br />
+        in catalogue: <strong>This evidence note cannot be voided as it has transfers associated with it. Ensure that the transfer evidence notes have been voided first before voiding this evidence note.</strong>
+    </div>
+}
+<!-- screen 6.07d -->
 
 <div class="govuk-width-container govuk-!-padding-left-0">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">

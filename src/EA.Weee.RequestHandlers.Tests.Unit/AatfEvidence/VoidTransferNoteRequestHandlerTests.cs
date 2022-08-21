@@ -10,6 +10,7 @@
     using Domain.Evidence;
     using Domain.Organisation;
     using Domain.Scheme;
+    using EA.Weee.Requests.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -17,7 +18,6 @@
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Factories;
     using RequestHandlers.Security;
-    using Weee.Requests.AatfEvidence;
     using Weee.Security;
     using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
@@ -33,7 +33,7 @@
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly Note note;
         private readonly DateTime currentDate;
-        private readonly VoidTransferNoteRequestHandler handler;
+        private readonly VoidNoteRequestHandler handler;
 
         public VoidTransferNoteRequestHandlerTests()
         {
@@ -56,13 +56,13 @@
             
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
-            handler = new VoidTransferNoteRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            handler = new VoidNoteRequestHandler(context, userContext, authorization, systemDataDataAccess);
         }
 
         [Fact]
         public void VoidTransferNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
         {
-            typeof(VoidTransferNoteRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
+            typeof(VoidNoteRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
         }
 
         [Fact]
@@ -72,7 +72,7 @@
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
             //act
-            await handler.HandleAsync(TestFixture.Create<VoidTransferNoteRequest>());
+            await handler.HandleAsync(TestFixture.Create<VoidNoteRequest>());
 
             //assert
             A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
@@ -86,7 +86,7 @@
             A.CallTo(() => authorization.EnsureCanAccessInternalArea()).Throws<SecurityException>();
 
             //act
-            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(TestFixture.Create<VoidTransferNoteRequest>()));
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(TestFixture.Create<VoidNoteRequest>()));
 
             //assert
             exception.Should().BeOfType<SecurityException>();
@@ -99,7 +99,7 @@
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
             //act
-            await handler.HandleAsync(TestFixture.Create<VoidTransferNoteRequest>());
+            await handler.HandleAsync(TestFixture.Create<VoidNoteRequest>());
 
             //assert
             A.CallTo(() => authorization.EnsureUserInRole(Roles.InternalAdmin)).MustHaveHappenedOnceExactly();
@@ -113,7 +113,7 @@
             A.CallTo(() => authorization.EnsureUserInRole(A<Roles>._)).Throws<SecurityException>();
 
             //act
-            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(TestFixture.Create<VoidTransferNoteRequest>()));
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(TestFixture.Create<VoidNoteRequest>()));
 
             //assert
             exception.Should().BeOfType<SecurityException>();
@@ -126,7 +126,7 @@
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns((Note)null);
 
             // Act
-            var exception = await Record.ExceptionAsync(() => handler.HandleAsync(TestFixture.Create<VoidTransferNoteRequest>()));
+            var exception = await Record.ExceptionAsync(() => handler.HandleAsync(TestFixture.Create<VoidNoteRequest>()));
 
             // Assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -140,7 +140,7 @@
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
 
-            var request = new VoidTransferNoteRequest(id);
+            var request = new VoidNoteRequest(id);
 
             // Act
             var result = await handler.HandleAsync(request);
@@ -165,7 +165,7 @@
             A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
 
-            var request = new VoidTransferNoteRequest(id);
+            var request = new VoidNoteRequest(id);
 
             // Act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -174,9 +174,12 @@
             exception.Should().BeOfType<InvalidOperationException>();
         }
 
-        [Fact]
+        //[Fact]
         public async Task HandleAsync_WithNoteFoundThatIsTransferNote_ShouldThrowInvalidOperationException()
         {
+            // both transfer and evidence note can be Voided
+            // this unit test is not relevant anymore
+
             // Arrange
             var id = TestFixture.Create<Guid>();
             A.CallTo(() => note.Id).Returns(id);
@@ -184,7 +187,7 @@
             A.CallTo(() => note.NoteType).Returns(NoteType.EvidenceNote);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
 
-            var request = new VoidTransferNoteRequest(id);
+            var request = new VoidNoteRequest(id);
 
             // Act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -204,7 +207,7 @@
             A.CallTo(() => userContext.UserId).Returns(userId);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
-            var request = new VoidTransferNoteRequest(TestFixture.Create<Guid>());
+            var request = new VoidNoteRequest(TestFixture.Create<Guid>());
             
             // Act
             await handler.HandleAsync(request);
@@ -228,7 +231,7 @@
             A.CallTo(() => userContext.UserId).Returns(userId);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
 
-            var request = new VoidTransferNoteRequest(TestFixture.Create<Guid>(), "reason passed as parameter");
+            var request = new VoidNoteRequest(TestFixture.Create<Guid>(), "reason passed as parameter");
 
             // Act
             await handler.HandleAsync(request);

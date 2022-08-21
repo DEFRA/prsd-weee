@@ -88,7 +88,7 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], this.User));
 
                 ViewBag.Page = page;
 
@@ -114,6 +114,34 @@
                 ViewBag.Page = page;
 
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [NoCacheFilter]
+        public async Task<ActionResult> VoidEvidenceNote(Guid evidenceNoteId)
+        {
+            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteForInternalUserRequest(evidenceNoteId);
+
+                var evidenceNoteData = await client.SendAsync(User.GetAccessToken(), request);
+
+                if (evidenceNoteData.Type == NoteType.Evidence && evidenceNoteData.Status == NoteStatus.Approved)
+                {
+                    var model = new VoidEvidenceNoteViewModel()
+                    {
+                        ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, TempData[ViewDataConstant.EvidenceNoteStatus], this.User))
+                    };
+
+                    return View("VoidEvidenceNote", model);
+                }
+
+                return RedirectToAction(nameof(Index),
+                    new { tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString() });
             }
         }
 
@@ -150,7 +178,39 @@
                     new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
                         transferNoteData, null, this.User))
             };
+
             return model;
+        }
+
+        [HttpPost]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> VoidEvidenceNote(VoidEvidenceNoteViewModel model)
+        {
+            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            using (var client = apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    await client.SendAsync(User.GetAccessToken(), new VoidNoteRequest(model.ViewEvidenceNoteViewModel.Id, model.VoidedReason));
+
+                    TempData[ViewDataConstant.EvidenceNoteStatus] = NoteUpdatedStatusEnum.Void;
+
+                    return RedirectToAction("ViewEvidenceNote", "ManageEvidenceNotes", new { evidenceNoteId = model.ViewEvidenceNoteViewModel.Id });
+                }
+
+                var request = new GetEvidenceNoteForInternalUserRequest(model.ViewEvidenceNoteViewModel.Id);
+
+                var evidenceNoteData = await client.SendAsync(User.GetAccessToken(), request);
+
+                var updatedModel = new VoidEvidenceNoteViewModel()
+                {
+                    ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, this.User))
+                };
+
+                return View("VoidEvidenceNote", updatedModel);
+            }
         }
 
         [HttpPost]
@@ -164,7 +224,7 @@
             {
                 if (ModelState.IsValid)
                 {
-                    await client.SendAsync(User.GetAccessToken(), new VoidTransferNoteRequest(model.ViewTransferNoteViewModel.EvidenceNoteId, model.VoidedReason));
+                    await client.SendAsync(User.GetAccessToken(), new VoidNoteRequest(model.ViewTransferNoteViewModel.EvidenceNoteId, model.VoidedReason));
 
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = NoteUpdatedStatusEnum.Void;
 

@@ -60,6 +60,8 @@
         [DisplayName("Reason")]
         public string VoidedReason { get; set; }
 
+        public bool CanVoid { get; set; }
+
         public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(ReturnedReason);
 
         public bool DisplayRejectedReason => Status.Equals(NoteStatus.Rejected) && !string.IsNullOrWhiteSpace(RejectedReason);
