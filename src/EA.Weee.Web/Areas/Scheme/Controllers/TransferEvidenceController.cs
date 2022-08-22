@@ -13,6 +13,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
+    using Filters;
     using Infrastructure;
     using Mappings.ToViewModels;
     using Requests;
@@ -40,6 +41,7 @@
 
         [HttpGet]
         [CheckCanCreateTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> TransferEvidenceNote(Guid pcsId, int complianceYear)
         {
             await SetBreadcrumb(pcsId);
@@ -95,6 +97,7 @@
 
         [HttpGet]
         [CheckCanCreateTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> TransferFrom(Guid pcsId, int complianceYear)
         {
             using (var client = this.apiClient())
@@ -153,6 +156,7 @@
 
         [HttpGet]
         [CheckCanCreateTransferNote]
+        [NoCacheFilter]
         public async Task<ActionResult> TransferTonnage(Guid pcsId, int complianceYear, bool transferAllTonnage = false)
         {
             using (var client = this.apiClient())
@@ -204,7 +208,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab)
+        [NoCacheFilter]
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1)
         {
             await SetBreadcrumb(pcsId);
 
@@ -221,6 +226,8 @@
                     RedirectTab = redirectTab,
                     SystemDateTime = currentDateTime
                 });
+
+                ViewBag.Page = page;
 
                 return this.View("TransferredEvidence", model);
             }

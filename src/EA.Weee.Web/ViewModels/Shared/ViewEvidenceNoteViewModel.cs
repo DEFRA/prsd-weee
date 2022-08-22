@@ -82,5 +82,7 @@
         }
 
         public string RedirectTab { get; set; }
+
+        public bool CanDisplayApprovedNotesMessage { get; set; }
     }
 }

@@ -179,7 +179,7 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\SetNoteStatusRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\VoidTransferNoteRequestTests.cs" />
-    <Compile Include="AatfEvidence\VoidTransferNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\VoidNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\TransferTonnagesValidatorTests.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />

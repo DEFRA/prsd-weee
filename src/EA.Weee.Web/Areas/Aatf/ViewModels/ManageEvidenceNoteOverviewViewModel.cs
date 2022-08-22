@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using Core.Shared.Paging;
     using Web.ViewModels.Shared;
 

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
     using System;
+    using System.Security.Principal;
     using Core.AatfEvidence;
     using Prsd.Core;
 
@@ -14,13 +15,16 @@
 
         public bool IncludeAllCategories { get; set; }
 
-        public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus)
+        public IPrincipal User { get; private set; }
+
+        public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus, IPrincipal user = null)
         {
             Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);
 
             EvidenceNoteData = evidenceNoteData;
             NoteStatus = noteStatus;
             IncludeAllCategories = true;
+            User = user;
         }
 
         public string RedirectTab { get; set; }

@@ -43,8 +43,9 @@
         {
             //arrange
             var schemeId = fixture.Create<Guid>();
+
             // act
-            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status)
+            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status, null)
             {
                 SchemeId = schemeId
             });
@@ -79,8 +80,7 @@
         public void Map_GivenAValidEvidenceNote_MapperShouldBeCalled()
         {
             // arrange
-            var note = fixture.Create<EvidenceNoteData>();
-            var transfer = fixture.Create<ViewEvidenceNoteMapTransfer>();
+            var transfer = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
 
             // act
             map.Map(transfer);
@@ -94,7 +94,7 @@
         {
             //arrange
             EvidenceNoteData note = fixture.Create<EvidenceNoteData>();
-            var transfer = new ViewEvidenceNoteMapTransfer(note, null);
+            var transfer = new ViewEvidenceNoteMapTransfer(note, null, null);
             var viewEvidenceNoteViewModel = new ViewEvidenceNoteViewModel();
             A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(viewEvidenceNoteViewModel);
 
