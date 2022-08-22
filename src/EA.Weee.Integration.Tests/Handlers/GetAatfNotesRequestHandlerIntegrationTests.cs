@@ -136,6 +136,8 @@
                 var evidence1 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                 .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                 .Create();
 
@@ -154,6 +156,8 @@
                 var evidence4 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                 .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                 .Create();
             };
@@ -225,6 +229,7 @@
                 .With(n =>
                 {
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                     n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                 })
                 .Create();

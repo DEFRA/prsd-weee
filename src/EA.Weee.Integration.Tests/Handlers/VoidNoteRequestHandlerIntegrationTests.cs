@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
-    using System;
-    using System.Threading.Tasks;
     using Autofac;
     using AutoFixture;
     using Base;
@@ -9,17 +7,19 @@
     using Core.Shared;
     using Domain.Evidence;
     using Domain.Organisation;
+    using EA.Weee.Requests.Shared;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
-    using Requests.AatfEvidence;
+    using System;
+    using System.Threading.Tasks;
     using NoteStatus = Domain.Evidence.NoteStatus;
 
-    public class VoidTransferNoteRequestHandlerIntegrationTests : IntegrationTestBase
+    public class VoidNoteRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIVoidTheNote : VoidTransferNoteRequestHandlerIntegrationTestBase
+        public class WhenIVoidTheNote : VoidNoteRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -39,7 +39,7 @@
                     })
                     .Create();
 
-                request = new VoidTransferNoteRequest(note.Id, "reason");
+                request = new VoidNoteRequest(note.Id, "reason");
             };
 
             private readonly Because of = () =>
@@ -65,11 +65,11 @@
             };
         }
 
-        public class VoidTransferNoteRequestHandlerIntegrationTestBase : WeeeContextSpecification
+        public class VoidNoteRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<VoidTransferNoteRequest, Guid> handler;
+            protected static IRequestHandler<VoidNoteRequest, Guid> handler;
             protected static Organisation organisation;
-            protected static VoidTransferNoteRequest request;
+            protected static VoidNoteRequest request;
             protected static Guid result;
             protected static Note note;
             protected static Fixture fixture;
@@ -84,7 +84,7 @@
                 Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<VoidTransferNoteRequest, Guid>>();
+                handler = Container.Resolve<IRequestHandler<VoidNoteRequest, Guid>>();
 
                 return setup;
             }
