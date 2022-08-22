@@ -7,7 +7,6 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using EA.Weee.Security;
-    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
     using Prsd.Core;
@@ -87,7 +86,10 @@
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
                 EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
-                CanVoid = InternalAdmin(source.User)
+                CanVoid = InternalAdmin(source.User) && 
+                          source.EvidenceNoteData.Status == NoteStatus.Approved && 
+                          source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => e.Status != NoteStatus.Approved),
+                CanDisplayApprovedNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => e.Status == NoteStatus.Approved)
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
