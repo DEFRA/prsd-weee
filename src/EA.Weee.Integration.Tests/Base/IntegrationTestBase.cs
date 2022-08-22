@@ -153,11 +153,11 @@
 
                 try
                 {
-                    if (hardReset || !TestingStatus.IsDbBuilt)
-                    {
-                        Console.WriteLine("Rebuilding Test database");
-                        new DatabaseSeeder().RebuildDatabase();
-                    }
+                    //if (hardReset || !TestingStatus.IsDbBuilt)
+                    //{
+                    //    Console.WriteLine("Rebuilding Test database");
+                    //    new DatabaseSeeder().RebuildDatabase();
+                    //}
 
                     var userManager = Container.Resolve<ApplicationUserManager>();
                     const string user = "integration-email@email.com";
