@@ -10,8 +10,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
-    using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -19,13 +17,8 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Extensions;
-    using Prsd.Core.Extensions;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Attributes;
     using Filters;
+    using Prsd.Core.Extensions;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
