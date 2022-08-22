@@ -25,7 +25,7 @@
     using NoteStatus = Domain.Evidence.NoteStatus;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class VoidTransferNoteRequestHandlerTests : SimpleUnitTestBase
+    public class VoidNoteRequestHandlerTests : SimpleUnitTestBase
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
@@ -35,7 +35,7 @@
         private readonly DateTime currentDate;
         private readonly VoidNoteRequestHandler handler;
 
-        public VoidTransferNoteRequestHandlerTests()
+        public VoidNoteRequestHandlerTests()
         {
             context = A.Fake<WeeeContext>();
             userContext = A.Fake<IUserContext>();
@@ -60,7 +60,7 @@
         }
 
         [Fact]
-        public void VoidTransferNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
+        public void VoidNoteRequestHandler_ShouldDerivedFromSaveTransferNoteRequestBase()
         {
             typeof(VoidNoteRequestHandler).Should().BeDerivedFrom<SaveNoteRequestBase>();
         }
@@ -171,20 +171,25 @@
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
             // Assert
-            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be($"Cannot void note with id {id}");
         }
 
-        //[Fact]
-        public async Task HandleAsync_WithNoteFoundThatIsTransferNote_ShouldThrowInvalidOperationException()
+        [Fact]
+        public async Task HandleAsync_WithNoteFoundThatIsApprovedButHasEvidenceNoteWithApprovedTransfers_ShouldThrowInvalidOperationException()
         {
-            // both transfer and evidence note can be Voided
-            // this unit test is not relevant anymore
-
             // Arrange
             var id = TestFixture.Create<Guid>();
+            var noteTransferTonnages = new List<NoteTransferTonnage>();
+            var transferNote = A.Fake<Note>();
+            A.CallTo(() => transferNote.Status).Returns(NoteStatus.Approved);
+            var noteTransferTonnage = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnage.TransferNote).Returns(transferNote);
+            noteTransferTonnages.Add(noteTransferTonnage);
+
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => note.Status).Returns(NoteStatus.Approved);
             A.CallTo(() => note.NoteType).Returns(NoteType.EvidenceNote);
+            A.CallTo(() => note.NoteTransferTonnage).Returns(noteTransferTonnages);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
 
             var request = new VoidNoteRequest(id);
@@ -193,7 +198,58 @@
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
 
             // Assert
-            exception.Should().BeOfType<InvalidOperationException>();
+            exception.Should().BeOfType<InvalidOperationException>().Which.Message.Should().Be($"Cannot void note with id {id} as its has approved transfers");
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithNoteFoundThatIsApprovedAndHasEvidenceNoteWithNonApprovedTransfers_ShouldNotThrowInvalidOperationException()
+        {
+            // Arrange
+            var id = TestFixture.Create<Guid>();
+            var noteTransferTonnages = new List<NoteTransferTonnage>();
+            var transferNoteDraft = A.Fake<Note>();
+            A.CallTo(() => transferNoteDraft.Status).Returns(NoteStatus.Draft);
+            var noteTransferTonnageDraft = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnageDraft.TransferNote).Returns(transferNoteDraft);
+            noteTransferTonnages.Add(noteTransferTonnageDraft);
+
+            var transferNoteSubmitted = A.Fake<Note>();
+            A.CallTo(() => transferNoteSubmitted.Status).Returns(NoteStatus.Submitted);
+            var noteTransferTonnageSubmitted = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnageSubmitted.TransferNote).Returns(transferNoteSubmitted);
+            noteTransferTonnages.Add(noteTransferTonnageSubmitted);
+
+            var transferNoteVoid = A.Fake<Note>();
+            A.CallTo(() => transferNoteVoid.Status).Returns(NoteStatus.Void);
+            var noteTransferTonnageVoid = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnageVoid.TransferNote).Returns(transferNoteVoid);
+            noteTransferTonnages.Add(noteTransferTonnageVoid);
+
+            var transferNoteReturned = A.Fake<Note>();
+            A.CallTo(() => transferNoteReturned.Status).Returns(NoteStatus.Returned);
+            var noteTransferTonnageReturned = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnageReturned.TransferNote).Returns(transferNoteReturned);
+            noteTransferTonnages.Add(noteTransferTonnageReturned);
+
+            var transferNoteRejected = A.Fake<Note>();
+            A.CallTo(() => transferNoteRejected.Status).Returns(NoteStatus.Returned);
+            var noteTransferTonnageRejected = A.Fake<NoteTransferTonnage>();
+            A.CallTo(() => noteTransferTonnageRejected.TransferNote).Returns(transferNoteRejected);
+            noteTransferTonnages.Add(noteTransferTonnageRejected);
+
+            A.CallTo(() => note.Id).Returns(id);
+            A.CallTo(() => note.Status).Returns(NoteStatus.Approved);
+            A.CallTo(() => note.NoteType).Returns(NoteType.EvidenceNote);
+            A.CallTo(() => note.NoteTransferTonnage).Returns(noteTransferTonnages);
+            A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
+
+            var request = new VoidNoteRequest(id);
+
+            // Act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            // Assert
+            exception.Should().BeNull();
         }
 
         [Fact]

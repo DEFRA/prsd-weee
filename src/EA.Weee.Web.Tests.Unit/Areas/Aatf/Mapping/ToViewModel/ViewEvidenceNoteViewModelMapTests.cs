@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Principal;
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.AatfReturn;
@@ -10,10 +11,10 @@
     using Core.Helpers;
     using Core.Organisations;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
+    using Security;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
@@ -676,6 +677,225 @@
             result.EvidenceNoteHistoryData.First().TransferredTo.Should().Be(history.First().TransferredTo);
 
             A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void Map_GivenEvidenceNoteIsNotApprovedAndUserIsAdmin_CanVoidShouldBeFalse(NoteStatus status)
+        {
+            if (status == NoteStatus.Approved)
+            {
+                return;
+            }
+
+            //arrange
+            var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
+            
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, status).Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanVoid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsNotAdminAndNoApprovedNotes_CanVoidShouldBeFalse()
+        {
+            //arrange
+            var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { string.Empty });
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, NoteStatus.Approved).Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanVoid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminNoApprovedNotes_CanVoidShouldBeTrue()
+        {
+            //arrange
+            var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, NoteStatus.Approved).Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanVoid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoteHasApprovedNotes_CanVoidShouldBeFalse()
+        {
+            //arrange
+            var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
+
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Approved,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>())
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, NoteStatus.Approved)
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanVoid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenEvidenceNoteNoteHasApprovedNotes_CanDisplayApprovedNotesMessageShouldBeTrue()
+        {
+            //arrange
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Approved,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>())
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanDisplayApprovedNotesMessage.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoteHasNoApprovedNotes_CanVoidShouldBeTrue()
+        {
+            //arrange
+            var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
+
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Draft,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Rejected,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Returned,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Submitted,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Void,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>())
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, NoteStatus.Approved)
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanVoid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenEvidenceNoteHasNoApprovedNotes_CanDisplayApprovedNotesMessageShouldBeFalse()
+        {
+            //arrange
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Draft,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Rejected,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Returned,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Submitted,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Void,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>())
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanDisplayApprovedNotesMessage.Should().BeFalse();
         }
     }
 }
