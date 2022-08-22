@@ -64,6 +64,12 @@
             return this;
         }
 
+        public EvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.Status, statusToUpdate, instance);
+            return this;
+        }
+
         public EvidenceNoteDbSetup WithTonnages(List<NoteTonnage> tonnages)
         {
             instance.NoteTonnage.Clear();
