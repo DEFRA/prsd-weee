@@ -93,6 +93,7 @@
                 // note not to be found not matching note type, matching status and category
                 var note8ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
                 note8ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note8ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
                 note8ToNotBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.Now);
                 note8ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null));
 
@@ -101,6 +102,7 @@
                 // note not to be found not matching note type, matching status and category
                 var note9ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
                 note9ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note9ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
                 note9ToNotBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.Now);
                 note9ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 1, null));
 
@@ -234,6 +236,7 @@
                 // note not to be found not matching note type, matching status and category
                 var note8ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
                 note8ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note8ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
                 note8ToNotBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.Now);
                 note8ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null));
 
@@ -242,6 +245,7 @@
                 // note not to be found not matching note type, matching status and category
                 var note9ToNotBeFound = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
                 note9ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note9ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
                 note9ToNotBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.Now);
                 note9ToNotBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 1, null));
 
