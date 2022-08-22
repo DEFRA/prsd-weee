@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Constant;
-    using Core.Scheme;
     using EA.Weee.Web.Areas.Scheme.Attributes;
     using EA.Weee.Web.Controllers.Base;
     using Services;
