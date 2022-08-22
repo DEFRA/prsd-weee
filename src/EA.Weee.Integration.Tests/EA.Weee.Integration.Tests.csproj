@@ -209,7 +209,7 @@
     <Compile Include="Handlers\GetObligationComplianceYearsHandlerTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationUploadHandlerIntegrationTests.cs" />
-    <Compile Include="Handlers\VoidTransferNoteRequestHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\VoidNoteRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\SubmitSchemeObligationHandlerTests.cs" />
     <Compile Include="Handlers\CreateTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\EditEvidenceNoteHandlerIntegationTests.cs" />
