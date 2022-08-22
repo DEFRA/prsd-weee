@@ -134,14 +134,14 @@
                 {
                     var model = new VoidEvidenceNoteViewModel()
                     {
-                        ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, TempData[ViewDataConstant.EvidenceNoteStatus], this.User))
+                        ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, null))
                     };
 
                     return View("VoidEvidenceNote", model);
                 }
 
                 return RedirectToAction(nameof(Index),
-                    new { tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString() });
+                    new { tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString() });
             }
         }
 
@@ -176,7 +176,7 @@
             {
                 ViewTransferNoteViewModel = mapper.Map<ViewTransferNoteViewModel>(
                     new ViewTransferNoteViewModelMapTransfer(transferNoteData.TransferredOrganisationData.Id,
-                        transferNoteData, null, this.User))
+                        transferNoteData, null, null))
             };
 
             return model;
@@ -206,7 +206,7 @@
 
                 var updatedModel = new VoidEvidenceNoteViewModel()
                 {
-                    ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, this.User))
+                    ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, null))
                 };
 
                 return View("VoidEvidenceNote", updatedModel);
