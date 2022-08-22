@@ -170,7 +170,7 @@
 
                     if (schemeId.HasValue)
                     {
-                        var request = new GetObligationSummaryRequest(schemeId.Value, complianceYear.Value);
+                        var request = new GetObligationSummaryRequest(schemeId.Value, complianceYear.Value, true);
                         obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
                     }
                 }

@@ -16,13 +16,13 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Domain.Evidence;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.Requests.Shared;
     using FluentAssertions;
     using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
-    using Requests.Admin.Obligations;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
 
     public class GetObligationSummaryRequestHandlerIntegrationTests : IntegrationTestBase
@@ -341,7 +341,7 @@
                     .WithRecipient(recipientOrganisation2.Id)
                     .Create();
 
-                request = new GetObligationSummaryRequest(scheme.Id, 2022);
+                request = new GetObligationSummaryRequest(scheme.Id, 2022, true);
             };
 
             private readonly Because of = () =>
@@ -673,7 +673,7 @@
                     }
                 }
 
-                request = new GetObligationSummaryRequest(schemesList.ElementAt(0).Id, 2023);
+                request = new GetObligationSummaryRequest(schemesList.ElementAt(0).Id, 2023, true);
             };
 
             private readonly Because of = () =>
