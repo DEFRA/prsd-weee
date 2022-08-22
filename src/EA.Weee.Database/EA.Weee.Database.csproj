@@ -350,6 +350,7 @@
     <Content Include="scripts\Update\Release 5\Sprint10\20220810-1407-add-evidence-view.sql" />
     <Content Include="scripts\Update\Release 5\Sprint10\20220810-1407-add-transfer-view.sql" />
     <Content Include="scripts\Update\Release 5\Sprint10\20220815-1625-add-obligation-evidence-summary-query.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint11\20220822-1702-alter-obligation-evidence-summary-query.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
