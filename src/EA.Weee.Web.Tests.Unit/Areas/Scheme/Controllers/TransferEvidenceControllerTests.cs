@@ -27,6 +27,7 @@
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
+    using Web.Filters;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.Shared;
@@ -69,10 +70,36 @@
         }
 
         [Fact]
+        public void TransferredEvidenceGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void TransferredEvidenceGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
+        public void TransferEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
         public void TransferEvidenceNoteGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
         {
             typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
+        }
+
+        [Fact]
+        public void TransferTonnageGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(Guid), typeof(int), typeof(bool) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -93,6 +120,13 @@
         {
             typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void TransferFromGet_ShouldHaveNoCacheFilterAttribute()
+        {
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -1724,6 +1758,19 @@
                          t.RedirectTab == redirectTab &&
                          t.SystemDateTime == currentDate)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferredEvidenceGet_GivenPageNumber_ShouldPopulateViewBagWithPageNumber()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), "view-and-transfer-evidence", pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
         }
 
         private void AddModelError()

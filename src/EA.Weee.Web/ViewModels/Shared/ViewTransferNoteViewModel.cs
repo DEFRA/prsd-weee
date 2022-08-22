@@ -18,8 +18,6 @@
 
         public bool EditMode { get; set; }
 
-        public bool CanVoid { get; set; }
-
         public override string TabName
         {
             get

@@ -57,6 +57,8 @@
 
         if (Model.SchemeId.HasValue)
         {
+            Html.RenderPartial("_EvidenceReportHintText");
+
             <table id="evidence-summary-table" class="govuk-table">
                 <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
                 <thead class="govuk-table__head">

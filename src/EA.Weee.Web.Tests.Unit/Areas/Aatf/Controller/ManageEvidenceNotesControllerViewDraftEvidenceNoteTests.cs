@@ -6,10 +6,10 @@
     using AutoFixture;
     using Constant;
     using Core.AatfEvidence;
-    using Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Controllers;
+    using Web.Filters;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
@@ -21,8 +21,15 @@
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void ViewDraftEvidenceNoteGet_ShouldHaveNoCacheAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -118,6 +125,19 @@
 
             //asset
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task ViewDraftEvidenceNoteGet_GivenPageNumber_ShouldPopulateViewBagPage()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
         }
     }
 }

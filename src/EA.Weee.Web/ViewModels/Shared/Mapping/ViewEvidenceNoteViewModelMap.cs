@@ -2,9 +2,11 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
+    using System.Security.Principal;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
     using Prsd.Core;
@@ -42,18 +44,20 @@
                 AatfId = source.EvidenceNoteData.AatfData.Id,
                 Reference = source.EvidenceNoteData.Reference,
                 Status = source.EvidenceNoteData.Status,
-                Type = source.EvidenceNoteData.Type,
+                Type = source.EvidenceNoteData.Type, 
                 StartDate = source.EvidenceNoteData.StartDate,
                 EndDate = source.EvidenceNoteData.EndDate,
                 SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 ReturnedDate = source.EvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(),
-                RejectedDate = source.EvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(),
+                RejectedDate = source.EvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(), 
+                VoidedDate = source.EvidenceNoteData.VoidedDate.ToDisplayGMTDateTimeString(),
                 RejectedReason = source.EvidenceNoteData.RejectedReason,
-                ReturnedReason = source.EvidenceNoteData.ReturnedReason,
+                ReturnedReason = source.EvidenceNoteData.ReturnedReason, 
+                VoidedReason = source.EvidenceNoteData.VoidedReason,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
-                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
+                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty, 
                 ComplianceYear = source.EvidenceNoteData.ComplianceYear,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
@@ -77,11 +81,15 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null),
-                SchemeId = source.SchemeId,
+                SchemeId = source.SchemeId, 
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
-                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData)
+                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
+                CanVoid = InternalAdmin(source.User) && 
+                          source.EvidenceNoteData.Status == NoteStatus.Approved && 
+                          source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => e.Status != NoteStatus.Approved),
+                CanDisplayApprovedNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => e.Status == NoteStatus.Approved)
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
@@ -108,6 +116,16 @@
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 
             return model;
+        }
+
+        private bool InternalAdmin(IPrincipal user)
+        {
+            if (user == null)
+            {
+                return false;
+            }
+            var claimsPrincipal = new ClaimsPrincipal(user);
+            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
         }
 
         private void SetSuccessMessage(EvidenceNoteData note, object noteStatus, ViewEvidenceNoteViewModel model)
@@ -138,6 +156,9 @@
                             break;
                         case NoteUpdatedStatusEnum.ReturnedSubmitted:
                             model.SuccessMessage = $"You have successfully submitted the returned evidence note with reference ID E{note.Reference}";
+                            break;
+                        case NoteUpdatedStatusEnum.Void:
+                            model.SuccessMessage = $"You have successfully voided the evidence note with reference ID E{note.Reference}";
                             break;
                     }
                 }
