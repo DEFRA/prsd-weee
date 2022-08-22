@@ -1,2 +1,2 @@
 cd scripts
-AliaSQL.exe Update .\sqlexpress EA.Weee ..\scripts
+AliaSQL.exe Update .\sqlexpress WeeeTest ..\scripts
