@@ -171,15 +171,8 @@
 
         private void DisplayAatf(int i, TransferEvidenceViewModelBase model)
         {
-            //GC: fending for null occurring in unti tests - not sure this is the best solution though
-            if (i > 0 && model.EvidenceNotesDataList.ElementAt(i).SubmittedBy == null)
-            {
-                model.EvidenceNotesDataList.ElementAt(i).DisplayAatfName = false;
-                return;
-            }
-
             if (i > 0 && model.EvidenceNotesDataList.Count > 1 && model.EvidenceNotesDataList.ElementAt(i).SubmittedBy
-                .Equals(model.EvidenceNotesDataList.ElementAt(i - 1).SubmittedBy))
+                    .Equals(model.EvidenceNotesDataList.ElementAt(i - 1).SubmittedBy))
             {
                 model.EvidenceNotesDataList.ElementAt(i).DisplayAatfName = false;
             }
