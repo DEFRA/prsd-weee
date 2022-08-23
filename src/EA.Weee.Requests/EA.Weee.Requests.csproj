@@ -49,7 +49,7 @@
     <Compile Include="AatfEvidence\EditEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteBaseRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
-    <Compile Include="Admin\Obligations\GetObligationSummaryRequest.cs" />
+    <Compile Include="Shared\GetObligationSummaryRequest.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForAatfRequest.cs" />
