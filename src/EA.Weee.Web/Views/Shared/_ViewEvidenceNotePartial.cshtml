@@ -126,7 +126,7 @@ else
         @(this.WeeeGds().Submit("Void evidence note", new { id = "voidEvidenceNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
     }
 }
-else if (Model.CanDisplayNotesMessage)
+@*else if (Model.CanDisplayNotesMessage)
 {
     <style type="text/css">
         .govuk-warning-text__text {
@@ -136,7 +136,7 @@ else if (Model.CanDisplayNotesMessage)
     <div class="govuk-width-container govuk-body govuk-!-padding-left-0">
         @(this.WeeeGds().Warning("This evidence note cannot be voided as it has not been approved, or it has been approved but has transfers associated with it. Ensure that the evidence note transfers are void or have been rejected before voiding this evidence note."))
     </div>
-}
+}*@
 
 <div class="govuk-width-container govuk-!-padding-left-0">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
