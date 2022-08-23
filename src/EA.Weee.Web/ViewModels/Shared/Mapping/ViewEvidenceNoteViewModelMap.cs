@@ -37,6 +37,8 @@
                 ? source.EvidenceNoteData.RecipientOrganisationData.BusinessAddress
                 : source.EvidenceNoteData.RecipientOrganisationData.NotificationAddress;
 
+            var allowVoidStatus = new List<NoteStatus>() { NoteStatus.Void, NoteStatus.Rejected };
+
             var model = new ViewEvidenceNoteViewModel
             {
                 Id = source.EvidenceNoteData.Id,
@@ -88,8 +90,8 @@
                 EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
                 CanVoid = InternalAdmin(source.User) && 
                           source.EvidenceNoteData.Status == NoteStatus.Approved && 
-                          source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => e.Status != NoteStatus.Approved),
-                CanDisplayApprovedNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => e.Status == NoteStatus.Approved)
+                          source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => allowVoidStatus.Contains(e.Status)),
+                CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status))
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
