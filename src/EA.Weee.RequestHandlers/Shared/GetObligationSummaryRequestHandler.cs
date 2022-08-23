@@ -37,10 +37,7 @@
             else
             {
                 authorization.EnsureCanAccessExternalArea();
-
-                var organisation = await organisationDataAccess.GetById(message.OrganisationId);
-
-                authorization.EnsureOrganisationAccess(organisation.Id);
+                authorization.EnsureOrganisationAccess(message.OrganisationId);
             }
 
             var summaryData = await evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(message.SchemeId, message.ComplianceYear);
