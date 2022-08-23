@@ -313,6 +313,7 @@
     <Compile Include="Areas\Admin\Controllers\ObligationsControllerViewObligationAndEvidenceSummaryTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ViewObligationsAndEvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidNoteViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidTransferNoteViewModelTests.cs" />
@@ -368,6 +369,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotesDisplayOptionsTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewEvidenceNoteViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\SummaryEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TotalCategoryValueTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNoteDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelTests.cs" />
