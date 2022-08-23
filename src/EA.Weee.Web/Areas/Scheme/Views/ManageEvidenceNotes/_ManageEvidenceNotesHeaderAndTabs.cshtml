@@ -34,10 +34,14 @@
 }
 
 <ul class="govuk-tabs__list">
-    @this.WeeeGds().Tab("Summary",
-       Url.Action("Index", "ManageEvidenceNotes",
-           new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.Summary.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
-       Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.Summary)
+    @if (!Model.SchemeInfo.IsBalancingScheme)
+    {
+        @(this.WeeeGds().Tab("Summary",
+            Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.Summary.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+            Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.Summary))
+    }
+    
     @this.WeeeGds().Tab("Review submitted evidence",
         Url.Action("Index", "ManageEvidenceNotes",
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
@@ -47,9 +51,9 @@
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
     @this.WeeeGds().Tab("Outgoing transfers",
-      Url.Action("Index", "ManageEvidenceNotes",
-          new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
-      Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
 </ul>
 
 
