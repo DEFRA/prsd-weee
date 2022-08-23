@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
@@ -12,13 +17,8 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Extensions;
-    using Prsd.Core.Extensions;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Attributes;
     using Filters;
+    using Prsd.Core.Extensions;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -63,12 +63,14 @@
 
                 if (tab == null)
                 {
-                    tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+                     tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
                 }
                 var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
 
                 switch (value)
                 {
+                    case ManageEvidenceNotesDisplayOptions.Summary:
+                        return await CreateAndPopulateEvideneSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
@@ -167,7 +169,6 @@
             {
                 await SetBreadcrumb(pcsId);
 
-                // create the new evidence note schemeName request from note's Guid
                 ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
 
                 if (model.ViewEvidenceNoteViewModel.Status != NoteStatus.Submitted)
@@ -175,7 +176,6 @@
                     return RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() });
                 }
 
-                //return viewmodel to view
                 return View("ReviewEvidenceNote", model);
             }
         }
@@ -229,6 +229,25 @@
                 ViewBag.Page = page;
 
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CreateAndPopulateEvideneSummaryViewModel(Guid pcsId, SchemePublicInfo scheme, DateTime currentDate, 
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        {
+            using (var client = apiClient())
+            {
+                var complianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
+
+                var request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
+
+                var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
+
+                var summaryModel = mapper.Map<SummaryEvidenceViewModel>
+                    (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
+
+                return View("SummaryEvidence", summaryModel);
             }
         }
 
