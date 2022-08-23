@@ -40,11 +40,26 @@
         }
 
         [Fact]
-        public async Task HandleAsync_NoInternalAccess_ThrowsSecurityException()
+        public async Task HandleAsync_GivenInternalAccessIsSetToTrue_NoInternalAccess_ThrowsSecurityException()
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
+            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
+
+            //act
+            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            exception.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenInternalAccessIsSetToFalse_NoExternalAccess_ThrowsSecurityException()
+        {
+            //arrange
+            var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
             var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
 
             //act
@@ -62,6 +77,48 @@
 
             //arrange
             A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_ExternalAccess_ShouldBeChecked()
+        {
+            // arrange 
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //arrange
+            A.CallTo(() => authorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
+        {
+            //arrange
+            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
+            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
+
+            //act
+            var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_EnsureOrganisationAccess_ShouldBeChecked()
+        {
+            // arrange 
+            var organisationId = TestFixture.Create<Guid>();
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false, organisationId);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //arrange
+            A.CallTo(() => authorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
