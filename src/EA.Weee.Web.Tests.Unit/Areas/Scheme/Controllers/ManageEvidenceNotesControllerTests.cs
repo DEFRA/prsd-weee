@@ -329,10 +329,8 @@
                          a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedDataAndPageNumber_ViewModelShouldBeBuilt(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTabAlongWithReturnedDataAndPageNumber_ViewModelShouldBeBuilt()
         {
             // Arrange
             var scheme = TestFixture.Create<SchemePublicInfo>();
@@ -346,7 +344,7 @@
             const int pageNumber = 10;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, pageNumber);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, pageNumber);
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -355,10 +353,8 @@
                          a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt()
         {
             // Arrange
             var scheme = A.Fake<SchemePublicInfo>();
@@ -372,7 +368,7 @@
 
             //act
 
-            await ManageEvidenceController.Index(OrganisationId, tab, model);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", model);
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -465,10 +461,8 @@
                          a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenReviewSubmittedEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewSubmittedEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned()
         {
             //arrange
             var model = TestFixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
@@ -476,7 +470,7 @@
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence") as ViewResult;
 
             //asset
             result.Model.Should().Be(model);
@@ -726,6 +720,9 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_SessionShouldBeUpdated()
         {
+            // arrange 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
+
             // act
             await ManageEvidenceController.Index(OrganisationId);
 
@@ -738,6 +735,9 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_EditTransferTonnageViewModelKeySessionShouldBeUpdated()
         {
+            // arrange 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
+
             // act
             await ManageEvidenceController.Index(OrganisationId);
 

@@ -8,6 +8,8 @@
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Scheme;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Admin.Mappings.ToViewModel;
     using Weee.Tests.Core;
@@ -19,7 +21,8 @@
 
         public ViewObligationsAndEvidenceSummaryViewModelMapTests()
         {
-            mapper = new ViewObligationsAndEvidenceSummaryViewModelMap();
+            var tonnageUtilities = A.Fake<ITonnageUtilities>();
+            mapper = new ViewObligationsAndEvidenceSummaryViewModelMap(tonnageUtilities);
         }
 
         [Fact]
