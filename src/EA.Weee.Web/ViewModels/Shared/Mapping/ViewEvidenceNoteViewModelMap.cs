@@ -4,7 +4,7 @@
     using System.Linq;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
     using Prsd.Core;
@@ -102,7 +102,29 @@
                     category.Id = noteTonnage.Id;
                 }
             }
-          
+
+            if (TransferHistoryHasApprovedTransferNotes(source.EvidenceNoteData.EvidenceNoteHistoryData))
+            {
+                model.DisplayTransferEvidenceColumns = true;
+
+                for (var i = model.TransferCategoryValues.Count - 1; i >= 0; i--)
+                {
+                    var category = model.TransferCategoryValues.ElementAt(i);
+
+                    var transferTonnage = source.EvidenceNoteData.EvidenceNoteHistoryData.SelectMany(x => x.TransferEvidenceTonnageData).Where(y => y.CategoryId == (WeeeCategory)category.CategoryId).Distinct().ToList();
+
+                    if ((transferTonnage == null || transferTonnage.Count == 0) && !source.IncludeAllCategories)
+                    {
+                        model.TransferCategoryValues.RemoveAt(i);
+                    }
+                    if (transferTonnage != null)
+                    {
+                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferTonnage.Sum(x => x.Received));
+                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferTonnage.Sum(x => x.Reused));
+                    }
+                }
+            }
+
             model.TotalReceivedDisplay = model.ReceivedTotal;
 
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
@@ -142,6 +164,11 @@
                     }
                 }
             }
+        }
+
+        private bool TransferHistoryHasApprovedTransferNotes(List<EvidenceNoteHistoryData> historyData)
+        {
+            return (historyData != null && historyData.Count >= 1 && historyData.Where(x => x.Status.Equals(NoteStatus.Approved)).Any(y => y.TransferEvidenceTonnageData != null && y.TransferEvidenceTonnageData.Count >= 1)) ? true : false;
         }
     }
 }

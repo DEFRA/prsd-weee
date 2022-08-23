@@ -7,13 +7,12 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     [Serializable]
     public class EvidenceNoteViewModel
     {
-        private readonly ICategoryValueTotalCalculator categoryValueCalculator;
+        protected readonly ICategoryValueTotalCalculator CategoryValueCalculator;
 
         public Guid Id { get; set; }
 
@@ -68,13 +67,13 @@
 
         public EvidenceNoteViewModel()
         {
-            categoryValueCalculator = new CategoryValueTotalCalculator();
+            CategoryValueCalculator = new CategoryValueTotalCalculator();
             AddCategoryValues(new EvidenceCategoryValues());
         }
 
         public EvidenceNoteViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
         {
-            this.categoryValueCalculator = categoryValueCalculator;
+            this.CategoryValueCalculator = categoryValueCalculator;
             AddCategoryValues(new EvidenceCategoryValues());
         }
 
@@ -96,9 +95,9 @@
             }
         }
 
-        public string ReceivedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
+        public string ReceivedTotal => CategoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
 
-        public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
+        public string ReusedTotal => CategoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
 
         public string AatfRedirectTab
         {
