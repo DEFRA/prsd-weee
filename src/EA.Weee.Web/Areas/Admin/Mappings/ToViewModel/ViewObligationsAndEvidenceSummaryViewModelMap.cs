@@ -7,10 +7,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using EA.Weee.Web.Areas.Shared.ToViewModels;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
 
     public class ViewObligationsAndEvidenceSummaryViewModelMap : ObligationEvidenceSummaryDataToViewModel<ViewObligationsAndEvidenceSummaryViewModel, ViewObligationsAndEvidenceSummaryViewModelMapTransfer>,
         IMap<ViewObligationsAndEvidenceSummaryViewModelMapTransfer, ViewObligationsAndEvidenceSummaryViewModel>
     {
+        public ViewObligationsAndEvidenceSummaryViewModelMap(ITonnageUtilities tonnageUtilities) : base(tonnageUtilities)
+        {
+        }
+
         public ViewObligationsAndEvidenceSummaryViewModel Map(ViewObligationsAndEvidenceSummaryViewModelMapTransfer source)
         {
             Condition.Requires(source).IsNotNull();
