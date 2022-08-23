@@ -27,7 +27,7 @@
     public class EvidenceNoteSeeder : IntegrationTestBase
     {
         [Component]
-        //[Ignore("Time consuming data set only use for seeding of data")]
+        [Ignore("Time consuming data set only use for seeding of data")]
         public class SeedTheDataBaseWithLotsOfNotes : EvidenceNoteSeederBase
         {
             private readonly Establish context = () =>
@@ -38,8 +38,8 @@
                 var schemesList = new List<Scheme>();
                 var organisations = new List<Organisation>();
                 var aatfs = new List<Aatf>();
-                const int numberOfNotes = 2500;
-                const int numberOfTransfers = 500;
+                const int numberOfNotes = 1100;
+                const int numberOfTransfers = 300;
                 Random randomTransfer = new Random();
                 Random randomAatf = new Random();
                 Random tonnageRandom = new Random();
@@ -115,7 +115,7 @@
                     foreach (var organisation in organisations)
                     {
                         var notes = new List<Note>();
-                        for (int i = 0; i < randomApprovedNote.Next(numberOfNotes - 750, numberOfNotes - 1); i++)
+                        for (int i = 0; i < randomApprovedNote.Next(numberOfNotes - 200, numberOfNotes - 1); i++)
                         {
                             var tonnage1 = NextTonnage(tonnageRandom);
                             var tonnage2 = NextTonnage(tonnageRandom);
@@ -162,7 +162,7 @@
                         }
 
                         //create some random notes with status and waste type
-                        for (int i = 0; i < 200; i++)
+                        for (int i = 0; i < 100; i++)
                         {
                             var tonnage1 = NextTonnage(tonnageRandom);
                             var tonnage2 = NextTonnage(tonnageRandom);
@@ -201,7 +201,7 @@
                             var wasteType = (WasteType)wasteTypes.GetValue(randomWastType.Next(wasteTypes.Length));
 
                             var newNote = EvidenceNoteDbSetup.Init().WithRecipient(organisation.Id)
-                                .WithStatus(status)
+                                .WithStatusUpdate(status)
                                 .WithWasteType(wasteType)
                                 .WithAatf(aatfs.ElementAt(randomAatf.Next(0, 49)).Id)
                                 .WithComplianceYear(year)
@@ -214,21 +214,6 @@
                         {
                             // create transfer in note 1
                             var noteToTransfer = notes.ElementAt(randomTransfer.Next(0, notes.Count - 1));
-
-                            //var tonnage1 = NextTonnage(tonnageRandom);
-                            //var tonnage2 = NextTonnage(tonnageRandom);
-                            //var tonnage3 = NextTonnage(tonnageRandom);
-                            //var tonnage4 = NextTonnage(tonnageRandom);
-                            //var tonnage5 = NextTonnage(tonnageRandom);
-                            //var tonnage6 = NextTonnage(tonnageRandom);
-                            //var tonnage7 = NextTonnage(tonnageRandom);
-                            //var tonnage8 = NextTonnage(tonnageRandom);
-                            //var tonnage9 = NextTonnage(tonnageRandom);
-                            //var tonnage10 = NextTonnage(tonnageRandom);
-                            //var tonnage11 = NextTonnage(tonnageRandom);
-                            //var tonnage12 = NextTonnage(tonnageRandom);
-                            //var tonnage13 = NextTonnage(tonnageRandom);
-                            //var tonnage14 = NextTonnage(tonnageRandom);
 
                             var noteTonnage1 = noteToTransfer.NoteTonnage.First(
                                 nt => nt.CategoryId.Equals(WeeeCategory.PhotovoltaicPanels));
@@ -292,10 +277,10 @@
                             };
 
                             TransferEvidenceNoteDbSetup.Init().With(t =>
-                                {
-                                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
-                                }).WithTonnages(newTransferNoteTonnage1)
+                            {
+                                t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                                t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                            }).WithTonnages(newTransferNoteTonnage1)
                                 .WithWasteType(WasteType.HouseHold)
                                 .WithComplianceYear(year)
                                 .WithRecipient(organisation.Id)
@@ -342,7 +327,7 @@
                 {
                     randH = rng.NextDouble();
                     randL = rng.NextDouble();
-                } 
+                }
                 while (randH > 0.999d || randL > 0.999d);
 
                 var randValue = (decimal)randH + ((decimal)randL / 1E14m);
