@@ -994,7 +994,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned(string tab)
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceNotesViewModel_SummaryEvidenceViewModelShouldBeReturned(string tab)
         {
             // arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
