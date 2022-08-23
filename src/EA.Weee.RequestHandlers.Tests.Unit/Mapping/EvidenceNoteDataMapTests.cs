@@ -19,13 +19,13 @@
     public class EvidenceNoteDataMapTests : SimpleUnitTestBase
     {
         private readonly IMapper mapper;
-        private readonly EvidenceNoteDataMap map;
+        private readonly ListOfEvidenceNoteDataMap map;
 
         public EvidenceNoteDataMapTests()
         {
             mapper = A.Fake<IMapper>();
 
-            map = new EvidenceNoteDataMap(mapper);
+            map = new ListOfEvidenceNoteDataMap(mapper);
         }
 
         [Fact]
@@ -49,7 +49,7 @@
             var result = map.Map(source);
 
             // assert
-            result.Should().BeOfType<ListOfEvidenceNoteDataMap>();
+            result.Should().BeOfType<ListOfEvidenceNoteDataMapperObject>();
         }
 
         [Fact]
@@ -65,7 +65,7 @@
             var result = map.Map(source);
 
             // assert
-            result.Should().BeOfType<ListOfEvidenceNoteDataMap>();
+            result.Should().BeOfType<ListOfEvidenceNoteDataMapperObject>();
             A.CallTo(() => mapper.Map<Scheme, SchemeData>(scheme)).MustNotHaveHappened();
             A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).MustNotHaveHappened();
         }

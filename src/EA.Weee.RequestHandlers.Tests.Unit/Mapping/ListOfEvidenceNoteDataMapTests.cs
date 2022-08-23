@@ -19,7 +19,7 @@
             var evidences = new List<EvidenceNoteData>();
 
             // act
-            var result = new ListOfEvidenceNoteDataMap();
+            var result = new ListOfEvidenceNoteDataMapperObject();
 
             // assert
             result.ListOfEvidenceNoteData.Should().BeEquivalentTo(evidences);

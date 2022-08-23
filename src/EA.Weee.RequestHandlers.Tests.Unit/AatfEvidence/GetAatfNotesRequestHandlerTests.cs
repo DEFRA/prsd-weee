@@ -329,7 +329,7 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a => 
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>.That.Matches(a => 
                 a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
@@ -353,11 +353,11 @@
             };
             var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
+            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMapperObject() { ListOfEvidenceNoteData = evidenceNoteDatas };
 
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
             // act
             var result = await handler.HandleAsync(GetAatfNotesRequest(currentYear));
@@ -367,7 +367,7 @@
             result.NoteCount.Should().Be(evidenceNoteDatas.Count);
             result.Results.ToList().Should().BeEquivalentTo(listOfEvidenceNotes.ListOfEvidenceNoteData);
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
         }
 
         private GetAatfNotesRequest GetAatfNotesRequest(int selectedComplianceYear, string searchRef = null, Guid? receivedId = null, WasteType? wasteType = null, NoteStatus? noteStatus = null,

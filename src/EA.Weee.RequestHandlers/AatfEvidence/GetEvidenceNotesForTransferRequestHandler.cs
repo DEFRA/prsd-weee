@@ -42,7 +42,7 @@
             var noteData = await noteDataAccess.GetNotesToTransfer(message.OrganisationId, 
                 message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, message.ComplianceYear, message.PageNumber, message.PageSize);
 
-            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(
+            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMapperObject>(
                 new ListOfNotesMap(noteData.Notes.OrderByDescending(x => x.CreatedDate).ToList(), true)
                     {
                         CategoryFilter = message.Categories

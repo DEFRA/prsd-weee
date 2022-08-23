@@ -61,7 +61,7 @@
 
             var noteData = await noteDataAccess.GetAllNotes(filter);
 
-            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMap>(new ListOfNotesMap(noteData.Notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
+            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMapperObject>(new ListOfNotesMap(noteData.Notes.OrderByDescending(x => x.CreatedDate).ToList(), false)).ListOfEvidenceNoteData;
 
             return new EvidenceNoteSearchDataResult(mappedResults, noteData.NumberOfResults);
         }
