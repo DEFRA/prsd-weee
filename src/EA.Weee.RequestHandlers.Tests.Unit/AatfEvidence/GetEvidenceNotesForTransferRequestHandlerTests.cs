@@ -180,7 +180,7 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a =>
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>.That.Matches(a =>
                 a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
@@ -222,7 +222,7 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a =>
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>.That.Matches(a =>
                 a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
                 a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
                 a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
@@ -243,7 +243,7 @@
                 A.Fake<EvidenceNoteData>()
             };
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = noteData };
+            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMapperObject() { ListOfEvidenceNoteData = noteData };
             var evidenceNoteResults = new EvidenceNoteResults(noteList, 2);
 
             A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._,
@@ -253,7 +253,7 @@
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
+            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
 
             // act
             var result = await handler.HandleAsync(request);

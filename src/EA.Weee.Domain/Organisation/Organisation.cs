@@ -175,7 +175,7 @@
             }
         }
 
-        public virtual List<Scheme> Schemes { get; set; }
+        public virtual ICollection<Scheme> Schemes { get; set; }
 
         public Scheme Scheme
         {
