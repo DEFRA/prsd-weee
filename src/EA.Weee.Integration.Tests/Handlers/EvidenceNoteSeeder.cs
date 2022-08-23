@@ -27,7 +27,7 @@
     public class EvidenceNoteSeeder : IntegrationTestBase
     {
         [Component]
-        //[Ignore("Time consuming data set only use for seeding of data")]
+        [Ignore("Time consuming data set only use for seeding of data")]
         public class SeedTheDataBaseWithLotsOfNotes : EvidenceNoteSeederBase
         {
             private readonly Establish context = () =>
@@ -215,21 +215,6 @@
                             // create transfer in note 1
                             var noteToTransfer = notes.ElementAt(randomTransfer.Next(0, notes.Count - 1));
 
-                            //var tonnage1 = NextTonnage(tonnageRandom);
-                            //var tonnage2 = NextTonnage(tonnageRandom);
-                            //var tonnage3 = NextTonnage(tonnageRandom);
-                            //var tonnage4 = NextTonnage(tonnageRandom);
-                            //var tonnage5 = NextTonnage(tonnageRandom);
-                            //var tonnage6 = NextTonnage(tonnageRandom);
-                            //var tonnage7 = NextTonnage(tonnageRandom);
-                            //var tonnage8 = NextTonnage(tonnageRandom);
-                            //var tonnage9 = NextTonnage(tonnageRandom);
-                            //var tonnage10 = NextTonnage(tonnageRandom);
-                            //var tonnage11 = NextTonnage(tonnageRandom);
-                            //var tonnage12 = NextTonnage(tonnageRandom);
-                            //var tonnage13 = NextTonnage(tonnageRandom);
-                            //var tonnage14 = NextTonnage(tonnageRandom);
-
                             var noteTonnage1 = noteToTransfer.NoteTonnage.First(
                                 nt => nt.CategoryId.Equals(WeeeCategory.PhotovoltaicPanels));
                             var noteTonnage2 = noteToTransfer.NoteTonnage.First(nt =>
@@ -291,11 +276,14 @@
                                     noteTonnage14.Id, NextTonnage(tonnageRandom, noteTonnage14.Received - 3), NextTonnage(tonnageRandom, noteTonnage14.Reused - 2)),
                             };
 
+                            var transferNoteOrg = OrganisationDbSetup.Init().Create();
+
                             TransferEvidenceNoteDbSetup.Init().With(t =>
                                 {
                                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                                 }).WithTonnages(newTransferNoteTonnage1)
+                                .WithOrganisation(transferNoteOrg.Id)
                                 .WithWasteType(WasteType.HouseHold)
                                 .WithComplianceYear(year)
                                 .WithRecipient(organisation.Id)
