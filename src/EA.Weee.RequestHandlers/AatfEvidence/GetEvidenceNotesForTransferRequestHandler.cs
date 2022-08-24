@@ -7,7 +7,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
     using Mappings;
-    using Prsd.Core;
     using Security;
     using System.Collections.Generic;
     using System.Linq;
@@ -42,13 +41,20 @@
             var noteData = await noteDataAccess.GetNotesToTransfer(message.OrganisationId, 
                 message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, message.ComplianceYear, message.PageNumber, message.PageSize);
 
-            var mappedResults = mapper.Map<ListOfEvidenceNoteDataMapperObject>(
-                new ListOfNotesMap(noteData.Notes.OrderByDescending(x => x.CreatedDate).ToList(), true)
-                    {
-                        CategoryFilter = message.Categories
-                    }).ListOfEvidenceNoteData;
+            var mappedNotes = new List<EvidenceNoteData>();
 
-            return new EvidenceNoteSearchDataResult(mappedResults, noteData.NumberOfResults);
+            foreach (var note in noteData.Notes.OrderByDescending(n => n.CreatedDate))
+            {
+                var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(note)
+                {
+                    CategoryFilter = message.Categories,
+                    IncludeTonnage = true
+                });
+
+                mappedNotes.Add(evidenceNoteData);
+            }
+
+            return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults);
         }
     }
 }

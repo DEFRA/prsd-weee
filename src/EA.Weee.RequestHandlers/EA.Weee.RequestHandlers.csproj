@@ -135,6 +135,8 @@
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
+    <Compile Include="Mappings\AatfSimpleMapObject.cs" />
+    <Compile Include="Mappings\AatfSimpleMap.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
@@ -194,7 +196,6 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
-    <Compile Include="Mappings\ListOfEvidenceNoteDataMapperObject.cs" />
     <Compile Include="Mappings\ListOfNotesMap.cs" />
     <Compile Include="Mappings\AatfSummaryTotalsMap.cs" />
     <Compile Include="Mappings\TransferNoteMapTransfer.cs" />

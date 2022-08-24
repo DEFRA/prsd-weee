@@ -180,55 +180,21 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>.That.Matches(a =>
-                a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
-                a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
-                a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
-                a.ListOfNotes.Count.Equals(3)))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async void HandleAsync_GivenCategoryFilterAndNotesData_ReturnedNotesDataShouldBeMapped()
-        {
-            // arrange
-            var note1 = A.Fake<Note>();
-            var note2 = A.Fake<Note>();
-            var note3 = A.Fake<Note>();
-
-            A.CallTo(() => note1.Reference).Returns(2);
-            A.CallTo(() => note1.CreatedDate).Returns(DateTime.Now.AddDays(1));
-            A.CallTo(() => note2.Reference).Returns(4);
-            A.CallTo(() => note2.CreatedDate).Returns(DateTime.Now);
-            A.CallTo(() => note3.Reference).Returns(6);
-            A.CallTo(() => note3.CreatedDate).Returns(DateTime.Now.AddDays(2));
-
-            var noteList = new List<Note>()
-            {
-                note1,
-                note2,
-                note3
-            };
-
-            var evidenceNoteResults = new EvidenceNoteResults(noteList, 3);
-
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._,
-                A<List<int>>._,
-                A<List<Guid>>._,
-                A<int>._,
-                A<int>._,
-                A<int>._)).Returns(evidenceNoteResults);
-
-            // act
-            await handler.HandleAsync(request);
-
-            // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>.That.Matches(a =>
-                a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
-                a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
-                a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
-                a.ListOfNotes.Count.Equals(3) &&
-                a.CategoryFilter.SequenceEqual(request.Categories) &&
-                a.IncludeTonnage == true))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>
+                .That.Matches(e => e.Note.Equals(note1) &&
+                                   e.CategoryFilter.Equals(request.Categories) &&
+                                   e.IncludeTonnage == true &&
+                                   e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>
+                .That.Matches(e => e.Note.Equals(note2) &&
+                                   e.CategoryFilter.Equals(request.Categories) &&
+                                   e.IncludeTonnage == true &&
+                                   e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>
+                .That.Matches(e => e.Note.Equals(note3) &&
+                                   e.CategoryFilter.SequenceEqual(request.Categories) &&
+                                   e.IncludeTonnage == true &&
+                                   e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -243,7 +209,6 @@
                 A.Fake<EvidenceNoteData>()
             };
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMapperObject() { ListOfEvidenceNoteData = noteData };
             var evidenceNoteResults = new EvidenceNoteResults(noteList, 2);
 
             A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._,
@@ -253,13 +218,16 @@
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._))
+                .ReturnsNextFromSequence(noteData.ElementAt(0), noteData.ElementAt(1));
 
             // act
             var result = await handler.HandleAsync(request);
 
             // assert
-            result.Results.Should().BeSameAs(noteData);
+            result.Results.Count.Should().Be(2);
+            result.Results.ElementAt(0).Should().Be(noteData.ElementAt(0));
+            result.Results.ElementAt(1).Should().Be(noteData.ElementAt(1));
             result.NoteCount.Should().Be(2);
         }
     }
