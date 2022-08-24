@@ -21,8 +21,8 @@
            
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
-                evidenceNoteRowViewModel.DisplayEditLink = evidenceNoteRowViewModel.Status == NoteStatus.Draft ||
-                                                           evidenceNoteRowViewModel.Status == NoteStatus.Returned && 
+                evidenceNoteRowViewModel.DisplayEditLink = (evidenceNoteRowViewModel.Status == NoteStatus.Draft ||
+                                                           evidenceNoteRowViewModel.Status == NoteStatus.Returned) && 
                                                            model.CanSchemeManageEvidence;
             }
 
