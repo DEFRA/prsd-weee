@@ -13,6 +13,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
+    using Extensions;
     using Filters;
     using Infrastructure;
     using Mappings.ToViewModels;
@@ -112,22 +113,29 @@
                     return RedirectToManageEvidence(pcsId, complianceYear);
                 }
 
-                var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear));
-
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId);
-
-                var evidenceNoteIds = transferRequest.EvidenceNoteIds;
-                if (evidenceNoteIds != null)
-                {
-                    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
-                }
-
-                var model =
-                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+                var model = await TransferFromViewModel(pcsId, complianceYear, client, transferRequest, 1);
 
                 return this.View("TransferFrom", model);
             }
+        }
+
+        private async Task<TransferEvidenceNotesViewModel> TransferFromViewModel(Guid pcsId, int complianceYear, IWeeeClient client,
+            TransferEvidenceNoteRequest transferRequest, int pageNumber)
+        {
+            var result = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear));
+
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId, pageNumber);
+
+            var evidenceNoteIds = transferRequest.EvidenceNoteIds;
+            if (evidenceNoteIds != null)
+            {
+                mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
+            }
+
+            var model =
+                mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+            return model;
         }
 
         [HttpPost]
@@ -141,12 +149,30 @@
                 return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
             }
 
-            if (ModelState.IsValid)
+            if (model.PageNumber.HasValue)
             {
-                UpdateAndSetSelectedNotesInSession(model);
+                if (ModelState.ContainsKey("Action"))
+                {
+                    ModelState["Action"].Errors.Clear();
+                }
+                
+                using (var client = this.apiClient())
+                {
+                    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                        SessionKeyConstant.TransferNoteKey);
 
-                return RedirectToAction("TransferTonnage", "TransferEvidence", 
-                    new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
+                    model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, transferRequest, model.PageNumber.Value);
+                }
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    UpdateAndSetSelectedNotesInSession(model);
+
+                    return RedirectToAction("TransferTonnage", "TransferEvidence",
+                        new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
+                }
             }
 
             await SetBreadcrumb(model.PcsId);
@@ -297,7 +323,7 @@
             { 
                 pcsId, 
                 area = "Scheme", 
-                tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(),
+                tab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence),
                 selectedComplianceYear = complianceYear
             });
         }

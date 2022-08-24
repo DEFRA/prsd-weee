@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Shared.Paging;
     using Web.ViewModels.Shared;
 
     [Serializable]
@@ -15,6 +16,8 @@
 
         public List<ViewEvidenceNoteViewModel> EvidenceNotesDataList { get; set; }
 
+        public PagedList<ViewEvidenceNoteViewModel> EvidenceNotesDataListPaged { get; set; }
+
         public List<TotalCategoryValue> CategoryValues { get; set; }
 
         public ViewTransferNoteViewModel ViewTransferNoteViewModel { get; set; }
@@ -24,6 +27,7 @@
         protected TransferEvidenceViewModelBase()
         {
             EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
+            EvidenceNotesDataListPaged = new PagedList<ViewEvidenceNoteViewModel>();
             CategoryValues = new List<TotalCategoryValue>();
         }
     }

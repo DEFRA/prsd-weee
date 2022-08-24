@@ -25,7 +25,7 @@
             int complianceYear, 
             List<Guid> evidenceNotes = null,
             int pageNumber = 1,
-            int pageSize = 25)
+            int pageSize = 1)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categories).IsNotEmpty();

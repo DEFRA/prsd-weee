@@ -8,6 +8,7 @@
         CopyAndPaste = 4,
         Filter = 5,
         Back = 6,
-        Continue = 7
+        Continue = 7,
+        Paging = 8
     }
 }

@@ -31,17 +31,17 @@ namespace EA.Weee.Web.Infrastructure.Paging
 
     public class Pager : IHtmlString
     {
-        private readonly HtmlHelper htmlHelper;
-        private readonly int pageSize;
-        private readonly int currentPage;
+        protected readonly HtmlHelper HtmlHelper;
+        protected readonly int PageSize;
+        protected readonly int CurrentPage;
         private int totalItemCount;
         protected readonly PagerOptions PagerOptions;
 
         public Pager(HtmlHelper htmlHelper, int pageSize, int currentPage, int totalItemCount)
         {
-            this.htmlHelper = htmlHelper;
-            this.pageSize = pageSize;
-            this.currentPage = currentPage;
+            this.HtmlHelper = htmlHelper;
+            this.PageSize = pageSize;
+            this.CurrentPage = currentPage;
             this.totalItemCount = totalItemCount;
             this.PagerOptions = new PagerOptions();
         }
@@ -59,24 +59,24 @@ namespace EA.Weee.Web.Infrastructure.Paging
             {
                 // Set page count directly from total item count instead of calculating. Then calculate totalItemCount based on pageCount and pageSize;
                 pageCount = this.totalItemCount;
-                this.totalItemCount = pageCount * this.pageSize;
+                this.totalItemCount = pageCount * this.PageSize;
             }
             else
             {
-                pageCount = (int)Math.Ceiling(totalItemCount / (double)pageSize);
+                pageCount = (int)Math.Ceiling(totalItemCount / (double)PageSize);
             }
 
-            var model = new PaginationModel { PageSize = this.pageSize, CurrentPage = this.currentPage, TotalItemCount = this.totalItemCount, PageCount = pageCount };
+            var model = new PaginationModel { PageSize = this.PageSize, CurrentPage = this.CurrentPage, TotalItemCount = this.totalItemCount, PageCount = pageCount };
 
             // First page
             if (this.PagerOptions.DisplayFirstAndLastPage)
             {
-                model.PaginationLinks.Add(new PaginationLink { Active = (currentPage > 1 ? true : false), DisplayText = this.PagerOptions.FirstPageText, DisplayTitle = this.PagerOptions.FirstPageTitle, PageIndex = 1, Url = generateUrl(1) });
+                model.PaginationLinks.Add(new PaginationLink { Active = (CurrentPage > 1 ? true : false), DisplayText = this.PagerOptions.FirstPageText, DisplayTitle = this.PagerOptions.FirstPageTitle, PageIndex = 1, Url = generateUrl(1) });
             }
 
             // Previous page
             var previousPageText = this.PagerOptions.PreviousPageText;
-            model.PaginationLinks.Add(currentPage > 1 ? new PaginationLink { Active = true, DisplayText = previousPageText, DisplayTitle = this.PagerOptions.PreviousPageTitle, PageIndex = currentPage - 1, Url = generateUrl(currentPage - 1) } : new PaginationLink { Active = false, DisplayText = previousPageText });
+            model.PaginationLinks.Add(CurrentPage > 1 ? new PaginationLink { Active = true, DisplayText = previousPageText, DisplayTitle = this.PagerOptions.PreviousPageTitle, PageIndex = CurrentPage - 1, Url = generateUrl(CurrentPage - 1) } : new PaginationLink { Active = false, DisplayText = previousPageText });
 
             var start = 1;
             var end = pageCount;
@@ -85,8 +85,8 @@ namespace EA.Weee.Web.Infrastructure.Paging
             if (pageCount > pagesToDisplay)
             {
                 var middle = (int)Math.Ceiling(pagesToDisplay / 2d) - 1;
-                var below = (currentPage - middle);
-                var above = (currentPage + middle);
+                var below = (CurrentPage - middle);
+                var above = (CurrentPage + middle);
 
                 if (below < 2)
                 {
@@ -118,7 +118,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
 
             for (var i = start; i <= end; i++)
             {
-                if (i == currentPage || (currentPage <= 0 && i == 1))
+                if (i == CurrentPage || (CurrentPage <= 0 && i == 1))
                 {
                     model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = i, IsCurrent = true, DisplayText = i.ToString() });
                 }
@@ -144,12 +144,12 @@ namespace EA.Weee.Web.Infrastructure.Paging
 
             // Next page
             var nextPageText = this.PagerOptions.NextPageText;
-            model.PaginationLinks.Add(currentPage < pageCount ? new PaginationLink { Active = true, PageIndex = currentPage + 1, DisplayText = nextPageText, DisplayTitle = this.PagerOptions.NextPageTitle, Url = generateUrl(currentPage + 1) } : new PaginationLink { Active = false, DisplayText = nextPageText });
+            model.PaginationLinks.Add(CurrentPage < pageCount ? new PaginationLink { Active = true, PageIndex = CurrentPage + 1, DisplayText = nextPageText, DisplayTitle = this.PagerOptions.NextPageTitle, Url = generateUrl(CurrentPage + 1) } : new PaginationLink { Active = false, DisplayText = nextPageText });
 
             // Last page
             if (this.PagerOptions.DisplayFirstAndLastPage)
             {
-                model.PaginationLinks.Add(new PaginationLink { Active = (currentPage < pageCount ? true : false), DisplayText = this.PagerOptions.LastPageText, DisplayTitle = this.PagerOptions.LastPageTitle, PageIndex = pageCount, Url = generateUrl(pageCount) });
+                model.PaginationLinks.Add(new PaginationLink { Active = (CurrentPage < pageCount ? true : false), DisplayText = this.PagerOptions.LastPageText, DisplayTitle = this.PagerOptions.LastPageTitle, PageIndex = pageCount, Url = generateUrl(pageCount) });
             }
 
             model.Options = PagerOptions;
@@ -163,7 +163,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
             if (!String.IsNullOrEmpty(this.PagerOptions.DisplayTemplate))
             {
                 var templatePath = string.Format("DisplayTemplates/{0}", this.PagerOptions.DisplayTemplate);
-                return htmlHelper.Partial(templatePath, model).ToHtmlString();
+                return HtmlHelper.Partial(templatePath, model).ToHtmlString();
             }
             else
             {
@@ -208,7 +208,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
 
         protected virtual string GeneratePageUrl(int pageNumber)
         {
-            var viewContext = this.htmlHelper.ViewContext;
+            var viewContext = this.HtmlHelper.ViewContext;
             var routeDataValues = viewContext.RequestContext.RouteData.Values;
             RouteValueDictionary pageLinkValueDictionary;
 
