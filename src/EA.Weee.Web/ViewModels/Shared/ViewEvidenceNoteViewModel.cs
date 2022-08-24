@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using Extensions;
@@ -57,6 +58,14 @@
 
         public bool DisplayEvidenceNoteHistoryData => EvidenceNoteHistoryData != null && EvidenceNoteHistoryData.Count > 0;
 
+        public virtual IList<EvidenceCategoryValue> TransferCategoryValues { get; set; }
+
+        public bool DisplayTransferEvidenceColumns { get; set; }
+
+        public string TransferReceivedTotalDisplay => CategoryValueCalculator.Total(TransferCategoryValues.Select(x => x.Received).ToList());
+
+        public string TransferReusedTotalDisplay => CategoryValueCalculator.Total(TransferCategoryValues.Select(x => x.Reused).ToList());
+
         public virtual string TabName
         {
             get
@@ -84,5 +93,20 @@
         public string RedirectTab { get; set; }
 
         public bool CanDisplayNotesMessage { get; set; }
+
+        public ViewEvidenceNoteViewModel()
+        {
+            AddTransferCategoryValues(new EvidenceCategoryValues());
+        }
+
+        private void AddTransferCategoryValues(EvidenceCategoryValues evidenceCategoryValues)
+        {
+            TransferCategoryValues = new List<EvidenceCategoryValue>();
+
+            foreach (var categoryValue in evidenceCategoryValues)
+            {
+                TransferCategoryValues.Add(categoryValue);
+            }
+        }
     }
 }
