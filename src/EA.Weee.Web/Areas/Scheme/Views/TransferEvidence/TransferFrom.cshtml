@@ -1,9 +1,6 @@
-﻿
-@using EA.Weee.Web.RazorHelpers
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using MvcNavigationHelpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.ViewModels.Shared
-@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "Transfer from - GOV.UK";
@@ -23,5 +20,11 @@
     @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post, htmlAttributes: new { id = "transfer-summary-partial-form" }))
     {
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
+
+        <div class="pager govuk-body">
+            @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount);
+        </div>
     }
+
+    <p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>
 }
