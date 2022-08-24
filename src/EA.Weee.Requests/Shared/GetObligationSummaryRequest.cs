@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Admin.Obligations
+﻿namespace EA.Weee.Requests.Shared
 {
     using CuttingEdge.Conditions;
     using EA.Prsd.Core;
@@ -12,13 +12,21 @@
 
         public int ComplianceYear { get; private set; }
 
-        public GetObligationSummaryRequest(Guid schemeId, int complianceYear)
+        public bool InternalAccess { get; set; }
+
+        public Guid OrganisationId { get; private set; }
+
+        public GetObligationSummaryRequest(Guid schemeId, int complianceYear, bool internalAccess, Guid organisationId = default(Guid))
         {
             Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
+
             Condition.Requires(complianceYear).IsGreaterThan(0);
+            Condition.Requires(internalAccess);
 
             SchemeId = schemeId;
+            OrganisationId = organisationId;
             ComplianceYear = complianceYear;
+            InternalAccess = internalAccess;
         }
     }
 }
