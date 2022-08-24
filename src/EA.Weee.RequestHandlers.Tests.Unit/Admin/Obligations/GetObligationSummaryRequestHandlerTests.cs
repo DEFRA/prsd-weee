@@ -3,12 +3,13 @@
     using AutoFixture;
     using Core.Admin.Obligation;
     using DataAccess.StoredProcedure;
+    using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.RequestHandlers.Shared;
+    using EA.Weee.Requests.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
-    using RequestHandlers.Admin.Obligations;
     using RequestHandlers.Security;
-    using Requests.Admin.Obligations;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,6 +23,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IMapper mapper;
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
+        private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly GetObligationSummaryRequestHandler handler;
         private readonly GetObligationSummaryRequest request;
 
@@ -30,10 +32,11 @@
             authorization = A.Fake<IWeeeAuthorization>();
             mapper = A.Fake<IMapper>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
+            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
 
-            request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>());
+            request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), true);
 
-            handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
+            handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
         }
 
         [Fact]
@@ -42,7 +45,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
+            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));

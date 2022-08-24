@@ -170,10 +170,12 @@ namespace EA.Weee.Web.Infrastructure.Paging
         /// Set custom route value parameters for the pager links.
         /// </summary>
         /// <param name="routeValues"></param>
+        /// <param name="replaceDashedRouteValues"></param>
         /// <returns></returns>
-        public PagerOptionsBuilder RouteValues(object routeValues)
+        public PagerOptionsBuilder RouteValues(object routeValues, bool replaceDashedRouteValues = false)
         {
-            RouteValues(new RouteValueDictionary(routeValues));
+            RouteValues(new RouteValueDictionary(routeValues), replaceDashedRouteValues);
+           
             return this;
         }
 
@@ -181,14 +183,29 @@ namespace EA.Weee.Web.Infrastructure.Paging
         /// Set custom route value parameters for the pager links.
         /// </summary>
         /// <param name="routeValues"></param>
+        /// <param name="replaceDashedRouteValues"></param>
         /// <returns></returns>
-        public PagerOptionsBuilder RouteValues(RouteValueDictionary routeValues)
+        public PagerOptionsBuilder RouteValues(RouteValueDictionary routeValues, bool replaceDashedRouteValues = false)
         {
             if (routeValues == null)
             {
                 throw new ArgumentException("routeValues may not be null", "routeValues");
             }
-            this.pagerOptions.RouteValues = routeValues;
+
+            var modified = new RouteValueDictionary();
+            foreach (var routeValue in routeValues)
+            {
+                if (routeValue.Key.Contains("_") && replaceDashedRouteValues)
+                {
+                    modified.Add(routeValue.Key.Replace("_", "."), routeValue.Value);
+                }
+                else
+                {
+                    modified.Add(routeValue.Key, routeValue.Value);
+                }
+            }
+            
+            this.pagerOptions.RouteValues = modified;
             if (!string.IsNullOrWhiteSpace(pagerOptions.Action) && !pagerOptions.RouteValues.ContainsKey("action"))
             {
                 pagerOptions.RouteValues.Add("action", pagerOptions.Action);
