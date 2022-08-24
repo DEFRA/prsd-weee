@@ -229,6 +229,43 @@
         }
 
         [Fact]
+        public async Task IndexGet_GivenNullTab_GivenSchemeIsBalancing_SubmittedEvidenceNoteShouldBeRetrieved()
+        {
+            // Arrange
+            var status = new List<NoteStatus>() { NoteStatus.Submitted };
+            var schemeName = Faker.Company.Name();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.IsBalancingScheme, true)
+                .With(s => s.Name, schemeName)
+                .Create();
+
+            var evidenceData = TestFixture.Create<EvidenceNoteData>();
+            var returnList = new List<EvidenceNoteData>() { evidenceData };
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.Results, returnList).Create();
+
+            var currentDate = TestFixture.Create<DateTime>();
+            var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, null);
+
+            //asset
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     status.SequenceEqual(g.AllowedStatuses) &&
+                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.TransferredOut == false &&
+                     g.NoteTypeFilterList.SequenceEqual(noteTypes) &&
+                     g.PageSize == int.MaxValue &&
+                     g.PageNumber == 1))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task IndexGet_GivenReviewTabAndPageNumber_SubmittedEvidenceNoteShouldBeRetrieved()
         {
             // Arrange
@@ -888,10 +925,14 @@
         {
             // arrange
             var schemeId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+              .With(s => s.IsBalancingScheme, false)
+              .With(s => s.SchemeId, schemeId)
+              .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
 
-            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = schemeId });
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._)).Returns(obligationSummaryData);
           
@@ -912,13 +953,17 @@
         {
             // arrange
             var schemeId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+              .With(s => s.IsBalancingScheme, false)
+              .With(s => s.SchemeId, schemeId)
+              .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
             var complianceYear = TestFixture.Create<short>();
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
-            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = schemeId });
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._))
                 .Returns(obligationSummaryData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -939,7 +984,11 @@
         public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedData_GivenSchemeIsNotBalancing_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
-            var scheme = TestFixture.Create<SchemePublicInfo>();
+            var schemeId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+              .With(s => s.IsBalancingScheme, false)
+              .With(s => s.SchemeId, schemeId)
+              .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
 
@@ -966,7 +1015,11 @@
         public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_GivenSchemeIsNotBalancing_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
-            var scheme = TestFixture.Create<SchemePublicInfo>();
+            var schemeId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+              .With(s => s.IsBalancingScheme, false)
+              .With(s => s.SchemeId, schemeId)
+              .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
             var complianceYear = TestFixture.Create<short>();
@@ -994,10 +1047,15 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceNotesViewModel_SummaryEvidenceViewModelShouldBeReturned(string tab)
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceNotesViewModel_GivenSchemeIsNotBalancing_SummaryEvidenceViewModelShouldBeReturned(string tab)
         {
             // arrange
-            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
+            var schemeId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+              .With(s => s.IsBalancingScheme, false)
+              .With(s => s.SchemeId, schemeId)
+              .Create();
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             
             var model = TestFixture.Create<SummaryEvidenceViewModel>();
 
