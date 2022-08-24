@@ -276,11 +276,14 @@
                                     noteTonnage14.Id, NextTonnage(tonnageRandom, noteTonnage14.Received - 3), NextTonnage(tonnageRandom, noteTonnage14.Reused - 2)),
                             };
 
+                            var transferNoteOrg = OrganisationDbSetup.Init().Create();
+
                             TransferEvidenceNoteDbSetup.Init().With(t =>
-                            {
-                                t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                                t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
-                            }).WithTonnages(newTransferNoteTonnage1)
+                                {
+                                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                                }).WithTonnages(newTransferNoteTonnage1)
+                                .WithOrganisation(transferNoteOrg.Id)
                                 .WithWasteType(WasteType.HouseHold)
                                 .WithComplianceYear(year)
                                 .WithRecipient(organisation.Id)
