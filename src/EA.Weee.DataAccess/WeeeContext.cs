@@ -235,8 +235,8 @@
             bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
 
             this.SetEntityId();
-            //this.AuditChanges(userContext.UserId);
-            //AuditEntities();
+            this.AuditChanges(userContext.UserId);
+            AuditEntities();
 
             int result;
             if (alreadyHasTransaction)
@@ -265,8 +265,8 @@
             bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
 
             this.SetEntityId();
-            //this.AuditChanges(userContext.UserId);
-            //AuditEntities();
+            this.AuditChanges(userContext.UserId);
+            AuditEntities();
 
             int result;
             if (alreadyHasTransaction)
