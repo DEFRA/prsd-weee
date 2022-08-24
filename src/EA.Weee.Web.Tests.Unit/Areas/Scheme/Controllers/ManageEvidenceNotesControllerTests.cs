@@ -884,7 +884,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTab_ObligationEvidenceSummaryDataShouldBeRetrieved(string tab)
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTab_GivenSchemeIsNotBalancing_ObligationEvidenceSummaryDataShouldBeRetrieved(string tab)
         {
             // arrange
             var schemeId = TestFixture.Create<Guid>();
@@ -908,7 +908,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTab_GivenPreviouslySelectedComplianceYear_ObligationEvidenceSummaryDataShouldBeRetrieved(string tab)
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTab_GivenPreviouslySelectedComplianceYear_GivenSchemeIsNotBalancing_ObligationEvidenceSummaryDataShouldBeRetrieved(string tab)
         {
             // arrange
             var schemeId = TestFixture.Create<Guid>();
@@ -936,7 +936,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedData_ViewModelShouldBeBuilt(string tab)
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedData_GivenSchemeIsNotBalancing_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
             var scheme = TestFixture.Create<SchemePublicInfo>();
@@ -963,7 +963,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt(string tab)
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_GivenSchemeIsNotBalancing_ViewModelShouldBeBuilt(string tab)
         {
             // arrange
             var scheme = TestFixture.Create<SchemePublicInfo>();
