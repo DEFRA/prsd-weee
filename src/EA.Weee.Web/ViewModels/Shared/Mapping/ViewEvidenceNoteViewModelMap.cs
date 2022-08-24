@@ -4,16 +4,16 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Security.Principal;
-    using Core.AatfEvidence;
-    using Core.Helpers;
-    using EA.Weee.Security;
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
-    using Prsd.Core;
-    using Prsd.Core.Mapper;
-    using Returns.Mappings.ToViewModel;
-    using Utilities;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
 
     public class ViewEvidenceNoteViewModelMap : IMap<ViewEvidenceNoteMapTransfer, ViewEvidenceNoteViewModel>
     {
