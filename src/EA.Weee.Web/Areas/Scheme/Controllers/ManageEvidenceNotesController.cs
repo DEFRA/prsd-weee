@@ -69,9 +69,6 @@
                     case null:
                         tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
                         break;
-                    default:
-                        tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
-                        break;
                 }
 
                 var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
