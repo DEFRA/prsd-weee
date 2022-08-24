@@ -23,13 +23,15 @@
 
         public GetAatfNotesRequest(Guid organisationId, Guid aatfId, List<NoteStatus> allowedStatuses, string searchRef, int complianceYear, 
             Guid? recipient, WasteType? wasteType, NoteStatus? noteStatusFilter,
-            DateTime? startDateSubmitted, DateTime? endDateSubmitted)
+            DateTime? startDateSubmitted, DateTime? endDateSubmitted, int pageNumber, int pageSize)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
             Condition.Requires(complianceYear).IsGreaterThan(0);
+            Condition.Requires(pageNumber).IsGreaterThan(0);
+            Condition.Requires(pageSize).IsGreaterThan(0);
 
             OrganisationId = organisationId;
             AatfId = aatfId;
@@ -41,6 +43,8 @@
             StartDateSubmitted = startDateSubmitted;
             EndDateSubmitted = endDateSubmitted;
             ComplianceYear = complianceYear;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }

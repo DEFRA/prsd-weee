@@ -21,16 +21,20 @@
 
         public int PageNumber { get; protected set; }
 
+        public int PageSize { get; protected set; }
+
         public SchemeTabViewModelMapTransfer(Guid organisationId,
             EvidenceNoteSearchDataResult noteData,
             SchemePublicInfo scheme,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
-            int pageNumber)
+            int pageNumber,
+            int pageSize)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => noteData, noteData);
             Condition.Requires(pageNumber).IsNotLessOrEqual(0);
+            Condition.Requires(pageSize).IsNotLessOrEqual(0);
 
             OrganisationId = organisationId;
             NoteData = noteData;
@@ -38,6 +42,7 @@
             CurrentDate = currentDate;
             ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
             PageNumber = pageNumber;
+            PageSize = pageSize;
         }
     }
 }

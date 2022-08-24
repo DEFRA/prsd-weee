@@ -92,6 +92,8 @@
 
         public string RedirectTab { get; set; }
 
+        public bool CanDisplayNotesMessage { get; set; }
+
         public ViewEvidenceNoteViewModel()
         {
             AddTransferCategoryValues(new EvidenceCategoryValues());

@@ -30,7 +30,7 @@
             var result = Record.Exception(() => new GetAatfNotesRequest(Guid.Empty, 
                 aatfId, 
                 fixture.CreateMany<NoteStatus>().ToList(), 
-                null, SystemTime.UtcNow.Year, null, null, null, null, null));
+                null, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -43,7 +43,7 @@
             var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, 
                 Guid.Empty, 
                 fixture.CreateMany<NoteStatus>().ToList(), 
-                null, SystemTime.UtcNow.Year, null, null, null, null, null));
+                null, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -53,7 +53,7 @@
         public void GetAatfNotesRequest_Constructor_GivenEmptyAllowedStatusArgumentExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>(), null, SystemTime.UtcNow.Year, null, null, null, null, null));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, Guid.Empty, new List<NoteStatus>(), null, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -63,7 +63,7 @@
         public void GetAatfNotesRequest_ConstructorListOfAllowedStatusIsNull_ArgumentNullExceptionExpected()
         {
             // act
-            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, null, null, SystemTime.UtcNow.Year, null, null, null, null, null));
+            var result = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, null, null, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -76,7 +76,7 @@
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Draft };
 
             // act
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -91,7 +91,7 @@
             var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
             var searchRef = fixture.Create<string>();
 
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, SystemTime.UtcNow.Year, null, null, null, null, null);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -113,7 +113,7 @@
             var endDate = fixture.Create<DateTime>();
             var selectedComplianceYear = fixture.Create<int>();
 
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -125,6 +125,46 @@
             result.NoteStatusFilter.Should().Be(noteStatus);
             result.StartDateSubmitted.Should().Be(startDate);
             result.EndDateSubmitted.Should().Be(endDate);
+        }
+
+        [Fact]
+        public void GetAatfNotesRequest_Constructor_GivenZeroPageNumber_ShouldThrowArgumentOutOfRangeException()
+        {
+            // act
+            var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
+            var searchRef = fixture.Create<string>();
+            var recievedId = fixture.Create<Guid>();
+            var wasteType = fixture.Create<WasteType>();
+            var noteStatus = fixture.Create<NoteStatus>();
+            var startDate = fixture.Create<DateTime>();
+            var endDate = fixture.Create<DateTime>();
+            var selectedComplianceYear = fixture.Create<int>();
+
+            //arrange
+            var exception = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 0));
+
+            //assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void GetAatfNotesRequest_Constructor_GivenZeroPageSize_ShouldThrowArgumentOutOfRangeException()
+        {
+            // act
+            var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
+            var searchRef = fixture.Create<string>();
+            var recievedId = fixture.Create<Guid>();
+            var wasteType = fixture.Create<WasteType>();
+            var noteStatus = fixture.Create<NoteStatus>();
+            var startDate = fixture.Create<DateTime>();
+            var endDate = fixture.Create<DateTime>();
+            var selectedComplianceYear = fixture.Create<int>();
+
+            //arrange
+            var exception = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate, 0, 1));
+
+            //assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
         }
     }
 }
