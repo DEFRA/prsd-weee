@@ -61,10 +61,16 @@
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
-                if (tab == null)
+                switch (tab)
                 {
-                     tab = Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
+                    case null when !scheme.IsBalancingScheme:
+                        tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
+                        break;
+                    case null:
+                        tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
+                        break;
                 }
+
                 var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
 
                 switch (value)
