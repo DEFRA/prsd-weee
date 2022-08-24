@@ -517,5 +517,167 @@
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
         }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void Map_GivenComplianceYearIsNotClosedAndSchemeIsNotWithdrawnAndEvidenceNotesAreInNotEditableState_DisplayEditLinkShouldBeFalse(NoteStatus status)
+        {
+            if (status == NoteStatus.Draft || status == NoteStatus.Returned)
+            {
+                return;
+            }
+
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = status
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeFalse();
+            });
+        }
+
+        [Fact]
+        public void Map_GivenComplianceYearIsNotClosedAndSchemeIsNotWithdrawnAndEvidenceNotesAreInEditableState_DisplayEditLinkShouldBeTrue()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Returned
+                },
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Draft
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeTrue();
+            });
+        }
+
+        [Fact]
+        public void Map_GivenComplianceYearIsNotClosedAndSchemeIsWithdrawnAndEvidenceNotesAreInEditableState_DisplayEditLinkShouldBeFalse()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Returned
+                },
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Draft
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeFalse();
+            });
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenComplianceYearIsClosedAndSchemeIsNotWithdrawnAndEvidenceNotesAreInEditableState_DisplayEditLinkShouldBeFalse(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, complianceYear).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Returned
+                },
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Draft
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeFalse();
+            });
+        }
     }
 }
