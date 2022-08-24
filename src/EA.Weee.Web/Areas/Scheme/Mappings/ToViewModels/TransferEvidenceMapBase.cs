@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Helpers;
+    using Core.Shared.Paging;
     using CuttingEdge.Conditions;
     using Filters;
     using Prsd.Core.Mapper;
@@ -48,8 +49,11 @@
                             IncludeAllCategories = false
                         }));
                 }
+
+                model.EvidenceNotesDataListPaged =
+                    model.EvidenceNotesDataList.ToPagedList(source.PageNumber - 1, source.PageSize, source.Notes.NoteCount) as PagedList<ViewEvidenceNoteViewModel>;
             }
-            
+
             if (source.TransferEvidenceNoteData != null)
             {
                 model.ViewTransferNoteViewModel = TransferNoteMapper.Map(
