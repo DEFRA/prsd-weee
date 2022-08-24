@@ -23,7 +23,6 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IMapper mapper;
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
-        private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly GetObligationSummaryRequestHandler handler;
         private readonly GetObligationSummaryRequest request;
 
@@ -32,11 +31,10 @@
             authorization = A.Fake<IWeeeAuthorization>();
             mapper = A.Fake<IMapper>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
-            organisationDataAccess = A.Fake<IOrganisationDataAccess>();
 
             request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), true);
 
-            handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
+            handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
         }
 
         [Fact]
@@ -45,7 +43,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
+            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -60,7 +58,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
             var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
-            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
+            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -98,7 +96,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
             var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
-            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures, organisationDataAccess);
+            var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
