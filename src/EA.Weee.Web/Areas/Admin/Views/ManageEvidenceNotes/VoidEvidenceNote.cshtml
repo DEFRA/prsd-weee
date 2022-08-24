@@ -1,0 +1,35 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.VoidEvidenceNoteViewModel
+@{
+    ViewBag.Title = string.Format("Are you sure you want to void evidence note {0}?", @Model.ViewEvidenceNoteViewModel.ReferenceDisplay) + " - GOV.UK";
+}
+
+@section full_main_content{
+    
+    @(this.WeeeGds().BackLink(
+        Url.Action("ViewEvidenceNote", "ManageEvidenceNotes", new { evidenceNoteId = Model.ViewEvidenceNoteViewModel.Id })))
+
+    <h1 class="govuk-heading-l">Are you sure you want to void evidence note @Model.ViewEvidenceNoteViewModel.ReferenceDisplay?</h1>
+
+    <p class="govuk-body">Voiding an evidence note is permanent and cannot be undone. The note will no longer count as evidence.</p>
+
+    <p class="govuk-body" id="void-description">
+        Please provide a reason for voiding the note below. <br />
+        The reason entered here is displayed on the evidence note and will be visible to customers.
+    </p>
+
+    @using (Html.BeginForm("VoidEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.VoidedReason)">
+            @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Id)
+            @Html.Gds().ValidationMessageFor(m => m.VoidedReason)
+            @Html.TextAreaFor(m => m.VoidedReason, htmlAttributes: new { @id = "VoidedReason", @class = "govuk-textarea", @maxlength = "200", @rows = "4", @title = "Please provide a reason for voiding the note, you can type up to 200 characters", @aria_labelledBy = "void-description" })
+        </div>
+
+        @(this.WeeeGds().Submit("Confirm void", new { id = "confirmVoidButton", @class = "govuk-button", style = "margin-top: 20px" }, true))
+    }
+}
+<!-- screen 6.08a -->

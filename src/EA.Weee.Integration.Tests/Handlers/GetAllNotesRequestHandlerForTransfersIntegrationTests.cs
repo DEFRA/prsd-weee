@@ -65,6 +65,8 @@
                 var noteVoidStatus = TransferEvidenceNoteDbSetup.Init()
                  .With(n =>
                  {
+                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                      n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                  })
                  .WithComplianceYear(complianceYear)

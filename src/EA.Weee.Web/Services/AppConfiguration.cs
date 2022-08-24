@@ -91,6 +91,9 @@
         public DateTime EvidenceNotesSiteSelectionDateFrom { get; set; }
 
         [DefaultValue("25")]
-        public int DefaultPagingPageSize { get; set; }
+        public int DefaultInternalPagingPageSize { get; set; }
+
+        [DefaultValue("10")]
+        public int DefaultExternalPagingPageSize { get; set; }
     }
 }

@@ -125,6 +125,11 @@
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
+            if ((newStatus.Equals(NoteStatus.Void) && !Status.Equals(NoteStatus.Approved)))
+            {
+                ThrowInvalidStateTransitionError(newStatus);
+            }
+
             NoteStatusHistory.Add(new NoteStatusHistory(changedBy, Status, newStatus, date, reason));
 
             Status = newStatus;

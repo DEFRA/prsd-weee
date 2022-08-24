@@ -24,7 +24,6 @@
     using System.Web.Mvc;
     using Filters;
     using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -42,6 +41,7 @@
         private readonly IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator;
         private readonly IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
         private readonly ISessionService sessionService;
+        private readonly ConfigurationService configurationService;
 
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
@@ -49,7 +49,8 @@
             Func<IWeeeClient> apiClient, 
             IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
             IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator,
-            ISessionService sessionService)
+            ISessionService sessionService,
+            ConfigurationService configurationService)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -58,6 +59,7 @@
             this.createRequestCreator = createRequestCreator;
             this.editRequestCreator = editRequestCreator;
             this.sessionService = sessionService;
+            this.configurationService = configurationService;
         }
 
         [HttpGet]
@@ -190,7 +192,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId, int page = 1)
         {
             using (var client = apiClient())
             {
@@ -201,6 +203,8 @@
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+
+                ViewBag.Page = page;
 
                 return View(model);
             }
@@ -323,10 +327,13 @@
                manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
                manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
-               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
+               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate,
+               pageNumber,
+               configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
             }
 
-            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber));
+            var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var schemeData = resultAllNotes.Results.ToList().CreateOrganisationSchemeDataList();
 
@@ -380,9 +387,10 @@
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
-                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null));
+                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, int.MaxValue));
 
-            var model = mapper.Map<EditDraftReturnedNotesViewModel>(new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber));
+            var model = mapper.Map<EditDraftReturnedNotesViewModel>(
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, int.MaxValue));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));

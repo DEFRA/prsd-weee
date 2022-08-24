@@ -35,7 +35,7 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
-            var filter = new NoteFilter(message.ComplianceYear, int.MaxValue, 1)
+            var filter = new NoteFilter(message.ComplianceYear, message.PageSize, message.PageNumber)
             {
                 AatfId = message.AatfId,
                 NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
@@ -47,7 +47,7 @@
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,
                 EndDateSubmitted = message.EndDateSubmitted, 
-                ComplianceYear = message.ComplianceYear
+                ComplianceYear = message.ComplianceYear,
             };
 
             var noteData = await noteDataAccess.GetAllNotes(filter);

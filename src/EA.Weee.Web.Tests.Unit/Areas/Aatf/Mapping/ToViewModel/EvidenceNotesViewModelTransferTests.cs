@@ -13,6 +13,7 @@
     public class EvidenceNotesViewModelTransferTests : SimpleUnitTestBase
     {
         private const int PageNumber = 2;
+        private const int PageSize = 3;
 
         [Fact]
         public void EvidenceNotesViewModelTransfer_GiveListOfNotesIsNull_ArgumentNullExceptionExpected()
@@ -23,7 +24,8 @@
                 null, 
                 SystemTime.Now, 
                 null,
-                PageNumber));
+                PageNumber,
+                PageSize));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -33,7 +35,7 @@
         public void EvidenceNotesViewModelTransfer_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null, PageNumber));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.Empty, Guid.NewGuid(), TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null, PageNumber, PageSize));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -43,7 +45,7 @@
         public void EvidenceNotesViewModelTransfer_GivenEvidenceNoteIdGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null, PageNumber));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(Guid.NewGuid(), Guid.Empty, TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null, PageNumber, PageSize));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -55,7 +57,19 @@
         public void EvidenceNotesViewModelTransfer_Constructor_GivenPageNumberIsLessThanOne_ShouldThrowAnException(int pageNumber)
         {
             //act
-            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null, pageNumber));
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null, pageNumber, PageSize));
+
+            // assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void EvidenceNotesViewModelTransfer_Constructor_GivenPageSizeIsLessThanOne_ShouldThrowAnException(int pageSize)
+        {
+            //act
+            var exception = Record.Exception(() => new EvidenceNotesViewModelTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<EvidenceNoteSearchDataResult>(), SystemTime.Now, null, PageNumber, pageSize));
 
             // assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -72,7 +86,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
-            var mapper = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, PageNumber);
+            var mapper = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, PageNumber, PageSize);
 
             //assert
             mapper.AatfId.Should().Be(aatfId);
@@ -80,6 +94,7 @@
             mapper.ManageEvidenceNoteViewModel.Should().Be(model);
             mapper.NoteData.Should().Be(noteData);
             mapper.PageNumber.Should().Be(PageNumber);
+            mapper.PageSize.Should().Be(PageSize);
         }
     }
 }
