@@ -167,6 +167,9 @@
         [InlineData("outgoing-transfers")]
         public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
+            //arrange 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
 
@@ -182,6 +185,9 @@
         [InlineData("outgoing-transfers")]
         public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(string tab)
         {
+            //arrange 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
 
@@ -189,10 +195,8 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTab_SubmittedEvidenceNoteShouldBeRetrieved(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTab_SubmittedEvidenceNoteShouldBeRetrieved()
         {
             // Arrange
             var status = new List<NoteStatus>() { NoteStatus.Submitted };
@@ -210,7 +214,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence");
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -223,10 +227,8 @@
                      g.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTabAndPageNumber_SubmittedEvidenceNoteShouldBeRetrieved(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTabAndPageNumber_SubmittedEvidenceNoteShouldBeRetrieved()
         {
             // Arrange
             var schemeName = Faker.Company.Name();
@@ -244,17 +246,15 @@
             const int pageNumber = 10;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, pageNumber);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, pageNumber);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.PageNumber == pageNumber && g.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTabAndPreviouslySelectedComplianceYear_SubmittedEvidenceNoteShouldBeRetrieved(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTabAndPreviouslySelectedComplianceYear_SubmittedEvidenceNoteShouldBeRetrieved()
         {
             // Arrange
             var status = new List<NoteStatus>() { NoteStatus.Submitted };
@@ -274,7 +274,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, model);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", model);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -293,12 +293,7 @@
         [InlineData(NoteStatus.Returned, "review-submitted-evidence")]
         [InlineData(NoteStatus.Void, "review-submitted-evidence")]
         [InlineData(NoteStatus.Rejected, "review-submitted-evidence")]
-        [InlineData(NoteStatus.Approved, null)]
-        [InlineData(NoteStatus.Draft, null)]
-        [InlineData(NoteStatus.Returned, null)]
-        [InlineData(NoteStatus.Void, null)]
-        [InlineData(NoteStatus.Rejected, null)]
-        public async Task IndexGet_GivenDefaultAndReviewTab_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus(NoteStatus status, string tab)
+        public async Task IndexGet_GivenReviewTab_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus(NoteStatus status, string tab)
         {
             //act
             await ManageEvidenceController.Index(OrganisationId, tab);
@@ -308,10 +303,8 @@
                 g => g.AllowedStatuses.Contains(status)))).MustNotHaveHappened();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedData_ViewModelShouldBeBuilt(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTabAlongWithReturnedData_ViewModelShouldBeBuilt()
         {
             // Arrange
             var scheme = TestFixture.Create<SchemePublicInfo>();
@@ -323,7 +316,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence");
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -336,10 +329,8 @@
                          a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedDataAndPageNumber_ViewModelShouldBeBuilt(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTabAlongWithReturnedDataAndPageNumber_ViewModelShouldBeBuilt()
         {
             // Arrange
             var scheme = TestFixture.Create<SchemePublicInfo>();
@@ -353,7 +344,7 @@
             const int pageNumber = 10;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, pageNumber);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, pageNumber);
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -362,10 +353,8 @@
                          a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenDefaultAndReviewTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_ViewModelShouldBeBuilt()
         {
             // Arrange
             var scheme = A.Fake<SchemePublicInfo>();
@@ -379,7 +368,7 @@
 
             //act
 
-            await ManageEvidenceController.Index(OrganisationId, tab, model);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", model);
 
             //asset
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -472,10 +461,8 @@
                          a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("review-submitted-evidence")]
-        public async Task IndexGet_GivenReviewSubmittedEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned(string tab)
+        [Fact]
+        public async Task IndexGet_GivenReviewSubmittedEvidenceNotesViewModel_ReviewSubmittedEvidenceNotesViewModelShouldBeReturned()
         {
             //arrange
             var model = TestFixture.Create<ReviewSubmittedManageEvidenceNotesSchemeViewModel>();
@@ -483,7 +470,7 @@
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence") as ViewResult;
 
             //asset
             result.Model.Should().Be(model);
@@ -623,11 +610,13 @@
         [Theory]
         [InlineData("view-and-transfer-evidence", "ViewAndTransferEvidence")]
         [InlineData("review-submitted-evidence", "ReviewSubmittedEvidence")]
-        [InlineData("evidence-summary", "ReviewSubmittedEvidence")]
+        [InlineData("evidence-summary", "SummaryEvidence")]
         [InlineData("outgoing-transfers", "OutgoingTransfers")]
         public async void Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
         {
             var pcs = Guid.NewGuid();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
 
             var result = await ManageEvidenceController.Index(pcs, tab) as ViewResult;
 
@@ -731,6 +720,9 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_SessionShouldBeUpdated()
         {
+            // arrange 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
+
             // act
             await ManageEvidenceController.Index(OrganisationId);
 
@@ -743,6 +735,9 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_EditTransferTonnageViewModelKeySessionShouldBeUpdated()
         {
+            // arrange 
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
+
             // act
             await ManageEvidenceController.Index(OrganisationId);
 
