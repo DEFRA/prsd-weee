@@ -17,16 +17,15 @@
             var data = new EvidenceNoteData
             {
                 Id = source.Note.Id,
+                ComplianceYear = source.Note.ComplianceYear,
                 Type = source.Note.NoteType.ToCoreEnumeration<NoteType>(),
+                StartDate = source.Note.StartDate,
+                EndDate = source.Note.EndDate,
                 SubmittedDate = source.Note.NoteStatusHistory
                     .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Submitted))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate,
                 Reference = source.Note.Reference,
-                RecipientSchemeData = new SchemeData()
-                {
-                    SchemeName = source.Note.Recipient.Scheme.SchemeName
-                },
                 RecipientOrganisationData = new OrganisationData()
                 {
                     IsBalancingScheme = source.Note.Recipient.ProducerBalancingScheme != null,
@@ -35,14 +34,15 @@
                     OrganisationName = source.Note.Recipient.OrganisationName,
                 },
                 Status = (NoteStatus)source.Note.Status.Value,
+                Protocol = source.Note.Protocol.HasValue ? (Protocol?)source.Note.Protocol.Value : null,
                 WasteType = source.Note.WasteType.HasValue
-                    ? (Core.AatfEvidence.WasteType?)source.Note.WasteType.Value
+                    ? (WasteType?)source.Note.WasteType.Value
                     : null,
                 OrganisationData = new OrganisationData()
                 {
                     Name = source.Note.Organisation.Name,
                     TradingName = source.Note.Organisation.TradingName,
-                    OrganisationName = source.Note.Organisation.OrganisationName,
+                    OrganisationName = source.Note.Organisation.OrganisationName
                 }
             };
 
@@ -61,6 +61,14 @@
                 };
             }
 
+            if (source.Note.Recipient.Scheme != null)
+            {
+                data.RecipientSchemeData = new SchemeData()
+                {
+                    SchemeName = source.Note.Recipient.Scheme.SchemeName
+                };
+            }
+            
             return data;
         }
     }

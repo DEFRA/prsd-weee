@@ -139,7 +139,6 @@
             var count = await notes.Select(n => n.Id).CountAsync();
 
             var returnNotes = await notes
-                .Include(n => n.NoteStatusHistory)
                 .OrderByDescending(n => n.Reference)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
