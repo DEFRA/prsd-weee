@@ -195,13 +195,8 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>.That.Matches(a =>
-                a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
-                a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
-                a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
-                a.ListOfNotes.Count.Equals(3) &&
-                a.CategoryFilter.IsNullOrEmpty() &&
-                a.IncludeTonnage == false))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<Note>, List<EvidenceNoteData>>(A<List<Note>>
+                .That.IsSameSequenceAs(noteList.OrderByDescending(n => n.CreatedDate)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -216,11 +211,10 @@
                 A.Fake<EvidenceNoteData>()
             };
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMapperObject() { ListOfEvidenceNoteData = mappedNoteData };
             var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
             A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMapperObject>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
+            A.CallTo(() => mapper.Map<List<Note>, List<EvidenceNoteData>>(A<List<Note>>._)).Returns(mappedNoteData);
 
             // act
             var result = await handler.HandleAsync(request);
