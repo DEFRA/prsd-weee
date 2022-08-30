@@ -6,6 +6,7 @@
     using Domain;
     using Domain.AatfReturn;
     using Domain.Organisation;
+    using Weee.Tests.Core;
 
     public class AatfDbSetup : DbTestDataBuilder<Aatf, AatfDbSetup>
     {
@@ -40,7 +41,8 @@
 
         public AatfDbSetup WithOrganisation(Guid organisationId)
         {
-            instance.UpdateOrganisation(organisationId);
+            ObjectInstantiator<Aatf>.SetProperty(o => o.Organisation, null, instance);
+            ObjectInstantiator<Aatf>.SetProperty(o => o.OrganisationId, organisationId, instance);
 
             return this;
         }
