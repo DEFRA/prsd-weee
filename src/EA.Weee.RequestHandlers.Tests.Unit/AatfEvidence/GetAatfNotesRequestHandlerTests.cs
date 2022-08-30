@@ -11,7 +11,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.RequestHandlers.AatfEvidence;
-    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Tests.Core;
@@ -22,7 +21,6 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using Castle.Core.Internal;
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Domain.Evidence.NoteType;
@@ -329,15 +327,8 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>.That.Matches(a => 
-                a.ListOfNotes.ElementAt(0).Reference.Equals(6) &&
-                a.ListOfNotes.ElementAt(1).Reference.Equals(2) &&
-                a.ListOfNotes.ElementAt(2).Reference.Equals(4) &&
-                a.ListOfNotes.Count.Equals(3) &&
-                a.CategoryFilter.IsNullOrEmpty() &&
-                a.IncludeTonnage == false))).MustHaveHappenedOnceExactly();
-
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<List<Note>, List<EvidenceNoteData>>(A<List<Note>>
+                .That.IsSameSequenceAs(noteList.OrderByDescending(n => n.CreatedDate)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -353,11 +344,9 @@
             };
             var noteData = new EvidenceNoteResults(noteList, noteList.Count);
 
-            var listOfEvidenceNotes = new ListOfEvidenceNoteDataMap() { ListOfEvidenceNoteData = evidenceNoteDatas };
-
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).Returns(noteData);
 
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).Returns(listOfEvidenceNotes);
+            A.CallTo(() => mapper.Map<List<Note>, List<EvidenceNoteData>>(A<List<Note>>._)).Returns(evidenceNoteDatas);
 
             // act
             var result = await handler.HandleAsync(GetAatfNotesRequest(currentYear));
@@ -365,9 +354,7 @@
             // assert
             result.Should().BeOfType<EvidenceNoteSearchDataResult>();
             result.NoteCount.Should().Be(evidenceNoteDatas.Count);
-            result.Results.ToList().Should().BeEquivalentTo(listOfEvidenceNotes.ListOfEvidenceNoteData);
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => mapper.Map<ListOfEvidenceNoteDataMap>(A<ListOfNotesMap>._)).MustHaveHappenedOnceExactly();
+            result.Results.ToList().Should().BeEquivalentTo(evidenceNoteDatas);
         }
 
         private GetAatfNotesRequest GetAatfNotesRequest(int selectedComplianceYear, string searchRef = null, Guid? receivedId = null, WasteType? wasteType = null, NoteStatus? noteStatus = null,
