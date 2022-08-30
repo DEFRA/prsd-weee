@@ -8,7 +8,7 @@
 
     public class ViewAllTransferNotesMap : ListOfNotesViewModelBase<ViewAllTransferNotesViewModel>, IMap<ViewEvidenceNotesMapTransfer, ViewAllTransferNotesViewModel>
     {
-        public ViewAllTransferNotesMap(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
+        public ViewAllTransferNotesMap(IMapper mapper) : base(mapper)
         {
         }
 
@@ -16,7 +16,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.PageNumber, source.ComplianceYearList);
+            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.PageNumber, source.PageSize, source.ComplianceYearList);
 
             return model;
         }

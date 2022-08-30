@@ -23,15 +23,12 @@
     {
         private readonly TransferredOutEvidenceViewModelMap transferredOutEvidenceViewModelMap;
         private readonly IMapper mapper;
-        private readonly ConfigurationService configurationService;
 
         public TransferredOutEvidenceViewModelMapTests()
         {
             mapper = A.Fake<IMapper>();
-            configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(25);
-
-            transferredOutEvidenceViewModelMap = new TransferredOutEvidenceViewModelMap(mapper, configurationService);
+            
+            transferredOutEvidenceViewModelMap = new TransferredOutEvidenceViewModelMap(mapper);
         }
 
         [Fact]
@@ -50,7 +47,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -65,7 +62,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -83,7 +80,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -104,7 +101,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             transferredOutEvidenceViewModelMap.Map(transfer);
@@ -126,7 +123,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             transferredOutEvidenceViewModelMap.Map(transfer);
@@ -147,7 +144,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -176,7 +173,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 3);
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
@@ -202,17 +199,17 @@
             };
 
             var organisationId = Guid.NewGuid();
-            var pageNumber = TestFixture.Create<int>();
-            var pageSize = TestFixture.Create<int>();
+            var pageNumber = 1;
+            var pageSize = 3;
 
             var transfer = new SchemeTabViewModelMapTransfer(organisationId,
                 noteData,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                pageNumber);
+                pageNumber,
+                pageSize);
 
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
@@ -238,7 +235,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(source);
@@ -265,7 +262,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 null,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(source);
@@ -290,7 +287,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(source);
@@ -313,7 +310,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(source);
@@ -335,7 +332,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -357,7 +354,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -385,7 +382,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(), 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -416,7 +413,7 @@
                 scheme,
                 currentDate,
                 model, 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -441,7 +438,7 @@
                 scheme,
                 currentDate,
                 model, 
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -466,7 +463,7 @@
                 scheme,
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -489,7 +486,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
@@ -512,13 +509,175 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = transferredOutEvidenceViewModelMap.Map(transfer);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public void Map_GivenComplianceYearIsNotClosedAndSchemeIsNotWithdrawnAndEvidenceNotesAreInNotEditableState_DisplayEditLinkShouldBeFalse(NoteStatus status)
+        {
+            if (status == NoteStatus.Draft || status == NoteStatus.Returned)
+            {
+                return;
+            }
+
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = status
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeFalse();
+            });
+        }
+
+        [Fact]
+        public void Map_GivenComplianceYearIsNotClosedAndSchemeIsNotWithdrawnAndEvidenceNotesAreInEditableState_DisplayEditLinkShouldBeTrue()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Returned
+                },
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Draft
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeTrue();
+            });
+        }
+
+        [Fact]
+        public void Map_GivenComplianceYearIsNotClosedAndSchemeIsWithdrawnAndEvidenceNotesAreInEditableState_DisplayEditLinkShouldBeFalse()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 1, 1);
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Returned
+                },
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Draft
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeFalse();
+            });
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenComplianceYearIsClosedAndSchemeIsNotWithdrawnAndEvidenceNotesAreInEditableState_DisplayEditLinkShouldBeFalse(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, complianceYear).Create();
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var notesRow = new List<EvidenceNoteRowViewModel>
+            {
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Returned
+                },
+                new EvidenceNoteRowViewModel()
+                {
+                    Status = NoteStatus.Draft
+                }
+            };
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                model,
+                1, 2);
+
+            //act
+            var result = transferredOutEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
+            {
+                e.DisplayEditLink.Should().BeFalse();
+            });
         }
     }
 }
