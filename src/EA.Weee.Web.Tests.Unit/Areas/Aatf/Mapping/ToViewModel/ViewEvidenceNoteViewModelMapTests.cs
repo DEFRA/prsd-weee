@@ -1103,7 +1103,12 @@
 
             //assert
             result.DisplayTransferEvidenceColumns.Should().BeTrue();
-            result.RemainingTransferCategoryValues.Where(x => x.Received != String.Empty).Should().HaveCount(3);
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Received.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Reused.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Received.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Reused.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Received.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Reused.Should().Be("5.000");
             result.TransferReceivedRemainingTotalDisplay.Should().Be("30.000");
             result.TransferReusedRemainingTotalDisplay.Should().Be("25.000");
         }
