@@ -1217,7 +1217,7 @@
             A.CallTo(() => history.ToStatus).Returns(NoteStatus.Submitted);
             historyList.Add(history);
 
-            A.CallTo(() => transferNote1.Id).Returns(transferId);
+            A.CallTo(() => transferNote1.Id).Returns(transferId); // transfer note ID must match TransferNoteId on NoteTransferTonnage
             A.CallTo(() => transferNote1.Reference).Returns(TestFixture.Create<int>());
             A.CallTo(() => transferNote1.NoteType).Returns(NoteType.TransferNote);
             A.CallTo(() => transferNote1.Status).Returns(NoteStatus.Approved);
