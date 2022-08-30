@@ -22,6 +22,7 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Admin.Obligations;
+    using Requests.Shared;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
 
     public class EvidenceNoteSeeder : IntegrationTestBase
@@ -291,8 +292,6 @@
                         }
                     }
                 }
-
-                request = new GetObligationSummaryRequest(schemesList.ElementAt(0).Id, 2023);
             };
 
             private readonly Because of = () =>
