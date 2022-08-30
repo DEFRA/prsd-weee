@@ -83,6 +83,18 @@
                 namespaces: new[] { typeof(OutgoingTransfersController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/manage-evidence-notes/view-approved-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewVoidedEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/manage-evidence-notes/view-voided-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "Scheme_evidence_default",
                 url: "Scheme/{pcsId}/{controller}/{action}/{evidenceNoteId}",
                 defaults: new { action = "Index", controller = "Home", area = "Scheme" },
