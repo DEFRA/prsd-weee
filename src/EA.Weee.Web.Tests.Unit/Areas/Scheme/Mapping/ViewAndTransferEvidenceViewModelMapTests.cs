@@ -230,10 +230,26 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft).With(a => a.WasteType, WasteType.Household).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected).With(a => a.WasteType, WasteType.NonHousehold).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted).With(a => a.WasteType, WasteType.NonHousehold).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).With(a => a.WasteType, WasteType.Household).Create()
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected)
+                    .With(a => a.WasteType, WasteType.NonHousehold)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted)
+                    .With(a => a.WasteType, WasteType.NonHousehold)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .With(a => a.Type, NoteType.Transfer)
+                    .Create()
             };
             var noteData = new EvidenceNoteSearchDataResult(notes, notes.Count);
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
@@ -268,7 +284,10 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).With(a => a.WasteType, WasteType.Household).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>()
                 .With(s => s.Status, status)
@@ -288,6 +307,39 @@
             result.DisplayTransferButton.Should().BeTrue();
         }
 
+        [Fact]
+        public void Map_GivenSchemeIsNotWithdrawnAndComplianceWindowIsOpenWithOnlyApprovedTransferNotes_DisplayTransferButtonShouldBeSetToFalse()
+        {
+            var currentDate = new DateTime(2022, 1, 1);
+            var manageEvidenceModel = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2022).Create();
+
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.Type, NoteType.Transfer)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .Create(),
+            };
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.Status, SchemeStatus.Approved)
+                .Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.Results, notes).Create();
+
+            //act
+            var result = viewAndTransferEvidenceViewModelMap.Map(new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
+                noteData,
+                scheme,
+                currentDate,
+                manageEvidenceModel,
+                1, 2));
+
+            //assert
+            result.DisplayTransferButton.Should().BeFalse();
+        }
+
         [Theory]
         [ClassData(typeof(SchemeStatusCoreData))]
         public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithdrawnAndComplianceWindowIsOpenAndExistingModelIsNull_DisplayTransferButtonShouldBeSetToTrue(SchemeStatus status)
@@ -305,6 +357,7 @@
                 TestFixture.Build<EvidenceNoteData>()
                 .With(a => a.Status, NoteStatus.Approved)
                 .With(a => a.WasteType, WasteType.Household)
+                .With(a => a.Type, NoteType.Evidence)
                 .Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>()
@@ -373,6 +426,7 @@
             {
                 TestFixture.Build<EvidenceNoteData>()
                 .With(a => a.Status, NoteStatus.Approved)
+                .With(a => a.Type, NoteType.Evidence)
                 .With(a => a.WasteType, WasteType.Household).Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
@@ -399,7 +453,10 @@
                 .With(m => m.SelectedComplianceYear, complianceYear).Create();
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).With(a => a.WasteType, WasteType.Household).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();

@@ -3,7 +3,6 @@
     using System;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using Core.Tests.Unit.Helpers;
     using FluentAssertions;
     using Web.Infrastructure;
     using Web.ViewModels.Shared;
@@ -140,10 +139,11 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenDraftStatus_DraftRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenTransferNoteAndDraftStatus_DraftRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Draft;
+            model.Type = NoteType.Transfer;
 
             //act
             var result = model.SchemeViewRouteName;
@@ -153,10 +153,11 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenSubmittedStatus_SubmittedRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenTransferNoteAndSubmittedStatus_SubmittedRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Submitted;
+            model.Type = NoteType.Transfer;
 
             //act
             var result = model.SchemeViewRouteName;
@@ -166,10 +167,11 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenApprovedStatus_ApprovedRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenTransferNoteAndApprovedStatus_ApprovedRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Approved;
+            model.Type = NoteType.Transfer;
 
             //act
             var result = model.SchemeViewRouteName;
@@ -179,10 +181,11 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenReturnedStatus_ReturnedRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenTransferNoteAndReturnedStatus_ReturnedRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Returned;
+            model.Type = NoteType.Transfer;
 
             //act
             var result = model.SchemeViewRouteName;
@@ -192,10 +195,11 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenRejectedStatus_RejectedRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenTransferNoteAndRejectedStatus_RejectedRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Rejected;
+            model.Type = NoteType.Transfer;
 
             //act
             var result = model.SchemeViewRouteName;
@@ -205,16 +209,101 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenVoidNoteStatus_VoidedViewShouldBeReturned()
+        public void SchemeViewRouteName_GivenTransferNoteAndVoidNoteStatus_VoidedViewShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Void;
+            model.Type = NoteType.Transfer;
 
             //act
             var route = model.SchemeViewRouteName;
 
             //assert
             route.Should().Be(SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName);
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenEvidenceNoteAndVoidNoteStatus_VoidedViewShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Void;
+            model.Type = NoteType.Evidence;
+
+            //act
+            var route = model.SchemeViewRouteName;
+
+            //assert
+            route.Should().Be(SchemeTransferEvidenceRedirect.ViewVoidedEvidenceNoteRouteName);
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenEvidenceNoteAndApprovedNoteStatus_ApprovedViewShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Approved;
+            model.Type = NoteType.Evidence;
+
+            //act
+            var route = model.SchemeViewRouteName;
+
+            //assert
+            route.Should().Be(SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName);
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenEvidenceNoteAndSubmittedNoteStatus_EmptyRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Submitted;
+            model.Type = NoteType.Evidence;
+
+            //act
+            var route = model.SchemeViewRouteName;
+
+            //assert
+            route.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenEvidenceNoteAndDraftNoteStatus_EmptyRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Draft;
+            model.Type = NoteType.Evidence;
+
+            //act
+            var route = model.SchemeViewRouteName;
+
+            //assert
+            route.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenEvidenceNoteAndRejectedNoteStatus_EmptyRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Rejected;
+            model.Type = NoteType.Evidence;
+
+            //act
+            var route = model.SchemeViewRouteName;
+
+            //assert
+            route.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SchemeViewRouteName_GivenEvidenceNoteAndReturnedNoteStatus_EmptyRouteShouldBeReturned()
+        {
+            //arrange
+            model.Status = NoteStatus.Returned;
+            model.Type = NoteType.Evidence;
+
+            //act
+            var route = model.SchemeViewRouteName;
+
+            //assert
+            route.Should().BeEmpty();
         }
     }
 }

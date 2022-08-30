@@ -136,12 +136,15 @@
                 notes = notes.Where(p => p.Aatf.AatfId == groupedAatfId);
             }
 
-            var returnNotes = await notes.OrderByDescending(n => n.Reference)
+            var count = await notes.Select(n => n.Id).CountAsync();
+
+            var returnNotes = await notes
+                .OrderByDescending(n => n.Reference)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 
-            return new EvidenceNoteResults(returnNotes.ToList(), notes.Count());
+            return new EvidenceNoteResults(returnNotes, count);
         }
 
         public async Task<IEnumerable<int>> GetComplianceYearsForNotes(List<int> allowedStatuses)
