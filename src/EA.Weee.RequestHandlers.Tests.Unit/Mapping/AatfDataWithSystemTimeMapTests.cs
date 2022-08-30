@@ -19,12 +19,12 @@
 
     public class AatfDataWithSystemTimeMapTests : SimpleUnitTestBase
     {
-        private readonly IMap<Aatf, AatfData> aatfMap;
+        private readonly IMap<AatfSimpleMapObject, AatfData> aatfMap;
         private readonly AatfDataWithSystemTimeMap map;
 
         public AatfDataWithSystemTimeMapTests()
         {
-            aatfMap = A.Fake<IMap<Aatf, AatfData>>();
+            aatfMap = A.Fake<IMap<AatfSimpleMapObject, AatfData>>();
 
             map = new AatfDataWithSystemTimeMap(aatfMap);
         }
@@ -49,7 +49,7 @@
             map.Map(new AatfWithSystemDateMapperObject(aatf, TestFixture.Create<DateTime>()));
 
             //assert
-            A.CallTo(() => aatfMap.Map(aatf)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>.That.Matches(a => a.Aatf.Equals(aatf)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -57,7 +57,7 @@
         {
             //arrange
             var aatfData = TestFixture.Create<AatfData>();
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), TestFixture.Create<DateTime>()));
@@ -77,7 +77,7 @@
                 .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
@@ -97,7 +97,7 @@
                 .With(a => a.FacilityType, FacilityType.Ae)
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
@@ -117,7 +117,7 @@
                 .With(a => a.FacilityType, FacilityType.Aatf)
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
@@ -136,7 +136,7 @@
                 .With(a => a.ApprovalDate, (DateTime?)null)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), TestFixture.Create<DateTime>()));
@@ -157,7 +157,7 @@
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
@@ -178,7 +178,7 @@
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
@@ -206,7 +206,7 @@
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
@@ -227,7 +227,7 @@
                 .With(a => a.ApprovalDate, approvalDate)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
@@ -248,7 +248,7 @@
                 .With(a => a.ComplianceYear, date.Year)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), date));
@@ -268,7 +268,7 @@
                 .With(a => a.ComplianceYear, currentDate.Year)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
@@ -288,7 +288,7 @@
                 .With(a => a.ComplianceYear, complianceYear)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             
@@ -311,7 +311,7 @@
                 .With(a => a.ComplianceYear, currentDate.Year)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
@@ -331,7 +331,7 @@
                 .With(a => a.ComplianceYear, currentDate.Year)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));
@@ -351,7 +351,7 @@
                 .With(a => a.ComplianceYear, currentDate.Year)
                 .Create();
 
-            A.CallTo(() => aatfMap.Map(A<Aatf>._)).Returns(aatfData);
+            A.CallTo(() => aatfMap.Map(A<AatfSimpleMapObject>._)).Returns(aatfData);
 
             //act
             var result = map.Map(new AatfWithSystemDateMapperObject(TestFixture.Create<Aatf>(), currentDate));

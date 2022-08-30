@@ -135,6 +135,8 @@
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
+    <Compile Include="Mappings\AatfSimpleMapObject.cs" />
+    <Compile Include="Mappings\AatfSimpleMap.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
@@ -150,6 +152,8 @@
     <Compile Include="Mappings\AatfDataWithSystemTimeMap.cs" />
     <Compile Include="Mappings\AatfWithSystemDateMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteDataMapBase.cs" />
+    <Compile Include="Mappings\EvidenceNoteRowMap.cs" />
+    <Compile Include="Mappings\EvidenceNoteRowMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteWithCriteriaMap.cs" />
     <Compile Include="Mappings\ObligationSummaryTotalsMap.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
@@ -160,7 +164,7 @@
     <Compile Include="Admin\Obligations\GetPcsObligationsCsvHandler.cs" />
     <Compile Include="Admin\Obligations\ObligationCsvConstants.cs" />
     <Compile Include="Mappings\EvidenceNoteMap.cs" />
-    <Compile Include="Mappings\EvidenceNoteDataMap.cs" />
+    <Compile Include="Mappings\ListOfEvidenceNoteDataMap.cs" />
     <Compile Include="Mappings\NonObligatedWeeeMap.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeRequestHandler.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsvHandler.cs" />
@@ -192,7 +196,6 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfAeActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandler.cs" />
-    <Compile Include="Mappings\ListOfEvidenceNoteDataMap.cs" />
     <Compile Include="Mappings\ListOfNotesMap.cs" />
     <Compile Include="Mappings\AatfSummaryTotalsMap.cs" />
     <Compile Include="Mappings\TransferNoteMapTransfer.cs" />
