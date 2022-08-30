@@ -39,6 +39,7 @@
         protected readonly Guid OrganisationId;
         protected readonly Guid EvidenceNoteId;
         protected readonly ISessionService SessionService;
+        private readonly ConfigurationService configurationService;
 
         public ManageEvidenceNotesControllerReviewEvidenceNoteTests()
         {
@@ -50,7 +51,8 @@
             RecipientId = Guid.NewGuid();
             OrganisationId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService);
+            configurationService = A.Fake<ConfigurationService>();
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, configurationService);
 
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(
                 new ReviewEvidenceNoteViewModel()
@@ -86,13 +88,13 @@
         [Fact]
         public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void DownloadEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]

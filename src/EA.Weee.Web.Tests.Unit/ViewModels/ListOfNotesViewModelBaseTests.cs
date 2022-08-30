@@ -19,21 +19,18 @@
     public class ListOfNotesViewModelBaseTests : SimpleUnitTestBase
     {
         private readonly IMapper mapper;
-        private readonly ConfigurationService configurationService;
         private readonly TestListBase testClass;
 
         public ListOfNotesViewModelBaseTests()
         {
             mapper = A.Fake<IMapper>();
-            configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(25);
-
-            testClass = new TestListBase(mapper, configurationService);
+            
+            testClass = new TestListBase(mapper);
         }
 
         private class TestListBase : ListOfNotesViewModelBase<EditDraftReturnedNotesViewModel>
         {
-            public TestListBase(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
+            public TestListBase(IMapper mapper) : base(mapper)
             {
             }
         }
@@ -55,7 +52,7 @@
         public void Map_GivenNullSource_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => testClass.MapBase(null, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>(), TestFixture.Create<int>()));
+            var exception = Record.Exception(() => testClass.MapBase(null, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>(), 1, 2));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -74,7 +71,7 @@
             var noteData = new EvidenceNoteSearchDataResult(notes, 2);
 
             //act
-            testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>(), TestFixture.Create<int>());
+            testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>(), 1, 2);
 
             // assert 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e => 
@@ -96,7 +93,7 @@
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
             //act
-            var result = testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>(), TestFixture.Create<int>());
+            var result = testClass.MapBase(noteData, TestFixture.Create<DateTime>(), TestFixture.Create<ManageEvidenceNoteViewModel>(), 1, 3);
 
             // assert
             result.EvidenceNotesDataList.Should().NotBeEmpty();
@@ -112,7 +109,7 @@
             var date = new DateTime(2022, 1, 1);
 
             //act
-            var result = testClass.MapBase(noteData, date, model, TestFixture.Create<int>());
+            var result = testClass.MapBase(noteData, date, model, 1, 2);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
@@ -132,7 +129,7 @@
             var date = new DateTime(year, 1, 1);
 
             //act
-            var result = testClass.MapBase(noteData, date, null, TestFixture.Create<int>());
+            var result = testClass.MapBase(noteData, date, null, 1, 2);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
@@ -150,7 +147,7 @@
                 .With(m => m.SelectedComplianceYear, complianceYear).Create();
 
             //act
-            var result = testClass.MapBase(noteData, date, model, TestFixture.Create<int>());
+            var result = testClass.MapBase(noteData, date, model, 1, 2);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
@@ -166,7 +163,7 @@
                 .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
-            var result = testClass.MapBase(noteData, date, model, TestFixture.Create<int>());
+            var result = testClass.MapBase(noteData, date, model, 1, 2);
 
             //assert
             result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
@@ -181,7 +178,7 @@
                 .With(m => m.SelectedComplianceYear, 2021).Create();
 
             //act
-            var result = testClass.MapBase(noteData, date, model, TestFixture.Create<int>());
+            var result = testClass.MapBase(noteData, date, model, 1, 2);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
@@ -196,7 +193,7 @@
                 .With(m => m.SelectedComplianceYear, complianceYear).Create();
 
             //act
-            var result = testClass.MapBase(noteData, currentDate, model, TestFixture.Create<int>());
+            var result = testClass.MapBase(noteData, currentDate, model, 1, 2);
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeTrue();
