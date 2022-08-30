@@ -787,6 +787,8 @@
                 await database.WeeeContext.SaveChangesAsync();
 
                 var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: year);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), now);
+                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), now);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), now);
                 context.Notes.Add(noteShouldBeFound);
 
@@ -1236,12 +1238,14 @@
 
                 var voided1 = NoteCommon.CreateNote(database, organisation, null, aatf1, complianceYear: complianceYear);
                 voided1.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                voided1.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 voided1.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(voided1);
 
                 //diff aatf not counted
                 var voided2 = NoteCommon.CreateNote(database, organisation, null, aatf2, complianceYear: complianceYear);
                 voided2.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
+                voided2.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 voided2.UpdateStatus(NoteStatus.Void, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(voided2);
 

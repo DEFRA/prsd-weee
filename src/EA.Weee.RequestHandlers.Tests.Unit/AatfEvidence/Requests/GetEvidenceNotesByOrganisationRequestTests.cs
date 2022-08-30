@@ -31,7 +31,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -42,7 +42,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -53,7 +53,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -66,7 +66,29 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, new List<NoteType>() { NoteType.Evidence }, false));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25));
+
+            //assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void GetEvidenceNotesByOrganisationRequest_GivenZeroPageSize_ShouldThrowArgumentOutOfRangeException()
+        {
+            //act
+            var exception = Record.Exception(() =>
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 1, 0));
+
+            //assert
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void GetEvidenceNotesByOrganisationRequest_GivenZeroPageNumber_ShouldThrowArgumentOutOfRangeException()
+        {
+            //act
+            var exception = Record.Exception(() =>
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 0, 25));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -82,7 +104,7 @@
             var statusList = fixture.CreateMany<NoteStatus>().ToList();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);

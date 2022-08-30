@@ -16,13 +16,13 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Domain.Evidence;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.Requests.Shared;
     using FluentAssertions;
     using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
-    using Requests.Admin.Obligations;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
 
     public class GetObligationSummaryRequestHandlerIntegrationTests : IntegrationTestBase
@@ -184,6 +184,8 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages9).Create();
@@ -291,6 +293,7 @@
                 TransferEvidenceNoteDbSetup.Init().With(t =>
                     {
                         t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                         t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                     }).WithTonnages(newTransferNoteTonnage7)
                     .WithRecipient(recipientOrganisation.Id)
@@ -341,7 +344,7 @@
                     .WithRecipient(recipientOrganisation2.Id)
                     .Create();
 
-                request = new GetObligationSummaryRequest(scheme.Id, 2022);
+                request = new GetObligationSummaryRequest(scheme.Id, 2022, true);
             };
 
             private readonly Because of = () =>
@@ -357,32 +360,32 @@
                 category.Evidence.Should().Be(101);
                 category.Difference.Should().Be(-899);
                 category.Reuse.Should().Be(51);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.MedicalDevices.ToInt());
                 category.Obligation.Should().Be(800);
                 category.Evidence.Should().Be(51);
                 category.Difference.Should().Be(-749);
                 category.Reuse.Should().Be(0);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.GasDischargeLampsAndLedLightSources.ToInt());
                 category.Obligation.Should().Be(0);
                 category.Evidence.Should().Be(201);
                 category.Difference.Should().Be(201);
                 category.Reuse.Should().Be(11);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.ElectricalAndElectronicTools.ToInt());
-                category.Obligation.Should().Be(0);
+                category.Obligation.Should().BeNull();
                 category.Evidence.Should().Be(251);
                 category.Difference.Should().Be(251);
                 category.Reuse.Should().Be(1);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.ConsumerEquipment.ToInt());
                 category.Obligation.Should().Be(100);
@@ -397,8 +400,8 @@
                 category.Evidence.Should().Be(76);
                 category.Difference.Should().Be(-924.235M);
                 category.Reuse.Should().Be(21);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt());
                 category.Obligation.Should().Be(600);
@@ -406,30 +409,30 @@
                 category.Difference.Should().Be(-579);
                 category.Reuse.Should().Be(6);
                 category.TransferredIn.Should().Be(10);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.DisplayEquipment.ToInt());
                 category.Obligation.Should().Be(200);
                 category.Evidence.Should().Be(31);
                 category.Difference.Should().Be(-169);
                 category.Reuse.Should().Be(1);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.CoolingApplicancesContainingRefrigerants.ToInt());
-                category.Obligation.Should().Be(0);
+                category.Obligation.Should().BeNull();
                 category.Evidence.Should().Be(201.789M);
                 category.Difference.Should().Be(201.789M);
                 category.Reuse.Should().Be(101);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.SmallHouseholdAppliances.ToInt());
                 category.Obligation.Should().Be(20);
                 category.Evidence.Should().Be(26);
                 category.Difference.Should().Be(6);
                 category.Reuse.Should().Be(1);
-                category.TransferredIn.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
                 category.TransferredOut.Should().Be(100);
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.LargeHouseholdAppliances.ToInt());
@@ -437,32 +440,32 @@
                 category.Evidence.Should().Be(101);
                 category.Difference.Should().Be(-466);
                 category.Reuse.Should().Be(1);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.ITAndTelecommsEquipment.ToInt());
                 category.Obligation.Should().Be(150.5M);
                 category.Evidence.Should().Be(81);
                 category.Difference.Should().Be(-69.500M);
                 category.Reuse.Should().Be(71);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.LightingEquipment.ToInt());
-                category.Obligation.Should().Be(0);
+                category.Obligation.Should().BeNull();
                 category.Evidence.Should().Be(68.280M);
                 category.Difference.Should().Be(68.280M);
                 category.Reuse.Should().Be(1);
                 category.TransferredIn.Should().Be(57.280M);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredOut.Should().BeNull();
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.MonitoringAndControlInstruments.ToInt());
                 category.Obligation.Should().Be(1);
                 category.Evidence.Should().Be(21);
                 category.Difference.Should().Be(20);
                 category.Reuse.Should().Be(0);
-                category.TransferredIn.Should().Be(0);
-                category.TransferredOut.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
             };
         }
 

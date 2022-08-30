@@ -287,7 +287,7 @@
         [HttpGet]
         [CheckCanEditTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> EditCategories(Guid pcsId, Guid evidenceNoteId, int page = 1)
         {
             await SetBreadcrumb(pcsId);
 
@@ -296,6 +296,8 @@
                 var model = await TransferEvidenceNoteCategoriesViewModel(pcsId, evidenceNoteId, client, null);
 
                 MananageCategoryIdsInSession(model);
+
+                ViewBag.Page = page;
 
                 return this.View("EditCategories", model);
             }
