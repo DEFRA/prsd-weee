@@ -724,7 +724,8 @@
             var aatfData = TestFixture.Create<AatfData>();
 
             A.CallTo(() => note.Aatf).Returns(aatf);
-            A.CallTo(() => mapper.Map<Aatf, AatfData>(aatf)).Returns(aatfData);
+            A.CallTo(() => mapper.Map<AatfSimpleMapObject, AatfData>(A<AatfSimpleMapObject>
+                .That.Matches(a => a.Aatf.Equals(aatf)))).Returns(aatfData);
 
             //act
             var result = map.Map(EvidenceNoteWithCriteriaMap(note));
