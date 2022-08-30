@@ -653,7 +653,7 @@
         {
             //arrange
             var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
-            var data = new EvidenceNoteHistoryData(TestFixture.Create<Guid>(), TestFixture.Create<NoteStatus>(), TestFixture.Create<int>(), TestFixture.Create<NoteType>(), TestFixture.Create<DateTime?>(), TestFixture.Create<string>());
+            var data = new EvidenceNoteHistoryData(TestFixture.Create<Guid>(), TestFixture.Create<NoteStatus>(), TestFixture.Create<int>(), TestFixture.Create<NoteType>(), TestFixture.Create<DateTime?>(), TestFixture.Create<string>(), TestFixture.Create<List<EvidenceTonnageData>>());
             var history = new List<EvidenceNoteHistoryData>()
             {
                 data
@@ -751,7 +751,8 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -781,7 +782,8 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -811,13 +813,15 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>()),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
                 new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
                     NoteStatus.Rejected,
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -853,7 +857,8 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -883,19 +888,22 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>()),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
                 new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
                     NoteStatus.Rejected,
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>()),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
                 new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
                     NoteStatus.Void,
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -929,7 +937,8 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -956,13 +965,15 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>()),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
                 new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
                     NoteStatus.Void,
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -989,13 +1000,15 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>()),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
                 new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
                     NoteStatus.Rejected,
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
@@ -1022,13 +1035,15 @@
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>()),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
                 new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
                     NoteStatus.Rejected,
                     TestFixture.Create<int>(),
                     NoteType.Transfer,
                     TestFixture.Create<DateTime>(),
-                    TestFixture.Create<string>())
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
             };
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
