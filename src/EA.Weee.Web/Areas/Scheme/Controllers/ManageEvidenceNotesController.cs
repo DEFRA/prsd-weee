@@ -76,7 +76,7 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesDisplayOptions.Summary:
-                        return await CreateAndPopulateEvideneSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
@@ -84,7 +84,8 @@
                     case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
                         return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     default:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
+                        //return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
+                        return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
                 }
             }
         }
@@ -239,7 +240,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateAndPopulateEvideneSummaryViewModel(Guid pcsId, SchemePublicInfo scheme, DateTime currentDate, 
+        public async Task<ActionResult> CreateAndPopulateEvidenceSummaryViewModel(Guid pcsId, SchemePublicInfo scheme, DateTime currentDate, 
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             using (var client = apiClient())
@@ -248,10 +249,13 @@
 
                 var request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
 
-                var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
+                var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);  //BUG here
 
                 var summaryModel = mapper.Map<SummaryEvidenceViewModel>
                     (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
+
+                scheme.IsBalancingScheme = true;  // line is just needed while developing
+                summaryModel.SchemeInfo = scheme;
 
                 return View("SummaryEvidence", summaryModel);
             }
