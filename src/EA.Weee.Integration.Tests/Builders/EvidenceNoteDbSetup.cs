@@ -94,6 +94,7 @@
                 else if (statusToUpdate == NoteStatus.Void)
                 {
                     instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Approved, DbContext.GetCurrentUser(), SystemTime.UtcNow);
                     instance.UpdateStatus(NoteStatus.Void, DbContext.GetCurrentUser(), SystemTime.UtcNow);
                 }
             }
