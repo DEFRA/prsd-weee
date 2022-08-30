@@ -31,20 +31,20 @@ TransferEvidenceReceivedIn, TransferEvidenceReuseIn, TransferEvidenceReceivedOut
 SELECT
 	c.Id,
 	c.[Name],
-	0, 
-	0, 
-	0,
-	0, 
-	0, 
-	0,
-	0
+	NULL, 
+	NULL, 
+	NULL,
+	NULL, 
+	NULL, 
+	NULL,
+	NULL
 FROM
 	Lookup.WeeeCategory c
 	
 
 UPDATE s
 SET 
-	s.Obligation = ISNULL(osa.Obligation, 0)
+	s.Obligation = osa.Obligation
 FROM
 	#EvidenceSummary s
 	LEFT JOIN [PCS].ObligationSchemeAmount osa ON s.CategoryId = osa.CategoryId 
@@ -57,8 +57,8 @@ WHERE
 UPDATE 
 	s
 SET
-	s.EvidenceReceivedInTotal = ISNULL(evc.Received, 0),
-	s.EvidenceReuseInTotal = ISNULL(evc.Reused, 0)
+	s.EvidenceReceivedInTotal = evc.Received,
+	s.EvidenceReuseInTotal = evc.Reused
 FROM
 	#EvidenceSummary s
 	INNER JOIN Evidence.vwEvidenceSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
@@ -67,8 +67,8 @@ FROM
 UPDATE 
 	s
 SET
-	s.TransferEvidenceReceivedIn = ISNULL(evc.TransferredReceived, 0),
-	s.TransferEvidenceReuseIn =  ISNULL(evc.TransferredReused, 0)
+	s.TransferEvidenceReceivedIn = evc.TransferredReceived,
+	s.TransferEvidenceReuseIn =  evc.TransferredReused
 FROM
 	#EvidenceSummary s
 	INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
@@ -77,8 +77,8 @@ FROM
 UPDATE 
 	s
 SET
-	s.TransferEvidenceReceivedOut = ISNULL(evc.TransferredReceived, 0),
-	s.TransferEvidenceReuseOut =  ISNULL(evc.TransferredReused, 0)
+	s.TransferEvidenceReceivedOut = evc.TransferredReceived,
+	s.TransferEvidenceReuseOut =  evc.TransferredReused
 FROM
 	#EvidenceSummary s
 	INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
@@ -87,11 +87,14 @@ FROM
 SELECT 
 	CategoryId,
 	Obligation,
-	EvidenceReceivedInTotal + (TransferEvidenceReceivedIn - TransferEvidenceReceivedOut) AS Evidence,
-	EvidenceReuseInTotal + (TransferEvidenceReuseIn - TransferEvidenceReuseOut) AS Reuse,
+	CASE WHEN TransferEvidenceReceivedIn IS NULL AND TransferEvidenceReceivedOut IS NULL AND EvidenceReceivedInTotal IS NULL THEN NULL ELSE
+		COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0)) END AS Evidence,
+	CASE WHEN EvidenceReuseInTotal IS NULL AND TransferEvidenceReuseIn IS NULL AND TransferEvidenceReuseOut IS NULL THEN NULL ELSE
+		COALESCE(EvidenceReuseInTotal, 0) + (COALESCE(TransferEvidenceReuseIn, 0) - COALESCE(TransferEvidenceReuseOut, 0)) END AS Reuse,
 	TransferEvidenceReceivedOut AS TransferredOut,
 	TransferEvidenceReceivedIn AS TransferredIn,
-	(EvidenceReceivedInTotal + (TransferEvidenceReceivedIn - TransferEvidenceReceivedOut)) - Obligation AS ObligationDifference
+	CASE WHEN EvidenceReceivedInTotal IS NULL AND TransferEvidenceReceivedIn IS NULL AND TransferEvidenceReceivedOut IS NULL AND Obligation IS NULL THEN NULL ELSE
+		(COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0))) - COALESCE(Obligation, 0) END AS ObligationDifference
 FROM 
 	#EvidenceSummary
 
