@@ -8,6 +8,9 @@
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Scheme;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
+    using EA.Weee.Web.Areas.Shared.ToViewModels;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
@@ -34,6 +37,22 @@
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Map_Constructor_ShouldBeDerivedFromObligationEvidenceSummaryDataToViewModel()
+        {
+            //arrange
+            typeof(ViewObligationsAndEvidenceSummaryViewModelMap).Should()
+                .BeDerivedFrom<ObligationEvidenceSummaryDataToViewModel<ViewObligationsAndEvidenceSummaryViewModel, ViewObligationsAndEvidenceSummaryViewModelMapTransfer>>();
+        }
+
+        [Fact]
+        public void Map_Constructor_ShouldImplementIMap()
+        {
+            //arrange
+            typeof(ViewObligationsAndEvidenceSummaryViewModelMap).Should()
+                .Implement<IMap<ViewObligationsAndEvidenceSummaryViewModelMapTransfer, ViewObligationsAndEvidenceSummaryViewModel>>();
         }
 
         [Fact]

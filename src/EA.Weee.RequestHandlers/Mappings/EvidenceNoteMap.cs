@@ -50,7 +50,7 @@
                         .Select(ntt => ntt.Reused).Sum())).ToList();
             data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient.Scheme);
             data.OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation);
-            data.AatfData = source.SystemDateTime.HasValue ? mapper.Map<AatfWithSystemDateMapperObject, AatfData>(new AatfWithSystemDateMapperObject(source.Note.Aatf, source.SystemDateTime.Value)) : mapper.Map<Aatf, AatfData>(source.Note.Aatf);
+            data.AatfData = source.SystemDateTime.HasValue ? mapper.Map<AatfWithSystemDateMapperObject, AatfData>(new AatfWithSystemDateMapperObject(source.Note.Aatf, source.SystemDateTime.Value)) : mapper.Map<AatfSimpleMapObject, AatfData>(new AatfSimpleMapObject(source.Note.Aatf));
             data.RecipientOrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Recipient);
             if (source.Note.Organisation.Scheme != null)
             {
@@ -67,7 +67,9 @@
                 history = transferredNotes.Select(n => new EvidenceNoteHistoryData(n.Id, n.Status.ToCoreEnumeration<NoteStatus>(), n.Reference, n.NoteType.ToCoreEnumeration<NoteType>(), 
                     n.NoteStatusHistory
                     .Where(n1 => n1.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
-                    .OrderByDescending(n1 => n1.ChangedDate).FirstOrDefault()?.ChangedDate, n.Recipient.Scheme != null ? n.Recipient.Scheme.SchemeName : string.Empty)).OrderByDescending(n => n.Reference).ToList();
+                    .OrderByDescending(n1 => n1.ChangedDate).FirstOrDefault()?.ChangedDate, n.Recipient.Scheme != null ? n.Recipient.Scheme.SchemeName : string.Empty,
+                    source.Note.NoteTonnage.SelectMany(nt => nt.NoteTransferTonnage).Distinct().ToList().Where(x => x.TransferNote.Status.ToCoreEnumeration<NoteStatus>().Equals(NoteStatus.Approved) && x.TransferNoteId == n.Id)
+                    .Select(y => new EvidenceTonnageData(y.Id, (WeeeCategory)y.NoteTonnage.CategoryId, y.Received, y.Reused, null, null)).ToList())).ToList().OrderByDescending(n => n.Reference).ToList();
             }
             data.EvidenceNoteHistoryData = history;
 

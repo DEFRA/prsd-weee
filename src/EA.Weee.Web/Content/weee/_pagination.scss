@@ -1,8 +1,9 @@
 ﻿/* Pager */
 .pager
 {
-	margin: 8px 3px;
+	margin: 8px 0px;
 	padding: 3px;
+	padding-right: 0;
     float: right;
 }
 
@@ -27,10 +28,19 @@
 	margin: 4px 3px;
 }
 
+.pager span:last-of-type{
+	margin-right: 0;
+	padding-right: 0;
+}
 .pager a
 {	    
 	padding: 3px 5px;
     text-align: right;	
     color: #005EA5;
 	text-decoration: underline;      
+}
+
+.pager a:last-of-type {
+	margin-right: 0;
+	padding-right: 0;
 }

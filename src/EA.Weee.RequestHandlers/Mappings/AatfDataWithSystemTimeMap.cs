@@ -4,16 +4,15 @@
     using Core.AatfReturn;
     using Core.Helpers;
     using CuttingEdge.Conditions;
-    using Domain.AatfReturn;
     using Prsd.Core.Mapper;
     using AatfStatus = Core.AatfReturn.AatfStatus;
     using FacilityType = Core.AatfReturn.FacilityType;
 
     public class AatfDataWithSystemTimeMap : IMap<AatfWithSystemDateMapperObject, AatfData>
     {
-        private readonly IMap<Aatf, AatfData> aatfMap;
+        private readonly IMap<AatfSimpleMapObject, AatfData> aatfMap;
 
-        public AatfDataWithSystemTimeMap(IMap<Aatf, AatfData> aatfMap)
+        public AatfDataWithSystemTimeMap(IMap<AatfSimpleMapObject, AatfData> aatfMap)
         {
             this.aatfMap = aatfMap;
         }
@@ -22,7 +21,7 @@
         {
             Condition.Requires(source).IsNotNull();
             
-            var aatf = aatfMap.Map(source.Aatf);
+            var aatf = aatfMap.Map(new AatfSimpleMapObject(source.Aatf));
 
             SetAatfDisplayProperty(source, aatf);
 
@@ -74,7 +73,7 @@
         {
             var evidenceSiteDisplay = false;
 
-            if (aatf.FacilityType == Core.AatfReturn.FacilityType.Aatf)
+            if (aatf.FacilityType == FacilityType.Aatf)
             {
                 var approvalDateValid = ApprovalDateValid(aatf.ApprovalDate, source.SystemDateTime);
 

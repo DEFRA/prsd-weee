@@ -4,15 +4,16 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Security.Principal;
-    using Core.AatfEvidence;
-    using Core.Helpers;
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
-    using Prsd.Core;
-    using Prsd.Core.Mapper;
-    using Returns.Mappings.ToViewModel;
-    using Utilities;
+    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Utilities;
 
     public class ViewEvidenceNoteViewModelMap : IMap<ViewEvidenceNoteMapTransfer, ViewEvidenceNoteViewModel>
     {
@@ -112,7 +113,38 @@
                     category.Id = noteTonnage.Id;
                 }
             }
-          
+
+            if (TransferHistoryHasApprovedTransferNotes(source.EvidenceNoteData.EvidenceNoteHistoryData))
+            {
+                model.DisplayTransferEvidenceColumns = true;
+
+                for (var i = model.RemainingTransferCategoryValues.Count - 1; i >= 0; i--)
+                {
+                    var category = model.RemainingTransferCategoryValues.ElementAt(i);
+
+                    var transferTonnage = source.EvidenceNoteData.EvidenceNoteHistoryData.SelectMany(x => x.TransferEvidenceTonnageData).Where(y => y.CategoryId == (WeeeCategory)category.CategoryId).Distinct().ToList();
+                    var originalTonnage = source.EvidenceNoteData.EvidenceTonnageData.FirstOrDefault(t =>
+                        t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
+
+                    if ((transferTonnage == null || transferTonnage.Count == 0 || originalTonnage != null) && !source.IncludeAllCategories)
+                    {
+                        model.RemainingTransferCategoryValues.RemoveAt(i);
+                    }
+                    else if (transferTonnage != null && originalTonnage != null)
+                    {
+                        var transferReceived = originalTonnage.Received - transferTonnage.Sum(x => x.Received);
+                        var transferReused = originalTonnage.Reused - transferTonnage.Sum(x => x.Reused);
+                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferReceived == 0 ? null : transferReceived);
+                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferReused == 0 ? null : transferReused);
+                    }
+                    else
+                    {
+                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(null);
+                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(null);
+                    }
+                }
+            }
+
             model.TotalReceivedDisplay = model.ReceivedTotal;
 
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
@@ -165,6 +197,11 @@
                     }
                 }
             }
+        }
+
+        private bool TransferHistoryHasApprovedTransferNotes(List<EvidenceNoteHistoryData> historyData)
+        {
+            return (historyData != null && historyData.Count >= 1 && historyData.Where(x => x.Status.Equals(NoteStatus.Approved)).Any(y => y.TransferEvidenceTonnageData != null && y.TransferEvidenceTonnageData.Count >= 1)) ? true : false;
         }
     }
 }
