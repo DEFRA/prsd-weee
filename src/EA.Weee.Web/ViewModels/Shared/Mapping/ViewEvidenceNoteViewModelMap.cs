@@ -118,20 +118,29 @@
             {
                 model.DisplayTransferEvidenceColumns = true;
 
-                for (var i = model.TransferCategoryValues.Count - 1; i >= 0; i--)
+                for (var i = model.RemainingTransferCategoryValues.Count - 1; i >= 0; i--)
                 {
-                    var category = model.TransferCategoryValues.ElementAt(i);
+                    var category = model.RemainingTransferCategoryValues.ElementAt(i);
 
                     var transferTonnage = source.EvidenceNoteData.EvidenceNoteHistoryData.SelectMany(x => x.TransferEvidenceTonnageData).Where(y => y.CategoryId == (WeeeCategory)category.CategoryId).Distinct().ToList();
+                    var originalTonnage = source.EvidenceNoteData.EvidenceTonnageData.FirstOrDefault(t =>
+                        t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
 
-                    if ((transferTonnage == null || transferTonnage.Count == 0) && !source.IncludeAllCategories)
+                    if ((transferTonnage == null || transferTonnage.Count == 0 || originalTonnage != null) && !source.IncludeAllCategories)
                     {
-                        model.TransferCategoryValues.RemoveAt(i);
+                        model.RemainingTransferCategoryValues.RemoveAt(i);
                     }
-                    if (transferTonnage != null)
+                    else if (transferTonnage != null && originalTonnage != null)
                     {
-                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferTonnage.Sum(x => x.Received));
-                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferTonnage.Sum(x => x.Reused));
+                        var transferReceived = originalTonnage.Received - transferTonnage.Sum(x => x.Received);
+                        var transferReused = originalTonnage.Reused - transferTonnage.Sum(x => x.Reused);
+                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferReceived == 0 ? null : transferReceived);
+                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferReused == 0 ? null : transferReused);
+                    }
+                    else
+                    {
+                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(null);
+                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(null);
                     }
                 }
             }
