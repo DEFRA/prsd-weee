@@ -58,13 +58,13 @@
 
         public bool DisplayEvidenceNoteHistoryData => EvidenceNoteHistoryData != null && EvidenceNoteHistoryData.Count > 0;
 
-        public virtual IList<EvidenceCategoryValue> TransferCategoryValues { get; set; }
+        public virtual IList<EvidenceCategoryValue> RemainingTransferCategoryValues { get; set; }
 
         public bool DisplayTransferEvidenceColumns { get; set; }
 
-        public string TransferReceivedTotalDisplay => CategoryValueCalculator.Total(TransferCategoryValues.Select(x => x.Received).ToList());
+        public string TransferReceivedRemainingTotalDisplay => CategoryValueCalculator.Total(RemainingTransferCategoryValues.Select(x => x.Received).ToList());
 
-        public string TransferReusedTotalDisplay => CategoryValueCalculator.Total(TransferCategoryValues.Select(x => x.Reused).ToList());
+        public string TransferReusedRemainingTotalDisplay => CategoryValueCalculator.Total(RemainingTransferCategoryValues.Select(x => x.Reused).ToList());
 
         public virtual string TabName
         {
@@ -101,11 +101,11 @@
 
         private void AddTransferCategoryValues(EvidenceCategoryValues evidenceCategoryValues)
         {
-            TransferCategoryValues = new List<EvidenceCategoryValue>();
+            RemainingTransferCategoryValues = new List<EvidenceCategoryValue>();
 
             foreach (var categoryValue in evidenceCategoryValues)
             {
-                TransferCategoryValues.Add(categoryValue);
+                RemainingTransferCategoryValues.Add(categoryValue);
             }
         }
     }
