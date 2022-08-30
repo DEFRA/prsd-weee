@@ -39,9 +39,13 @@
 
             model.SchemeInfo = source.Scheme;
             model.OrganisationId = source.OrganisationId;
-            model.DisplayNoDataMessage = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.All(s => s.Difference == null 
-                                            && s.Evidence == null && s.Obligation == null && s.Reuse == null && s.TransferredIn == null &&
-                                            s.TransferredOut == null);
+
+            if (source.ObligationEvidenceSummaryData != null)
+            {
+                model.DisplayNoDataMessage = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.All(s => s.Difference == null
+                                  && s.Evidence == null && s.Obligation == null && s.Reuse == null && s.TransferredIn == null &&
+                                  s.TransferredOut == null);
+            }
 
             MapToViewModel(model, source);
 
