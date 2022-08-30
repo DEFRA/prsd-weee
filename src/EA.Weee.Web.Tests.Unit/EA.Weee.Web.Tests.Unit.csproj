@@ -325,6 +325,7 @@
     <Compile Include="Areas\Scheme\Attributes\CheckSchemeNoteAttributeBaseTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\EvidenceNoteHistoryDataViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\SchemeDataOrganisationMapTests.cs" />
+    <Compile Include="Areas\Scheme\Mapping\ViewEvidenceSummaryViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewEvidenceSummaryViewModelMapTransferTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewTransferNoteViewModelMapTransferTests.cs" />
