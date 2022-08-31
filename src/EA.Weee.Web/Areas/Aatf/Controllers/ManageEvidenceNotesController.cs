@@ -57,7 +57,7 @@
             IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator,
             ISessionService sessionService,
             ConfigurationService configurationService,
-            ISessionService sessionService, IMvcTemplateExecutor templateExecutor, IPdfDocumentProvider2 pdfDocumentProvider)
+            IMvcTemplateExecutor templateExecutor, IPdfDocumentProvider2 pdfDocumentProvider)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -235,7 +235,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId)
+        public async Task<ActionResult> DownloadEvidenceNote(Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
@@ -245,7 +245,7 @@
 
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
 
-                var content = 
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadEvidenceNote", model);
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 

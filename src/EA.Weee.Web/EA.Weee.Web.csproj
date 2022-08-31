@@ -146,12 +146,6 @@
     <Reference Include="itext.svg, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.svg.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
-    </Reference>
-    <Reference Include="itextsharp.xmlworker, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itextsharp.xmlworker.5.5.13.3\lib\itextsharp.xmlworker.dll</HintPath>
-    </Reference>
     <Reference Include="LowercaseDashedRouting, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LowercaseDashedRouteExt.1.4\lib\net40\LowercaseDashedRouting.dll</HintPath>
     </Reference>
@@ -443,11 +437,9 @@
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
     <Compile Include="Infrastructure\IMvcTemplateExecutor.cs" />
     <Compile Include="Infrastructure\IPdfDocumentProvider2.cs" />
-    <Compile Include="Infrastructure\IPdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\MvcRazorTemplateLoader.cs" />
     <Compile Include="Infrastructure\MvcTemplateExecutor.cs" />
     <Compile Include="Infrastructure\PdfDocumentProviderVersion2.cs" />
-    <Compile Include="Infrastructure\PdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
@@ -884,7 +876,7 @@
     <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\ViewObligationAndEvidenceSummary.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ViewAllNotesEmptyPartial.cshtml" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\test.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidTransferNote.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidence.cshtml" />
@@ -937,10 +929,18 @@
     <Content Include="Areas\Admin\Views\Reports\PcsAatfDataDifference.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfAeDetails.cshtml" />
     <Content Include="Areas\Aatf\Views\ContactDetails\Index.cshtml" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-affa96571d-v2.woff" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-b542beb274-v2.woff2" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-94a07e06a1-v2.woff2" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-f591b13f7d-v2.woff" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-affa96571d-v2.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-b542beb274-v2.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\govuk_frontend\assets\fonts\light-94a07e06a1-v2.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\govuk_frontend\assets\fonts\light-f591b13f7d-v2.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\govuk_frontend\components\accordion\fixtures.json" />
     <Content Include="Content\govuk_frontend\components\accordion\macro-options.json" />
     <Content Include="Content\govuk_frontend\components\accordion\macro.njk" />
@@ -1615,7 +1615,7 @@
     <Content Include="Views\Shared\_EvidenceNotesPagerPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
-    <Content Include="Views\Shared\_PdfLayout.cshtml" />
+    <Content Include="Views\Shared\_EvidenceNotePdfLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

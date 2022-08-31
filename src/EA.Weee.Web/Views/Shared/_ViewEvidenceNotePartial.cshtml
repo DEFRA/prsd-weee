@@ -65,7 +65,7 @@ else
         @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1 govuk-full-printable-width">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
@@ -104,7 +104,6 @@ else
         </div>
     }
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
     <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
@@ -149,20 +148,20 @@ else
     </div>
 }*@
 
-<div class="govuk-width-container govuk-!-padding-left-0">
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="site" class="govuk-label--s">Site</span><br />
-        <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>
+    <div class="govuk-width-container govuk-!-padding-left-0 printable-padding-top">
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="site" class="govuk-label--s">Site</span><br />
+            <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>
+        </div>
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="operator" class="govuk-label--s">Operator</span><br />
+            <p aria-labelledby="operator" class="govuk-body weee-word-break">@Html.Raw(Model.OperatorAddress)</p>
+        </div>
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="recipient" class="govuk-label--s">Recipient</span><br />
+            <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
+        </div>
     </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 ">
-        <span id="operator" class="govuk-label--s">Operator</span><br />
-        <p aria-labelledby="operator" class="govuk-body weee-word-break">@Html.Raw(Model.OperatorAddress)</p>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="recipient" class="govuk-label--s">Recipient</span><br />
-        <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
-    </div>
-</div>
 <div class="ui-helper-clearfix"></div>
 <div class="govuk-width-container govuk-!-padding-top-7">
     <p>
@@ -210,10 +209,10 @@ else
                     <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
                 </div>
             </td>
-            <td class="govuk-table__cell govuk-!-text-align-right">
+            <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">
                 @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
             </td>
-            <td class="govuk-table__cell govuk-!-text-align-right">
+            <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">
                 @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
             </td>
             @if (Model.DisplayTransferEvidenceColumns)
