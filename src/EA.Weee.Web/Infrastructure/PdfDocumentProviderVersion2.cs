@@ -2,45 +2,27 @@
 {
     using System.IO;
     using iText.Html2pdf;
+    using iText.Html2pdf.Resolver.Font;
+    using iText.Kernel.Geom;
     using iText.Kernel.Pdf;
-    using iTextSharp.text;
-    using PageSize = iText.Kernel.Geom.PageSize;
+    using iText.Layout.Font;
 
     public class PdfDocumentProviderVersion2 : IPdfDocumentProvider2
     {
         public byte[] GeneratePdfFromHtml(string htmlDocument)
         {
-            //var workStream = new MemoryStream();
-
-            //using (MemoryStream memStream = new MemoryStream())
-            //{
-            //    WriterProperties properties = new WriterProperties();
-            //    using (PdfWriter pdfWriter = new PdfWriter(memStream, properties))
-            //    {
-            //        pdfWriter.SetCloseStream(true);
-            //        PdfDocument pdfDoc;
-            //        using (pdfDoc = new PdfDocument(pdfWriter))
-            //        {
-            //            ConverterProperties props = new ConverterProperties();
-
-            //            pdfDoc.SetDefaultPageSize(PageSize.LETTER);
-            //            pdfDoc.SetCloseWriter(true);
-            //            pdfDoc.SetCloseReader(true);
-            //            pdfDoc.SetFlushUnusedObjects(true);
-            //            HtmlConverter.ConvertToPdf(htmlDocument, pdfDoc, props);
-            //            pdfDoc.Close();
-            //        }
-            //    }
-            //    return workStream;
-            //}
-
             using (var workStream = new MemoryStream())
             using (var pdfWriter = new PdfWriter(workStream))
                 using (var pdfDocument = new PdfDocument(pdfWriter))
             {
                 pdfDocument.SetDefaultPageSize(PageSize.A4);
+                FontProvider fontProvider = new DefaultFontProvider(true, true, true);
+                //fontProvider.AddDirectory("C:\\Repos\\prsd-weee\\src\\EA.Weee.Web\\bin\\Content\\govuk_frontend\\assets\\fonts");
+                //fontProvider.AddFont()
+
                 ConverterProperties properties = new ConverterProperties();
-                properties.SetBaseUri("https://localhost:44300/content/");
+                properties.SetBaseUri("https://localhost:44300/content/"); // need this
+                properties.SetFontProvider(fontProvider);
                 HtmlConverter.ConvertToPdf(htmlDocument, pdfDocument, properties);
                 return workStream.ToArray();
             }
