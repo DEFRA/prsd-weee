@@ -38,7 +38,7 @@
 
             private readonly Because of = () =>
             {
-                CatchExceptionAsync(() => handler.HandleAsync(new GetAatfNotesRequest(Guid.NewGuid(), aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null)));
+                CatchExceptionAsync(() => handler.HandleAsync(new GetAatfNotesRequest(Guid.NewGuid(), aatf.Id, new List<Core.AatfEvidence.NoteStatus> { Core.AatfEvidence.NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1)));
             };
 
             private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<SecurityException>;
@@ -85,7 +85,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null, 1, int.MaxValue))).Result;
             };
 
             private readonly It shouldReturnListOfEvidenceNotes = () =>
@@ -136,6 +136,8 @@
                 var evidence1 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                 .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                 .Create();
 
@@ -154,13 +156,15 @@
                 var evidence4 = EvidenceNoteDbSetup.Init()
                 .WithOrganisation(organisation.Id)
                 .WithAatf(aatf.Id)
+                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                 .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                 .Create();
             };
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, new List<NoteStatus> { NoteStatus.Draft }, null, SystemTime.UtcNow.Year, null, null, null, null, null, int.MaxValue, 1))).Result;
             };
 
             private readonly It shouldReturnNoData = () =>
@@ -225,6 +229,7 @@
                 .With(n =>
                 {
                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                     n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                 })
                 .Create();
@@ -232,7 +237,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, SystemTime.UtcNow.Year, null, null, null, null, null, 1, int.MaxValue))).Result;
             };
 
             private readonly It shouldReturnAFilteredListBasedOnAllowedStatuses = () =>
@@ -345,7 +350,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, complianceYear, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, complianceYear, null, null, null, null, null, 1, int.MaxValue))).Result;
             };
 
             private readonly It shouldReturnAFilteredListBasedOnAllowedStatuses = () =>
@@ -438,7 +443,7 @@
 
             private readonly Because of = () =>
             {
-                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, complianceYear, null, null, null, null, null))).Result;
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(new GetAatfNotesRequest(organisation.Id, aatf.Id, allowedStatuses, null, complianceYear, null, null, null, null, null, 1, int.MaxValue))).Result;
             };
 
             private readonly It shouldHaveExpectedResultsCount = () =>

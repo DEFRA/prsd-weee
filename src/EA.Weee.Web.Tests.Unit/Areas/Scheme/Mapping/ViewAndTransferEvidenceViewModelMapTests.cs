@@ -23,15 +23,12 @@
     {
         private readonly ViewAndTransferEvidenceViewModelMap viewAndTransferEvidenceViewModelMap;
         private readonly IMapper mapper;
-        private readonly ConfigurationService configurationService;
 
         public ViewAndTransferEvidenceViewModelMapTests()
         {
             mapper = A.Fake<IMapper>();
-            configurationService = A.Fake<ConfigurationService>();
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(25);
 
-            viewAndTransferEvidenceViewModelMap = new ViewAndTransferEvidenceViewModelMap(mapper, configurationService);
+            viewAndTransferEvidenceViewModelMap = new ViewAndTransferEvidenceViewModelMap(mapper);
         }
 
         [Fact]
@@ -50,7 +47,7 @@
                 TestFixture.Create<SchemePublicInfo>(), 
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -65,7 +62,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -84,7 +81,7 @@
                 TestFixture.Create<SchemePublicInfo>(), 
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -106,7 +103,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -128,7 +125,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -149,7 +146,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -178,7 +175,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 3);
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
 
@@ -204,18 +201,18 @@
             };
 
             var organisationId = Guid.NewGuid();
-            var pageNumber = TestFixture.Create<int>();
-            var pageSize = TestFixture.Create<int>();
+            var pageNumber = 1;
+            var pageSize = 3;
 
             var transfer = new SchemeTabViewModelMapTransfer(organisationId,
                 noteData,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                pageNumber);
+                pageNumber,
+                pageSize);
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultPagingPageSize).Returns(pageSize);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -233,10 +230,26 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft).With(a => a.WasteType, WasteType.Household).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected).With(a => a.WasteType, WasteType.NonHousehold).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted).With(a => a.WasteType, WasteType.NonHousehold).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void).With(a => a.WasteType, WasteType.Household).Create()
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Draft)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Rejected)
+                    .With(a => a.WasteType, WasteType.NonHousehold)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Submitted)
+                    .With(a => a.WasteType, WasteType.NonHousehold)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Void)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .With(a => a.Type, NoteType.Transfer)
+                    .Create()
             };
             var noteData = new EvidenceNoteSearchDataResult(notes, notes.Count);
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
@@ -249,7 +262,7 @@
                 schemeInfo,
                 currentDate,
                 model,
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             result.DisplayTransferButton.Should().BeFalse();
@@ -271,7 +284,10 @@
             //arrange
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).With(a => a.WasteType, WasteType.Household).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>()
                 .With(s => s.Status, status)
@@ -285,10 +301,43 @@
                 scheme,
                 currentDate,
                 manageEvidenceModel,
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             result.DisplayTransferButton.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenSchemeIsNotWithdrawnAndComplianceWindowIsOpenWithOnlyApprovedTransferNotes_DisplayTransferButtonShouldBeSetToFalse()
+        {
+            var currentDate = new DateTime(2022, 1, 1);
+            var manageEvidenceModel = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(m => m.SelectedComplianceYear, 2022).Create();
+
+            //arrange
+            var notes = new List<EvidenceNoteData>
+            {
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.Type, NoteType.Transfer)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .Create(),
+            };
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.Status, SchemeStatus.Approved)
+                .Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.Results, notes).Create();
+
+            //act
+            var result = viewAndTransferEvidenceViewModelMap.Map(new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
+                noteData,
+                scheme,
+                currentDate,
+                manageEvidenceModel,
+                1, 2));
+
+            //assert
+            result.DisplayTransferButton.Should().BeFalse();
         }
 
         [Theory]
@@ -308,6 +357,7 @@
                 TestFixture.Build<EvidenceNoteData>()
                 .With(a => a.Status, NoteStatus.Approved)
                 .With(a => a.WasteType, WasteType.Household)
+                .With(a => a.Type, NoteType.Evidence)
                 .Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>()
@@ -322,7 +372,7 @@
                 scheme,
                 currentDate,
                 null,
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             result.DisplayTransferButton.Should().BeTrue();
@@ -359,7 +409,7 @@
                 scheme,
                 currentDate,
                 null,
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             result.DisplayTransferButton.Should().BeFalse();
@@ -376,6 +426,7 @@
             {
                 TestFixture.Build<EvidenceNoteData>()
                 .With(a => a.Status, NoteStatus.Approved)
+                .With(a => a.Type, NoteType.Evidence)
                 .With(a => a.WasteType, WasteType.Household).Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
@@ -387,7 +438,7 @@
                 scheme,
                 currentDate,
                 manageEvidenceModel,
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             result.DisplayTransferButton.Should().BeFalse();
@@ -402,7 +453,10 @@
                 .With(m => m.SelectedComplianceYear, complianceYear).Create();
             var notes = new List<EvidenceNoteData>
             {
-                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved).With(a => a.WasteType, WasteType.Household).Create(),
+                TestFixture.Build<EvidenceNoteData>().With(a => a.Status, NoteStatus.Approved)
+                    .With(a => a.Type, NoteType.Evidence)
+                    .With(a => a.WasteType, WasteType.Household)
+                    .Create(),
             };
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();
@@ -413,7 +467,7 @@
                 scheme,
                 currentDate,
                 manageEvidenceModel,
-                TestFixture.Create<int>()));
+                1, 2));
 
             //assert
             result.DisplayTransferButton.Should().BeFalse();
@@ -434,7 +488,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(source);
@@ -464,7 +518,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 null,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -492,7 +546,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -518,7 +572,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 date,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -541,7 +595,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -563,7 +617,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -591,7 +645,7 @@
                 scheme,
                 TestFixture.Create<DateTime>(),
                 TestFixture.Create<ManageEvidenceNoteViewModel>(),
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -622,7 +676,7 @@
                 scheme,
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -647,7 +701,7 @@
                 scheme,
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -672,7 +726,7 @@
                 scheme,
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -695,7 +749,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
@@ -718,7 +772,7 @@
                 TestFixture.Create<SchemePublicInfo>(),
                 currentDate,
                 model,
-                TestFixture.Create<int>());
+                1, 2);
 
             //act
             var result = viewAndTransferEvidenceViewModelMap.Map(transfer);

@@ -64,6 +64,32 @@
             return this;
         }
 
+        public EvidenceNoteDbSetup WithStatusUpdate(NoteStatus statusToUpdate)
+        {
+            if (statusToUpdate == NoteStatus.Draft)
+            {
+                return this;
+            }
+
+            if (statusToUpdate == NoteStatus.Submitted && instance.Status != NoteStatus.Draft)
+            {
+                return this;
+            }
+
+            if (instance.NoteStatusHistory.All(s => s.ToStatus != NoteStatus.Submitted))
+            {
+                instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+            }
+
+            if (instance.Status == NoteStatus.Submitted && statusToUpdate == NoteStatus.Submitted)
+            {
+                return this;
+            }
+
+            instance.UpdateStatus(statusToUpdate, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+            return this;
+        }
+
         public EvidenceNoteDbSetup WithTonnages(List<NoteTonnage> tonnages)
         {
             instance.NoteTonnage.Clear();
@@ -80,7 +106,7 @@
         public EvidenceNoteDbSetup WithWasteType(WasteType wasteType)
         {
             ObjectInstantiator<Note>.SetProperty(o => o.WasteType, wasteType, instance);
-            
+
             return this;
         }
     }

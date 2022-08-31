@@ -409,6 +409,7 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllTransferNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\ViewAllEvidenceNotesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidNoteViewModelBase.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidTransferNoteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
@@ -421,17 +422,23 @@
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\EvidenceNoteHistoryDataViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\IObligationEvidenceSummaryBase.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ISchemeManageEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ListOfSchemeNotesViewModelBase.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewTransferNoteViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\SchemeDataOrganisationMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferEvidenceCategoriesViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMap.cs" />
+    <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\EvidenceNoteHistoryViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IObligationSummaryBase.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SummaryEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
+    <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
     <Compile Include="Infrastructure\IMvcTemplateExecutor.cs" />
@@ -879,6 +886,8 @@
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ViewAllNotesEmptyPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\test.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidTransferNote.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidEvidenceNote.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidence.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1605,6 +1614,7 @@
     <Content Include="Views\Shared\_EvidenceTransferProgressiveDisclosurePartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotesPagerPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
+    <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1832,6 +1842,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
+    <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
   </ItemGroup>
   <PropertyGroup>

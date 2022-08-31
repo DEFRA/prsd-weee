@@ -10,7 +10,7 @@
 
     public class AllOtherNotesViewModelMap : ListOfNotesViewModelBase<AllOtherManageEvidenceNotesViewModel>, IMap<EvidenceNotesViewModelTransfer, AllOtherManageEvidenceNotesViewModel>
     {
-        public AllOtherNotesViewModelMap(IMapper mapper, ConfigurationService configurationService) : base(mapper, configurationService)
+        public AllOtherNotesViewModelMap(IMapper mapper) : base(mapper)
         {
         }
 
@@ -18,7 +18,7 @@
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.PageNumber);
+            var model = MapBase(source.NoteData, source.CurrentDate, source.ManageEvidenceNoteViewModel, source.PageNumber, source.PageSize);
 
             foreach (var evidenceNoteRowViewModel in model.EvidenceNotesDataList)
             {
