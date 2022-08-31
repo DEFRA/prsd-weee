@@ -38,7 +38,7 @@
                         }
                         else
                         {
-                            var link = $@"<button class=""govuk-back-link"" type=""submit"" name=""PageNumber"" value=""{paginationLink.PageIndex}"" form=""transfer-summary-partial-form"">{paginationLink.DisplayText}</button>";
+                            var link = $@"<button class=""link-like-behaviour"" type=""submit"" name=""PageNumber"" value=""{paginationLink.PageIndex}"" form=""transfer-summary-partial-form""><span>{paginationLink.DisplayText}</span></button>";
                             
                             sb.Append(link);
                         }
