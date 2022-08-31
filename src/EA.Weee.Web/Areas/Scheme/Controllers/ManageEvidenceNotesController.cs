@@ -247,14 +247,23 @@
             {
                 var complianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
-                var request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
+                GetObligationSummaryRequest request = null;
+                if (scheme.IsBalancingScheme)
+                {
+                    request = new GetObligationSummaryRequest(null, complianceYear, false, pcsId);
+                }
+                else
+                {
+                    request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
+                }
+
+                //var request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
 
                 var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);  //BUG here
 
                 var summaryModel = mapper.Map<SummaryEvidenceViewModel>
                     (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
 
-                scheme.IsBalancingScheme = true;  // line is just needed while developing
                 summaryModel.SchemeInfo = scheme;
 
                 return View("SummaryEvidence", summaryModel);

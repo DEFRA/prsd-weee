@@ -127,7 +127,7 @@
 
             //arrange
             A.CallTo(() =>
-                    evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(request.SchemeId,
+                    evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(request.SchemeId, request.OrganisationId,
                         request.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
@@ -137,7 +137,7 @@
             //arrange
             var summaryData = TestFixture.CreateMany<ObligationEvidenceSummaryTotalsData>().ToList();
 
-            A.CallTo(() => evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(A<Guid>._, A<int>._))
+            A.CallTo(() => evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(A<Guid>._, A<Guid>._, A<int>._))
                 .Returns(summaryData);
 
             //act
