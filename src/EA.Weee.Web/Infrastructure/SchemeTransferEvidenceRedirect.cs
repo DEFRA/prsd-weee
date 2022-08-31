@@ -10,5 +10,7 @@
         public static string ViewReturnedTransferEvidenceRouteName = "Scheme_returned_transfer";
         public static string ViewRejectedTransferEvidenceRouteName = "Scheme_rejected_transfer";
         public static string ViewVoidedTransferEvidenceRouteName = "Scheme_voided_transfer";
+        public static string ViewApprovedEvidenceNoteRouteName = "Scheme_approved_evidence_note";
+        public static string ViewVoidedEvidenceNoteRouteName = "Scheme_void_evidence_note";
     }
 }
