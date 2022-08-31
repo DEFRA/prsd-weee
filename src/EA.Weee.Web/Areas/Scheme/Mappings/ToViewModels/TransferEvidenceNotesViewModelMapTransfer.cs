@@ -62,7 +62,7 @@
             TransferEvidenceNoteRequest request,
             Guid organisationId,
             int pageNumber = 1,
-            int pageSize = 1)
+            int pageSize = 10)
         {
             Condition.Requires(notes).IsNotNull();
             Condition.Requires(request).IsNotNull();
