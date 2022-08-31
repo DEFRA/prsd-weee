@@ -33,7 +33,7 @@
         [ClassData(typeof(NoteStatusData))]
         public async Task Execute_GivenAatfWithDraftNote_NoDataShouldBeReturned(NoteStatus noteStatus)
         {
-            if (noteStatus.Equals(NoteStatus.Approved))
+            if (noteStatus.Equals(NoteStatus.Approved) || noteStatus.Equals(NoteStatus.Void))
             {
                 return;
             }

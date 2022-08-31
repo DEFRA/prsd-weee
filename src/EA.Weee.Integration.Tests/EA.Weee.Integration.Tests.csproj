@@ -201,6 +201,7 @@
     <Compile Include="Handlers\EditTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAllNotesRequestHandlerForTransfersIntegrationTests.cs" />
     <Compile Include="Handlers\GetComplianceYearsFilterHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\EvidenceNoteSeeder.cs" />
     <Compile Include="Handlers\GetSchemesWithObligationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetObligationSummaryRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteForInternalUserRequestHandlerIntegrationTests.cs" />
@@ -209,7 +210,7 @@
     <Compile Include="Handlers\GetObligationComplianceYearsHandlerTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationUploadHandlerIntegrationTests.cs" />
-    <Compile Include="Handlers\VoidTransferNoteRequestHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\VoidNoteRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\SubmitSchemeObligationHandlerTests.cs" />
     <Compile Include="Handlers\CreateTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\EditEvidenceNoteHandlerIntegationTests.cs" />

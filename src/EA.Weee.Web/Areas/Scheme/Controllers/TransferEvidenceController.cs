@@ -209,7 +209,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1)
         {
             await SetBreadcrumb(pcsId);
 
@@ -226,6 +226,8 @@
                     RedirectTab = redirectTab,
                     SystemDateTime = currentDateTime
                 });
+
+                ViewBag.Page = page;
 
                 return this.View("TransferredEvidence", model);
             }

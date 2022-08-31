@@ -5,8 +5,9 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using Core.Scheme;
+    using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
-    public class ViewObligationsAndEvidenceSummaryViewModel
+    public class ViewObligationsAndEvidenceSummaryViewModel : IObligationSummaryBase
     {
         public IEnumerable<int> ComplianceYearList { get; set; }
 
