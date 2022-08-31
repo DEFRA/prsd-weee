@@ -36,7 +36,7 @@
                 authorization.EnsureOrganisationAccess(message.OrganisationId);
             }
 
-            var summaryData = await evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(message.SchemeId, message.ComplianceYear);
+            var summaryData = await evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(message.SchemeId, message.OrganisationId, message.ComplianceYear);
 
             var result = mapper.Map<List<ObligationEvidenceSummaryTotalsData>, ObligationEvidenceSummaryData>(summaryData);
 

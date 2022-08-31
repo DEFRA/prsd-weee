@@ -8,7 +8,7 @@
 
     public class GetObligationSummaryRequest : IRequest<ObligationEvidenceSummaryData>
     {
-        public Guid SchemeId { get; private set; }
+        public Guid? SchemeId { get; private set; }
 
         public int ComplianceYear { get; private set; }
 
@@ -16,9 +16,9 @@
 
         public Guid OrganisationId { get; private set; }
 
-        public GetObligationSummaryRequest(Guid schemeId, int complianceYear, bool internalAccess, Guid organisationId = default(Guid))
+        public GetObligationSummaryRequest(Guid? schemeId, int complianceYear, bool internalAccess, Guid organisationId = default(Guid))
         {
-            Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
+            //Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
 
             Condition.Requires(complianceYear).IsGreaterThan(0);
             Condition.Requires(internalAccess);
