@@ -1,10 +1,10 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
+﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin.Obligation;
     using EA.Weee.DataAccess.StoredProcedure;
-    using EA.Weee.Requests.Admin.Obligations;
+    using EA.Weee.Requests.Shared;
     using Security;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -26,7 +26,15 @@
 
         public async Task<ObligationEvidenceSummaryData> HandleAsync(GetObligationSummaryRequest message)
         {
-            authorization.EnsureCanAccessInternalArea();
+            if (message.InternalAccess)
+            {
+                authorization.EnsureCanAccessInternalArea();
+            }
+            else
+            {
+                authorization.EnsureCanAccessExternalArea();
+                authorization.EnsureOrganisationAccess(message.OrganisationId);
+            }
 
             var summaryData = await evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(message.SchemeId, message.ComplianceYear);
 

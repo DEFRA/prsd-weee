@@ -7,13 +7,12 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     [Serializable]
     public class EvidenceNoteViewModel
     {
-        private readonly ICategoryValueTotalCalculator categoryValueCalculator;
+        protected readonly ICategoryValueTotalCalculator CategoryValueCalculator;
 
         public Guid Id { get; set; }
 
@@ -60,6 +59,8 @@
         [DisplayName("Reason")]
         public string VoidedReason { get; set; }
 
+        public bool CanVoid { get; set; }
+
         public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(ReturnedReason);
 
         public bool DisplayRejectedReason => Status.Equals(NoteStatus.Rejected) && !string.IsNullOrWhiteSpace(RejectedReason);
@@ -68,13 +69,13 @@
 
         public EvidenceNoteViewModel()
         {
-            categoryValueCalculator = new CategoryValueTotalCalculator();
+            CategoryValueCalculator = new CategoryValueTotalCalculator();
             AddCategoryValues(new EvidenceCategoryValues());
         }
 
         public EvidenceNoteViewModel(ICategoryValueTotalCalculator categoryValueCalculator)
         {
-            this.categoryValueCalculator = categoryValueCalculator;
+            this.CategoryValueCalculator = categoryValueCalculator;
             AddCategoryValues(new EvidenceCategoryValues());
         }
 
@@ -96,9 +97,9 @@
             }
         }
 
-        public string ReceivedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
+        public string ReceivedTotal => CategoryValueCalculator.Total(CategoryValues.Select(c => c.Received).ToList());
 
-        public string ReusedTotal => categoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
+        public string ReusedTotal => CategoryValueCalculator.Total(CategoryValues.Select(c => c.Reused).ToList());
 
         public string AatfRedirectTab
         {

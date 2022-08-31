@@ -34,6 +34,7 @@
         protected readonly Guid OrganisationId;
         protected readonly Guid AatfId;
         protected readonly Guid EvidenceNoteId;
+        protected readonly ConfigurationService ConfigurationService;
 
         public ManageEvidenceNotesControllerTestsBase()
         {
@@ -44,13 +45,16 @@
             SessionService = A.Fake<ISessionService>();
             CreateRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest>>();
             EditRequestCreator = A.Fake<IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest>>();
+            ConfigurationService = A.Fake<ConfigurationService>();
+            A.CallTo(() => ConfigurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
+
             TemplateExecutor = A.Fake<IMvcTemplateExecutor>();
             PdfDocumentProvider = A.Fake<IPdfDocumentProvider2>();
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
             EvidenceNoteId = Guid.NewGuid();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator, EditRequestCreator, SessionService, TemplateExecutor, PdfDocumentProvider);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, CreateRequestCreator, EditRequestCreator, SessionService, ConfigurationService, TemplateExecutor, PdfDocumentProvider);
         }
 
         protected void AddModelError()

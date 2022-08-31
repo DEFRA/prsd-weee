@@ -5,12 +5,13 @@
     using System;
     using System.Collections.Generic;
     using Core.Scheme;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
 
-    public class ViewObligationsAndEvidenceSummaryViewModelMapTransfer
+    public class ViewObligationsAndEvidenceSummaryViewModelMapTransfer : IObligationEvidenceSummaryBase
     {
         public Guid? SchemeId { get; private set; }
 
-        public ObligationEvidenceSummaryData ObligationEvidenceSummaryData { get; private set; }
+        public ObligationEvidenceSummaryData ObligationEvidenceSummaryData { get; set; }
 
         public List<int> ComplianceYears { get; private set; }
 

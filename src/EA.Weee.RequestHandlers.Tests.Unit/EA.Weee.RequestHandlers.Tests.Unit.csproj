@@ -179,7 +179,7 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\SetNoteStatusRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\VoidTransferNoteRequestTests.cs" />
-    <Compile Include="AatfEvidence\VoidTransferNoteRequestHandlerTests.cs" />
+    <Compile Include="AatfEvidence\VoidNoteRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\SetNoteStatusRequestHandlerTests.cs" />
     <Compile Include="AatfEvidence\TransferTonnagesValidatorTests.cs" />
     <Compile Include="AatfReturn\AddReturnReportOnHandlerTests.cs" />
@@ -351,9 +351,11 @@
     <Compile Include="Mapping\AatfDataListMapTests.cs" />
     <Compile Include="Mapping\AatfContactMapTests.cs" />
     <Compile Include="Mapping\AatfDataWithSystemTimeMapTests.cs" />
+    <Compile Include="Mapping\AatfSimpleMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
-    <Compile Include="Mapping\EvidenceNoteDataMapTests.cs" />
+    <Compile Include="Mapping\EvidenceNoteRowMapTests.cs" />
+    <Compile Include="Mapping\ListOfEvidenceNoteDataMapUnitTests.cs" />
     <Compile Include="Mapping\ObligationSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\OrganisationMapTests.cs" />
     <Compile Include="Mapping\OrganisationProducerBalancingSchemeMapTests.cs" />
@@ -363,8 +365,6 @@
     <Compile Include="Mapping\TransferEvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />
-    <Compile Include="Mapping\ListOfEvidenceNoteDataMapTests.cs" />
-    <Compile Include="Mapping\ListOfNotesMapTests.cs" />
     <Compile Include="Mapping\LocalAreaMapTests.cs" />
     <Compile Include="Mapping\NonObligatedObjectMapperTests.cs" />
     <Compile Include="Mapping\PanAreaMapTests.cs" />

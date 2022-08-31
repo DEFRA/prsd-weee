@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence.Requests
 {
     using AutoFixture;
-    using System;
     using Core.AatfEvidence;
+    using EA.Weee.Requests.Shared;
     using FluentAssertions;
+    using System;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
     using Xunit;
@@ -13,7 +14,7 @@
         [Fact]
         public void VoidTransferNoteRequest_ShouldDeriveFromSetNoteStatusBase()
         {
-            typeof(VoidTransferNoteRequest).Should().BeDerivedFrom<SetNoteStatusBase>();
+            typeof(VoidNoteRequest).Should().BeDerivedFrom<SetNoteStatusBase>();
         }
 
         [Fact]
@@ -24,7 +25,7 @@
             var reason = TestFixture.Create<string>();
 
             //act
-            var request = new VoidTransferNoteRequest(id, reason);
+            var request = new VoidNoteRequest(id, reason);
 
             //assert
             request.NoteId.Should().Be(id);
@@ -39,7 +40,7 @@
             var id = TestFixture.Create<Guid>();
 
             //act
-            var request = new VoidTransferNoteRequest(id);
+            var request = new VoidNoteRequest(id);
 
             //assert
             request.NoteId.Should().Be(id);

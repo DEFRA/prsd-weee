@@ -29,89 +29,93 @@
                         @(this.WeeeGds().Submit("Transfer evidence"))
                     }
                 }
-                else
+                else if (Model.CanSchemeManageEvidence && !Model.DisplayTransferButton)
                 { 
                     <p>
-                        You are unable to transfer evidence at the moment as you do not have any approved evidence notes that contain household waste
+                        You are unable to transfer evidence at the moment as you do not have any approved household evidence notes with available tonnages to transfer
                     </p>
                 }
 
                 <table id="reviewed-evidence-notes-table" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">View all reviewed evidence or transfer to another PCS</caption>
                     <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header">
-                            Reference ID
-                        </th>
-                        <th class="govuk-table__header">
-                            Submitted date
-                        </th>
-                        <th class="govuk-table__header">
-                            Submitted by
-                        </th>
-                        <th class="govuk-table__header">
-                            Type of waste
-                        </th>
-                        <th class="govuk-table__header">
-                            Status
-                        </th>
-                        <th class="govuk-table__header">
-                            @Html.Gds().VisuallyHidden("actions")
-                        </th>
-                    </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header">
+                                Reference ID
+                            </th>
+                            <th class="govuk-table__header">
+                                Submitted date
+                            </th>
+                            <th class="govuk-table__header">
+                                Submitted by
+                            </th>
+                            <th class="govuk-table__header">
+                                Type of waste
+                            </th>
+                            <th class="govuk-table__header">
+                                Status
+                            </th>
+                            <th class="govuk-table__header">
+                                @Html.Gds().VisuallyHidden("actions")
+                            </th>
+                        </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    @if (Model.EvidenceNotesDataList.Any())
-                    {
-                        foreach (var note in Model.EvidenceNotesDataList)
+                        @if (Model.EvidenceNotesDataList.Any())
                         {
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
-                                <td class="govuk-table__cell">@note.SubmittedBy</td>
-                                @if (note.TypeOfWaste.HasValue)
-                                {
-                                    <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
-                                }
-                                else
-                                {
-                                    <td class="govuk-table__cell"> </td>
-                                }
-                                <td class="govuk-table__cell">@note.Status</td>
-                                <td class="govuk-table__cell">
-                                    @if (@note.Type == NoteType.Transfer)
+                            foreach (var note in Model.EvidenceNotesDataList)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                    <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
+                                    <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                    @if (note.TypeOfWaste.HasValue)
                                     {
-                                        @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString() }, null)
-
-                                        if (note.DisplayEditLink)
-                                        {
-                                            <br />
-                                            @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
-                                        }
+                                        <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
                                     }
                                     else
                                     {
-                                        @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                        <td class="govuk-table__cell"> </td>
                                     }
+                                    <td class="govuk-table__cell">@note.Status</td>
+                                    <td class="govuk-table__cell">
+                                        @if (@note.Type == NoteType.Transfer)
+                                        {
+                                            @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, null)
+
+                                            if (note.DisplayEditLink)
+                                            {
+                                                <br />
+                                                @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, null)
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    <p>There are currently no evidence notes to view or transfer </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p> Showing 0 - 0 of 0 </p>
                                 </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5">
-                                <p>There are currently no evidence notes to view or transfer </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p> Showing 0 - 0 of 0 </p>
-                            </td>
-                        </tr>
-                    }
                     </tbody>
                 </table>
+                <br />
+                @{
+                    Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary() { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(), selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
+                }
             </section>
         </div>
     </div>
