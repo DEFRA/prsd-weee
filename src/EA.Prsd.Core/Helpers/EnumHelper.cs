@@ -39,6 +39,15 @@
             return values.ToDictionary(v => v.Key, v => v.Value);
         }
 
+        public static Dictionary<int, string> GetOrderedValuesByKey(Type enumType)
+        {
+            var values = GetValues(enumType).ToList();
+
+            values.Sort((pair1, pair2) => pair1.Key.CompareTo(pair2.Key));
+
+            return values.ToDictionary(v => v.Key, v => v.Value);
+        }
+
         private static readonly ConcurrentDictionary<Type, EnumHelperMetaData> enumHelperMetaDataMap = new ConcurrentDictionary<Type, EnumHelperMetaData>();
 
         public static string GetDescription<TEnum>(TEnum value)

@@ -37,12 +37,12 @@ else
 
     .transfer-category-column
     {
-        width: 30%;
+        width: 25%;
     }
 
     .transfer-column
     {
-        width: 19%;
+        width: 18.75%;
     }
 
     .received-column
@@ -118,13 +118,11 @@ else
 
     @if (Model.DisplayEvidenceNoteHistoryData)
     {
-        <div class="govuk-width-container govuk-!-padding-left-0">
-            @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
-                        @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
-                        "Hidden content",
-                        "Progressive disclosure",
-                        "Transfer history"))
-        </div>
+        @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
+                    @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
+                    "Hidden content",
+                    "Progressive disclosure",
+                    "Transfer history"))
     }
 </div>
 
@@ -136,6 +134,7 @@ else
         @(this.WeeeGds().Submit("Void evidence note", new { id = "voidEvidenceNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
     }
 }
+
 @*else if (Model.CanDisplayNotesMessage)
 {
     <style type="text/css">
@@ -170,10 +169,11 @@ else
         It has been reused as whole appliances to the extent set out below. No other evidence has been issued on these WEEE materials.
     </p>
 </div>
+
 @if (Model.DisplayTransferEvidenceColumns)
 {
-    <div class="govuk-width-container govuk-!-padding-top-7">
-        <p class="govuk-details__text govuk-!-margin-bottom-4 govuk-!-margin-bottom-4">The total after transfer (tonnes) and total reused after transfer (tonnes) includes approved transfers only</p>
+    <div class="govuk-width-container govuk-!-padding-top-3">
+        <p class="govuk-details__text">The total after transfer (tonnes) and total reused after transfer (tonnes) includes approved transfers only</p>
     </div>
 }
 <table class="govuk-table">
@@ -183,16 +183,16 @@ else
             @if (Model.DisplayTransferEvidenceColumns)
             {
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total reused as whole appliances (tonnes)</th>
                 <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total after transfer (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total reused after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total reused after transfer (tonnes)</th>
             }
             else
             {
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">Total received <br/>(tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">Total reused as whole appliances<br/> (tonnes)</th>
             }
         </tr>
     </thead>
