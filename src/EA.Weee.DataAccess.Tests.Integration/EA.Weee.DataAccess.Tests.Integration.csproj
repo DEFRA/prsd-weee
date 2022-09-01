@@ -66,8 +66,8 @@
     <Reference Include="Faker.Net.4.8, Version=2.0.154.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Faker.Net.2.0.154\lib\net48\Faker.Net.4.8.dll</HintPath>
     </Reference>
-    <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Fare.2.1.2\lib\net35\Fare.dll</HintPath>
+    <Reference Include="Fare, Version=2.2.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fare.2.2.1\lib\net35\Fare.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions, Version=6.5.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.6.5.1\lib\net47\FluentAssertions.dll</HintPath>
