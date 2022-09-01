@@ -434,7 +434,6 @@
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
     <Compile Include="Infrastructure\IMvcTemplateExecutor.cs" />
     <Compile Include="Infrastructure\IPdfDocumentProvider.cs" />
-    <Compile Include="Infrastructure\MvcRazorTemplateLoader.cs" />
     <Compile Include="Infrastructure\MvcTemplateExecutor.cs" />
     <Compile Include="Infrastructure\PdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
