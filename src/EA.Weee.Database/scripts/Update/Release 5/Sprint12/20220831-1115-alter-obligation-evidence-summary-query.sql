@@ -1,14 +1,14 @@
 USE [EA.Weee]
 GO
-/****** Object:  StoredProcedure [Evidence].[getObligationEvidenceSummaryTotals]    Script Date: 31/08/2022 15:43:44 ******/
+/****** Object:  StoredProcedure [Evidence].[getObligationEvidenceSummaryTotals]    Script Date: 01/09/2022 10:25:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 ALTER PROCEDURE [Evidence].[getObligationEvidenceSummaryTotals]
-	@SchemeId UNIQUEIDENTIFIER = NULL,
+	@ComplianceYear SMALLINT,
 	@OrganisationId UNIQUEIDENTIFIER,
-	@ComplianceYear SMALLINT
+	@SchemeId UNIQUEIDENTIFIER = NULL
 AS
 BEGIN
 SET NOCOUNT ON;
@@ -45,7 +45,7 @@ SELECT
 FROM
 	Lookup.WeeeCategory c
 	
-IF @SchemeId = NULL
+IF @SchemeId IS NULL
 
 BEGIN
 

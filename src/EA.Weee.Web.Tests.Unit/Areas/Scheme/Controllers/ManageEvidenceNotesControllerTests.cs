@@ -228,7 +228,9 @@
                      g.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
+        // tab = null is now redirecting to Summary so this Submitted Evidence is no more created
+        // I wish to keep this test (disabled) to test Summary tab instead
+        //[Fact]
         public async Task IndexGet_GivenNullTab_GivenSchemeIsBalancing_SubmittedEvidenceNoteShouldBeRetrieved()
         {
             // Arrange
