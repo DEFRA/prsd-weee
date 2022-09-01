@@ -155,7 +155,8 @@
                             v => v.IncludeAllCategories.Equals(false) && 
                                  v.EvidenceNoteData.Equals(notes.ElementAt(0)) && 
                                  v.NoteStatus == null &&
-                                 v.User == null)))
+                                 v.User == null &&
+                                 v.PrintableVersion == false)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(0));
 
             A.CallTo(() =>
@@ -164,7 +165,8 @@
                             v => v.IncludeAllCategories.Equals(false) && 
                                  v.EvidenceNoteData.Equals(notes.ElementAt(1)) && 
                                  v.NoteStatus == null &&
-                                 v.User == null)))
+                                 v.User == null &&
+                                 v.PrintableVersion == false)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(1));
 
             //act
