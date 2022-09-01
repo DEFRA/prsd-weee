@@ -836,7 +836,7 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
-    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EvidenceSummaryOverview.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_NoResultsPartial.cshtml" />
