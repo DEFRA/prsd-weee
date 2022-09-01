@@ -107,9 +107,9 @@
         }
 
         [Fact]
-        public void DownloadEvidenceNoteGet_ShouldHaveHttpGetAttribute()
+        public void ViewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Theory]
@@ -908,13 +908,13 @@
         }
 
         [Fact]
-        public async Task DownloadEvidenceNoteGet_GivenPageNumber_ViewBagShouldBePopulatedWithPageNumber()
+        public async Task ViewEvidenceNoteGet_GivenPageNumber_ViewBagShouldBePopulatedWithPageNumber()
         {
             // Arrange
             var pageNumber = 3;
 
             //act
-            var result = await ManageEvidenceController.DownloadEvidenceNote(OrganisationId, TestFixture.Create<Guid>(), "view-and-transfer-evidence", pageNumber) as ViewResult;
+            var result = await ManageEvidenceController.ViewEvidenceNote(OrganisationId, TestFixture.Create<Guid>(), "view-and-transfer-evidence", pageNumber) as ViewResult;
 
             //assert
             Assert.Equal(pageNumber, result.ViewBag.Page);
