@@ -35,7 +35,7 @@
     }
     
     <p class="govuk-body">
-        @Html.ActionLink("Download as PDF", "DownloadEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", evidenceNoteId = @Model.Id }, new { @class = "govuk-link" })
+        @Html.ActionLink("Download as PDF", "ViewEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", evidenceNoteId = @Model.Id }, new { @class = "govuk-link" })
     </p>
 
 }
