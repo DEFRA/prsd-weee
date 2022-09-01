@@ -27,6 +27,8 @@
 
     public class GetObligationSummaryRequestHandlerIntegrationTests : IntegrationTestBase
     {
+        // currently fails due to SP receiving too many parameters
+
         [Component]
         public class WhenIGetASchemesObligationSummary : GetObligationSummaryRequestHandlerIntegrationTestBase
         {
@@ -56,7 +58,12 @@
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
                 };
-                ObligationSchemeDbSetup.Init().WithScheme(scheme.Id).WithObligationUpload(obligationUpload.Id).WithObligationAmounts(obligationAmounts).WithComplianceYear(2022).Create();
+                ObligationSchemeDbSetup.Init()
+                                       .WithScheme(scheme.Id)
+                                       .WithObligationUpload(obligationUpload.Id)
+                                       .WithObligationAmounts(obligationAmounts)
+                                       .WithComplianceYear(2022)
+                                       .Create();
 
                 //tonnages 1
                 var tonnages = new List<NoteTonnage>()

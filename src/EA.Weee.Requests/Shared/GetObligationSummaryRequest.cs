@@ -18,8 +18,6 @@
 
         public GetObligationSummaryRequest(Guid? schemeId, int complianceYear, bool internalAccess, Guid organisationId = default(Guid))
         {
-            //Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
-
             Condition.Requires(complianceYear).IsGreaterThan(0);
             Condition.Requires(internalAccess);
 

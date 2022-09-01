@@ -26,14 +26,15 @@
 
         public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid? pcsId, Guid orgId, int complianceYear)
         {
-            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @SchemeId, @OrganisationId, @ComplianceYear";
-            SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", pcsId); 
-            pcsIdParameter.SqlDbType = SqlDbType.UniqueIdentifier;
-            SqlParameter orgIdParameter = new SqlParameter("@OrganisationId", orgId); 
-            orgIdParameter.SqlDbType = SqlDbType.UniqueIdentifier;
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
+            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @ComplianceYear, @OrganisationId, @SchemeId ";
 
-            return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, pcsIdParameter, orgIdParameter, complianceYearParameter).ToListAsync();
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
+            SqlParameter orgIdParameter = new SqlParameter("@OrganisationId", orgId);
+            SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier);
+            pcsIdParameter.IsNullable = true;
+            pcsIdParameter.Value = pcsId.HasValue ? pcsId.Value : (object)DBNull.Value;
+
+            return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter).ToListAsync();
         }
     }
 }

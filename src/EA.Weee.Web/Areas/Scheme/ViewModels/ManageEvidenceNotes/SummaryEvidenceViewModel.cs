@@ -3,9 +3,14 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using EA.Weee.Core.Admin.Obligation;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
 
     public class SummaryEvidenceViewModel : ManageEvidenceNoteSchemeViewModel, IObligationSummaryBase
     {
+        public int NumberOfSubmittedNotes { get; set; } = 0;
+
+        //public ManageEvidenceSummaryViewModel manageEvidenceSummaryViewModel { get; set; }
+
         public IEnumerable<int> ComplianceYearList { get; set; }
 
         [DisplayName("Compliance year")]

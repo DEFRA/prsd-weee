@@ -11,7 +11,7 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Model.SchemeInfo.IsBalancingScheme
+
             @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
 
             <section class="govuk-tabs__panel" id="pcsEvidenceSummary">
@@ -42,9 +42,11 @@
                 else
                 {
                     <p class="govuk-body">
-                        <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-5">Model.NumberOfSubmittedNotes&nbsp;<span class="govuk-body">Submitted evidence notes for review &nbsp;</span> </span>
+                        <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-0">@Model.NumberOfSubmittedNotes &nbsp; <span class="govuk-body">Submitted evidence notes for review &nbsp;</span> </span>
                     </p>
                     <!-- two download links here -->
+                    <p class="govuk-body"><a href="#">Download evidence notes report</a></p>
+                    <p class="govuk-body"><a href="#">Download transferred evidence report</a></p>
                 }
 
                 <table id="evidence-summary-table" class="govuk-table">
@@ -54,21 +56,39 @@
                             <th class="govuk-table__header">
                                 Category
                             </th>
-                            <th class="govuk-table__header govuk-!-text-align-left">
-                                Obligation (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-left">
-                                Evidence (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-left">
-                                Reuse (tonnes)
-                            </th>
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
+                            {
+                                <th class="govuk-table__header govuk-!-text-align-left">
+                                    Obligation (tonnes)
+                                </th>
+                            }
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
+                            {
+                                <th class="govuk-table__header govuk-!-text-align-left">
+                                    Evidence (tonnes)
+                                </th>
+                            }
+                            else
+                            {
+                                <th class="govuk-table__header govuk-!-text-align-left">
+                                    Evidence received (tonnes)
+                                </th>
+                            }
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
+                            {
+                                <th class="govuk-table__header govuk-!-text-align-left">
+                                    Reuse (tonnes)
+                                </th>
+                            }
                             <th class="govuk-table__header govuk-!-text-align-left">
                                 Transferred out (tonnes)
                             </th>
-                            <th class="govuk-table__header govuk-!-text-align-left">
-                                Transferred in (tonnes)
-                            </th>
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
+                            {
+                                <th class="govuk-table__header govuk-!-text-align-left">
+                                    Transferred in (tonnes)
+                                </th>
+                            }
                             <th class="govuk-table__header govuk-!-text-align-left">
                                 Difference (tonnes)
                             </th>
@@ -83,7 +103,7 @@
                                 <td class="govuk-table__cell">
                                     <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
                                 </td>
-                                if (!Model.SchemeInfo.IsBalancingScheme)
+                                @if (!Model.SchemeInfo.IsBalancingScheme)
                                 {
                                     <td class="govuk-table__cell weee-tonnage-center-aligned-display">
                                         @category.Obligation
@@ -92,7 +112,7 @@
                                 <td class="govuk-table__cell weee-tonnage-center-aligned-display">
                                     @category.Evidence
                                 </td>
-                                if (!Model.SchemeInfo.IsBalancingScheme)
+                                @if (!Model.SchemeInfo.IsBalancingScheme)
                                 {
                                     <td class="govuk-table__cell weee-tonnage-center-aligned-display">
                                         @category.Reused
@@ -101,15 +121,15 @@
                                 <td class="govuk-table__cell weee-tonnage-center-aligned-display">
                                     @category.TransferredOut
                                 </td>
-                                <td class="govuk-table__cell weee-tonnage-center-aligned-display">
-                                    @category.TransferredIn
-                                </td>
-                                if (!Model.SchemeInfo.IsBalancingScheme)
+                                @if (!Model.SchemeInfo.IsBalancingScheme)
                                 {
                                     <td class="govuk-table__cell weee-tonnage-center-aligned-display">
-                                        @category.Difference
+                                        @category.TransferredIn
                                     </td>
                                 }
+                                <td class="govuk-table__cell weee-tonnage-center-aligned-display">
+                                    @category.Difference
+                                </td>
                             </tr>
                         }
 
@@ -117,7 +137,7 @@
                             <td class="govuk-table__cell">
                                 <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
                             </td>
-                            if (!Model.SchemeInfo.IsBalancingScheme)
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
                             {
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
                                     <p class="govuk-body  weee-tonnage-right-aligned-display" id="Obligation2To10Total">@Model.Obligation210Total</p>
@@ -126,7 +146,7 @@
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <p class="govuk-body weee-tonnage-right-aligned-display" id="Evidence2To10Total">@Model.Evidence210Total</p>
                             </td>
-                            if (!Model.SchemeInfo.IsBalancingScheme)
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
                             {
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
                                     <p class="govuk-body  weee-tonnage-right-aligned-display" id="Reused2To10Total">@Model.Reuse210Total</p>
@@ -135,36 +155,45 @@
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
-                            </td>
-                            if (!Model.SchemeInfo.IsBalancingScheme)
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
                             {
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
-                                    <p class="govuk-body weee-tonnage-right-aligned-display" id="Difference2To10Total">@Model.Difference210Total</p>
+                                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
                                 </td>
                             }
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body weee-tonnage-right-aligned-display" id="Difference2To10Total">@Model.Difference210Total</p>
+                            </td>
                         </tr>
 
                         <tr class="govuk-table__row govuk-panel-grey-background">
                             <td class="govuk-table__cell">
                                 <p class="govuk-body"><strong>Total (tonnes)</strong></p>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body  weee-tonnage-right-aligned-display" id="ObligationTotal">@Model.ObligationTotal</p>
-                            </td>
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
+                            {
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="ObligationTotal">@Model.ObligationTotal</p>
+                                </td>
+                            }
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <p class="govuk-body weee-tonnage-right-aligned-display" id="EvidenceTotal">@Model.EvidenceTotal</p>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReuseTotal</p>
-                            </td>
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
+                            {
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.ReuseTotal</p>
+                                </td>
+                            }
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <p class="govuk-body weee-tonnage-right-aligned-display" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredInTotal">@Model.TransferredInTotal</p>
-                            </td>
+                            @if (!Model.SchemeInfo.IsBalancingScheme)
+                            {
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="TransferredInTotal">@Model.TransferredInTotal</p>
+                                </td>
+                            }
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <p class="govuk-body weee-tonnage-right-aligned-display" id="DifferenceTotal">@Model.DifferenceTotal</p>
                             </td>

@@ -61,14 +61,9 @@
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
-                switch (tab)
-                {
-                    case null when !scheme.IsBalancingScheme:
-                        tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
-                        break;
-                    case null:
-                        tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence);
-                        break;
+                if (tab == null) 
+                { 
+                    tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary); 
                 }
 
                 var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
@@ -84,7 +79,6 @@
                     case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
                         return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                     default:
-                        //return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
                         return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
                 }
             }
@@ -250,24 +244,36 @@
                 GetObligationSummaryRequest request = null;
                 if (scheme.IsBalancingScheme)
                 {
+                    // PBS do not have a scheme id - we send a null to the Stored Proc which will use organisation id instead
                     request = new GetObligationSummaryRequest(null, complianceYear, false, pcsId);
                 }
                 else
                 {
+                    // used by Scheme users
                     request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
                 }
 
-                //var request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
-
-                var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);  //BUG here
+                var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
 
                 var summaryModel = mapper.Map<SummaryEvidenceViewModel>
                     (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
 
-                summaryModel.SchemeInfo = scheme;
+                summaryModel.NumberOfSubmittedNotes = GetSubmittedNotes();  // will be done in another story
 
                 return View("SummaryEvidence", summaryModel);
             }
+        }
+
+        private int GetSubmittedNotes()
+        {
+            //TODO: create and use ManageEvidenceSummaryViewModel property and map it
+            // example found in EvidenceSummaryCase() in public class ManageEvidenceNotesController
+            // var request = new GetAatfSummaryRequest(aatfId, selectedComplianceYear);
+            // var result = await client.SendAsync(User.GetAccessToken(), request);
+            // var summaryModel = mapper.Map<ManageEvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
+            // summaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, null, null, null, selectedComplianceYear, currentDate));
+
+            return 0;
         }
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
