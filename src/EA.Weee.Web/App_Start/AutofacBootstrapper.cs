@@ -108,7 +108,7 @@
             builder.RegisterType<AatfEvidenceHelper>().As<IAatfEvidenceHelper>();
 
             builder.RegisterType<MvcTemplateExecutor>().As<IMvcTemplateExecutor>();
-            builder.RegisterType<PdfDocumentProviderVersion2>().As<IPdfDocumentProvider2>();
+            builder.RegisterType<PdfDocumentProvider>().As<IPdfDocumentProvider>();
 
             return builder.Build();
         }

@@ -24,7 +24,9 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Constants;
     using Filters;
+    using Prsd.Core;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Email;
@@ -47,7 +49,7 @@
         private readonly ISessionService sessionService;
         private readonly ConfigurationService configurationService;
         private readonly IMvcTemplateExecutor templateExecutor;
-        private readonly IPdfDocumentProvider2 pdfDocumentProvider;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
@@ -57,7 +59,7 @@
             IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator,
             ISessionService sessionService,
             ConfigurationService configurationService,
-            IMvcTemplateExecutor templateExecutor, IPdfDocumentProvider2 pdfDocumentProvider)
+            IMvcTemplateExecutor templateExecutor, IPdfDocumentProvider pdfDocumentProvider)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -211,27 +213,12 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false));
 
                 ViewBag.Page = page;
 
                 return View(model);
             }
-        }
-
-        public string RenderRazorView(ControllerContext context, string viewName, object model)
-        {
-            IView viewEngineResult = ViewEngines.Engines.FindView(context, viewName, null).View;
-            var sb = new StringBuilder();
-
-            using (TextWriter tr = new StringWriter(sb))
-            {
-                context.Controller.ViewData.Model = model;
-                var viewContext = new ViewContext(context, viewEngineResult, context.Controller.ViewData,
-                    context.Controller.TempData, tr);
-                viewEngineResult.Render(viewContext, tr);
-            }
-            return sb.ToString();
         }
 
         [HttpGet]
@@ -243,13 +230,16 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], true));
 
                 var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadEvidenceNote", model);
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 
-                return File(pdf, "application/pdf", "Grid.pdf");
+                var timestamp = SystemTime.Now;
+                var fileName = $"{model.ReferenceDisplay}_{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+
+                return File(pdf, "application/pdf", fileName);
             }
         }
 

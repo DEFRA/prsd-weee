@@ -1,8 +1,6 @@
 ﻿@using EA.Weee.Core.Helpers
-@using EA.Weee.Core.AatfEvidence
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 
 @if (Model.DisplayH2Title)
@@ -190,9 +188,14 @@ else
             }
             else
             {
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">Total received <br/>(tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">Total reused as whole appliances<br/> (tonnes)</th>
+                {
+                    var printableReceivedTitle = !Model.IsPrintable ? "Total received <br/>(tonnes)" : "Total received (tonnes)";
+                    var printableReusedTitle = !Model.IsPrintable ? "Total reused as whole appliances<br/> (tonnes)" : "Total reused as whole appliances (tonnes)";
+
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left category-column">Category</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">@Html.Raw(@printableReceivedTitle)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">@Html.Raw(@printableReusedTitle)</th>
+                }
             }
         </tr>
     </thead>

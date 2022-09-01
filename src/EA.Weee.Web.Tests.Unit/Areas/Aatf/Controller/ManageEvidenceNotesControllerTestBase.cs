@@ -29,7 +29,7 @@
         protected readonly IRequestCreator<EvidenceNoteViewModel, CreateEvidenceNoteRequest> CreateRequestCreator;
         protected readonly IRequestCreator<EvidenceNoteViewModel, EditEvidenceNoteRequest> EditRequestCreator;
         protected readonly IMvcTemplateExecutor TemplateExecutor;
-        protected readonly IPdfDocumentProvider2 PdfDocumentProvider;
+        protected readonly IPdfDocumentProvider PdfDocumentProvider;
         protected readonly Fixture Fixture;
         protected readonly Guid OrganisationId;
         protected readonly Guid AatfId;
@@ -49,7 +49,7 @@
             A.CallTo(() => ConfigurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
 
             TemplateExecutor = A.Fake<IMvcTemplateExecutor>();
-            PdfDocumentProvider = A.Fake<IPdfDocumentProvider2>();
+            PdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
             Fixture = new Fixture();
             OrganisationId = Guid.NewGuid();
             AatfId = Guid.NewGuid();
