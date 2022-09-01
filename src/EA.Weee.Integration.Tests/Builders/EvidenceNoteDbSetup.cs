@@ -70,23 +70,35 @@
             {
                 return this;
             }
-
-            if (statusToUpdate == NoteStatus.Submitted && instance.Status != NoteStatus.Draft)
+            else
             {
-                return this;
+                if (statusToUpdate == NoteStatus.Submitted)
+                {
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                }
+                else if (statusToUpdate == NoteStatus.Approved)
+                {
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Approved, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                }
+                else if (statusToUpdate == NoteStatus.Rejected)
+                {
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Rejected, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                }
+                else if (statusToUpdate == NoteStatus.Returned)
+                {
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Returned, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                }
+                else if (statusToUpdate == NoteStatus.Void)
+                {
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Approved, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Void, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                }
             }
-
-            if (instance.NoteStatusHistory.All(s => s.ToStatus != NoteStatus.Submitted))
-            {
-                instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
-            }
-
-            if (instance.Status == NoteStatus.Submitted && statusToUpdate == NoteStatus.Submitted)
-            {
-                return this;
-            }
-
-            instance.UpdateStatus(statusToUpdate, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+            
             return this;
         }
 
