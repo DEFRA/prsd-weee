@@ -185,7 +185,9 @@
             // assert
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
-                                                                 v.SchemeId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
+                                                                 v.SchemeId.Equals(OrganisationId) &&
+                                                                 v.PrintableVersion == false &&
+                                                                 v.User == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -206,7 +208,9 @@
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.NoteStatus.Equals(NoteStatus.Approved) &&
-                                                                 v.RedirectTab == null))).MustHaveHappenedOnceExactly();
+                                                                 v.RedirectTab == null &&
+                                                                 v.PrintableVersion == false &&
+                                                                 v.User == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -228,7 +232,9 @@
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.NoteStatus.Equals(NoteStatus.Approved) &&
-                                                                 v.RedirectTab.Equals(redirectTab)))).MustHaveHappenedOnceExactly();
+                                                                 v.RedirectTab.Equals(redirectTab) &&
+                                                                 v.PrintableVersion == false &&
+                                                                 v.User == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -336,7 +342,9 @@
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
-                                                                 v.SchemeId.Equals(OrganisationId)))).MustHaveHappenedOnceExactly();
+                                                                 v.SchemeId.Equals(OrganisationId) &&
+                                                                 v.PrintableVersion == false &&
+                                                                 v.User == null))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -563,7 +571,10 @@
 
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
-                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && v.SchemeId.Equals(model.ViewEvidenceNoteViewModel.SchemeId)))).MustHaveHappenedOnceExactly();
+                A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
+                                                                 v.SchemeId.Equals(model.ViewEvidenceNoteViewModel.SchemeId) &&
+                                                                 v.PrintableVersion == false &&
+                                                                 v.User == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
