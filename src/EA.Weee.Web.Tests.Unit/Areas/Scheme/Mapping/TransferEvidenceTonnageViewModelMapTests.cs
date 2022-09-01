@@ -996,13 +996,19 @@
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
+                            v => v.IncludeAllCategories.Equals(false) && 
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(0)) && 
+                                 v.NoteStatus == null &&
+                                 v.PrintableVersion == false)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(0));
 
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
+                            v => v.IncludeAllCategories.Equals(false) && 
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(1)) && 
+                                 v.NoteStatus == null &&
+                                 v.PrintableVersion == false)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(1));
 
             var request = DefaultRequest();
@@ -1026,13 +1032,19 @@
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(0)) && v.NoteStatus == null)))
+                            v => v.IncludeAllCategories.Equals(false) && 
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(0)) && 
+                                 v.NoteStatus == null &&
+                                 v.PrintableVersion == false)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(0));
 
             A.CallTo(() =>
                     mapper.Map<ViewEvidenceNoteViewModel>(
                         A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && v.EvidenceNoteData.Equals(notes.ElementAt(1)) && v.NoteStatus == null)))
+                            v => v.IncludeAllCategories.Equals(false) && 
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(1)) && 
+                                 v.NoteStatus == null &&
+                                 v.PrintableVersion == false)))
                 .Returns(viewEvidenceNoteViewModel.ElementAt(1));
 
             var transferNoteTonnageData = TestFixture.CreateMany<TransferEvidenceNoteTonnageData>().ToList();
