@@ -254,7 +254,7 @@
 
                     pbsSummaryModel.NumberOfSubmittedNotes = GetSubmittedNotes();  // will be done in another story
 
-                    return View("SummaryEvidence", pbsSummaryModel);
+                    return View("SummaryEvidencePBS", pbsSummaryModel);
                 }
 
                 // used by Scheme users
