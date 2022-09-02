@@ -88,7 +88,7 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], this.User));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false, this.User));
 
                 ViewBag.Page = page;
 
@@ -134,7 +134,7 @@
                 {
                     var model = new VoidEvidenceNoteViewModel()
                     {
-                        ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, null))
+                        ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null))
                     };
 
                     return View("VoidEvidenceNote", model);
@@ -206,7 +206,7 @@
 
                 var updatedModel = new VoidEvidenceNoteViewModel()
                 {
-                    ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, null))
+                    ViewEvidenceNoteViewModel = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null))
                 };
 
                 return View("VoidEvidenceNote", updatedModel);

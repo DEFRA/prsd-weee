@@ -88,7 +88,9 @@
             //asset
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
                 v => v.EvidenceNoteData.Equals(data) &&
-                     v.NoteStatus == null))).MustHaveHappenedOnceExactly();
+                     v.NoteStatus == null &&
+                     v.PrintableVersion == false &&
+                     v.User == null))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -107,7 +109,9 @@
             //asset
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
                 v => v.EvidenceNoteData.Equals(data) &&
-                     v.NoteStatus.Equals(status)))).MustHaveHappenedOnceExactly();
+                     v.NoteStatus.Equals(status) &&
+                     v.PrintableVersion == false &&
+                     v.User == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

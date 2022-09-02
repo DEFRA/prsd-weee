@@ -94,6 +94,8 @@
 
         public bool CanDisplayNotesMessage { get; set; }
 
+        public bool IsPrintable { get; set; }
+
         public ViewEvidenceNoteViewModel()
         {
             AddTransferCategoryValues(new EvidenceCategoryValues());
