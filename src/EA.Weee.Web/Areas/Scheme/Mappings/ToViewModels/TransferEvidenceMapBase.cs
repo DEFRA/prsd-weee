@@ -43,7 +43,7 @@
                 foreach (var evidenceNoteData in source.Notes.Results)
                 {
                     model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
-                        new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, null)
+                        new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
                         {
                             IncludeAllCategories = false
                         }));

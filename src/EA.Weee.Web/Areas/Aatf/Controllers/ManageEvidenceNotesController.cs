@@ -19,11 +19,17 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Constants;
     using Filters;
+    using Prsd.Core;
     using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
+    using Prsd.Email;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -42,6 +48,8 @@
         private readonly IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator;
         private readonly ISessionService sessionService;
         private readonly ConfigurationService configurationService;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ManageEvidenceNotesController(IMapper mapper, 
             BreadcrumbService breadcrumb, 
@@ -50,7 +58,8 @@
             IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
             IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator,
             ISessionService sessionService,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService,
+            IMvcTemplateExecutor templateExecutor, IPdfDocumentProvider pdfDocumentProvider)
         {
             this.mapper = mapper;
             this.breadcrumb = breadcrumb;
@@ -59,6 +68,8 @@
             this.createRequestCreator = createRequestCreator;
             this.editRequestCreator = editRequestCreator;
             this.sessionService = sessionService;
+            this.templateExecutor = templateExecutor;
+            this.pdfDocumentProvider = pdfDocumentProvider;
             this.configurationService = configurationService;
         }
 
@@ -202,11 +213,33 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus]));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false));
 
                 ViewBag.Page = page;
 
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceNote(Guid evidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], true));
+
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadEvidenceNote", model);
+
+                var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+                var timestamp = SystemTime.Now;
+                var fileName = $"{model.ReferenceDisplay}_{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+
+                return File(pdf, "application/pdf", fileName);
             }
         }
 
