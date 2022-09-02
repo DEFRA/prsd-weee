@@ -69,78 +69,78 @@
                         {
                             var category = Model.ObligationEvidenceValues[i];
 
-                            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                                <td class="govuk-table__cell">
-                                    <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.Obligation
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.Evidence
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.Reused
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.TransferredOut
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.TransferredIn
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right">
-                                    @category.Difference
-                                </td>
-                            </tr>
-                        }
-
-                        <tr class="govuk-table__row govuk-panel-grey-background">
+                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
                             <td class="govuk-table__cell">
-                                <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
+                                <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="Obligation2To10Total">@Model.Obligation210Total</p>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Obligation
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="Evidence2To10Total">@Model.Evidence210Total</p>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Evidence
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="Reused2To10Total">@Model.Reuse210Total</p>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Reused
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.TransferredOut
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.TransferredIn
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="Difference2To10Total">@Model.Difference210Total</p>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Difference
                             </td>
                         </tr>
+                    }
 
-                        <tr class="govuk-table__row govuk-panel-grey-background">
-                            <td class="govuk-table__cell">
-                                <p class="govuk-body"><strong>Total (tonnes)</strong></p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="ObligationTotal">@Model.ObligationTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="EvidenceTotal">@Model.EvidenceTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="ReusedTotal">@Model.ReuseTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="TransferredInTotal">@Model.TransferredInTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right" id="DifferenceTotal">@Model.DifferenceTotal</p>
-                            </td>
-                        </tr>
+                    <tr class="govuk-table__row govuk-panel-grey-background">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="Obligation2To10Total">@Model.Obligation210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="Evidence2To10Total">@Model.Evidence210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="Reused2To10Total">@Model.Reuse210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="Difference2To10Total">@Model.Difference210Total</p>
+                        </td>
+                    </tr>
+
+                    <tr class="govuk-table__row govuk-panel-grey-background">
+                        <td class="govuk-table__cell">
+                            <p class="govuk-body"><strong>Total (tonnes)</strong></p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="ObligationTotal">@Model.ObligationTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="EvidenceTotal">@Model.EvidenceTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="ReusedTotal">@Model.ReuseTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="TransferredInTotal">@Model.TransferredInTotal</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <p class="govuk-body govuk-!-text-align-right break-word" id="DifferenceTotal">@Model.DifferenceTotal</p>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
