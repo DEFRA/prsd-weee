@@ -1,5 +1,4 @@
-USE [EA.Weee]
-GO
+
 /****** Object:  StoredProcedure [Evidence].[getObligationEvidenceSummaryTotals]    Script Date: 01/09/2022 10:25:28 ******/
 SET ANSI_NULLS ON
 GO
@@ -7,7 +6,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 ALTER PROCEDURE [Evidence].[getObligationEvidenceSummaryTotals]
 	@ComplianceYear SMALLINT,
-	@OrganisationId UNIQUEIDENTIFIER,
+	@OrganisationId UNIQUEIDENTIFIER = NULL,
 	@SchemeId UNIQUEIDENTIFIER = NULL
 AS
 BEGIN
@@ -45,105 +44,57 @@ SELECT
 FROM
 	Lookup.WeeeCategory c
 	
-IF @SchemeId IS NULL
+-- PBS doesnt have an obligation as isnt a scheme
+UPDATE s
+SET 
+	s.Obligation = osa.Obligation
+FROM
+	#EvidenceSummary s
+	LEFT JOIN [PCS].ObligationSchemeAmount osa ON s.CategoryId = osa.CategoryId 
+	LEFT JOIN [PCS].ObligationScheme os ON os.Id = osa.ObligationSchemeId
+	LEFT JOIN [PCS].Scheme sc ON sc.Id = os.SchemeId AND sc.Id = @SchemeId
+WHERE
+	os.ComplianceYear = @ComplianceYear
+	AND (os.SchemeId = @SchemeId)
 
-BEGIN
+UPDATE 
+	s
+SET
+	s.EvidenceReceivedInTotal = evc.Received,
+	s.EvidenceReuseInTotal = evc.Reused
+FROM
+	#EvidenceSummary s
+	INNER JOIN Evidence.vwEvidenceSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
+WHERE
+	(sc.Id = @SchemeId OR @SchemeId IS NULL)
+	AND (evc.ReceiverOrganisation = @OrganisationId OR @OrganisationId IS NULL)
 
-	UPDATE s
-	SET 
-		s.Obligation = osa.Obligation
-	FROM
-		#EvidenceSummary s
-		LEFT JOIN [PCS].ObligationSchemeAmount osa ON s.CategoryId = osa.CategoryId 
-		LEFT JOIN [PCS].ObligationScheme os ON os.Id = osa.ObligationSchemeId
-		--LEFT JOIN [PCS].Scheme sc ON sc.Id = os.SchemeId AND sc.Id = @SchemeId
-		LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = os.SchemeId AND sc.Id = @OrganisationId
-	WHERE
-		os.ComplianceYear = @ComplianceYear
-		AND os.SchemeId = @SchemeId
+UPDATE 
+	s
+SET
+	s.TransferEvidenceReceivedIn = evc.TransferredReceived,
+	s.TransferEvidenceReuseIn =  evc.TransferredReused
+FROM
+	#EvidenceSummary s
+	INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
+WHERE
+	(sc.Id = @SchemeId OR @SchemeId IS NULL)
+	AND (evc.ReceiverOrganisation = @OrganisationId OR @OrganisationId IS NULL)
 
-	UPDATE 
-		s
-	SET
-		s.EvidenceReceivedInTotal = evc.Received,
-		s.EvidenceReuseInTotal = evc.Reused
-	FROM
-		#EvidenceSummary s
-		INNER JOIN Evidence.vwEvidenceSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
-		--INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
-		INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.OrganisationId = @OrganisationId
-
-	UPDATE 
-		s
-	SET
-		s.TransferEvidenceReceivedIn = evc.TransferredReceived,
-		s.TransferEvidenceReuseIn =  evc.TransferredReused
-	FROM
-		#EvidenceSummary s
-		INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
-		--INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId
-		INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.OrganisationId = @OrganisationId
-
-	UPDATE 
-		s
-	SET
-		s.TransferEvidenceReceivedOut = evc.TransferredReceived,
-		s.TransferEvidenceReuseOut =  evc.TransferredReused
-	FROM
-		#EvidenceSummary s
-		INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
-		--INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.Id = @SchemeId
-		INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.OrganisationId = @OrganisationId
-
-END
-
-ELSE
-
-BEGIN
-	UPDATE s
-	SET 
-		s.Obligation = osa.Obligation
-	FROM
-		#EvidenceSummary s
-		LEFT JOIN [PCS].ObligationSchemeAmount osa ON s.CategoryId = osa.CategoryId 
-		LEFT JOIN [PCS].ObligationScheme os ON os.Id = osa.ObligationSchemeId
-		LEFT JOIN [PCS].Scheme sc ON sc.Id = os.SchemeId AND sc.Id = @SchemeId
-	WHERE
-		os.ComplianceYear = @ComplianceYear
-		AND os.SchemeId = @SchemeId
-
-	UPDATE 
-		s
-	SET
-		s.EvidenceReceivedInTotal = evc.Received,
-		s.EvidenceReuseInTotal = evc.Reused
-	FROM
-		#EvidenceSummary s
-		INNER JOIN Evidence.vwEvidenceSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
-		INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId 
-
-	UPDATE 
-		s
-	SET
-		s.TransferEvidenceReceivedIn = evc.TransferredReceived,
-		s.TransferEvidenceReuseIn =  evc.TransferredReused
-	FROM
-		#EvidenceSummary s
-		INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
-		INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation AND sc.Id = @SchemeId 
-
-	UPDATE 
-		s
-	SET
-		s.TransferEvidenceReceivedOut = evc.TransferredReceived,
-		s.TransferEvidenceReuseOut =  evc.TransferredReused
-	FROM
-		#EvidenceSummary s
-		INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
-		INNER JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.Id = @SchemeId 
-
-END
-
+UPDATE 
+	s
+SET
+	s.TransferEvidenceReceivedOut = evc.TransferredReceived,
+	s.TransferEvidenceReuseOut =  evc.TransferredReused
+FROM
+	#EvidenceSummary s
+	INNER JOIN Evidence.vwTransferSumByCategory evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear
+	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation AND sc.Id = @SchemeId
+WHERE
+	(sc.Id = @SchemeId OR @SchemeId IS NULL)
+	AND (evc.TransferOrganisation = @OrganisationId OR @OrganisationId IS NULL)
 
 
 SELECT 
