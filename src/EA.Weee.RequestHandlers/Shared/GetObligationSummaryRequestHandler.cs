@@ -26,14 +26,14 @@
 
         public async Task<ObligationEvidenceSummaryData> HandleAsync(GetObligationSummaryRequest message)
         {
-            if (message.InternalAccess)
+            if (!message.OrganisationId.HasValue)
             {
                 authorization.EnsureCanAccessInternalArea();
             }
             else
             {
                 authorization.EnsureCanAccessExternalArea();
-                authorization.EnsureOrganisationAccess(message.OrganisationId);
+                authorization.EnsureOrganisationAccess(message.OrganisationId.Value);
             }
 
             var summaryData = await evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(message.SchemeId, message.OrganisationId, message.ComplianceYear);

@@ -24,12 +24,14 @@
             return await context.Database.SqlQuery<AatfEvidenceSummaryTotalsData>(queryString, aatfIdParameter, complianceYearParameter).ToListAsync();
         }
 
-        public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid? pcsId, Guid orgId, int complianceYear)
+        public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid? pcsId, Guid? orgId, int complianceYear)
         {
             string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @ComplianceYear, @OrganisationId, @SchemeId ";
 
             SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
-            SqlParameter orgIdParameter = new SqlParameter("@OrganisationId", orgId);
+            SqlParameter orgIdParameter = new SqlParameter("@OrganisationId", SqlDbType.UniqueIdentifier);
+            orgIdParameter.IsNullable = true;
+            orgIdParameter.Value = orgId.HasValue ? orgId.Value : (object)DBNull.Value;
             SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier);
             pcsIdParameter.IsNullable = true;
             pcsIdParameter.Value = pcsId.HasValue ? pcsId.Value : (object)DBNull.Value;
