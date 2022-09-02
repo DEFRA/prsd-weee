@@ -245,12 +245,12 @@
                 if (scheme.IsBalancingScheme)
                 {
                     // PBS do not have a scheme id - we send a null to the Stored Proc which will use organisation id instead
-                    request = new GetObligationSummaryRequest(null, complianceYear, false, pcsId);
+                    request = new GetObligationSummaryRequest(null, pcsId, complianceYear);
                 }
                 else
                 {
                     // used by Scheme users
-                    request = new GetObligationSummaryRequest(scheme.SchemeId, complianceYear, false, pcsId);
+                    request = new GetObligationSummaryRequest(scheme.SchemeId, pcsId, complianceYear);
                 }
 
                 var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
