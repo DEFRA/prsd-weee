@@ -246,12 +246,19 @@
                 {
                     // PBS do not have a scheme id - we send a null to the Stored Proc which will use organisation id instead
                     request = new GetObligationSummaryRequest(null, pcsId, complianceYear);
+
+                    var evidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
+
+                    var pbsSummaryModel = mapper.Map<SummaryEvidenceViewModel>
+                        (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, evidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
+
+                    pbsSummaryModel.NumberOfSubmittedNotes = GetSubmittedNotes();  // will be done in another story
+
+                    return View("SummaryEvidence", pbsSummaryModel);
                 }
-                else
-                {
-                    // used by Scheme users
-                    request = new GetObligationSummaryRequest(scheme.SchemeId, pcsId, complianceYear);
-                }
+
+                // used by Scheme users
+                request = new GetObligationSummaryRequest(scheme.SchemeId, pcsId, complianceYear);
 
                 var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
 

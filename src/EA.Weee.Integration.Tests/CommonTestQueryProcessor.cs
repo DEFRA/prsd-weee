@@ -98,6 +98,11 @@
                 u.UserId == userId && u.UserStatus.Value == UserStatus.Active.Value && u.RoleId == roleId);
         }
 
+        public Guid GetBalancingSchemeId()
+        {
+            return dbContext.ProducerBalancingSchemes.First(c => c.Organisation != null).Organisation.Id;
+        }
+
         public void SetupUserWithRole(string userId, string role, CompetentAuthority authority)
         {
             var user = dbContext.CompetentAuthorityUsers.FirstOrDefault(u => u.UserId == userId);
