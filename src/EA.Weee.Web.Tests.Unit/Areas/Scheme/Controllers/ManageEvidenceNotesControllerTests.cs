@@ -951,6 +951,34 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTab_GivenSchemeIsBalancing_ObligationEvidenceSummaryDataShouldBeRetrieved(string tab)
+        {
+            // arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.IsBalancingScheme, true)
+                .With(s => s.SchemeId, schemeId)
+                .Create();
+            var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
+            var currentDate = TestFixture.Create<DateTime>();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._)).Returns(obligationSummaryData);
+
+            // act
+            await ManageEvidenceController.Index(OrganisationId, tab);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.SchemeId == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("evidence-summary")]
         public async Task IndexGet_GivenDefaultAndSummaryEvidenceTab_GivenPreviouslySelectedComplianceYear_GivenSchemeIsNotBalancing_ObligationEvidenceSummaryDataShouldBeRetrieved(string tab)
         {
             // arrange
@@ -983,12 +1011,46 @@
         [Theory]
         [InlineData(null)]
         [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedData_GivenSchemeIsNotBalancing_ViewModelShouldBeBuilt(string tab)
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTab_GivenPreviouslySelectedComplianceYear_GivenSchemeIsBalancing_ObligationEvidenceSummaryDataShouldBeRetrieved(string tab)
         {
             // arrange
             var schemeId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>()
-              .With(s => s.IsBalancingScheme, false)
+                .With(s => s.IsBalancingScheme, true)
+                .With(s => s.SchemeId, schemeId)
+                .Create();
+            var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
+            var currentDate = TestFixture.Create<DateTime>();
+            var complianceYear = TestFixture.Create<short>();
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._))
+                .Returns(obligationSummaryData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            // act
+            await ManageEvidenceController.Index(OrganisationId, tab, model);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
+                g => g.OrganisationId.Equals(OrganisationId) &&
+                     g.ComplianceYear.Equals(complianceYear) &&
+                     g.SchemeId == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null, true)]
+        [InlineData("evidence-summary", true)]
+        [InlineData(null, false)]
+        [InlineData("evidence-summary", false)]
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedData_GivenBalancingScheme_ViewModelShouldBeBuilt(string tab, bool balancingScheme)
+        {
+            // arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>()
+              .With(s => s.IsBalancingScheme, balancingScheme)
               .With(s => s.SchemeId, schemeId)
               .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
@@ -1012,16 +1074,18 @@
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_GivenSchemeIsNotBalancing_ViewModelShouldBeBuilt(string tab)
+        [InlineData(null, true)]
+        [InlineData("evidence-summary", true)]
+        [InlineData(null, false)]
+        [InlineData("evidence-summary", false)]
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceTabAlongWithReturnedDataAndManageEvidenceNoteViewModel_GivenBalancingScheme_ViewModelShouldBeBuilt(string tab, bool balancingScheme)
         {
             // arrange
             var schemeId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>()
-              .With(s => s.IsBalancingScheme, false)
-              .With(s => s.SchemeId, schemeId)
-              .Create();
+                .With(s => s.IsBalancingScheme, balancingScheme)
+                .With(s => s.SchemeId, schemeId)
+                .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
             var complianceYear = TestFixture.Create<short>();
@@ -1037,24 +1101,26 @@
 
             // assert
             A.CallTo(() => Mapper.Map<SummaryEvidenceViewModel>(
-               A<ViewEvidenceSummaryViewModelMapTransfer>.That.Matches(
-                   a => a.OrganisationId.Equals(OrganisationId) &&
-                   a.ComplianceYear.Equals(complianceYear)  &&
-                   a.Scheme.Equals(scheme) &&
-                   a.CurrentDate.Equals(currentDate) &&
-                   a.ObligationEvidenceSummaryData.Equals(obligationSummaryData) &&
-                   a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
+                A<ViewEvidenceSummaryViewModelMapTransfer>.That.Matches(
+                    a => a.OrganisationId.Equals(OrganisationId) &&
+                         a.ComplianceYear.Equals(complianceYear) &&
+                         a.Scheme.Equals(scheme) &&
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.ObligationEvidenceSummaryData.Equals(obligationSummaryData) &&
+                         a.ManageEvidenceNoteViewModel.Equals(model)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("evidence-summary")]
-        public async Task IndexGet_GivenDefaultAndSummaryEvidenceNotesViewModel_GivenSchemeIsNotBalancing_SummaryEvidenceViewModelShouldBeReturned(string tab)
+        [InlineData(null, true)]
+        [InlineData("evidence-summary", true)]
+        [InlineData(null, false)]
+        [InlineData("evidence-summary", false)]
+        public async Task IndexGet_GivenDefaultAndSummaryEvidenceNotesViewModel_GivenBalancingScheme_SummaryEvidenceViewModelShouldBeReturned(string tab, bool balancingScheme)
         {
             // arrange
             var schemeId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>()
-              .With(s => s.IsBalancingScheme, false)
+              .With(s => s.IsBalancingScheme, balancingScheme)
               .With(s => s.SchemeId, schemeId)
               .Create();
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);

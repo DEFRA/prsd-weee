@@ -27,8 +27,6 @@
 
     public class GetObligationSummaryRequestHandlerIntegrationTests : IntegrationTestBase
     {
-        // currently fails due to SP receiving too many parameters
-
         [Component]
         public class WhenIGetASchemesObligationSummary : GetObligationSummaryRequestHandlerIntegrationTestBase
         {
@@ -351,7 +349,7 @@
                     .WithRecipient(recipientOrganisation2.Id)
                     .Create();
 
-                request = new GetObligationSummaryRequest(scheme.Id, 2022, true);
+                request = new GetObligationSummaryRequest(scheme.Id, null, 2022);
             };
 
             private readonly Because of = () =>
