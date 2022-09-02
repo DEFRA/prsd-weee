@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Infrastructure
+﻿namespace EA.Weee.Web.Infrastructure.PDF
 {
     using System;
     using System.IO;
@@ -20,9 +20,11 @@
 
                 configureSettings?.Invoke(pdfWriter, pdfDocument);
 
-                FontProvider fontProvider = new DefaultFontProvider(false, false, true);
-                var properties = new ConverterProperties();
+                FontProvider fontProvider = new DefaultFontProvider(false, 
+                    false, 
+                    true);
 
+                var properties = new ConverterProperties();
                 properties.SetFontProvider(fontProvider);
                 HtmlConverter.ConvertToPdf(htmlDocument, pdfDocument, properties);
 

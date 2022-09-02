@@ -26,6 +26,7 @@
     using System.Web.Mvc;
     using Core.Constants;
     using Filters;
+    using Infrastructure.PDF;
     using Prsd.Core;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
@@ -230,14 +231,14 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], true));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null, true));
 
                 var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadEvidenceNote", model);
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 
                 var timestamp = SystemTime.Now;
-                var fileName = $"{model.ReferenceDisplay}_{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+                var fileName = $"{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
 
                 return File(pdf, "application/pdf", fileName);
             }
