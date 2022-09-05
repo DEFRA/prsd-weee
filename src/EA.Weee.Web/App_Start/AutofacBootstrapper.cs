@@ -24,6 +24,7 @@
     using Areas.Aatf.Mappings.Filters;
     using Areas.Scheme.Requests;
     using Infrastructure;
+    using Infrastructure.PDF;
     using Prsd.Email;
 
     public class AutofacBootstrapper

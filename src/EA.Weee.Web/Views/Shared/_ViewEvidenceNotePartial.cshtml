@@ -12,40 +12,49 @@ else
     <h1 class="govuk-heading-l">Evidence note</h1>
 }
 
-<style>
+<style type="text/css">
     .category
     {
         display: table;
     }
 
-    .category span
+    .category span 
     {
         display: table-cell;
     }
 
-    .category-id
+    .category-id 
     {
         width: 20px;
     }
 
-    .category-column
+    .category-column 
     {
         width: 40%;
     }
 
-    .transfer-category-column
+    .transfer-category-column 
     {
         width: 25%;
     }
 
-    .transfer-column
+    .transfer-column 
     {
         width: 18.75%;
     }
 
-    .received-column
-    {
+    .category-column-printable {
+        width: 40%;
+    }
+
+    .received-column-printable {
+        padding-left: 35px;
         width: 30%;
+    }
+    
+    .received-column 
+    {
+        width: 20%;
     }
 </style>
 
@@ -59,13 +68,20 @@ else
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width ">
         @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
     <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
+
+    @if (Model.HasVoidReason)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+            @Html.Gds().DisplayFor(m => m.VoidedReason, Model.VoidedReason, "govuk-grid-column-one-quarter")
+        </div>
+    }
 
     @if (Model.HasSubmittedDate)
     {
@@ -97,7 +113,7 @@ else
 
     @if (Model.HasBeenVoided)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
             @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
         </div>
     }
@@ -181,20 +197,20 @@ else
             @if (Model.DisplayTransferEvidenceColumns)
             {
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total reused as whole appliances (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total after transfer (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total reused after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused after transfer (tonnes)</th>
             }
             else
             {
                 {
-                    var printableReceivedTitle = !Model.IsPrintable ? "Total received <br/>(tonnes)" : "Total received (tonnes)";
-                    var printableReusedTitle = !Model.IsPrintable ? "Total reused as whole appliances<br/> (tonnes)" : "Total reused as whole appliances (tonnes)";
+                    var categoryColumnWidthCss = Model.IsPrintable ? "category-column-printable" : "category-column";
+                    var receivedColumnWithCss = Model.IsPrintable ? "received-column-printable" : "received-column";
 
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-left category-column">Category</th>
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">@Html.Raw(@printableReceivedTitle)</th>
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">@Html.Raw(@printableReusedTitle)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @categoryColumnWidthCss">Category</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss">Total reused as whole appliances (tonnes)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss">Total received (tonnes)</th>
                 }
             }
         </tr>
