@@ -8,17 +8,16 @@
 
         .govuk-full-printable-width {
             width: 100% !important;
-            display: block;
+            display: flex;
         }
 
-        .govuk-full-printable-width span:nth-child(1) {
-            display: inline-block;
-            width: 230px !important;
-        }
+            .govuk-full-printable-width span:nth-child(1) {
+                width: 25%;
+            }
 
-        .govuk-full-printable-width span:nth-child(2) {
-            display: inline-block;
-        }
+            .govuk-full-printable-width span:nth-child(2) {
+                width: 75%;
+            }
 
         .printable-padding-top {
             padding-top: 5px;
@@ -127,12 +126,12 @@
             display: flex;
             width: 20%;
         }
-        .govuk-header__logotype > img {
-            height: 30px;
-            top: 0;
-            padding: 0;
-            margin: 0;
-        }
+            .govuk-header__logotype > img {
+                height: 30px;
+                padding: 0;
+                margin-top: 2px;
+                margin-left: 2px;
+            }
 
         .govuk-header__logotype-text {
             padding-top: 10px;
@@ -164,12 +163,13 @@
 
 <header class="govuk-header">
     <div class="govuk-header__container">
-            <div class="govuk-header__logotype">
-                <img src="/Content/govuk_frontend/assets/images/govuk-logotype-crown.png" />
-                <span class="govuk-header__logotype-text">
-                    GOV.UK
-                </span>
-            </div>
+        <div class="govuk-header__logotype">
+            
+            <img alt="GOV.UK crown logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AgXEBkknAt7fAAAA0VJREFUWMPtl02IjlEUx/93Rs0YFiJSmlkgSU2+ZmGFNGI2PhdvjLJkMdRYiclHyl7U2CiThZKFpiRSksUsKM0GTVhggRnCTJhe08/m/4471/M+3jHjIzl1e57nfPzPueeee+5zpX+JgIp446EwCUEdkrTEnw9CCCcnglc1CYn6LKnVY/BPLtdUP2fzjWbEst+doQLwUdIBScMeHeYVfkmxAtOBqjI6uyhPu8rYVAHT84o/01kIQcA518QI0JwTf7ukokd7ziSbJY1IGgTOhRDGlaHaZMZ3zN8OXATagPnAVGBBpLfAvPnWuQhst+2dBLP2R0FsMkC7v2PqApYnvA3WOxHxTpi3IdFdboxRsl67fW5Kg5mXALQCjUA30FmmZg6a/yrivTLvYFZNAZ3GbLSPmObFAW1OhEfjogMEVAP9lg8DdclyxctWZx1sU52BdzSx25xm6aUFI8CsnJ03x88ArMgIaAUQEt2sEpllXwAvM88eYGbJ2Tg2wPMomKfjsAuxz9FYgBrgoQEvpFkBpgFNP+hXBaCQ11+AJmOl/Av2/RCoEdCRpjwxOGv+op85yT2pRcY4m8jSJT82RdKXBONj8r3Hz0shhGUJYIukmdFfA5LehhCuJU32UoS1N8fXpxJwt3fDkYwZjukdyVI1ZhR1Y0ZtfocRyY7Yd3cKvtTNayPQEBlcN9ZAArTOz7bIX1upMSa6A5Zfj3gN9tUFLB0zCfeNEi0EeiPDeqAI3APOAzvN/wBcAVYDbzxWm/fBOjvssMcY9RFur32VqC5N3W4Lbvo5LTkW0rbfE7E+eZSoJ+P4GT1ejB372l1uRzzxTPBWvg/cjRpYE3Daupc9y2rgKnDD773AZeuctk2p4d71KJhXBJ7kbc9tVqwH9gHro9ST6B+I3vuBd1myKFM7/L4W2G8f2Gdu3ygCfXFHBbbY+HiG/uFoOToy5Mct2xKfAEAfUKykkZ0ywGOgBdgKDEVOXwBnPPoyaqQvkr+I+EPGajE2wKlKAlrF76OVFd3LmOhtr9JLYcZ/7JQyurckrZH0WNIzSa8lPZL0XtJb38We51w0kVQvqUbSXEl1khZLmiOpQdJCSbd/+no80Svyr8D8T38NfQWcfES5EXNkCgAAAABJRU5ErkJggg==" />
+            <span class="govuk-header__logotype-text">
+                GOV.UK
+            </span>
+        </div>
         <div>
             <span class="govuk-header__link--service-name">
                 Waste Electrical and Electronic Equipment (WEEE)
