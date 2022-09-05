@@ -1209,5 +1209,58 @@
             result.TransferReceivedRemainingTotalDisplay.Should().Be("0.000");
             result.TransferReusedRemainingTotalDisplay.Should().Be("0.000");
         }
+
+        [Fact]
+        public void Map_GivenApprovedTransferHistoryNotes_ButCategoryHasZeroTransfer_TransferTonnagesAndDisplayTransferTonnages_AreMappedAsOriginalAmount()
+        {
+            //arrange
+            var tonnageHistory = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.LargeHouseholdAppliances, 20, 20, null, null),
+            };
+
+            var currentTonnage = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.LargeHouseholdAppliances, 20, 20, null, null),
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.SmallHouseholdAppliances, 20, 20, null, null),
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.ITAndTelecommsEquipment, 20, 10, null, null),
+            };
+
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Approved,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>(),
+                    tonnageHistory)
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .With(e => e.EvidenceTonnageData, currentTonnage)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
+
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(null)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(10m)).Returns("10.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(20m)).Returns("20.000");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayTransferEvidenceColumns.Should().BeTrue();
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Received.Should().Be("-");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Reused.Should().Be("-");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Received.Should().Be("20.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Reused.Should().Be("20.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Received.Should().Be("20.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Reused.Should().Be("10.000");
+            result.TransferReceivedRemainingTotalDisplay.Should().Be("40.000");
+            result.TransferReusedRemainingTotalDisplay.Should().Be("30.000");
+        }
     }
 }
