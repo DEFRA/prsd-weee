@@ -271,19 +271,12 @@
             return note;
         }
 
-        public async Task<List<Organisation>> GetOrganisationsWithNotes(Guid? organisationId, int complianceYear)
+        public async Task<List<Organisation>> GetRecipientOrganisations(Guid organisationId, int complianceYear)
         {
             var notes = context.Notes
-                .Where(n => n.ComplianceYear == complianceYear);
-
-            if (organisationId.HasValue)
-            {
-                notes = notes.Where(n => n.OrganisationId == organisationId);
-            }
+                .Where(n => n.ComplianceYear == complianceYear && n.OrganisationId == organisationId);
 
             return await notes.Select(n => n.Recipient)
-                //.Include(n => n.)
-                //.Include(n => n.ProducerBalancingScheme)
                 .Distinct()
                 .ToListAsync();
         }
