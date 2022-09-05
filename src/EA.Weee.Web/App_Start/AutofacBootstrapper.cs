@@ -23,6 +23,8 @@
     using Areas.Aatf.Helpers;
     using Areas.Aatf.Mappings.Filters;
     using Areas.Scheme.Requests;
+    using Infrastructure;
+    using Prsd.Email;
 
     public class AutofacBootstrapper
     {
@@ -104,6 +106,9 @@
             builder.RegisterType<HttpContextService>().As<IHttpContextService>();
             builder.RegisterType<TransferEvidenceNoteRequestCreator>().As<ITransferEvidenceRequestCreator>();
             builder.RegisterType<AatfEvidenceHelper>().As<IAatfEvidenceHelper>();
+
+            builder.RegisterType<MvcTemplateExecutor>().As<IMvcTemplateExecutor>();
+            builder.RegisterType<PdfDocumentProvider>().As<IPdfDocumentProvider>();
 
             return builder.Build();
         }

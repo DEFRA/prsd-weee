@@ -89,10 +89,12 @@
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
                 EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
-                CanVoid = InternalAdmin(source.User) && 
+                CanVoid = !source.PrintableVersion &&
+                          InternalAdmin(source.User) && 
                           source.EvidenceNoteData.Status == NoteStatus.Approved && 
                           source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => allowVoidStatus.Contains(e.Status)),
-                CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status))
+                CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status)),
+                IsPrintable = source.PrintableVersion
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
