@@ -30,7 +30,7 @@ else
 
     .category-column
     {
-        width: 40%;
+        width: 50%;
     }
 
     .transfer-category-column
@@ -45,7 +45,7 @@ else
 
     .received-column
     {
-        width: 30%;
+        width: 20%;
     }
 </style>
 
@@ -181,10 +181,10 @@ else
             @if (Model.DisplayTransferEvidenceColumns)
             {
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total reused as whole appliances (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total after transfer (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total reused after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused after transfer (tonnes)</th>
             }
             else
             {
@@ -193,8 +193,8 @@ else
                     var printableReusedTitle = !Model.IsPrintable ? "Total reused as whole appliances<br/> (tonnes)" : "Total reused as whole appliances (tonnes)";
 
                     <th scope="col" class="govuk-table__header govuk-!-text-align-left category-column">Category</th>
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">@Html.Raw(@printableReceivedTitle)</th>
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-right received-column">@Html.Raw(@printableReusedTitle)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left received-column">@Html.Raw(@printableReceivedTitle)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left">@Html.Raw(@printableReusedTitle)</th>
                 }
             }
         </tr>
