@@ -15,9 +15,11 @@
 
         public bool IncludeAllCategories { get; set; }
 
+        public bool PrintableVersion { get; set; }
+
         public IPrincipal User { get; private set; }
 
-        public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus, IPrincipal user = null)
+        public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus, bool printableVersion, IPrincipal user = null)
         {
             Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);
 
@@ -25,6 +27,7 @@
             NoteStatus = noteStatus;
             IncludeAllCategories = true;
             User = user;
+            PrintableVersion = printableVersion;
         }
 
         public string RedirectTab { get; set; }
