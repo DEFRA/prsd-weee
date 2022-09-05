@@ -13,6 +13,7 @@
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.ViewModels;
     using Web.Infrastructure;
+    using Web.Infrastructure.PDF;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
     using Weee.Requests.Aatf;
