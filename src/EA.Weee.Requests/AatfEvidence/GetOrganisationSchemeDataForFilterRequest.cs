@@ -8,11 +8,11 @@
     [Serializable]
     public class GetOrganisationSchemeDataForFilterRequest : IRequest<List<OrganisationSchemeData>>
     {
-        public Guid? OrganisationId { get; private set; }
+        public Guid OrganisationId { get; private set; }
 
         public int ComplianceYear { get; private set; }
     
-        public GetOrganisationSchemeDataForFilterRequest(Guid? organisationId, int complianceYear)
+        public GetOrganisationSchemeDataForFilterRequest(Guid organisationId, int complianceYear)
         {
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;
