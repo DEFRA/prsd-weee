@@ -252,8 +252,6 @@
                     var pbsSummaryModel = mapper.Map<SummaryEvidenceViewModel>
                         (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, evidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
 
-                    pbsSummaryModel.NumberOfSubmittedNotes = GetSubmittedNotes();  // will be done in another story
-
                     return View("SummaryEvidencePBS", pbsSummaryModel);
                 }
 
@@ -265,22 +263,8 @@
                 var summaryModel = mapper.Map<SummaryEvidenceViewModel>
                     (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
 
-                summaryModel.NumberOfSubmittedNotes = GetSubmittedNotes();  // will be done in another story
-
                 return View("SummaryEvidence", summaryModel);
             }
-        }
-
-        private int GetSubmittedNotes()
-        {
-            //TODO: create and use ManageEvidenceSummaryViewModel property and map it
-            // example found in EvidenceSummaryCase() in public class ManageEvidenceNotesController
-            // var request = new GetAatfSummaryRequest(aatfId, selectedComplianceYear);
-            // var result = await client.SendAsync(User.GetAccessToken(), request);
-            // var summaryModel = mapper.Map<ManageEvidenceSummaryViewModel>(new EvidenceSummaryMapTransfer(organisationId, aatfId, result));
-            // summaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, null, null, null, selectedComplianceYear, currentDate));
-
-            return 0;
         }
 
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
