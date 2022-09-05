@@ -76,6 +76,13 @@ else
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
+    @if (Model.HasVoidReason)
+    {
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+            @Html.Gds().DisplayFor(m => m.VoidedReason, Model.VoidedReason, "govuk-grid-column-one-quarter")
+        </div>
+    }
+
     @if (Model.HasSubmittedDate)
     {
         <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
