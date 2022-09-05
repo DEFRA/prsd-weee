@@ -97,7 +97,7 @@ else
 
     @if (Model.HasBeenVoided)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
             @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
         </div>
     }
