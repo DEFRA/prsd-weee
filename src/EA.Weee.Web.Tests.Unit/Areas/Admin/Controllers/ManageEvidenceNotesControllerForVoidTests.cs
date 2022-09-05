@@ -359,7 +359,8 @@
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
                 v => v.EvidenceNoteData.Equals(evidenceNoteData) &&
                      v.NoteStatus == null &&
-                     v.User == null))).MustHaveHappenedOnceExactly();
+                     v.User == null &&
+                     v.PrintableVersion == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -397,7 +398,8 @@
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
                 v => v.EvidenceNoteData.Equals(EvidenceNoteData) &&
                      v.NoteStatus == null &&
-                     v.User == null))).MustHaveHappenedOnceExactly();
+                     v.User == null &&
+                     v.PrintableVersion == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

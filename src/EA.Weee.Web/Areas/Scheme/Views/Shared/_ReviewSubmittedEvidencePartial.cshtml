@@ -61,7 +61,7 @@
                             }
                             else
                             {
-                                @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
+                                @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, "Scheme_evidence_default", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
                             }
                         }
                         else
