@@ -126,11 +126,13 @@
                     var originalTonnage = source.EvidenceNoteData.EvidenceTonnageData.FirstOrDefault(t =>
                         t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
 
-                    if ((transferTonnage == null || transferTonnage.Count == 0 || originalTonnage != null) && !source.IncludeAllCategories)
+                    if ((transferTonnage == null || transferTonnage.Count == 0) && originalTonnage == null)
                     {
-                        model.RemainingTransferCategoryValues.RemoveAt(i);
+                        // If original category was deleted, number should be zeroed
+                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(null);
+                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(null);
                     }
-                    else if (transferTonnage != null && originalTonnage != null)
+                    else if (originalTonnage != null)
                     {
                         var transferReceived = originalTonnage.Received - transferTonnage.Sum(x => x.Received);
                         var transferReused = originalTonnage.Reused - transferTonnage.Sum(x => x.Reused);
