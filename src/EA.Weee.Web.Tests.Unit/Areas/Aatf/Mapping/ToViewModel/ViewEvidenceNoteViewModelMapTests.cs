@@ -1242,7 +1242,7 @@
                 .With(e => e.EvidenceTonnageData, currentTonnage)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(null)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(10m)).Returns("10.000");
