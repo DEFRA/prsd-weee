@@ -1211,7 +1211,7 @@
         }
 
         [Fact]
-        public void Map_GivenApprovedTransferHistoryNotes_ButCategoryHasZeroTransfer_TransferTonnagesAndDisplayTransferTonnages_AreMappedAsHyphen()
+        public void Map_GivenApprovedTransferHistoryNotes_ButCategoryHasZeroTransfer_TransferTonnagesAndDisplayTransferTonnages_AreMappedAsOriginalAmount()
         {
             //arrange
             var tonnageHistory = new List<EvidenceTonnageData>()
