@@ -59,7 +59,7 @@ else
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width ">
         @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
