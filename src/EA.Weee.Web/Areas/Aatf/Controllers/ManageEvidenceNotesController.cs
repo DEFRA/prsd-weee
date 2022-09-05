@@ -369,7 +369,8 @@
             var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(
                 new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-            var schemeData = resultAllNotes.Results.ToList().CreateOrganisationSchemeDataList();
+            var schemeData = await client.SendAsync(User.GetAccessToken(),
+                new GetOrganisationSchemeDataForFilterRequest(organisationId, selectedComplianceYear));
 
             if (schemeData.Any())
             {

@@ -50,5 +50,7 @@
             IList<NoteTransferTonnage> tonnages,
             NoteStatus status,
             DateTime updateDate);
+
+        Task<List<Organisation>> GetRecipientOrganisations(Guid organisationId, int complianceYear);
     }
 }
