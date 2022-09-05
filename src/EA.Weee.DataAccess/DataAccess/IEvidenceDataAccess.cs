@@ -51,6 +51,6 @@
             NoteStatus status,
             DateTime updateDate);
 
-        Task<List<Organisation>> GetOrganisationsWithNotes(Guid? organisationId, int complianceYear);
+        Task<List<Organisation>> GetRecipientOrganisations(Guid organisationId, int complianceYear);
     }
 }
