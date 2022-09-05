@@ -12,8 +12,8 @@ else
     <h1 class="govuk-heading-l">Evidence note</h1>
 }
 
-<style>
-    .category 
+<style type="text/css">
+    .category
     {
         display: table;
     }
@@ -30,7 +30,7 @@ else
 
     .category-column 
     {
-        width: 50%;
+        width: 40%;
     }
 
     .transfer-category-column 
@@ -43,6 +43,15 @@ else
         width: 18.75%;
     }
 
+    .category-column-printable {
+        width: 40%;
+    }
+
+    .received-column-printable {
+        padding-left: 35px;
+        width: 30%;
+    }
+    
     .received-column 
     {
         width: 20%;
@@ -189,12 +198,12 @@ else
             else
             {
                 {
-                    var printableReceivedTitle = !Model.IsPrintable ? "Total received <br/>(tonnes)" : "Total received (tonnes)";
-                    var printableReusedTitle = !Model.IsPrintable ? "Total reused as whole appliances<br/> (tonnes)" : "Total reused as whole appliances (tonnes)";
+                    var categoryColumnWidthCss = Model.IsPrintable ? "category-column-printable" : "category-column";
+                    var receivedColumnWithCss = Model.IsPrintable ? "received-column-printable" : "received-column";
 
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-left category-column">Category</th>
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-left received-column">@Html.Raw(@printableReceivedTitle)</th>
-                    <th scope="col" class="govuk-table__header govuk-!-text-align-left">@Html.Raw(@printableReusedTitle)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @categoryColumnWidthCss">Category</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss">Total reused as whole appliances (tonnes)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss">Total received (tonnes)</th>
                 }
             }
         </tr>
