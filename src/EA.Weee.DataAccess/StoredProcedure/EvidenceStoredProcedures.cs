@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
+    using CuttingEdge.Conditions;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -26,6 +27,8 @@
 
         public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid? pcsId, Guid? orgId, int complianceYear)
         {
+            Condition.Requires(pcsId == null && orgId == null).IsFalse("pcsId and orgId cannot be both null");
+            
             string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @ComplianceYear, @OrganisationId, @SchemeId ";
 
             SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);

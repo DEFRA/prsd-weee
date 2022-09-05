@@ -7,10 +7,6 @@
 
     public class SummaryEvidenceViewModel : ManageEvidenceNoteSchemeViewModel, IObligationSummaryBase
     {
-        public int NumberOfSubmittedNotes { get; set; } = 0;
-
-        //public ManageEvidenceSummaryViewModel manageEvidenceSummaryViewModel { get; set; }
-
         public IEnumerable<int> ComplianceYearList { get; set; }
 
         [DisplayName("Compliance year")]
