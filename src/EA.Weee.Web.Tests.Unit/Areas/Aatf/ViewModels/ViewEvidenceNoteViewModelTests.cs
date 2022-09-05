@@ -300,5 +300,31 @@
             //Assert
             model.DisplayEvidenceNoteHistoryData.Should().BeFalse();
         }
+
+        [Fact]
+        public void HasVoidReason_ShouldBeTrue_IfVoidedReasonProvided()
+        {
+            //Act
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                VoidedReason = "Test",
+            };
+
+            //Assert
+            model.HasVoidReason.Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasVoidReason_ShouldBeFalse_IfVoidedReasonNotProvided()
+        {
+            //Act
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                VoidedReason = String.Empty,
+            };
+
+            //Assert
+            model.HasVoidReason.Should().BeFalse();
+        }
     }
 }

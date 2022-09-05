@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Infrastructure
+﻿namespace EA.Weee.Web.Infrastructure.PDF
 {
     using System;
     using iText.Kernel.Pdf;
