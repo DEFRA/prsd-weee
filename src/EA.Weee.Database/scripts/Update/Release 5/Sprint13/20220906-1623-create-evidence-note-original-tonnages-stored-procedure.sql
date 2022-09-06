@@ -1,4 +1,6 @@
-
+IF OBJECT_ID('[Evidence].[getEvidenceNotesOriginalTonnage]', 'P') IS NOT NULL
+	DROP PROC [Evidence].[getEvidenceNotesOriginalTonnage]
+GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13,7 +15,7 @@ SET NOCOUNT ON;
 
 SELECT
 		CASE WHEN n.NoteType = 1 THEN 'E' ELSE 'T' END + CAST(n.Reference AS NVARCHAR) AS Reference,
-		ens.[Name] AS NoteStatus,
+		ens.[Name] AS [Status],
 		ca.Abbreviation AS AppropriateAuthority,
 		submittedHistory.ChangedDate AS SubmittedDate,
 		aa.Name AS AatfName,
@@ -79,7 +81,10 @@ FROM
 		(
 		SELECT
 			pvt.NoteId,
-			[1], [2], [3], [4], [5], [6], [7],	[8], [9], [10], [11], [12], [13], [14]
+			CAST([1] AS DECIMAL(28, 3)) AS [1], CAST([2] AS DECIMAL(28, 3)) AS [2], CAST([3] AS DECIMAL(28, 3)) AS [3], CAST([4] AS DECIMAL(28, 3)) AS [4], 
+				CAST([5] AS DECIMAL(28, 3)) AS [5], CAST([6] AS DECIMAL(28, 3)) AS [6], CAST([7] AS DECIMAL(28, 3)) AS [7],	CAST([8] AS DECIMAL(28, 3)) AS [8], 
+				CAST([9] AS DECIMAL(28, 3)) AS [9], CAST([10] AS DECIMAL(28, 3)) AS [10], CAST([11] AS DECIMAL(28, 3)) AS [11], CAST([12] AS DECIMAL(28, 3)) AS [12], 
+				CAST([13] AS DECIMAL(28, 3)) AS [13], CAST([14] AS DECIMAL(28, 3)) AS [14]
 		FROM
 				(SELECT
 					COALESCE(nt.Received, 0) AS Received,
@@ -103,7 +108,10 @@ FROM
 			(
 			SELECT
 				pvt.NoteId,
-				[1], [2], [3], [4], [5], [6], [7],	[8], [9], [10], [11], [12], [13], [14]
+				CAST([1] AS DECIMAL(28, 3)) AS [1], CAST([2] AS DECIMAL(28, 3)) AS [2], CAST([3] AS DECIMAL(28, 3)) AS [3], CAST([4] AS DECIMAL(28, 3)) AS [4], 
+				CAST([5] AS DECIMAL(28, 3)) AS [5], CAST([6] AS DECIMAL(28, 3)) AS [6], CAST([7] AS DECIMAL(28, 3)) AS [7],	CAST([8] AS DECIMAL(28, 3)) AS [8], 
+				CAST([9] AS DECIMAL(28, 3)) AS [9], CAST([10] AS DECIMAL(28, 3)) AS [10], CAST([11] AS DECIMAL(28, 3)) AS [11], CAST([12] AS DECIMAL(28, 3)) AS [12], 
+				CAST([13] AS DECIMAL(28, 3)) AS [13], CAST([14] AS DECIMAL(28, 3)) AS [14]
 			FROM
 					(SELECT
 						COALESCE(nt.Reused, 0) AS Reused,
