@@ -6,6 +6,7 @@
     using System.Linq;
     using Web.ViewModels.Shared;
 
+    [Serializable]
     public class TransferEvidenceNotesViewModel : TransferEvidenceViewModelBase, IValidatableObject
     {
         public List<GenericControlPair<Guid, bool>> SelectedEvidenceNotePairs { get; set; }
@@ -13,6 +14,8 @@
         public ActionEnum Action { get; set; }
 
         public int? PageNumber { get; set; }
+
+        public int NoteCount { get; set; }
 
         public TransferEvidenceNotesViewModel()
         {
