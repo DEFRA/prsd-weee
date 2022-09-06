@@ -14,7 +14,6 @@
     using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
-    using Extensions;
     using Filters;
     using Infrastructure;
     using Mappings.ToViewModels;
