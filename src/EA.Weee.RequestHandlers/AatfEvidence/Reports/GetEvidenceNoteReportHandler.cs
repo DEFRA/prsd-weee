@@ -46,7 +46,7 @@
                 request.OriginatorOrganisationId,
                 request.RecipientOrganisationId);
 
-            csvWriter.DefineColumn(EvidenceReportConstants.Reference, x => x.ReferenceId);
+            csvWriter.DefineColumn(EvidenceReportConstants.Reference, x => x.Reference);
             csvWriter.DefineColumn(EvidenceReportConstants.Status, x => x.Status);
             csvWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority, x => x.AppropriateAuthority);
             csvWriter.DefineColumn(EvidenceReportConstants.SubmittedDate, x => x.SubmittedDateTime);
