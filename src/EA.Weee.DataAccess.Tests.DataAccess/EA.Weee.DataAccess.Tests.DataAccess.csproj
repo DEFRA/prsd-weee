@@ -148,6 +148,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConstraintTests.cs" />
+    <Compile Include="StoredProcedure\GetObligationSummaryTotalsTests.cs" />
     <Compile Include="StoredProcedure\GetAatfEvidenceSummaryTotalsTests.cs" />
     <Compile Include="StoredProcedure\GetAatfAeDetailsCsvTests.cs" />
     <Compile Include="StoredProcedure\GetNonObligatedWeeeReceivedAtAatfsTests.cs" />
