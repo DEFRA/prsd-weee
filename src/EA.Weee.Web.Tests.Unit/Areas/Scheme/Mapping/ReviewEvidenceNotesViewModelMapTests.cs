@@ -45,7 +45,7 @@
             var schemeId = fixture.Create<Guid>();
 
             // act
-            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status, null)
+            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status, false, null)
             {
                 SchemeId = schemeId
             });
@@ -70,7 +70,7 @@
         public void MapTransfer_GivenNullArguments_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new ViewEvidenceNoteMapTransfer(null, note.Status));
+            var exception = Record.Exception(() => new ViewEvidenceNoteMapTransfer(null,  note.Status, false));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -80,7 +80,7 @@
         public void Map_GivenAValidEvidenceNote_MapperShouldBeCalled()
         {
             // arrange
-            var transfer = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var transfer = new ViewEvidenceNoteMapTransfer(fixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, false);
 
             // act
             map.Map(transfer);
@@ -94,7 +94,7 @@
         {
             //arrange
             EvidenceNoteData note = fixture.Create<EvidenceNoteData>();
-            var transfer = new ViewEvidenceNoteMapTransfer(note, null, null);
+            var transfer = new ViewEvidenceNoteMapTransfer(note, null, false, null);
             var viewEvidenceNoteViewModel = new ViewEvidenceNoteViewModel();
             A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(viewEvidenceNoteViewModel);
 
@@ -110,7 +110,7 @@
         {
             //arrange
             EvidenceNoteData note = fixture.Create<EvidenceNoteData>();
-            ViewEvidenceNoteMapTransfer transfer = new ViewEvidenceNoteMapTransfer(note, note.Status);
+            ViewEvidenceNoteMapTransfer transfer = new ViewEvidenceNoteMapTransfer(note, note.Status, false);
 
             //act
             var result = map.Map(transfer);
@@ -124,7 +124,7 @@
         {
             //arrange
             EvidenceNoteData note = fixture.Create<EvidenceNoteData>();
-            ViewEvidenceNoteMapTransfer transfer = new ViewEvidenceNoteMapTransfer(note, note.Status);
+            ViewEvidenceNoteMapTransfer transfer = new ViewEvidenceNoteMapTransfer(note, note.Status, false);
 
             //act
             var result = map.Map(transfer);
@@ -143,7 +143,7 @@
         public void ReviewEvidenceNotesViewModelMap_ShouldSetDisplayH2TitleTrue()
         {
             // act
-            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status)
+            ReviewEvidenceNoteViewModel modelCreated = map.Map(new ViewEvidenceNoteMapTransfer(note, note.Status, false)
             {
                 SchemeId = note.RecipientId
             });

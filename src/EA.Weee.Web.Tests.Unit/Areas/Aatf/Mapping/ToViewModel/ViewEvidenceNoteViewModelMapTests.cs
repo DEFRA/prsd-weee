@@ -49,11 +49,13 @@
             result.Should().BeOfType<ArgumentNullException>();
         }
 
-        [Fact]
-        public void Map_GivenSource_StandardPropertiesShouldBeMapped()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenSource_StandardPropertiesShouldBeMapped(bool printable)
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, printable);
 
             //act
             var result = map.Map(source);
@@ -73,13 +75,14 @@
             result.SubmittedBy.Should().Be(source.EvidenceNoteData.AatfData.Name);
             result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
             result.ComplianceYear.Should().Be(source.EvidenceNoteData.ComplianceYear);
+            result.IsPrintable.Should().Be(printable);
         }
 
         [Fact]
         public void Map_GivenSource_OperatorAddressShouldBeSet()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
             const string operatorAddress = "operatorAddress";
 
             A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
@@ -101,7 +104,7 @@
         public void Map_GivenSource_SiteAddressShouldBeSet()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
             const string siteAddress = "siteAddress";
 
             A.CallTo(() => addressUtilities.FormattedAddress(source.EvidenceNoteData.AatfData.SiteAddress.Name,
@@ -129,7 +132,7 @@
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
                 .Create();
-            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
             
             const string recipientAddress = "recipientAddress";
 
@@ -159,7 +162,7 @@
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
                 .Create();
-            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
 
             const string recipientAddress = "recipientAddress";
 
@@ -183,14 +186,18 @@
         public void Map_GivenTonnagesAndIncludeAllCategories_TonnagesShouldBeFormatted()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
-            source.IncludeAllCategories = true;
-
-            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
-            {
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1, null, null),
-                new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null)
-            };
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>())
+                {
+                    IncludeAllCategories = true,
+                    EvidenceNoteData =
+                    {
+                        EvidenceTonnageData = new List<EvidenceTonnageData>()
+                        {
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ConsumerEquipment, null, 1, null, null),
+                            new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null)
+                        }
+                    }
+                };
 
             A.CallTo(() =>
                     tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received))
@@ -235,7 +242,7 @@
         public void Map_GivenTonnagesAndNotIncludeAllCategories_OnlyCategoriesThatNoteTonnageShouldBeIncluded()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
             source.IncludeAllCategories = false;
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
@@ -266,7 +273,7 @@
         public void Map_GivenTonnages_TotalReceivedShouldBeSet()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
 
             source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
             {
@@ -292,7 +299,7 @@
         public void Map_GivenNoteStatusIsNull_SuccessMessageShouldNotBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), null);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), null, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -305,7 +312,7 @@
         public void Map_GivenNoteStatusDraftCreated_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -320,7 +327,7 @@
         public void Map_GivenNoteStatusSubmitted_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -335,7 +342,7 @@
         public void Map_GivenNoteStatusApproved_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -351,7 +358,7 @@
         public void Map_GivenNoteStatusRejected_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -367,7 +374,7 @@
         public void Map_GivenNoteStatusReturned_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -383,7 +390,7 @@
         public void Map_GivenNoteStatusReturnedSaved_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSaved);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSaved, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -398,7 +405,7 @@
         public void Map_GivenNoteStatusReturnedSubmitted_SuccessMessageShouldBeShown()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSubmitted);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.ReturnedSubmitted, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -412,7 +419,7 @@
         [Fact]
         public void Map_GivenSubmittedDateTime_FormatsToGMTString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted, TestFixture.Create<bool>());
             source.EvidenceNoteData.SubmittedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -423,7 +430,7 @@
         [Fact]
         public void Map_GivenNoSubmittedDateTime_FormatsToEmptyString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted, TestFixture.Create<bool>());
             source.EvidenceNoteData.SubmittedDate = null;
 
             var result = map.Map(source);
@@ -434,7 +441,7 @@
         [Fact]
         public void Map_GivenNoSubmittedDateTime_SubmittedByShouldBeEmpty()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Submitted, TestFixture.Create<bool>());
             source.EvidenceNoteData.SubmittedDate = null;
 
             var result = map.Map(source);
@@ -445,7 +452,7 @@
         [Fact]
         public void Map_GivenApprovedDateTime_FormatsToGMTString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved, TestFixture.Create<bool>());
             source.EvidenceNoteData.ApprovedDate = DateTime.Parse("21/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -456,7 +463,7 @@
         [Fact]
         public void Map_GivenNoApprovedDateTime_FormatsToEmptyString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved, TestFixture.Create<bool>());
             source.EvidenceNoteData.ApprovedDate = null;
 
             var result = map.Map(source);
@@ -467,7 +474,7 @@
         [Fact]
         public void Map_GivenReturnedDateTime_FormatsToGMTString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned, TestFixture.Create<bool>());
             source.EvidenceNoteData.ReturnedDate = DateTime.Parse("01/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -478,7 +485,7 @@
         [Fact]
         public void Map_GivenNoReturnedDateTime_FormatsToEmptyString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned, TestFixture.Create<bool>());
             source.EvidenceNoteData.ReturnedDate = null;
 
             var result = map.Map(source);
@@ -489,7 +496,7 @@
         [Fact]
         public void Map_GivenSourceWithRedirectTab_RedirectTabShouldBeSet()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
 
             var result = map.Map(source);
 
@@ -499,7 +506,7 @@
         [Fact]
         public void Map_GivenSourceWithNoRedirectTab_RedirectTabShouldBeSet()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
             source.RedirectTab = null;
 
             var result = map.Map(source);
@@ -510,7 +517,7 @@
         [Fact]
         public void Map_GivenReturnedReasonAndNoRejectedReason_ReasonMustBeSet()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned, TestFixture.Create<bool>());
             var reason = TestFixture.Create<string>();
             source.EvidenceNoteData.ReturnedReason = reason;
             source.EvidenceNoteData.RejectedReason = null;
@@ -522,7 +529,7 @@
         [Fact]
         public void Map_GivenNoReturnedReasonAndNoRejectedReason_ReasonMustBeNullOrEmpty()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Returned, TestFixture.Create<bool>());
             source.EvidenceNoteData.ReturnedReason = null;
             source.EvidenceNoteData.RejectedReason = null;
 
@@ -534,7 +541,7 @@
         [Fact]
         public void Map_GivenRejectedDateTime_FormatsToGMTString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected, TestFixture.Create<bool>());
             source.EvidenceNoteData.RejectedDate = DateTime.Parse("21/01/2001 13:30:30");
 
             var result = map.Map(source);
@@ -545,7 +552,7 @@
         [Fact]
         public void Map_GivenNoRejectedDateTime_FormatsToEmptyString()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected, TestFixture.Create<bool>());
             source.EvidenceNoteData.RejectedDate = null;
 
             var result = map.Map(source);
@@ -556,7 +563,7 @@
         [Fact]
         public void Map_GivenRejectedReason_ReasonMustBeSet()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected, TestFixture.Create<bool>());
             var reason = TestFixture.Create<string>();
             source.EvidenceNoteData.RejectedReason = reason;
             var result = map.Map(source);
@@ -567,7 +574,7 @@
         [Fact]
         public void Map_GivenNoRejectedReasonAndNoReturnedReason_ReasonMustBeNullOrEmpty()
         {
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected, TestFixture.Create<bool>());
             source.EvidenceNoteData.RejectedReason = null;
             source.EvidenceNoteData.ReturnedReason = null;
 
@@ -591,7 +598,7 @@
                 .With(e => e.AatfData,
                     TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, true)
                         .Create()).Create();
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -615,7 +622,7 @@
                     TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, true)
                         .Create()).Create();
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -639,7 +646,7 @@
                     TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, false)
                         .Create()).Create();
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, TestFixture.Create<bool>());
 
             //act
             var result = map.Map(source);
@@ -652,7 +659,7 @@
         public void Map_GivenSourceWithHistoryNoteData_EvidenceNoteHistoryViewModelShouldBePopulated()
         {
             //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft);
+            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
             var data = new EvidenceNoteHistoryData(TestFixture.Create<Guid>(), TestFixture.Create<NoteStatus>(), TestFixture.Create<int>(), TestFixture.Create<NoteType>(), TestFixture.Create<DateTime?>(), TestFixture.Create<string>(), TestFixture.Create<List<EvidenceTonnageData>>());
             var history = new List<EvidenceNoteHistoryData>()
             {
@@ -681,7 +688,7 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void Map_GivenEvidenceNoteIsNotApprovedAndUserIsAdmin_CanVoidShouldBeFalse(NoteStatus status)
+        public void Map_GivenEvidenceNoteIsNotApprovedAndUserIsAdminAndNotPrintableVersion_CanVoidShouldBeFalse(NoteStatus status)
         {
             if (status == NoteStatus.Approved)
             {
@@ -693,7 +700,7 @@
             
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.Status, status).Create();
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
@@ -703,14 +710,14 @@
         }
 
         [Fact]
-        public void Map_GivenEvidenceNoteIsApprovedAndUserIsNotAdminAndNoTransferNotesInNonVoidableState_CanVoidShouldBeFalse()
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsNotAdminAndNoTransferNotesInNonVoidableStateAndNotPrintableVersion_CanVoidShouldBeFalse()
         {
             //arrange
             var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { string.Empty });
 
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.Status, NoteStatus.Approved).Create();
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
@@ -720,7 +727,7 @@
         }
 
         [Fact]
-        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoTransferNotes_CanVoidShouldBeTrue()
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoTransferNotesAndNotPrintableVersion_CanVoidShouldBeTrue()
         {
             //arrange
             var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
@@ -729,7 +736,7 @@
                 .With(e => e.Status, NoteStatus.Approved)
                 .With(e => e.EvidenceNoteHistoryData, new List<EvidenceNoteHistoryData>())
                 .Create();
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
@@ -739,7 +746,7 @@
         }
 
         [Fact]
-        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndTransferNotesInVoidState_CanVoidShouldBeTrue()
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndTransferNotesInVoidStateAndNotPrintableVersion_CanVoidShouldBeTrue()
         {
             //arrange
             var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
@@ -760,7 +767,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
@@ -770,7 +777,7 @@
         }
 
         [Fact]
-        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndTransferNotesInRejectedState_CanVoidShouldBeTrue()
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndTransferNotesInRejectedStateAndNotPrintableVersion_CanVoidShouldBeTrue()
         {
             //arrange
             var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
@@ -791,7 +798,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
@@ -801,7 +808,7 @@
         }
 
         [Fact]
-        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndTransferNotesInRejectedAndVoidState_CanVoidShouldBeTrue()
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndTransferNotesInRejectedAndVoidStateAndNotPrintableVersion_CanVoidShouldBeTrue()
         {
             //arrange
             var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
@@ -829,7 +836,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
@@ -840,7 +847,7 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoteHasTransferNotesInNotVoidableState_CanVoidShouldBeFalse(NoteStatus status)
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoteHasTransferNotesInNotVoidableStateAndNotPrintableVersion_CanVoidShouldBeFalse(NoteStatus status)
         {
             if (status == NoteStatus.Void || status == NoteStatus.Rejected)
             {
@@ -866,7 +873,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
@@ -876,7 +883,7 @@
         }
 
         [Fact]
-        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoteHasNoTransfersInNonVoidableStatus_CanVoidShouldBeTrue()
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoteHasNoTransfersInNonVoidableStatusAndNotPrintableVersion_CanVoidShouldBeTrue()
         {
             //arrange
             var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
@@ -911,13 +918,58 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, user);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
 
             //act
             var result = map.Map(source);
 
             //assert
             result.CanVoid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Map_GivenEvidenceNoteIsApprovedAndUserIsAdminAndNoteHasNoTransfersInNonVoidableStatusAndPrintableVersion_CanVoidShouldBeFalse()
+        {
+            //arrange
+            var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
+
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Void,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Rejected,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>()),
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Void,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>(),
+                    TestFixture.Create<List<EvidenceTonnageData>>())
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, NoteStatus.Approved)
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, true, user);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.CanVoid.Should().BeFalse();
         }
 
         [Theory]
@@ -945,7 +997,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
 
             //act
             var result = map.Map(source);
@@ -980,7 +1032,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
 
             //act
             var result = map.Map(source);
@@ -1015,7 +1067,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
 
             //act
             var result = map.Map(source);
@@ -1050,7 +1102,7 @@
                 .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
 
             //act
             var result = map.Map(source);
@@ -1093,7 +1145,7 @@
                 .With(e => e.EvidenceTonnageData, currentTonnage)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(10m)).Returns("10.000");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(5m)).Returns("5.000");
@@ -1103,12 +1155,12 @@
 
             //assert
             result.DisplayTransferEvidenceColumns.Should().BeTrue();
-            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Received.Should().Be("10.000");
-            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Reused.Should().Be("10.000");
-            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Received.Should().Be("10.000");
-            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Reused.Should().Be("10.000");
-            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Received.Should().Be("10.000");
-            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Reused.Should().Be("5.000");
+            result.RemainingTransferCategoryValues.FirstOrDefault(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances)?.Received.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.FirstOrDefault(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances)?.Reused.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.FirstOrDefault(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances)?.Received.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.FirstOrDefault(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances)?.Reused.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.FirstOrDefault(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment)?.Received.Should().Be("10.000");
+            result.RemainingTransferCategoryValues.FirstOrDefault(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment)?.Reused.Should().Be("5.000");
             result.TransferReceivedRemainingTotalDisplay.Should().Be("30.000");
             result.TransferReusedRemainingTotalDisplay.Should().Be("25.000");
         }
@@ -1147,13 +1199,111 @@
                 .With(e => e.EvidenceTonnageData, currentTonnage)
                 .Create();
 
-            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, null);
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
 
             //act
             var result = map.Map(source);
 
             //assert
             result.DisplayTransferEvidenceColumns.Should().BeFalse();
+            result.TransferReceivedRemainingTotalDisplay.Should().Be("0.000");
+            result.TransferReusedRemainingTotalDisplay.Should().Be("0.000");
+        }
+
+        [Fact]
+        public void Map_GivenApprovedTransferHistoryNotes_ButCategoryHasZeroTransfer_TransferTonnagesAndDisplayTransferTonnages_AreMappedAsOriginalAmount()
+        {
+            //arrange
+            var tonnageHistory = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.LargeHouseholdAppliances, 20, 20, null, null),
+            };
+
+            var currentTonnage = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.LargeHouseholdAppliances, 20, 20, null, null),
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.SmallHouseholdAppliances, 20, 20, null, null),
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.ITAndTelecommsEquipment, 20, 10, null, null),
+            };
+
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Approved,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>(),
+                    tonnageHistory)
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .With(e => e.EvidenceTonnageData, currentTonnage)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
+
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(0m)).Returns("0.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(10m)).Returns("10.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(20m)).Returns("20.000");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayTransferEvidenceColumns.Should().BeTrue();
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Received.Should().Be("0.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Reused.Should().Be("0.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Received.Should().Be("20.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.SmallHouseholdAppliances).FirstOrDefault().Reused.Should().Be("20.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Received.Should().Be("20.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.ITAndTelecommsEquipment).FirstOrDefault().Reused.Should().Be("10.000");
+            result.TransferReceivedRemainingTotalDisplay.Should().Be("40.000");
+            result.TransferReusedRemainingTotalDisplay.Should().Be("30.000");
+        }
+
+        [Fact]
+        public void Map_GivenApprovedTransferHistoryNotes_AndIsFullyTransferred_TransferTonnagesAndDisplayTransferTonnages_ShouldDisplayZero()
+        {
+            //arrange
+            var tonnageHistory = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.LargeHouseholdAppliances, 20, 20, null, null),
+            };
+
+            var currentTonnage = new List<EvidenceTonnageData>()
+            {
+                new EvidenceTonnageData(TestFixture.Create<Guid>(), WeeeCategory.LargeHouseholdAppliances, 20, 20, null, null),
+            };
+
+            var evidenceNoteHistory = new List<EvidenceNoteHistoryData>()
+            {
+                new EvidenceNoteHistoryData(TestFixture.Create<Guid>(),
+                    NoteStatus.Approved,
+                    TestFixture.Create<int>(),
+                    NoteType.Transfer,
+                    TestFixture.Create<DateTime>(),
+                    TestFixture.Create<string>(),
+                    tonnageHistory)
+            };
+
+            var evidenceNote = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.EvidenceNoteHistoryData, evidenceNoteHistory)
+                .With(e => e.EvidenceTonnageData, currentTonnage)
+                .Create();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, TestFixture.Create<bool>(), null);
+
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(0m)).Returns("0.000");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayTransferEvidenceColumns.Should().BeTrue();
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Received.Should().Be("0.000");
+            result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Reused.Should().Be("0.000");
             result.TransferReceivedRemainingTotalDisplay.Should().Be("0.000");
             result.TransferReusedRemainingTotalDisplay.Should().Be("0.000");
         }

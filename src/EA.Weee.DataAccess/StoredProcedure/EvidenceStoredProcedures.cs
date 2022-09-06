@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
+    using CuttingEdge.Conditions;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
 
@@ -23,13 +25,21 @@
             return await context.Database.SqlQuery<AatfEvidenceSummaryTotalsData>(queryString, aatfIdParameter, complianceYearParameter).ToListAsync();
         }
 
-        public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid pcsId, int complianceYear)
+        public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid? pcsId, Guid? orgId, int complianceYear)
         {
-            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @SchemeId, @ComplianceYear";
-            SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", pcsId);
-            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
+            Condition.Requires(pcsId == null && orgId == null).IsFalse("pcsId and orgId cannot be both null");
+            
+            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @ComplianceYear, @OrganisationId, @SchemeId ";
 
-            return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, pcsIdParameter, complianceYearParameter).ToListAsync();
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
+            SqlParameter orgIdParameter = new SqlParameter("@OrganisationId", SqlDbType.UniqueIdentifier);
+            orgIdParameter.IsNullable = true;
+            orgIdParameter.Value = orgId.HasValue ? orgId.Value : (object)DBNull.Value;
+            SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier);
+            pcsIdParameter.IsNullable = true;
+            pcsIdParameter.Value = pcsId.HasValue ? pcsId.Value : (object)DBNull.Value;
+
+            return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter).ToListAsync();
         }
     }
 }

@@ -1,0 +1,107 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfEvidence
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.Extensions
+
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.SummaryEvidenceViewModel
+
+@section full_main_content
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+            @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
+
+            <section class="govuk-tabs__panel" id="pcsEvidenceSummary">
+
+                <header class="hgroup">
+                    <h2 class="govuk-heading-m">
+                        Evidence summary
+                    </h2>
+                </header>
+
+                <!-- PLACEHOLDER for future task -->
+                <!--<p class="govuk-body">
+                    <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-0"> <span class="govuk-body">Submitted evidence notes for review &nbsp;</span> </span>
+                </p>-->
+                <!-- two download links here -->
+                <!--<p class="govuk-body"><a href="#">Download evidence notes report</a></p>
+                <p class="govuk-body"><a href="#">Download transferred evidence report</a></p>-->
+
+                <table id="evidence-summary-table" class="govuk-table">
+                    <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header">
+                                Category
+                            </th>
+                            <th class="govuk-table__header govuk-!-text-align-left" style="width: 20%;">
+                                Evidence received (tonnes)
+                            </th>
+                            <th class="govuk-table__header govuk-!-text-align-left" style="width: 20%;">
+                                Transferred out (tonnes)
+                            </th>
+                            <th class="govuk-table__header govuk-!-text-align-left" style="width: 20%;">
+                                Difference (tonnes)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @for (var i = 0; i < Model.ObligationEvidenceValues.Count; i++)
+                        {
+                            var category = Model.ObligationEvidenceValues[i];
+
+                            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                                <td class="govuk-table__cell">
+                                    <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                                </td>
+                                <td class="govuk-table__cell govuk-!-text-align-right">
+                                    @category.Evidence
+                                </td>
+                                <td class="govuk-table__cell govuk-!-text-align-right">
+                                    @category.TransferredOut
+                                </td>
+                                <td class="govuk-table__cell govuk-!-text-align-right">
+                                    @category.Difference
+                                </td>
+                            </tr>
+                        }
+
+                        <tr class="govuk-table__row govuk-panel-grey-background">
+                            <td class="govuk-table__cell">
+                                <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body govuk-!-text-align-right" id="Evidence2To10Total">@Model.Evidence210Total</p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body govuk-!-text-align-right" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body govuk-!-text-align-right" id="Difference2To10Total">@Model.Difference210Total</p>
+                            </td>
+                        </tr>
+
+                        <tr class="govuk-table__row govuk-panel-grey-background">
+                            <td class="govuk-table__cell">
+                                <p class="govuk-body"><strong>Total (tonnes)</strong></p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body govuk-!-text-align-right" id="EvidenceTotal">@Model.EvidenceTotal</p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body govuk-!-text-align-right" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body govuk-!-text-align-right" id="DifferenceTotal">@Model.DifferenceTotal</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </section>
+        </div>
+    </div>
+}

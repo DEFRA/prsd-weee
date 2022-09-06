@@ -48,23 +48,26 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Autofac, Version=6.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.6.3.0\lib\netstandard2.0\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=6.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.6.4.0\lib\netstandard2.0\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Mvc, Version=6.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Mvc5.6.0.0\lib\net472\Autofac.Integration.Mvc.dll</HintPath>
+    <Reference Include="Autofac.Integration.Mvc, Version=6.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.6.1.0\lib\net472\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Mvc.Owin, Version=6.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Mvc5.Owin.6.0.0\lib\net472\Autofac.Integration.Mvc.Owin.dll</HintPath>
+    <Reference Include="Autofac.Integration.Mvc.Owin, Version=6.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.Owin.6.1.0\lib\net472\Autofac.Integration.Mvc.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Owin, Version=6.0.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Owin.6.0.1\lib\net472\Autofac.Integration.Owin.dll</HintPath>
+    <Reference Include="Autofac.Integration.Owin, Version=7.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Owin.7.0.0\lib\net472\Autofac.Integration.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.WebApi, Version=6.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.WebApi2.6.1.0\lib\net472\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="CuttingEdge.Conditions, Version=1.2.0.11174, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\CuttingEdge.Conditions.1.2.0.0\lib\NET35\CuttingEdge.Conditions.dll</HintPath>
@@ -110,6 +113,39 @@
     <Reference Include="IdentityServer3, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IdentityServer3.2.6.3\lib\net45\IdentityServer3.dll</HintPath>
     </Reference>
+    <Reference Include="itext.barcodes, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.barcodes.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.commons, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.commons.7.2.3\lib\net461\itext.commons.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.forms, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.forms.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.html2pdf, Version=4.0.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.pdfhtml.4.0.3\lib\net461\itext.html2pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.io, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.io.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.kernel, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.kernel.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.layout, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.layout.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.pdfa, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.pdfa.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.sign, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.sign.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.styledxmlparser, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.styledxmlparser.dll</HintPath>
+    </Reference>
+    <Reference Include="itext.svg, Version=7.2.3.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.7.2.3\lib\net461\itext.svg.dll</HintPath>
+    </Reference>
     <Reference Include="LowercaseDashedRouting, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LowercaseDashedRouteExt.1.4\lib\net40\LowercaseDashedRouting.dll</HintPath>
     </Reference>
@@ -117,6 +153,24 @@
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.5.0.0\lib\net461\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.5.0.0\lib\net461\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.16.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.6.16.0\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
     </Reference>
@@ -154,6 +208,9 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="MvcRazorToPdf, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcRazorToPdf.1.0.2\lib\40\MvcRazorToPdf.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -190,9 +247,6 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.16.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.6.16.0\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -378,6 +432,10 @@
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
+    <Compile Include="Infrastructure\IMvcTemplateExecutor.cs" />
+    <Compile Include="Infrastructure\PDF\IPdfDocumentProvider.cs" />
+    <Compile Include="Infrastructure\MvcTemplateExecutor.cs" />
+    <Compile Include="Infrastructure\PDF\PdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
@@ -775,7 +833,7 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
-    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EvidenceSummaryOverview.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_NoResultsPartial.cshtml" />
@@ -815,9 +873,11 @@
     <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\ViewObligationAndEvidenceSummary.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ViewAllNotesEmptyPartial.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidTransferNote.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidence.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidencePBS.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -867,10 +927,18 @@
     <Content Include="Areas\Admin\Views\Reports\PcsAatfDataDifference.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\AatfAeDetails.cshtml" />
     <Content Include="Areas\Aatf\Views\ContactDetails\Index.cshtml" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-affa96571d-v2.woff" />
-    <Content Include="Content\govuk_frontend\assets\fonts\bold-b542beb274-v2.woff2" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-94a07e06a1-v2.woff2" />
-    <Content Include="Content\govuk_frontend\assets\fonts\light-f591b13f7d-v2.woff" />
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-affa96571d-v2.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\govuk_frontend\assets\fonts\bold-b542beb274-v2.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\govuk_frontend\assets\fonts\light-94a07e06a1-v2.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\govuk_frontend\assets\fonts\light-f591b13f7d-v2.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\govuk_frontend\components\accordion\fixtures.json" />
     <Content Include="Content\govuk_frontend\components\accordion\macro-options.json" />
     <Content Include="Content\govuk_frontend\components\accordion\macro.njk" />
@@ -1545,6 +1613,7 @@
     <Content Include="Views\Shared\_EvidenceNotesPagerPartial.cshtml" />
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
+    <Content Include="Views\Shared\_EvidenceNotePdfLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1738,6 +1807,10 @@
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Prsd.Email\EA.Prsd.Email.csproj">
+      <Project>{89e709f9-14a1-4bca-b145-76bdf4a84247}</Project>
+      <Name>EA.Prsd.Email</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
