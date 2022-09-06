@@ -116,7 +116,7 @@
 
                 var model = await TransferFromViewModel(pcsId, complianceYear, client, transferRequest, 1);
 
-                return View(model);
+                return this.View("TransferFrom", model);
             }
         }
 
