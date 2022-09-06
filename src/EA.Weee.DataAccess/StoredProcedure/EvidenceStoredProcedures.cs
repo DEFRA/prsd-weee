@@ -16,6 +16,22 @@
             this.context = context;
         }
 
+        public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(
+            Guid? originatingOrganisationId, Guid? recipientOrganisationId)
+        {
+            string queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @ComplianceYear, @OrganisationId, @SchemeId ";
+
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
+            SqlParameter orgIdParameter = new SqlParameter("@OrganisationId", SqlDbType.UniqueIdentifier);
+            orgIdParameter.IsNullable = true;
+            orgIdParameter.Value = orgId.HasValue ? orgId.Value : (object)DBNull.Value;
+            SqlParameter pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier);
+            pcsIdParameter.IsNullable = true;
+            pcsIdParameter.Value = pcsId.HasValue ? pcsId.Value : (object)DBNull.Value;
+
+            return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter).ToListAsync();
+        }
+
         public async Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, int complianceYear)
         {
             string queryString = "[Evidence].[getAatfEvidenceSummaryTotals] @AatfId, @ComplianceYear";

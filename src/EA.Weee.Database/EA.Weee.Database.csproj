@@ -414,7 +414,9 @@
     <Content Include="scripts\Update\Release 1\Sprint07\20150616-UpdateCATable-Remove_IsSysetmUser.sql" />
     <Content Include="scripts\Update\Release 1\Sprint07\20150618-162503-AddOrganisationUserTable.sql" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="scripts\Update\Release 5\Sprint13\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
