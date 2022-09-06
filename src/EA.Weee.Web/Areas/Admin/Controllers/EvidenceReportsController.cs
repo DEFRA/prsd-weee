@@ -5,12 +5,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.AatfEvidence;
     using Infrastructure;
     using Prsd.Core.Helpers;
     using ViewModels.EvidenceReports;
+    using Weee.Requests.AatfEvidence.Reports;
     using Weee.Requests.Shared;
 
     public class EvidenceReportsController : ReportsBaseController
@@ -30,26 +32,56 @@
         {
             SetBreadcrumb();
 
+            ViewBag.TriggerDownload = false;
+
             var model = new EvidenceReportViewModel();
 
-            var returnsDate = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
-
-            using (var client = ApiClient())
-            {
-                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-
-                var complianceYears = Enumerable.Range(returnsDate.Year, currentDate.Year - returnsDate.Year)
-                    .OrderByDescending(x => x)
-                    .ToList();
-
-                model.ComplianceYears = new SelectList(complianceYears);
-                model.TonnageToDisplayOptions = new SelectList(EnumHelper.GetValues(typeof(TonnageToDisplayReportEnum)), "Key", "Value");
-
-                model.SelectedYear = complianceYears.ElementAt(0);
-                model.SelectedTonnageToDisplay = TonnageToDisplayReportEnum.OriginalTonnages;
-            }
+            await SetupEvidenceReportViewModelFilters(model);
 
             return View(model);
+        }
+
+        public async Task<EvidenceReportViewModel> SetupEvidenceReportViewModelFilters(EvidenceReportViewModel model)
+        {
+            using (var client = ApiClient())
+            {
+                var returnsDate = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                var complianceYears = Enumerable.Range(returnsDate.Year, currentDate.Year - returnsDate.Year).OrderByDescending(x => x).ToList();
+
+                model.TonnageToDisplayOptions = new SelectList(EnumHelper.GetValues(typeof(TonnageToDisplayReportEnum)),
+                    "Key", "Value");
+                model.ComplianceYears = new SelectList(complianceYears);
+
+                return model;
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EvidenceNoteReport(EvidenceReportViewModel model)
+        {
+            SetBreadcrumb();
+
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await SetupEvidenceReportViewModelFilters(model);
+            
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceNoteReport(int complianceYear, TonnageToDisplayReportEnum tonnageToDisplay)
+        {
+            using (var client = ApiClient())
+            {
+                var request = new GetEvidenceNoteReportRequest(null, null, tonnageToDisplay, complianceYear);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+            }
         }
     }
 }
