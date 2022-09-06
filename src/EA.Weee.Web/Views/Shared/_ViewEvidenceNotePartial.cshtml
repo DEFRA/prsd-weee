@@ -78,44 +78,44 @@ else
 
     @if (Model.HasVoidReason)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.VoidedReason, Model.VoidedReason, "govuk-grid-column-one-quarter")
+        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width ">
+            @Html.Partial("_DisplayVoidedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
         </div>
     }
 
     @if (Model.HasSubmittedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasApprovedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasRejectedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasBeenReturned)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasBeenVoided)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
@@ -132,7 +132,7 @@ else
 
     @if (Model.DisplayEvidenceNoteHistoryData)
     {
-        @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
+    @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
                     @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
                     "Hidden content",
                     "Progressive disclosure",
