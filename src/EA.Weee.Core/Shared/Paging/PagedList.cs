@@ -26,6 +26,7 @@ namespace EA.Weee.Core.Shared.Paging
     using System.Collections.Generic;
     using System.Linq;
 
+    [Serializable]
     public class PagedList<T> : List<T>, IPagedList<T>
     {
         public PagedList(IEnumerable<T> source, int index, int pageSize, int? totalCount = null)
