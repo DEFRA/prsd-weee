@@ -25,20 +25,17 @@
 
             var list = (value as IList).Cast<IEvidenceCategoryValue>();
 
-            if (model.Action.Equals(ActionEnum.Submit))
+            if (list == null || !list.Any())
             {
-                if (list == null || !list.Any())
-                {
-                    return new ValidationResult(Message);
-                }
+                return new ValidationResult(Message);
+            }
 
-                var anyValidValues = list.Where(v => v.Received != null)
-                    .Where(val => decimal.TryParse(val.Received, out var converted) && converted > 0);
+            var anyValidValues = list.Where(v => v.Received != null)
+                .Where(val => decimal.TryParse(val.Received, out var converted) && converted > 0);
 
-                if (!anyValidValues.Any())
-                {
-                    return new ValidationResult(Message);
-                }
+            if (!anyValidValues.Any())
+            {
+                return new ValidationResult(Message);
             }
 
             return ValidationResult.Success;
