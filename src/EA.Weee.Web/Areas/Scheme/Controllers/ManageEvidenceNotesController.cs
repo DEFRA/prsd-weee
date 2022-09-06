@@ -52,6 +52,7 @@
         {
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.TransferNoteKey);
+            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.PagingTransferViewModelKey);
 
             using (var client = this.apiClient())
             {

@@ -5,6 +5,7 @@
     using System;
     using System.ComponentModel;
 
+    [Serializable]
     public class EvidenceNoteHistoryViewModel
     {
         public Guid Id { get; set; }
