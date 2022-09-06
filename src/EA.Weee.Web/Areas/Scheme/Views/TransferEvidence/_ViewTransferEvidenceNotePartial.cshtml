@@ -75,9 +75,6 @@
 }
 
 <!-- screen 6.07a -->
-<!-- --------------------------- -->
-<!-- Void transfer note button   -->
-<!-- --------------------------- -->
 @if (Model.Status.Equals(NoteStatus.Approved) && Model.CanVoid)
 {
     using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
@@ -245,3 +242,11 @@ else
     </table>
 }
 
+@if (Model.Status.HasFlag(NoteStatus.Draft) || Model.HasBeenReturned)
+{
+    <div class="govuk-!-margin-top-3">
+        <div class="govuk-button-group">
+            @this.WeeeGds().Button("* Submit transfer *", new { name = "Action", value = ActionEnum.Submit, id = "submit-transfer-note", @class = "govuk-!-width-one-quarter" })
+        </div>
+    </div>
+}
