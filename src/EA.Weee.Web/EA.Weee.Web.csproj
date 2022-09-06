@@ -386,12 +386,14 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\EvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewEvidenceNotesMapTransfer.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EvidenceReports\EvidenceReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\FromViewModel\SubmitSchemeObligationMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\UploadObligationsViewModelMap.cs" />
@@ -877,6 +879,7 @@
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidencePBS.cshtml" />
+    <Content Include="Areas\Admin\Views\EvidenceReports\EvidenceNoteReport.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
