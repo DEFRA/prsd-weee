@@ -197,7 +197,7 @@
             A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(g =>
                 g.ComplianceYear == complianceYears.ElementAt(0)
                 && g.SchemeId == schemeId 
-                && g.InternalAccess.Equals(true)))).MustHaveHappenedOnceExactly();
+                && g.OrganisationId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -244,7 +244,7 @@
             A.CallTo(() => client.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(g =>
                 g.ComplianceYear == selectedComplianceYear
                 && g.SchemeId == schemeId
-                && g.InternalAccess.Equals(true)))).MustHaveHappenedOnceExactly();
+                && g.OrganisationId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

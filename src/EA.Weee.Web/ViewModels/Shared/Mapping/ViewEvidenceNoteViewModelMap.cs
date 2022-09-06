@@ -89,10 +89,12 @@
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
                 EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
-                CanVoid = InternalAdmin(source.User) && 
+                CanVoid = !source.PrintableVersion &&
+                          InternalAdmin(source.User) && 
                           source.EvidenceNoteData.Status == NoteStatus.Approved && 
                           source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => allowVoidStatus.Contains(e.Status)),
-                CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status))
+                CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status)),
+                IsPrintable = source.PrintableVersion
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
@@ -126,16 +128,33 @@
                     var originalTonnage = source.EvidenceNoteData.EvidenceTonnageData.FirstOrDefault(t =>
                         t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
 
-                    if ((transferTonnage == null || transferTonnage.Count == 0 || originalTonnage != null) && !source.IncludeAllCategories)
+                    if ((transferTonnage == null || transferTonnage.Count == 0) && originalTonnage == null)
                     {
-                        model.RemainingTransferCategoryValues.RemoveAt(i);
+                        // If original category was deleted, number should be zeroed
+                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(null);
+                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(null);
                     }
-                    else if (transferTonnage != null && originalTonnage != null)
+                    else if (originalTonnage != null)
                     {
                         var transferReceived = originalTonnage.Received - transferTonnage.Sum(x => x.Received);
                         var transferReused = originalTonnage.Reused - transferTonnage.Sum(x => x.Reused);
-                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferReceived == 0 ? null : transferReceived);
-                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferReused == 0 ? null : transferReused);
+
+                        if (transferReceived == 0)
+                        {
+                            category.Received = "0.000";
+                        }
+                        else
+                        {
+                            category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferReceived == 0 ? null : transferReceived);
+                        }
+                        if (transferReused == 0)
+                        {
+                            category.Reused = "0.000";
+                        }
+                        else
+                        {
+                            category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferReused == 0 ? null : transferReused);
+                        }
                     }
                     else
                     {

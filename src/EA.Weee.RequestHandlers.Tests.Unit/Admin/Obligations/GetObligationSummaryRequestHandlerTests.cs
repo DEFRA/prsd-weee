@@ -32,18 +32,18 @@
             mapper = A.Fake<IMapper>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
 
-            request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), true);
+            request = new GetObligationSummaryRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
             handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
         }
 
         [Fact]
-        public async Task HandleAsync_GivenInternalAccessIsSetToTrue_NoInternalAccess_ThrowsSecurityException()
+        public async Task HandleAsync_GivenOrganisationIsNotSpecified_NoInternalAccess_ThrowsSecurityException()
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
-
             var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), null, TestFixture.Create<int>());
 
             //act
             var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
@@ -53,11 +53,11 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenInternalAccessIsSetToFalse_NoExternalAccess_ThrowsSecurityException()
+        public async Task HandleAsync_GivenOrganisationIdIsSpecified_NoExternalAccess_ThrowsSecurityException()
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
-            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<int>());
             var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
 
             //act
@@ -68,8 +68,11 @@
         }
 
         [Fact]
-        public async Task HandleAsync_InternalAccess_ShouldBeChecked()
+        public async Task HandleAsync_GivenNoOrganisationIsIsSpecifiedInternalAccess_ShouldBeChecked()
         {
+            //arrange
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), null, TestFixture.Create<int>());
+
             //act
             await handler.HandleAsync(request);
 
@@ -78,10 +81,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_ExternalAccess_ShouldBeChecked()
+        public async Task HandleAsync_GivenOrganisationIdIsSpecifiedExternalAccess_ShouldBeChecked()
         {
             // arrange 
-            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
@@ -95,7 +98,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false);
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<int>());
             var handler = new GetObligationSummaryRequestHandler(authorization, mapper, evidenceStoredProcedures);
 
             //act
@@ -106,11 +109,11 @@
         }
 
         [Fact]
-        public async Task HandleAsync_EnsureOrganisationAccess_ShouldBeChecked()
+        public async Task HandleAsync_GivenNullOrganisationIdEnsureOrganisationAccess_ShouldBeChecked()
         {
             // arrange 
             var organisationId = TestFixture.Create<Guid>();
-            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>(), false, organisationId);
+            var request = new GetObligationSummaryRequest(TestFixture.Create<Guid>(), organisationId, TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
@@ -127,7 +130,7 @@
 
             //arrange
             A.CallTo(() =>
-                    evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(request.SchemeId,
+                    evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(request.SchemeId, request.OrganisationId,
                         request.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
@@ -137,7 +140,7 @@
             //arrange
             var summaryData = TestFixture.CreateMany<ObligationEvidenceSummaryTotalsData>().ToList();
 
-            A.CallTo(() => evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(A<Guid>._, A<int>._))
+            A.CallTo(() => evidenceStoredProcedures.GetObligationEvidenceSummaryTotals(A<Guid>._, A<Guid>._, A<int>._))
                 .Returns(summaryData);
 
             //act

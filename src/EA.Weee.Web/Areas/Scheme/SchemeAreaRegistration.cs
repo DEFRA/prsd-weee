@@ -85,13 +85,31 @@
             context.MapLowercaseDashedRoute(
                 name: SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName,
                 url: "Scheme/{pcsId}/manage-evidence-notes/view-approved-evidence-note/{evidenceNoteId}",
-                defaults: new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                defaults: new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
                 name: SchemeTransferEvidenceRedirect.ViewVoidedEvidenceNoteRouteName,
                 url: "Scheme/{pcsId}/manage-evidence-notes/view-voided-evidence-note/{evidenceNoteId}",
-                defaults: new { action = "DownloadEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                defaults: new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewRejectedEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/manage-evidence-notes/view-rejected-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewReturnedEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/manage-evidence-notes/view-returned-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewSubmittedEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/manage-evidence-notes/view-submitted-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(

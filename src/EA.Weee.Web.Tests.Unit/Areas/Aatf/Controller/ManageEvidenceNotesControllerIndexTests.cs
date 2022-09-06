@@ -769,44 +769,55 @@
         }
 
         [Fact]
-        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenRequiredData_SessionObjectShouldBeSet()
+        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenNullManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved()
         {
             // arrange
-            var scheme1 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "aaaa").Create();
-            var evidenceNoteData1 = Fixture.Build<EvidenceNoteData>()
-                .With(x => x.RecipientSchemeData, scheme1)
-                .With(x => x.RecipientOrganisationData,
-                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
-
-            var scheme2 = Fixture.Build<SchemeData>().With(x => x.SchemeName, "gggg").Create();
-            var evidenceNoteData2 = Fixture.Build<EvidenceNoteData>()
-                .With(x => x.RecipientSchemeData, scheme2)
-                .With(x => x.RecipientOrganisationData,
-                    Fixture.Build<OrganisationData>().With(o => o.IsBalancingScheme, false).Create()).Create();
-
-            var notes = new List<EvidenceNoteData>
-            {
-                evidenceNoteData1,
-                evidenceNoteData2
-            };
-            var noteData = new EvidenceNoteSearchDataResult(notes, 2);
-            var allOtherNotesViewModel = Fixture.Create<AllOtherManageEvidenceNotesViewModel>();
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(noteData);
-            A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotesViewModel);
+            var currentDate = Fixture.Create<DateTime>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
             await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null, 1);
 
             // assert
-          A.CallTo(() =>
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == currentDate.Year &&
+                     g.OrganisationId == OrganisationId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved()
+        {
+            // arrange
+            var existingManageEvidenceNoteViewModel = Fixture.Create<ManageEvidenceNoteViewModel>();
+
+            // act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), existingManageEvidenceNoteViewModel, 1);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == existingManageEvidenceNoteViewModel.SelectedComplianceYear &&
+                     g.OrganisationId == OrganisationId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenSchemeOrganisationData_SessionObjectShouldBeSet()
+        {
+            // arrange
+            var organisationSchemeData = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>._))
+                .Returns(organisationSchemeData);
+            
+            // act
+            await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null, 1);
+
+            // assert
+            A.CallTo(() =>
              SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<OrganisationSchemeData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
           
-          A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, 
-                 A<List<OrganisationSchemeData>>.That.Matches(a => 
-                     a.Count == 2 &&
-                        a.ElementAt(0).Id == evidenceNoteData1.RecipientOrganisationData.Id && a.ElementAt(0).DisplayName.Equals(scheme1.SchemeName) &&
-                        a.ElementAt(1).Id == evidenceNoteData2.RecipientOrganisationData.Id && a.ElementAt(1).DisplayName.Equals(scheme2.SchemeName)), 
-                        SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+              A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, 
+                     A<List<OrganisationSchemeData>>.That.IsSameSequenceAs(organisationSchemeData), 
+                            SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

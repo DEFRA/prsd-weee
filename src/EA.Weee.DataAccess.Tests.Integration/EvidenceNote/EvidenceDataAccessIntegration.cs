@@ -120,5 +120,53 @@
                 result.Should().NotBeNull();
             }
         }
+
+        [Fact]
+        public async Task GetRecipientOrganisations_GivenOrganisationIdAndComplianceYear_RecipientOrganisationsShouldBeReturned()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+                var recipientOrganisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation2);
+
+                var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
+                var note2NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: organisation1);
+                var note3NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2, organisation: organisation1);
+                var note4NoMatchOrganisation = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation2);
+                var note5Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation2);
+
+                // act
+                context.Schemes.Add(scheme1);
+                context.Schemes.Add(scheme2);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1Match);
+                context.Notes.Add(note2NoMatchCy);
+                context.Notes.Add(note3NoMatchCy);
+                context.Notes.Add(note4NoMatchOrganisation);
+                context.Notes.Add(note5Match);
+
+                await context.SaveChangesAsync();
+
+                var recipientList = await dataAccess.GetRecipientOrganisations(organisation1.Id, SystemTime.UtcNow.Year);
+
+                // asset
+                recipientList.Count.Should().Be(2);
+                recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
+                recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
+            }
+        }
     }
 }

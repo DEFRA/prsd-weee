@@ -270,5 +270,15 @@
 
             return note;
         }
+
+        public async Task<List<Organisation>> GetRecipientOrganisations(Guid organisationId, int complianceYear)
+        {
+            var notes = context.Notes
+                .Where(n => n.ComplianceYear == complianceYear && n.OrganisationId == organisationId);
+
+            return await notes.Select(n => n.Recipient)
+                .Distinct()
+                .ToListAsync();
+        }
     }
 }

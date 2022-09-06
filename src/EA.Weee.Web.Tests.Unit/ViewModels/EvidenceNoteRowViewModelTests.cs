@@ -251,7 +251,7 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenEvidenceNoteAndSubmittedNoteStatus_EmptyRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenEvidenceNoteAndSubmittedNoteStatus_SubmittedViewRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Submitted;
@@ -261,7 +261,7 @@
             var route = model.SchemeViewRouteName;
 
             //assert
-            route.Should().BeEmpty();
+            route.Should().Be(SchemeTransferEvidenceRedirect.ViewSubmittedEvidenceNoteRouteName);
         }
 
         [Fact]
@@ -279,7 +279,7 @@
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenEvidenceNoteAndRejectedNoteStatus_EmptyRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenEvidenceNoteAndRejectedNoteStatus_RejectedViewRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Rejected;
@@ -289,11 +289,11 @@
             var route = model.SchemeViewRouteName;
 
             //assert
-            route.Should().BeEmpty();
+            route.Should().Be(SchemeTransferEvidenceRedirect.ViewRejectedEvidenceNoteRouteName);
         }
 
         [Fact]
-        public void SchemeViewRouteName_GivenEvidenceNoteAndReturnedNoteStatus_EmptyRouteShouldBeReturned()
+        public void SchemeViewRouteName_GivenEvidenceNoteAndReturnedNoteStatus_ReturnedViewRouteShouldBeReturned()
         {
             //arrange
             model.Status = NoteStatus.Returned;
@@ -303,7 +303,7 @@
             var route = model.SchemeViewRouteName;
 
             //assert
-            route.Should().BeEmpty();
+            route.Should().Be(SchemeTransferEvidenceRedirect.ViewReturnedEvidenceNoteRouteName);
         }
     }
 }
