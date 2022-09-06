@@ -138,8 +138,23 @@
                     {
                         var transferReceived = originalTonnage.Received - transferTonnage.Sum(x => x.Received);
                         var transferReused = originalTonnage.Reused - transferTonnage.Sum(x => x.Reused);
-                        category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferReceived == 0 ? null : transferReceived);
-                        category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferReused == 0 ? null : transferReused);
+
+                        if (transferReceived == 0)
+                        {
+                            category.Received = "0.000";
+                        }
+                        else
+                        {
+                            category.Received = tonnageUtilities.CheckIfTonnageIsNull(transferReceived == 0 ? null : transferReceived);
+                        }
+                        if (transferReused == 0)
+                        {
+                            category.Reused = "0.000";
+                        }
+                        else
+                        {
+                            category.Reused = tonnageUtilities.CheckIfTonnageIsNull(transferReused == 0 ? null : transferReused);
+                        }
                     }
                     else
                     {

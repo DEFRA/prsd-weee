@@ -60,12 +60,18 @@
 
         public EvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
         {
-            instance.UpdateStatus(statusToUpdate, user, SystemTime.UtcNow);
+            var date = SystemTime.UtcNow;
+
+            instance.UpdateStatus(statusToUpdate, user, new DateTime(instance.ComplianceYear, date.Month, date.Day, date.Hour, date.Minute, date.Second));
+
             return this;
         }
 
         public EvidenceNoteDbSetup WithStatusUpdate(NoteStatus statusToUpdate)
         {
+            var date = SystemTime.UtcNow;
+            var updateDate = new DateTime(instance.ComplianceYear, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+
             if (statusToUpdate == NoteStatus.Draft)
             {
                 return this;
@@ -74,28 +80,28 @@
             {
                 if (statusToUpdate == NoteStatus.Submitted)
                 {
-                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), updateDate);
                 }
                 else if (statusToUpdate == NoteStatus.Approved)
                 {
-                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
-                    instance.UpdateStatus(NoteStatus.Approved, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), updateDate);
+                    instance.UpdateStatus(NoteStatus.Approved, DbContext.GetCurrentUser(), updateDate);
                 }
                 else if (statusToUpdate == NoteStatus.Rejected)
                 {
-                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
-                    instance.UpdateStatus(NoteStatus.Rejected, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), updateDate);
+                    instance.UpdateStatus(NoteStatus.Rejected, DbContext.GetCurrentUser(), updateDate);
                 }
                 else if (statusToUpdate == NoteStatus.Returned)
                 {
-                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
-                    instance.UpdateStatus(NoteStatus.Returned, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), updateDate);
+                    instance.UpdateStatus(NoteStatus.Returned, DbContext.GetCurrentUser(), updateDate);
                 }
                 else if (statusToUpdate == NoteStatus.Void)
                 {
-                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), SystemTime.UtcNow);
-                    instance.UpdateStatus(NoteStatus.Approved, DbContext.GetCurrentUser(), SystemTime.UtcNow);
-                    instance.UpdateStatus(NoteStatus.Void, DbContext.GetCurrentUser(), SystemTime.UtcNow);
+                    instance.UpdateStatus(NoteStatus.Submitted, DbContext.GetCurrentUser(), updateDate);
+                    instance.UpdateStatus(NoteStatus.Approved, DbContext.GetCurrentUser(), updateDate);
+                    instance.UpdateStatus(NoteStatus.Void, DbContext.GetCurrentUser(), updateDate);
                 }
             }
             
@@ -112,6 +118,18 @@
         public EvidenceNoteDbSetup WithComplianceYear(int complianceYear)
         {
             instance.ComplianceYear = complianceYear;
+            
+            var r = new Random();
+            var rand62Bit = (((long)r.Next()) << 31) + r.Next();
+            var startDate = new DateTime(complianceYear, 1, 1);
+            var endDate = new DateTime(complianceYear, 12, 31);
+
+            var newStartDate = startDate + new TimeSpan(rand62Bit % (endDate - startDate).Ticks);
+            var newEndDate = newStartDate + new TimeSpan(rand62Bit % (endDate - newStartDate).Ticks);
+
+            ObjectInstantiator<Note>.SetProperty(o => o.StartDate, newStartDate, instance);
+            ObjectInstantiator<Note>.SetProperty(o => o.EndDate, newEndDate, instance);
+
             return this;
         }
 
