@@ -42,6 +42,8 @@
 
         public bool HasBeenVoided => Status.Equals(NoteStatus.Void);
 
+        public bool HasVoidReason => !string.IsNullOrEmpty(VoidedReason);
+
         public Guid SchemeId { get; set; }
 
         public string SubmittedBy { get; set; }
@@ -93,6 +95,8 @@
         public string RedirectTab { get; set; }
 
         public bool CanDisplayNotesMessage { get; set; }
+
+        public bool IsPrintable { get; set; }
 
         public ViewEvidenceNoteViewModel()
         {

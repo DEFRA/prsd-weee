@@ -90,6 +90,12 @@
                 {
                     case NoteStatus.Approved:
                         return SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName;
+                    case NoteStatus.Rejected:
+                        return SchemeTransferEvidenceRedirect.ViewRejectedEvidenceNoteRouteName;
+                    case NoteStatus.Returned:
+                        return SchemeTransferEvidenceRedirect.ViewReturnedEvidenceNoteRouteName;
+                    case NoteStatus.Submitted:
+                        return SchemeTransferEvidenceRedirect.ViewSubmittedEvidenceNoteRouteName;
                     case NoteStatus.Void:
                         return SchemeTransferEvidenceRedirect.ViewVoidedEvidenceNoteRouteName;
                 }

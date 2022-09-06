@@ -1,8 +1,6 @@
 ﻿@using EA.Weee.Core.Helpers
-@using EA.Weee.Core.AatfEvidence
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 
 @if (Model.DisplayH2Title)
@@ -14,117 +12,131 @@ else
     <h1 class="govuk-heading-l">Evidence note</h1>
 }
 
-<style>
+<style type="text/css">
     .category
     {
         display: table;
     }
 
-    .category span
+    .category span 
     {
         display: table-cell;
     }
 
-    .category-id
+    .category-id 
     {
         width: 20px;
     }
 
-    .category-column
+    .category-column 
     {
         width: 40%;
     }
 
-    .transfer-category-column
+    .transfer-category-column 
     {
-        width: 30%;
+        width: 25%;
     }
 
-    .transfer-column
+    .transfer-column 
     {
-        width: 19%;
+        width: 18.75%;
     }
 
-    .received-column
-    {
+    .category-column-printable {
+        width: 40%;
+    }
+
+    .received-column-printable {
+        padding-left: 35px;
         width: 30%;
+    }
+    
+    .received-column 
+    {
+        width: 20%;
     }
 </style>
 
 <div class="govuk-width-container govuk-!-margin-top-3">
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width ">
         @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
+    @if (Model.HasVoidReason)
+    {
+        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width ">
+            @Html.Partial("_DisplayVoidedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+        </div>
+    }
+
     @if (Model.HasSubmittedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasApprovedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasRejectedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasBeenReturned)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
     @if (Model.HasBeenVoided)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
-            @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
-        </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
+        @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
+    </div>
     }
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay, "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-!-padding-bottom-6">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-!-padding-bottom-6 govuk-full-printable-width">
         @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay, "govuk-grid-column-one-quarter")
     </div>
 
     @if (Model.DisplayEvidenceNoteHistoryData)
     {
-        <div class="govuk-width-container govuk-!-padding-left-0">
-            @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
-                        @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
-                        "Hidden content",
-                        "Progressive disclosure",
-                        "Transfer history"))
-        </div>
+    @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
+                    @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
+                    "Hidden content",
+                    "Progressive disclosure",
+                    "Transfer history"))
     }
 </div>
 
@@ -136,6 +148,7 @@ else
         @(this.WeeeGds().Submit("Void evidence note", new { id = "voidEvidenceNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
     }
 }
+
 @*else if (Model.CanDisplayNotesMessage)
 {
     <style type="text/css">
@@ -148,20 +161,20 @@ else
     </div>
 }*@
 
-<div class="govuk-width-container govuk-!-padding-left-0">
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="site" class="govuk-label--s">Site</span><br />
-        <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>
+    <div class="govuk-width-container govuk-!-padding-left-0 printable-padding-top">
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="site" class="govuk-label--s">Site</span><br />
+            <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>
+        </div>
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="operator" class="govuk-label--s">Operator</span><br />
+            <p aria-labelledby="operator" class="govuk-body weee-word-break">@Html.Raw(Model.OperatorAddress)</p>
+        </div>
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="recipient" class="govuk-label--s">Recipient</span><br />
+            <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
+        </div>
     </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0 ">
-        <span id="operator" class="govuk-label--s">Operator</span><br />
-        <p aria-labelledby="operator" class="govuk-body weee-word-break">@Html.Raw(Model.OperatorAddress)</p>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="recipient" class="govuk-label--s">Recipient</span><br />
-        <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
-    </div>
-</div>
 <div class="ui-helper-clearfix"></div>
 <div class="govuk-width-container govuk-!-padding-top-7">
     <p>
@@ -170,10 +183,11 @@ else
         It has been reused as whole appliances to the extent set out below. No other evidence has been issued on these WEEE materials.
     </p>
 </div>
+
 @if (Model.DisplayTransferEvidenceColumns)
 {
-    <div class="govuk-width-container govuk-!-padding-top-7">
-        <p class="govuk-details__text govuk-!-margin-bottom-4 govuk-!-margin-bottom-4">The total after transfer (tonnes) and total reused after transfer (tonnes) includes approved transfers only</p>
+    <div class="govuk-width-container govuk-!-padding-top-3">
+        <p class="govuk-details__text">The total after transfer (tonnes) and total reused after transfer (tonnes) includes approved transfers only</p>
     </div>
 }
 <table class="govuk-table">
@@ -183,16 +197,21 @@ else
             @if (Model.DisplayTransferEvidenceColumns)
             {
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total reused as whole appliances (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right transfer-column">Total after transfer (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total reused after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused after transfer (tonnes)</th>
             }
             else
             {
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right">Total reused as whole appliances (tonnes)</th>
+                {
+                    var categoryColumnWidthCss = Model.IsPrintable ? "category-column-printable" : "category-column";
+                    var receivedColumnWithCss = Model.IsPrintable ? "received-column-printable" : "received-column";
+
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @categoryColumnWidthCss">Category</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss">Total received (tonnes)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss">Total reused as whole appliances (tonnes)</th>
+                }
             }
         </tr>
     </thead>
@@ -209,10 +228,10 @@ else
                     <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
                 </div>
             </td>
-            <td class="govuk-table__cell govuk-!-text-align-right">
+            <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">
                 @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
             </td>
-            <td class="govuk-table__cell govuk-!-text-align-right">
+            <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">
                 @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
             </td>
             @if (Model.DisplayTransferEvidenceColumns)
