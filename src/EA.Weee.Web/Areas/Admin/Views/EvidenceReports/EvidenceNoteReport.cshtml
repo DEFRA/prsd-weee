@@ -1,0 +1,61 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.EvidenceReports.EvidenceReportViewModel
+@{
+    ViewBag.Title = "Evidence notes report - GOV.UK";
+}
+@section main_content
+{
+    <p>
+        @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes")))
+    </p>
+
+   <header class="hgroup">
+        <h1 class="govuk-heading-l">Evidence notes report</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p class="govuk-body">This report shows the received and reuse of each individual evidence note for a particular compliance year. It includes household and non-household waste for all statuses of evidence note.</p>
+        <p class="govuk-body">All data is reported in tonnes (t) to three decimal places.</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedTonnageToDisplay)">
+            @Html.Gds().LabelFor(m => m.SelectedTonnageToDisplay)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedTonnageToDisplay)
+            @Html.Gds().DropDownListFor(m => m.SelectedTonnageToDisplay, Model.TonnageToDisplayOptions, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        <p>
+            If there is a large amount of data, it may take a while to download the report.
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+                                                                                   "Report download", "Evidence notes report", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+
+}
+@section scripts {
+        @if (ViewBag.TriggerDownload)
+    {
+        @*<script type="text/javascript">
+                window.location = "@Html.Raw(@Url.Action("DownloadAatfAePublicRegisterCsv", new
+                                   {
+                                       complianceYear = Model.SelectedYear,
+                                       facilityType = Model.SelectedFacilityType,
+                                       authorityId = Model.CompetentAuthorityId
+                                   }))";
+            </script>*@
+    }
+}
