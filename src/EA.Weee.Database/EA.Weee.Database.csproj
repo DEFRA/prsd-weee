@@ -354,6 +354,7 @@
     <Content Include="scripts\Update\Release 5\Sprint10\20220810-1407-add-transfer-view.sql" />
     <Content Include="scripts\Update\Release 5\Sprint10\20220815-1625-add-obligation-evidence-summary-query.sql" />
     <Content Include="scripts\Update\Release 5\Sprint11\20220822-1702-alter-obligation-evidence-summary-query.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint12\20220831-1115-alter-obligation-evidence-summary-query.sql" />
     <Content Include="scripts\Update\Release 5\Sprint12\20220822-1418-create-evidence-by-category.sql" />
     <Content Include="scripts\Update\Release 5\Sprint12\20220822-1418-evidence-by-category-net-stored-procedure.sql" />
     <Content Include="scripts\Update\Release 5\Sprint12\20220822-1418-create-evidence-summary.sql" />
