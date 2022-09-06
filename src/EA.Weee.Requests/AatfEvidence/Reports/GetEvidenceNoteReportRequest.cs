@@ -13,13 +13,17 @@
 
         public TonnageToDisplayReportEnum TonnageToDisplay { get; private set; }
 
+        public int ComplianceYear { get; private set; }
+
         public GetEvidenceNoteReportRequest(Guid? recipientOrganisationId, 
             Guid? originatorOrganisationId,
-            TonnageToDisplayReportEnum tonnageToDisplay)
+            TonnageToDisplayReportEnum tonnageToDisplay,
+            int complianceYear)
         {
             RecipientOrganisationId = recipientOrganisationId;
             OriginatorOrganisationId = originatorOrganisationId;
             TonnageToDisplay = tonnageToDisplay;
+            ComplianceYear = complianceYear;
         }
     }
 }

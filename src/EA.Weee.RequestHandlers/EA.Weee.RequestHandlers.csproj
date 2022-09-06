@@ -115,6 +115,7 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
     <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceNoteReportHandler.cs" />
+    <Compile Include="AatfEvidence\Reports\EvidenceReportConstants.cs" />
     <Compile Include="AatfEvidence\SaveEvidenceNoteRequestBase.cs" />
     <Compile Include="AatfEvidence\SaveNoteRequestBase.cs" />
     <Compile Include="AatfEvidence\VoidNoteRequestHandler.cs" />
