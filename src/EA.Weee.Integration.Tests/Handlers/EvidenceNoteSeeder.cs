@@ -41,7 +41,7 @@
                 var aatfs = new List<Aatf>();
                 const int numberOfNotes = 900;
                 const int numberOfTransferredInX = 150;
-                const int numberOfTransfersOut = 50;
+                const int numberOfTransfersOut = 90;
                 Random randomTransferOut = new Random();
                 Random randomTransferIn = new Random();
                 Random randomAatf = new Random();
@@ -61,7 +61,7 @@
                     aatfs.Add(aatf);
                 }
 
-                for (int i = 0; i < 40; i++)
+                for (int i = 0; i < 30; i++)
                 {
                     var randomOrganisation = OrganisationDbSetup.Init().Create();
                     var randomScheme = SchemeDbSetup.Init().WithOrganisation(randomOrganisation.Id).Create();
@@ -156,13 +156,15 @@
                                 new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, tonnage14, NextTonnage(tonnageRandom, tonnage14 - 5)),
                             };
 
+                            var aatf = aatfs.ElementAt(randomAatf.Next(0, 49));
                             var newNote = EvidenceNoteDbSetup.Init()
                                 .WithRecipient(organisation.Id)
+                                .WithComplianceYear(year)
                                 .WithStatus(NoteStatus.Submitted, UserId.ToString())
                                 .WithStatus(NoteStatus.Approved, UserId.ToString())
                                 .WithWasteType(WasteType.HouseHold)
-                                .WithAatf(aatfs.ElementAt(randomAatf.Next(0, 49)).Id)
-                                .WithComplianceYear(year)
+                                .WithOrganisation(aatf.OrganisationId)
+                                .WithAatf(aatf.Id)
                                 .WithTonnages(tonnages2).Create();
 
                             notes.Add(newNote);
@@ -207,12 +209,14 @@
 
                             var status = noteStatuses.ElementAt(randomStatus.Next(noteStatuses.Count - 1));
                             var wasteType = (WasteType)wasteTypes.GetValue(randomWastType.Next(wasteTypes.Length));
+                            var aatf = aatfs.ElementAt(randomAatf.Next(0, 49));
 
                             var newNote = EvidenceNoteDbSetup.Init().WithRecipient(organisation.Id)
+                                .WithComplianceYear(year)
                                 .WithStatusUpdate(status)
                                 .WithWasteType(wasteType)
-                                .WithAatf(aatfs.ElementAt(randomAatf.Next(0, 49)).Id)
-                                .WithComplianceYear(year)
+                                .WithAatf(aatf.Id)
+                                .WithOrganisation(aatf.OrganisationId)
                                 .WithTonnages(tonnages2).Create();
 
                             notes.Add(newNote);
