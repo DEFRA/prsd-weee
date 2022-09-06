@@ -9,7 +9,7 @@
         @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes")))
     </p>
 
-   <header class="hgroup">
+    <header class="hgroup">
         <h1 class="govuk-heading-l">Evidence notes report</h1>
     </header>
 
@@ -24,13 +24,13 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
         </div>
 
         <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedTonnageToDisplay)">
             @Html.Gds().LabelFor(m => m.SelectedTonnageToDisplay)
             @Html.Gds().ValidationMessageFor(m => m.SelectedTonnageToDisplay)
-            @Html.Gds().DropDownListFor(m => m.SelectedTonnageToDisplay, Model.TonnageToDisplayOptions, string.Empty, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedTonnageToDisplay, Model.TonnageToDisplayOptions, new { autocomplete = "false" })
         </div>
 
         <p>
@@ -38,7 +38,7 @@
         </p>
 
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-                                                                                   "Report download", "Evidence notes report", new Dictionary<string, object> { { "class", "button" } }))
+            "Report download", "Evidence notes report", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
@@ -47,5 +47,14 @@
 
 }
 @section scripts {
-
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadEvidenceNoteReport", new
+                          {
+                              complianceYear = Model.SelectedYear,
+                              tonnageToDisplay = Model.SelectedTonnageToDisplay
+                          }))";
+        </script>
+    }
 }
