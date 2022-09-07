@@ -370,6 +370,7 @@
     <Compile Include="App_Start\CustomDateBinder.cs" />
     <Compile Include="App_Start\CustomModelBindersConfig.cs" />
     <Compile Include="Areas\Aatf\Attributes\CheckCanCreateEvidenceNoteAttribute.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredTonnageBaseAttribute.cs" />
     <Compile Include="Areas\Aatf\Helpers\AatfEvidenceHelper.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceDateValidationBase.cs" />
     <Compile Include="Areas\Aatf\Comparers\SchemeOrganisationDataComparer.cs" />
@@ -409,6 +410,7 @@
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckSchemeNoteAttributeBase.cs" />
+    <Compile Include="Areas\Scheme\Attributes\RequiredTransferTonnageAttribute.cs" />
     <Compile Include="Areas\Scheme\Controllers\OutgoingTransfersController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationValue.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SchemeObligationViewModel.cs" />

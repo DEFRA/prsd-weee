@@ -3,8 +3,6 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
-    using Filters;
-    using Weee.Requests.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteEndDateAttribute : EvidenceDateValidationBase
