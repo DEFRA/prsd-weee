@@ -355,25 +355,25 @@
 
             if (transferRequest != null)
             {
-                var result = new List<Guid>();
+                var resultNotes = new List<Guid>();
 
                 var alreadySelectedEvidenceNotes = transferRequest.EvidenceNoteIds;
 
-                result.AddRange(alreadySelectedEvidenceNotes);
+                resultNotes.AddRange(alreadySelectedEvidenceNotes);
 
                 var selectedEvidenceNotes =
                 model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key).ToList();
 
                 foreach (var note in selectedEvidenceNotes)
                 {
-                    if (!result.Contains(note))
+                    if (!resultNotes.Contains(note))
                     {
-                        result.Add(note);
+                        resultNotes.Add(note);
                     }
                 }
               
                 var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, result);
+                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, resultNotes);
 
                 sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
             }
