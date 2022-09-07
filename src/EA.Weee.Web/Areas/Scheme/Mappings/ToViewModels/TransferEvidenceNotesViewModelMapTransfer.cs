@@ -36,9 +36,9 @@
 
         public List<Guid> ExcludeEvidenceNoteIds { get; set; }
 
-        public int PageNumber { get; private set; }
+        public int PageNumber { get; private set; } = 1;
 
-        public int PageSize { get; private set; }
+        public int PageSize { get; private set; } = 10;
 
         public TransferEvidenceNotesViewModelMapTransfer(
             EvidenceNoteSearchDataResult notes,
