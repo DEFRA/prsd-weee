@@ -29,17 +29,17 @@
         {
             if (!request.OriginatorOrganisationId.HasValue && !request.RecipientOrganisationId.HasValue)
             {
-                authorization.CheckCanAccessInternalArea();
+                authorization.EnsureCanAccessInternalArea();
             }
 
             if (request.OriginatorOrganisationId.HasValue)
             {
-                authorization.CheckInternalOrOrganisationAccess(request.OriginatorOrganisationId.Value);
+                authorization.EnsureOrganisationAccess(request.OriginatorOrganisationId.Value);
             }
 
             if (request.RecipientOrganisationId.HasValue)
             {
-                authorization.CheckInternalOrOrganisationAccess(request.RecipientOrganisationId.Value);
+                authorization.EnsureOrganisationAccess(request.RecipientOrganisationId.Value);
             }
             
             var reportData = await evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(

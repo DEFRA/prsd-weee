@@ -101,7 +101,7 @@
             breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
         }
 
-        protected async Task<ActionResult> CheckUserStatus(string redirectController, string redirectAction)
+        protected async Task<ActionResult> CheckUserStatus(string redirectController, string redirectAction, Func<Task<ActionResult>> viewResult = null)
         {
             using (var client = ApiClient())
             {
@@ -110,6 +110,11 @@
                 switch (userStatus)
                 {
                     case UserStatus.Active:
+                        if (viewResult != null)
+                        {
+                           return await viewResult.Invoke();
+                        }
+
                         return RedirectToAction(redirectAction, redirectController);
                     case UserStatus.Inactive:
                     case UserStatus.Pending:

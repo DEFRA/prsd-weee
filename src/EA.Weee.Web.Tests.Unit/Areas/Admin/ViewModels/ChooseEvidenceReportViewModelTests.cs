@@ -14,8 +14,8 @@
             var model = new ChooseEvidenceReportViewModel();
 
             model.PossibleValues.Count.Should().Be(2);
-            model.PossibleValues.ElementAt(0).Should().Be(Reports.EvidenceNotesReports);
-            model.PossibleValues.ElementAt(1).Should().Be(Reports.EvidenceNotesReports);
+            model.PossibleValues.ElementAt(0).Should().Be(Reports.EvidenceNoteData);
+            model.PossibleValues.ElementAt(1).Should().Be(Reports.EvidenceTransfersData);
         }
     }
 }
