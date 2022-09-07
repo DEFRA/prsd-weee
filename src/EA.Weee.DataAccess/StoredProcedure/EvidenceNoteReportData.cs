@@ -12,7 +12,7 @@
 
         public DateTime? SubmittedDateTime { get; set; }
 
-        public string SubmittedBy { get; set; }
+        public string SubmittedByAatf { get; set; }
 
         public string AatfApprovalNumber { get; set; }
 

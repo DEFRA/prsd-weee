@@ -4,10 +4,10 @@
     {
         public const string Reference = "Reference ID";
         public const string Status = "Status";
-        public const string AppropriateAuthority = "Appropriate authority (AATF)";
-        public const string SubmittedDate = "Date & time submitted (GMT)";
+        public const string AppropriateAuthority = "AATF appropriate authority";
+        public const string SubmittedDate = "Date submitted (GMT)";
         public const string SubmittedAatf = "Submitted by AATF site name";
-        public const string SubmittedAatfApprovalNumber = "AATF Approval number";
+        public const string SubmittedAatfApprovalNumber = "AATF approval number";
         public const string ObligationType = "Obligation type";
         public const string ReceivedStartDate = "WEEE received start date";
         public const string ReceivedEndDate = "WEEE received end date";

@@ -18,6 +18,7 @@
             model.PossibleValues.ElementAt(1).Should().Be(Reports.AatfReports);
             model.PossibleValues.ElementAt(2).Should().Be(Reports.PcsAatfDataDifference);
             model.PossibleValues.ElementAt(3).Should().Be(Reports.AatfAeDetails);
+            model.PossibleValues.ElementAt(4).Should().Be(Reports.EvidenceNotesReports);
         }
     }
 }

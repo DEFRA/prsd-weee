@@ -370,6 +370,7 @@
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTransferTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ChooseEvidenceReportViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ViewObligationsAndEvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidNoteViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidEvidenceNoteViewModelTests.cs" />

@@ -367,7 +367,7 @@
     <Content Include="scripts\Update\Release 5\Sprint12\20220817-1742-reportingindex.sql" />
     <Content Include="scripts\Update\Release 5\Sprint12\20220817-1408-add-wastetype.sql" />
     <Content Include="scripts\Update\Release 5\Sprint12\20220817-1408-add-status-lookup.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint13\20220906-1623-create-evidence-note-original-tonnages-stored-procedure.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint13\2022907-1041-create-evidence-note-original-tonnages-stored-procedure.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
