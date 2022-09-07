@@ -40,7 +40,7 @@ SELECT
 		receivedCat.[12] AS Cat12Received,
 		receivedCat.[13] AS Cat13Received,
 		receivedCat.[14] AS Cat14Received,
-		receivedCat.[1], receivedCat.[2] + receivedCat.[3]+ receivedCat.[4] + receivedCat.[5] + receivedCat.[6] + receivedCat.[7] + receivedCat.[8] + receivedCat.[8] + receivedCat.[10] + receivedCat.[11]
+		receivedCat.[1] + receivedCat.[2] + receivedCat.[3]+ receivedCat.[4] + receivedCat.[5] + receivedCat.[6] + receivedCat.[7] + receivedCat.[8] + receivedCat.[8] + receivedCat.[10] + receivedCat.[11]
 			+ receivedCat.[12] + receivedCat.[13] + receivedCat.[14] AS TotalReceived,
 		reusedCat.[1] AS Cat1Reused, 
 		reusedCat.[2] AS Cat2Reused,
@@ -56,7 +56,7 @@ SELECT
 		reusedCat.[12] AS Cat12Reused,
 		reusedCat.[13] AS Cat13Reused,
 		reusedCat.[14] AS Cat14Reused,
-		reusedCat.[1], reusedCat.[2] + reusedCat.[3]+ reusedCat.[4] + reusedCat.[5] + reusedCat.[6] + reusedCat.[7] + reusedCat.[8] + reusedCat.[8] + reusedCat.[10] + reusedCat.[11]
+		reusedCat.[1] + reusedCat.[2] + reusedCat.[3]+ reusedCat.[4] + reusedCat.[5] + reusedCat.[6] + reusedCat.[7] + reusedCat.[8] + reusedCat.[8] + reusedCat.[10] + reusedCat.[11]
 			+ reusedCat.[12] + reusedCat.[13] + reusedCat.[14] AS TotalReused
 FROM
 	[Evidence].Note n

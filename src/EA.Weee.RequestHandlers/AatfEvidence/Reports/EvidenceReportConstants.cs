@@ -11,7 +11,7 @@
         public const string ObligationType = "Obligation type";
         public const string ReceivedStartDate = "WEEE received start date";
         public const string ReceivedEndDate = "WEEE received end date";
-        public const string RecipientName = "Recipient name";
+        public const string Recipient = "Recipient name";
         public const string RecipientApprovalNumber = "Recpient approval number";
         public const string Protocol = "Actual or protocol";
         public const string Cat1Received = "Cat 1 received (t)";
@@ -43,6 +43,6 @@
         public const string Cat12Reused = "Cat 12 reuse (t)";
         public const string Cat13Reused = "Cat 13 reuse (t)";
         public const string Cat14Reused = "Cat 14 reuse (t)";
-        public const string ReusedTotal = "Total reused (t)";
+        public const string TotalReused = "Total reused (t)";
     }
 }
