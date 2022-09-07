@@ -10,7 +10,7 @@
             : base(new List<string>
             {
                 Reports.EvidenceNoteData,
-                Reports.EvidenceNotesReports
+                Reports.EvidenceTransfersData
             })
         {
         }
