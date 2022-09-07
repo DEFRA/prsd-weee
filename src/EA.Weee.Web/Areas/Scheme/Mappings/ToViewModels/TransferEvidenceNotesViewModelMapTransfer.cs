@@ -44,7 +44,9 @@
             EvidenceNoteSearchDataResult notes,
             TransferEvidenceNoteRequest request,
             TransferEvidenceNoteData transferNoteData,
-            Guid organisationId)
+            Guid organisationId, 
+            int pageNumber = 1,
+            int pageSize = 10)
         {
             Condition.Requires(notes).IsNotNull();
             Condition.Requires(transferNoteData).IsNotNull();
@@ -54,6 +56,8 @@
             Notes = notes;
             TransferEvidenceNoteData = transferNoteData;
             OrganisationId = organisationId;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
 
         public TransferEvidenceNotesViewModelMapTransfer(

@@ -1,8 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using System.Web.Routing;
+    using Attributes;
+    using Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -11,13 +20,6 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using System.Web.Routing;
-    using Attributes;
-    using Core.Helpers;
     using Filters;
     using Requests;
     using ViewModels;
@@ -261,7 +263,7 @@
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
                 var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear));
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, null, 1));
 
                 var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, noteData, pcsId);
 
@@ -279,6 +281,10 @@
 
                 var model =
                     mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+
+                model.NoteCount = result.NoteCount;
+
+                sessionService.SetTransferSessionObject(Session, model.EvidenceNotesDataListPaged, SessionKeyConstant.PagingOutgoingTransferViewModelKey);
 
                 return this.View("EditTransferFrom", model);
             }
@@ -349,21 +355,76 @@
 
                 return RedirectToAction("EditCategories", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId});
             }
-
-            if (ModelState.IsValid)
+            
+            if (model.PageNumber.HasValue)
             {
-                var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-               SessionKeyConstant.OutgoingTransferKey);
+                var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
 
-                if (outgoingTransfer == null)
+                if (ModelState.ContainsKey("Action"))
                 {
-                    return RedirectToManageEvidence(model.PcsId);
+                    ModelState["Action"].Errors.Clear();
+                    ModelState.Clear();
                 }
 
-                SetEvidenceNotesInSession(model, outgoingTransfer);
+                using (var client = this.apiClient())
+                {
+                    SetEvidenceNotesInSession(model, outgoingTransfer);
 
-                return RedirectToRoute("Scheme_edit_transfer_tonnages",
-                    new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
+                    var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
+
+                    var result = await client.SendAsync(User.GetAccessToken(),
+                        new GetEvidenceNotesForTransferRequest(model.PcsId, outgoingTransfer.CategoryIds, noteData.ComplianceYear, null, model.PageNumber.Value));
+
+                    var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, outgoingTransfer, noteData, model.PcsId, model.PageNumber.Value);
+
+                    var evidenceNoteIds = outgoingTransfer.EvidenceNoteIds;
+                    if (evidenceNoteIds != null)
+                    {
+                        mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
+                    }
+
+                    var excludeEvidenceNoteIds = outgoingTransfer.ExcludeEvidenceNoteIds;
+                    if (excludeEvidenceNoteIds != null)
+                    {
+                        mapperObject.ExcludeEvidenceNoteIds = excludeEvidenceNoteIds;
+                    }
+
+                    model =
+                        mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+
+                    model.NoteCount = result.NoteCount;
+
+                    sessionService.SetTransferSessionObject(Session, model.EvidenceNotesDataListPaged, SessionKeyConstant.PagingOutgoingTransferViewModelKey);
+                }
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                   SessionKeyConstant.OutgoingTransferKey);
+
+                    if (outgoingTransfer == null)
+                    {
+                        return RedirectToManageEvidence(model.PcsId);
+                    }
+
+                    SetEvidenceNotesInSession(model, outgoingTransfer);
+
+                    return RedirectToRoute("Scheme_edit_transfer_tonnages",
+                        new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
+                }
+
+                if (!model.PageNumber.HasValue)
+                {
+                    var pagedModel = sessionService.GetTransferSessionObject<PagedList<ViewEvidenceNoteViewModel>>(Session,
+                        SessionKeyConstant.PagingOutgoingTransferViewModelKey);
+
+                    if (pagedModel != null)
+                    {
+                        model.EvidenceNotesDataListPaged = pagedModel;
+                    }
+                }
             }
 
             return this.View("EditTransferFrom", model);
@@ -371,14 +432,28 @@
 
         private void SetEvidenceNotesInSession(TransferEvidenceNotesViewModel model, TransferEvidenceNoteRequest outgoingTransfer)
         {
+            var resultNotes = new List<Guid>();
+
+            var alreadySelectedEvidenceNotes = outgoingTransfer.EvidenceNoteIds;
+
+            resultNotes.AddRange(alreadySelectedEvidenceNotes);   
+
             var selectedEvidenceNotes =
                model.SelectedEvidenceNotePairs.Where(a => a.Value == true).Select(b => b.Key);
+
+            foreach (var note in selectedEvidenceNotes)
+            {
+                if (!resultNotes.Contains(note))
+                {
+                    resultNotes.Add(note);
+                }
+            }
 
             var unselectedEvidenceNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value == false).Select(b => b.Key);
 
             var updatedTransferRequest =
                 new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, outgoingTransfer.CategoryIds,
-                    selectedEvidenceNotes.ToList(), unselectedEvidenceNotes.ToList());
+                    resultNotes.ToList(), unselectedEvidenceNotes.ToList());
 
             sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
                 SessionKeyConstant.OutgoingTransferKey);
