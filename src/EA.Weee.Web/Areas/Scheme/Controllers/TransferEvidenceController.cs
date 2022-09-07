@@ -11,6 +11,7 @@
     using Core.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
     using Filters;
@@ -230,6 +231,45 @@
                 ViewBag.Page = page;
 
                 return this.View("TransferredEvidence", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubmittedTransferNote(ViewTransferNoteViewModel model)
+        {
+            await SetBreadcrumb(model.OrganisationId);
+
+            using (var client = this.apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    SetNoteStatusRequest request = new SetNoteStatusRequest(model.EvidenceNoteId, NoteStatus.Submitted);
+
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = (NoteUpdatedStatusEnum)request.Status;
+
+                    Guid id = await client.SendAsync(User.GetAccessToken(), request);
+
+                    var requestRefreshed = new GetTransferEvidenceNoteForSchemeRequest(id);
+
+                    TransferEvidenceNoteData note = await client.SendAsync(User.GetAccessToken(), requestRefreshed);
+
+                    var modelRefreshed = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.OrganisationId, note, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
+                    {
+                        OrganisationId = model.OrganisationId
+                    });
+
+                    return View("DownloadTransferNote", modelRefreshed);
+                }
+
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EvidenceNoteId));
+
+                var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.SchemeId, noteData, null)
+                {
+                    OrganisationId = model.SchemeId
+                });
+
+                return View("SubmittedTransfer", refreshedModel);
             }
         }
 

@@ -1,11 +1,10 @@
-﻿
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
+@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
-
 @{
     ViewBag.Title = "Evidence note(transfer) - GOV.UK";
 }
@@ -21,10 +20,15 @@
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
             new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear })))
-
     }
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
+
+    @if (Model.Status.HasFlag(NoteStatus.Draft) || Model.HasBeenReturned)
+    {
+        using (Html.BeginForm("SubmittedTransferNote", "TransferEvidence", FormMethod.Get))
+        {
+            @this.WeeeGds().Button("* Submit transfer *", new { name = "Action", value = ActionEnum.Submit, id = "submit-transfer-note", @class = "govuk-!-width-one-quarter" })
+        }
+    }
 }
-
-
