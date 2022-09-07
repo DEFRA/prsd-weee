@@ -1,16 +1,18 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.ViewModels.Shared
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "From which evidence notes would you like to transfer tonnage to? - GOV.UK";
+    var formName = "edit-transfer-notes-post-form";
 }
 
 @section full_main_content
 {
-   
-    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="edit-transfer-notes-post-form" >Back</button>
+
+    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="@formName">Back</button>
 
 
     @(this.WeeeGds().Warning("Unselecting notes may remove data you have previously input"))
@@ -23,7 +25,7 @@
 
     @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferSummaryPartial.cshtml", Model.ViewTransferNoteViewModel); }
 
-    @using (Html.BeginRouteForm("Scheme_edit_transfer_notes", FormMethod.Post, new { id = "edit-transfer-notes-post-form" }))
+    @using (Html.BeginRouteForm("Scheme_edit_transfer_notes", FormMethod.Post, new { id = formName }))
     {
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Reference)
@@ -33,6 +35,12 @@
         @Html.HiddenFor(m => m.RecipientId)
 
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
+
+        <div class="pager govuk-body">
+            @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount, @formName)
+        </div>
     }
+
+    <p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>
 }
 
