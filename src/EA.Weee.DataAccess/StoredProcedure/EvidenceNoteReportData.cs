@@ -22,7 +22,7 @@
 
         public DateTime ReceivedEndDate { get; set; }
 
-        public string RecipientScheme { get; set; }
+        public string Recipient { get; set; }
 
         public string RecipientApprovalNumber { get; set; }
 

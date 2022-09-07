@@ -56,7 +56,7 @@
             csvWriter.DefineColumn(EvidenceReportConstants.ObligationType, x => x.ObligationType);
             csvWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate, x => x.ReceivedStartDate);
             csvWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate, x => x.ReceivedEndDate);
-            csvWriter.DefineColumn(EvidenceReportConstants.RecipientName, x => x.RecipientScheme);
+            csvWriter.DefineColumn(EvidenceReportConstants.Recipient, x => x.Recipient);
             csvWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber, x => x.RecipientApprovalNumber);
             csvWriter.DefineColumn(EvidenceReportConstants.Protocol, x => x.Protocol);
             csvWriter.DefineColumn(EvidenceReportConstants.Cat1Received, x => x.Cat1Received.ToTonnageDisplay());
@@ -88,7 +88,7 @@
             csvWriter.DefineColumn(EvidenceReportConstants.Cat12Reused, x => x.Cat12Reused.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat13Reused, x => x.Cat13Reused.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat14Reused, x => x.Cat14Reused.ToTonnageDisplay());
-            csvWriter.DefineColumn(EvidenceReportConstants.ReusedTotal, x => x.TotalReused.ToTonnageDisplay());
+            csvWriter.DefineColumn(EvidenceReportConstants.TotalReused, x => x.TotalReused.ToTonnageDisplay());
 
             var fileContent = csvWriter.Write(reportData);
             var timestamp = SystemTime.Now;
