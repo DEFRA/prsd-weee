@@ -11,7 +11,7 @@
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            Guard.ArgumentNotNull(() => value, value, "RequiredTonnageAttribute Tonnage Values are null");
+            Guard.ArgumentNotNull(() => value, value, "RequiredTransferTonnageAttribute Tonnage Values are null");
 
             return ValidateTonnage(value);
         }
