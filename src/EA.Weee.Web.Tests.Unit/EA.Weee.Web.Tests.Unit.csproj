@@ -302,6 +302,7 @@
     <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredTonnageBaseAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\CheckCanEditEvidenceAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />
@@ -378,6 +379,7 @@
     <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBaseTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckSchemeNoteAttributeBaseTests.cs" />
+    <Compile Include="Areas\Scheme\Attributes\RequiredTransferTonnageAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\EvidenceNoteHistoryDataViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\SchemeDataOrganisationMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewEvidenceSummaryViewModelMapTests.cs" />
