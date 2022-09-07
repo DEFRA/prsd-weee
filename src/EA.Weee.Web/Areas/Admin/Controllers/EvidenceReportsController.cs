@@ -28,29 +28,27 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> ChooseReport()
         {
             SetBreadcrumb();
 
-            return await CheckUserStatus("EvidenceReports", "ChooseReport");
-        }
+            async Task<ActionResult> ViewAction()
+            {
+                return await Task.Run(() =>
+                {
+                    var model = new ChooseEvidenceReportViewModel();
 
-        [HttpGet]
-        public ActionResult ChooseReport()
-        {
-            SetBreadcrumb();
+                    return View(model);
+                });
+            }
 
-            var model = new ChooseEvidenceReportViewModel();
-
-            return View(model);
+            return await CheckUserStatus("EvidenceReports", "ChooseReport", ViewAction);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ChooseReport(ChooseEvidenceReportViewModel model)
         {
-            SetBreadcrumb();
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -61,7 +59,7 @@
                 case Reports.EvidenceNoteData:
                     return RedirectToAction(nameof(EvidenceNoteReport), "EvidenceReports");
 
-                case Reports.EvidenceNotesReports:
+                case Reports.EvidenceTransfersData:
                     return RedirectToAction("Index", "AdminHolding");
 
                 default:
@@ -76,11 +74,16 @@
 
             ViewBag.TriggerDownload = false;
 
-            var model = new EvidenceReportViewModel();
+            async Task<ActionResult> ViewAction()
+            {
+                var model = new EvidenceReportViewModel();
 
-            await SetupEvidenceReportViewModelFilters(model);
+                await SetupEvidenceReportViewModelFilters(model);
 
-            return View(model);
+                return View(model);
+            }
+
+            return await CheckUserStatus("EvidenceReports", "ChooseReport", ViewAction);
         }
 
         public async Task<EvidenceReportViewModel> SetupEvidenceReportViewModelFilters(EvidenceReportViewModel model)
@@ -89,7 +92,7 @@
             {
                 var returnsDate = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-                var complianceYears = Enumerable.Range(returnsDate.Year, currentDate.Year - returnsDate.Year).OrderByDescending(x => x).ToList();
+                var complianceYears = Enumerable.Range(returnsDate.Year, (currentDate.Year - returnsDate.Year) + 1).OrderByDescending(x => x).ToList();
 
                 model.TonnageToDisplayOptions = new SelectList(EnumHelper.GetValues(typeof(TonnageToDisplayReportEnum)),
                     "Key", "Value");
@@ -103,8 +106,6 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EvidenceNoteReport(EvidenceReportViewModel model)
         {
-            SetBreadcrumb();
-
             ViewBag.TriggerDownload = ModelState.IsValid;
 
             await SetupEvidenceReportViewModelFilters(model);
@@ -115,15 +116,20 @@
         [HttpGet]
         public async Task<ActionResult> DownloadEvidenceNoteReport(int complianceYear, TonnageToDisplayReportEnum tonnageToDisplay)
         {
-            using (var client = ApiClient())
+            async Task<ActionResult> FileResult()
             {
-                var request = new GetEvidenceNoteReportRequest(null, null, tonnageToDisplay, complianceYear);
+                using (var client = ApiClient())
+                {
+                    var request = new GetEvidenceNoteReportRequest(null, null, tonnageToDisplay, complianceYear);
 
-                var file = await client.SendAsync(User.GetAccessToken(), request);
+                    var file = await client.SendAsync(User.GetAccessToken(), request);
 
-                var data = new UTF8Encoding().GetBytes(file.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+                    var data = new UTF8Encoding().GetBytes(file.FileContent);
+                    return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+                }
             }
+
+            return await CheckUserStatus("EvidenceReports", "ChooseReport", FileResult);
         }
     }
 }
