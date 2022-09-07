@@ -33,23 +33,7 @@
         {
             SetBreadcrumb();
 
-            using (var client = apiClient())
-            {
-                var userStatus = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
-
-                switch (userStatus)
-                {
-                    case UserStatus.Active:
-                        return RedirectToAction("ChooseReport", "AatfReports");
-                    case UserStatus.Inactive:
-                    case UserStatus.Pending:
-                    case UserStatus.Rejected:
-                        return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
-                    default:
-                        throw new NotSupportedException(
-                            $"Cannot determine result for user with status '{userStatus}'");
-                }
-            }
+            return await CheckUserStatus("AatfReports", "ChooseReport");
         }
 
         [HttpGet]

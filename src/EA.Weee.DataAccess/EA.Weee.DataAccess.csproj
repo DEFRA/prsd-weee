@@ -170,6 +170,7 @@
     <Compile Include="StoredProcedure\AatfEvidenceSummaryTotalsData.cs" />
     <Compile Include="StoredProcedure\AatfReuseSitesData.cs" />
     <Compile Include="StoredProcedure\DataReturnSummaryCsvData.cs" />
+    <Compile Include="StoredProcedure\EvidenceNoteReportData.cs" />
     <Compile Include="StoredProcedure\EvidenceStoredProcedures.cs" />
     <Compile Include="StoredProcedure\IEvidenceStoredProcedures.cs" />
     <Compile Include="StoredProcedure\MissingProducerDataCsvData.cs" />
