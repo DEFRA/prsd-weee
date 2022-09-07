@@ -88,7 +88,7 @@
                     return RedirectToAction(nameof(AatfAeDetails), "Reports");
 
                 case Reports.EvidenceNotesReports:
-                    return RedirectToAction("Index", "EvidenceReports");
+                    return RedirectToAction("ChooseReport", "EvidenceReports");
 
                 default:
                     throw new NotSupportedException();
