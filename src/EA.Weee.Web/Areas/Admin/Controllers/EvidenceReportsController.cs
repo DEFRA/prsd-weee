@@ -3,7 +3,6 @@
     using Api.Client;
     using Services;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -12,6 +11,7 @@
     using Infrastructure;
     using Prsd.Core.Helpers;
     using ViewModels.EvidenceReports;
+    using ViewModels.Reports;
     using Weee.Requests.AatfEvidence.Reports;
     using Weee.Requests.Shared;
 
@@ -25,6 +25,48 @@
             base(apiClient, breadcrumb)
         {
             this.configurationService = configurationService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Index()
+        {
+            SetBreadcrumb();
+
+            return await CheckUserStatus("EvidenceReports", "ChooseReport");
+        }
+
+        [HttpGet]
+        public ActionResult ChooseReport()
+        {
+            SetBreadcrumb();
+
+            var model = new ChooseEvidenceReportViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChooseReport(ChooseEvidenceReportViewModel model)
+        {
+            SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            switch (model.SelectedValue)
+            {
+                case Reports.EvidenceNoteData:
+                    return RedirectToAction(nameof(EvidenceNoteReport), "EvidenceReports");
+
+                case Reports.EvidenceNotesReports:
+                    return RedirectToAction("Index", "AdminHolding");
+
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         [HttpGet]
