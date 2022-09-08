@@ -7,8 +7,11 @@
 
     public class PageEvidenceNoteSelection : Pager
     {
-        public PageEvidenceNoteSelection(HtmlHelper htmlHelper, int pageSize, int currentPage, int totalItemCount) : base(htmlHelper, pageSize, currentPage, totalItemCount)
+        public string FormName { get; set; }
+
+        public PageEvidenceNoteSelection(HtmlHelper htmlHelper, int pageSize, int currentPage, int totalItemCount, string formName) : base(htmlHelper, pageSize, currentPage, totalItemCount)
         {
+            FormName = formName;
         }
 
         public override string ToHtmlString()
@@ -38,7 +41,7 @@
                         }
                         else
                         {
-                            var link = $@"<button class=""link-like-behaviour"" type=""submit"" name=""PageNumber"" value=""{paginationLink.PageIndex}"" form=""transfer-summary-partial-form""><span>{paginationLink.DisplayText}</span></button>";
+                            var link = $@"<button class=""link-like-behaviour"" type=""submit"" name=""PageNumber"" value=""{paginationLink.PageIndex}"" form=""{FormName}""><span>{paginationLink.DisplayText}</span></button>";
                             
                             sb.Append(link);
                         }

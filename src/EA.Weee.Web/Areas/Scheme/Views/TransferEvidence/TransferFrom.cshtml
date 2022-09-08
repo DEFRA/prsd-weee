@@ -4,12 +4,13 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "Transfer from - GOV.UK";
+    var formName = "transfer-summary-partial-form";
 }
 
 @section full_main_content
 {
-    <button class="govuk-visually-hidden" aria-hidden="true" style="z-index: -1" name="Action" value="@ActionEnum.Continue" form="transfer-summary-partial-form"></button>
-    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="transfer-summary-partial-form">Back</button>
+    <button class="govuk-visually-hidden" aria-hidden="true" style="z-index: -1" name="Action" value="@ActionEnum.Continue" form="@formName"></button>
+    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="@formName">Back</button>
 
     <h1 class="govuk-heading-l">
         From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
@@ -17,12 +18,12 @@
 
     @Html.Gds().ValidationSummary()
 
-    @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post, htmlAttributes: new { id = "transfer-summary-partial-form" }))
+    @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post, htmlAttributes: new { id = formName }))
     {
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
 
         <div class="pager govuk-body">
-            @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount)
+            @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount, @formName)
         </div>
     }
 

@@ -38,9 +38,9 @@ namespace EA.Weee.Web.Infrastructure.Paging
         }
 
         public static PageEvidenceNoteSelection PageEvidenceNoteSelection<TModel>(this HtmlHelper<TModel> htmlHelper, int pageSize, int currentPage,
-            int totalItemCount)
+            int totalItemCount, string formName)
         {
-            return new PageEvidenceNoteSelection(htmlHelper, pageSize, currentPage, totalItemCount);
+            return new PageEvidenceNoteSelection(htmlHelper, pageSize, currentPage, totalItemCount, formName);
         }
     }
 }
