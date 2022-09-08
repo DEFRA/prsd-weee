@@ -36,5 +36,11 @@ namespace EA.Weee.Web.Infrastructure.Paging
         {
             return new Pager<TModel>(htmlHelper, pageSize, currentPage, totalItemCount);
         }
+
+        public static PageEvidenceNoteSelection PageEvidenceNoteSelection<TModel>(this HtmlHelper<TModel> htmlHelper, int pageSize, int currentPage,
+            int totalItemCount)
+        {
+            return new PageEvidenceNoteSelection(htmlHelper, pageSize, currentPage, totalItemCount);
+        }
     }
 }

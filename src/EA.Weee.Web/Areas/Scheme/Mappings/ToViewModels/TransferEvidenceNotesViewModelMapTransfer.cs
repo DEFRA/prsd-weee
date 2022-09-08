@@ -36,6 +36,10 @@
 
         public List<Guid> ExcludeEvidenceNoteIds { get; set; }
 
+        public int PageNumber { get; private set; } = 1;
+
+        public int PageSize { get; private set; } = 10;
+
         public TransferEvidenceNotesViewModelMapTransfer(
             EvidenceNoteSearchDataResult notes,
             TransferEvidenceNoteRequest request,
@@ -56,7 +60,9 @@
             int complianceYear,
             EvidenceNoteSearchDataResult notes,
             TransferEvidenceNoteRequest request,
-            Guid organisationId)
+            Guid organisationId,
+            int pageNumber = 1,
+            int pageSize = 10)
         {
             Condition.Requires(notes).IsNotNull();
             Condition.Requires(request).IsNotNull();
@@ -66,6 +72,8 @@
             Request = request;
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
 
         public TransferEvidenceNotesViewModelMapTransfer(TransferEvidenceNoteData transferNoteData,

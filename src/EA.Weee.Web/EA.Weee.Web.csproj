@@ -441,6 +441,7 @@
     <Compile Include="Infrastructure\PDF\IPdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\MvcTemplateExecutor.cs" />
     <Compile Include="Infrastructure\PDF\PdfDocumentProvider.cs" />
+    <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
