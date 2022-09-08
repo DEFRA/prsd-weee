@@ -123,6 +123,12 @@
                 url: "Scheme/{pcsId}/{controller}/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional, area = "Scheme" },
                 namespaces: new[] { typeof(HomeController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: "DownloadTransferEvidenceNote",
+                url: "Scheme/{organisationId}/{controller}/{pcsId}/{action}/{transferEvidenceNoteId}",
+                defaults: new { action = "DownloadTransferEvidenceNote", controller = "TransferEvidence" },
+                namespaces: new[] { typeof(TransferEvidenceController).Namespace });
         }
     }
 }
