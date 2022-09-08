@@ -9,12 +9,12 @@
 
     public class EvidenceReportViewModel
     {
-        [DisplayName("Compliance year")]
+        [Display(Name = "Compliance year")]
         public int SelectedYear { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [Display(Name = "Tonnage to display")]
+        [Display(Name = "Tonnage values")]
         public TonnageToDisplayReportEnum SelectedTonnageToDisplay { get; set; }
 
         public IEnumerable<SelectListItem> TonnageToDisplayOptions { get; set; }        
