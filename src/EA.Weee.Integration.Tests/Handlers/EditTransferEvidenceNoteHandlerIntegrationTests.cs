@@ -90,7 +90,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(result);
+                note = Query.GetTransferEvidenceNoteById(result);
             };
 
             private readonly It shouldHaveUpdatedTheTransferEvidenceNoteWithExpectedPropertyValues = () =>
@@ -180,7 +180,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(result);
+                note = Query.GetTransferEvidenceNoteById(result);
             };
 
             private readonly It shouldHaveUpdatedTheTransferEvidenceNoteWithExpectedPropertyValues = () =>
@@ -296,7 +296,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(result);
+                note = Query.GetTransferEvidenceNoteById(result);
             };
 
             private readonly It shouldHaveUpdatedTheTransferEvidenceNoteWithExpectedPropertyValues = () =>

@@ -3,6 +3,8 @@
     using System;
     using System.Linq;
     using Base;
+    using Core.Helpers;
+    using Core.Shared;
     using Domain;
     using Domain.AatfReturn;
     using Domain.Organisation;
@@ -21,8 +23,9 @@
             var organisation = DbContext.Organisations.First(o => o.Name.Equals(TestingConstants.TestCompanyName));
             var newAddress = DbContext.AatfAddress.First(a => a.Id.Equals(address.Id));
             var newContact = DbContext.AatfContacts.First(c => c.Id.Equals(contact.Id));
+            var name = Faker.Company.Name();
 
-            instance = new Aatf(Faker.Company.Name(),
+            instance = new Aatf(name.Substring(0, name.Length - 1).Replace(",", string.Empty),
                 auth,
                 $"WEE/AA{Faker.RandomNumber.Next(1000, 9999)}ZZ/ATF",
                 AatfStatus.Approved,
@@ -43,6 +46,17 @@
         {
             ObjectInstantiator<Aatf>.SetProperty(o => o.Organisation, null, instance);
             ObjectInstantiator<Aatf>.SetProperty(o => o.OrganisationId, organisationId, instance);
+
+            return this;
+        }
+
+        public AatfDbSetup WithAppropriateAuthority(CompetentAuthority authority)
+        {
+            var authString = authority.ToDisplayString();
+            var ca = DbContext.UKCompetentAuthorities.First(c => c.Name.Equals(authString));
+            
+            ObjectInstantiator<Aatf>.SetProperty(o => o.CompetentAuthority, null, instance);
+            ObjectInstantiator<Aatf>.SetProperty(o => o.CompetentAuthority, ca, instance);
 
             return this;
         }
