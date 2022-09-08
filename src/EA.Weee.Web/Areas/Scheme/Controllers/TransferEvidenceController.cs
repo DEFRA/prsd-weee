@@ -238,28 +238,35 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmittedTransferNote(ViewTransferNoteViewModel model)
         {
+            model.OrganisationId = model.SchemeId;  //TODO: find the reason why organisation id is default(Guid)
+
             await SetBreadcrumb(model.OrganisationId);
 
             using (var client = this.apiClient())
             {
                 if (ModelState.IsValid)
                 {
-                    SetNoteStatusRequest request = new SetNoteStatusRequest(model.EvidenceNoteId, NoteStatus.Submitted);
-
-                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = (NoteUpdatedStatusEnum)request.Status;
-
-                    Guid id = await client.SendAsync(User.GetAccessToken(), request);
-
-                    var requestRefreshed = new GetTransferEvidenceNoteForSchemeRequest(id);
-
-                    TransferEvidenceNoteData note = await client.SendAsync(User.GetAccessToken(), requestRefreshed);
-
-                    var modelRefreshed = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.OrganisationId, note, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
+                    var status = NoteUpdatedStatusEnum.Draft;
+                    switch (model.Status)
                     {
-                        OrganisationId = model.OrganisationId
-                    });
+                        case NoteStatus.Draft:
+                            status = NoteUpdatedStatusEnum.Submitted;
+                            break;
+                        case NoteStatus.Returned:
+                            status = NoteUpdatedStatusEnum.ReturnedSubmitted;
+                            break;
+                        default:
+                            // should we catch the error here or just let it through ?
+                            break;
+                    }
 
-                    return View("DownloadTransferNote", modelRefreshed);
+                    SetNoteStatusRequest request = new SetNoteStatusRequest(model.EvidenceNoteId, (NoteStatus)status);
+
+                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = status;
+
+                    await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new { pcsId = model.OrganisationId, EvidenceNoteId = model.EvidenceNoteId, redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers) });
                 }
 
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EvidenceNoteId));
