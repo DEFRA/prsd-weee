@@ -12,8 +12,8 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Core.Constants;
+    using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.ViewModels.Shared;
@@ -38,7 +38,15 @@
         private readonly IPdfDocumentProvider pdfDocumentProvider;
         private readonly IMvcTemplateExecutor templateExecutor;
 
-        public TransferEvidenceController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, ITransferEvidenceRequestCreator transferNoteRequestCreator, IWeeeCache cache, ISessionService sessionService, ConfigurationService configurationService) : base(breadcrumb, cache)
+        public TransferEvidenceController(Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb,
+            IMapper mapper,
+            ITransferEvidenceRequestCreator transferNoteRequestCreator,
+            IWeeeCache cache,
+            ISessionService sessionService,
+            ConfigurationService configurationService,
+            IPdfDocumentProvider pdfDocumentProvider,
+            IMvcTemplateExecutor templateExecutor) : base(breadcrumb, cache)
         {
             this.apiClient = apiClient;
             this.mapper = mapper;
