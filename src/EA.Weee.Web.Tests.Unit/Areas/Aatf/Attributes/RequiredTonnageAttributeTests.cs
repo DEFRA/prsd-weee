@@ -31,7 +31,7 @@
         [Fact]
         public void RequiredTonnageAttribute_ShouldBeDerivedFrom_RequiredAttribute()
         {
-            typeof(RequiredTonnageAttribute).Should().BeDerivedFrom<RequiredAttribute>();
+            typeof(RequiredTonnageAttribute).Should().BeDerivedFrom<RequiredTonnageBaseAttribute>();
         }
 
         [Fact]

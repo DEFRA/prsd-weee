@@ -162,6 +162,7 @@
     <Compile Include="DataHelpers\NoteStatusCoreData.cs" />
     <Compile Include="DataHelpers\OutOfComplianceYearDataWithBalancingScheme.cs" />
     <Compile Include="DataHelpers\OutOfComplianceYearData.cs" />
+    <Compile Include="DataHelpers\UserStatusCoreData.cs" />
     <Compile Include="DataHelpers\SchemeStatusCoreData.cs" />
     <Compile Include="DataHelpers\SchemeStatusData.cs" />
     <Compile Include="DataHelpers\NoteStatusData.cs" />
