@@ -17,6 +17,7 @@
     using Filters;
     using Infrastructure;
     using Mappings.ToViewModels;
+    using Microsoft.Ajax.Utilities;
     using Requests;
     using Services;
     using Services.Caching;
@@ -98,10 +99,33 @@
             return View(model);
         }
 
+        //[HttpGet]
+        //[CheckCanCreateTransferNote]
+        //[NoCacheFilter]
+        //public async Task<ActionResult> TransferEvidenceNotePaging(Guid pcsId, int complianceYear, )
+        //{
+        //    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+        //        SessionKeyConstant.TransferNoteKey);
+
+        //    if (transferRequest == null)
+        //    {
+        //        return RedirectToManageEvidence(pcsId, complianceYear);
+        //    }
+
+        //    var model = await TransferFromViewModel(pcsId, complianceYear, client, transferRequest, 1);
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEvidenceNote(Guid evidenceNoteId, Guid pcsId, int complianceYear, int page)
+        {
+            return RedirectToAction("TransferFrom", new { pcsId, complianceYear, page });
+        }
+
         [HttpGet]
         [CheckCanCreateTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferFrom(Guid pcsId, int complianceYear)
+        public async Task<ActionResult> TransferFrom(Guid pcsId, int complianceYear, int page = 1)
         {
             using (var client = this.apiClient())
             {
@@ -115,7 +139,7 @@
                     return RedirectToManageEvidence(pcsId, complianceYear);
                 }
 
-                var model = await TransferFromViewModel(pcsId, complianceYear, client, transferRequest, 1);
+                var model = await TransferFromViewModel(pcsId, complianceYear, client, transferRequest, page);
 
                 return this.View("TransferFrom", model);
             }
@@ -125,15 +149,21 @@
             TransferEvidenceNoteRequest transferRequest, int pageNumber)
         {
             var result = await client.SendAsync(User.GetAccessToken(),
-               new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+               new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, 
+                result, 
+                result, 
+                transferRequest, 
+                pcsId, pageNumber, 
+                configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
-            var evidenceNoteIds = transferRequest.EvidenceNoteIds;
-            if (evidenceNoteIds != null)
-            {
-                mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
-            }
+            //This should be set by above
+            //var evidenceNoteIds = transferRequest.EvidenceNoteIds;
+            //if (evidenceNoteIds != null)
+            //{
+            //    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
+            //}
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
@@ -294,7 +324,7 @@
             sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
 
             var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds));
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, new List<Guid>()));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId)
             {
@@ -361,16 +391,16 @@
 
                 resultNotes.AddRange(alreadySelectedEvidenceNotes);
 
-                var selectedEvidenceNotes =
-                model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key).ToList();
+                //var selectedEvidenceNotes =
+                //model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key).ToList();
 
-                foreach (var note in selectedEvidenceNotes)
-                {
-                    if (!resultNotes.Contains(note))
-                    {
-                        resultNotes.Add(note);
-                    }
-                }
+                //foreach (var note in selectedEvidenceNotes)
+                //{
+                //    if (!resultNotes.Contains(note))
+                //    {
+                //        resultNotes.Add(note);
+                //    }
+                //}
               
                 var updatedTransferRequest =
                     new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, resultNotes);
