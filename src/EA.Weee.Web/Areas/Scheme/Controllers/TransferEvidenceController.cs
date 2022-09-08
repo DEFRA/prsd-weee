@@ -31,13 +31,15 @@
         private readonly IMapper mapper;
         private readonly ITransferEvidenceRequestCreator transferNoteRequestCreator;
         private readonly ISessionService sessionService;
+        private readonly ConfigurationService configurationService;
 
-        public TransferEvidenceController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, ITransferEvidenceRequestCreator transferNoteRequestCreator, IWeeeCache cache, ISessionService sessionService) : base(breadcrumb, cache)
+        public TransferEvidenceController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, ITransferEvidenceRequestCreator transferNoteRequestCreator, IWeeeCache cache, ISessionService sessionService, ConfigurationService configurationService) : base(breadcrumb, cache)
         {
             this.apiClient = apiClient;
             this.mapper = mapper;
             this.transferNoteRequestCreator = transferNoteRequestCreator;
             this.sessionService = sessionService;
+            this.configurationService = configurationService;
         }
 
         [HttpGet]
@@ -123,9 +125,9 @@
             TransferEvidenceNoteRequest transferRequest, int pageNumber)
         {
             var result = await client.SendAsync(User.GetAccessToken(),
-               new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null, pageNumber));
+               new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId, pageNumber);
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
             var evidenceNoteIds = transferRequest.EvidenceNoteIds;
             if (evidenceNoteIds != null)
@@ -136,8 +138,6 @@
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
 
-            model.NoteCount = result.NoteCount;
-                
             sessionService.SetTransferSessionObject(Session, model.EvidenceNotesDataListPaged, SessionKeyConstant.PagingTransferViewModelKey);
 
             return model;
