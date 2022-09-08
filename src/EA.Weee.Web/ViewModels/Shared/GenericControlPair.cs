@@ -9,6 +9,7 @@
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value.</typeparam>
+    [Serializable]
     public class GenericControlPair<TKey, TValue>
     {
         /// <summary>

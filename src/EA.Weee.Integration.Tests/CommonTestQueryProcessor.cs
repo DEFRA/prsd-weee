@@ -35,7 +35,16 @@
         public Note GetEvidenceNoteById(Guid id)
         {
             return dbContext.Notes
-                .Include(n => n.Recipient)
+                .Include(n => n.Recipient.Schemes)
+                .Include(n => n.Organisation)
+                .Include(n => n.Aatf)
+                .Include(n => n.NoteTonnage)
+                .FirstOrDefault(n => n.Id.Equals(id));
+        }
+
+        public Note GetTransferEvidenceNoteById(Guid id)
+        {
+            return dbContext.Notes
                 .Include(n => n.NoteTransferTonnage)
                 .Include(n => n.NoteTonnage)
                 .FirstOrDefault(n => n.Id.Equals(id));
