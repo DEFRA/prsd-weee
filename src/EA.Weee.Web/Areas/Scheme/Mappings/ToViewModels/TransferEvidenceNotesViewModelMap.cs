@@ -29,46 +29,47 @@
                     selected = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.Any(t =>
                         t.OriginalNoteId == evidenceNoteData.Id);
                 }
-                model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, selected));
+                //model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, selected));
             }
            
-            if (source.SessionEvidenceNotesId != null)
-            {
-                model.SelectedEvidenceNotePairs.Where(c => source.SessionEvidenceNotesId.Contains(c.Key)).ToList()
-                           .ForEach(c => c.Value = true);
+            //if (source.SessionEvidenceNotesId != null)
+            //{
+            //    model.SelectedEvidenceNotePairs.Where(c => source.SessionEvidenceNotesId.Contains(c.Key)).ToList()
+            //               .ForEach(c => c.Value = true);
 
-                model.SelectedEvidenceNotePairs = ReorderAndGetSelectedEvidenceIds(model);
-            }
+            //    model.SelectedEvidenceNotePairs = ReorderAndGetSelectedEvidenceIds(model);
+            //}
 
-            if (source.TransferEvidenceNoteData != null)
-            {
-                model.SelectedEvidenceNotePairs = ReorderAndGetSelectedEvidenceIds(model);
-            }
+            //if (source.TransferEvidenceNoteData != null)
+            //{
+            //    model.SelectedEvidenceNotePairs = ReorderAndGetSelectedEvidenceIds(model);
+            //}
 
-            if (source.ExcludeEvidenceNoteIds != null)
-            {
-                model.SelectedEvidenceNotePairs.Where(c => source.ExcludeEvidenceNoteIds.Contains(c.Key)).ToList()
-                    .ForEach(c => c.Value = false);
-            }
+            //if (source.ExcludeEvidenceNoteIds != null)
+            //{
+            //    model.SelectedEvidenceNotePairs.Where(c => source.ExcludeEvidenceNoteIds.Contains(c.Key)).ToList()
+            //        .ForEach(c => c.Value = false);
+            //}
 
             return model;
         }
 
-        private List<GenericControlPair<Guid, bool>> ReorderAndGetSelectedEvidenceIds(TransferEvidenceNotesViewModel model)
-        {
-            var selectedNoteIds = model.SelectedEvidenceNotePairs
-                 .Where(s => s.Value)
-                 .Select(s1 => s1.Key).ToList();
+        //private List<GenericControlPair<Guid, bool>> ReorderAndGetSelectedEvidenceIds(TransferEvidenceNotesViewModel model)
+        //{
+        //    //var selectedNoteIds = model.SelectedEvidenceNotePairs
+        //    //     .Where(s => s.Value)
+        //    //     .Select(s1 => s1.Key).ToList();
 
-            // order list by the selected notes first (in desc ref order) and then the rest of the notes in ref desc
-            var formattedList = new List<ViewEvidenceNoteViewModel>();
-            formattedList.AddRange(model.EvidenceNotesDataList.Where(e => selectedNoteIds.Contains(e.Id)).OrderByDescending(e => e.Reference).ToList());
-            formattedList.AddRange(model.EvidenceNotesDataList.Where(e => !selectedNoteIds.Contains(e.Id)).OrderByDescending(e => e.Reference).ToList());
-            model.EvidenceNotesDataList = formattedList;
+        //    // order list by the selected notes first (in desc ref order) and then the rest of the notes in ref desc
+        //    var formattedList = new List<ViewEvidenceNoteViewModel>();
+        //    formattedList.AddRange(model.EvidenceNotesDataList.Where(e => selectedNoteIds.Contains(e.Id)).OrderByDescending(e => e.Reference).ToList());
+        //    formattedList.AddRange(model.EvidenceNotesDataList.Where(e => !selectedNoteIds.Contains(e.Id)).OrderByDescending(e => e.Reference).ToList());
+        //    model.EvidenceNotesDataList = formattedList;
 
-            // reorder the selected evidence note ids to ensure they match the list of notes
-            return model.EvidenceNotesDataList.Select(e =>
-                new GenericControlPair<Guid, bool>(e.Id, selectedNoteIds.Contains(e.Id))).ToList();
-        }
+        //    // reorder the selected evidence note ids to ensure they match the list of notes
+        //    //return model.EvidenceNotesDataList.Select(e =>
+        //    //    new GenericControlPair<Guid, bool>(e.Id, selectedNoteIds.Contains(e.Id))).ToList();
+        //    return model.EvidenceNotesDataList.ToList();
+        //}
     }
 }

@@ -167,6 +167,7 @@
         public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
             List<int> categories, 
             List<Guid> evidenceNotes, 
+            List<Guid> excludeEvidenceNotes,
             int complianceYear,
             int pageNumber,
             int pageSize)
