@@ -238,9 +238,6 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmittedTransferNote(Guid schemeId, Guid evidenceNoteId, NoteStatus status)
         {
-            // can be removed as will be leaveing this screen
-            //await SetBreadcrumb(model.OrganisationId);
-
             using (var client = this.apiClient())
             {
                 NoteUpdatedStatusEnum updateStatus;
@@ -253,8 +250,6 @@
                         updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
                         break;
                     default:
-                        // should we catch the error here or just let it through ?
-                        // TODO: probably throw an invalid operation exception
                         throw new InvalidOperationException();
                 }
 
@@ -270,16 +265,6 @@
                     evidenceNoteId, 
                     redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
                 });
-                
-                //TODO: remove as we will be leaving the screen above and we
-                //var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EvidenceNoteId));
-
-                //var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.SchemeId, noteData, null)
-                //{
-                //    OrganisationId = model.SchemeId
-                //});
-
-                //return View("SubmittedTransfer", refreshedModel);
             }
         }
 
