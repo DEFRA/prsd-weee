@@ -139,5 +139,12 @@
 
             return this;
         }
+
+        public EvidenceNoteDbSetup WithProtocol(Protocol protocol)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.Protocol, protocol, instance);
+
+            return this;
+        }
     }
 }

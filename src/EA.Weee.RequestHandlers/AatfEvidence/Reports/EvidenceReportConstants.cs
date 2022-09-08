@@ -12,7 +12,7 @@
         public const string ReceivedStartDate = "WEEE received start date";
         public const string ReceivedEndDate = "WEEE received end date";
         public const string Recipient = "Recipient name";
-        public const string RecipientApprovalNumber = "Recpient approval number";
+        public const string RecipientApprovalNumber = "Recipient approval number";
         public const string Protocol = "Actual or protocol";
         public const string Cat1Received = "Cat 1 received (t)";
         public const string Cat2Received = "Cat 2 received (t)";

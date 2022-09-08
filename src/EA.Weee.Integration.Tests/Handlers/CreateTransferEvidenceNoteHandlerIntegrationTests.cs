@@ -90,7 +90,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(result);
+                note = Query.GetTransferEvidenceNoteById(result);
             };
 
             private readonly It shouldHaveCreatedTheTransferEvidenceNote = () =>
@@ -183,7 +183,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(result);
+                note = Query.GetTransferEvidenceNoteById(result);
             };
 
             private readonly It shouldHaveCreatedTheTransferEvidenceNote = () =>

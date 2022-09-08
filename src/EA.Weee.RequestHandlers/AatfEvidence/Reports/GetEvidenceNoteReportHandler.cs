@@ -92,7 +92,7 @@
 
             var fileContent = csvWriter.Write(reportData);
             var timestamp = SystemTime.Now;
-            var fileName = $"{request.ComplianceYear}_Evidence notes original tonnages_{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv";
+            var fileName = $"{request.ComplianceYear}_Evidence notes original tonnages{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
 
             return new CSVFileData
             {
