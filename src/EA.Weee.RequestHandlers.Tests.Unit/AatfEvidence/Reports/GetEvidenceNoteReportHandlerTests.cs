@@ -14,7 +14,6 @@
     using System.Threading.Tasks;
     using Core.Constants;
     using FluentAssertions;
-    using Neleus.LambdaCompare;
     using Prsd.Core;
     using Weee.Requests.AatfEvidence.Reports;
     using Weee.Tests.Core;
@@ -133,7 +132,7 @@
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.RecipientName,
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Recipient,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
@@ -197,7 +196,7 @@
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Reused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReusedTotal,
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
         }
 
@@ -240,7 +239,7 @@
             //assert
             result.FileContent.Should().Be(content);
             result.FileName.Should()
-                .Be($"{request.ComplianceYear}_Evidence notes original tonnages_{date.ToString(DateTimeConstants.FilenameTimestampFormat)}.csv");
+                .Be($"{request.ComplianceYear}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
             SystemTime.Unfreeze();
         }
     }

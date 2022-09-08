@@ -68,7 +68,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
@@ -142,7 +142,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveRejectedTheTransferEvidenceNote = () =>
@@ -218,7 +218,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
@@ -294,7 +294,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveApprovedTheTransferEvidenceNote = () =>
@@ -367,7 +367,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
