@@ -19,12 +19,12 @@
 
     public class ReportsBaseController : AdminController
     {
-        private readonly Func<IWeeeClient> apiClient;
+        protected readonly Func<IWeeeClient> ApiClient;
         private readonly BreadcrumbService breadcrumb;
 
         public ReportsBaseController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
         {
-            this.apiClient = apiClient;
+            this.ApiClient = apiClient;
             this.breadcrumb = breadcrumb;
         }
 
@@ -45,7 +45,7 @@
 
         protected async Task<IList<PanAreaData>> FetchPatAreas()
         {
-            using (var client = apiClient())
+            using (var client = ApiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetPanAreas());
             }
@@ -53,7 +53,7 @@
 
         protected async Task<IList<LocalAreaData>> FetchLocalAreas()
         {
-            using (var client = apiClient())
+            using (var client = ApiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetLocalAreas());
             }
@@ -61,7 +61,7 @@
 
         protected async Task<IList<UKCompetentAuthorityData>> FetchAuthorities()
         {
-            using (var client = apiClient())
+            using (var client = ApiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
             }
@@ -70,7 +70,7 @@
         protected async Task<List<SchemeData>> FetchSchemes()
         {
             var request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
-            using (var client = apiClient())
+            using (var client = ApiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
             }
@@ -79,7 +79,7 @@
         protected async Task<List<int>> FetchComplianceYearsForAatf()
         {
             var request = new GetAatfAeActiveComplianceYears();
-            using (var client = apiClient())
+            using (var client = ApiClient())
             {
                 var items = await client.SendAsync(User.GetAccessToken(), request);
                 return items;
@@ -89,7 +89,7 @@
         protected async Task<List<int>> FetchComplianceYearsForAatfReturns()
         {
             var request = new GetAatfReturnsActiveComplianceYears();
-            using (var client = apiClient())
+            using (var client = ApiClient())
             {
                 var items = await client.SendAsync(User.GetAccessToken(), request);
                 return items;
@@ -99,6 +99,32 @@
         protected void SetBreadcrumb()
         {
             breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
+        }
+
+        protected async Task<ActionResult> CheckUserStatus(string redirectController, string redirectAction, Func<Task<ActionResult>> viewResult = null)
+        {
+            using (var client = ApiClient())
+            {
+                var userStatus = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
+
+                switch (userStatus)
+                {
+                    case UserStatus.Active:
+                        if (viewResult != null)
+                        {
+                           return await viewResult.Invoke();
+                        }
+
+                        return RedirectToAction(redirectAction, redirectController);
+                    case UserStatus.Inactive:
+                    case UserStatus.Pending:
+                    case UserStatus.Rejected:
+                        return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
+                    default:
+                        throw new NotSupportedException(
+                            $"Cannot determine result for user with status '{userStatus}'");
+                }
+            }
         }
     }
 }

@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using EA.Weee.Web.Areas.Aatf.Attributes;
     using FluentAssertions;
+    using Web.Areas.Scheme.Attributes;
     using Web.Areas.Scheme.ViewModels;
     using Xunit;
 
@@ -32,9 +33,9 @@
         }
 
         [Fact]
-        public void TransferEvidenceTonnageViewModel_TransferCategoryValues_ShouldHaveRequiredTonnageAttribute()
+        public void TransferEvidenceTonnageViewModel_TransferCategoryValues_ShouldHaveRequiredTransferTonnageAttribute()
         {
-            typeof(TransferEvidenceTonnageViewModel).GetProperty("TransferCategoryValues").Should().BeDecoratedWith<RequiredTonnageAttribute>();
+            typeof(TransferEvidenceTonnageViewModel).GetProperty("TransferCategoryValues").Should().BeDecoratedWith<RequiredTransferTonnageAttribute>();
         }
 
         [Fact]

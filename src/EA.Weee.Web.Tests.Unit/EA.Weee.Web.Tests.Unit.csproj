@@ -302,6 +302,7 @@
     <Compile Include="Areas\Aatf\Attributes\RequiredTonnageAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\RequiredSubmitActionAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteStartDateAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\RequiredTonnageBaseAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\ValidateEvidenceEnabledAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\CheckCanEditEvidenceAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Controller\AatfEvidenceBaseControllerTests.cs" />
@@ -364,11 +365,14 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\EvidenceReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesControllerForVoidTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsControllerViewObligationAndEvidenceSummaryTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTransferTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ChooseEvidenceReportViewModelTests.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EvidenceReportViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\ViewObligationsAndEvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidNoteViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidEvidenceNoteViewModelTests.cs" />
@@ -378,6 +382,7 @@
     <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBaseTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckSchemeNoteAttributeBaseTests.cs" />
+    <Compile Include="Areas\Scheme\Attributes\RequiredTransferTonnageAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\EvidenceNoteHistoryDataViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\SchemeDataOrganisationMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewEvidenceSummaryViewModelMapTests.cs" />

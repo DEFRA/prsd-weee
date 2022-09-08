@@ -44,7 +44,9 @@
         private readonly Guid organisationId;
         private readonly ITransferEvidenceRequestCreator transferNoteRequestCreator;
         private readonly ISessionService sessionService;
-        
+        private readonly ConfigurationService configurationService;
+        private const int DefaultPageSize = 20;
+
         public TransferEvidenceControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
@@ -54,8 +56,12 @@
             sessionService = A.Fake<ISessionService>();
             organisationId = Guid.NewGuid();
             transferNoteRequestCreator = A.Fake<ITransferEvidenceRequestCreator>();
+            configurationService = A.Fake<ConfigurationService>();
 
-            transferEvidenceController = new TransferEvidenceController(() => weeeClient, breadcrumb, mapper, transferNoteRequestCreator, cache, sessionService);
+            transferEvidenceController = new TransferEvidenceController(() => weeeClient, breadcrumb, mapper, transferNoteRequestCreator, cache, sessionService, configurationService);
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize)
+                .Returns(DefaultPageSize);
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -754,7 +760,9 @@
                         g.Categories.Equals(request.CategoryIds) && 
                         g.OrganisationId.Equals(organisationId) && 
                         g.EvidenceNotes.Count.Equals(0) &&
-                        g.ComplianceYear == complianceYear)))
+                        g.ComplianceYear == complianceYear &&
+                        g.PageSize == DefaultPageSize &&
+                        g.PageNumber == 1)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -782,7 +790,9 @@
                     t.OrganisationId.Equals(organisationId) &&
                     t.Notes.Equals(notes) &&
                     t.Request.Equals(request) &&
-                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+                    t.ComplianceYear == complianceYear &&
+                    t.PageSize == DefaultPageSize && 
+                    t.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -873,7 +883,11 @@
         public async Task TransferFromPost_GivenInvalidModel_SchemeShouldBeRetrievedFromCache()
         {
             // arrange 
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.PageNumber, (int?)null)
+                .With(t => t.Action, ActionEnum.Continue)
+                .Create();
+            
             AddModelError();
 
             // act
@@ -887,8 +901,15 @@
         public async Task TransferFromPost_GivenModelIsNotValidAndSchemeIsNotBalancingScheme_BreadCrumbShouldBeSet()
         {
             // arrange 
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.IsBalancingScheme, false)
+                .Create();
+
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.PageNumber, (int?)null)
+                .With(t => t.Action, ActionEnum.Continue)
+                .Create();
+
             var organisationName = "OrganisationName";
             AddModelError();
 
@@ -908,8 +929,15 @@
         public async Task TransferFromPost_GivenModelIsNotValidAndSchemeIsBalancingScheme_BreadCrumbShouldBeSet()
         {
             // arrange 
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>()
+                .With(s => s.IsBalancingScheme, true)
+                .Create();
+
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.PageNumber, (int?)null)
+                .With(t => t.Action, ActionEnum.Continue)
+                .Create();
+
             var organisationName = "OrganisationName";
             AddModelError();
 
@@ -929,7 +957,11 @@
         public async Task TransferFromPost_GivenModelIsNotValid_TransferFromViewShouldBeReturned()
         {
             // arrange 
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.PageNumber, (int?)null)
+                .With(t => t.Action, ActionEnum.Continue)
+                .Create();
+
             AddModelError();
 
             // act
@@ -943,7 +975,11 @@
         public async Task TransferFromPost_GivenModelIsNotValid_ModelShouldBeReturned()
         {
             // arrange 
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.PageNumber, (int?)null)
+                .With(t => t.Action, ActionEnum.Continue)
+                .Create();
+
             AddModelError();
 
             // act
@@ -957,7 +993,10 @@
         public async Task TransferFromPost_GivenModelIsValid_SessionTransferNoteObjectShouldBeRetrieved()
         {
             // arrange 
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+               .With(t => t.PageNumber, (int?)null)
+               .With(t => t.Action, ActionEnum.Continue)
+               .Create();
 
             // act
             await transferEvidenceController.TransferFrom(model);
@@ -972,14 +1011,22 @@
         public async Task TransferFromPost_GivenModelIsValid_SessionTransferNoteObjectShouldBeUpdatedWithSelectedNotes()
         {
             // arrange 
-            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.PageNumber, (int?)null)
+                .With(t => t.Action, ActionEnum.Continue)
+                .Create();
+
             model.SelectedEvidenceNotePairs = new List<GenericControlPair<Guid, bool>>()
             {
                 new GenericControlPair<Guid, bool>(Guid.NewGuid(), true),
                 new GenericControlPair<Guid, bool>(Guid.NewGuid(), true)
             };
             var request = GetRequest();
+
             var selectedNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key).ToList();
+            var alreadySelectedNotes = request.EvidenceNoteIds;
+
+            selectedNotes.AddRange(alreadySelectedNotes);
 
             A.CallTo(() =>
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
@@ -1004,8 +1051,12 @@
         {
             // arrange 
             var complianceYear = TestFixture.Create<int>();
+
             var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
-                .With(t => t.ComplianceYear, complianceYear).Create();
+                .With(t => t.ComplianceYear, complianceYear)
+                .With(t => t.Action, ActionEnum.Continue)
+                .With(t => t.PageNumber, (int?)null)
+                .Create();
           
             // act
             var result = await transferEvidenceController.TransferFrom(model) as RedirectToRouteResult;
