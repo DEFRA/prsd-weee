@@ -40,12 +40,14 @@
         private readonly ISessionService sessionService;
         private readonly ITransferEvidenceRequestCreator transferEvidenceRequestCreator;
         private readonly OutgoingTransfersController outgoingTransferEvidenceController;
+        private readonly ConfigurationService configurationService;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly Guid organisationId;
         private readonly TransferEvidenceNoteData transferEvidenceNoteData;
         private readonly EvidenceNoteSearchDataResult evidenceNoteData;
         private readonly TransferEvidenceTonnageViewModel transferEvidenceTonnageViewModel;
+        private const int DefaultPageSize = 11;
 
         public OutgoingTransfersControllerTests()
         {
@@ -55,12 +57,16 @@
             mapper = A.Fake<IMapper>();
             sessionService = A.Fake<ISessionService>();
             transferEvidenceRequestCreator = A.Fake<ITransferEvidenceRequestCreator>();
+            configurationService = A.Fake<ConfigurationService>();
 
             organisationId = Guid.NewGuid();
 
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize)
+                .Returns(DefaultPageSize);
+
             outgoingTransferEvidenceController =
                 new OutgoingTransfersController(mapper, breadcrumb, cache, () => weeeClient, sessionService,
-                    transferEvidenceRequestCreator);
+                    transferEvidenceRequestCreator, configurationService);
 
             transferEvidenceNoteData = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(n => n.Status, NoteStatus.Submitted).Create();
@@ -1350,7 +1356,9 @@
                         t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                         t.Request == request &&
                         t.Notes.Equals(evidenceNoteData) &&
-                        t.OrganisationId == organisationId)))
+                        t.OrganisationId == organisationId &&
+                        t.PageSize == DefaultPageSize &&
+                        t.PageNumber == 1)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1376,6 +1384,35 @@
                         t.Request == request &&
                         t.SessionEvidenceNotesId.SequenceEqual(evidenceNoteIds))))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromGet_AvailableTransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidenceNoteData);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
+                g.PageSize == DefaultPageSize &&
+                g.PageNumber == 1 &&
+                g.Categories.SequenceEqual(request.CategoryIds) &&
+                g.ComplianceYear == transferEvidenceNoteData.ComplianceYear &&
+                g.OrganisationId == organisationId &&
+                g.EvidenceNotes.Count == 0))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
