@@ -16,6 +16,8 @@
 
         public EvidenceNoteSearchDataResult Notes { get; }
 
+        public EvidenceNoteSearchDataResult NotesSelection { get; }
+
         public TransferEvidenceNoteRequest Request { get; }
 
         public TransferEvidenceNoteData TransferEvidenceNoteData { get; }
@@ -56,6 +58,29 @@
             Notes = notes;
             TransferEvidenceNoteData = transferNoteData;
             OrganisationId = organisationId;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+        }
+
+        public TransferEvidenceNotesViewModelMapTransfer(
+            int complianceYear,
+            EvidenceNoteSearchDataResult notes,
+            EvidenceNoteSearchDataResult notesSelection,
+            TransferEvidenceNoteRequest request,
+            Guid organisationId,
+            int pageNumber = 1,
+            int pageSize = 10)
+        {
+            Condition.Requires(notes).IsNotNull();
+            Condition.Requires(notesSelection).IsNotNull();
+            Condition.Requires(request).IsNotNull();
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
+
+            Notes = notes;
+            NotesSelection = notesSelection;
+            Request = request;
+            OrganisationId = organisationId;
+            ComplianceYear = complianceYear;
             PageNumber = pageNumber;
             PageSize = pageSize;
         }

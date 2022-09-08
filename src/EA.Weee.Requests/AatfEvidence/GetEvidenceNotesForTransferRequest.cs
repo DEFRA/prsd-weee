@@ -14,6 +14,8 @@
 
         public List<Guid> EvidenceNotes { get; private set; }
 
+        public List<Guid> ExcludeEvidenceNotes { get; private set; }
+
         public int ComplianceYear { get; private set; }
 
         public int PageNumber { get; private set; }
@@ -23,7 +25,8 @@
         public GetEvidenceNotesForTransferRequest(Guid organisationId, 
             List<int> categories, 
             int complianceYear, 
-            List<Guid> evidenceNotes = null,
+            List<Guid> evidenceNotes,
+            List<Guid> excludeEvidenceNotes,
             int pageNumber = 1,
             int pageSize = 10)
         {
@@ -34,6 +37,7 @@
             Categories = categories;
             ComplianceYear = complianceYear;
             EvidenceNotes = evidenceNotes ?? new List<Guid>();
+            ExcludeEvidenceNotes = excludeEvidenceNotes ?? new List<Guid>();
             PageNumber = pageNumber;
             PageSize = pageSize;
         }
