@@ -209,8 +209,11 @@
             controller.ModelState.AddModelError(string.Empty, "Validation message");
             var filter = fixture.Create<FilteringViewModel>();
 
-            var viewModel = new ManageAatfsViewModel();
-            viewModel.Filter = filter;
+            var viewModel = new ManageAatfsViewModel
+            {
+                Filter = filter
+            };
+
             var result = await controller.ManageAatfs(viewModel) as ViewResult;
 
             var resultViewModel = result.Model as ManageAatfsViewModel;

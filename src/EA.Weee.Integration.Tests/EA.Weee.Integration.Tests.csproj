@@ -199,6 +199,7 @@
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
     <Compile Include="Handlers\EditTransferEvidenceNoteHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetEvidenceNoteReportHandlerRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAllNotesRequestHandlerForTransfersIntegrationTests.cs" />
     <Compile Include="Handlers\GetComplianceYearsFilterHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\EvidenceNoteSeeder.cs" />

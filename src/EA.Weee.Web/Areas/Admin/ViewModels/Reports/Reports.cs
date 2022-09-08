@@ -22,5 +22,8 @@
         public const string AatfAePublicRegister = "AATF / AE public register";
         public const string PcsReports = "PCS reports";
         public const string AatfReports = "AATF / AE reports";
+        public const string EvidenceNotesReports = "Evidence and evidence transfers reports";
+        public const string EvidenceNoteData = "Evidence notes report";
+        public const string EvidenceTransfersData = "Evidence transfers report";
     }
 }
