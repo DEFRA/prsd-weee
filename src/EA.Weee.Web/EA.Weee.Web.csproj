@@ -877,6 +877,7 @@
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidencePBS.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\DownloadTransferEvidenceNote.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1613,6 +1614,7 @@
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotePdfLayout.cshtml" />
+    <Content Include="Views\Shared\_TransferEvidenceNotePdfLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

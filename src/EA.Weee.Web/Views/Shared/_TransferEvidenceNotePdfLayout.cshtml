@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <title>GOV.UK - The best place to find government services and information</title>
+    
+    <style type="text/css">
+
+        .govuk-full-printable-width {
+            width: 100% !important;
+            display: flex;
+        }
+
+            .govuk-full-printable-width span:nth-child(1) {
+                width: 25%;
+            }
+
+            .govuk-full-printable-width span:nth-child(2) {
+                width: 75%;
+            }
+
+        .printable-padding-top {
+            padding-top: 5px;
+        }
+
+        .govuk-width-container {
+            width: 100%;
+            display: table;
+        }
+        .govuk-grid-column-one-third {
+            display: table-cell;
+            width: 30% !important;
+        }
+
+        .govuk-label--s {
+            font-family: arial, sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 1.25;
+        }
+
+        .govuk-heading-l {
+            color: #0b0c0c;
+            font-family: arial, sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 1.0416666667;
+            display: block;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .govuk-visually-hidden {
+            display: none;
+        }
+
+        .govuk-body, p, .govuk-body-m {
+            color: #0b0c0c;
+            font-family: arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.25;
+            margin-top: 0;
+        }
+
+        .govuk-table {
+            font-family: arial, sans-serif;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 1.25;
+            color: #0b0c0c;
+            width: 100%;
+            margin-bottom: 20px;
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        .govuk-table__header {
+            font-weight: 700;
+        }
+
+        .govuk-table__header,
+        .govuk-table__cell {
+            padding: 5px 10px 5px 0;
+            border-bottom: 1px solid #b1b4b6;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .govuk-table__cell--numeric {
+            font-family: arial, sans-serif;
+            font-weight: 400;
+        }
+
+        .govuk-table__header--numeric,
+        .govuk-table__cell--numeric {
+            text-align: right;
+        }
+
+        .govuk-table__header:last-child,
+        .govuk-table__cell:last-child {
+            padding-right: 0;
+        }
+
+        .govuk-header {
+            color: #ffffff;
+            background: #0b0c0c;
+            margin-bottom: 10px;
+            height: 40px;
+        }
+
+        .govuk-header__container {
+            display: flex;
+            width: 100%;
+        }
+
+        .govuk-header__link--service-name {
+            display: inline-block;
+            font-family: arial, sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 1.1111111111;
+            padding-top: 5px;
+        }
+
+        .govuk-header__logotype {
+            display: flex;
+            width: 20%;
+        }
+            .govuk-header__logotype > img {
+                height: 30px;
+                padding: 0;
+                margin-top: 2px;
+                margin-left: 2px;
+            }
+
+        .govuk-header__logotype-text {
+            padding-top: 10px;
+            padding-left: 5px;
+            font-family: arial, sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .govuk-\!-text-align-left {
+            text-align: left !important;
+        }
+
+        .govuk-\!-text-align-centre {
+            text-align: center !important;
+        }
+
+        .govuk-\!-text-align-right {
+            text-align: right !important;
+        }
+
+        .printable-text-align-right {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="govuk-header">
+    <div class="govuk-header__container">
+        <div class="govuk-header__logotype">
+            
+            <img alt="GOV.UK crown logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AgXEBkknAt7fAAAA0VJREFUWMPtl02IjlEUx/93Rs0YFiJSmlkgSU2+ZmGFNGI2PhdvjLJkMdRYiclHyl7U2CiThZKFpiRSksUsKM0GTVhggRnCTJhe08/m/4471/M+3jHjIzl1e57nfPzPueeee+5zpX+JgIp446EwCUEdkrTEnw9CCCcnglc1CYn6LKnVY/BPLtdUP2fzjWbEst+doQLwUdIBScMeHeYVfkmxAtOBqjI6uyhPu8rYVAHT84o/01kIQcA518QI0JwTf7ukokd7ziSbJY1IGgTOhRDGlaHaZMZ3zN8OXATagPnAVGBBpLfAvPnWuQhst+2dBLP2R0FsMkC7v2PqApYnvA3WOxHxTpi3IdFdboxRsl67fW5Kg5mXALQCjUA30FmmZg6a/yrivTLvYFZNAZ3GbLSPmObFAW1OhEfjogMEVAP9lg8DdclyxctWZx1sU52BdzSx25xm6aUFI8CsnJ03x88ArMgIaAUQEt2sEpllXwAvM88eYGbJ2Tg2wPMomKfjsAuxz9FYgBrgoQEvpFkBpgFNP+hXBaCQ11+AJmOl/Av2/RCoEdCRpjwxOGv+op85yT2pRcY4m8jSJT82RdKXBONj8r3Hz0shhGUJYIukmdFfA5LehhCuJU32UoS1N8fXpxJwt3fDkYwZjukdyVI1ZhR1Y0ZtfocRyY7Yd3cKvtTNayPQEBlcN9ZAArTOz7bIX1upMSa6A5Zfj3gN9tUFLB0zCfeNEi0EeiPDeqAI3APOAzvN/wBcAVYDbzxWm/fBOjvssMcY9RFur32VqC5N3W4Lbvo5LTkW0rbfE7E+eZSoJ+P4GT1ejB372l1uRzzxTPBWvg/cjRpYE3Daupc9y2rgKnDD773AZeuctk2p4d71KJhXBJ7kbc9tVqwH9gHro9ST6B+I3vuBd1myKFM7/L4W2G8f2Gdu3ygCfXFHBbbY+HiG/uFoOToy5Mct2xKfAEAfUKykkZ0ywGOgBdgKDEVOXwBnPPoyaqQvkr+I+EPGajE2wKlKAlrF76OVFd3LmOhtr9JLYcZ/7JQyurckrZH0WNIzSa8lPZL0XtJb38We51w0kVQvqUbSXEl1khZLmiOpQdJCSbd/+no80Svyr8D8T38NfQWcfES5EXNkCgAAAABJRU5ErkJggg==" />
+            <span class="govuk-header__logotype-text">
+                GOV.UK
+            </span>
+        </div>
+        <div>
+            <span class="govuk-header__link--service-name">
+                Waste Electrical and Electronic Equipment (WEEE)
+            </span>
+        </div>
+    </div>
+</header>
+
+@RenderBody()
+
+</body>
+
+</html>
