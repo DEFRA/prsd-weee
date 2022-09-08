@@ -2,7 +2,6 @@
 {
     using System;
     using System.Web.Mvc;
-    using Api.Client;
     using Services;
 
     public class ValidateAatfEvidenceEnabledAttribute : ActionFilterAttribute

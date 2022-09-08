@@ -3,13 +3,10 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
-    using Constant;
     using Filters;
     using Helpers;
     using Infrastructure;
-    using Services;
     using Weee.Requests.AatfReturn;
 
     public class CheckCanCreateEvidenceNoteAttribute : ActionFilterAttribute
