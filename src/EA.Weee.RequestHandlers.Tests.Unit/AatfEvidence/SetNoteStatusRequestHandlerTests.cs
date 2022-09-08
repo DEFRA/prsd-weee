@@ -181,17 +181,43 @@
             result.Should().BeOfType<SecurityException>();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task HandleAsync_GivenRequestThatIsNotBeingSubmitted_ShouldCheckRecipientOrganisationAccess(Core.AatfEvidence.NoteStatus status)
         {
+            if (status == Core.AatfEvidence.NoteStatus.Submitted)
+            {
+                return;
+            }
+
             //arrange
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
-            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), status);
 
             var organisation = A.Fake<Organisation>();
             var organisationId = TestFixture.Create<Guid>();
             A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.Recipient).Returns(organisation);
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => authorization.EnsureOrganisationAccess(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestThatIsBeingSubmitted_ShouldCheckOrganisationAccess()
+        {
+            //arrange
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess);
+            var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Submitted);
+
+            var organisation = A.Fake<Organisation>();
+            var organisationId = TestFixture.Create<Guid>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => note.Organisation).Returns(organisation);
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
             //act
