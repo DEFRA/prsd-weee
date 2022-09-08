@@ -6,11 +6,16 @@
     using System.Linq;
     using Web.ViewModels.Shared;
 
+    [Serializable]
     public class TransferEvidenceNotesViewModel : TransferEvidenceViewModelBase, IValidatableObject
     {
         public List<GenericControlPair<Guid, bool>> SelectedEvidenceNotePairs { get; set; }
 
         public ActionEnum Action { get; set; }
+
+        public int? PageNumber { get; set; }
+
+        public int NoteCount { get; set; }
 
         public TransferEvidenceNotesViewModel()
         {
@@ -19,16 +24,19 @@
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (!SelectedEvidenceNotePairs.Any(s => s.Value.Equals(true)))
+            if (!PageNumber.HasValue)
             {
-                yield return new ValidationResult("Select at least one evidence note to transfer from", new[] { nameof(SelectedEvidenceNotePairs) });
-            }
-            else
-            {
-                if (SelectedEvidenceNotePairs.Count(s => s.Value.Equals(true)) > 5)
+                if (!SelectedEvidenceNotePairs.Any(s => s.Value.Equals(true)))
                 {
-                    yield return new ValidationResult("You cannot select more than 5 notes",
-                        new[] { nameof(SelectedEvidenceNotePairs) });
+                    yield return new ValidationResult("Select at least one evidence note to transfer from", new[] { nameof(SelectedEvidenceNotePairs) });
+                }
+                else
+                {
+                    if (SelectedEvidenceNotePairs.Count(s => s.Value.Equals(true)) > 5)
+                    {
+                        yield return new ValidationResult("You cannot select more than 5 notes",
+                            new[] { nameof(SelectedEvidenceNotePairs) });
+                    }
                 }
             }
         }
