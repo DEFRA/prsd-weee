@@ -1,0 +1,41 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.EvidenceReports.ChooseEvidenceReportViewModel
+@{
+    var title = "Which evidence and evidence transfers report would you like to view?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@section full_main_content
+{
+    <p>
+        @(this.WeeeGds().BackLink(Url.Action("ChooseReport", "Reports")))
+    </p>
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            @title
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ChooseReport", controllerName: "EvidenceReports", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ReportOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Which report would you like to view?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+        </p>
+    }
+}

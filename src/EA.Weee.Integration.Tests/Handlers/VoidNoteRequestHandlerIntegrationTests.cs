@@ -46,7 +46,7 @@
             {
                 result = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveUpdatedTheTransferNoteToVoid = () =>

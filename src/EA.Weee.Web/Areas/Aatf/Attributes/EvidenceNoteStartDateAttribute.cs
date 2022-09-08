@@ -4,8 +4,6 @@
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
     using EA.Prsd.Core;
-    using Filters;
-    using Weee.Requests.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteStartDateAttribute : EvidenceDateValidationBase
