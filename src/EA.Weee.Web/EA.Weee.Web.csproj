@@ -1622,7 +1622,6 @@
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotePdfLayout.cshtml" />
-    <Content Include="Views\Shared\_TransferEvidenceNotePdfLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
