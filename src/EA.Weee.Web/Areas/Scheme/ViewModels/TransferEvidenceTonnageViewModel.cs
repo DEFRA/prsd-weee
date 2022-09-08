@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Attributes;
     using Core.AatfEvidence;
     using EA.Weee.Web.Areas.Aatf.Attributes;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -14,7 +15,7 @@
         [DisplayName("Transfer all available tonnage from all notes that you have selected")]
         public bool TransferAllTonnage { get; set; }
 
-        [RequiredTonnage]
+        [RequiredTransferTonnage]
         public List<TransferEvidenceCategoryValue> TransferCategoryValues { get; set; }
 
         public ActionEnum Action { get; set; }
