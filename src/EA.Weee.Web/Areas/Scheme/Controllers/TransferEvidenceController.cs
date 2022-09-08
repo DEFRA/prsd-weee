@@ -236,47 +236,50 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SubmittedTransferNote(ViewTransferNoteViewModel model)
+        public async Task<ActionResult> SubmittedTransferNote(Guid schemeId, Guid evidenceNoteId, NoteStatus status)
         {
-            model.OrganisationId = model.SchemeId;  //TODO: find the reason why organisation id is default(Guid)
-
-            await SetBreadcrumb(model.OrganisationId);
+            // can be removed as will be leaveing this screen
+            //await SetBreadcrumb(model.OrganisationId);
 
             using (var client = this.apiClient())
             {
-                if (ModelState.IsValid)
+                NoteUpdatedStatusEnum updateStatus;
+                switch (status)
                 {
-                    var status = NoteUpdatedStatusEnum.Draft;
-                    switch (model.Status)
-                    {
-                        case NoteStatus.Draft:
-                            status = NoteUpdatedStatusEnum.Submitted;
-                            break;
-                        case NoteStatus.Returned:
-                            status = NoteUpdatedStatusEnum.ReturnedSubmitted;
-                            break;
-                        default:
-                            // should we catch the error here or just let it through ?
-                            break;
-                    }
-
-                    SetNoteStatusRequest request = new SetNoteStatusRequest(model.EvidenceNoteId, (NoteStatus)status);
-
-                    TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = status;
-
-                    await client.SendAsync(User.GetAccessToken(), request);
-
-                    return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new { pcsId = model.OrganisationId, EvidenceNoteId = model.EvidenceNoteId, redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers) });
+                    case NoteStatus.Draft:
+                        updateStatus = NoteUpdatedStatusEnum.Submitted;
+                        break;
+                    case NoteStatus.Returned:
+                        updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
+                        break;
+                    default:
+                        // should we catch the error here or just let it through ?
+                        // TODO: probably throw an invalid operation exception
+                        throw new InvalidOperationException();
                 }
 
-                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EvidenceNoteId));
+                SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
 
-                var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.SchemeId, noteData, null)
+                TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
+
+                await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
                 {
-                    OrganisationId = model.SchemeId
+                    pcsId = schemeId, 
+                    evidenceNoteId, 
+                    redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
                 });
+                
+                //TODO: remove as we will be leaving the screen above and we
+                //var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EvidenceNoteId));
 
-                return View("SubmittedTransfer", refreshedModel);
+                //var refreshedModel = mapper.Map<ReviewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(model.SchemeId, noteData, null)
+                //{
+                //    OrganisationId = model.SchemeId
+                //});
+
+                //return View("SubmittedTransfer", refreshedModel);
             }
         }
 
