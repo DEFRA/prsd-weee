@@ -12,7 +12,7 @@
                 Reports.AatfReports,
                 Reports.PcsAatfDataDifference,
                 Reports.AatfAeDetails,
-                Reports.EvidenceNotesReports
+                Reports.EvidenceNoteData
             })
         {
         }
