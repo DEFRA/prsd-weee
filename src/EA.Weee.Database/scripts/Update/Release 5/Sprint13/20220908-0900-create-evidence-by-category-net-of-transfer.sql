@@ -1,31 +1,12 @@
-IF OBJECT_ID('[Evidence].[getEvidenceNotesOriginalTonnage]', 'P') IS NOT NULL
-	DROP PROC [Evidence].[getEvidenceNotesOriginalTonnage]
 GO
-SET ANSI_NULLS ON
+IF OBJECT_ID('Evidence.vwEvidenceByCategoryNetOfTransfer', 'V') IS NOT NULL
+	DROP VIEW Evidence.vwEvidenceByCategoryNetOfTransfer;
 GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [Evidence].[getEvidenceNotesOriginalTonnage]
-	@ComplianceYear SMALLINT,
-	@OriginatingOrganisationId UNIQUEIDENTIFIER = NULL,
-	@RecipientOrganisationId UNIQUEIDENTIFIER = NULL
-AS
-BEGIN
-SET NOCOUNT ON;
 
+
+CREATE VIEW [Evidence].[vwEvidenceByCategoryNetOfTransfer] AS
 SELECT
-		CASE WHEN n.NoteType = 1 THEN 'E' ELSE 'T' END + CAST(n.Reference AS NVARCHAR) AS Reference,
-		ens.[Name] AS [Status],
-		ca.Abbreviation AS AppropriateAuthority,
-		submittedHistory.ChangedDate AS SubmittedDateTime,
-		aa.Name AS SubmittedByAatf,
-		aa.ApprovalNumber AS AatfApprovalNumber,
-		ews.[Name] AS ObligationType,
-		n.StartDate AS ReceivedStartDate,
-		n.EndDate AS ReceivedEndDate,
-		CASE WHEN pbs.OrganisationId IS NULL THEN s.SchemeName ELSE recipientOrg.[Name] END AS Recipient,
-		s.ApprovalNumber AS RecipientApprovalNumber,
-		ep.[Name] AS Protocol,
+		n.Id,
 		receivedCat.[1] AS Cat1Received,
 		receivedCat.[2] AS Cat2Received,
 		receivedCat.[3] AS Cat3Received,
@@ -60,23 +41,6 @@ SELECT
 			+ reusedCat.[12] + reusedCat.[13] + reusedCat.[14] AS TotalReused
 FROM
 	[Evidence].Note n
-	INNER JOIN [Lookup].EvidenceNoteStatus ens ON n.[Status] = ens.Id
-	INNER JOIN [Lookup].EvidenceNoteWasteType ews ON n.WasteType = ews.Id
-	INNER JOIN [Lookup].EvidenceNoteProtocol ep ON n.Protocol = ep.Id
-	INNER JOIN [Organisation].Organisation recipientOrg ON recipientOrg.Id = n.RecipientId
-	INNER JOIN [Organisation].Organisation originatingOrg ON originatingOrg.Id = n.OrganisationId
-	INNER JOIN [AATF].AATF aa ON aa.Id = n.AatfId
-	INNER JOIN [Lookup].CompetentAuthority ca ON ca.Id = aa.CompetentAuthorityId
-	LEFT JOIN [PCS].Scheme s ON s.OrganisationId = recipientOrg.Id
-	LEFT JOIN [Organisation].ProducerBalancingScheme pbs ON pbs.OrganisationId = recipientOrg.Id
-	OUTER APPLY (SELECT TOP 1 * 
-					FROM 
-					[Evidence].NoteStatusHistory nsh 
-					WHERE
-					n.Id = nsh.NoteId
-					AND nsh.ToStatus = 2
-					ORDER BY
-					nsh.ChangedDate DESC) as submittedHistory
 	CROSS APPLY
 		(
 		SELECT
@@ -87,12 +51,13 @@ FROM
 				CAST([13] AS DECIMAL(28, 3)) AS [13], CAST([14] AS DECIMAL(28, 3)) AS [14]
 		FROM
 				(SELECT
-					COALESCE(nt.Received, 0) AS Received,
+					COALESCE(nt.Received, 0) - COALESCE(SUM(COALESCE(ntt.Received, 0)), 0) AS Received,
 					n1.Id AS NoteId,
-					nt.CategoryId as Category
+					nt.CategoryId AS Category
 				 FROM    
 					[Evidence].NoteTonnage nt
-					INNER JOIN [Evidence].Note n1 ON n1.Id = nt.NoteId 
+					INNER JOIN [Evidence].Note n1 ON n1.Id = nt.NoteId AND n1.WasteType = 1 AND n1.Status = 3	
+					LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
 				WHERE 
 					nt.NoteId = n.Id
 				GROUP BY
@@ -114,12 +79,13 @@ FROM
 				CAST([13] AS DECIMAL(28, 3)) AS [13], CAST([14] AS DECIMAL(28, 3)) AS [14]
 			FROM
 					(SELECT
-						COALESCE(nt.Reused, 0) AS Reused,
+						COALESCE(nt.Reused, 0) - COALESCE(SUM(COALESCE(ntt.Reused, 0)), 0) AS Reused,
 						n1.Id AS NoteId,
-						nt.CategoryId as Category
-					 FROM 
+						nt.CategoryId AS Category
+					FROM 
 						[Evidence].NoteTonnage nt
-						INNER JOIN [Evidence].Note n1 ON n1.Id = nt.NoteId
+						INNER JOIN [Evidence].Note n1 ON n1.Id = nt.NoteId AND n1.WasteType = 1 AND n1.Status = 3	
+						LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
 					WHERE 
 						nt.NoteId = n.Id
 					GROUP BY
@@ -132,12 +98,4 @@ FROM
 					) pvt
 				) reusedCat 
 		WHERE
-		(n.ComplianceYear = @ComplianceYear) AND
-		(
-			(@OriginatingOrganisationId IS NULL OR originatingOrg.Id = @OriginatingOrganisationId) AND
-			(@RecipientOrganisationId IS NULL OR recipientOrg.Id = @RecipientOrganisationId)
-		)
-		ORDER BY
-			n.Reference ASC
-
-END
+			n.NoteType = 1
