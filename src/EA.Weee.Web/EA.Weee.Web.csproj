@@ -432,6 +432,9 @@
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SummaryEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferDeselectEvidenceNoteModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferSelectEvidenceNoteModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferSelectEvidenceNoteModelBase.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />

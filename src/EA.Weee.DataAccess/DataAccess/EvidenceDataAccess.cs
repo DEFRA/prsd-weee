@@ -180,6 +180,7 @@
                             n.Status.Value == NoteStatus.Approved.Value &&
                             n.ComplianceYear == complianceYear &&
                             (evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)) &&
+                            (excludeEvidenceNotes.Count == 0 || !excludeEvidenceNotes.Contains(n.Id)) &&
                             n.NoteTonnage.Where(nt => nt.Received != null)
                                 .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)));
 

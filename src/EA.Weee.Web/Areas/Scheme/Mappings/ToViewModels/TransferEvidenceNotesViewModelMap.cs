@@ -3,11 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Shared.Paging;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
     using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
 
     public class TransferEvidenceNotesViewModelMap : TransferEvidenceMapBase<TransferEvidenceNotesViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>
     {
@@ -20,6 +22,18 @@
             Condition.Requires(source).IsNotNull();
             
             var model = MapBaseProperties(source);
+
+            foreach (var evidenceNoteData in source.NotesSelection.Results)
+            {
+                model.EvidenceNotesDataListPaged.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
+                    new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
+                    {
+                        IncludeAllCategories = false
+                    }));
+            }
+
+            model.EvidenceNotesDataListPaged =
+                model.EvidenceNotesDataListPaged.ToPagedList(source.PageNumber - 1, source.PageSize, source.NotesSelection.NoteCount) as PagedList<ViewEvidenceNoteViewModel>;
 
             foreach (var evidenceNoteData in source.Notes.Results.OrderByDescending(e => e.Reference))
             {
