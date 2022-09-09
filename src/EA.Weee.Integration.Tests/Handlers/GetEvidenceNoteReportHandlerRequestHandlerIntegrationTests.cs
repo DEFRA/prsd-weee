@@ -458,7 +458,7 @@
 
                 notes.Add(outOfComplianceYearNote);
 
-                request = new GetEvidenceNoteReportRequest(null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
             };
 
             private readonly Because of = () =>
@@ -493,7 +493,7 @@
                     $"E4,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate},{note4.EndDate},{note4.Recipient.Name},,Reuse network PWP,10.244,9.322,10.266,9.099,10.288,7.077,9.122,2.033,9.311,9.144,9.166,10.299,5.055,1.011,111.437,10.255,10.233,10.277,9.011,10.299,8.088,9.133,4.044,9.322,9.155,10.177,9.311,6.066,2.022,117.393\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes net of transfer{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
