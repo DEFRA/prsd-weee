@@ -145,19 +145,21 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model)
+        public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model, int selectedPageNumber = 1)
         {
+            await SetBreadcrumb(model.PcsId);
+
+            UpdateAndSetSelectedNotesInSession(model);
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                SessionKeyConstant.TransferNoteKey);
+
             if (model.Action == ActionEnum.Back)
             {
-                UpdateAndSetSelectedNotesInSession(model);
-
                 return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
             }
 
             if (model.PageNumber.HasValue)
             {
-                UpdateAndSetSelectedNotesInSession(model);
-
                 if (ModelState.ContainsKey("Action"))
                 {
                     ModelState["Action"].Errors.Clear();
@@ -166,35 +168,49 @@
 
                 using (var client = this.apiClient())
                 {
-                    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                        SessionKeyConstant.TransferNoteKey);
-
                     model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, transferRequest, model.PageNumber.Value);
                 }
             }
             else
             {
-                if (ModelState.IsValid)
+                //Hack before the page is redesigned to fix validation
+                if (!transferRequest.EvidenceNoteIds.Any())
                 {
-                    UpdateAndSetSelectedNotesInSession(model);
-
-                    return RedirectToAction("TransferTonnage", "TransferEvidence",
-                        new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
+                    ModelState.AddModelError("SelectedEvidenceNotePairs",
+                        "Select at least one evidence note to transfer from");
                 }
 
-                if (!model.PageNumber.HasValue)
+                if (transferRequest.EvidenceNoteIds.Count > 5)
                 {
-                    var pagedModel = sessionService.GetTransferSessionObject<PagedList<ViewEvidenceNoteViewModel>>(Session,
-                        SessionKeyConstant.PagingTransferViewModelKey);
+                    ModelState.AddModelError("SelectedEvidenceNotePairs",
+                        "You cannot select more than 5 notes");
+                }
 
-                    if (pagedModel != null)
+                if (!ModelState.IsValid)
+                {
+                    using (var client = this.apiClient())
                     {
-                        model.EvidenceNotesDataListPaged = pagedModel;
+                        model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client,
+                            transferRequest, selectedPageNumber);
                     }
+
+                    return View("TransferFrom", model);
                 }
+
+                return RedirectToAction("TransferTonnage", "TransferEvidence",
+                    new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
             }
 
-            await SetBreadcrumb(model.PcsId);
+            if (!model.PageNumber.HasValue)
+            {
+                var pagedModel = sessionService.GetTransferSessionObject<PagedList<ViewEvidenceNoteViewModel>>(Session,
+                    SessionKeyConstant.PagingTransferViewModelKey);
+
+                if (pagedModel != null)
+                {
+                    model.EvidenceNotesDataListPaged = pagedModel;
+                }
+            }
 
             return View("TransferFrom", model);
         }
@@ -371,7 +387,15 @@
                         resultNotes.Add(note);
                     }
                 }
-              
+
+                var deselectedEvidenceNotes =
+                    model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(false)).Select(b => b.Key).ToList();
+
+                foreach (var deselectedEvidenceNote in deselectedEvidenceNotes)
+                {
+                    resultNotes.Remove(deselectedEvidenceNote);
+                }
+                
                 var updatedTransferRequest =
                     new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, resultNotes);
 
