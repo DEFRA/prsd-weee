@@ -17,7 +17,7 @@ SELECT
 	*
 FROM 
 	[Evidence].[vwEvidenceSummary] es 
-	INNER JOIN [Evidence].vwEvidenceByCategoryNetOfTransfer ec ON es.Id = ec.Id
+	INNER JOIN [Evidence].vwEvidenceByCategoryNetOfTransfer ec WITH (NOLOCK) ON es.Id = ec.Id
 WHERE
 	es.NoteType = 1 AND
 	(es.ComplianceYear = @ComplianceYear) AND
