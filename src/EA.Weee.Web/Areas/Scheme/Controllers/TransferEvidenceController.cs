@@ -310,7 +310,7 @@
                         updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
                         break;
                     default:
-                        throw new InvalidOperationException();
+                        throw new InvalidOperationException("status is not valid");
                 }
 
                 SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
