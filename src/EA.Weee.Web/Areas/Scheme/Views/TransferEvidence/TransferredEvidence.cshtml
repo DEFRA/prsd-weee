@@ -30,6 +30,13 @@
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
 
+    @if (!Model.HasBeenVoided)
+    {
+        <p class="govuk-body">
+            @Html.ActionLink("Download as PDF", "DownloadTransferEvidenceNote", "TransferEvidence", new { area = "Scheme", pcsId = Model.SchemeId, transferEvidenceNoteId = Model.EvidenceNoteId }, new { @class = "govuk-link" })
+        </p>
+    }
+
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3">
