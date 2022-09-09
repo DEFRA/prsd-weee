@@ -75,9 +75,6 @@
 }
 
 <!-- screen 6.07a -->
-<!-- --------------------------- -->
-<!-- Void transfer note button   -->
-<!-- --------------------------- -->
 @if (Model.Status.Equals(NoteStatus.Approved) && Model.CanVoid)
 {
     using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
@@ -244,4 +241,3 @@ else
         </tbody>
     </table>
 }
-
