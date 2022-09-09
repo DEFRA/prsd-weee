@@ -10,10 +10,12 @@
     public class EvidenceReportViewModel
     {
         [Display(Name = "Compliance year")]
+        [Required(ErrorMessage = "Select a compliance year")]
         public int SelectedYear { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
+        [Required(ErrorMessage = "Select whether you want to view the original tonnages or net of transfers")]
         [Display(Name = "Tonnage values")]
         public TonnageToDisplayReportEnum SelectedTonnageToDisplay { get; set; }
 
