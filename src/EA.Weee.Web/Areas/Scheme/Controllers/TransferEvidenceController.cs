@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using Attributes;
     using Constant;
+    using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Scheme;
     using EA.Prsd.Core.Mapper;
@@ -117,9 +118,39 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddEvidenceNote(Guid evidenceNoteId, Guid pcsId, int complianceYear, int page)
+        public ActionResult DeselectEvidenceNote(TransferDeselectEvidenceNoteModel model)
         {
-            return RedirectToAction("TransferFrom", new { pcsId, complianceYear, page });
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                SessionKeyConstant.TransferNoteKey);
+
+            transferRequest.EvidenceNoteIds.Remove(model.EvidenceNoteId);
+
+            return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, model.Page });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model)
+        {
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                SessionKeyConstant.TransferNoteKey);
+
+            if (ModelState.IsValid)
+            {
+                transferRequest.EvidenceNoteIds.Add(model.EvidenceNoteId);
+
+                return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, model.Page });
+            }
+            else
+            {
+                using (var client = this.apiClient())
+                {
+                    var newModel = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client,
+                        transferRequest, model.Page);
+
+                    return View("TransferFrom", newModel);
+                }
+            }
         }
 
         [HttpGet]
@@ -148,22 +179,22 @@
         private async Task<TransferEvidenceNotesViewModel> TransferFromViewModel(Guid pcsId, int complianceYear, IWeeeClient client,
             TransferEvidenceNoteRequest transferRequest, int pageNumber)
         {
-            var result = await client.SendAsync(User.GetAccessToken(),
-               new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+            var currentSelectedNotes = new EvidenceNoteSearchDataResult();
+            if (transferRequest.EvidenceNoteIds.Any())
+            {
+                currentSelectedNotes = await client.SendAsync(User.GetAccessToken(),
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, null, 1, int.MaxValue));
+            }
+           
+            var availableNotes = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null, transferRequest.EvidenceNoteIds, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, 
-                result, 
-                result, 
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear,
+                currentSelectedNotes,
+                availableNotes, 
                 transferRequest, 
                 pcsId, pageNumber, 
                 configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
-
-            //This should be set by above
-            //var evidenceNoteIds = transferRequest.EvidenceNoteIds;
-            //if (evidenceNoteIds != null)
-            //{
-            //    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
-            //}
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);

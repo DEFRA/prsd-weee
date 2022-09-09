@@ -20,7 +20,7 @@
 
     @using (Html.BeginForm(actionName: "TransferFrom", controllerName: "TransferEvidence", method: FormMethod.Post, htmlAttributes: new { id = formName }))
     {
-        
+        @Html.AntiForgeryToken()
     }
 
     @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
