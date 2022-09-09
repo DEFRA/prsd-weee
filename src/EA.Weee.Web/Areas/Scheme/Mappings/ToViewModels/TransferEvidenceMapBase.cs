@@ -49,9 +49,6 @@
                             IncludeAllCategories = false
                         }));
                 }
-
-                model.EvidenceNotesDataListPaged =
-                    model.EvidenceNotesDataList.ToPagedList(source.PageNumber - 1, source.PageSize, source.Notes.NoteCount) as PagedList<ViewEvidenceNoteViewModel>;
             }
 
             if (source.TransferEvidenceNoteData != null)
