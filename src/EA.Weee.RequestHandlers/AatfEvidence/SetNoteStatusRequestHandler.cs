@@ -6,6 +6,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+    using Core.AatfEvidence;
     using DataAccess.DataAccess;
     using Requests.AatfEvidence;
 
@@ -25,7 +26,9 @@
 
             var evidenceNote = await EvidenceNote(message.NoteId);
 
-            Authorization.EnsureOrganisationAccess(evidenceNote.Recipient.Id);
+            Authorization.EnsureOrganisationAccess(message.Status == NoteStatus.Submitted
+                ? evidenceNote.Organisation.Id
+                : evidenceNote.Recipient.Id);
 
             var currentDate = await SystemDataDataAccess.GetSystemDateTime();
 
