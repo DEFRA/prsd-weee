@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Attributes;
     using Constant;
     using Core.Helpers;
@@ -12,6 +7,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.Scheme;
@@ -23,6 +19,11 @@
     using Requests;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels;
     using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
@@ -290,6 +291,40 @@
                 ViewBag.Page = page;
 
                 return this.View("TransferredEvidence", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubmittedTransferNote(Guid schemeId, Guid evidenceNoteId, NoteStatus status)
+        {
+            using (var client = this.apiClient())
+            {
+                NoteUpdatedStatusEnum updateStatus;
+                switch (status)
+                {
+                    case NoteStatus.Draft:
+                        updateStatus = NoteUpdatedStatusEnum.Submitted;
+                        break;
+                    case NoteStatus.Returned:
+                        updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
+
+                SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
+
+                TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
+
+                await client.SendAsync(User.GetAccessToken(), request);
+
+                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
+                {
+                    pcsId = schemeId, 
+                    evidenceNoteId, 
+                    redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
+                });
             }
         }
 

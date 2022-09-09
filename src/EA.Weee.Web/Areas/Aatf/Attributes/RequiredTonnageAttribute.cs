@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Attributes
 {
+    using EA.Weee.Web.ViewModels.Shared;
+    using Prsd.Core;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Prsd.Core;
     using ViewModels;
-    using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class RequiredTonnageAttribute : RequiredTonnageBaseAttribute
