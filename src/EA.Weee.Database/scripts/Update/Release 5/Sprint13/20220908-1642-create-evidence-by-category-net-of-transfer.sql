@@ -52,16 +52,16 @@ FROM
 		FROM
 				(SELECT
 					COALESCE(nt.Received, 0) - COALESCE(SUM(COALESCE(ntt.Received, 0)), 0) AS Received,
-					n1.Id AS NoteId,
+					nt.NoteId AS NoteId,
 					nt.CategoryId AS Category
 				 FROM    
 					[Evidence].NoteTonnage nt
-					INNER JOIN [Evidence].Note n1 ON n1.Id = nt.NoteId AND n1.WasteType = 1 AND n1.Status = 3	
 					LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
+					LEFT JOIN [Evidence].Note tn ON tn.Id = ntt.TransferNoteId AND tn.NoteType = 2 AND tn.Status = 3
 				WHERE 
 					nt.NoteId = n.Id
 				GROUP BY
-					n1.Id,
+					nt.NoteId,
 					nt.CategoryId,
 					nt.Received
 				) AS t
@@ -80,16 +80,16 @@ FROM
 			FROM
 					(SELECT
 						COALESCE(nt.Reused, 0) - COALESCE(SUM(COALESCE(ntt.Reused, 0)), 0) AS Reused,
-						n1.Id AS NoteId,
+						nt.NoteId AS NoteId,
 						nt.CategoryId AS Category
 					FROM 
 						[Evidence].NoteTonnage nt
-						INNER JOIN [Evidence].Note n1 ON n1.Id = nt.NoteId AND n1.WasteType = 1 AND n1.Status = 3	
 						LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
+						LEFT JOIN [Evidence].Note tn ON tn.Id = ntt.TransferNoteId AND tn.NoteType = 2 AND tn.Status = 3
 					WHERE 
 						nt.NoteId = n.Id
 					GROUP BY
-						n1.Id,
+						nt.NoteId,
 						nt.CategoryId,
 						nt.Reused
 					) AS t

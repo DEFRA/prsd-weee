@@ -17,9 +17,13 @@
         }
 
         public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(
-            int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId)
+            int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId, bool netTonnage)
         {
-            var queryString = "[Evidence].[getEvidenceNotesOriginalTonnage] @ComplianceYear, @OriginatingOrganisationId, @RecipientOrganisationId";
+            var storedProcedure = netTonnage
+                ? "[Evidence].[getEvidenceNotesOriginalTonnage]"
+                : "[Evidence].[getEvidenceNotesNetTonnage]";
+
+            var queryString = $"{storedProcedure} @ComplianceYear, @OriginatingOrganisationId, @RecipientOrganisationId";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
             var orgIdParameter = new SqlParameter("@OriginatingOrganisationId", SqlDbType.UniqueIdentifier)
@@ -53,10 +57,10 @@
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
             var orgIdParameter = new SqlParameter("@OrganisationId", SqlDbType.UniqueIdentifier)
- {
-     IsNullable = true,
-     Value = orgId ?? (object)DBNull.Value
- };
+             {
+                 IsNullable = true,
+                 Value = orgId ?? (object)DBNull.Value
+             };
             var pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier)
             {
                 IsNullable = true,
