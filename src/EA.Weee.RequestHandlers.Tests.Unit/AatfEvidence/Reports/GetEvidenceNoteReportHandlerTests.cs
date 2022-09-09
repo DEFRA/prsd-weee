@@ -82,8 +82,10 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled()
+        [Theory]
+        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, false)]
+        [InlineData(TonnageToDisplayReportEnum.Net, true)]
+        public async Task HandleAsync_GivenRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled(TonnageToDisplayReportEnum tonnageToDisplay, bool expected)
         {
             //arrange
             var originatingOrganisationId = TestFixture.Create<Guid>();
@@ -91,7 +93,7 @@
             var complianceYear = TestFixture.Create<int>();
 
             var request = new GetEvidenceNoteReportRequest(recipientOrganisationId, originatingOrganisationId,
-                TestFixture.Create<TonnageToDisplayReportEnum>(),
+                tonnageToDisplay,
                 complianceYear);
 
             //act
@@ -99,7 +101,7 @@
 
             A.CallTo(() =>
                 evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
-                    originatingOrganisationId, recipientOrganisationId)).MustHaveHappenedOnceExactly();
+                    originatingOrganisationId, recipientOrganisationId, expected)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -211,7 +213,7 @@
             var reportData = TestFixture.CreateMany<EvidenceNoteReportData>().ToList();
 
             A.CallTo(() =>
-                    evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(A<int>._, A<Guid?>._, A<Guid?>._)).Returns(reportData);
+                    evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(A<int>._, A<Guid?>._, A<Guid?>._, A<bool>._)).Returns(reportData);
 
             //act
             await handler.HandleAsync(request);
@@ -220,14 +222,16 @@
             A.CallTo(() => evidenceWriter.Write(reportData)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenCsvData_CsvFileDataShouldBeReturned()
+        [Theory]
+        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, "original tonnages")]
+        [InlineData(TonnageToDisplayReportEnum.Net, "net of transfer")]
+        public async Task HandleAsync_GivenCsvData_CsvFileDataShouldBeReturned(TonnageToDisplayReportEnum tonnageToDisplay, string expected)
         {
             //arrange
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
             var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                TestFixture.Create<TonnageToDisplayReportEnum>(),
+                tonnageToDisplay,
                 TestFixture.Create<int>());
 
             var content = TestFixture.Create<string>();
@@ -239,7 +243,7 @@
             //assert
             result.FileContent.Should().Be(content);
             result.FileName.Should()
-                .Be($"{request.ComplianceYear}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
+                .Be($"{request.ComplianceYear}_Evidence notes {expected}{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
             SystemTime.Unfreeze();
         }
     }
