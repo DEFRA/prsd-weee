@@ -1,10 +1,10 @@
 GO
-IF OBJECT_ID('Evidence.vwEvidenceByCategory', 'V') IS NOT NULL
-	DROP VIEW Evidence.vwEvidenceByCategory;
+IF OBJECT_ID('Evidence.vwEvidenceByCategoryNetOfTransfer', 'V') IS NOT NULL
+	DROP VIEW Evidence.vwEvidenceByCategoryNetOfTransfer;
 GO
 
 
-CREATE VIEW [Evidence].vwEvidenceByCategory AS
+CREATE VIEW [Evidence].[vwEvidenceByCategoryNetOfTransfer] AS
 SELECT
 		n.Id,
 		receivedCat.[1] AS Cat1Received,
@@ -21,7 +21,7 @@ SELECT
 		receivedCat.[12] AS Cat12Received,
 		receivedCat.[13] AS Cat13Received,
 		receivedCat.[14] AS Cat14Received,
-		receivedCat.[1] + receivedCat.[2] + receivedCat.[3]+ receivedCat.[4] + receivedCat.[5] + receivedCat.[6] + receivedCat.[7] + receivedCat.[8] + receivedCat.[8] + receivedCat.[10] + receivedCat.[11]
+		receivedCat.[1] + receivedCat.[2] + receivedCat.[3]+ receivedCat.[4] + receivedCat.[5] + receivedCat.[6] + receivedCat.[7] + receivedCat.[8] + receivedCat.[9] + receivedCat.[10] + receivedCat.[11]
 			+ receivedCat.[12] + receivedCat.[13] + receivedCat.[14] AS TotalReceived,
 		reusedCat.[1] AS Cat1Reused, 
 		reusedCat.[2] AS Cat2Reused,
@@ -37,7 +37,7 @@ SELECT
 		reusedCat.[12] AS Cat12Reused,
 		reusedCat.[13] AS Cat13Reused,
 		reusedCat.[14] AS Cat14Reused,
-		reusedCat.[1] + reusedCat.[2] + reusedCat.[3]+ reusedCat.[4] + reusedCat.[5] + reusedCat.[6] + reusedCat.[7] + reusedCat.[8] + reusedCat.[8] + reusedCat.[10] + reusedCat.[11]
+		reusedCat.[1] + reusedCat.[2] + reusedCat.[3]+ reusedCat.[4] + reusedCat.[5] + reusedCat.[6] + reusedCat.[7] + reusedCat.[8] + reusedCat.[9] + reusedCat.[10] + reusedCat.[11]
 			+ reusedCat.[12] + reusedCat.[13] + reusedCat.[14] AS TotalReused
 FROM
 	[Evidence].Note n
@@ -51,20 +51,36 @@ FROM
 				CAST([13] AS DECIMAL(28, 3)) AS [13], CAST([14] AS DECIMAL(28, 3)) AS [14]
 		FROM
 				(SELECT
-					COALESCE(nt.Received, 0) AS Received,
-					nt.CategoryId,
-					nt.NoteId
-				FROM    
+					COALESCE(nt.Received, 0) - COALESCE(transferReceivedSum.TransferReceived, 0) AS Received,
+					nt.NoteId AS NoteId,
+					nt.CategoryId AS Category
+				 FROM    
 					[Evidence].NoteTonnage nt
+					LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
+					LEFT JOIN	
+						(
+							SELECT
+								SUM(COALESCE(ntt.Received, 0)) AS TransferReceived,
+								ntt.NoteTonnageId
+							FROM
+								[Evidence].NoteTransferTonnage ntt
+								INNER JOIN [Evidence].Note tn ON tn.Id = ntt.TransferNoteId
+							WHERE
+								tn.NoteType = 2
+								AND tn.Status = 3
+							GROUP BY
+								ntt.NoteTonnageId
+						) transferReceivedSum ON transferReceivedSum.NoteTonnageId = nt.Id
 				WHERE 
 					nt.NoteId = n.Id
 				GROUP BY
 					nt.NoteId,
 					nt.CategoryId,
-					nt.Received
+					nt.Received,
+					transferReceivedSum.TransferReceived
 				) AS t
 				PIVOT
-				(   AVG(t.Received) FOR CategoryId IN ([1], [2], [3], [4], [5], [6], [7],	[8], [9], [10], [11], [12], [13], [14])
+				(   AVG(t.Received) FOR Category IN ([1], [2], [3], [4], [5], [6], [7],	[8], [9], [10], [11], [12], [13], [14])
 				) pvt
 			) receivedCat 
 	CROSS APPLY
@@ -77,20 +93,36 @@ FROM
 				CAST([13] AS DECIMAL(28, 3)) AS [13], CAST([14] AS DECIMAL(28, 3)) AS [14]
 			FROM
 					(SELECT
-						COALESCE(nt.Reused, 0) AS Reused,
-						nt.CategoryId,
-						nt.NoteId
+						COALESCE(nt.Reused, 0) - COALESCE(transferReusedSum.TransferReused, 0) AS Reused,
+						nt.NoteId AS NoteId,
+						nt.CategoryId AS Category
 					FROM 
 						[Evidence].NoteTonnage nt
+						LEFT JOIN [Evidence].NoteTransferTonnage ntt ON ntt.NoteTonnageId = nt.Id
+						LEFT JOIN	
+						(
+							SELECT
+								SUM(COALESCE(ntt.Reused, 0)) AS TransferReused,
+								ntt.NoteTonnageId
+							FROM
+								[Evidence].NoteTransferTonnage ntt
+								INNER JOIN [Evidence].Note tn ON tn.Id = ntt.TransferNoteId
+							WHERE
+								tn.NoteType = 2
+								AND tn.Status = 3
+							GROUP BY
+								ntt.NoteTonnageId
+						) transferReusedSum ON transferReusedSum.NoteTonnageId = nt.Id
 					WHERE 
 						nt.NoteId = n.Id
 					GROUP BY
 						nt.NoteId,
 						nt.CategoryId,
-						nt.Reused
+						nt.Reused,
+						transferReusedSum.TransferReused
 					) AS t
 					PIVOT
-					(   AVG(t.Reused) FOR CategoryId IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14])
+					(   AVG(t.Reused) FOR Category IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14])
 					) pvt
 				) reusedCat 
 		WHERE

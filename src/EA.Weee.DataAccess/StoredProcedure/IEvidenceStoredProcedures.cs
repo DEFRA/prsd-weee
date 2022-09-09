@@ -9,6 +9,6 @@
         Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, int complianceYear);
         Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid? schemeId, Guid? organisationId, int complianceYear);
 
-        Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId);
+        Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId, bool netTonnage);
     }
 }
