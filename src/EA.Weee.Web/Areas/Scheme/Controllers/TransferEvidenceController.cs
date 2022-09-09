@@ -4,11 +4,14 @@
     using Constant;
     using Core.Helpers;
     using Core.Scheme;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.ViewModels.Shared;
     using Filters;
     using Infrastructure;
@@ -33,14 +36,26 @@
         private readonly ITransferEvidenceRequestCreator transferNoteRequestCreator;
         private readonly ISessionService sessionService;
         private readonly ConfigurationService configurationService;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
+        private readonly IMvcTemplateExecutor templateExecutor;
 
-        public TransferEvidenceController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, ITransferEvidenceRequestCreator transferNoteRequestCreator, IWeeeCache cache, ISessionService sessionService, ConfigurationService configurationService) : base(breadcrumb, cache)
+        public TransferEvidenceController(Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb,
+            IMapper mapper,
+            ITransferEvidenceRequestCreator transferNoteRequestCreator,
+            IWeeeCache cache,
+            ISessionService sessionService,
+            ConfigurationService configurationService,
+            IPdfDocumentProvider pdfDocumentProvider,
+            IMvcTemplateExecutor templateExecutor) : base(breadcrumb, cache)
         {
             this.apiClient = apiClient;
             this.mapper = mapper;
             this.transferNoteRequestCreator = transferNoteRequestCreator;
             this.sessionService = sessionService;
             this.configurationService = configurationService;
+            this.pdfDocumentProvider = pdfDocumentProvider;
+            this.templateExecutor = templateExecutor;
         }
 
         [HttpGet]
@@ -310,6 +325,28 @@
                     evidenceNoteId, 
                     redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
                 });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadTransferEvidenceNote(Guid pcsId, Guid transferEvidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetTransferEvidenceNoteForSchemeRequest(transferEvidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, result, null));
+
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadTransferEvidenceNote", model);
+
+                var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+                var timestamp = SystemTime.Now;
+                var fileName = $"{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+
+                return File(pdf, "application/pdf", fileName);
             }
         }
 
