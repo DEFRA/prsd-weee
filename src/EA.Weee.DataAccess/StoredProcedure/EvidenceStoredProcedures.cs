@@ -20,8 +20,8 @@
             int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId, bool netTonnage)
         {
             var storedProcedure = netTonnage
-                ? "[Evidence].[getEvidenceNotesOriginalTonnage]"
-                : "[Evidence].[getEvidenceNotesNetTonnage]";
+                ? "[Evidence].[getEvidenceNotesNetTonnage]"
+                : "[Evidence].[getEvidenceNotesOriginalTonnage]";
 
             var queryString = $"{storedProcedure} @ComplianceYear, @OriginatingOrganisationId, @RecipientOrganisationId";
 
