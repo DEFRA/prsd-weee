@@ -3,6 +3,26 @@
 @using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 
+<style type="text/css">
+    .reference-column {
+        width: 15%;
+    }
+
+    .submitted-column {
+        width: 55%;
+    }
+
+    .tonnage-column {
+        width: 20%;
+    }
+
+    .add-remove-column {
+        width: 10%;
+    }
+</style>
+
+
+
 @Html.AntiForgeryToken()
 @Html.HiddenFor(m => m.PcsId)
 @Html.HiddenFor(m => m.RecipientName)
@@ -26,17 +46,17 @@
     <caption class="govuk-table__caption govuk-visually-hidden">selected notes to transfer</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th class="govuk-table__header">
+            <th class="govuk-table__header reference-column">
                 Reference ID
             </th>
-            <th class="govuk-table__header">
+            <th class="govuk-table__header submitted-column">
                 Submitted by
             </th>
-            <th class="govuk-table__header">
+            <th class="govuk-table__header tonnage-column">
                 Total (tonnes)
             </th>
-            <th class="govuk-table__header">
-                <span class="govuk-visually-hidden">actions</span>
+            <th class="govuk-table__header add-remove-column">
+                <span class="govuk-visually-hidden">remove note</span>
             </th>
         </tr>
     </thead>
@@ -63,7 +83,7 @@
                         @Html.Hidden("complianceYear", @Model.ComplianceYear, new { id = "deselected-evidence-compliance-year" })
                         @Html.Hidden("pcsId", @Model.PcsId, new { id = "deselected-evidence-pcs" })
                         @Html.Hidden("selected", false, new { id = "deselected-evidence-selected-true" })
-                        <button>Remove</button>
+                        <button class="link-submit" type="submit">Remove</button>
                     }
                 </td>
             </tr>
@@ -96,17 +116,17 @@
     <caption class="govuk-table__caption govuk-visually-hidden">Select up to 5 notes to transfer</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th class="govuk-table__header">
+            <th class="govuk-table__header reference-column">
                 Reference ID
             </th>
-            <th class="govuk-table__header">
+            <th class="govuk-table__header submitted-column">
                 Submitted by
             </th>
-            <th class="govuk-table__header">
+            <th class="govuk-table__header tonnage-column">
                 Total (tonnes)
             </th>
-            <th class="govuk-table__header">
-                <span class="govuk-visually-hidden">actions</span>
+            <th class="govuk-table__header add-remove-column">
+                <span class="govuk-visually-hidden">add note</span>
             </th>
         </tr>
     </thead>
@@ -134,7 +154,7 @@
                         @Html.Hidden("pcsId", @Model.PcsId, new { id = "selected-evidence-pcs" })
                         @Html.Hidden("numberOfSelectedNotes", @Model.EvidenceNotesDataList.Count, new { id = "selected-evidence-pcs" })
 
-                        <button>Add</button>
+                        <button class="link-submit" type="submit">Add</button>
                     }
                 </td>
             </tr>
