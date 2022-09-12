@@ -28,7 +28,7 @@
             result.CategoryValues.Should().NotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
         public void Validate_GivenNoNotesSelected_ValidationResultExpected()
         {
             //arrange
@@ -44,7 +44,7 @@
                 && v.MemberNames.Contains("SelectedEvidenceNotePairs"));
         }
 
-        [Fact]
+        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
         public void Validate_GivenMoreThanFiveNotesSelected_ValidationResultExpected()
         {
             //arrange
@@ -67,7 +67,7 @@
                 && v.MemberNames.Contains("SelectedEvidenceNotePairs"));
         }
 
-        [Fact]
+        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
         public void Validate_GivenFivesNotesSelected_ValidationResultShouldBeEmpty()
         {
             //arrange
@@ -85,7 +85,7 @@
             validationResults.Should().BeEmpty();
         }
 
-        [Fact]
+        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
         public void Validate_GivenSingleNoteSelected_ValidationResultShouldBeEmpty()
         {
             //arrange
