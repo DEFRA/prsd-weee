@@ -7,6 +7,7 @@
 @Html.HiddenFor(m => m.PcsId)
 @Html.HiddenFor(m => m.RecipientName)
 @Html.HiddenFor(m => m.ComplianceYear)
+@Html.Hidden("selectedPageNumber", Model.EvidenceNotesDataListPaged.PageNumber)
 
 <h2 class="govuk-heading-m">Showing approved evidence notes with categories</h2>
 <ul class="govuk-list">
@@ -47,14 +48,14 @@
     </thead>
     <tbody class="govuk-table__body">
 
-        @for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
+        @for (var i = 0; i < Model.EvidenceNotesDataListPaged.Count; i++)
         {
             var i1 = i;
-            @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Type)
-            @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Reference)
-            @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].SubmittedBy)
-            @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].TotalReceivedDisplay)
-            @Html.HiddenFor(m => m.EvidenceNotesDataList[i1].Id)
+            @Html.HiddenFor(m => m.EvidenceNotesDataListPaged[i1].Type)
+            @Html.HiddenFor(m => m.EvidenceNotesDataListPaged[i1].Reference)
+            @Html.HiddenFor(m => m.EvidenceNotesDataListPaged[i1].SubmittedBy)
+            @Html.HiddenFor(m => m.EvidenceNotesDataListPaged[i1].TotalReceivedDisplay)
+            @Html.HiddenFor(m => m.EvidenceNotesDataListPaged[i1].Id)
 
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
@@ -71,7 +72,7 @@
 
                                 <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
                                 <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
-                                    @Model.EvidenceNotesDataList[i].ReferenceDisplay
+                                    @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay
                                 </label>
                                 <input name="@name" type="hidden" value="false">
                             </div>
@@ -79,9 +80,9 @@
                     </div>
                 </td>
                 <td class="govuk-table__cell">
-                    @Model.EvidenceNotesDataList[i].SubmittedBy
+                    @Model.EvidenceNotesDataListPaged[i].SubmittedBy
                 </td>
-                <td class="govuk-table__cell">@Model.EvidenceNotesDataList[i].TotalReceivedDisplay</td>
+                <td class="govuk-table__cell">@Model.EvidenceNotesDataListPaged[i].TotalReceivedDisplay</td>
                 <td class="govuk-table__cell">
                 </td>
             </tr>
