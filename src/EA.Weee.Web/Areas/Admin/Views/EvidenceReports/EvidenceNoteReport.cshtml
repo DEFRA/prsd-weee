@@ -18,19 +18,19 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-<p class="govuk-body">This report shows the tonnages of WEEE received and reused on each individual evidence note for a particular compliance year. It includes household and non-household evidence notes in all statuses. Selecting tonnage values ‘Original tonnages’ will return the original tonnages for all notes. Selecting ‘Net of transfers’ will return the tonnages for approved household evidence notes adjusted for evidence transfers where applicable. All other evidence notes in the same report will still be original tonnages.</p>
-<p class="govuk-body">All data is reported in tonnes (t) to three decimal places.</p>
+        <p class="govuk-body">This report shows the tonnages of WEEE received and reused on each individual evidence note for a particular compliance year. It includes household and non-household evidence notes in all statuses. Selecting tonnage values ‘Original tonnages’ will return the original tonnages for all notes. Selecting ‘Net of transfers’ will return the tonnages for approved household evidence notes adjusted for evidence transfers where applicable. All other evidence notes in the same report will still be original tonnages.</p>
+        <p class="govuk-body">All data is reported in tonnes (t) to three decimal places.</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-quarter" })
         </div>
 
         <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedTonnageToDisplay)">
             @Html.Gds().LabelFor(m => m.SelectedTonnageToDisplay)
             @Html.Gds().ValidationMessageFor(m => m.SelectedTonnageToDisplay)
-            @Html.Gds().DropDownListFor(m => m.SelectedTonnageToDisplay, Model.TonnageToDisplayOptions, new { autocomplete = "false" })
+            @Html.Gds().DropDownListFor(m => m.SelectedTonnageToDisplay, Model.TonnageToDisplayOptions, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-quarter" })
         </div>
 
         <p>
