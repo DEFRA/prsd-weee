@@ -44,11 +44,17 @@
 
             Guid? organisationId = null;
             Guid? recipientId = request.OrganisationId;
-            
+            var hasApprovedEvidenceNotes = false;
+
             if (request.TransferredOut)
             {
                 organisationId = request.OrganisationId;
                 recipientId = null;
+            }
+            else
+            {
+                hasApprovedEvidenceNotes =
+                    await noteDataAccess.HasApprovedWasteHouseHoldEvidence(recipientId.Value, request.ComplianceYear);
             }
 
             var filter = new NoteFilter(request.ComplianceYear, request.PageSize, request.PageNumber)
@@ -64,7 +70,7 @@
             var mappedNotes = mapper.Map<List<Note>, List<EvidenceNoteData>>(noteData.Notes
                 .OrderByDescending(n => n.CreatedDate).ToList());
 
-            return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults);
+            return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults, hasApprovedEvidenceNotes);
         }
     }
 }
