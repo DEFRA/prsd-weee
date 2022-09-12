@@ -478,7 +478,7 @@
                     .First(s => s.ToStatus.Value == NoteStatus.Submitted.Value).ChangedDate;
 
                 var note4 = Query.GetEvidenceNoteById(notes.ElementAt(3).Id);
-                var note4SubmittedDate = note3.NoteStatusHistory
+                var note4SubmittedDate = note4.NoteStatusHistory
                     .First(s => s.ToStatus.Value == NoteStatus.Submitted.Value).ChangedDate;
 
                 var expectedCsvData =
