@@ -333,7 +333,8 @@
 
                 TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
-                await client.SendAsync(User.GetAccessToken(), request);
+                string token = User.GetAccessToken();
+                await client.SendAsync(token, request);
 
                 return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
                 {
