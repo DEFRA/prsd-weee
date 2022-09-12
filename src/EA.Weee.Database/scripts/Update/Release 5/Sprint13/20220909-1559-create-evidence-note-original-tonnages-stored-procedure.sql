@@ -8,10 +8,21 @@ GO
 CREATE PROCEDURE [Evidence].[getEvidenceNotesOriginalTonnage]
 	@ComplianceYear SMALLINT,
 	@OriginatingOrganisationId UNIQUEIDENTIFIER = NULL,
-	@RecipientOrganisationId UNIQUEIDENTIFIER = NULL
+	@RecipientOrganisationId UNIQUEIDENTIFIER = NULL,
+	@AatfId UNIQUEIDENTIFIER = NULL
 AS
 BEGIN
 SET NOCOUNT ON;
+
+IF @AatfId IS NOT NULL BEGIN
+	SELECT
+		a2.Id 
+	FROM
+		[AATF].[Aatf] a1 
+		INNER JOIN [AATF].AATF a2 ON a1.AatfId = a2.AatfId AND a2.ComplianceYear = @ComplianceYear
+	WHERE
+		a1.Id = @AatfId
+END
 
 SELECT
 	*
@@ -23,7 +34,8 @@ WHERE
 	(es.ComplianceYear = @ComplianceYear) AND
 		(
 			(@OriginatingOrganisationId IS NULL OR es.OriginatingOrganisationId = @OriginatingOrganisationId) AND
-			(@RecipientOrganisationId IS NULL OR es.RecipientOrganisationId = @RecipientOrganisationId)
+			(@RecipientOrganisationId IS NULL OR es.RecipientOrganisationId = @RecipientOrganisationId) AND
+			(@AatfId IS NULL OR es.AatfId = @AatfId)
 		)
 ORDER BY
 	es.Reference ASC

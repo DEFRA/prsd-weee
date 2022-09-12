@@ -17,37 +17,26 @@
     {
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
         private readonly ICsvWriter<EvidenceNoteReportData> csvWriter;
-        private readonly IWeeeAuthorization authorization;
+        private readonly IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck;
 
-        public GetEvidenceNoteReportHandler(IWeeeAuthorization authorization,
-            IEvidenceStoredProcedures evidenceStoredProcedures, ICsvWriter<EvidenceNoteReportData> csvWriter)
+        public GetEvidenceNoteReportHandler(IEvidenceStoredProcedures evidenceStoredProcedures, 
+            ICsvWriter<EvidenceNoteReportData> csvWriter, 
+            IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck)
         {
-            this.authorization = authorization;
             this.evidenceStoredProcedures = evidenceStoredProcedures;
             this.csvWriter = csvWriter;
+            this.evidenceReportsAuthenticationCheck = evidenceReportsAuthenticationCheck;
         }
 
         public async Task<CSVFileData> HandleAsync(GetEvidenceNoteReportRequest request)
         {
-            if (!request.OriginatorOrganisationId.HasValue && !request.RecipientOrganisationId.HasValue)
-            {
-                authorization.EnsureCanAccessInternalArea();
-            }
-
-            if (request.OriginatorOrganisationId.HasValue)
-            {
-                authorization.EnsureOrganisationAccess(request.OriginatorOrganisationId.Value);
-            }
-
-            if (request.RecipientOrganisationId.HasValue)
-            {
-                authorization.EnsureOrganisationAccess(request.RecipientOrganisationId.Value);
-            }
+            await evidenceReportsAuthenticationCheck.EnsureIsAuthorised(request);
 
             var reportData = await evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(
                     request.ComplianceYear,
                     request.OriginatorOrganisationId,
                     request.RecipientOrganisationId,
+                    request.AatfId,
                     request.TonnageToDisplay == TonnageToDisplayReportEnum.Net);
            
             csvWriter.DefineColumn(EvidenceReportConstants.Reference, x => x.Reference);
