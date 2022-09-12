@@ -9,6 +9,7 @@
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Security;
     using EA.Weee.Tests.Core.DataHelpers;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
@@ -20,13 +21,17 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using IdentityModel.Client;
     using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
+    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.Areas.Scheme.Attributes;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
@@ -1948,10 +1953,10 @@
             var evidenceNoteId = TestFixture.Create<Guid>();
 
             //act
-            var exception = Assert.ThrowsAsync<InvalidOperationException>(async () => await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status));
+            var exception = await Record.ExceptionAsync(() => transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status));
 
             //assert
-            exception.Result.Message.Should().Be("status is not valid");
+            exception.Message.Should().Be("status is not valid");
         }
 
         [Theory]
@@ -1968,11 +1973,66 @@
 
             //assert
             result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName);
-            //result.RouteValues["controller"].Should().Be("TransferEvidence");
-            //result.RouteValues["action"].Should().Be("SubmittedTransferNote");
             result.RouteValues["pcsId"].Should().Be(schemeId);
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
             result.RouteValues["redirectTab"].Should().Be("outgoing-transfers");
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft)]
+        [InlineData(NoteStatus.Returned)]
+        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_SetNoteStatusRequestShouldBeCalled(NoteStatus status)
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+            var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(evidenceNoteId);
+            SetUpControllerContext(true);
+            A.CallTo(() => transferEvidenceController.User.GetAccessToken()).Returns("token");
+
+            //act
+            await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft, NoteUpdatedStatusEnum.Submitted)]
+        [InlineData(NoteStatus.Returned, NoteUpdatedStatusEnum.ReturnedSubmitted)]
+        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_TempDataShouldHaveCorrectStatus(NoteStatus status, NoteUpdatedStatusEnum tempDataStatus)
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+            var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).Returns(evidenceNoteId);
+
+            //act
+            await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status);
+
+            //assert
+            transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(tempDataStatus);
+        }
+
+        private void SetUpControllerContext(bool hasInternalAdminUserClaims)
+        {
+            var httpContextBase = A.Fake<HttpContextBase>();
+            var principal = new ClaimsPrincipal(httpContextBase.User);
+            var claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
+
+            if (hasInternalAdminUserClaims)
+            {
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
+            }
+            principal.AddIdentity(claimsIdentity);
+
+            A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
+            //A.CallTo(() => httpContextBase.User.GetAccessToken()).Returns("token");
+
+            var context = new ControllerContext(httpContextBase, new RouteData(), transferEvidenceController);
+            transferEvidenceController.ControllerContext = context;
         }
 
         private void AddModelError()
