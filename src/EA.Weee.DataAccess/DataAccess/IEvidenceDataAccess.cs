@@ -52,5 +52,7 @@
             DateTime updateDate);
 
         Task<List<Organisation>> GetRecipientOrganisations(Guid organisationId, int complianceYear);
+
+        Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear);
     }
 }

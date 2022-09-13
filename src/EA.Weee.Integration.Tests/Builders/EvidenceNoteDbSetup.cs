@@ -124,8 +124,18 @@
             var startDate = new DateTime(complianceYear, 1, 1);
             var endDate = new DateTime(complianceYear, 12, 31);
 
-            var newStartDate = startDate + new TimeSpan(rand62Bit % (endDate - startDate).Ticks);
-            var newEndDate = newStartDate + new TimeSpan(rand62Bit % (endDate - newStartDate).Ticks);
+            DateTime newStartDate;
+            DateTime newEndDate;
+            try
+            {
+                newStartDate = startDate + new TimeSpan(rand62Bit % (endDate - startDate).Ticks);
+                newEndDate = newStartDate + new TimeSpan(rand62Bit % (endDate - newStartDate).Ticks);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                newStartDate = new DateTime(complianceYear, 1, 1);
+                newEndDate = new DateTime(complianceYear, 12, 31);
+            }
 
             ObjectInstantiator<Note>.SetProperty(o => o.StartDate, newStartDate, instance);
             ObjectInstantiator<Note>.SetProperty(o => o.EndDate, newEndDate, instance);
