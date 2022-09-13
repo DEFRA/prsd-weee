@@ -1986,16 +1986,13 @@
             //arrange
             var schemeId = TestFixture.Create<Guid>();
             var evidenceNoteId = TestFixture.Create<Guid>();
-            var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
-            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).Returns(evidenceNoteId);
-            SetUpControllerContext(true);
-            A.CallTo(() => transferEvidenceController.User.GetAccessToken()).Returns("token");
 
             //act
             await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status);
 
             //assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, request)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<SetNoteStatusRequest>.That
+                .Matches(s => s.NoteId == evidenceNoteId && s.Status == NoteStatus.Submitted))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -2006,8 +2003,6 @@
             //arrange
             var schemeId = TestFixture.Create<Guid>();
             var evidenceNoteId = TestFixture.Create<Guid>();
-            var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).Returns(evidenceNoteId);
 
             //act
             await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status);
