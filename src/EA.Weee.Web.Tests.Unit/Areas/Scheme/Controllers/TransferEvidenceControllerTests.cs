@@ -1,12 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
     using AutoFixture;
+    using Core.AatfEvidence;
+    using Core.Helpers;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Security;
+    using EA.Weee.Tests.Core.DataHelpers;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Constant;
@@ -17,15 +21,17 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
+    using IdentityModel.Client;
+    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
+    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Core.AatfEvidence;
-    using Core.Helpers;
-    using Prsd.Core.Mediator;
+    using System.Web.Routing;
     using Web.Areas.Scheme.Attributes;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
@@ -1931,6 +1937,97 @@
             result.FileDownloadName.Should().Be("T151_2022_02/09/2022_1422.pdf");
             result.ContentType.Should().Be("application/pdf");
             SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusCoreData))]
+        public async Task SubmittedTransferNotePost_GivenIncorrectStatus_ShouldThrowException(NoteStatus status)
+        {
+            if (status.Equals(NoteStatus.Returned) || status.Equals(NoteStatus.Draft))
+            {
+                return;
+            }
+
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            var exception = await Record.ExceptionAsync(() => transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status));
+
+            //assert
+            exception.Message.Should().Be("status is not valid");
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft)]
+        [InlineData(NoteStatus.Returned)]
+        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_ShouldRedirectedToRoute(NoteStatus status)
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            var result = await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status) as RedirectToRouteResult;
+
+            //assert
+            result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName);
+            result.RouteValues["pcsId"].Should().Be(schemeId);
+            result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
+            result.RouteValues["redirectTab"].Should().Be("outgoing-transfers");
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft)]
+        [InlineData(NoteStatus.Returned)]
+        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_SetNoteStatusRequestShouldBeCalled(NoteStatus status)
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<SetNoteStatusRequest>.That
+                .Matches(s => s.NoteId == evidenceNoteId && s.Status == NoteStatus.Submitted))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(NoteStatus.Draft, NoteUpdatedStatusEnum.Submitted)]
+        [InlineData(NoteStatus.Returned, NoteUpdatedStatusEnum.ReturnedSubmitted)]
+        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_TempDataShouldHaveCorrectStatus(NoteStatus status, NoteUpdatedStatusEnum tempDataStatus)
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            await transferEvidenceController.SubmittedTransferNote(schemeId, evidenceNoteId, status);
+
+            //assert
+            transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(tempDataStatus);
+        }
+
+        private void SetUpControllerContext(bool hasInternalAdminUserClaims)
+        {
+            var httpContextBase = A.Fake<HttpContextBase>();
+            var principal = new ClaimsPrincipal(httpContextBase.User);
+            var claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
+
+            if (hasInternalAdminUserClaims)
+            {
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
+            }
+            principal.AddIdentity(claimsIdentity);
+
+            A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
+            //A.CallTo(() => httpContextBase.User.GetAccessToken()).Returns("token");
+
+            var context = new ControllerContext(httpContextBase, new RouteData(), transferEvidenceController);
+            transferEvidenceController.ControllerContext = context;
         }
 
         private void AddModelError()

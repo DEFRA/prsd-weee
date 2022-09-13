@@ -326,14 +326,15 @@
                         updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
                         break;
                     default:
-                        throw new InvalidOperationException();
+                        throw new InvalidOperationException("status is not valid");
                 }
 
                 SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
 
                 TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
-                await client.SendAsync(User.GetAccessToken(), request);
+                string token = User.GetAccessToken();
+                await client.SendAsync(token, request);
 
                 return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
                 {
