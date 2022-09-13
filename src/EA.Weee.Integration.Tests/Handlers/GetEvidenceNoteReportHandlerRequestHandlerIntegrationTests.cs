@@ -151,7 +151,7 @@
 
                 notes.Add(outOfComplianceYearNote);
 
-                request = new GetEvidenceNoteReportRequest(null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
             };
 
             private readonly Because of = () =>
@@ -458,7 +458,7 @@
 
                 notes.Add(outOfComplianceYearNote);
 
-                request = new GetEvidenceNoteReportRequest(null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
             };
 
             private readonly Because of = () =>
@@ -478,7 +478,7 @@
                     .First(s => s.ToStatus.Value == NoteStatus.Submitted.Value).ChangedDate;
 
                 var note4 = Query.GetEvidenceNoteById(notes.ElementAt(3).Id);
-                var note4SubmittedDate = note3.NoteStatusHistory
+                var note4SubmittedDate = note4.NoteStatusHistory
                     .First(s => s.ToStatus.Value == NoteStatus.Submitted.Value).ChangedDate;
 
                 var expectedCsvData =
@@ -592,7 +592,7 @@
 
                 notes.Add(outOfComplianceYearNote);
 
-                request = new GetEvidenceNoteReportRequest(null, originatorOrganisation1.Id, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, originatorOrganisation1.Id, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
             };
 
             private readonly Because of = () =>
@@ -715,7 +715,7 @@
 
                 notes.Add(outOfComplianceYearNote);
 
-                request = new GetEvidenceNoteReportRequest(recipientOrganisation1.Id, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(recipientOrganisation1.Id, null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
             };
 
             private readonly Because of = () =>

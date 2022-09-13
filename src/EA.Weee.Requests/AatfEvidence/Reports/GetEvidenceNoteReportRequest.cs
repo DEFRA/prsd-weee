@@ -2,28 +2,21 @@
 {
     using System;
     using Core.AatfEvidence;
-    using Core.Admin;
-    using Prsd.Core.Mediator;
 
-    public class GetEvidenceNoteReportRequest : IRequest<CSVFileData>
+    public class GetEvidenceNoteReportRequest : GetEvidenceReportBaseRequest
     {
-        public Guid? RecipientOrganisationId { get; private set; }
-
-        public Guid? OriginatorOrganisationId { get; private set; }
-
         public TonnageToDisplayReportEnum TonnageToDisplay { get; private set; }
-
-        public int ComplianceYear { get; private set; }
 
         public GetEvidenceNoteReportRequest(Guid? recipientOrganisationId, 
             Guid? originatorOrganisationId,
+            Guid? aatfId,
             TonnageToDisplayReportEnum tonnageToDisplay,
-            int complianceYear)
+            int complianceYear) : base(recipientOrganisationId, 
+                                    originatorOrganisationId, 
+                                    aatfId, 
+                                    complianceYear)
         {
-            RecipientOrganisationId = recipientOrganisationId;
-            OriginatorOrganisationId = originatorOrganisationId;
             TonnageToDisplay = tonnageToDisplay;
-            ComplianceYear = complianceYear;
         }
     }
 }
