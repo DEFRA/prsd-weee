@@ -20,7 +20,9 @@
 
         public async Task EnsureIsAuthorised(GetEvidenceReportBaseRequest request)
         {
-            if (!request.OriginatorOrganisationId.HasValue && !request.RecipientOrganisationId.HasValue)
+            if (!request.OriginatorOrganisationId.HasValue && 
+                !request.RecipientOrganisationId.HasValue &&
+                !request.AatfId.HasValue)
             {
                 authorization.EnsureCanAccessInternalArea();
             }
