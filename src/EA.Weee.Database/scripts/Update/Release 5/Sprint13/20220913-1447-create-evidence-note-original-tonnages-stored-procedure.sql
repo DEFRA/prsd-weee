@@ -16,7 +16,7 @@ SET NOCOUNT ON;
 
 IF @AatfId IS NOT NULL BEGIN
 	SELECT
-		a2.Id 
+		@AatfId = a2.Id 
 	FROM
 		[AATF].[Aatf] a1 
 		INNER JOIN [AATF].AATF a2 ON a1.AatfId = a2.AatfId AND a2.ComplianceYear = @ComplianceYear

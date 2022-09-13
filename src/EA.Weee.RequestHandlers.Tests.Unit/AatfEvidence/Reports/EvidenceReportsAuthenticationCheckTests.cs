@@ -32,8 +32,8 @@
         {
             //arrange
             var request = new TestRequest(null, 
-                null, 
-                TestFixture.Create<Guid>(),
+                null,
+                null,
                 TestFixture.Create<int>());
 
             //act
