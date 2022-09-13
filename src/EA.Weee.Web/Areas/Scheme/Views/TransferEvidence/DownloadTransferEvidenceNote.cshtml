@@ -4,5 +4,20 @@
     Layout = "~/Views/Shared/_EvidenceNotePdfLayout.cshtml";
 }
 
+<style type="text/css">
+    .govuk-table__cell {
+        padding-right: 0;
+        margin-right: 0;
+        margin-left: 1px;
+        padding-left: 1px;
+    }
+    .govuk-printable-aatf-transferred {
+        padding-left: 10px;
+    }
+    .govuk-printable-half-column {
+        margin-bottom: 0px !important;
+        padding-bottom: -30px !important;
+    }
+</style>
 
 @Html.Partial("_ViewTransferEvidenceNotePartial", Model)
