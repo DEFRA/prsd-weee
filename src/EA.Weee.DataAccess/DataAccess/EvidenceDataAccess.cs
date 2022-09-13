@@ -285,7 +285,7 @@
         {
             return context.Notes
                 .AnyAsync(n => n.ComplianceYear == complianceYear && 
-                               n.OrganisationId == recipientId && 
+                               n.RecipientId == recipientId && 
                                n.Status.Value == NoteStatus.Approved.Value &&
                                n.WasteType.Value == WasteType.HouseHold);
         }

@@ -37,10 +37,16 @@
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
 
         @*<div class="pager govuk-body">
-            @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount, @formName)
-        </div>*@
+                @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount, @formName)
+            </div>*@
+        <div class="govuk-!-margin-top-3">
+            <div class="govuk-button-group">
+                @this.WeeeGds().Button("Continue", new { name = "Action", value = ActionEnum.Continue, id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
+            </div>
+        </div>
     }
+}
 
-    @*<p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>*@
+@*<p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>*@
 }
 

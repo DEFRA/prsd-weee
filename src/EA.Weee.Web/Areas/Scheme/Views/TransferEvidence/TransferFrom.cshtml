@@ -1,6 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.ViewModels.Shared
 @using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "Transfer from - GOV.UK";
@@ -25,7 +26,14 @@
         <div class="pager govuk-body">
             @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount, @formName)
         </div>
+        <p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>
+        
+        <div class="govuk-!-margin-top-3">
+            <div class="govuk-button-group">
+                @this.WeeeGds().Button("Continue", new { name = "Action", value = ActionEnum.Continue, id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
+            </div>
+        </div>
     }
 
-    <p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>
+
 }
