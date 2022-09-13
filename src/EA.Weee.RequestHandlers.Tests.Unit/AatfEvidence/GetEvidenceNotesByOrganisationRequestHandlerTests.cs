@@ -156,6 +156,62 @@
         }
 
         [Fact]
+        public async void HandleAsync_GivenTransferredOutRequest_EvidenceDataAccessHasApprovedEvidenceShouldNotBeCalled()
+        {
+            //arrange
+            var organisation = A.Fake<Organisation>();
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true, 1, 25);
+
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
+
+            // act
+            var result = await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(A<Guid>._, A<int>._)).MustNotHaveHappened();
+            result.HasApprovedEvidenceNotes.Should().BeFalse();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenNotTransferredOutRequest_EvidenceDataAccessHasApprovedEvidenceShouldBeCalled()
+        {
+            //arrange
+            var organisation = A.Fake<Organisation>();
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, false, 1, 25);
+
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
+
+            // act
+            await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() =>
+                    evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(request.OrganisationId,
+                        request.ComplianceYear))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void HandleAsync_GivenNotTransferredOutRequest_EvidenceDataAccessHasApprovedEvidence_ResultShouldBeSet(bool hasApprovedEvidence)
+        {
+            //arrange
+            var organisation = A.Fake<Organisation>();
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, false, 1, 25);
+
+            A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
+            A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(A<Guid>._, A<int>._))
+                .Returns(hasApprovedEvidence);
+            // act
+            
+            var result = await handler.HandleAsync(request);
+
+            // assert
+            result.HasApprovedEvidenceNotes.Should().Be(hasApprovedEvidence);
+        }
+
+        [Fact]
         public async void HandleAsync_GivenRequest_OrganisationDataAccessShouldBeCalledOnce()
         {
             // act
