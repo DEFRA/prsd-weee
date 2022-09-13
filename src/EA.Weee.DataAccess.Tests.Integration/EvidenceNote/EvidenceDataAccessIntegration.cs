@@ -197,7 +197,7 @@
 
                 await context.SaveChangesAsync();
 
-                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
 
                 // asset
                 hasApprovedWaste.Should().BeTrue();
