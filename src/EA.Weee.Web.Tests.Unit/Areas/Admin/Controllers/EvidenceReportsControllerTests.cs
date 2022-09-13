@@ -470,6 +470,7 @@
                 g.ComplianceYear == complianceYear &&
                 g.OriginatorOrganisationId == null &&
                 g.RecipientOrganisationId == null &&
+                g.AatfId == null &&
                 g.TonnageToDisplay == tonnageToDisplay))).MustHaveHappenedOnceExactly();
         }
 
