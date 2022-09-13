@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
+    using AatfEvidence.Reports;
     using AatfReturn;
     using Admin;
     using Admin.Obligations;
@@ -91,6 +92,7 @@
             builder.RegisterType<WeeeCsvReader>().As<IWeeeCsvReader>();
             builder.RegisterType<ObligationCsvReader>().As<IObligationCsvReader>();
             builder.RegisterType<ObligationUploadValidator>().As<IObligationUploadValidator>();
+            builder.RegisterType<EvidenceReportsAuthenticationCheck>().As<IEvidenceReportsAuthenticationCheck>();
         }
     }
 }
