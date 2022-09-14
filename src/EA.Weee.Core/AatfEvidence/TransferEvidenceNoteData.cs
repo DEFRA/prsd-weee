@@ -23,6 +23,20 @@
                 return new List<int>();
             }
         }
+
+        public List<Guid> CurrentEvidenceNoteIds
+        {
+            get
+            {
+                if (TransferEvidenceNoteTonnageData != null)
+                {
+                    return TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
+                }
+
+                return new List<Guid>();
+            }
+        }
+
         public SchemeData RecipientSchemeData { get; set; }
 
         public OrganisationData TransferredOrganisationData { get; set; }
