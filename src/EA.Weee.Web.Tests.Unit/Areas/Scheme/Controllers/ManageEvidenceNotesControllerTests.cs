@@ -637,6 +637,8 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
                 .With(e => e.Results, returnList).Create();
             var currentDate = TestFixture.Create<DateTime>();
+            const int pageNumber = 1;
+            const int pageSize = 10;
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
@@ -652,8 +654,8 @@
                      g.ComplianceYear.Equals(currentDate.Year) &&
                      g.TransferredOut == true &&
                      noteTypes.SequenceEqual(g.NoteTypeFilterList) &&
-                     g.PageSize == int.MaxValue &&
-                     g.PageNumber == 1))).MustHaveHappenedOnceExactly();
+                     g.PageSize == pageSize &&
+                     g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -674,13 +676,14 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             const int pageNumber = 10;
+            const int pageSize = 10;
 
             //act
             await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.PageSize == int.MaxValue &&
+                g => g.PageSize == pageSize &&
                      g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -705,6 +708,9 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
+            const int pageNumber = 1;
+            const int pageSize = 10;
+
             //act
             await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
 
@@ -715,8 +721,8 @@
                      g.ComplianceYear.Equals(complianceYear) &&
                      g.TransferredOut == true &&
                      noteTypes.SequenceEqual(g.NoteTypeFilterList) &&
-                     g.PageSize == int.MaxValue &&
-                     g.PageNumber == 1))).MustHaveHappenedOnceExactly();
+                     g.PageSize == pageSize &&
+                     g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -767,6 +773,9 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
+            const int pageNumber = 1;
+            const int pageSize = 10;
+
             //act
             await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
 
@@ -778,8 +787,8 @@
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
                          a.ManageEvidenceNoteViewModel == model &&
-                         a.PageNumber == 1 &&
-                         a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                         a.PageNumber == pageNumber &&
+                         a.PageSize == pageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -796,6 +805,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             const int pageNumber = 10;
+            const int pageSize = 10;
 
             //act
             await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model, pageNumber);
@@ -804,7 +814,7 @@
             A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                 A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.PageNumber == pageNumber &&
-                         a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                         a.PageSize == pageSize))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
