@@ -328,57 +328,6 @@
             }
         }
 
-        private async Task<TransferEvidenceNotesViewModel> RebuildModel(TransferEvidenceNotesViewModel model, 
-            TransferEvidenceNoteRequest request, 
-            int selectedPageNumber = 1)
-        {
-            using (var client = this.apiClient())
-            {
-                var noteData = await client.SendAsync(User.GetAccessToken(),
-                    new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
-
-                var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(model.PcsId, request.CategoryIds,
-                        noteData.ComplianceYear, null, null,  model.PageNumber,
-                        int.MaxValue));
-
-                //var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData,
-                //    model.PcsId, model.PageNumber,
-                //    int.MaxValue);
-
-                //model =
-                //    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
-
-                return model;
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditTransferFrom(TransferEvidenceNotesViewModel model, int page = 1)
-        {
-            await SetBreadcrumb(model.PcsId);
-
-            var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
-
-            if (outgoingTransfer == null)
-            {
-                return RedirectToManageEvidence(model.PcsId);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                using (var client = this.apiClient())
-                {
-                    model = await RebuildModel(model, outgoingTransfer, page);
-                }
-
-                return View("EditTransferFrom", model);
-            }
-
-            return RedirectToRoute("Scheme_edit_transfer_tonnages",
-                new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
-        }
         private async Task<TransferEvidenceNoteCategoriesViewModel> TransferEvidenceNoteCategoriesViewModel(Guid pcsId, 
             Guid evidenceNoteId, 
             IWeeeClient client,
