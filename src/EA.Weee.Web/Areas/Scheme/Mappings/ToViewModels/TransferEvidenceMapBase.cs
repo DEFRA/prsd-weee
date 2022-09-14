@@ -39,9 +39,9 @@
                 ComplianceYear = source.ComplianceYear
             };
 
-            if (source.Notes != null)
+            if (source.SelectedNotes != null)
             {
-                foreach (var evidenceNoteData in source.Notes.Results)
+                foreach (var evidenceNoteData in source.SelectedNotes.Results)
                 {
                     model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
                         new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)

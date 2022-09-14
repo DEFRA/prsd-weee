@@ -1,23 +1,20 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using Api.Client;
     using Attributes;
     using Constant;
     using Core.AatfEvidence;
+    using Core.Constants;
     using Core.Helpers;
     using Core.Scheme;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Constants;
-    using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.Scheme;
-    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.ViewModels.Shared;
     using Filters;
     using Infrastructure;
+    using Infrastructure.PDF;
     using Mappings.ToViewModels;
-    using Microsoft.Ajax.Utilities;
     using Requests;
     using Services;
     using Services.Caching;
@@ -75,7 +72,7 @@
             };
 
             var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                  SessionKeyConstant.TransferNoteKey);
+                SessionKeyConstant.TransferNoteKey);
 
             if (transferRequest != null)
             {
@@ -85,7 +82,7 @@
                 model.SelectedSchema = transferRequest.RecipientId;
             }
 
-            return this.View("TransferEvidenceNote", model);
+            return View("TransferEvidenceNote", model);
         }
 
         [HttpPost]
@@ -97,14 +94,17 @@
             if (ModelState.IsValid)
             {
                 var existingTransferRequest =
-                   sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                       SessionKeyConstant.TransferNoteKey);
+                    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                        SessionKeyConstant.TransferNoteKey);
 
-                var transferRequestWithSelectedCategories = transferNoteRequestCreator.SelectCategoriesToRequest(model, existingTransferRequest);
+                var transferRequestWithSelectedCategories =
+                    transferNoteRequestCreator.SelectCategoriesToRequest(model, existingTransferRequest);
 
-                sessionService.SetTransferSessionObject(Session, transferRequestWithSelectedCategories, SessionKeyConstant.TransferNoteKey);
+                sessionService.SetTransferSessionObject(Session, transferRequestWithSelectedCategories,
+                    SessionKeyConstant.TransferNoteKey);
 
-                return RedirectToAction("TransferFrom", "TransferEvidence", new { area = "Scheme", pcsId = model.OrganisationId, complianceYear = model.ComplianceYear });
+                return RedirectToAction("TransferFrom", "TransferEvidence",
+                    new { area = "Scheme", pcsId = model.OrganisationId, complianceYear = model.ComplianceYear });
             }
 
             await SetBreadcrumb(model.OrganisationId);
@@ -115,22 +115,6 @@
 
             return View(model);
         }
-
-        //[HttpGet]
-        //[CheckCanCreateTransferNote]
-        //[NoCacheFilter]
-        //public async Task<ActionResult> TransferEvidenceNotePaging(Guid pcsId, int complianceYear, )
-        //{
-        //    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-        //        SessionKeyConstant.TransferNoteKey);
-
-        //    if (transferRequest == null)
-        //    {
-        //        return RedirectToManageEvidence(pcsId, complianceYear);
-        //    }
-
-        //    var model = await TransferFromViewModel(pcsId, complianceYear, client, transferRequest, 1);
-        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -157,15 +141,13 @@
 
                 return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, model.Page });
             }
-            else
-            {
-                using (var client = this.apiClient())
-                {
-                    var newModel = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client,
-                        transferRequest, model.Page);
 
-                    return View("TransferFrom", newModel);
-                }
+            using (var client = apiClient())
+            {
+                var newModel = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client,
+                    transferRequest, model.Page);
+
+                return View("TransferFrom", newModel);
             }
         }
 
@@ -174,10 +156,10 @@
         [NoCacheFilter]
         public async Task<ActionResult> TransferFrom(Guid pcsId, int complianceYear, int page = 1)
         {
-            using (var client = this.apiClient())
+            using (var client = apiClient())
             {
                 await SetBreadcrumb(pcsId);
-                
+
                 var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                     SessionKeyConstant.TransferNoteKey);
 
@@ -188,108 +170,67 @@
 
                 var model = await TransferFromViewModel(pcsId, complianceYear, client, transferRequest, page);
 
-                return this.View("TransferFrom", model);
+                return View("TransferFrom", model);
             }
         }
 
-        private async Task<TransferEvidenceNotesViewModel> TransferFromViewModel(Guid pcsId, int complianceYear, IWeeeClient client,
+        private async Task<TransferEvidenceNotesViewModel> TransferFromViewModel(Guid pcsId, int complianceYear,
+            IWeeeClient client,
             TransferEvidenceNoteRequest transferRequest, int pageNumber)
         {
             var currentSelectedNotes = new EvidenceNoteSearchDataResult();
             if (transferRequest.EvidenceNoteIds.Any())
             {
                 currentSelectedNotes = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, null, 1, int.MaxValue));
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear,
+                        transferRequest.EvidenceNoteIds, null, 1, int.MaxValue));
             }
-           
+
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null, transferRequest.EvidenceNoteIds, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null,
+                    transferRequest.EvidenceNoteIds, pageNumber,
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear,
                 currentSelectedNotes,
-                availableNotes, 
-                transferRequest, 
-                pcsId, pageNumber, 
+                availableNotes,
+                transferRequest,
+                pcsId, pageNumber,
                 configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
-
-            sessionService.SetTransferSessionObject(Session, model.EvidenceNotesDataListPaged, SessionKeyConstant.PagingTransferViewModelKey);
 
             return model;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model, int selectedPageNumber = 1)
+        public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model)
         {
             await SetBreadcrumb(model.PcsId);
 
-            UpdateAndSetSelectedNotesInSession(model);
             var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                 SessionKeyConstant.TransferNoteKey);
 
-            if (model.Action == ActionEnum.Back)
+            transferRequest.UpdateSelectedNotes(model.EvidenceNotesDataList.Select(e => e.Id).ToList());
+
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
+                using (var client = apiClient())
+                {
+                    model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, transferRequest, model.PageNumber);
+                }
+
+                return View("TransferFrom", model);
             }
 
-            if (model.PageNumber.HasValue)
-            {
-                if (ModelState.ContainsKey("Action"))
+            return RedirectToAction("TransferTonnage", "TransferEvidence",
+                new
                 {
-                    ModelState["Action"].Errors.Clear();
-                    ModelState.Clear();
-                }
-
-                using (var client = this.apiClient())
-                {
-                    model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, transferRequest, model.PageNumber.Value);
-                }
-            }
-            else
-            {
-                //Hack before the page is redesigned to fix validation
-                if (!transferRequest.EvidenceNoteIds.Any())
-                {
-                    ModelState.AddModelError("SelectedEvidenceNotePairs",
-                        "Select at least one evidence note to transfer from");
-                }
-
-                if (transferRequest.EvidenceNoteIds.Count > 5)
-                {
-                    ModelState.AddModelError("SelectedEvidenceNotePairs",
-                        "You cannot select more than 5 notes");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    using (var client = this.apiClient())
-                    {
-                        model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client,
-                            transferRequest, selectedPageNumber);
-                    }
-
-                    return View("TransferFrom", model);
-                }
-
-                return RedirectToAction("TransferTonnage", "TransferEvidence",
-                    new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
-            }
-
-            if (!model.PageNumber.HasValue)
-            {
-                var pagedModel = sessionService.GetTransferSessionObject<PagedList<ViewEvidenceNoteViewModel>>(Session,
-                    SessionKeyConstant.PagingTransferViewModelKey);
-
-                if (pagedModel != null)
-                {
-                    model.EvidenceNotesDataListPaged = pagedModel;
-                }
-            }
-
-            return View("TransferFrom", model);
+                    area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear,
+                    transferAllTonnage = false
+                });
         }
 
         [HttpGet]
@@ -297,7 +238,7 @@
         [NoCacheFilter]
         public async Task<ActionResult> TransferTonnage(Guid pcsId, int complianceYear, bool transferAllTonnage = false)
         {
-            using (var client = this.apiClient())
+            using (var client = apiClient())
             {
                 var model = await TransferEvidenceTonnageViewModel(pcsId, transferAllTonnage, complianceYear, client);
 
@@ -306,7 +247,7 @@
                     return RedirectToManageEvidence(pcsId, complianceYear);
                 }
 
-                return this.View("TransferTonnage", model);
+                return View("TransferTonnage", model);
             }
         }
 
@@ -321,7 +262,7 @@
                 return RedirectToAction("TransferFrom", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
             }
 
-            using (var client = this.apiClient())
+            using (var client = apiClient())
             {
                 if (ModelState.IsValid)
                 {
@@ -341,7 +282,7 @@
 
                 var updatedModel = await TransferEvidenceTonnageViewModel(model.PcsId, false, model.ComplianceYear, client);
 
-                return this.View("TransferTonnage", updatedModel);
+                return View("TransferTonnage", updatedModel);
             }
         }
 
@@ -367,7 +308,7 @@
 
                 ViewBag.Page = page;
 
-                return this.View("TransferredEvidence", model);
+                return View("TransferredEvidence", model);
             }
         }
 
@@ -375,7 +316,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmittedTransferNote(Guid schemeId, Guid evidenceNoteId, NoteStatus status)
         {
-            using (var client = this.apiClient())
+            using (var client = apiClient())
             {
                 NoteUpdatedStatusEnum updateStatus;
                 switch (status)
@@ -495,38 +436,6 @@
                 tab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence),
                 selectedComplianceYear = complianceYear
             });
-        }
-
-        private void UpdateAndSetSelectedNotesInSession(TransferEvidenceNotesViewModel model)
-        {
-            var transferRequest =
-               sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                   SessionKeyConstant.TransferNoteKey);
-
-            if (transferRequest != null)
-            {
-                var resultNotes = new List<Guid>();
-
-                var alreadySelectedEvidenceNotes = transferRequest.EvidenceNoteIds;
-
-                resultNotes.AddRange(alreadySelectedEvidenceNotes);
-
-                //var selectedEvidenceNotes =
-                //model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key).ToList();
-
-                //foreach (var note in selectedEvidenceNotes)
-                //{
-                //    if (!resultNotes.Contains(note))
-                //    {
-                //        resultNotes.Add(note);
-                //    }
-                //}
-              
-                var updatedTransferRequest =
-                    new TransferEvidenceNoteRequest(model.PcsId, transferRequest.RecipientId, transferRequest.CategoryIds, resultNotes);
-
-                sessionService.SetTransferSessionObject(Session, updatedTransferRequest, SessionKeyConstant.TransferNoteKey);
-            }
         }
     }
 }

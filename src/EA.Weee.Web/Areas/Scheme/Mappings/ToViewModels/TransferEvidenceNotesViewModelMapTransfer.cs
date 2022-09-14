@@ -14,9 +14,9 @@
 
         public TransferEvidenceNoteCategoriesViewModel ExistingTransferEvidenceNoteCategoriesViewModel { get; }
 
-        public EvidenceNoteSearchDataResult Notes { get; }
+        public EvidenceNoteSearchDataResult SelectedNotes { get; }
 
-        public EvidenceNoteSearchDataResult NotesSelection { get; }
+        public EvidenceNoteSearchDataResult AvailableNotes { get; }
 
         public TransferEvidenceNoteRequest Request { get; }
 
@@ -36,26 +36,47 @@
 
         public bool? ReturnToEditDraftTransfer { get; set; }
 
-        public List<Guid> ExcludeEvidenceNoteIds { get; set; }
-
         public int PageNumber { get; private set; } = 1;
 
         public int PageSize { get; private set; } = 10;
 
         public TransferEvidenceNotesViewModelMapTransfer(
-            EvidenceNoteSearchDataResult notes,
+            EvidenceNoteSearchDataResult selectedNotes,
             TransferEvidenceNoteRequest request,
             TransferEvidenceNoteData transferNoteData,
-            Guid organisationId, 
+            Guid organisationId,
             int pageNumber = 1,
             int pageSize = 10)
         {
-            Condition.Requires(notes).IsNotNull();
+            Condition.Requires(selectedNotes).IsNotNull();
             Condition.Requires(transferNoteData).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
             Request = request;
-            Notes = notes;
+            SelectedNotes = selectedNotes;
+            TransferEvidenceNoteData = transferNoteData;
+            OrganisationId = organisationId;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+        }
+
+        public TransferEvidenceNotesViewModelMapTransfer(
+            EvidenceNoteSearchDataResult selectedNotes,
+            EvidenceNoteSearchDataResult availableNotes,
+            TransferEvidenceNoteRequest request,
+            TransferEvidenceNoteData transferNoteData,
+            Guid organisationId,
+            int pageNumber = 1,
+            int pageSize = 10)
+        {
+            Condition.Requires(selectedNotes).IsNotNull();
+            Condition.Requires(transferNoteData).IsNotNull();
+            Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(availableNotes).IsNotNull();
+
+            Request = request;
+            SelectedNotes = selectedNotes;
+            AvailableNotes = availableNotes;
             TransferEvidenceNoteData = transferNoteData;
             OrganisationId = organisationId;
             PageNumber = pageNumber;
@@ -64,20 +85,20 @@
 
         public TransferEvidenceNotesViewModelMapTransfer(
             int complianceYear,
-            EvidenceNoteSearchDataResult notes,
-            EvidenceNoteSearchDataResult notesSelection,
+            EvidenceNoteSearchDataResult selectedNotes,
+            EvidenceNoteSearchDataResult availableNotes,
             TransferEvidenceNoteRequest request,
             Guid organisationId,
             int pageNumber = 1,
             int pageSize = 10)
         {
-            Condition.Requires(notes).IsNotNull();
-            Condition.Requires(notesSelection).IsNotNull();
+            Condition.Requires(selectedNotes).IsNotNull();
+            Condition.Requires(availableNotes).IsNotNull();
             Condition.Requires(request).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
-            Notes = notes;
-            NotesSelection = notesSelection;
+            SelectedNotes = selectedNotes;
+            AvailableNotes = availableNotes;
             Request = request;
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;
@@ -87,17 +108,17 @@
 
         public TransferEvidenceNotesViewModelMapTransfer(
             int complianceYear,
-            EvidenceNoteSearchDataResult notes,
+            EvidenceNoteSearchDataResult selectedNotes,
             TransferEvidenceNoteRequest request,
-            Guid organisationId,
+            Guid organisationId, 
             int pageNumber = 1,
             int pageSize = 10)
         {
-            Condition.Requires(notes).IsNotNull();
+            Condition.Requires(selectedNotes).IsNotNull();
             Condition.Requires(request).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
-            Notes = notes;
+            SelectedNotes = selectedNotes;
             Request = request;
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;

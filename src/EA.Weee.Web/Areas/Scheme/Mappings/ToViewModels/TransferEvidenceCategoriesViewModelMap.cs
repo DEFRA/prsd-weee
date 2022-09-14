@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using CuttingEdge.Conditions;
-    using EA.Weee.Core.Scheme;
     using Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;

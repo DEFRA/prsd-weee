@@ -23,7 +23,7 @@
             
             var model = MapBaseProperties(source);
 
-            foreach (var evidenceNoteData in source.NotesSelection.Results)
+            foreach (var evidenceNoteData in source.AvailableNotes.Results.OrderByDescending(e => e.Reference))
             {
                 model.EvidenceNotesDataListPaged.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
                     new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
@@ -33,19 +33,10 @@
             }
 
             model.EvidenceNotesDataListPaged =
-                model.EvidenceNotesDataListPaged.ToPagedList(source.PageNumber - 1, source.PageSize, source.NotesSelection.NoteCount) as PagedList<ViewEvidenceNoteViewModel>;
+                model.EvidenceNotesDataListPaged.ToPagedList(source.PageNumber - 1, source.PageSize, source.AvailableNotes.NoteCount) as PagedList<ViewEvidenceNoteViewModel>;
 
-            foreach (var evidenceNoteData in source.Notes.Results.OrderByDescending(e => e.Reference))
-            {
-                var selected = false;
-                if (source.TransferEvidenceNoteData != null)
-                {
-                    selected = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.Any(t =>
-                        t.OriginalNoteId == evidenceNoteData.Id);
-                }
-                //model.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(evidenceNoteData.Id, selected));
-            }
-           
+            //TEST FOR THIS
+            model.PageNumber = source.PageNumber;
             //if (source.SessionEvidenceNotesId != null)
             //{
             //    model.SelectedEvidenceNotePairs.Where(c => source.SessionEvidenceNotesId.Contains(c.Key)).ToList()
