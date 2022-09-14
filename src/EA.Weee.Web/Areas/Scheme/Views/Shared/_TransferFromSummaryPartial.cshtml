@@ -1,7 +1,14 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Constant
+@using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
+
+@{
+    var controller = ViewData["controller"] as string;
+    var postAction = ViewData["postAction"] as string;
+}
 
 <style type="text/css">
     .reference-column {
@@ -21,14 +28,6 @@
     }
 </style>
 
-
-
-@Html.AntiForgeryToken()
-@Html.HiddenFor(m => m.PcsId)
-@Html.HiddenFor(m => m.RecipientName)
-@Html.HiddenFor(m => m.ComplianceYear)
-@Html.Hidden("selectedPageNumber", Model.EvidenceNotesDataListPaged.PageNumber)
-
 <h2 class="govuk-heading-m">Showing approved evidence notes with categories</h2>
 <ul class="govuk-list">
     @for (var categoryCount = 0; categoryCount < Model.CategoryValues.Count; categoryCount++)
@@ -41,10 +40,9 @@
         <li>@Model.CategoryValues[categoryCount].CategoryId. @Model.CategoryValues[categoryCount].CategoryDisplay</li>
     }
 </ul>
-
-
+<p class="govuk-body">Select evidence notes from the available evidence notes table. A maximum of 5 notes can be chosen.</p>
 <table id="selected-notes-selection" class="govuk-table">
-    <caption class="govuk-table__caption govuk-visually-hidden">selected notes to transfer</caption>
+    <caption class="govuk-table__caption govuk-heading-m">Selected evidence notes</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th class="govuk-table__header reference-column">
@@ -63,58 +61,64 @@
     </thead>
     <tbody class="govuk-table__body">
 
-        @for (var i = 0; i < Model.EvidenceNotesDataListPaged.Count; i++)
+        @if (Model.EvidenceNotesDataList.Count > 0)
         {
-            var i1 = i;
-
+            for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @Model.EvidenceNotesDataList[i].ReferenceDisplay
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.EvidenceNotesDataList[i].SubmittedBy
+                    </td>
+                    <td class="govuk-table__cell">@Model.EvidenceNotesDataList[i].TotalReceivedDisplay</td>
+                    <td class="govuk-table__cell">
+                        @using (Html.BeginForm(actionName: "DeselectEvidenceNote", controllerName: controller, method: FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "deselected-evidence-note-page" + i })
+                            @Html.Hidden("evidenceNoteId", Model.EvidenceNotesDataList[i].Id, new { id = "deselected-evidence-note-id" + i })
+                            @Html.Hidden("complianceYear", Model.ComplianceYear, new { id = "deselected-evidence-compliance-year" + i })
+                            @Html.Hidden("pcsId", Model.PcsId, new { id = "deselected-evidence-pcs" + i })
+                            @Html.Hidden("selected", false, new { id = "deselected-evidence-selected-true" + i })
+                            <button class="link-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    @Model.EvidenceNotesDataList[i].ReferenceDisplay
-                </td>
-                <td class="govuk-table__cell">
-                    @Model.EvidenceNotesDataList[i].SubmittedBy
-                </td>
-                <td class="govuk-table__cell">@Model.EvidenceNotesDataList[i].TotalReceivedDisplay</td>
-                <td class="govuk-table__cell">
-                    @using (Html.BeginForm(actionName: "DeselectEvidenceNote", controllerName: "TransferEvidence", method: FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new {id = "deselected-evidence-note-page" })
-                        @Html.Hidden("evidenceNoteId", @Model.EvidenceNotesDataList[i].Id, new { id = "deselected-evidence-note-id" })
-                        @Html.Hidden("complianceYear", @Model.ComplianceYear, new { id = "deselected-evidence-compliance-year" })
-                        @Html.Hidden("pcsId", @Model.PcsId, new { id = "deselected-evidence-pcs" })
-                        @Html.Hidden("selected", false, new { id = "deselected-evidence-selected-true" })
-                        <button class="link-submit" type="submit">Remove</button>
-                    }
+                <td class="govuk-table__cell" colspan="4">
+                    There are currently no evidence notes selected to transfer evidence from
                 </td>
             </tr>
         }
-
     </tbody>
 </table>
 
-
-
-<p class="govuk-body-m">Select up to 5 notes</p>
 @{
     var displayNoteCountError = string.Empty;
     var error = string.Empty;
-    if (ViewData.ModelState.ContainsKey("selectedNotesError") && ViewData.ModelState["selectedNotesError"].Errors.Any())
+    if (ViewData.ModelState.ContainsKey(ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError) && ViewData.ModelState[ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError].Errors.Any())
     {
         displayNoteCountError = "govuk-form-group govuk-form-group--error error";
-        error = ViewData.ModelState["selectedNotesError"].Errors.ElementAt(0).ErrorMessage;
+        error = ViewData.ModelState[ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError].Errors.ElementAt(0).ErrorMessage;
     }
 }
+
 <div class="govuk-form-group @displayNoteCountError">
-    <label for="selectedNotesError" class="govuk-visually-hidden">hidden link for navigation to evidence error</label> 
-        <input id="selectedNotesError" class="govuk-visually-hidden" />
-        <p id="selectedNotesErrorText" class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> @error
-        </p>
-    </div>
+    <label for="selectedNotesError" class="govuk-visually-hidden">hidden link for navigation to evidence error</label>
+    <input id="selectedNotesError" class="govuk-visually-hidden" />
+    <p id="selectedNotesErrorText" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> @error
+    </p>
+</div>
 
 <table id="transfer-notes-selection" class="govuk-table">
-    <caption class="govuk-table__caption govuk-visually-hidden">Select up to 5 notes to transfer</caption>
+    <caption class="govuk-table__caption govuk-heading-m">Available evidence notes</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th class="govuk-table__header reference-column">
@@ -133,33 +137,72 @@
     </thead>
     <tbody class="govuk-table__body">
 
-        @for (var i = 0; i < Model.EvidenceNotesDataListPaged.Count; i++)
+        @if (Model.EvidenceNotesDataListPaged.Count > 0)
         {
-            var i1 = i;
+            for (var i = 0; i < Model.EvidenceNotesDataListPaged.Count; i++)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.EvidenceNotesDataListPaged[i].SubmittedBy
+                    </td>
+                    <td class="govuk-table__cell">@Model.EvidenceNotesDataListPaged[i].TotalReceivedDisplay</td>
+                    <td class="govuk-table__cell">
+                        @using (Html.BeginForm(actionName: "SelectEvidenceNote", controllerName: controller, method: FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "selected-evidence-note-page" + i })
+                            @Html.Hidden("evidenceNoteId", Model.EvidenceNotesDataListPaged[i].Id, new { id = "selected-evidence-note-id" + i })
+                            @Html.Hidden("complianceYear", Model.ComplianceYear, new { id = "selected-evidence-compliance-year" + i })
+                            @Html.Hidden("pcsId", Model.PcsId, new { id = "selected-evidence-pcs" })
+                            @Html.Hidden("numberOfSelectedNotes", Model.EvidenceNotesDataList.Count, new { id = "selected-evidence-pcs" + i })
 
+                            <button class="link-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay
-                </td>
-                <td class="govuk-table__cell">
-                    @Model.EvidenceNotesDataListPaged[i].SubmittedBy
-                </td>
-                <td class="govuk-table__cell">@Model.EvidenceNotesDataListPaged[i].TotalReceivedDisplay</td>
-                <td class="govuk-table__cell">
-                    @using (Html.BeginForm(actionName: "SelectEvidenceNote", controllerName: "TransferEvidence", method: FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "selected-evidence-note-page" })
-                        @Html.Hidden("evidenceNoteId", @Model.EvidenceNotesDataListPaged[i].Id, new { id = "selected-evidence-note-id" })
-                        @Html.Hidden("complianceYear", @Model.ComplianceYear, new { id = "selected-evidence-compliance-year" })
-                        @Html.Hidden("pcsId", @Model.PcsId, new { id = "selected-evidence-pcs" })
-                        @Html.Hidden("numberOfSelectedNotes", @Model.EvidenceNotesDataList.Count, new { id = "selected-evidence-pcs" })
-
-                        <button class="link-submit" type="submit">Add</button>
-                    }
+                <td class="govuk-table__cell" colspan="4">
+                    There are currently no evidence notes available to transfer from
                 </td>
             </tr>
         }
 
     </tbody>
 </table>
+
+<div class="pager govuk-body">
+    @Html.Pager(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount).Options(o => o.Action("TransferFrom").RouteValues(new { pcsId = Model.PcsId, complianceYear = Model.ComplianceYear }))
+</div>
+
+<p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>
+
+@using (Html.BeginForm(actionName: postAction, controllerName: controller, method: FormMethod.Post, htmlAttributes: new { id = "transfer-summary-partial-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (Model.EvidenceNotesDataList.Count > 0)
+    {
+        for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
+        {
+            @Html.HiddenFor(m => m.EvidenceNotesDataList[i].Id)
+        }
+    }
+
+    @Html.HiddenFor(m => m.PageNumber)
+    @Html.HiddenFor(m => m.ComplianceYear)
+    @Html.HiddenFor(m => m.PcsId)
+
+    <div class="govuk-!-margin-top-3 govuk-!-padding-top-5">
+        <div class="govuk-button-group">
+            @this.WeeeGds().Button("Continue", new { name = "Action", value = ActionEnum.Continue, id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
+        </div>
+    </div>
+}
+

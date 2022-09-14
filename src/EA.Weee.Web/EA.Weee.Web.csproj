@@ -438,6 +438,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
+    <Compile Include="Constant\ValidationKeyConstants.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
     <Compile Include="Infrastructure\IMvcTemplateExecutor.cs" />
