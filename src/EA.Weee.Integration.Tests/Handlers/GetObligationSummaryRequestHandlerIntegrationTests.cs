@@ -344,6 +344,30 @@
                     .WithRecipient(recipientOrganisation2.Id)
                     .Create();
 
+                var recipientAsOriginatorTonnages = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50),
+                    new NoteTonnage(WeeeCategory.MedicalDevices, 50, null),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 200, 10),
+                    new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 250, null),
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, 150, null),
+                    new NoteTonnage(WeeeCategory.ToysLeisureAndSports, 75, 20),
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 10, null),
+                    new NoteTonnage(WeeeCategory.DisplayEquipment, 30, null),
+                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 200.789M, 100),
+                    new NoteTonnage(WeeeCategory.SmallHouseholdAppliances, 125, null),
+                    new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 100, null),
+                    new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
+                    new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
+                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                };
+
+                EvidenceNoteDbSetup.Init().WithOrganisation(recipientOrganisation.Id)
+                    .WithTonnages(recipientAsOriginatorTonnages)
+                    .WithWasteType(WasteType.HouseHold)
+                    .WithStatusUpdate(NoteStatus.Approved)
+                    .Create();
+
                 request = new GetObligationSummaryRequest(scheme.Id, null, 2022);
             };
 
