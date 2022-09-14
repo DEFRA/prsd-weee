@@ -168,5 +168,165 @@
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
             }
         }
+
+        [Fact]
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenApprovedWasteEvidenceNotes_ShouldReturnTrue()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                note1Match.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note1Match.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
+
+                // act
+                context.Schemes.Add(scheme1);
+                
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1Match);
+
+                await context.SaveChangesAsync();
+
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
+
+                // asset
+                hasApprovedWaste.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenIncorrectComplianceYear_ShouldReturnFalse()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year + 1, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                note1Match.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note1Match.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
+
+                // act
+                context.Schemes.Add(scheme1);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1Match);
+
+                await context.SaveChangesAsync();
+
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
+
+                // asset
+                hasApprovedWaste.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenIncorrectWasteTypeEvidenceNotes_ShouldReturnFalse()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.NonHouseHold);
+                note1Match.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note1Match.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
+
+                // act
+                context.Schemes.Add(scheme1);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1Match);
+
+                await context.SaveChangesAsync();
+
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
+
+                // asset
+                hasApprovedWaste.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenIncorrectStatusEvidenceNotes_ShouldReturnFalse()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                var note1NoMatch = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                note1NoMatch.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+
+                var note2NoMatch = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                note2NoMatch.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note2NoMatch.UpdateStatus(NoteStatus.Rejected, userContext.UserId.ToString(), SystemTime.Now);
+
+                var note3NoMatch = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                note3NoMatch.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note3NoMatch.UpdateStatus(NoteStatus.Returned, userContext.UserId.ToString(), SystemTime.Now);
+
+                var note4NoMatch = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                note4NoMatch.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note4NoMatch.UpdateStatus(NoteStatus.Rejected, userContext.UserId.ToString(), SystemTime.Now);
+
+                var note5NoMatch = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                note5NoMatch.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note5NoMatch.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
+                note5NoMatch.UpdateStatus(NoteStatus.Void, userContext.UserId.ToString(), SystemTime.Now);
+
+                // act
+                context.Schemes.Add(scheme1);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1NoMatch);
+                context.Notes.Add(note2NoMatch);
+                context.Notes.Add(note3NoMatch);
+                context.Notes.Add(note4NoMatch);
+                context.Notes.Add(note5NoMatch);
+
+                await context.SaveChangesAsync();
+
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
+
+                // asset
+                hasApprovedWaste.Should().BeFalse();
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence.Reports
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.AatfEvidence;
     using Core.Admin;
     using Core.Constants;
     using Core.Helpers;
@@ -15,38 +17,28 @@
     {
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
         private readonly ICsvWriter<EvidenceNoteReportData> csvWriter;
-        private readonly IWeeeAuthorization authorization;
+        private readonly IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck;
 
-        public GetEvidenceNoteReportHandler(IWeeeAuthorization authorization,
-            IEvidenceStoredProcedures evidenceStoredProcedures, ICsvWriter<EvidenceNoteReportData> csvWriter)
+        public GetEvidenceNoteReportHandler(IEvidenceStoredProcedures evidenceStoredProcedures, 
+            ICsvWriter<EvidenceNoteReportData> csvWriter, 
+            IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck)
         {
-            this.authorization = authorization;
             this.evidenceStoredProcedures = evidenceStoredProcedures;
             this.csvWriter = csvWriter;
+            this.evidenceReportsAuthenticationCheck = evidenceReportsAuthenticationCheck;
         }
 
         public async Task<CSVFileData> HandleAsync(GetEvidenceNoteReportRequest request)
         {
-            if (!request.OriginatorOrganisationId.HasValue && !request.RecipientOrganisationId.HasValue)
-            {
-                authorization.EnsureCanAccessInternalArea();
-            }
+            await evidenceReportsAuthenticationCheck.EnsureIsAuthorised(request);
 
-            if (request.OriginatorOrganisationId.HasValue)
-            {
-                authorization.EnsureOrganisationAccess(request.OriginatorOrganisationId.Value);
-            }
-
-            if (request.RecipientOrganisationId.HasValue)
-            {
-                authorization.EnsureOrganisationAccess(request.RecipientOrganisationId.Value);
-            }
-            
             var reportData = await evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(
-                request.ComplianceYear,
-                request.OriginatorOrganisationId,
-                request.RecipientOrganisationId);
-
+                    request.ComplianceYear,
+                    request.OriginatorOrganisationId,
+                    request.RecipientOrganisationId,
+                    request.AatfId,
+                    request.TonnageToDisplay == TonnageToDisplayReportEnum.Net);
+           
             csvWriter.DefineColumn(EvidenceReportConstants.Reference, x => x.Reference);
             csvWriter.DefineColumn(EvidenceReportConstants.Status, x => x.Status);
             csvWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority, x => x.AppropriateAuthority);
@@ -92,7 +84,11 @@
 
             var fileContent = csvWriter.Write(reportData);
             var timestamp = SystemTime.Now;
-            var fileName = $"{request.ComplianceYear}_Evidence notes original tonnages{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+            var type = request.TonnageToDisplay == TonnageToDisplayReportEnum.OriginalTonnages
+                ? "original tonnages"
+                : "net of transfer";
+
+            var fileName = $"{request.ComplianceYear}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
 
             return new CSVFileData
             {
