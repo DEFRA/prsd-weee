@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Web;
+    using Constant;
     using Web.ViewModels.Shared;
+    using Weee.Requests.Scheme;
 
     [Serializable]
     public class TransferEvidenceNotesViewModel : TransferEvidenceViewModelBase, IValidatableObject

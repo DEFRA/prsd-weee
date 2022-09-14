@@ -3,14 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Shared;
     using DataAccess.StoredProcedure;
     using FakeItEasy;
     using RequestHandlers.AatfEvidence.Reports;
-    using RequestHandlers.Security;
     using System.Threading.Tasks;
     using Core.Constants;
     using FluentAssertions;
@@ -22,76 +20,47 @@
     public class GetEvidenceNoteReportHandlerTests : SimpleUnitTestBase
     {
         private readonly GetEvidenceNoteReportHandler handler;
-        private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
         private readonly ICsvWriter<EvidenceNoteReportData> evidenceWriter;
+        private readonly IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck;
 
         public GetEvidenceNoteReportHandlerTests()
         {
-            authorization = A.Fake<IWeeeAuthorization>();
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
             evidenceWriter = A.Fake<ICsvWriter<EvidenceNoteReportData>>();
+            evidenceReportsAuthenticationCheck = A.Fake<IEvidenceReportsAuthenticationCheck>();
 
-            handler = new GetEvidenceNoteReportHandler(authorization, evidenceStoredProcedures, evidenceWriter);
+            handler = new GetEvidenceNoteReportHandler(evidenceStoredProcedures, evidenceWriter, evidenceReportsAuthenticationCheck);
         }
 
         [Fact]
-        public async Task HandleAsync_GivenNullOrganisationIds_InternalAccessShouldBeChecked()
+        public async Task HandleAsync_GivenRequest_EvidenceReportsAuthenticationCheckShouldBeCalled()
         {
             //arrange
-            var request = new GetEvidenceNoteReportRequest(null, null, TestFixture.Create<TonnageToDisplayReportEnum>(),
+            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
 
-            A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceReportsAuthenticationCheck.EnsureIsAuthorised(request)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenRecipientOrganisationId_OrganisationAccessShouldBeChecked()
-        {
-            //arrange
-            var recipientOrganisationId = TestFixture.Create<Guid>();
-
-            var request = new GetEvidenceNoteReportRequest(recipientOrganisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<TonnageToDisplayReportEnum>(),
-                TestFixture.Create<int>());
-
-            //act
-            await handler.HandleAsync(request);
-
-            A.CallTo(() => authorization.EnsureOrganisationAccess(recipientOrganisationId))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenOriginatingOrganisationId_OrganisationAccessShouldBeChecked()
-        {
-            //arrange
-            var originatingOrganisationId = TestFixture.Create<Guid>();
-
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), originatingOrganisationId,
-                TestFixture.Create<TonnageToDisplayReportEnum>(),
-                TestFixture.Create<int>());
-
-            //act
-            await handler.HandleAsync(request);
-
-            A.CallTo(() => authorization.EnsureOrganisationAccess(originatingOrganisationId))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_GivenRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled()
+        [Theory]
+        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, false)]
+        [InlineData(TonnageToDisplayReportEnum.Net, true)]
+        public async Task HandleAsync_GivenRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled(TonnageToDisplayReportEnum tonnageToDisplay, bool expected)
         {
             //arrange
             var originatingOrganisationId = TestFixture.Create<Guid>();
             var recipientOrganisationId = TestFixture.Create<Guid>();
+            var aatfId = TestFixture.Create<Guid>();
             var complianceYear = TestFixture.Create<int>();
 
-            var request = new GetEvidenceNoteReportRequest(recipientOrganisationId, originatingOrganisationId,
-                TestFixture.Create<TonnageToDisplayReportEnum>(),
+            var request = new GetEvidenceNoteReportRequest(recipientOrganisationId, 
+                originatingOrganisationId,
+                aatfId,
+                tonnageToDisplay,
                 complianceYear);
 
             //act
@@ -99,14 +68,16 @@
 
             A.CallTo(() =>
                 evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
-                    originatingOrganisationId, recipientOrganisationId)).MustHaveHappenedOnceExactly();
+                    originatingOrganisationId, recipientOrganisationId, aatfId, expected)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_CsvShouldBeDefined()
         {
             //arrange
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
+            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), 
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
 
@@ -204,14 +175,20 @@
         public async Task HandleAsync_GivenReportData_CsvShouldBeCreated()
         {
             //arrange
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
+            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), 
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
 
             var reportData = TestFixture.CreateMany<EvidenceNoteReportData>().ToList();
 
             A.CallTo(() =>
-                    evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(A<int>._, A<Guid?>._, A<Guid?>._)).Returns(reportData);
+                    evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(A<int>._, 
+                        A<Guid?>._, 
+                        A<Guid?>._,
+                        A<Guid?>._,
+                        A<bool>._)).Returns(reportData);
 
             //act
             await handler.HandleAsync(request);
@@ -220,14 +197,18 @@
             A.CallTo(() => evidenceWriter.Write(reportData)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenCsvData_CsvFileDataShouldBeReturned()
+        [Theory]
+        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, "original tonnages")]
+        [InlineData(TonnageToDisplayReportEnum.Net, "net of transfer")]
+        public async Task HandleAsync_GivenCsvData_CsvFileDataShouldBeReturned(TonnageToDisplayReportEnum tonnageToDisplay, string expected)
         {
             //arrange
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                TestFixture.Create<TonnageToDisplayReportEnum>(),
+            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), 
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
+                tonnageToDisplay,
                 TestFixture.Create<int>());
 
             var content = TestFixture.Create<string>();
@@ -239,7 +220,7 @@
             //assert
             result.FileContent.Should().Be(content);
             result.FileName.Should()
-                .Be($"{request.ComplianceYear}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
+                .Be($"{request.ComplianceYear}_Evidence notes {expected}{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
             SystemTime.Unfreeze();
         }
     }

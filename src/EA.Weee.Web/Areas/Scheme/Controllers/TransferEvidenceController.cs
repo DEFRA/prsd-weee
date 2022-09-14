@@ -1,19 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Attributes;
     using Constant;
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Scheme;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.ViewModels.Shared;
     using Filters;
     using Infrastructure;
@@ -22,6 +21,11 @@
     using Requests;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels;
     using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
@@ -34,14 +38,26 @@
         private readonly ITransferEvidenceRequestCreator transferNoteRequestCreator;
         private readonly ISessionService sessionService;
         private readonly ConfigurationService configurationService;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
+        private readonly IMvcTemplateExecutor templateExecutor;
 
-        public TransferEvidenceController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, IMapper mapper, ITransferEvidenceRequestCreator transferNoteRequestCreator, IWeeeCache cache, ISessionService sessionService, ConfigurationService configurationService) : base(breadcrumb, cache)
+        public TransferEvidenceController(Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb,
+            IMapper mapper,
+            ITransferEvidenceRequestCreator transferNoteRequestCreator,
+            IWeeeCache cache,
+            ISessionService sessionService,
+            ConfigurationService configurationService,
+            IPdfDocumentProvider pdfDocumentProvider,
+            IMvcTemplateExecutor templateExecutor) : base(breadcrumb, cache)
         {
             this.apiClient = apiClient;
             this.mapper = mapper;
             this.transferNoteRequestCreator = transferNoteRequestCreator;
             this.sessionService = sessionService;
             this.configurationService = configurationService;
+            this.pdfDocumentProvider = pdfDocumentProvider;
+            this.templateExecutor = templateExecutor;
         }
 
         [HttpGet]
@@ -206,19 +222,21 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model)
+        public async Task<ActionResult> TransferFrom(TransferEvidenceNotesViewModel model, int selectedPageNumber = 1)
         {
+            await SetBreadcrumb(model.PcsId);
+
+            UpdateAndSetSelectedNotesInSession(model);
+            var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                SessionKeyConstant.TransferNoteKey);
+
             if (model.Action == ActionEnum.Back)
             {
-                UpdateAndSetSelectedNotesInSession(model);
-
                 return RedirectToAction("TransferEvidenceNote", "TransferEvidence", new { pcsId = model.PcsId, complianceYear = model.ComplianceYear });
             }
 
             if (model.PageNumber.HasValue)
             {
-                UpdateAndSetSelectedNotesInSession(model);
-
                 if (ModelState.ContainsKey("Action"))
                 {
                     ModelState["Action"].Errors.Clear();
@@ -227,35 +245,49 @@
 
                 using (var client = this.apiClient())
                 {
-                    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                        SessionKeyConstant.TransferNoteKey);
-
                     model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, transferRequest, model.PageNumber.Value);
                 }
             }
             else
             {
-                if (ModelState.IsValid)
+                //Hack before the page is redesigned to fix validation
+                if (!transferRequest.EvidenceNoteIds.Any())
                 {
-                    UpdateAndSetSelectedNotesInSession(model);
-
-                    return RedirectToAction("TransferTonnage", "TransferEvidence",
-                        new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
+                    ModelState.AddModelError("SelectedEvidenceNotePairs",
+                        "Select at least one evidence note to transfer from");
                 }
 
-                if (!model.PageNumber.HasValue)
+                if (transferRequest.EvidenceNoteIds.Count > 5)
                 {
-                    var pagedModel = sessionService.GetTransferSessionObject<PagedList<ViewEvidenceNoteViewModel>>(Session,
-                        SessionKeyConstant.PagingTransferViewModelKey);
+                    ModelState.AddModelError("SelectedEvidenceNotePairs",
+                        "You cannot select more than 5 notes");
+                }
 
-                    if (pagedModel != null)
+                if (!ModelState.IsValid)
+                {
+                    using (var client = this.apiClient())
                     {
-                        model.EvidenceNotesDataListPaged = pagedModel;
+                        model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client,
+                            transferRequest, selectedPageNumber);
                     }
+
+                    return View("TransferFrom", model);
                 }
+
+                return RedirectToAction("TransferTonnage", "TransferEvidence",
+                    new { area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear, transferAllTonnage = false });
             }
 
-            await SetBreadcrumb(model.PcsId);
+            if (!model.PageNumber.HasValue)
+            {
+                var pagedModel = sessionService.GetTransferSessionObject<PagedList<ViewEvidenceNoteViewModel>>(Session,
+                    SessionKeyConstant.PagingTransferViewModelKey);
+
+                if (pagedModel != null)
+                {
+                    model.EvidenceNotesDataListPaged = pagedModel;
+                }
+            }
 
             return View("TransferFrom", model);
         }
@@ -336,6 +368,63 @@
                 ViewBag.Page = page;
 
                 return this.View("TransferredEvidence", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubmittedTransferNote(Guid schemeId, Guid evidenceNoteId, NoteStatus status)
+        {
+            using (var client = this.apiClient())
+            {
+                NoteUpdatedStatusEnum updateStatus;
+                switch (status)
+                {
+                    case NoteStatus.Draft:
+                        updateStatus = NoteUpdatedStatusEnum.Submitted;
+                        break;
+                    case NoteStatus.Returned:
+                        updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
+                        break;
+                    default:
+                        throw new InvalidOperationException("status is not valid");
+                }
+
+                SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
+
+                TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
+
+                string token = User.GetAccessToken();
+                await client.SendAsync(token, request);
+
+                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
+                {
+                    pcsId = schemeId, 
+                    evidenceNoteId, 
+                    redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadTransferEvidenceNote(Guid pcsId, Guid transferEvidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetTransferEvidenceNoteForSchemeRequest(transferEvidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, result, null));
+
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadTransferEvidenceNote", model);
+
+                var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+                var timestamp = SystemTime.Now;
+                var fileName = $"{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+
+                return File(pdf, "application/pdf", fileName);
             }
         }
 

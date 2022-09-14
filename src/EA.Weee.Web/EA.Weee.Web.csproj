@@ -888,6 +888,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\SummaryEvidencePBS.cshtml" />
     <Content Include="Areas\Admin\Views\EvidenceReports\EvidenceNoteReport.cshtml" />
     <Content Include="Areas\Admin\Views\EvidenceReports\ChooseReport.cshtml" />
+    <Content Include="Areas\Scheme\Views\TransferEvidence\DownloadTransferEvidenceNote.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

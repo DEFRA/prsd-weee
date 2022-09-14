@@ -9,62 +9,62 @@
 
 <div class="govuk-width-container govuk-!-margin-top-3">
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Partial("_DisplayVoidedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
     @if (Model.HasSubmittedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
             @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
         </div>
     }
 
     @if (Model.HasApprovedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
             @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
         </div>
     }
 
     @if (Model.HasRejectedDate)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
             @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
         </div>
     }
 
     @if (Model.HasBeenReturned)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
             @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
         </div>
     }
 
     @if (Model.HasBeenVoided)
     {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1">
+        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
             @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
         </div>
     }
 
-    <div class="govuk-grid-row govuk-!-margin-bottom-1">
+    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
         @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
     </div>
 </div>
@@ -75,9 +75,6 @@
 }
 
 <!-- screen 6.07a -->
-<!-- --------------------------- -->
-<!-- Void transfer note button   -->
-<!-- --------------------------- -->
 @if (Model.Status.Equals(NoteStatus.Approved) && Model.CanVoid)
 {
     using (Html.BeginForm("VoidTransferNote", "ManageEvidenceNotes", FormMethod.Get))
@@ -89,7 +86,7 @@
 <!-- screen 6.07a -->
 
 
-<div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0">
+<div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0 printable-padding-top-3">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
         <span id="site" class="govuk-label--s">Transferred by</span><br />
         <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.TransferredByAddress)</p>
@@ -134,13 +131,13 @@ else
     <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence transferred</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th class="govuk-table__header govuk-!-text-align-left">
+            <th class="govuk-table__header govuk-!-text-align-left" style="width: 35%">
                 Category
             </th>
-            <th class="govuk-table__header govuk-!-text-align-right">
+            <th class="govuk-table__header govuk-!-text-align-left printable-text-align-right" style="width: 32.5%">
                 Total transferred (tonnes)
             </th>
-            <th class="govuk-table__header govuk-!-text-align-right govuk-!-padding-right-2">
+            <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-2 printable-text-align-right" style="width: 32.5%">
                 Total reuse transferred (tonnes)
             </th>
         </tr>
@@ -155,8 +152,8 @@ else
                 <td class="govuk-table__cell govuk-!-padding-left-2">
                     @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
                 </td>
-                <td class="govuk-table__cell govuk-!-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
-                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
+                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
+                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2 printable-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
             </tr>
         }
     </tbody>
@@ -175,13 +172,13 @@ else
 
     @if (Model.EditMode)
     {
-        <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
-            @Html.NavigationRouteLink("Edit tonnages", "Edit tonnages for transfer note" + Model.Reference, "Scheme_edit_transfer_tonnages", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
-        </div>
+    <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
+        @Html.NavigationRouteLink("Edit tonnages", "Edit tonnages for transfer note" + Model.Reference, "Scheme_edit_transfer_tonnages", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
+    </div>
     }
     else
     {
-        <div class="govuk-grid-column-one-half">&nbsp;</div>
+    <div class="govuk-grid-column-one-half govuk-printable-half-column">&nbsp;</div>
     }
 </div>
 
@@ -207,10 +204,10 @@ else
                 <th class="govuk-table__header govuk-!-text-align-left" style="width: 40%;">
                     Category
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-0" style="width: 15%;">
+                <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-0 govuk-!-padding-left-7 govuk-printable-aatf-transferred" style="width: 22.5%;">
                     Total transferred (tonnes)
                 </th>
-                <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-0" style="width: 18%;">
+                <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-0" style="width: 22.5%;">
                     Total reuse transferred (tonnes)
                 </th>
             </tr>
@@ -232,10 +229,10 @@ else
                         <td class="govuk-table__cell govuk-!-text-align-left">
                             @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
                         </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-4">
+                        <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-3">
                             @category.Received
                         </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right">
+                        <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-1">
                             @category.Reused
                         </td>
                     </tr>
@@ -244,4 +241,3 @@ else
         </tbody>
     </table>
 }
-
