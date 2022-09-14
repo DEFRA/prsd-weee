@@ -14,20 +14,20 @@
     </thead>
 
     <tbody class="govuk-table__body">
-        @foreach (var historyData in Model.EvidenceNoteHistoryData)
+        @for (int i = 0; i < Model.EvidenceNoteHistoryData.Count; i++)
         {
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell govuk-!-text-align-left">
-                    <p class="govuk-body">@historyData.ReferenceDisplay</p>
+                    <p class="govuk-body">@Model.EvidenceNoteHistoryData[i].ReferenceDisplay</p>
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
-                    <p class="govuk-body" id="SubmittedDateDisplay">@historyData.SubmittedDateDisplay</p>
+                    <p class="govuk-body" id="SubmittedDateDisplay-@i">@Model.EvidenceNoteHistoryData[i].SubmittedDateDisplay</p>
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
-                    <p class="govuk-body" id="TransferredTo">@historyData.TransferredTo</p>
+                    <p class="govuk-body" id="TransferredTo-@i">@Model.EvidenceNoteHistoryData[i].TransferredTo</p>
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
-                    <p class="govuk-body" id="HistoryStatus">@historyData.Status</p>
+                    <p class="govuk-body" id="HistoryStatus-@i">@Model.EvidenceNoteHistoryData[i].Status</p>
                 </td>
                 <td class="govuk-table__cell">
                     
