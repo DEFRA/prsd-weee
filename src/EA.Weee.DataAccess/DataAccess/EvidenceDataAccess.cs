@@ -282,5 +282,14 @@
                 .Distinct()
                 .ToListAsync();
         }
+
+        public Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear)
+        {
+            return context.Notes
+                .AnyAsync(n => n.ComplianceYear == complianceYear && 
+                               n.RecipientId == recipientId && 
+                               n.Status.Value == NoteStatus.Approved.Value &&
+                               n.WasteType.Value == WasteType.HouseHold);
+        }
     }
 }

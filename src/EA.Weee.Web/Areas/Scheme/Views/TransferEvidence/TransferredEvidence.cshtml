@@ -32,8 +32,15 @@
 
     @if (Model.DisplayEditButton)
     {
-        <div class="govuk-!-margin-top-3">
+        <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
             @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab }, new { @class = "govuk-button" })
         </div>
+    }
+
+    @if (!Model.HasBeenVoided)
+    {
+        <p class="govuk-body">
+            @Html.ActionLink("Download as PDF", "DownloadTransferEvidenceNote", "TransferEvidence", new { area = "Scheme", pcsId = Model.SchemeId, transferEvidenceNoteId = Model.EvidenceNoteId }, new { @class = "govuk-link" })
+        </p>
     }
 }

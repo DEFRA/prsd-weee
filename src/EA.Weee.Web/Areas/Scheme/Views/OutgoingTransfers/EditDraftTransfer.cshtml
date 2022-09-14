@@ -1,11 +1,6 @@
-﻿
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
-@using EA.Weee.Web.Infrastructure
+﻿@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
-
 @{
     ViewBag.Title = "Evidence note(transfer) - GOV.UK";
 }
@@ -21,10 +16,19 @@
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
             new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear })))
-
     }
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
+
+    @using (Html.BeginForm("SubmittedTransferNote", "TransferEvidence", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.SchemeId)
+        @Html.HiddenFor(m => m.EvidenceNoteId)
+        @Html.HiddenFor(m => m.Status)
+
+        <div>
+            @(this.WeeeGds().Button("Submit transfer", new { id = "submit-transfer-note" }))
+        </div>
+    }
 }
-
-

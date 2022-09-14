@@ -1,43 +1,40 @@
 ﻿/* Pager */
 .pager
 {
-	margin: 8px 0px;
-	padding: 3px;
-	padding-right: 0;
+	margin: 0px 0px 5px 0px;
+	padding: 0px 3px 3px 3px;
     float: right;
 }
 
-.pager .disabled
-{
+.pager .disabled {
 	color: #999;
+	padding: 0px 3px 3px 3px;
 	margin-top: 4px;
-	padding: 3px;
- 	text-align: right;
+	text-align: right;
 }
 
 .pager .current
 {
     color:#333333;			
-	margin-top: 4px;
-	padding: 3px 5px;
+	margin-top: 0px;
+	padding: 0px 5px 3px 5px;
  	text-align: right;
 }
 
 .pager span, .pager a
 {
-	margin: 4px 3px;
+	margin: 0px 4px 3px 3px;
 }
 
 .pager span:last-of-type{
 	margin-right: 0;
 	padding-right: 0;
 }
-.pager a
-{	    
-	padding: 3px 5px;
-    text-align: right;	
-    color: #005EA5;
-	text-decoration: underline;      
+.pager a {
+	padding: 0px 5px 3px 5px;
+	text-align: right;
+	color: #005EA5;
+	text-decoration: underline;
 }
 
 .pager a:last-of-type {

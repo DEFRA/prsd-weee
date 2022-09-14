@@ -17,9 +17,13 @@
         }
 
         public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(
-            int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId)
+            int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId, Guid? aatfId, bool netTonnage)
         {
-            var queryString = "[Evidence].[getEvidenceNotesOriginalTonnage] @ComplianceYear, @OriginatingOrganisationId, @RecipientOrganisationId";
+            var storedProcedure = netTonnage
+                ? "[Evidence].[getEvidenceNotesNetTonnage]"
+                : "[Evidence].[getEvidenceNotesOriginalTonnage]";
+
+            var queryString = $"{storedProcedure} @ComplianceYear, @OriginatingOrganisationId, @RecipientOrganisationId, @AatfId";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
             var orgIdParameter = new SqlParameter("@OriginatingOrganisationId", SqlDbType.UniqueIdentifier)
@@ -32,8 +36,13 @@
                     IsNullable = true,
                     Value = recipientOrganisationId ?? (object)DBNull.Value
                 };
+            var aatfIdParameter = new SqlParameter("@AatfId", SqlDbType.UniqueIdentifier)
+            {
+                IsNullable = true,
+                Value = aatfId ?? (object)DBNull.Value
+            };
 
-            return await context.Database.SqlQuery<EvidenceNoteReportData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<EvidenceNoteReportData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter, aatfIdParameter).ToListAsync();
         }
 
         public async Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, int complianceYear)
@@ -53,10 +62,10 @@
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
             var orgIdParameter = new SqlParameter("@OrganisationId", SqlDbType.UniqueIdentifier)
- {
-     IsNullable = true,
-     Value = orgId ?? (object)DBNull.Value
- };
+             {
+                 IsNullable = true,
+                 Value = orgId ?? (object)DBNull.Value
+             };
             var pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier)
             {
                 IsNullable = true,

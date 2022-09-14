@@ -1,6 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.ViewModels.Shared
 @using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "Transfer from - GOV.UK";
@@ -29,5 +30,5 @@
         @Html.Pager(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount).Options(o => o.Action("TransferFrom").RouteValues(new { pcsId = Model.PcsId, complianceYear = Model.ComplianceYear }))
     </div>
 
-    <p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>
+
 }

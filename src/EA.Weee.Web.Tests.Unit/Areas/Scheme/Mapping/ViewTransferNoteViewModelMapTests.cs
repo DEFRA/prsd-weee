@@ -373,7 +373,7 @@
 
             //assert
             model.SuccessMessage.Should()
-                .Be($"You have successfully submitted the returned evidence note with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
+                .Be($"You have successfully submitted the returned evidence note transfer with reference ID {source.TransferEvidenceNoteData.Type.ToDisplayString()}{source.TransferEvidenceNoteData.Reference}");
         }
 
         [Fact]

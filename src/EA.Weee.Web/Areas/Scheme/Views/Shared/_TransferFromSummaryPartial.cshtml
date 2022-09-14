@@ -27,6 +27,7 @@
 @Html.HiddenFor(m => m.PcsId)
 @Html.HiddenFor(m => m.RecipientName)
 @Html.HiddenFor(m => m.ComplianceYear)
+@Html.Hidden("selectedPageNumber", Model.EvidenceNotesDataListPaged.PageNumber)
 
 <h2 class="govuk-heading-m">Showing approved evidence notes with categories</h2>
 <ul class="govuk-list">
@@ -62,7 +63,7 @@
     </thead>
     <tbody class="govuk-table__body">
 
-        @for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
+        @for (var i = 0; i < Model.EvidenceNotesDataListPaged.Count; i++)
         {
             var i1 = i;
 
@@ -162,9 +163,3 @@
 
     </tbody>
 </table>
-
-<div class="govuk-!-margin-top-3">
-    <div class="govuk-button-group">
-        @this.WeeeGds().Button("Continue", new { name = "Action", value = ActionEnum.Continue, id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
-    </div>
-</div>
