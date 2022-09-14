@@ -179,7 +179,7 @@
 </table>
 
 <div class="pager govuk-body">
-    @Html.Pager(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount).Options(o => o.Action("TransferFrom").RouteValues(new { pcsId = Model.PcsId, complianceYear = Model.ComplianceYear }))
+    @Html.Pager(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount).Options(o => o.Action(postAction).RouteValues(new { pcsId = Model.PcsId, complianceYear = Model.ComplianceYear, evidenceNoteId = (Model.ViewTransferNoteViewModel != null ? Model.ViewTransferNoteViewModel.EvidenceNoteId : (Guid?)null) }))
 </div>
 
 <p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>
