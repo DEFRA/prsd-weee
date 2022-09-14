@@ -106,6 +106,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EvidenceNoteReport(EvidenceReportViewModel model)
         {
+            SetBreadcrumb();
+
             ViewBag.TriggerDownload = ModelState.IsValid;
 
             await SetupEvidenceReportViewModelFilters(model);
@@ -116,6 +118,8 @@
         [HttpGet]
         public async Task<ActionResult> DownloadEvidenceNoteReport(int complianceYear, TonnageToDisplayReportEnum tonnageToDisplay)
         {
+            SetBreadcrumb();
+
             async Task<ActionResult> FileResult()
             {
                 using (var client = ApiClient())
