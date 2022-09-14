@@ -16,7 +16,7 @@
 
         public EvidenceNoteSearchDataResult Notes { get; }
 
-        public EvidenceNoteSearchDataResult NotesSelection { get; }
+        public EvidenceNoteSearchDataResult AvailableNotes { get; }
 
         public TransferEvidenceNoteRequest Request { get; }
 
@@ -65,19 +65,19 @@
         public TransferEvidenceNotesViewModelMapTransfer(
             int complianceYear,
             EvidenceNoteSearchDataResult notes,
-            EvidenceNoteSearchDataResult notesSelection,
+            EvidenceNoteSearchDataResult availableNotes,
             TransferEvidenceNoteRequest request,
             Guid organisationId,
             int pageNumber = 1,
             int pageSize = 10)
         {
             Condition.Requires(notes).IsNotNull();
-            Condition.Requires(notesSelection).IsNotNull();
+            Condition.Requires(availableNotes).IsNotNull();
             Condition.Requires(request).IsNotNull();
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
             Notes = notes;
-            NotesSelection = notesSelection;
+            AvailableNotes = availableNotes;
             Request = request;
             OrganisationId = organisationId;
             ComplianceYear = complianceYear;
