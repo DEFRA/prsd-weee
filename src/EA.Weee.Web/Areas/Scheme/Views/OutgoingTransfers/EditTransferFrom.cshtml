@@ -1,19 +1,22 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Infrastructure.Paging
-@using EA.Weee.Web.ViewModels.Shared
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "From which evidence notes would you like to transfer tonnage to? - GOV.UK";
-    var formName = "edit-transfer-notes-post-form";
+
+    ViewData.Add("controller", "OutgoingTransfers");
+    ViewData.Add("postAction", "EditTransferFrom");
 }
 
 @section full_main_content
 {
 
-    <button class="govuk-back-link weee-back-link button-as-back" type="submit" name="Action" value="@ActionEnum.Back" form="@formName">Back</button>
-
+    @(this.WeeeGds().BackLink(
+        Url.Action("EditCategories", "OutgoingTransfers",
+            new {
+                @pcsId = Model.ViewTransferNoteViewModel.SchemeId,
+                @evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId})))
 
     @(this.WeeeGds().Warning("Unselecting notes may remove data you have previously input"))
 
@@ -25,28 +28,9 @@
 
     @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferSummaryPartial.cshtml", Model.ViewTransferNoteViewModel); }
 
-    @using (Html.BeginRouteForm("Scheme_edit_transfer_notes", FormMethod.Post, new { id = formName }))
-    {
-        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
-        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Reference)
-        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Type)
-        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.Status)
-        @Html.HiddenFor(m => m.ViewTransferNoteViewModel.ComplianceYear)
-        @Html.HiddenFor(m => m.RecipientId)
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model);
 
-        { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model); }
-
-        @*<div class="pager govuk-body">
-                @Html.PageEvidenceNoteSelection(@Model.EvidenceNotesDataListPaged.PageSize, @Model.EvidenceNotesDataListPaged.PageNumber, @Model.EvidenceNotesDataListPaged.TotalItemCount, @formName)
-            </div>*@
-        <div class="govuk-!-margin-top-3">
-            <div class="govuk-button-group">
-                @this.WeeeGds().Button("Continue", new { name = "Action", value = ActionEnum.Continue, id = "transfer-from-btn", @class = "govuk-!-width-one-quarter" })
-            </div>
-        </div>
     }
-}
 
-@*<p class="govuk-body">Showing @Model.EvidenceNotesDataListPaged.ItemStart - @Model.EvidenceNotesDataListPaged.ItemEnd of @Model.EvidenceNotesDataListPaged.TotalItemCount</p>*@
 }
 

@@ -142,7 +142,8 @@
                     WeeeCategory.MedicalDevices.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, 
+                    new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(2);
                 notes.Notes.Count().Should().Be(2);
@@ -303,7 +304,7 @@
                     WeeeCategory.MedicalDevices.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year, 1, 2);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, 2);
 
                 notes.NumberOfResults.Should().Be(4);
                 notes.Notes.Count().Should().Be(2);
@@ -352,7 +353,7 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
@@ -422,7 +423,8 @@
 
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, 
                     categorySearch, 
-                    new List<Guid>(), 
+                    new List<Guid>(),
+                    new List<Guid>(),
                     SystemTime.Now.Year, 
                     2, 
                     1);
@@ -482,7 +484,7 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
@@ -559,7 +561,8 @@
 
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, 
                     categorySearch, 
-                    new List<Guid>(), 
+                    new List<Guid>(),
+                    new List<Guid>(),
                     SystemTime.Now.Year, 
                     2, 1);
 
@@ -630,7 +633,7 @@
                 {
                     note1ToBeFound.Id,
                     note2ToBeFound.Id
-                }, SystemTime.Now.Year, 1, int.MaxValue);
+                }, new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(2);
                 notes.Notes.Count().Should().Be(2);
@@ -729,7 +732,7 @@
                     note2ToBeFound.Id,
                     note3ToBeFound.Id,
                     note4ToBeFound.Id
-                }, SystemTime.Now.Year, 3, 1);
+                }, new List<Guid>(), SystemTime.Now.Year, 3, 1);
 
                 notes.NumberOfResults.Should().Be(4);
                 notes.Notes.Count().Should().Be(1);
@@ -784,7 +787,7 @@
                 {
                     note1ToBeFound.Id,
                     note2NotToBeFound.Id
-                }, SystemTime.Now.Year, 1, int.MaxValue);
+                }, new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);

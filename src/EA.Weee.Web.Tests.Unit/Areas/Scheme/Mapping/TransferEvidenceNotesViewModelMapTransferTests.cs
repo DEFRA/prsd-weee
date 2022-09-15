@@ -109,7 +109,7 @@
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.Notes.Should().BeEquivalentTo(notes);
+            result.SelectedNotes.Should().BeEquivalentTo(notes);
             result.Request.Should().Be(request);
             result.ComplianceYear.Should().Be(complianceYear);
         }
@@ -128,7 +128,7 @@
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
-            result.Notes.Should().BeEquivalentTo(notes);
+            result.SelectedNotes.Should().BeEquivalentTo(notes);
             result.TransferEvidenceNoteData.Should().Be(noteData);
         }
 
