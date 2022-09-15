@@ -447,10 +447,10 @@
                 existingEvidenceNoteIds.RemoveAll(a => !request.EvidenceNoteIds.Contains(a));
             }
 
-            var noteIds = request != null ? request.CategoryIds : noteData.CategoryIds;
+            var categoryIds = request != null ? request.CategoryIds : noteData.CategoryIds;
 
             var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, noteIds, noteData.ComplianceYear, existingEvidenceNoteIds, null));
+                new GetEvidenceNotesSelectedForTransferRequest(pcsId, existingEvidenceNoteIds, categoryIds));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId)
             {
