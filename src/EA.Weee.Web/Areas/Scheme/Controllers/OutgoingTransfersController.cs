@@ -26,11 +26,10 @@
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
 
-    public class OutgoingTransfersController : SchemeEvidenceBaseController
+    public class OutgoingTransfersController : TransferEvidenceBaseController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
-        private readonly ISessionService sessionService;
         private readonly ITransferEvidenceRequestCreator transferEvidenceRequestCreator;
         private readonly ConfigurationService configurationService;
 
@@ -40,11 +39,10 @@
             Func<IWeeeClient> apiClient, 
             ISessionService sessionService,
             ITransferEvidenceRequestCreator transferEvidenceRequestCreator,
-            ConfigurationService configurationService) : base(breadcrumb, cache)
+            ConfigurationService configurationService) : base(breadcrumb, cache, sessionService)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
-            this.sessionService = sessionService;
             this.transferEvidenceRequestCreator = transferEvidenceRequestCreator;
             this.configurationService = configurationService;
         }
@@ -81,7 +79,7 @@
 
             if (model.Action == ActionEnum.Back)
             {
-                sessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+                SessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
 
                 if (model.ReturnToEditDraftTransfer.Value)
                 {
@@ -97,7 +95,7 @@
             {
                 if (ModelState.IsValid)
                 {
-                    var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+                    var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
 
                     var updatedRequest = transferEvidenceRequestCreator.EditSelectTonnageToRequest(transferRequest, model);
 
@@ -107,26 +105,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), updatedRequest);
 
-                    NoteUpdatedStatusEnum updateStatus;
-                    if (model.ViewTransferNoteViewModel.Status == NoteStatus.Returned)
-                    {
-                        switch (model.Action)
-                        {
-                            case ActionEnum.Save:
-                                updateStatus = NoteUpdatedStatusEnum.ReturnedSaved;
-                                break;
-                            case ActionEnum.Submit:
-                                updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
-                                break;
-                            default:
-                                updateStatus = (NoteUpdatedStatusEnum)updatedRequest.Status;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        updateStatus = (NoteUpdatedStatusEnum)updatedRequest.Status;
-                    }
+                    var updateStatus = GetUpdateStatus(model, updatedRequest);
 
                     TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
@@ -145,6 +124,33 @@
 
                 return this.View("EditTonnages", updatedModel);
             }
+        }
+
+        private NoteUpdatedStatusEnum GetUpdateStatus(TransferEvidenceTonnageViewModel model,
+            EditTransferEvidenceNoteRequest updatedRequest)
+        {
+            NoteUpdatedStatusEnum updateStatus;
+            if (model.ViewTransferNoteViewModel.Status == NoteStatus.Returned)
+            {
+                switch (model.Action)
+                {
+                    case ActionEnum.Save:
+                        updateStatus = NoteUpdatedStatusEnum.ReturnedSaved;
+                        break;
+                    case ActionEnum.Submit:
+                        updateStatus = NoteUpdatedStatusEnum.ReturnedSubmitted;
+                        break;
+                    default:
+                        updateStatus = (NoteUpdatedStatusEnum)updatedRequest.Status;
+                        break;
+                }
+            }
+            else
+            {
+                updateStatus = (NoteUpdatedStatusEnum)updatedRequest.Status;
+            }
+
+            return updateStatus;
         }
 
         [HttpGet]
@@ -251,13 +257,13 @@
         [HttpGet]
         [CheckCanEditTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId, int page = 1)
         {
             await SetBreadcrumb(pcsId);
 
             using (var client = apiClient())
             {
-                var transferRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                     SessionKeyConstant.OutgoingTransferKey);
 
                 if (transferRequest == null)
@@ -265,32 +271,103 @@
                     return RedirectToManageEvidence(pcsId);
                 }
 
-                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
-
-                var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, null, 1, int.MaxValue));
-
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, transferRequest, noteData, pcsId, 1, int.MaxValue);
-
-                var evidenceNoteIds = transferRequest.EvidenceNoteIds;
-                if (evidenceNoteIds != null)
-                {
-                    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
-                }
-
-                var excludeEvidenceNoteIds = transferRequest.ExcludeEvidenceNoteIds;
-                if (excludeEvidenceNoteIds != null)
-                {
-                    mapperObject.ExcludeEvidenceNoteIds = excludeEvidenceNoteIds;
-                }
-
-                var model =
-                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
-
-                sessionService.SetTransferSessionObject(Session, model.EvidenceNotesDataListPaged, SessionKeyConstant.PagingOutgoingTransferViewModelKey);
+                var model = await TransferEvidenceNotesViewModel(pcsId, evidenceNoteId, page, client, transferRequest);
 
                 return this.View("EditTransferFrom", model);
             }
+        }
+
+        private async Task<TransferEvidenceNotesViewModel> TransferEvidenceNotesViewModel(Guid pcsId, Guid evidenceNoteId, int page, IWeeeClient client, TransferEvidenceNoteRequest transferRequest)
+        {
+            var noteData =
+                await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+            transferRequest.UpdateSelectedNotes(noteData.CurrentEvidenceNoteIds);
+
+            var currentSelectedNotes = new EvidenceNoteSearchDataResult();
+            if (transferRequest.EvidenceNoteIds.Any())
+            {
+                currentSelectedNotes = await client.SendAsync(User.GetAccessToken(),
+                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear,
+                        transferRequest.EvidenceNoteIds, null, 1, int.MaxValue));
+            }
+
+            var availableNotes = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, null,
+                    transferRequest.EvidenceNoteIds, page,
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+
+            var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(currentSelectedNotes, availableNotes,
+                transferRequest, noteData, pcsId, page);
+
+            var model =
+                mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+            return model;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditTransferFrom(TransferEvidenceNotesViewModel model)
+        {
+            await SetBreadcrumb(model.PcsId);
+
+            var outgoingTransfer = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+
+            if (outgoingTransfer == null)
+            {
+                return RedirectToManageEvidence(model.PcsId);
+            }
+
+            outgoingTransfer.UpdateSelectedNotes(model.EvidenceNotesDataList.Select(e => e.Id).ToList());
+
+            if (!ModelState.IsValid)
+            {
+                using (var client = this.apiClient())
+                {
+                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, model.PageNumber, client, outgoingTransfer);
+                }
+
+                return View("EditTransferFrom", model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                return RedirectToRoute("Scheme_edit_transfer_tonnages",
+                    new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
+            }
+
+            return this.View("EditTransferFrom", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model)
+        {
+            SelectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.OutgoingTransferKey);
+
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("EditTransferFrom", new { pcsId = model.PcsId, EvidenceNoteId = model.EditEvidenceNoteId, model.Page });
+            }
+
+            using (var client = apiClient())
+            {
+                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
+                    SessionKeyConstant.TransferNoteKey);
+
+                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.EditEvidenceNoteId, model.Page, client, transferRequest);
+
+                return View("EditTransferFrom", newModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public override ActionResult DeselectEvidenceNote(TransferDeselectEvidenceNoteModel model)
+        {
+            DeselectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.OutgoingTransferKey);
+
+            return RedirectToAction("EditTransferFrom", new { pcsId = model.PcsId, evidenceNoteId = model.EditEvidenceNoteId, model.Page });
         }
 
         [HttpGet]
@@ -320,11 +397,11 @@
 
             if (ModelState.IsValid)
             {
-                var existingRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+                var existingRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
 
                 var transferRequest = transferEvidenceRequestCreator.SelectCategoriesToRequest(model, existingRequest);
 
-                sessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.OutgoingTransferKey);
+                SessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.OutgoingTransferKey);
 
                 return RedirectToRoute("Scheme_edit_transfer_notes",
                     new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
@@ -336,177 +413,6 @@
 
                 return this.View("EditCategories", refreshedModel);
             }
-        }
-
-        private async Task<TransferEvidenceNotesViewModel> RebuildModel(TransferEvidenceNotesViewModel model, TransferEvidenceNoteRequest request, int selectedPageNumber = 1)
-        {
-            using (var client = this.apiClient())
-            {
-                var noteData = await client.SendAsync(User.GetAccessToken(),
-                    new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
-
-                var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(model.PcsId, request.CategoryIds,
-                        noteData.ComplianceYear, null, model.PageNumber ?? selectedPageNumber,
-                        int.MaxValue));
-
-                var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData,
-                    model.PcsId, model.PageNumber ?? selectedPageNumber,
-                    int.MaxValue);
-
-                var evidenceNoteIds = request.EvidenceNoteIds;
-                if (evidenceNoteIds != null)
-                {
-                    mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
-                }
-
-                var excludeEvidenceNoteIds = request.ExcludeEvidenceNoteIds;
-                if (excludeEvidenceNoteIds != null)
-                {
-                    mapperObject.ExcludeEvidenceNoteIds = excludeEvidenceNoteIds;
-                }
-
-                model =
-                    mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
-
-                sessionService.SetTransferSessionObject(Session, model.EvidenceNotesDataListPaged,
-                    SessionKeyConstant.PagingOutgoingTransferViewModelKey);
-
-                return model;
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditTransferFrom(TransferEvidenceNotesViewModel model, int selectedPageNumber = 1)
-        {
-            await SetBreadcrumb(model.PcsId);
-
-            SetEvidenceNotesInSession(model);
-
-            var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
-
-            if (outgoingTransfer == null)
-            {
-                return RedirectToManageEvidence(model.PcsId);
-            }
-
-            if (model.Action == ActionEnum.Back)
-            {
-                return RedirectToAction("EditCategories", "OutgoingTransfers", new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId});
-            }
-            
-            if (model.PageNumber.HasValue)
-            {
-                if (ModelState.ContainsKey("Action"))
-                {
-                    ModelState["Action"].Errors.Clear();
-                    ModelState.Clear();
-                }
-
-                using (var client = this.apiClient())
-                {
-                    var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
-
-                    var result = await client.SendAsync(User.GetAccessToken(),
-                        new GetEvidenceNotesForTransferRequest(model.PcsId, outgoingTransfer.CategoryIds, noteData.ComplianceYear, null, model.PageNumber.Value, int.MaxValue));
-
-                    var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, outgoingTransfer, noteData, model.PcsId, model.PageNumber.Value, int.MaxValue);
-
-                    var evidenceNoteIds = outgoingTransfer.EvidenceNoteIds;
-                    if (evidenceNoteIds != null)
-                    {
-                        mapperObject.SessionEvidenceNotesId = evidenceNoteIds;
-                    }
-
-                    var excludeEvidenceNoteIds = outgoingTransfer.ExcludeEvidenceNoteIds;
-                    if (excludeEvidenceNoteIds != null)
-                    {
-                        mapperObject.ExcludeEvidenceNoteIds = excludeEvidenceNoteIds;
-                    }
-
-                    model = await RebuildModel(model, outgoingTransfer);
-
-                    sessionService.SetTransferSessionObject(Session, model.EvidenceNotesDataListPaged, SessionKeyConstant.PagingOutgoingTransferViewModelKey);
-                }
-            }
-            else
-            {
-                //Hack before the page is redesigned to fix validation
-                if (!outgoingTransfer.EvidenceNoteIds.Any())
-                {
-                    ModelState.AddModelError("SelectedEvidenceNotePairs",
-                        "Select at least one evidence note to transfer from");
-                }
-
-                if (outgoingTransfer.EvidenceNoteIds.Count > 5)
-                {
-                    ModelState.AddModelError("SelectedEvidenceNotePairs",
-                        "You cannot select more than 5 notes");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    using (var client = this.apiClient())
-                    {
-                        model = await RebuildModel(model, outgoingTransfer, selectedPageNumber);
-                    }
-
-                    return View("EditTransferFrom", model);
-                }
-
-                if (ModelState.IsValid)
-                {
-                    return RedirectToRoute("Scheme_edit_transfer_tonnages",
-                        new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
-                }
-
-                var pagedModel = sessionService.GetTransferSessionObject<PagedList<ViewEvidenceNoteViewModel>>(Session,
-                    SessionKeyConstant.PagingOutgoingTransferViewModelKey);
-
-                if (pagedModel != null)
-                {
-                    model.EvidenceNotesDataListPaged = pagedModel;
-                }
-            }
-
-            return this.View("EditTransferFrom", model);
-        }
-
-        private void SetEvidenceNotesInSession(TransferEvidenceNotesViewModel model)
-        {
-            var outgoingTransfer = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
-
-            var resultNotes = new List<Guid>();
-
-            var alreadySelectedEvidenceNotes = outgoingTransfer.EvidenceNoteIds;
-
-            resultNotes.AddRange(alreadySelectedEvidenceNotes);   
-
-            var selectedEvidenceNotes =
-               model.SelectedEvidenceNotePairs.Where(a => a.Value == true).Select(b => b.Key);
-
-            foreach (var note in selectedEvidenceNotes)
-            {
-                if (!resultNotes.Contains(note))
-                {
-                    resultNotes.Add(note);
-                }
-            }
-
-            var unselectedEvidenceNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value == false).Select(b => b.Key).ToList();
-
-           foreach (var deselectedEvidenceNote in unselectedEvidenceNotes)
-            {
-                resultNotes.Remove(deselectedEvidenceNote);
-            }
-
-            var updatedTransferRequest =
-                new TransferEvidenceNoteRequest(model.PcsId, model.RecipientId, outgoingTransfer.CategoryIds,
-                    resultNotes.ToList(), unselectedEvidenceNotes.ToList());
-
-            sessionService.SetTransferSessionObject(Session, updatedTransferRequest,
-                SessionKeyConstant.OutgoingTransferKey);
         }
 
         private async Task<TransferEvidenceNoteCategoriesViewModel> TransferEvidenceNoteCategoriesViewModel(Guid pcsId, 
@@ -532,10 +438,10 @@
                 await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var request =
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+                SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
 
-            var existingModel = sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
-            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+            var existingModel = SessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+            SessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
 
             var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
 
@@ -548,7 +454,7 @@
             var noteIds = request != null ? request.CategoryIds : noteData.CategoryIds;
 
             var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, noteIds, noteData.ComplianceYear, existingEvidenceNoteIds));
+                new GetEvidenceNotesForTransferRequest(pcsId, noteIds, noteData.ComplianceYear, existingEvidenceNoteIds, null));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(result, request, noteData, pcsId)
             {
@@ -569,7 +475,7 @@
 
         private void MananageCategoryIdsInSession(TransferEvidenceNoteCategoriesViewModel model)
         {
-            var existingRequest = sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+            var existingRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
 
             if (existingRequest != null)
             {
@@ -587,8 +493,8 @@
 
         private void ClearSessionValues()
         {
-            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.OutgoingTransferKey);
-            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+            SessionService.ClearTransferSessionObject(Session, SessionKeyConstant.OutgoingTransferKey);
+            SessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
         }
     }
 }
