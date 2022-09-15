@@ -25,15 +25,11 @@
 
             foreach (var evidenceNoteData in source.AvailableNotes.Results.OrderByDescending(e => e.Reference))
             {
-                model.EvidenceNotesDataListPaged.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
-                    new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
-                    {
-                        IncludeAllCategories = false
-                    }));
+                model.EvidenceNotesDataListPaged.Add(Mapper.Map<EvidenceNoteRowViewModel>(evidenceNoteData));
             }
 
             model.EvidenceNotesDataListPaged =
-                model.EvidenceNotesDataListPaged.ToPagedList(source.PageNumber - 1, source.PageSize, source.AvailableNotes.NoteCount) as PagedList<ViewEvidenceNoteViewModel>;
+                model.EvidenceNotesDataListPaged.ToPagedList(source.PageNumber - 1, source.PageSize, source.AvailableNotes.NoteCount) as PagedList<EvidenceNoteRowViewModel>;
 
             //TEST FOR THIS
             model.PageNumber = source.PageNumber;

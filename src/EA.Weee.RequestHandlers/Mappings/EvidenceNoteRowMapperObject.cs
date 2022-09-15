@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System;
     using System.Collections.Generic;
     using Domain.Evidence;
 
@@ -8,9 +7,14 @@
     {
         public Note Note { get; }
 
+        public List<int> CategoryFilter { get; set; }
+
+        public bool IncludeTotal { get; set; }
+
         public EvidenceNoteRowMapperObject(Note note)
         {
             Note = note;
+            CategoryFilter = new List<int>();
         }
     }
 }

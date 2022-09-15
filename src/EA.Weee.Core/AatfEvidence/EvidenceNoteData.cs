@@ -31,6 +31,8 @@
 
         public List<EvidenceNoteHistoryData> EvidenceNoteHistoryData { get; set; }
 
+        public decimal? TotalReceived { get; set; }
+
         public EvidenceNoteData()
         {
         }
