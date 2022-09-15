@@ -39,9 +39,9 @@
                 ComplianceYear = source.ComplianceYear
             };
 
-            if (source.Notes != null)
+            if (source.SelectedNotes != null)
             {
-                foreach (var evidenceNoteData in source.Notes.Results)
+                foreach (var evidenceNoteData in source.SelectedNotes.Results)
                 {
                     model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
                         new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
@@ -49,9 +49,6 @@
                             IncludeAllCategories = false
                         }));
                 }
-
-                model.EvidenceNotesDataListPaged =
-                    model.EvidenceNotesDataList.ToPagedList(source.PageNumber - 1, source.PageSize, source.Notes.NoteCount) as PagedList<ViewEvidenceNoteViewModel>;
             }
 
             if (source.TransferEvidenceNoteData != null)
