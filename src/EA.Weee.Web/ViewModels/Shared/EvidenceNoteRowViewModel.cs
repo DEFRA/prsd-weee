@@ -5,6 +5,7 @@
     using Core.Helpers;
     using Infrastructure;
 
+    [Serializable]
     public class EvidenceNoteRowViewModel 
     {
         public int ReferenceId { get; set; }
@@ -103,5 +104,7 @@
                 return string.Empty;
             }
         }
+
+        public string TotalReceived { get; set; }
     }
 }

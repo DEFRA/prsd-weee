@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AatfEvidence\EditEvidenceNoteRequest.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNotesSelectedForTransferRequest.cs" />
     <Compile Include="AatfEvidence\GetOrganisationSchemeDataForFilterRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteBaseRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceReportBaseRequest.cs" />

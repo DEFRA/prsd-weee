@@ -12,14 +12,14 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class GetEvidenceNotesForTransferRequestHandler : IRequestHandler<GetEvidenceNotesForTransferRequest, EvidenceNoteSearchDataResult>
+    public class GetEvidenceNotesSelectedForTransferRequestHandler : IRequestHandler<GetEvidenceNotesSelectedForTransferRequest, EvidenceNoteSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
         private readonly IOrganisationDataAccess organisationDataAccess;
 
-        public GetEvidenceNotesForTransferRequestHandler(IWeeeAuthorization authorization,
+        public GetEvidenceNotesSelectedForTransferRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess,
             IMapper mapper, 
             IOrganisationDataAccess organisationDataAccess)
@@ -30,7 +30,7 @@
             this.organisationDataAccess = organisationDataAccess;
         }
 
-        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesForTransferRequest request)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesSelectedForTransferRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -38,22 +38,16 @@
 
             authorization.EnsureOrganisationAccess(organisation.Id);
 
-            var noteData = await noteDataAccess.GetNotesToTransfer(request.OrganisationId,
-                request.Categories.Select(c => c.ToInt()).ToList(),
-                request.ExcludeEvidenceNotes, 
-                request.ComplianceYear, 
-                request.Reference,
-                request.PageNumber, 
-                request.PageSize);
+            var noteData = await noteDataAccess.GetTransferSelectedNotes(request.OrganisationId, request.EvidenceNotes);
 
             var mappedNotes = new List<EvidenceNoteData>();
 
             foreach (var note in noteData.Notes.OrderByDescending(n => n.CreatedDate))
             {
-                var evidenceNoteData = mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(new EvidenceNoteRowMapperObject(note)
+                var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(note)
                 {
                     CategoryFilter = request.Categories,
-                    IncludeTotal = true
+                    IncludeTonnage = true
                 });
 
                 mappedNotes.Add(evidenceNoteData);

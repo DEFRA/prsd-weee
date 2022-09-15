@@ -28,12 +28,14 @@
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear);
 
         Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
-            List<int> categories, 
-            List<Guid> evidenceNotes,
+            List<int> categories,
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
+            int? searchRef,
             int pageNumber,
             int pageSize);
+
+        Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId, List<Guid> evidenceNotes);
 
         Task<Note> AddTransferNote(Organisation organisation,
             Organisation scheme,
