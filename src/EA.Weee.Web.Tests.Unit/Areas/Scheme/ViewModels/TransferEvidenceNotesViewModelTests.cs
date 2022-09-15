@@ -24,7 +24,6 @@
 
             //assert
             result.EvidenceNotesDataList.Should().NotBeNull();
-            result.SelectedEvidenceNotePairs.Should().NotBeNull();
             result.CategoryValues.Should().NotBeNull();
         }
 
@@ -33,7 +32,6 @@
         {
             //arrange
             var result = new TransferEvidenceNotesViewModel();
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>());
 
             //act
             var validationResults = result.Validate(new ValidationContext(result));
@@ -44,19 +42,19 @@
                 && v.MemberNames.Contains("SelectedEvidenceNotePairs"));
         }
 
-        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
+        [Fact(Skip = "CHECK AND FIX")]
         public void Validate_GivenMoreThanFiveNotesSelected_ValidationResultExpected()
         {
             //arrange
             var result = new TransferEvidenceNotesViewModel();
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), false));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), false));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), false));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), false));
 
             //act
             var validationResults = result.Validate(new ValidationContext(result));
@@ -67,16 +65,16 @@
                 && v.MemberNames.Contains("SelectedEvidenceNotePairs"));
         }
 
-        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
+        [Fact(Skip = "CHECK AND FIX")]
         public void Validate_GivenFivesNotesSelected_ValidationResultShouldBeEmpty()
         {
             //arrange
             var result = new TransferEvidenceNotesViewModel();
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
 
             //act
             var validationResults = result.Validate(new ValidationContext(result));
@@ -85,12 +83,12 @@
             validationResults.Should().BeEmpty();
         }
 
-        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
+        [Fact(Skip = "CHECK AND FIX")]
         public void Validate_GivenSingleNoteSelected_ValidationResultShouldBeEmpty()
         {
             //arrange
             var result = new TransferEvidenceNotesViewModel();
-            result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
 
             //act
             var validationResults = result.Validate(new ValidationContext(result));
