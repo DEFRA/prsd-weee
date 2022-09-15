@@ -481,8 +481,9 @@
                 .Distinct().ToList();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                    A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
+                    A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(r =>
                         r.Categories.SequenceEqual(sessionCategories) &&
+                        r.EvidenceNotes.SequenceEqual(expectedEvidenceNoteIds) &&
                         r.OrganisationId == organisationId)))
                 .MustHaveHappenedOnceExactly();
         }
@@ -529,8 +530,9 @@
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                    A<GetEvidenceNotesForTransferRequest>.That.Matches(r =>
+                    A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(r =>
                         r.Categories.SequenceEqual(sessionCategories) &&
+                        r.EvidenceNotes.SequenceEqual(sessionEvidenceNotes) &&
                         r.OrganisationId == organisationId)))
                 .MustHaveHappenedOnceExactly();
         }
@@ -624,7 +626,7 @@
             var returnToEditDraftTransfer = TestFixture.Create<bool?>();
             var request = TestFixture.Create<TransferEvidenceNoteRequest>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(evidenceNoteData);
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(evidenceNoteData);
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
 
@@ -2733,7 +2735,7 @@
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(evidenceNoteData);
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(evidenceNoteData);
 
             var request = TestFixture.Create<TransferEvidenceNoteRequest>();
 

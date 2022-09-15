@@ -1264,10 +1264,10 @@
 
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                    A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
+                    A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(g =>
                         g.Categories.Equals(request.CategoryIds) && 
                         g.OrganisationId.Equals(organisationId) &&
-                        g.ComplianceYear == complianceYear)))
+                        g.EvidenceNotes.SequenceEqual(request.EvidenceNoteIds))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1285,7 +1285,7 @@
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(notes);
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(
                         transferEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).Returns(null);
@@ -1316,7 +1316,7 @@
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(notes);
 
             var existingModel = TestFixture.Create<TransferEvidenceTonnageViewModel>();
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(
@@ -1533,9 +1533,10 @@
 
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                    A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
+                    A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(g =>
                         g.Categories.Equals(request.CategoryIds)
-                        && g.OrganisationId.Equals(model.PcsId))))
+                        && g.OrganisationId.Equals(model.PcsId) &&
+                        g.EvidenceNotes.SequenceEqual(request.EvidenceNoteIds))))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1553,7 +1554,7 @@
                 sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
                     SessionKeyConstant.TransferNoteKey)).Returns(request);
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(notes);
 
             // act
             await transferEvidenceController.TransferTonnage(model);
