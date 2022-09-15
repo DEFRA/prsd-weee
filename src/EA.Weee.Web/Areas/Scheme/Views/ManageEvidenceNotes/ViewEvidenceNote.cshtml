@@ -18,7 +18,7 @@
     {
         title = "Approved evidence note";
     }
-    else if(Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected))
+    else if (Model.Status.Equals(EA.Weee.Core.AatfEvidence.NoteStatus.Rejected))
     {
         title = "Rejected evidence note";
     }
@@ -38,7 +38,7 @@
 
     @if (Model.DisplayMessage)
     {
-    @(this.WeeeGds().BackLink(
+        @(this.WeeeGds().BackLink(
             Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }),
             "Manage evidence notes")
             )
@@ -49,7 +49,8 @@
         @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
                 new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }))
                 )
-        }
+    }
+
     <div class="govuk-!-margin-top-3"></div>
     @Html.Partial("_ViewEvidenceNotePartial", Model)
 }
