@@ -7,15 +7,18 @@
 
 @section full_main_content
 {
+    <p>Guido</p>
     @if (Model.ReturnToView)
     {
-        @(this.WeeeGds().BackLink(Url.RouteUrl(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, })))
+        @(this.WeeeGds().BackLink(
+        Url.RouteUrl(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, 
+                     new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, page = ViewBag.Page })))
     }
     else
     {
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear })))
+            new { @pcsId = Model.SchemeId, @selectedComplianceYear = Model.ComplianceYear, @tab = Model.RedirectTab, @page = ViewBag.Page })))
     }
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)

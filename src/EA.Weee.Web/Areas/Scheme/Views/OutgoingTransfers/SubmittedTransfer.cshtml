@@ -16,7 +16,7 @@
 
         @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.OrganisationId, @tab = Model.RedirectTabName, @selectedComplianceYear = Model.ViewTransferNoteViewModel.ComplianceYear })))
+            new { @pcsId = Model.OrganisationId, @tab = Model.RedirectTabName, @selectedComplianceYear = Model.ViewTransferNoteViewModel.ComplianceYear, page = ViewBag.Page })))
 
         @Html.AntiForgeryToken()
 
