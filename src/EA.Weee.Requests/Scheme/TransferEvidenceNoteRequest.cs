@@ -13,6 +13,7 @@
         public TransferEvidenceNoteRequest()
         {
             EvidenceNoteIds = new List<Guid>();
+            DeselectedEvidenceNoteIds = new List<Guid>();
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
@@ -26,6 +27,7 @@
             OrganisationId = organisationId;
             RecipientId = recipientId;
             CategoryIds = categoryIds;
+            DeselectedEvidenceNoteIds = new List<Guid>();
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
@@ -41,6 +43,7 @@
             RecipientId = recipientId;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
+            DeselectedEvidenceNoteIds = new List<Guid>();
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
@@ -64,6 +67,7 @@
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
             ComplianceYear = complianceYear;
+            DeselectedEvidenceNoteIds = new List<Guid>();
         }
 
         public Guid RecipientId { get; set; } 
@@ -71,6 +75,8 @@
         public List<int> CategoryIds { get; set; }
 
         public List<Guid> EvidenceNoteIds { get; set; }
+
+        public List<Guid> DeselectedEvidenceNoteIds { get; set; }
 
         public Guid OrganisationId { get; set; }
 
@@ -82,7 +88,10 @@
 
         public void UpdateSelectedNotes(List<Guid> selectedNotes)
         {
-            EvidenceNoteIds = new List<Guid>(selectedNotes);
+            selectedNotes.RemoveAll(s => DeselectedEvidenceNoteIds.Contains(s));
+
+            EvidenceNoteIds = EvidenceNoteIds.Union(selectedNotes.Distinct()).ToList();
+            //EvidenceNoteIds = new List<Guid>(selectedNotes.Distinct());
         }
     }
 }
