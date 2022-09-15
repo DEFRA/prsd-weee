@@ -16,7 +16,7 @@
 
         public List<ViewEvidenceNoteViewModel> EvidenceNotesDataList { get; set; }
 
-        public PagedList<ViewEvidenceNoteViewModel> EvidenceNotesDataListPaged { get; set; }
+        public PagedList<EvidenceNoteRowViewModel> EvidenceNotesDataListPaged { get; set; }
 
         public List<TotalCategoryValue> CategoryValues { get; set; }
 
@@ -27,7 +27,7 @@
         protected TransferEvidenceViewModelBase()
         {
             EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
-            EvidenceNotesDataListPaged = new PagedList<ViewEvidenceNoteViewModel>();
+            EvidenceNotesDataListPaged = new PagedList<EvidenceNoteRowViewModel>();
             CategoryValues = new List<TotalCategoryValue>();
         }
     }

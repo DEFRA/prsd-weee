@@ -91,7 +91,6 @@
             selectedNotes.RemoveAll(s => DeselectedEvidenceNoteIds.Contains(s));
 
             EvidenceNoteIds = EvidenceNoteIds.Union(selectedNotes.Distinct()).ToList();
-            //EvidenceNoteIds = new List<Guid>(selectedNotes.Distinct());
         }
     }
 }

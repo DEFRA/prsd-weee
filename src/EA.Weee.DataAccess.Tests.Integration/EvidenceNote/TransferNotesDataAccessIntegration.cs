@@ -53,7 +53,7 @@
 
                 // note not to be found not matching scheme, matching status and category
                 var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation2);
+                ObligatedWeeeIntegrationCommon.CreateScheme(organisation2);
                 var note3ToNotBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
                 note3ToNotBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
                 note3ToNotBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
@@ -134,6 +134,14 @@
                 
                 context.Notes.Add(note12ToNotBeFound);
 
+                var noteToBeExcluded = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                noteToBeExcluded.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                noteToBeExcluded.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                noteToBeExcluded.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+                noteToBeExcluded.NoteTonnage.Add(new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 2, null));
+
+                context.Notes.Add(noteToBeExcluded);
+
                 await context.SaveChangesAsync();
 
                 var categorySearch = new List<int>()
@@ -143,7 +151,7 @@
                 };
 
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, 
-                    new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                    new List<Guid>() { noteToBeExcluded.Id}, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(2);
                 notes.Notes.Count().Should().Be(2);
@@ -159,6 +167,7 @@
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note9ToNotBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note11ToNotBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note12ToNotBeFound.Id));
+                notes.Notes.Should().NotContain(n => n.Id.Equals(noteToBeExcluded.Id));
                 notes.Notes.ElementAtOrDefault(0).WasteType.Should().Be(WasteType.HouseHold);
                 notes.Notes.ElementAtOrDefault(1).WasteType.Should().Be(WasteType.HouseHold);
             }
@@ -296,6 +305,14 @@
 
                 context.Notes.Add(note12ToBeFound);
 
+                var note1ToBeExcludedFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+                note1ToBeExcludedFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 2, null));
+
+                context.Notes.Add(note1ToBeExcludedFound);
+
                 await context.SaveChangesAsync();
 
                 var categorySearch = new List<int>()
@@ -304,7 +321,10 @@
                     WeeeCategory.MedicalDevices.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, 2);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
+                {
+                    note1ToBeExcludedFound.Id
+                }, SystemTime.Now.Year, null, 1, 2);
 
                 notes.NumberOfResults.Should().Be(4);
                 notes.Notes.Count().Should().Be(2);
@@ -312,6 +332,7 @@
                 notes.Notes.Should().Contain(n => n.Id.Equals(note12ToBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note10ToBeFound.Id));
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcludedFound.Id));
             }
         }
 
@@ -346,6 +367,13 @@
 
                 context.Notes.Add(transferNote);
 
+                var noteToBeExcluded = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                noteToBeExcluded.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                noteToBeExcluded.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                noteToBeExcluded.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, null));
+
+                context.Notes.Add(noteToBeExcluded);
+
                 await context.SaveChangesAsync();
 
                 var categorySearch = new List<int>()
@@ -353,7 +381,10 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
+                {
+                    noteToBeExcluded.Id
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
@@ -363,6 +394,7 @@
                 notes.Notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.ElementAt(0).NoteTonnage.Id.Should()
                     .Be(note1ToBeFound.NoteTonnage.ElementAt(0).Id);
                 notes.Notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.ElementAt(0).Received.Should().Be(1);
+                notes.Notes.Should().NotContain(n => n.Id == noteToBeExcluded.Id);
             }
         }
 
@@ -414,6 +446,14 @@
                 transferNote2.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
                 transferNote2.NoteTransferTonnage.Add(transferTonnage2);
 
+                // to be found matching category, scheme and status
+                var note1ToBeExcludedFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, null));
+
+                context.Notes.Add(note1ToBeExcludedFound);
+
                 await context.SaveChangesAsync();
 
                 var categorySearch = new List<int>()
@@ -423,9 +463,12 @@
 
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, 
                     categorySearch, 
-                    new List<Guid>(),
-                    new List<Guid>(),
-                    SystemTime.Now.Year, 
+                    new List<Guid>()
+                    {
+                        note1ToBeExcludedFound.Id
+                    },
+                    SystemTime.Now.Year,
+                    null,
                     2, 
                     1);
 
@@ -438,6 +481,7 @@
                 notes.Notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.ElementAt(0).NoteTonnage.Id.Should()
                     .Be(note1ToBeFound.NoteTonnage.ElementAt(0).Id);
                 notes.Notes.ElementAt(0).NoteTonnage.ElementAt(0).NoteTransferTonnage.ElementAt(0).Received.Should().Be(1);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcludedFound.Id));
             }
         }
 
@@ -477,6 +521,14 @@
 
                 context.Notes.Add(note3ToNotBeFound);
 
+                // to be found matching category, scheme and status and compliance year
+                var note1ToBeExcludedFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1, SystemTime.Now.Year);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+
+                context.Notes.Add(note1ToBeExcludedFound);
+
                 await context.SaveChangesAsync();
 
                 var categorySearch = new List<int>()
@@ -484,13 +536,17 @@
                     WeeeCategory.ConsumerEquipment.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
+                {
+                    note1ToBeExcludedFound.Id
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
                 notes.Notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note2ToNotBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note3ToNotBeFound.Id));
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcludedFound.Id));
             }
         }
 
@@ -552,6 +608,14 @@
 
                 context.Notes.Add(note3ToNotBeFound);
 
+                // to be found matching category, scheme and status and compliance year
+                var note1ToBeExcludedFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1, SystemTime.Now.Year);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+
+                context.Notes.Add(note1ToBeExcludedFound);
+
                 await context.SaveChangesAsync();
 
                 var categorySearch = new List<int>()
@@ -561,21 +625,24 @@
 
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, 
                     categorySearch, 
-                    new List<Guid>(),
-                    new List<Guid>(),
-                    SystemTime.Now.Year, 
-                    2, 1);
+                    new List<Guid>()
+                    {
+                        note1ToBeExcludedFound.Id
+                    },
+                    SystemTime.Now.Year,
+                    null, 2, 1);
 
                 notes.NumberOfResults.Should().Be(3);
                 notes.Notes.Count().Should().Be(1);
                 notes.Notes.Should().Contain(n => n.Id.Equals(note2ToBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeFound.Id));
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note3ToBeFound.Id));
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcludedFound.Id));
             }
         }
 
         [Fact]
-        public async Task GetNotesToTransfer_GivenEvidenceNotes_NotesShouldBeReturned()
+        public async Task GetTransferSelectedNotes_GivenEvidenceNotes_NotesShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -622,18 +689,21 @@
 
                 context.Notes.Add(note4NonHouseHold);
 
+                // to be found matching category, scheme and status and id is requested
+                var note1ToBeExcludedFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcludedFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+
+                context.Notes.Add(note1ToBeExcludedFound);
+
                 await context.SaveChangesAsync();
 
-                var categorySearch = new List<int>()
-                {
-                    WeeeCategory.ConsumerEquipment.ToInt()
-                };
-
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
+                var notes = await dataAccess.GetTransferSelectedNotes(organisation1.Id, new List<Guid>()
                 {
                     note1ToBeFound.Id,
                     note2ToBeFound.Id
-                }, new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                });
 
                 notes.NumberOfResults.Should().Be(2);
                 notes.Notes.Count().Should().Be(2);
@@ -642,11 +712,12 @@
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note3NotToBeFound.Id));
                 notes.Notes.ElementAtOrDefault(0).WasteType.Should().Be(WasteType.HouseHold);
                 notes.Notes.ElementAtOrDefault(1).WasteType.Should().Be(WasteType.HouseHold);
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcludedFound.Id));
             }
         }
 
         [Fact]
-        public async Task GetNotesToTransfer_GivenEvidenceNotesWithPaging_NotesShouldBeReturned()
+        public async Task GetNotesToTransfer_GivenExcludedEvidenceNotes_NotesShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -657,17 +728,14 @@
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
                 context.Schemes.Add(scheme);
 
-                // to be found matching category, scheme and status and id is requested
-                var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
-                note1ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note1ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note1ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+                // not matches criteria but should be excluded from the results
+                var note1ToBeExcluded = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                note1ToBeExcluded.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcluded.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcluded.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
 
-                context.Notes.Add(note1ToBeFound);
+                context.Notes.Add(note1ToBeExcluded);
 
-                await context.SaveChangesAsync();
-
-                // to be found matching category, scheme and status and id is requested
                 var note2ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
                 note2ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
                 note2ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
@@ -677,50 +745,6 @@
 
                 await context.SaveChangesAsync();
 
-                // note not to be found matching scheme, status but not in evidence note list
-                var note3NotToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
-                note3NotToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note3NotToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note3NotToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note3NotToBeFound);
-
-                await context.SaveChangesAsync();
-
-                // Waste Type being 'NON-HOUSEHOLD' should be filtered out
-                var note4NonHouseHold = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
-                DateTime startDate = note4NonHouseHold.StartDate;
-                DateTime endDate = note4NonHouseHold.EndDate;
-                var protocol = note4NonHouseHold.Protocol;
-                note4NonHouseHold.Update(organisation1, startDate, endDate, wasteType: WasteType.NonHouseHold, protocol);
-                note4NonHouseHold.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note4NonHouseHold.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note4NonHouseHold.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note4NonHouseHold);
-
-                await context.SaveChangesAsync();
-
-                // to be found matching category, scheme and status and id is requested
-                var note3ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
-                note3ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note3ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note3ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note3ToBeFound);
-
-                await context.SaveChangesAsync();
-
-                // to be found matching category, scheme and status and id is requested
-                var note4ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
-                note4ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note4ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note4ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note4ToBeFound);
-
-                await context.SaveChangesAsync();
-
                 var categorySearch = new List<int>()
                 {
                     WeeeCategory.ConsumerEquipment.ToInt()
@@ -728,72 +752,13 @@
 
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
                 {
-                    note1ToBeFound.Id,
-                    note2ToBeFound.Id,
-                    note3ToBeFound.Id,
-                    note4ToBeFound.Id
-                }, new List<Guid>(), SystemTime.Now.Year, 3, 1);
-
-                notes.NumberOfResults.Should().Be(4);
-                notes.Notes.Count().Should().Be(1);
-                notes.Notes.Should().Contain(n => n.Id.Equals(note2ToBeFound.Id));
-            }
-        }
-
-        [Fact]
-        public async Task GetNotesToTransfer_GivenEvidenceNotesAndComplianceYear_NotesShouldBeReturned()
-        {
-            using (var database = new DatabaseWrapper())
-            {
-                var context = database.WeeeContext;
-                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
-
-                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
-                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
-                context.Schemes.Add(scheme);
-
-                // to be found matching category, scheme and status and id is requested
-                var note1ToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1, SystemTime.Now.Year);
-                note1ToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note1ToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note1ToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note1ToBeFound);
-
-                // to not be found matching criteria and id is requested but no compliance year match
-                var note2NotToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1, SystemTime.Now.Year - 1);
-                note2NotToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note2NotToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note2NotToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note2NotToBeFound);
-
-                // to not be found matching criteria and id is requested but no compliance year match
-                var note3NotToBeFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1, SystemTime.Now.Year + 1);
-                note3NotToBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note3NotToBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note3NotToBeFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note3NotToBeFound);
-
-                await context.SaveChangesAsync();
-
-                var categorySearch = new List<int>()
-                {
-                    WeeeCategory.ConsumerEquipment.ToInt()
-                };
-
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>()
-                {
-                    note1ToBeFound.Id,
-                    note2NotToBeFound.Id
-                }, new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                    note1ToBeExcluded.Id
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
-                notes.Notes.Should().Contain(n => n.Id.Equals(note1ToBeFound.Id));
-                notes.Notes.Should().NotContain(n => n.Id.Equals(note2NotToBeFound.Id));
-                notes.Notes.Should().NotContain(n => n.Id.Equals(note3NotToBeFound.Id));
+                notes.Notes.Should().Contain(n => n.Id.Equals(note2ToBeFound.Id));
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcluded.Id));
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Prsd.Core.Mapper;
     using Shared;
 
@@ -22,7 +23,8 @@
                 RejectedDate = source.RejectedDate,
                 ReturnedDate = source.ReturnedDate,
                 RejectedReason = source.RejectedReason,
-                ReturnedReason = source.ReturnedReason
+                ReturnedReason = source.ReturnedReason,
+                TotalReceived = source.TotalReceived.ToTonnageDisplay()
             };
         }
     }

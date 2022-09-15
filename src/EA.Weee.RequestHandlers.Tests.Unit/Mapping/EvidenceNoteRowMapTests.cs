@@ -436,6 +436,84 @@
             result.OrganisationSchemaData.Should().BeNull();
         }
 
+        [Fact]
+        public void Map_GivenNoteToIncludeTotalTonnageReceived_TotalReceivedShouldBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var tonnages = new List<NoteTonnage>()
+            {
+                new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 1, 2),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, null, 1.9M),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.GasDischargeLampsAndLedLightSources, 2.2M, null)
+            };
+
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTotal = true;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.TotalReceived.Should().Be(3.2M);
+        }
+
+        [Fact]
+        public void Map_GivenNoteToNotIncludeTotalTonnageReceived_TotalReceivedShouldNotBeMapped()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var tonnages = new List<NoteTonnage>()
+            {
+                new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 1, 2),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, 4, 1.9M),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.GasDischargeLampsAndLedLightSources, 2.2M, null)
+            };
+
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTotal = false;
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.TotalReceived.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_GivenNoteToIncludeTotalTonnageReceivedAndCategoryFilterIsSpecified_TotalReceivedShouldBeMappedWithOnlyRequestedCategories()
+        {
+            //arrange
+            var note = A.Fake<Note>();
+            var tonnages = new List<NoteTonnage>()
+            {
+                new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 1, 2),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, null, 1.9M),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.GasDischargeLampsAndLedLightSources, 2.2M, null),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.LightingEquipment, 20.2M, null),
+                new NoteTonnage(Domain.Lookup.WeeeCategory.MedicalDevices, 30.2M, null)
+            };
+
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTotal = true;
+            mapObject.CategoryFilter = new List<int>()
+            {
+                Domain.Lookup.WeeeCategory.LightingEquipment.ToInt(), Domain.Lookup.WeeeCategory.MedicalDevices.ToInt()
+            };
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.TotalReceived.Should().Be(50.4M);
+        }
+
         private EvidenceNoteRowMapperObject EvidenceNoteWithCriteriaMap(Note note)
         {
             return new EvidenceNoteRowMapperObject(note);
