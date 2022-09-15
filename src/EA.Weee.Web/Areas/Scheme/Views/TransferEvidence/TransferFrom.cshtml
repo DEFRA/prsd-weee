@@ -7,6 +7,9 @@
 @{
     ViewBag.Title = "Transfer from - GOV.UK";
     var formName = "transfer-summary-partial-form";
+
+    ViewData.Add("controller", "TransferEvidence");
+    ViewData.Add("postAction", "TransferFrom");
 }
 
 @section full_main_content
@@ -21,9 +24,6 @@
 
     @Html.Gds().ValidationSummary()
 
-    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model, 
-           new ViewDataDictionary { { "controller", "TransferEvidence" }, 
-               { "postAction", "TransferFrom" }
-           });
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model);
     }
 }

@@ -4,7 +4,9 @@
 
     public class TransferSelectEvidenceNoteModelBase
     {
-        public Guid EvidenceNoteId { get; set; }
+        public Guid EditEvidenceNoteId { get; set; }
+
+        public Guid SelectedEvidenceNoteId { get; set; }
 
         public Guid PcsId { get; set; }
 
