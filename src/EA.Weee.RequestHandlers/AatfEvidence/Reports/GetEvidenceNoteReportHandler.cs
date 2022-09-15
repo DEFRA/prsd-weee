@@ -46,8 +46,8 @@
             csvWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf, x => x.SubmittedByAatf);
             csvWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber, x => x.AatfApprovalNumber);
             csvWriter.DefineColumn(EvidenceReportConstants.ObligationType, x => x.ObligationType);
-            csvWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate, x => x.ReceivedStartDate);
-            csvWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate, x => x.ReceivedEndDate);
+            csvWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate, x => x.ReceivedStartDate.ToShortDateString());
+            csvWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate, x => x.ReceivedEndDate.ToShortDateString());
             csvWriter.DefineColumn(EvidenceReportConstants.Recipient, x => x.Recipient);
             csvWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber, x => x.RecipientApprovalNumber);
             csvWriter.DefineColumn(EvidenceReportConstants.Protocol, x => x.Protocol);
