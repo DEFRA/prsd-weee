@@ -4,6 +4,9 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "From which evidence notes would you like to transfer tonnage to? - GOV.UK";
+
+    ViewData.Add("controller", "OutgoingTransfers");
+    ViewData.Add("postAction", "EditTransferFrom");
 }
 
 @section full_main_content
@@ -25,12 +28,8 @@
 
     @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferSummaryPartial.cshtml", Model.ViewTransferNoteViewModel); }
 
-    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model,
-            new ViewDataDictionary { { "controller", "OutgoingTransfers" },
-               { "postAction", "EditTransferFrom" },
-               { "deselectAction", "DeselectEvidenceNote" },
-               { "selectAction", "SelectEvidenceNote" }
-            });
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model);
+
     }
 
 }
