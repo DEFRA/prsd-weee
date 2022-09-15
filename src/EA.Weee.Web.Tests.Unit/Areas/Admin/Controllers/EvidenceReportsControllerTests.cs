@@ -423,6 +423,19 @@
         }
 
         [Fact]
+        public async Task EvidenceNoteReportPost_ShouldSetBreadCrumb()
+        {
+            //arrange
+            var model = new EvidenceReportViewModel();
+         
+            //act
+            await controller.EvidenceNoteReport(model);
+
+            //assert
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ViewReports);
+        }
+
+        [Fact]
         public async Task DownloadEvidenceNoteReportGet_ShouldRetrieveUserStatus()
         {
             //act
@@ -487,6 +500,16 @@
             //assert
             result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(csvFile.FileContent));
             result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvFile.FileName));
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceNoteReportGet_ShouldSetBreadCrumb()
+        {
+            //act
+            await controller.DownloadEvidenceNoteReport(TestFixture.Create<int>(), TestFixture.Create<TonnageToDisplayReportEnum>());
+
+            //assert
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.ViewReports);
         }
 
         private void SetUpControllerContext()
