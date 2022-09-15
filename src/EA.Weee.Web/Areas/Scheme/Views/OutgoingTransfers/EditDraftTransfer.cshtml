@@ -25,7 +25,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.SchemeId)
         @Html.HiddenFor(m => m.EvidenceNoteId)
-        @Html.HiddenFor(m => m.Status)
+        @Html.HiddenFor(m => m.Status, new { id = "submit-status"})
 
         <div>
             @(this.WeeeGds().Button("Submit transfer", new { id = "submit-transfer-note" }))
