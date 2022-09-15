@@ -103,5 +103,7 @@
                 return string.Empty;
             }
         }
+
+        public string TotalReceived { get; set; }
     }
 }

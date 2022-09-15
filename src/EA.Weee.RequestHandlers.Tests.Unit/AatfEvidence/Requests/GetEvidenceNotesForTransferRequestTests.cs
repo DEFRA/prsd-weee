@@ -54,9 +54,7 @@
 
             request.Categories.Should().BeEquivalentTo(categories);
             request.OrganisationId.Should().Be(organisationId);
-            request.EvidenceNotes.Should().BeEmpty();
             request.ComplianceYear.Should().Be(complianceYear);
-            request.EvidenceNotes.Should().HaveCount(0);
             request.ExcludeEvidenceNotes.Should().HaveCount(0);
         }
 
@@ -65,15 +63,13 @@
         {
             var organisationId = Guid.NewGuid();
             var categories = new List<int>() { WeeeCategory.ConsumerEquipment.ToInt(), WeeeCategory.DisplayEquipment.ToInt() };
-            var notes = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() };
             var excludedNotes = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() };
             var complianceYear = TestFixture.Create<int>();
 
-            var request = new GetEvidenceNotesForTransferRequest(organisationId, categories, complianceYear, notes, excludedNotes);
+            var request = new GetEvidenceNotesForTransferRequest(organisationId, categories, complianceYear, excludedNotes);
 
             request.Categories.Should().BeEquivalentTo(categories);
             request.OrganisationId.Should().Be(organisationId);
-            request.EvidenceNotes.Should().BeEquivalentTo(notes);
             request.ExcludeEvidenceNotes.Should().BeEquivalentTo(excludedNotes);
         }
     }

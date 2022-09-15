@@ -144,13 +144,11 @@
             if (transferRequest.EvidenceNoteIds.Any())
             {
                 currentSelectedNotes = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear,
-                        transferRequest.EvidenceNoteIds, null, 1, int.MaxValue));
+                    new GetEvidenceNotesSelectedForTransferRequest(pcsId, transferRequest.EvidenceNoteIds, transferRequest.CategoryIds));
             }
 
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, null,
-                    transferRequest.EvidenceNoteIds, pageNumber,
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, null, pageNumber,
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear,
@@ -347,7 +345,7 @@
             SessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
 
             var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, new List<Guid>()));
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear, result, transferRequest, pcsId)
             {
