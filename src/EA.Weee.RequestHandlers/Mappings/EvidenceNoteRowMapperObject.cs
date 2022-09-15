@@ -14,6 +14,7 @@
         public EvidenceNoteRowMapperObject(Note note)
         {
             Note = note;
+            CategoryFilter = new List<int>();
         }
     }
 }
