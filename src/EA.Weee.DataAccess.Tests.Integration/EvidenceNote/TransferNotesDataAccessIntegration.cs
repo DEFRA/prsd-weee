@@ -143,7 +143,7 @@
                 };
 
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, 
-                    new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, 1, int.MaxValue);
+                    new List<Guid>(), new List<Guid>(), SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(2);
                 notes.Notes.Count().Should().Be(2);
@@ -315,7 +315,7 @@
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>()
                 {
                     note1ToBeExcludedFound.Id
-                }, SystemTime.Now.Year, 1, 2);
+                }, SystemTime.Now.Year, null, 1, 2);
 
                 notes.NumberOfResults.Should().Be(4);
                 notes.Notes.Count().Should().Be(2);
@@ -375,7 +375,7 @@
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>()
                 {
                     noteToBeExcluded.Id
-                }, SystemTime.Now.Year, 1, int.MaxValue);
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
@@ -459,7 +459,8 @@
                     {
                         note1ToBeExcludedFound.Id
                     },
-                    SystemTime.Now.Year, 
+                    SystemTime.Now.Year,
+                    null,
                     2, 
                     1);
 
@@ -530,7 +531,7 @@
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>()
                 {
                     note1ToBeExcludedFound.Id
-                }, SystemTime.Now.Year, 1, int.MaxValue);
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
@@ -621,8 +622,8 @@
                     {
                         note1ToBeExcludedFound.Id
                     },
-                    SystemTime.Now.Year, 
-                    2, 1);
+                    SystemTime.Now.Year,
+                    null, 2, 1);
 
                 notes.NumberOfResults.Should().Be(3);
                 notes.Notes.Count().Should().Be(1);
@@ -703,7 +704,7 @@
                 }, new List<Guid>()
                 {
                     note1ToBeExcludedFound.Id
-                }, SystemTime.Now.Year, 1, int.MaxValue);
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(2);
                 notes.Notes.Count().Should().Be(2);
@@ -814,7 +815,7 @@
                 }, new List<Guid>()
                 {
                     note1ToBeExcludedFound.Id
-                }, SystemTime.Now.Year, 3, 1);
+                }, SystemTime.Now.Year, null, 3, 1);
 
                 notes.NumberOfResults.Should().Be(4);
                 notes.Notes.Count().Should().Be(1);
@@ -881,7 +882,7 @@
                 }, new List<Guid>()
                 {
                     note1ToBeExcludedFound.Id
-                }, SystemTime.Now.Year, 1, int.MaxValue);
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
@@ -929,7 +930,7 @@
                 var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, new List<Guid>(), new List<Guid>()
                 {
                     note1ToBeExcluded.Id
-                }, SystemTime.Now.Year, 1, int.MaxValue);
+                }, SystemTime.Now.Year, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(1);
                 notes.Notes.Count().Should().Be(1);
