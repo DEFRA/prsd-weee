@@ -165,8 +165,7 @@
         }
 
         public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
-            List<int> categories, 
-            List<Guid> evidenceNotes, 
+            List<int> categories,
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
             int? searchRef,
@@ -182,11 +181,6 @@
             if (searchRef.HasValue)
             {
                 filteredNotes = filteredNotes.Where(n => n.Reference == searchRef.Value);
-            }
-            
-            if (evidenceNotes.Any())
-            {
-                filteredNotes = filteredNotes.Where(n => evidenceNotes.Contains(n.Id));
             }
 
             if (excludeEvidenceNotes.Any())
@@ -209,6 +203,16 @@
                 .ToListAsync();
 
             return new EvidenceNoteResults(pagedNotes, notes.Count());
+        }
+
+        public async Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId,
+            List<Guid> evidenceNotes)
+        {
+            var pagedNotes = await context.Notes.Where(n => n.RecipientId == recipientOrganisationId && evidenceNotes.Contains(n.Id))
+                .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
+                .ToListAsync();
+
+            return new EvidenceNoteResults(pagedNotes, pagedNotes.Count);
         }
 
         public async Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear)

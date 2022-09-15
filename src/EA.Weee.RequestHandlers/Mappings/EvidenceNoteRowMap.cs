@@ -9,6 +9,8 @@
     using EA.Weee.Core.AatfEvidence;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
+    using Protocol = Core.AatfEvidence.Protocol;
+    using WasteType = Core.AatfEvidence.WasteType;
 
     public class EvidenceNoteRowMap : IMap<EvidenceNoteRowMapperObject, EvidenceNoteData>
     {
@@ -46,6 +48,12 @@
                 }
             };
 
+            if (source.IncludeTotal)
+            {
+                data.TotalReceived = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter)
+                        .Sum(n => n.Received) : source.Note.NoteTonnage.Sum(n => n.Received);
+            }
+
             if (source.Note.Aatf != null)
             {
                 data.AatfData = new AatfData()
@@ -53,6 +61,7 @@
                     Name = source.Note.Aatf.Name
                 };
             }
+
             if (source.Note.Organisation.Scheme != null)
             {
                 data.OrganisationSchemaData = new SchemeData()

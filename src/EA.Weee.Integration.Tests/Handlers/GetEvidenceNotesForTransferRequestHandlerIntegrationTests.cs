@@ -115,7 +115,7 @@
                     },
                     notesSetToBeIncluded.ElementAt(0).ComplianceYear,
                     new List<Guid>(),
-                    new List<Guid>());
+                    null);
             };
 
             private readonly Because of = () =>
@@ -218,7 +218,7 @@
                         notesSetToBeIncluded.ElementAt(0).Id,
                         notesSetToBeIncluded.ElementAt(1).Id
                     },
-                    new List<Guid>());
+                    null);
             };
 
             private readonly Because of = () =>
@@ -270,7 +270,7 @@
                 note = EvidenceNoteDbSetup.Init().Create();
 
                 request = new GetEvidenceNotesForTransferRequest(note.OrganisationId,
-                    new List<int>() {1}, note.ComplianceYear, new List<Guid>(), new List<Guid>());
+                    new List<int>() {1}, note.ComplianceYear, new List<Guid>());
             };
 
             private readonly Because of = () =>

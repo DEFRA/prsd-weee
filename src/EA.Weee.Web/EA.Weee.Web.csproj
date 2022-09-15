@@ -1853,7 +1853,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
-    <Folder Include="Areas\Scheme\Views\TransferEvidenceBase\" />
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
   </ItemGroup>
