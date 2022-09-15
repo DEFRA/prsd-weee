@@ -30,16 +30,22 @@
             this.organisationDataAccess = organisationDataAccess;
         }
 
-        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesForTransferRequest message)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesForTransferRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var organisation = await organisationDataAccess.GetById(message.OrganisationId);
+            var organisation = await organisationDataAccess.GetById(request.OrganisationId);
 
             authorization.EnsureOrganisationAccess(organisation.Id);
 
-            var noteData = await noteDataAccess.GetNotesToTransfer(message.OrganisationId, 
-                message.Categories.Select(c => c.ToInt()).ToList(), message.EvidenceNotes, message.ExcludeEvidenceNotes, message.ComplianceYear, message.PageNumber, message.PageSize);
+            var noteData = await noteDataAccess.GetNotesToTransfer(request.OrganisationId,
+                request.Categories.Select(c => c.ToInt()).ToList(), 
+                request.EvidenceNotes, 
+                request.ExcludeEvidenceNotes, 
+                request.ComplianceYear, 
+                request.Reference,
+                request.PageNumber, 
+                request.PageSize);
 
             var mappedNotes = new List<EvidenceNoteData>();
 
@@ -47,7 +53,7 @@
             {
                 var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(note)
                 {
-                    CategoryFilter = message.Categories,
+                    CategoryFilter = request.Categories,
                     IncludeTonnage = true
                 });
 

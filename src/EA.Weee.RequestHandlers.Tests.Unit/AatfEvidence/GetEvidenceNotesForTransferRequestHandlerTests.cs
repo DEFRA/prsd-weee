@@ -45,7 +45,10 @@
 
             request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(), TestFixture.Create<int>(),
                 new List<Guid>(),
-                new List<Guid>());
+                new List<Guid>(),
+                TestFixture.Create<int?>(),
+                TestFixture.Create<int>(),
+                TestFixture.Create<int>());
 
             handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, organisationDataAccess);
         }
@@ -115,7 +118,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_DataAccessGetNotesToTransferShouldBeCalled()
+        public async void HandleAsync_GivenRequestWithCategories_DataAccessGetNotesToTransferShouldBeCalled()
         {
             //act
             await handler.HandleAsync(request);
@@ -126,19 +129,23 @@
                         A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), 
                         A<List<Guid>>._,
                         A<List<Guid>>._,
-                        request.ComplianceYear, request.PageNumber, request.PageSize))
+                        request.ComplianceYear,
+                        A<int?>._, 
+                        request.PageNumber, 
+                        request.PageSize))
                 .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithEvidenceNotes_DataAccessGetNotesToTransferShouldBeCalled()
+        public async void HandleAsync_GivenRequestWithCriteria_DataAccessGetNotesToTransferShouldBeCalled()
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
             var request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(),
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<Guid>().ToList(),
-                TestFixture.CreateMany<Guid>().ToList());
+                TestFixture.CreateMany<Guid>().ToList(),
+                TestFixture.Create<int?>());
 
             A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).Returns(organisation);
 
@@ -148,8 +155,9 @@
             //assert
             A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
                 A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), 
-                A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), A<List<Guid>>.That.IsSameSequenceAs(request.ExcludeEvidenceNotes),
-                request.ComplianceYear, request.PageNumber, this.request.PageSize)).MustHaveHappenedOnceExactly();
+                A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes), 
+                A<List<Guid>>.That.IsSameSequenceAs(request.ExcludeEvidenceNotes),
+                request.ComplianceYear, request.Reference, request.PageNumber, request.PageSize)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -181,6 +189,7 @@
                 A<List<Guid>>._,
                 A<List<Guid>>._,
                 A<int>._, 
+                A<int?>._,
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
@@ -224,6 +233,7 @@
                 A<List<Guid>>._,
                 A<List<Guid>>._,
                 A<int>._,
+                A<int?>._,
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
