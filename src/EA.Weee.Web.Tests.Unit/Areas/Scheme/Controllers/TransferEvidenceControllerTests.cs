@@ -812,8 +812,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
                         g.Categories.Equals(request.CategoryIds) && 
-                        g.OrganisationId.Equals(organisationId) && 
-                        g.EvidenceNotes.Count.Equals(0) &&
+                        g.OrganisationId.Equals(organisationId) &&
                         g.ComplianceYear == complianceYear &&
                         g.PageSize == DefaultPageSize &&
                         g.PageNumber == 1)))
@@ -1266,9 +1265,8 @@
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
-                        g.Categories.Equals(request.CategoryIds) 
-                        && g.OrganisationId.Equals(organisationId) 
-                        && g.EvidenceNotes.Equals(request.EvidenceNoteIds) &&
+                        g.Categories.Equals(request.CategoryIds) && 
+                        g.OrganisationId.Equals(organisationId) &&
                         g.ComplianceYear == complianceYear)))
                 .MustHaveHappenedOnceExactly();
         }
@@ -1537,8 +1535,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
                         g.Categories.Equals(request.CategoryIds)
-                        && g.OrganisationId.Equals(model.PcsId)
-                        && g.EvidenceNotes.Equals(request.EvidenceNoteIds))))
+                        && g.OrganisationId.Equals(model.PcsId))))
                 .MustHaveHappenedOnceExactly();
         }
 

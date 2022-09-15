@@ -8,11 +8,9 @@
 
     public class GetEvidenceNotesForTransferRequest : IRequest<EvidenceNoteSearchDataResult>
     {
-        public Guid OrganisationId { get; protected set; }
+        public Guid OrganisationId { get; private set; }
 
         public List<int> Categories { get; private set; }
-
-        public List<Guid> EvidenceNotes { get; private set; }
 
         public List<Guid> ExcludeEvidenceNotes { get; private set; }
 
@@ -26,8 +24,7 @@
 
         public GetEvidenceNotesForTransferRequest(Guid organisationId, 
             List<int> categories, 
-            int complianceYear, 
-            List<Guid> evidenceNotes,
+            int complianceYear,
             List<Guid> excludeEvidenceNotes,
             int? reference = null,
             int pageNumber = 1,
@@ -39,7 +36,6 @@
             OrganisationId = organisationId;
             Categories = categories;
             ComplianceYear = complianceYear;
-            EvidenceNotes = evidenceNotes ?? new List<Guid>();
             ExcludeEvidenceNotes = excludeEvidenceNotes ?? new List<Guid>();
             Reference = reference;
             PageNumber = pageNumber;
