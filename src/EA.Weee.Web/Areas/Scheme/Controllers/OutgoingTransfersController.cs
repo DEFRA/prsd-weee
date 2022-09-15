@@ -349,7 +349,7 @@
             using (var client = apiClient())
             {
                 var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.TransferNoteKey);
+                    SessionKeyConstant.OutgoingTransferKey);
 
                 var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.EditEvidenceNoteId, model.Page, client, transferRequest);
 
