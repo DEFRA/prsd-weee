@@ -36,14 +36,19 @@
 
 @section full_main_content{
 
-    @(this.WeeeGds().BackLink(
+    @if (Model.DisplayMessage)
+    {
+        @(this.WeeeGds().BackLink(
             Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }),
             "Manage evidence notes")
             )
-
-    @if (Model.DisplayMessage)
-    {
         @(this.WeeeGds().Panel(Model.SuccessMessage))
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }))
+                )
     }
 
     <div class="govuk-!-margin-top-3"></div>
