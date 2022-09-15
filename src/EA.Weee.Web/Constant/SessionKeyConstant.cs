@@ -8,8 +8,5 @@
         public static string FilterRecipientNameKey = "filterRecipientNameKey";
         public static string EditTransferEvidenceTonnageViewModel = "editTransferEvidenceTonnageViewModel";
         public static string OutgoingTransferKey = "outgoingTransferKey";
-        public static string OverrideTransferSessionKey = "overrideTransferSessionKey";
-        public static string PagingTransferViewModelKey = "pagingTransferViewModelKey";
-        public static string PagingOutgoingTransferViewModelKey = "pagingOutgoingTransferViewModelKey";
     }
 }
