@@ -167,20 +167,35 @@
         public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
             List<int> categories, 
             List<Guid> evidenceNotes, 
+            List<Guid> excludeEvidenceNotes,
             int complianceYear,
             int pageNumber,
             int pageSize)
         {
-            var notes = context.Notes
-                .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
-                .Where(n => n.RecipientId == recipientOrganisationId &&
-                            n.NoteType.Value == NoteType.EvidenceNote.Value &&
-                            n.WasteType.Value == WasteType.HouseHold &&
-                            n.Status.Value == NoteStatus.Approved.Value &&
-                            n.ComplianceYear == complianceYear &&
-                            (evidenceNotes.Count == 0 || evidenceNotes.Contains(n.Id)) &&
-                            n.NoteTonnage.Where(nt => nt.Received != null)
-                                .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)));
+            var filteredNotes = context.Notes.Where(n => n.RecipientId == recipientOrganisationId &&
+                                                                    n.NoteType.Value == NoteType.EvidenceNote.Value &&
+                                                                    n.WasteType.Value == WasteType.HouseHold &&
+                                                                    n.Status.Value == NoteStatus.Approved.Value &&
+                                                                    n.ComplianceYear == complianceYear);
+
+            if (evidenceNotes.Any())
+            {
+                filteredNotes = filteredNotes.Where(n => evidenceNotes.Contains(n.Id));
+            }
+
+            if (excludeEvidenceNotes.Any())
+            {
+                filteredNotes = filteredNotes.Where(n => !excludeEvidenceNotes.Contains(n.Id));
+            }
+
+            if (categories.Any())
+            {
+                filteredNotes = filteredNotes.Where(n => n.NoteTonnage.Where(nt => nt.Received != null)
+                                    .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)));
+            }
+
+            var notes = filteredNotes.Include(n =>
+                n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)));
 
             var pagedNotes = await notes.OrderByDescending(n => n.Reference)
                 .Skip((pageNumber - 1) * pageSize)
