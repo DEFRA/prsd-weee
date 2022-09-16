@@ -1,40 +1,45 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel
+﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
-    using System.Linq;
-    using Core.AatfReturn;
-    using Core.Helpers;
     using CuttingEdge.Conditions;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Web.Areas.Aatf.Helpers;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Shared;
-    using Helpers;
-    using Prsd.Core.Mapper;
+    using Services;
 
     public class ManageEvidenceNoteViewModelMap : IMap<ManageEvidenceNoteTransfer, ManageEvidenceNoteViewModel>
     {
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
+        private readonly ConfigurationService configurationService;
 
-        public ManageEvidenceNoteViewModelMap(IAatfEvidenceHelper aatfEvidenceHelper)
+        public ManageEvidenceNoteViewModelMap(IAatfEvidenceHelper aatfEvidenceHelper, ConfigurationService configurationService)
         {
             this.aatfEvidenceHelper = aatfEvidenceHelper;
+            this.configurationService = configurationService;
         }
 
         public ManageEvidenceNoteViewModel Map(ManageEvidenceNoteTransfer source)
         {
             Condition.Requires(source).IsNotNull();
 
-            var aatfs = aatfEvidenceHelper.GroupedValidAatfs(source.Aatfs);
-
             var model = new ManageEvidenceNoteViewModel()
             {
-                OrganisationId = source.OrganisationId, 
-                AatfId = source.AatfId, 
-                AatfName = source.AatfData.Name, 
-                SingleAatf = aatfs.Count == 1,
-                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
+                OrganisationId = source.OrganisationId,
+                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
                 CanCreateEdit = (aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear) && 
                                  WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)),
-                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)
+                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate),
+                AatfId = source.AatfId
             };
+
+            if (source.AatfData != null)
+            {
+                var aatfs = aatfEvidenceHelper.GroupedValidAatfs(source.Aatfs);
+
+                model.AatfName = source.AatfData.Name;
+                model.SingleAatf = aatfs.Count == 1;
+            }
 
             if (source.FilterViewModel != null)
             {

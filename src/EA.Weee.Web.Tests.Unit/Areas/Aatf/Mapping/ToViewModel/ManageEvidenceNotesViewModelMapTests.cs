@@ -12,6 +12,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Web.Areas.Aatf.Helpers;
+    using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
     using Xunit;
 
