@@ -366,7 +366,7 @@
          
             if (ModelState.IsValid)
             {
-                return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, model.Page });
+                return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, page = model.NewPage });
             }
 
             using (var client = apiClient())
