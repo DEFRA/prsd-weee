@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Aatf.Mappings.ToViewModel;
     using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -60,6 +61,7 @@
                 await SetBreadcrumb(pcsId);
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                var selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
                 if (tab == null) 
                 { 
@@ -95,7 +97,7 @@
             SchemePublicInfo scheme,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
-            int pageNumber)
+            int pageNumber, int selectedComplianceYear)
         {
             using (var client = this.apiClient())
             {
@@ -106,6 +108,8 @@
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber, int.MaxValue));
+
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("ReviewSubmittedEvidence", model);
             }
