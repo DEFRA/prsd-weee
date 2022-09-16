@@ -188,6 +188,49 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithAvailableNotes_AvailableEvidenceNoteDataShouldBeMappedAndReturned()
+        {
+            //arrange
+            var notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Build<EvidenceNoteData>().Create(),
+                TestFixture.Build<EvidenceNoteData>().Create(),
+            };
+
+            var availableEvidenceNoteData = new EvidenceNoteSearchDataResult(notes, 2);
+
+            var viewEvidenceNoteViewModel = TestFixture.CreateMany<EvidenceNoteRowViewModel>(2).ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>().With(e => e.CategoryIds,
+                    new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            const int pageNumber = 1;
+            const int pageSize = 3;
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                availableEvidenceNoteData, request,
+                TestFixture.Create<TransferEvidenceNoteData>(), organisationId,
+                pageNumber,
+                pageSize);
+
+            A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(notes.ElementAt(0))).Returns(viewEvidenceNoteViewModel.ElementAt(0));
+            A.CallTo(() => mapper.Map<EvidenceNoteRowViewModel>(notes.ElementAt(1))).Returns(viewEvidenceNoteViewModel.ElementAt(1));
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.EvidenceNotesDataListPaged.ElementAt(0).Should().BeEquivalentTo(viewEvidenceNoteViewModel.ElementAt(0)); 
+            result.EvidenceNotesDataListPaged.ElementAt(1).Should().BeEquivalentTo(viewEvidenceNoteViewModel.ElementAt(1));
+            result.EvidenceNotesDataListPaged.PageSize.Should().Be(pageSize);
+            result.EvidenceNotesDataListPaged.PageNumber.Should().Be(pageNumber);
+            result.EvidenceNotesDataListPaged.PageIndex.Should().Be(pageNumber - 1);
+            result.EvidenceNotesDataListPaged.TotalItemCount.Should().Be(2);
+        }
+
+        [Fact]
         public void Map_GivenSource_ViewTransferNoteViewModelShouldBeMapped()
         {
             //arrange
