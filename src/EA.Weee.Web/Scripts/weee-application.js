@@ -249,6 +249,11 @@ function initReviewEvidenceNote() {
     document.getElementById("SelectedValue-2").addEventListener("click", showReasonText);
 }
 
+$(".transfer-choose-notes-submit").closest('form').on('submit', function (event) {
+    event.preventDefault();
+    $(".transfer-choose-notes-submit").prop("disabled", true);
+    this.submit(); 
+});
 
 //USAGE: $("#form").serializeFiles();
 (function ($) {
