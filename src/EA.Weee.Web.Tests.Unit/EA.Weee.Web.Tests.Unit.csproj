@@ -426,6 +426,7 @@
     <Compile Include="Areas\Scheme\Mapping\TransferredOutEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewAndTransferEvidenceViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestCreatorTests.cs" />
+    <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\EvidenceNoteHistoryViewModelTests.cs" />
