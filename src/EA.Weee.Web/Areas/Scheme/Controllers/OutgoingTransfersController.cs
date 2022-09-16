@@ -326,20 +326,17 @@
                 return View("EditTransferFrom", model);
             }
 
-            if (ModelState.IsValid)
-            {
-                return RedirectToRoute("Scheme_edit_transfer_tonnages",
+            return RedirectToRoute("Scheme_edit_transfer_tonnages",
                     new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId, returnToEditDraftTransfer = false });
-            }
-
-            return this.View("EditTransferFrom", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model)
         {
-            SelectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.OutgoingTransferKey);
+            await SetBreadcrumb(model.PcsId);
+
+            var transferRequest = SelectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.OutgoingTransferKey);
 
             if (ModelState.IsValid)
             {
@@ -348,9 +345,6 @@
 
             using (var client = apiClient())
             {
-                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.OutgoingTransferKey);
-
                 var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.EditEvidenceNoteId, model.Page, client, transferRequest);
 
                 return View("EditTransferFrom", newModel);
