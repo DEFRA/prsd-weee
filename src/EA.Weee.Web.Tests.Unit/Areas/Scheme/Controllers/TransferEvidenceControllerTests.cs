@@ -9,7 +9,6 @@
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Scheme;
-    using EA.Weee.Security;
     using EA.Weee.Tests.Core.DataHelpers;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
@@ -21,17 +20,13 @@
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using FluentAssertions;
-    using IdentityModel.Client;
     using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.Routing;
     using Web.Areas.Scheme.Attributes;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
@@ -762,7 +757,7 @@
             breadcrumb.OrganisationId.Should().Be(organisationId);
         }
 
-        [Fact(Skip = "TO BE FIXED")]
+        [Fact]
         public async Task TransferFromGet_TransferNoteSessionObjectShouldBeRetrieved()
         {
             // act
@@ -790,120 +785,133 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["pcsId"].Should().Be(organisationId);
-            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            result.RouteValues["tab"].Should().Be(Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence));
             result.RouteValues["area"].Should().Be("Scheme");
             result.RouteValues["selectedComplianceYear"].Should().Be(complianceYear);
         }
 
-        [Fact]
-        public async Task TransferFromGet_GivenTransferNoteSessionObject_TransferNotesShouldBeRetrieved()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task TransferFromGet_AvailableTransferNotesShouldBeRetrieved(int page)
         {
             //arrange
-            var request = GetRequest();
-            A.CallTo(() =>
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
-                    SessionKeyConstant.TransferNoteKey)).Returns(request);
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var categories = TestFixture.CreateMany<int>().ToList();
             var complianceYear = TestFixture.Create<int>();
 
-            // act
-            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, categories)
+                .Create();
 
-            // assert
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear, page);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
+                g.PageSize == DefaultPageSize &&
+                g.PageNumber == page &&
+                g.Categories.SequenceEqual(request.CategoryIds) &&
+                g.ComplianceYear == complianceYear &&
+                g.OrganisationId == organisationId &&
+                g.Reference == null &&
+                g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task TransferFromGet_SelectedTransferNotesShouldBeRetrieved(int page)
+        {
+            //arrange
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var categories = TestFixture.CreateMany<int>().ToList();
+            var complianceYear = TestFixture.Create<int>();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear, page);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(g =>
+                g.Categories.SequenceEqual(request.CategoryIds) &&
+                g.OrganisationId == organisationId &&
+                g.EvidenceNotes.SequenceEqual(evidenceNoteIds)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task TransferFromGet_SelectedTransferNotesShouldNotBeRetrieved(int page)
+        {
+            //arrange
+            var categories = TestFixture.CreateMany<int>().ToList();
+            var complianceYear = TestFixture.Create<int>();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, new List<Guid>())
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear, page);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>._)).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task TransferFromGet_GivenNotes_ModelMapperShouldBeCalled(int page)
+        {
+            //arrange
+           var availableEvidenceNoteData =
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+
+            var selectedEvidenceNoteData =
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+            
+            var complianceYear = TestFixture.Create<int>();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                    A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
-                        g.Categories.Equals(request.CategoryIds) && 
-                        g.OrganisationId.Equals(organisationId) &&
-                        g.ComplianceYear == complianceYear &&
-                        g.PageSize == DefaultPageSize &&
-                        g.PageNumber == 1)))
+                A<GetEvidenceNotesForTransferRequest>._)).Returns(availableEvidenceNoteData);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(selectedEvidenceNoteData);
+
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            //act
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear, page);
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
+                        t.TransferEvidenceNoteData == null &&
+                        t.Request == request &&
+                        t.SelectedNotes.Equals(selectedEvidenceNoteData) &&
+                        t.AvailableNotes.Equals(availableEvidenceNoteData) &&
+                        t.OrganisationId == organisationId &&
+                        t.PageSize == DefaultPageSize &&
+                        t.PageNumber == page)))
                 .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact(Skip = "TO BE FIXED")]
-        public async Task TransferFromGet_GivenTransferNoteSessionObjectAndNotes_ModelShouldBeMapped()
-        {
-            //arrange
-            var request = GetRequest();
-            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
-            var complianceYear = TestFixture.Create<int>();
-
-            A.CallTo(() =>
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
-                    SessionKeyConstant.TransferNoteKey)).Returns(request);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
-
-            // act
-            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
-
-            // assert
-
-            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
-                A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
-                    t.OrganisationId.Equals(organisationId) &&
-                    t.SelectedNotes.Equals(notes) &&
-                    t.Request.Equals(request) &&
-                    t.ComplianceYear == complianceYear &&
-                    t.PageSize == DefaultPageSize && 
-                    t.PageNumber == 1))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact(Skip = "TO BE FIXED")]
-        public async Task TransferFromGet_GivenTransferNoteSessionObjectWithEvidenceNoteIds_ModelShouldBeMapped()
-        {
-            var request = GetRequest();
-            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
-            var complianceYear = TestFixture.Create<int>();
-
-            A.CallTo(() =>
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
-                    SessionKeyConstant.TransferNoteKey)).Returns(request);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
-
-            // act
-            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
-
-            // assert
-
-            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
-                A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
-                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds) &&
-                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
-        }
-
-        public static IEnumerable<object[]> EvidenceNoteIds =>
-         new List<object[]>
-         {
-                new object[] { new List<Guid>() },
-                new object[] { new List<Guid> { Guid.NewGuid() } },
-                new object[] { new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() } }
-         };
-
-        [Theory(Skip = "TO BE FIXED")]
-        [MemberData(nameof(EvidenceNoteIds))]
-        public async Task TransferFromGet_GivenTransferNoteSessionObjectWithListOfEvidenceIds_ModelShouldBeMapped(List<Guid> evidenceIds)
-        {
-            var request = GetRequest(evidenceIds);
- 
-            var notes = new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
-            var complianceYear = TestFixture.Create<int>();
-
-            A.CallTo(() =>
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
-                    SessionKeyConstant.TransferNoteKey)).Returns(request);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetEvidenceNotesForTransferRequest>._)).Returns(notes);
-
-            // act
-            await transferEvidenceController.TransferFrom(organisationId, complianceYear);
-
-            // assert
-
-            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
-                A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t =>
-                    t.SessionEvidenceNotesId.SequenceEqual(request.EvidenceNoteIds) &&
-                    t.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1024,82 +1032,6 @@
             result.ViewName.Should().Be("TransferFrom");
         }
 
-        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
-        public async Task TransferFromPost_GivenModelIsNotValid_ModelShouldBeReturned()
-        {
-            // arrange 
-            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
-                .With(t => t.PageNumber, (int?)null)
-                .With(t => t.Action, ActionEnum.Continue)
-                .Create();
-
-            AddModelError();
-
-            // act
-            var result = await transferEvidenceController.TransferFrom(model) as ViewResult;
-
-            // assert
-            result.Model.Should().Be(model);
-        }
-
-        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
-        public async Task TransferFromPost_GivenModelIsValid_SessionTransferNoteObjectShouldBeRetrieved()
-        {
-            // arrange 
-            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
-               .With(t => t.PageNumber, (int?)null)
-               .With(t => t.Action, ActionEnum.Continue)
-               .Create();
-
-            // act
-            await transferEvidenceController.TransferFrom(model);
-
-            // assert
-            A.CallTo(() =>
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
-                    SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task TransferFromPost_GivenModelIsValid_SessionTransferNoteObjectShouldBeUpdatedWithSelectedNotes()
-        {
-            // arrange 
-            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
-                .With(t => t.PageNumber, (int?)null)
-                .With(t => t.Action, ActionEnum.Continue)
-                .Create();
-
-            //TODO:REMOVE
-            //model.SelectedEvidenceNotePairs = new List<GenericControlPair<Guid, bool>>()
-            //{
-            //    new GenericControlPair<Guid, bool>(Guid.NewGuid(), true),
-            //    new GenericControlPair<Guid, bool>(Guid.NewGuid(), true)
-            //};
-            var request = GetRequest();
-
-            //var selectedNotes = model.SelectedEvidenceNotePairs.Where(a => a.Value.Equals(true)).Select(b => b.Key).ToList();
-            //var alreadySelectedNotes = request.EvidenceNoteIds;
-
-            //selectedNotes.AddRange(alreadySelectedNotes);
-
-            A.CallTo(() =>
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(transferEvidenceController.Session,
-                    SessionKeyConstant.TransferNoteKey)).Returns(request);
-
-            // act
-            await transferEvidenceController.TransferFrom(model);
-
-            // assert
-            //A.CallTo(() =>
-            //    sessionService.SetTransferSessionObject(transferEvidenceController.Session, 
-            //        A<object>.That.Matches(a => ((TransferEvidenceNoteRequest)a).OrganisationId.Equals(model.PcsId) &&
-            //                                    ((TransferEvidenceNoteRequest)a).CategoryIds.Equals(request.CategoryIds) &&
-            //                                    ((TransferEvidenceNoteRequest)a).RecipientId.Equals(request.RecipientId) &&
-            //                                    ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.Count > 0 &&
-            //                                    ((TransferEvidenceNoteRequest)a).EvidenceNoteIds.TrueForAll(s => selectedNotes.Contains(s))),
-            //        SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
-        }
-
         [Fact]
         public async Task TransferFromPost_GivenModelIsValid_ShouldRedirectToTransferTonnage()
         {
@@ -1125,19 +1057,245 @@
         }
 
         [Fact]
-        public async Task TransferFromPost_GivenModelActionIsBack_NoViewResultShouldBeReturned()
+        public async Task TransferFromPost_TransferRequestShouldBeRetrievedFromSession()
         {
-            // arrange 
-            var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
-                .With(t => t.Action, ActionEnum.Back).Create();
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+
+            //act
+            await transferEvidenceController.TransferFrom(model);
+
+            //assert
+            A.CallTo(() =>
+                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._,
+                    SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenInvalidModel_ViewShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(t => t.PageNumber, (int?)null)
+                .With(t => t.Action, ActionEnum.Save)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._,
+                        A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
 
             AddModelError();
 
-            // act
-            var result = await transferEvidenceController.TransferTonnage(model) as ViewResult;
+            //act
+            var result = await transferEvidenceController.TransferFrom(model) as ViewResult;
 
-            // assert
-            result.Should().BeNull();
+            //assert
+            result.ViewName.Should().Be("TransferFrom");
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenValidViewModelWithSelectedNotes_TransferRequestShouldBeUpdated()
+        {
+            //arrange
+            var selectedEvidenceNotes = TestFixture.CreateMany<ViewEvidenceNoteViewModel>().ToList();
+
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(m => m.EvidenceNotesDataList, selectedEvidenceNotes)
+                .With(m => m.PageNumber, TestFixture.Create<int>())
+                .Create();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, new List<Guid>())
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey)).Returns(request);
+
+            //act
+            await transferEvidenceController.TransferFrom(model);
+
+            //assert
+            request.EvidenceNoteIds.Should()
+                .BeEquivalentTo(selectedEvidenceNotes.Select(e => e.Id));
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenInvalidModel_AvailableTransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var categories = TestFixture.CreateMany<int>().ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.TransferFrom(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
+                g.PageSize == DefaultPageSize &&
+                g.PageNumber == model.PageNumber &&
+                g.Categories.SequenceEqual(request.CategoryIds) &&
+                g.ComplianceYear == model.ComplianceYear &&
+                g.OrganisationId == model.PcsId &&
+                g.Reference == null &&
+                g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds.Union(model.EvidenceNotesDataList.Select(m => m.Id)))))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenInvalidModelAndTransferRequestWithSelectedNotes_SelectedTransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var categories = TestFixture.CreateMany<int>().ToList();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.TransferFrom(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(g => g.Categories.SequenceEqual(request.CategoryIds) &&
+                g.OrganisationId == model.PcsId &&
+                g.EvidenceNotes.SequenceEqual(evidenceNoteIds.Union(model.EvidenceNotesDataList.Select(m => m.Id)))))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenInvalidModelAndTransferRequestWithNoSelectedNotes_SelectedTransferNotesShouldNotBeRetrieved()
+        {
+            //arrange
+            var categories = TestFixture.CreateMany<int>().ToList();
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .Without(t => t.EvidenceNotesDataList).Create();
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, new List<Guid>())
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            var transferEvidenceNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(n => n.Status, NoteStatus.Submitted)
+                .Without(t => t.TransferEvidenceNoteTonnageData)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidenceNoteData);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.TransferFrom(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenInvalidModelAndNoteData_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+
+            var availableEvidenceNoteData =
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+
+            var selectedEvidenceNoteData =
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesForTransferRequest>._)).Returns(availableEvidenceNoteData);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(selectedEvidenceNoteData);
+
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.TransferFrom(model);
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
+                        t.TransferEvidenceNoteData == null &&
+                        t.Request == request &&
+                        t.SelectedNotes.Equals(selectedEvidenceNoteData) &&
+                        t.AvailableNotes.Equals(availableEvidenceNoteData) &&
+                        t.OrganisationId == model.PcsId &&
+                        t.PageSize == DefaultPageSize &&
+                        t.PageNumber == model.PageNumber)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenInvalidModelAndMappedModel_ModelShouldBeReturned()
+        {
+            //arrange
+            var existingModel = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            AddModelError();
+
+            //act
+            var result = await transferEvidenceController.TransferFrom(existingModel) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task TransferFromPost_GivenInvalidValidViewModelWithSelectedNotes_TransferRequestShouldBeUpdated()
+        {
+            //arrange
+            var selectedEvidenceNotes = TestFixture.CreateMany<ViewEvidenceNoteViewModel>().ToList();
+
+            var model = TestFixture.Build<TransferEvidenceNotesViewModel>()
+                .With(m => m.EvidenceNotesDataList, selectedEvidenceNotes)
+                .With(m => m.PageNumber, TestFixture.Create<int>())
+                .Create();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, new List<Guid>())
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.TransferFrom(model);
+
+            //assert
+            request.EvidenceNoteIds.Should()
+                .BeEquivalentTo(selectedEvidenceNotes.Select(e => e.Id));
         }
 
         [Theory]
@@ -1242,7 +1400,7 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("ManageEvidenceNotes");
             result.RouteValues["pcsId"].Should().Be(organisationId);
-            result.RouteValues["tab"].Should().Be(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            result.RouteValues["tab"].Should().Be(Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence));
             result.RouteValues["area"].Should().Be("Scheme");
             result.RouteValues["selectedComplianceYear"].Should().Be(complianceYear);
         }
@@ -2022,23 +2180,394 @@
             transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(tempDataStatus);
         }
 
-        private void SetUpControllerContext(bool hasInternalAdminUserClaims)
+        [Fact]
+        public void DeselectEvidenceNotePost_TransferRequestShouldBeRetrievedFromSession()
         {
-            var httpContextBase = A.Fake<HttpContextBase>();
-            var principal = new ClaimsPrincipal(httpContextBase.User);
-            var claimsIdentity = new ClaimsIdentity(httpContextBase.User.Identity);
+            //arrange
+            var model = TestFixture.Create<TransferDeselectEvidenceNoteModel>();
 
-            if (hasInternalAdminUserClaims)
-            {
-                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, Claims.InternalAdmin));
-            }
-            principal.AddIdentity(claimsIdentity);
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                    A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey))
+                .Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
 
-            A.CallTo(() => httpContextBase.User.Identity).Returns(claimsIdentity);
-            //A.CallTo(() => httpContextBase.User.GetAccessToken()).Returns("token");
+            //act
+            transferEvidenceController.DeselectEvidenceNote(model);
 
-            var context = new ControllerContext(httpContextBase, new RouteData(), transferEvidenceController);
-            transferEvidenceController.ControllerContext = context;
+            //assert
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._,
+                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void DeselectEvidenceNotePost_GivenSelectedEvidenceNote_TransferRequestShouldBeUpdated()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferDeselectEvidenceNoteModel>();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(r => r.EvidenceNoteIds, new List<Guid>() { model.SelectedEvidenceNoteId }).Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey)).Returns(request);
+
+            //act
+            transferEvidenceController.DeselectEvidenceNote(model);
+
+            //assert
+            request.DeselectedEvidenceNoteIds.Should().Contain(model.SelectedEvidenceNoteId);
+            request.EvidenceNoteIds.Should().NotContain(model.SelectedEvidenceNoteId);
+        }
+
+        [Fact]
+        public void DeselectEvidenceNotePost_ShouldRedirectToAction()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferDeselectEvidenceNoteModel>();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                    A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey))
+                .Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            //act
+            var result = transferEvidenceController.DeselectEvidenceNote(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("TransferFrom");
+            result.RouteValues["controller"].Should().BeNull();
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["page"].Should().Be(model.Page);
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_TransferRequestShouldBeRetrievedFromSession()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                    A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey))
+                .Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._,
+                SessionKeyConstant.TransferNoteKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenValidModel_ShouldRedirectToAction()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                    A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey))
+                .Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            //act
+            var result = await transferEvidenceController.SelectEvidenceNote(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("TransferFrom");
+            result.RouteValues["controller"].Should().BeNull();
+            result.RouteValues["pcsId"].Should().Be(model.PcsId);
+            result.RouteValues["complianceYear"].Should().Be(model.ComplianceYear);
+            result.RouteValues["page"].Should().Be(model.NewPage);
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenSelectedEvidenceNoteAndModelIsValid_TransferRequestShouldBeUpdated()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(r => r.EvidenceNoteIds, new List<Guid>())
+                .With(r => r.DeselectedEvidenceNoteIds, new List<Guid>() { model.SelectedEvidenceNoteId })
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey)).Returns(request);
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            request.DeselectedEvidenceNoteIds.Should().NotContain(model.SelectedEvidenceNoteId);
+            request.EvidenceNoteIds.Should().Contain(model.SelectedEvidenceNoteId);
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenSelectedEvidenceNoteAndModelIsNotValid_TransferRequestShouldNotBeUpdated()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(r => r.DeselectedEvidenceNoteIds, new List<Guid>() { model.SelectedEvidenceNoteId })
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            request.DeselectedEvidenceNoteIds.Should().Contain(model.SelectedEvidenceNoteId);
+            request.EvidenceNoteIds.Should().NotContain(model.SelectedEvidenceNoteId);
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenInvalidModel_AvailableTransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var categories = TestFixture.CreateMany<int>().ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That
+                .Matches(g =>
+                    g.PageSize == DefaultPageSize &&
+                    g.PageNumber == model.Page &&
+                    g.Categories.SequenceEqual(request.CategoryIds) &&
+                    g.OrganisationId == model.PcsId &&
+                    g.Reference == null &&
+                    g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenInvalidModelAndTransferRequestWithSelectedNotes_SelectedTransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var categories = TestFixture.CreateMany<int>().ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(g =>
+                g.Categories.SequenceEqual(request.CategoryIds) &&
+                g.OrganisationId == model.PcsId &&
+                g.EvidenceNotes.SequenceEqual(evidenceNoteIds)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenInvalidModelAndTransferRequestWithNoSelectedNotes_SelectedTransferNotesShouldNotBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+            var categories = TestFixture.CreateMany<int>().ToList();
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, new List<Guid>())
+                .With(t => t.CategoryIds, categories)
+                .Create();
+
+            var transferEvidenceNoteData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(n => n.Status, NoteStatus.Submitted)
+                .Without(t => t.TransferEvidenceNoteTonnageData)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidenceNoteData);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenInvalidModelAndData_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            var availableEvidenceNoteData =
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+
+            var selectedEvidenceNoteData =
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesForTransferRequest>._)).Returns(availableEvidenceNoteData);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetEvidenceNotesSelectedForTransferRequest>._)).Returns(selectedEvidenceNoteData);
+
+            var request = TestFixture.Create<TransferEvidenceNoteRequest>();
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                    A<TransferEvidenceNotesViewModelMapTransfer>.That.Matches(t => t.TransferAllTonnage == false &&
+                        t.Request == request &&
+                        t.SelectedNotes.Equals(selectedEvidenceNoteData) &&
+                        t.AvailableNotes.Equals(availableEvidenceNoteData) &&
+                        t.OrganisationId == model.PcsId &&
+                        t.PageSize == DefaultPageSize &&
+                        t.PageNumber == model.Page)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenInvalidModelAndMappedModel_ModelShouldBeReturned()
+        {
+            //arrange
+            var existingModel = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
+                A<TransferEvidenceNotesViewModelMapTransfer>._)).Returns(model);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
+                A<HttpSessionStateBase>._, A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            AddModelError();
+
+            //act
+            var result = await transferEvidenceController.SelectEvidenceNote(existingModel) as ViewResult;
+
+            //assert
+            result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenInvalidModel_ViewShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._,
+                        A<string>._)).Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            AddModelError();
+
+            //act
+            var result = await transferEvidenceController.SelectEvidenceNote(model) as ViewResult;
+
+            //assert
+            result.ViewName.Should().Be("TransferFrom");
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_SchemeShouldBeRetrievedFromCache()
+        {
+            // arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            A.CallTo(() =>
+                    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._,
+                        A<string>._))
+                .Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            AddModelError();
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            //asset
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            A.CallTo(() =>
+                    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._,
+                        A<string>._))
+                .Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+
+            AddModelError();
+
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(model.PcsId);
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+
+            A.CallTo(() =>
+                    sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<HttpSessionStateBase>._,
+                        A<string>._))
+                .Returns(TestFixture.Create<TransferEvidenceNoteRequest>());
+
+            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+
+            AddModelError();
+
+            var organisationName = "OrganisationName";
+
+            A.CallTo(() => cache.FetchOrganisationName(model.PcsId)).Returns(organisationName);
+            A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).Returns(schemeInfo);
+
+            //act
+            await transferEvidenceController.SelectEvidenceNote(model);
+
+            // assert
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
+            breadcrumb.OrganisationId.Should().Be(model.PcsId);
         }
 
         private void AddModelError()
