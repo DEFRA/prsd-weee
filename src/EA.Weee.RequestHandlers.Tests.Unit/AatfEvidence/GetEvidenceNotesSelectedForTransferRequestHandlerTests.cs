@@ -20,18 +20,18 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetEvidenceNotesForTransferRequestHandlerTests : SimpleUnitTestBase
+    public class GGetEvidenceNotesSelectedForTransferRequestHandlerTests : SimpleUnitTestBase
     {
-        private GetEvidenceNotesForTransferRequestHandler handler;
+        private GetEvidenceNotesSelectedForTransferRequestHandler handler;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly IMapper mapper;
-        private readonly GetEvidenceNotesForTransferRequest request;
+        private readonly GetEvidenceNotesSelectedForTransferRequest request;
         private readonly Organisation organisation;
         private readonly Guid organisationId;
 
-        public GetEvidenceNotesForTransferRequestHandlerTests()
+        public GGetEvidenceNotesSelectedForTransferRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
@@ -43,13 +43,9 @@
 
             A.CallTo(() => organisationDataAccess.GetById(organisationId)).Returns(organisation);
 
-            request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(), TestFixture.Create<int>(),
-                TestFixture.CreateMany<Guid>().ToList(),
-                TestFixture.Create<int?>(),
-                TestFixture.Create<int>(),
-                TestFixture.Create<int>());
+            request = new GetEvidenceNotesSelectedForTransferRequest(organisationId, TestFixture.CreateMany<Guid>().ToList(), TestFixture.CreateMany<int>().ToList());
 
-            handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, organisationDataAccess);
+            handler = new GetEvidenceNotesSelectedForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, organisationDataAccess);
         }
 
         [Fact]
@@ -58,7 +54,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
+            handler = new GetEvidenceNotesSelectedForTransferRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -73,7 +69,7 @@
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
            
-            handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
+            handler = new GetEvidenceNotesSelectedForTransferRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
 
             //act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -117,47 +113,19 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithCategories_DataAccessGetNotesToTransferShouldBeCalled()
+        public async void HandleAsync_GivenRequestWithEvidenceNotes_DataAccessGetTransferSelectedNotesShouldBeCalled()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), 
-                        A<List<Guid>>._,
-                        request.ComplianceYear,
-                        A<int?>._, 
-                        request.PageNumber, 
-                        request.PageSize))
-                .MustHaveHappenedOnceExactly();
+                    evidenceDataAccess.GetTransferSelectedNotes(organisationId, 
+                        A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes.Select(w => (Guid)w).ToList()))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithCriteria_DataAccessGetNotesToTransferShouldBeCalled()
-        {
-            //arrange
-            var organisationId = TestFixture.Create<Guid>();
-            var request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(),
-                TestFixture.Create<int>(),
-                TestFixture.CreateMany<Guid>().ToList(),
-                TestFixture.Create<int?>());
-
-            A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).Returns(organisation);
-
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), 
-                A<List<Guid>>.That.IsSameSequenceAs(request.ExcludeEvidenceNotes),
-                request.ComplianceYear, request.Reference, request.PageNumber, request.PageSize)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
+        public async void HandleAsync_GivenEvidenceNotesData_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
             var note1 = A.Fake<Note>();
@@ -180,30 +148,27 @@
 
             var evidenceNoteResults = new EvidenceNoteResults(noteList, 3);
 
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, 
-                A<List<int>>._, 
-                A<List<Guid>>._,
-                A<int>._, 
-                A<int?>._,
-                A<int>._,
-                A<int>._)).Returns(evidenceNoteResults);
+            A.CallTo(() => evidenceDataAccess.GetTransferSelectedNotes(A<Guid>._, A<List<Guid>>._)).Returns(evidenceNoteResults);
 
             // act
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>
                 .That.Matches(e => e.Note.Equals(note1) &&
                                    e.CategoryFilter.Equals(request.Categories) &&
-                                   e.IncludeTotal == true))).MustHaveHappenedOnceExactly();
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
+                                   e.IncludeTonnage == true &&
+                                   e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>
                 .That.Matches(e => e.Note.Equals(note2) &&
                                    e.CategoryFilter.Equals(request.Categories) &&
-                                   e.IncludeTotal == true))).MustHaveHappenedOnceExactly();
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
+                                   e.IncludeTonnage == true &&
+                                   e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>
                 .That.Matches(e => e.Note.Equals(note3) &&
                                    e.CategoryFilter.SequenceEqual(request.Categories) &&
-                                   e.IncludeTotal == true))).MustHaveHappenedOnceExactly();
+                                   e.IncludeTonnage == true &&
+                                   e.IncludeHistory == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -220,15 +185,9 @@
 
             var evidenceNoteResults = new EvidenceNoteResults(noteList, 2);
 
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._,
-                A<List<int>>._,
-                A<List<Guid>>._,
-                A<int>._,
-                A<int?>._,
-                A<int>._,
-                A<int>._)).Returns(evidenceNoteResults);
+            A.CallTo(() => evidenceDataAccess.GetTransferSelectedNotes(A<Guid>._, A<List<Guid>>._)).Returns(evidenceNoteResults);
 
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>._))
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._))
                 .ReturnsNextFromSequence(noteData.ElementAt(0), noteData.ElementAt(1));
 
             // act

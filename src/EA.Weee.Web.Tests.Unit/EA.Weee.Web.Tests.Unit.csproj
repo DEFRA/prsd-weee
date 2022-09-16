@@ -439,6 +439,8 @@
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceTonnageViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceViewModelBaseTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferredOutEvidenceNotesSchemeViewModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferDeselectEvidenceNoteModelTests.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferSelectEvidenceNoteModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />

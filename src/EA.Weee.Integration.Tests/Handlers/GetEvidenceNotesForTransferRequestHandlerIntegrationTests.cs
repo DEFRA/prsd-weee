@@ -14,9 +14,7 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
-    using EA.Weee.Domain.Scheme;
     using FluentAssertions;
-    using NUnit.Framework;
     using NUnit.Specifications;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
@@ -28,6 +26,8 @@
         [Component]
         public class WhenIGetNotesToTransferForAnOrganisation : GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase
         {
+            private static List<int> categories;
+
             private readonly Establish context = () =>
             {
                 LocalSetup();
@@ -108,14 +108,31 @@
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(categories6).WithRecipient(transferOrganisation.Id).Create());
 
+                // note to be not be included as in exclude list
+                var categories7 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 4, 8),
+                    new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 10, 8),
+                };
+                var excludedNote = EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(categories7).WithRecipient(transferOrganisation.Id).Create();
+                notesSetToNotBeIncluded.Add(excludedNote);
+
+                categories = new List<int>()
+                {
+                    Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt(),
+                    Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools.ToInt()
+                };
+
                 request = new GetEvidenceNotesForTransferRequest(transferOrganisation.Id,
-                    new List<int>()
-                    {
-                        Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt(),
-                        Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools.ToInt()
-                    },
+                    categories,
                     notesSetToBeIncluded.ElementAt(0).ComplianceYear,
-                    new List<Guid>(),
+                    new List<Guid>()
+                    {
+                        excludedNote.Id
+                    },
                     null);
             };
 
@@ -135,100 +152,13 @@
 
                     var refreshedNote = Query.GetEvidenceNoteById(evidenceNoteData.Id);
 
-                    //evidenceNoteData.ShouldMapToNote(refreshedNote);
+                    evidenceNoteData.ShouldMapToCutDownEvidenceNote(refreshedNote);
+
+                    evidenceNoteData.TotalReceived.Should().Be(refreshedNote.NoteTonnage
+                        .Where(nt => categories.Contains(nt.CategoryId.ToInt())).Sum(nt => nt.Received));
+
+                    notesSetToNotBeIncluded.FirstOrDefault(n => n.Id == evidenceNoteData.Id).Should().BeNull();
                 }
-
-                var note1 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(0).Id));
-                note1.EvidenceTonnageData.Should().BeNull();
-
-                // second note has category MedicalDevices that is not in the category list so also shouldnt be in the tonnage data
-                var note2 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(1).Id));
-                note1.EvidenceTonnageData.Should().BeNull();
-            };
-        }
-
-        [Component]
-        [Ignore("TO BE FIXED")]
-        public class WhenIGetNotesToTransferForAnOrganisationThatHasENoteList : GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase
-        {
-            private readonly Establish context = () =>
-            {
-                LocalSetup();
-
-                organisation = OrganisationDbSetup.Init().Create();
-                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
-
-                var recipientOrganisation = OrganisationDbSetup.Init().Create();
-                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
-
-                // note to be included
-                var categories1 = new List<NoteTonnage>()
-                {
-                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 1, null)
-                };
-                notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
-                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
-                    .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories1).WithRecipient(recipientOrganisation.Id).Create());
-
-                // note to not be included no matching category
-                var categories2 = new List<NoteTonnage>()
-                {
-                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, null)
-                };
-                notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
-                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
-                    .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories2).WithRecipient(recipientOrganisation.Id).Create());
-
-                // note to not be included not in note list
-                var categories3 = new List<NoteTonnage>()
-                {
-                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 3, null)
-                };
-                notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
-                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
-                    .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories3).WithRecipient(recipientOrganisation.Id).Create());
-
-                request = new GetEvidenceNotesForTransferRequest(recipientOrganisation.Id,
-                    new List<int>()
-                    {
-                        Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt()
-                    },
-                    notesSetToBeIncluded.ElementAt(0).ComplianceYear,
-                    new List<Guid>()
-                    {
-                        notesSetToBeIncluded.ElementAt(0).Id,
-                        notesSetToBeIncluded.ElementAt(1).Id
-                    },
-                    null);
-            };
-
-            private readonly Because of = () =>
-            {
-                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
-            };
-
-            private readonly It shouldHaveReturnedCorrectEvidenceNotes = () =>
-            {
-                //result.Results.Should().HaveCount(2);
-                //result.NoteCount.Should().Be(2);
-                foreach (var evidenceNoteData in result.Results)
-                {
-                    notesSetToBeIncluded.First(n => n.Id.Equals(evidenceNoteData.Id)).Should().NotBeNull();
-
-                    var refreshedNote = Query.GetEvidenceNoteById(evidenceNoteData.Id);
-
-                    //evidenceNoteData.ShouldMapToNote(refreshedNote);
-                }
-
-                //var note1 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(0).Id));
-                //note1.EvidenceTonnageData.Should().BeNull();
-
-                //var notIncluded = result.Results.FirstOrDefault(r => r.Id.Equals(notesSetToNotBeIncluded.ElementAt(0).Id));
-                //notIncluded.Should().BeNull();
             };
         }
 
@@ -259,7 +189,6 @@
             protected static Organisation organisation;
             protected static GetEvidenceNotesForTransferRequest request;
             protected static EvidenceNoteSearchDataResult result;
-            protected static Scheme scheme;  
             protected static Note note;
             protected static Fixture fixture;
             protected static List<Note> notesSetToBeIncluded;
