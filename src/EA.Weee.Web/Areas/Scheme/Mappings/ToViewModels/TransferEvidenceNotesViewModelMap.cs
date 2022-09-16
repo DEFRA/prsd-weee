@@ -1,15 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Shared.Paging;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
     using Web.ViewModels.Shared;
-    using Web.ViewModels.Shared.Mapping;
 
     public class TransferEvidenceNotesViewModelMap : TransferEvidenceMapBase<TransferEvidenceNotesViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>
     {
@@ -29,7 +25,7 @@
                 model.EvidenceNotesDataListPaged.Add(Mapper.Map<EvidenceNoteRowViewModel>(evidenceNoteData));
             }
 
-            model.EvidenceNotesDataListPaged =
+            model.EvidenceNotesDataListPaged = 
                 model.EvidenceNotesDataListPaged.ToPagedList(source.PageNumber - 1, source.PageSize, source.AvailableNotes.NoteCount) as PagedList<EvidenceNoteRowViewModel>;
 
             //TEST FOR THIS
