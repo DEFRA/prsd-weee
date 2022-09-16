@@ -123,8 +123,7 @@
             {
                 await SetBreadcrumb(pcsId);
 
-                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.TransferNoteKey);
+                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.TransferNoteKey);
 
                 if (transferRequest == null)
                 {
@@ -362,7 +361,9 @@
         [ValidateAntiForgeryToken]
         public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model)
         {
-            SelectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
+            await SetBreadcrumb(model.PcsId);
+
+            var transferRequest = SelectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
          
             if (ModelState.IsValid)
             {
@@ -371,9 +372,6 @@
 
             using (var client = apiClient())
             {
-                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.TransferNoteKey);
-
                 var newModel = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, model.Page, transferRequest);
 
                 return View("TransferFrom", newModel);

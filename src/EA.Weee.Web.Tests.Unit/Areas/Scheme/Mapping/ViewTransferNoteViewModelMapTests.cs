@@ -589,25 +589,6 @@
             model.Summary[1].Notes.Should().BeInDescendingOrder(x => x.ReferenceId);
         }
 
-        [Fact(Skip = "TODO: be fixed")]
-        public void ViewTransferNoteViewModelMap_GivenTransfer_WhenGeneratingAatfDataViewModel_CallsTonnageUtilities()
-        {
-            //arrange
-            var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
-                TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(x => x.TransferredOrganisationData, CreateOrganisationData())
-                    .With(x => x.RecipientOrganisationData, CreateOrganisationData())
-                    .With(x => x.TransferEvidenceNoteTonnageData, CreateTransferEvidenceNoteTonnageData()).Create(),
-                false);
-
-            //act
-            var model = map.Map(source);
-
-            //assert
-            //Two times per TransferEvidenceNoteTonnageData with tonnage
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(A<decimal?>._)).MustHaveHappened(18, Times.Exactly);
-        }
-
         [Fact]
         public void ViewTransferNoteViewModelMap_GivenTransfer_DisplayCategoryDoesNotDisplayZeroedCategories()
         {
