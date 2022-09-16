@@ -48,6 +48,35 @@
             var transferReusedProperty = type.GetProperty(TransferReusedName);
             var transferReusedValue = transferReusedProperty.GetValue(instance, null);
 
+            if (string.IsNullOrWhiteSpace(value?.ToString()))
+            {
+                return ValidationResult.Success;
+            }
+
+            var valid = TonnageValueValidator.Validate(availableReceivedValue);
+            if (valid != TonnageValidationResult.Success)
+            {
+                return ValidationResult.Success;
+            }
+
+            valid = TonnageValueValidator.Validate(transferRecievedValue);
+            if (valid != TonnageValidationResult.Success)
+            {
+                return ValidationResult.Success;
+            }
+
+            valid = TonnageValueValidator.Validate(availableReusedValue);
+            if (valid != TonnageValidationResult.Success)
+            {
+                return ValidationResult.Success;
+            }
+
+            valid = TonnageValueValidator.Validate(transferReusedValue);
+            if (valid != TonnageValidationResult.Success)
+            {
+                return ValidationResult.Success;
+            }
+
             decimal.TryParse(availableReceivedValue != null ? availableReceivedValue.ToString() : "0", NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                                         CultureInfo.InvariantCulture, out var decimalAvailableReceivedResult);
             decimal.TryParse(transferRecievedValue != null ? transferRecievedValue.ToString() : "0", NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
