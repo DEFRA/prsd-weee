@@ -677,18 +677,6 @@
 
                 context.Notes.Add(note3NotToBeFound);
 
-                // Waste Type being 'NON-HOUSEHOLD' should be filtered out
-                var note4NonHouseHold = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
-                DateTime startDate = note4NonHouseHold.StartDate;
-                DateTime endDate = note4NonHouseHold.EndDate;
-                var protocol = note4NonHouseHold.Protocol;
-                note4NonHouseHold.Update(organisation1, startDate, endDate, wasteType: WasteType.NonHouseHold, protocol);
-                note4NonHouseHold.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note4NonHouseHold.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note4NonHouseHold.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
-
-                context.Notes.Add(note4NonHouseHold);
-
                 // to be found matching category, scheme and status and id is requested
                 var note1ToBeExcludedFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
                 note1ToBeExcludedFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
