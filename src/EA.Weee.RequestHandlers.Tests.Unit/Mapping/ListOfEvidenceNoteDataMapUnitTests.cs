@@ -47,7 +47,7 @@
             foreach (var note in notes)
             {
                 A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
-                    .That.Matches(e => e.Note.Equals(note)))).MustHaveHappenedOnceExactly();
+                    .That.Matches(e => e.Note.Equals(note) && e.IncludeTotal == false))).MustHaveHappenedOnceExactly();
             }
         }
 

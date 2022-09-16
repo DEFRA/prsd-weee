@@ -160,6 +160,7 @@
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "selected-evidence-note-page" + i })
+                            @Html.Hidden("pageCount", Model.EvidenceNotesDataListPaged.Count, new { id = "selected-evidence-note-page-count" + i })
                             @Html.Hidden("selectedEvidenceNoteId", Model.EvidenceNotesDataListPaged[i].Id, new { id = "selected-evidence-note-id" + i })
                             @Html.Hidden("complianceYear", Model.ComplianceYear, new { id = "selected-evidence-compliance-year" + i })
                             @Html.Hidden("pcsId", Model.PcsId, new { id = "selected-evidence-pcs" + i })
