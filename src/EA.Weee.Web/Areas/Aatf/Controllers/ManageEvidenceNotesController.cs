@@ -5,32 +5,32 @@
     using Attributes;
     using Core.AatfEvidence;
     using Core.AatfReturn;
+    using Core.Constants;
     using Core.Helpers;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
+    using EA.Weee.Requests.AatfEvidence.Reports;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Constant;
     using Extensions;
+    using Filters;
     using Infrastructure;
+    using Infrastructure.PDF;
     using Mappings.ToViewModel;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
+    using Prsd.Core.Web.ApiClient;
     using Services;
     using Services.Caching;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.Constants;
-    using Filters;
-    using Infrastructure.PDF;
-    using Prsd.Core;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using Prsd.Email;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -323,6 +323,21 @@
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceNotesReport(Guid? aatfId, int complianceYear, TonnageToDisplayReportEnum tonnageToDisplay)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteReportRequest(null, null, aatfId, tonnageToDisplay, complianceYear);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
             }
         }
 
