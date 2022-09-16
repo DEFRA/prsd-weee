@@ -89,24 +89,14 @@
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Status,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                //.Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority,
-                //    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedDate,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                //.Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf,
-                //    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                //.Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber,
-                //    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ObligationType,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                //.Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Recipient,
-                //    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                //.Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber,
-                //    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Protocol,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Received,
