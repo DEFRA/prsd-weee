@@ -15,23 +15,5 @@
         public int Page { get; set; }
 
         public int PageCount { get; set; }
-
-        public int NewPage
-        {
-            get
-            {
-                if (PageCount != 1)
-                {
-                    return Page;
-                }
-
-                if (Page > 1)
-                {
-                    return Page - 1;
-                }
-
-                return 1;
-            }
-        }
     }
 }
