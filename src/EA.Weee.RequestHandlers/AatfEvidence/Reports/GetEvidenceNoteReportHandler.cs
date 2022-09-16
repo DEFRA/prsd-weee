@@ -38,18 +38,33 @@
                     request.RecipientOrganisationId,
                     request.AatfId,
                     request.TonnageToDisplay == TonnageToDisplayReportEnum.Net);
-           
+          
             csvWriter.DefineColumn(EvidenceReportConstants.Reference, x => x.Reference);
             csvWriter.DefineColumn(EvidenceReportConstants.Status, x => x.Status);
-            csvWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority, x => x.AppropriateAuthority);
+            if (!request.AatfId.HasValue) 
+            { 
+                csvWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority, x => x.AppropriateAuthority); 
+            }
             csvWriter.DefineColumn(EvidenceReportConstants.SubmittedDate, x => x.SubmittedDateTime);
-            csvWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf, x => x.SubmittedByAatf);
-            csvWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber, x => x.AatfApprovalNumber);
+            if (!request.AatfId.HasValue) 
+            { 
+                csvWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf, x => x.SubmittedByAatf); 
+            }
+            if (!request.AatfId.HasValue) 
+            { 
+                csvWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber, x => x.AatfApprovalNumber); 
+            }
             csvWriter.DefineColumn(EvidenceReportConstants.ObligationType, x => x.ObligationType);
             csvWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate, x => x.ReceivedStartDate.ToShortDateString());
             csvWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate, x => x.ReceivedEndDate.ToShortDateString());
-            csvWriter.DefineColumn(EvidenceReportConstants.Recipient, x => x.Recipient);
-            csvWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber, x => x.RecipientApprovalNumber);
+            if (!request.AatfId.HasValue) 
+            { 
+                csvWriter.DefineColumn(EvidenceReportConstants.Recipient, x => x.Recipient); 
+            }
+            if (!request.AatfId.HasValue) 
+            { 
+                csvWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber, x => x.RecipientApprovalNumber); 
+            }
             csvWriter.DefineColumn(EvidenceReportConstants.Protocol, x => x.Protocol);
             csvWriter.DefineColumn(EvidenceReportConstants.Cat1Received, x => x.Cat1Received.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat2Received, x => x.Cat2Received.ToTonnageDisplay());
