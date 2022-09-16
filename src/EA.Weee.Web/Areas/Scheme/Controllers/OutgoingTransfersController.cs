@@ -296,7 +296,7 @@
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(currentSelectedNotes, availableNotes,
-                transferRequest, noteData, pcsId, page);
+                transferRequest, noteData, pcsId, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
@@ -345,7 +345,7 @@
 
             if (ModelState.IsValid)
             {
-                return RedirectToAction("EditTransferFrom", new { pcsId = model.PcsId, EvidenceNoteId = model.EditEvidenceNoteId, model.Page });
+                return RedirectToAction("EditTransferFrom", new { pcsId = model.PcsId, EvidenceNoteId = model.EditEvidenceNoteId, page = model.NewPage });
             }
 
             using (var client = apiClient())

@@ -21,7 +21,10 @@
             Guard.ArgumentNotNull(() => source, source);
 
             return source.Select(s =>
-                mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(new EvidenceNoteRowMapperObject(s))).ToList();
+                mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(new EvidenceNoteRowMapperObject(s)
+                {
+                    IncludeTotal = false
+                })).ToList();
         }
     }
 }
