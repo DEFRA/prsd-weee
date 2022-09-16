@@ -1,36 +1,47 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence.Reports
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.AatfEvidence;
     using Core.Admin;
     using Core.Constants;
     using Core.Helpers;
     using Core.Shared;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
-    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Domain.AatfReturn;
     using Prsd.Core;
     using Requests.AatfEvidence.Reports;
+    using System.Threading.Tasks;
 
     internal class GetEvidenceNoteReportHandler : IRequestHandler<GetEvidenceNoteReportRequest, CSVFileData>
     {
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
         private readonly ICsvWriter<EvidenceNoteReportData> csvWriter;
         private readonly IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public GetEvidenceNoteReportHandler(IEvidenceStoredProcedures evidenceStoredProcedures, 
             ICsvWriter<EvidenceNoteReportData> csvWriter, 
-            IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck)
+            IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck, 
+            IGenericDataAccess genericDataAccess)
         {
             this.evidenceStoredProcedures = evidenceStoredProcedures;
             this.csvWriter = csvWriter;
             this.evidenceReportsAuthenticationCheck = evidenceReportsAuthenticationCheck;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<CSVFileData> HandleAsync(GetEvidenceNoteReportRequest request)
         {
             await evidenceReportsAuthenticationCheck.EnsureIsAuthorised(request);
+
+            string aatfApprovalNumber = string.Empty;
+
+            if (request.AatfId.HasValue)
+            {
+                var aatf = await genericDataAccess.GetById<Aatf>(request.AatfId.Value);
+                aatfApprovalNumber = "_" + aatf.ApprovalNumber;
+            }
 
             var reportData = await evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(
                     request.ComplianceYear,
@@ -103,7 +114,7 @@
                 ? "original tonnages"
                 : "net of transfer";
 
-            var fileName = $"{request.ComplianceYear}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+            var fileName = $"{request.ComplianceYear}{aatfApprovalNumber}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
 
             return new CSVFileData
             {
