@@ -1,6 +1,9 @@
 ﻿@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Aatf.Controllers
+@using EA.Weee.Core.AatfEvidence
+@using MvcNavigationHelpers
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.ManageEvidenceSummaryViewModel
 
@@ -17,10 +20,20 @@
                         Evidence summary for @Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
                     </h2>
 
-                    <p class="govuk-body">
+                    <p class="govuk-body govuk-!-margin-top-5 govuk-!-margin-bottom-7">
                         <span class="govuk-!-font-size-36 govuk-!-font-weight-bold">@Model.NumberOfDraftNotes&nbsp;<span class="govuk-body">Draft notes&nbsp;</span> </span>
                         <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-5">@Model.NumberOfSubmittedNotes&nbsp;<span class="govuk-body">Submitted notes waiting for approval &nbsp;</span> </span>
                         <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-5">@Model.NumberOfApprovedNotes&nbsp;<span class="govuk-body">Approved notes &nbsp;</span> </span>
+                    </p>
+
+                    <!-- PLACEHOLDER -->
+                    <!--<p class="govuk-body"><a href="#">Download summary report</a></p>-->
+                    <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-7">
+                        @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report",
+                                                                 null,
+                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.ManageEvidenceNoteViewModel.AatfId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.OriginalTonnages)),
+                                                                 "Downloads",
+                                                                 "Evidence notes report"))
                     </p>
 
                     <table id="evidence-summary-table" class="govuk-table">
