@@ -7,12 +7,12 @@
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Linq;
     using System.Security.Principal;
+    using Core.Shared;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Tests.Core;
     using Xunit;
