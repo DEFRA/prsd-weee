@@ -9,7 +9,6 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
