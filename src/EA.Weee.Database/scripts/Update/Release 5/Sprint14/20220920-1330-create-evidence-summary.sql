@@ -8,6 +8,7 @@ SELECT
 		n.Id,
 		n.NoteType,
 		CASE WHEN n.NoteType = 1 THEN 'E' ELSE 'T' END + CAST(n.Reference AS NVARCHAR) AS Reference,
+		n.Reference AS ReferenceId,
 		ens.[Name] AS [Status],
 		ca.Abbreviation AS AppropriateAuthority,
 		submittedHistory.ChangedDate AS SubmittedDateTime,
