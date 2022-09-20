@@ -358,6 +358,7 @@
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\ITonnageValueValidator.cs" />
     <Compile Include="Validation\MinimumElementAttribute.cs" />
+    <Compile Include="Validation\ReuseTonnageCompareValueAttribute.cs" />
     <Compile Include="Validation\TonnageCompareValueAttribute.cs" />
     <Compile Include="Validation\TonnageValidationResult.cs" />
     <Compile Include="Validation\TonnageValidationTypeEnum.cs" />
