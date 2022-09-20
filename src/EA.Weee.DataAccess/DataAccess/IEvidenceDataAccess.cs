@@ -31,7 +31,7 @@
             List<int> categories,
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
-            int? searchRef,
+            string searchRef,
             int pageNumber,
             int pageSize);
 
