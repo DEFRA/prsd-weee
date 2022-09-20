@@ -18,7 +18,14 @@
 
                 <header class="hgroup">
                     <h2 class="govuk-heading-m">
-                        Evidence summary
+                        @if (Model.ManageEvidenceNoteViewModel.SelectedComplianceYear > 0)
+                        {
+                            <span>Evidence summary for @Model.ManageEvidenceNoteViewModel.SelectedComplianceYear</span>
+                        }
+                        else
+                        {
+                            <span>Evidence summary</span>
+                        }
                     </h2>
                 </header>
 
