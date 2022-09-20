@@ -16,6 +16,7 @@
 
         [TonnageValue(nameof(CategoryId), "The transfer received in tonnes", true)]
         [TonnageCompareValue(nameof(CategoryId), nameof(AvailableReceived), "The transfer received in tonnes for category {0} must be equivalent or lower than the total received available")]
+        [ReuseTonnageCompareValue(nameof(CategoryId), nameof(Received), nameof(AvailableReceived), nameof(Reused), nameof(AvailableReused), "The transfer reused in tonnes for category {0} is too low. After the transfer, the remaining total reused available must be equivalent or lower than the remaining total received available")]
         public string Received { get; set; }
 
         [TonnageValue(nameof(CategoryId), "The transfer reused in tonnes", true)]
