@@ -5,7 +5,6 @@
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using Prsd.Core.Mapper;
     using System.Collections.Generic;
     using System.Linq;

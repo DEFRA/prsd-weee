@@ -10,6 +10,7 @@
     using Core.DataReturns;
     using Core.Helpers;
     using Core.Organisations;
+    using Core.Shared;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FakeItEasy;
@@ -18,7 +19,6 @@
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
-    using Web.ViewModels.Shared.Utilities;
     using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
