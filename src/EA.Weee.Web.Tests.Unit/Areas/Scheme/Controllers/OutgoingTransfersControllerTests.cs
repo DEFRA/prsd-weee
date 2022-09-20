@@ -1415,6 +1415,10 @@
         [InlineData(2, null)]
         [InlineData(1, "search")]
         [InlineData(2, "search")]
+        [InlineData(1, "")]
+        [InlineData(2, "")]
+        [InlineData(1, " ")]
+        [InlineData(2, " ")]
         public async Task EditTransferFromGet_GivenNoteData_AvailableTransferNotesShouldBeRetrieved(int page, string searchRef)
         {
             //arrange
@@ -3455,6 +3459,8 @@
         [Theory]
         [InlineData(null)]
         [InlineData("search")]
+        [InlineData("")]
+        [InlineData(" ")]
         public async Task SelectEvidenceNotePost_GivenInvalidModel_AvailableTransferNotesShouldBeRetrieved(string search)
         {
             //arrange
