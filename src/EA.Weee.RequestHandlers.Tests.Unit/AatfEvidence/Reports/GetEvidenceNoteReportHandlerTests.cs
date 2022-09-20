@@ -1,18 +1,20 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence.Reports
 {
+    using AutoFixture;
+    using Core.AatfEvidence;
+    using Core.Constants;
+    using Core.Shared;
+    using DataAccess.StoredProcedure;
+    using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.AatfReturn;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Prsd.Core;
+    using RequestHandlers.AatfEvidence.Reports;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using AutoFixture;
-    using Core.AatfEvidence;
-    using Core.Shared;
-    using DataAccess.StoredProcedure;
-    using FakeItEasy;
-    using RequestHandlers.AatfEvidence.Reports;
     using System.Threading.Tasks;
-    using Core.Constants;
-    using FluentAssertions;
-    using Prsd.Core;
     using Weee.Requests.AatfEvidence.Reports;
     using Weee.Tests.Core;
     using Xunit;
@@ -23,14 +25,16 @@
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
         private readonly ICsvWriter<EvidenceNoteReportData> evidenceWriter;
         private readonly IEvidenceReportsAuthenticationCheck evidenceReportsAuthenticationCheck;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public GetEvidenceNoteReportHandlerTests()
         {
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
             evidenceWriter = A.Fake<ICsvWriter<EvidenceNoteReportData>>();
             evidenceReportsAuthenticationCheck = A.Fake<IEvidenceReportsAuthenticationCheck>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
 
-            handler = new GetEvidenceNoteReportHandler(evidenceStoredProcedures, evidenceWriter, evidenceReportsAuthenticationCheck);
+            handler = new GetEvidenceNoteReportHandler(evidenceStoredProcedures, evidenceWriter, evidenceReportsAuthenticationCheck, genericDataAccess);
         }
 
         [Fact]
@@ -293,6 +297,10 @@
         public async Task HandleAsync_GivenCsvData_CsvFileDataShouldBeReturned(TonnageToDisplayReportEnum tonnageToDisplay, string expected)
         {
             //arrange
+            Aatf aatf = A.Fake<Aatf>();
+            A.CallTo(() => aatf.ApprovalNumber).Returns<string>("123456");
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(A<Guid>._)).Returns<Aatf>(aatf);
+
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
             var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), 
@@ -310,7 +318,7 @@
             //assert
             result.FileContent.Should().Be(content);
             result.FileName.Should()
-                .Be($"{request.ComplianceYear}_Evidence notes {expected}{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
+                .Be($"{request.ComplianceYear}_{aatf.ApprovalNumber}_Evidence notes {expected}{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
             SystemTime.Unfreeze();
         }
     }
