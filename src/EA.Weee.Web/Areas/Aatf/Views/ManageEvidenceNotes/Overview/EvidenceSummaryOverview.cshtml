@@ -27,13 +27,13 @@
                     </p>
 
                     <!-- PLACEHOLDER -->
-                    <!--<p class="govuk-body"><a href="#">Download summary report</a></p>-->
+                    <!--<p class="govuk-body"><a href="#">Download summary report (CSV)</a></p>-->
                     <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-7">
-                        @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report",
+                        @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report (CSV)",
                                                                  null,
                                                                  Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.ManageEvidenceNoteViewModel.AatfId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.OriginalTonnages)),
                                                                  "Downloads",
-                                                                 "Evidence notes report"))
+                                                                 "Evidence notes report (CSV)"))
                     </p>
 
                     <table id="evidence-summary-table" class="govuk-table">
