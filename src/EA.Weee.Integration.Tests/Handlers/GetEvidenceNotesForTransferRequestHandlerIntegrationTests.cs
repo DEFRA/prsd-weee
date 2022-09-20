@@ -163,6 +163,86 @@
         }
 
         [Component]
+        public class WhenIGetNotesToTransferForAnOrganisationBySearchRef : GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase
+        {
+            private static List<int> categories;
+
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var transferOrganisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(transferOrganisation.Id).Create();
+
+                var transferOrganisationNonMatching = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(transferOrganisationNonMatching.Id).Create();
+
+                // note to be included
+                var categories1 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, null, null),
+                    new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 1, 2),
+                    new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 10, 2),
+                };
+                notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(categories1).WithRecipient(transferOrganisation.Id).Create());
+
+                // note to not be included no matching search ref
+                var categories2 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 4, null),
+                };
+                notesSetToNotBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(categories2).WithRecipient(transferOrganisation.Id).Create());
+
+                categories = new List<int>()
+                {
+                    Core.DataReturns.WeeeCategory.AutomaticDispensers.ToInt(),
+                    Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools.ToInt()
+                };
+
+                request = new GetEvidenceNotesForTransferRequest(transferOrganisation.Id,
+                    categories,
+                    notesSetToBeIncluded.ElementAt(0).ComplianceYear,
+                    new List<Guid>(),
+                    notesSetToBeIncluded.ElementAt(0).Reference.ToString());
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldHaveReturnedCorrectEvidenceNote = () =>
+            {
+                result.Results.Should().HaveCount(1);
+                result.NoteCount.Should().Be(1);
+
+                foreach (var evidenceNoteData in result.Results)
+                {
+                    notesSetToBeIncluded.First(n => n.Id.Equals(evidenceNoteData.Id)).Should().NotBeNull();
+
+                    var refreshedNote = Query.GetEvidenceNoteById(evidenceNoteData.Id);
+
+                    evidenceNoteData.ShouldMapToCutDownEvidenceNote(refreshedNote);
+
+                    evidenceNoteData.TotalReceived.Should().Be(refreshedNote.NoteTonnage
+                        .Where(nt => categories.Contains(nt.CategoryId.ToInt())).Sum(nt => nt.Received));
+
+                    notesSetToNotBeIncluded.FirstOrDefault(n => n.Id == evidenceNoteData.Id).Should().BeNull();
+                }
+            };
+        }
+
+        [Component]
         public class WhenIGetNotesToTransferWhereUserIsNotAuthorised : GetEvidenceNotesForTransferRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
