@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Security.Principal;
+    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
@@ -13,7 +14,6 @@
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
 
     public class ViewEvidenceNoteViewModelMap : IMap<ViewEvidenceNoteMapTransfer, ViewEvidenceNoteViewModel>
     {
