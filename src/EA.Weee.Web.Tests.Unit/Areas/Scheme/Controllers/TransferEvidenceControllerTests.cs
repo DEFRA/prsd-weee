@@ -795,6 +795,10 @@
         [InlineData(2, null)]
         [InlineData(1, "search")]
         [InlineData(2, "search")]
+        [InlineData(1, "")]
+        [InlineData(2, "")]
+        [InlineData(1, " ")]
+        [InlineData(2, " ")]
         public async Task TransferFromGet_AvailableTransferNotesShouldBeRetrieved(int page, string searchRef)
         {
             //arrange
