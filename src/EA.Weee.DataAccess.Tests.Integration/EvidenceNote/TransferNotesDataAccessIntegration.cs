@@ -1003,7 +1003,7 @@
         }
 
         [Fact]
-        public async Task GetNotesToTransfer_GivenSearchRefAndNotIsNotApproved_NoteShouldNotBeReturned()
+        public async Task GetNotesToTransfer_GivenSearchRefAndNoteIsNotApproved_NoteShouldNotBeReturned()
         {
             using (var database = new DatabaseWrapper())
             {

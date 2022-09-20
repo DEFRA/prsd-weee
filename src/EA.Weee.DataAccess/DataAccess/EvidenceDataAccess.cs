@@ -181,7 +181,7 @@
 
             if (!string.IsNullOrWhiteSpace(searchRef))
             {
-                var regex = new Regex("^[E?|e?|][1-9]+");
+                var regex = new Regex("^[E|e][1-9]+");
                 var formattedReference = regex.Match(searchRef.Trim()).Success ? searchRef.Trim().Remove(0, 1) : searchRef;
 
                 filteredNotes = filteredNotes.Where(n => n.NoteType.Value == NoteType.EvidenceNote.Value && n.Reference.ToString().Equals(formattedReference));
