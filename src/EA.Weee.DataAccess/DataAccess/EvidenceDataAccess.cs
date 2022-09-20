@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
     using Domain.Organisation;
@@ -168,7 +169,7 @@
             List<int> categories,
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
-            int? searchRef,
+            string searchRef,
             int pageNumber,
             int pageSize)
         {
@@ -178,9 +179,12 @@
                                                          n.Status.Value == NoteStatus.Approved.Value &&
                                                          n.ComplianceYear == complianceYear);
 
-            if (searchRef.HasValue)
+            if (!string.IsNullOrWhiteSpace(searchRef))
             {
-                filteredNotes = filteredNotes.Where(n => n.Reference == searchRef.Value);
+                var regex = new Regex("^[E?|e?|][1-9]+");
+                var formattedReference = regex.Match(searchRef.Trim()).Success ? searchRef.Trim().Remove(0, 1) : searchRef;
+
+                filteredNotes = filteredNotes.Where(n => n.NoteType.Value == NoteType.EvidenceNote.Value && n.Reference.ToString().Equals(formattedReference));
             }
 
             if (excludeEvidenceNotes.Any())
