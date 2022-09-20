@@ -132,21 +132,21 @@
         [Fact]
         public void TransferFromGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferFromGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void TransferFromGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
         }
 
@@ -174,14 +174,14 @@
         [Fact]
         public void SelectEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel) }).Should()
+            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
         [Fact]
         public void SelectEvidenceNotePost_ShouldHaveAntiForgeryAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel) }).Should()
+            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
                 .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
@@ -791,9 +791,15 @@
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async Task TransferFromGet_AvailableTransferNotesShouldBeRetrieved(int page)
+        [InlineData(1, null)]
+        [InlineData(2, null)]
+        [InlineData(1, "search")]
+        [InlineData(2, "search")]
+        [InlineData(1, "")]
+        [InlineData(2, "")]
+        [InlineData(1, " ")]
+        [InlineData(2, " ")]
+        public async Task TransferFromGet_AvailableTransferNotesShouldBeRetrieved(int page, string searchRef)
         {
             //arrange
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
@@ -809,7 +815,7 @@
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
 
             //act
-            await transferEvidenceController.TransferFrom(organisationId, complianceYear, page);
+            await transferEvidenceController.TransferFrom(organisationId, complianceYear, page, searchRef);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
@@ -818,7 +824,7 @@
                 g.Categories.SequenceEqual(request.CategoryIds) &&
                 g.ComplianceYear == complianceYear &&
                 g.OrganisationId == organisationId &&
-                g.Reference == null &&
+                g.SearchReference == searchRef &&
                 g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds)))).MustHaveHappenedOnceExactly();
         }
 
@@ -1146,7 +1152,7 @@
                 g.Categories.SequenceEqual(request.CategoryIds) &&
                 g.ComplianceYear == model.ComplianceYear &&
                 g.OrganisationId == model.PcsId &&
-                g.Reference == null &&
+                g.SearchReference == null &&
                 g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds.Union(model.EvidenceNotesDataList.Select(m => m.Id)))))).MustHaveHappenedOnceExactly();
         }
 
@@ -2351,7 +2357,7 @@
                     g.PageNumber == model.Page &&
                     g.Categories.SequenceEqual(request.CategoryIds) &&
                     g.OrganisationId == model.PcsId &&
-                    g.Reference == null &&
+                    g.SearchReference == null &&
                     g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds)))).MustHaveHappenedOnceExactly();
         }
 

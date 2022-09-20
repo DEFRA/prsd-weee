@@ -45,7 +45,7 @@
 
             request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(), TestFixture.Create<int>(),
                 TestFixture.CreateMany<Guid>().ToList(),
-                TestFixture.Create<int?>(),
+                TestFixture.Create<string>(),
                 TestFixture.Create<int>(),
                 TestFixture.Create<int>());
 
@@ -128,7 +128,7 @@
                         A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), 
                         A<List<Guid>>._,
                         request.ComplianceYear,
-                        A<int?>._, 
+                        A<string>._, 
                         request.PageNumber, 
                         request.PageSize))
                 .MustHaveHappenedOnceExactly();
@@ -142,7 +142,7 @@
             var request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(),
                 TestFixture.Create<int>(),
                 TestFixture.CreateMany<Guid>().ToList(),
-                TestFixture.Create<int?>());
+                TestFixture.Create<string>());
 
             A.CallTo(() => organisationDataAccess.GetById(request.OrganisationId)).Returns(organisation);
 
@@ -153,7 +153,7 @@
             A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
                 A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), 
                 A<List<Guid>>.That.IsSameSequenceAs(request.ExcludeEvidenceNotes),
-                request.ComplianceYear, request.Reference, request.PageNumber, request.PageSize)).MustHaveHappenedOnceExactly();
+                request.ComplianceYear, request.SearchReference, request.PageNumber, request.PageSize)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -184,7 +184,7 @@
                 A<List<int>>._, 
                 A<List<Guid>>._,
                 A<int>._, 
-                A<int?>._,
+                A<string>._,
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
@@ -224,7 +224,7 @@
                 A<List<int>>._,
                 A<List<Guid>>._,
                 A<int>._,
-                A<int?>._,
+                A<string>._,
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
