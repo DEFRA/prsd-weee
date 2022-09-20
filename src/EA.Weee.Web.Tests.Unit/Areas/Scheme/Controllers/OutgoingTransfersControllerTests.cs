@@ -106,7 +106,7 @@
         public void EditTransferFromGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int) })
+                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) })
                 .Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -115,7 +115,7 @@
         public void EditTransferFromGet_ShouldHaveNoCacheFilterAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int) })
+                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) })
                 .Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
@@ -124,7 +124,7 @@
         public void EditTransferFromGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int) })
+                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) })
                 .Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
@@ -277,7 +277,7 @@
         public void SelectEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel) }).Should()
+                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
@@ -285,7 +285,7 @@
         public void SelectEvidenceNotePost_ShouldHaveAntiForgeryAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel) }).Should()
+                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
                 .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
@@ -441,8 +441,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_WithExistingEditTransferEvidenceTonnageViewModel_ShouldBeRetrievedFromSession()
+        public async Task EditTonnagesGet_WithExistingEditTransferEvidenceTonnageViewModel_ShouldBeRetrievedFromSession()
         {
             //arrange
             var evidenceNoteId = TestFixture.Create<Guid>();
@@ -464,8 +463,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_WithExistingEditTransferEvidenceTonnageViewModel_ShouldClearTransferSessionObject()
+        public async Task EditTonnagesGet_WithExistingEditTransferEvidenceTonnageViewModel_ShouldClearTransferSessionObject()
         {
             //arrange
             var evidenceNoteId = TestFixture.Create<Guid>();
@@ -546,8 +544,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndSessionTransferRequest_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndSessionTransferRequest_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var removedEvidenceNoteId = TestFixture.Create<Guid>();
@@ -1414,9 +1411,15 @@
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async Task EditTransferFromGet_GivenNoteData_AvailableTransferNotesShouldBeRetrieved(int page)
+        [InlineData(1, null)]
+        [InlineData(2, null)]
+        [InlineData(1, "search")]
+        [InlineData(2, "search")]
+        [InlineData(1, "")]
+        [InlineData(2, "")]
+        [InlineData(1, " ")]
+        [InlineData(2, " ")]
+        public async Task EditTransferFromGet_GivenNoteData_AvailableTransferNotesShouldBeRetrieved(int page, string searchRef)
         {
             //arrange
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
@@ -1434,7 +1437,7 @@
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
 
             //act
-            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>(), page);
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>(), page, searchRef);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
@@ -1443,7 +1446,7 @@
                     g.Categories.SequenceEqual(request.CategoryIds) &&
                     g.ComplianceYear == transferEvidenceNoteData.ComplianceYear &&
                     g.OrganisationId == organisationId &&
-                    g.Reference == null &&
+                    g.SearchReference == searchRef &&
                     g.ExcludeEvidenceNotes.SequenceEqual(
                         evidenceNoteIds.Union(transferEvidenceNoteData.CurrentEvidenceNoteIds)))))
                 .MustHaveHappenedOnceExactly();
@@ -1609,8 +1612,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTransferFromPost_GivenTransferSessionTransferRequestIsNull_ShouldRedirectToManageEvidenceNotes()
+        public async Task EditTransferFromPost_GivenTransferSessionTransferRequestIsNull_ShouldRedirectToManageEvidenceNotes()
         {
             //arrange
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -1789,8 +1791,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTransferFromPost_GivenInvalidValidViewModelWithSelectedNotes_TransferRequestShouldBeUpdated()
+        public async Task EditTransferFromPost_GivenInvalidValidViewModelWithSelectedNotes_TransferRequestShouldBeUpdated()
         {
             //arrange
             var selectedEvidenceNotes = TestFixture.CreateMany<ViewEvidenceNoteViewModel>().ToList();
@@ -1917,15 +1918,14 @@
                 g.Categories.SequenceEqual(request.CategoryIds) &&
                 g.ComplianceYear == transferEvidenceNoteData.ComplianceYear &&
                 g.OrganisationId == model.PcsId &&
-                g.Reference == null &&
+                g.SearchReference == null &&
                 g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds
                     .Union(model.EvidenceNotesDataList.Select(m => m.Id))
                     .Union(transferEvidenceNoteData.CurrentEvidenceNoteIds))))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task
-            EditTransferFromPost_GivenInvalidModelAndTransferRequestWithSelectedNotes_SelectedTransferNotesShouldBeRetrieved()
+        public async Task EditTransferFromPost_GivenInvalidModelAndTransferRequestWithSelectedNotes_SelectedTransferNotesShouldBeRetrieved()
         {
             //arrange
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
@@ -1958,8 +1958,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTransferFromPost_GivenInvalidModelAndTransferRequestWithNoSelectedNotes_SelectedTransferNotesShouldNotBeRetrieved()
+        public async Task EditTransferFromPost_GivenInvalidModelAndTransferRequestWithNoSelectedNotes_SelectedTransferNotesShouldNotBeRetrieved()
         {
             //arrange
             var categories = TestFixture.CreateMany<int>().ToList();
@@ -3457,8 +3456,12 @@
                 A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r => r.EvidenceNoteId == model.EditEvidenceNoteId))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task SelectEvidenceNotePost_GivenInvalidModel_AvailableTransferNotesShouldBeRetrieved()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("search")]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task SelectEvidenceNotePost_GivenInvalidModel_AvailableTransferNotesShouldBeRetrieved(string search)
         {
             //arrange
             var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
@@ -3479,7 +3482,7 @@
             AddModelError();
 
             //act
-            await outgoingTransferEvidenceController.SelectEvidenceNote(model);
+            await outgoingTransferEvidenceController.SelectEvidenceNote(model, search);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That
@@ -3489,7 +3492,7 @@
                     g.Categories.SequenceEqual(request.CategoryIds) &&
                     g.ComplianceYear == transferEvidenceNoteData.ComplianceYear &&
                     g.OrganisationId == model.PcsId &&
-                    g.Reference == null &&
+                    g.SearchReference == search &&
                     g.ExcludeEvidenceNotes.SequenceEqual(evidenceNoteIds.Union(transferEvidenceNoteData.CurrentEvidenceNoteIds))))).MustHaveHappenedOnceExactly();
         }
 
