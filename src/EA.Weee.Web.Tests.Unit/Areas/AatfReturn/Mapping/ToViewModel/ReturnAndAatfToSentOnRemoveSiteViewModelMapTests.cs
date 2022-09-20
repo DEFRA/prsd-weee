@@ -3,11 +3,11 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using Core.Shared;
     using Xunit;
 
     public class ReturnAndAatfToSentOnRemoveSiteViewModelMapTests

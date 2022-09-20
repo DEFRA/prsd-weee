@@ -374,8 +374,10 @@
     <Content Include="scripts\Update\Release 5\Sprint13\20220913-1447-create-evidence-note-net-tonnages-stored-procedure.sql" />
     <Content Include="scripts\Update\Release 5\Sprint13\20220909-1642-create-evidence-by-category-net-of-transfer.sql" />
     <Content Include="scripts\Update\Release 5\Sprint13\20220909-0638-create-evidence-by-category.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint13\20220928-0622-create-evidence-summary.sql" />
     <Content Include="scripts\Update\Release 5\Sprint13\20220913-1447-create-evidence-note-original-tonnages-stored-procedure.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint14\20220920-1333-create-evidence-note-net-tonnages-stored-procedure.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint14\20220920-1333-create-evidence-note-original-tonnages-stored-procedure.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint14\20220920-1330-create-evidence-summary.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />

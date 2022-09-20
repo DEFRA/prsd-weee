@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel
 {
+    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using ITonnageUtilities = Web.ViewModels.Returns.Mappings.ToViewModel.ITonnageUtilities;
 
     public class ReturnAndAatfToSentOnRemoveSiteViewModelMap : IMap<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer, SentOnRemoveSiteViewModel>
