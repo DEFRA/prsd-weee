@@ -1,13 +1,12 @@
-﻿namespace EA.Weee.Web.ViewModels.Shared.Utilities
+﻿namespace EA.Weee.Core.Shared
 {
     using System;
     using System.Text;
     using System.Text.RegularExpressions;
-    using EA.Weee.Core.AatfReturn;
 
     public class AddressUtilities : IAddressUtilities
     {
-        public string AddressConcatenate(AddressData addressData)
+        public string AddressConcatenate(AatfReturn.AddressData addressData)
         {
             var address = addressData.Address1;
 
@@ -29,7 +28,7 @@
             return $"{address}, {input}";
         }
 
-        public string FormattedAddress(AddressData address, bool includeSiteName = true)
+        public string FormattedAddress(AatfReturn.AddressData address, bool includeSiteName = true)
         {
             if (address == null)
             {

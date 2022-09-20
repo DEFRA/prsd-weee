@@ -13,7 +13,6 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FluentValidation;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
@@ -23,6 +22,7 @@
     using Areas.Aatf.Helpers;
     using Areas.Aatf.Mappings.Filters;
     using Areas.Scheme.Requests;
+    using Core.Shared;
     using Infrastructure;
     using Infrastructure.PDF;
     using Prsd.Email;
