@@ -18,7 +18,6 @@
             this.context = context;
         }
 
-        //Below seems to only be used in tests
         public async Task<List<AatfSubmissionHistory>> GetAatfSubmissions(Guid aatfId, short complianceYear)
         {
             var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
