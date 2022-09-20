@@ -10,6 +10,9 @@
     [Serializable]
     public class TransferEvidenceNotesViewModel : TransferEvidenceViewModelBase, IValidatableObject
     {
+        [Display(Name = "Search by reference ID")]
+        public string SearchRef { get; set; }
+
         public ActionEnum Action { get; set; }
 
         public int PageNumber { get; set; }
