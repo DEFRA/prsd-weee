@@ -33,7 +33,7 @@
             transferRequest.DeselectedEvidenceNoteIds.Add(evidenceNoteId);
         }
 
-        public void SelectEvidenceNote(Guid evidenceNoteId, string sessionKey)
+        public TransferEvidenceNoteRequest SelectEvidenceNote(Guid evidenceNoteId, string sessionKey)
         {
             var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
                 sessionKey);
@@ -43,6 +43,8 @@
                 transferRequest.EvidenceNoteIds.Add(evidenceNoteId);
                 transferRequest.DeselectedEvidenceNoteIds.Remove(evidenceNoteId);
             }
+
+            return transferRequest;
         }
     }
 }

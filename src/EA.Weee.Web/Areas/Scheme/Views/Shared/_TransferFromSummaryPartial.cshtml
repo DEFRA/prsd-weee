@@ -88,7 +88,7 @@
                                 @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "deselect-evidence-id" + i })
                             }
 
-                            <button class="link-submit govuk-!-padding-left-5" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
+                            <button class="link-submit govuk-!-padding-left-5 transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
                         }
                     </td>
                 </tr>
@@ -170,7 +170,7 @@
                                 @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "select-evidence-id" + i })
                             }
 
-                            <button class="link-submit govuk-!-padding-left-5" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
+                            <button class="link-submit govuk-!-padding-left-5 transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
                         }
                     </td>
                 </tr>
@@ -220,4 +220,3 @@
         </div>
     </div>
 }
-

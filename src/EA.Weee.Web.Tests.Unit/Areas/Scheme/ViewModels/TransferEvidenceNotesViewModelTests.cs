@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
-    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Constant;
     using FluentAssertions;
     using Web.Areas.Scheme.ViewModels;
     using Web.ViewModels.Shared;
@@ -27,7 +28,7 @@
             result.CategoryValues.Should().NotBeNull();
         }
 
-        [Fact(Skip = "TO BE FIXED DURING REDESIGN")]
+        [Fact]
         public void Validate_GivenNoNotesSelected_ValidationResultExpected()
         {
             //arrange
@@ -39,22 +40,25 @@
             //assert
             validationResults.Should().Contain(v =>
                 v.ErrorMessage.Equals("Select at least one evidence note to transfer from")
-                && v.MemberNames.Contains("SelectedEvidenceNotePairs"));
+                && v.MemberNames.Contains(ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError));
         }
 
-        [Fact(Skip = "CHECK AND FIX")]
+        [Fact]
         public void Validate_GivenMoreThanFiveNotesSelected_ValidationResultExpected()
         {
             //arrange
-            var result = new TransferEvidenceNotesViewModel();
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), false));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), false));
+            var result = new TransferEvidenceNotesViewModel()
+            {
+                EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>()
+                {
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel()
+                }
+            };
 
             //act
             var validationResults = result.Validate(new ValidationContext(result));
@@ -62,19 +66,24 @@
             //assert
             validationResults.Should().Contain(v =>
                 v.ErrorMessage.Equals("You cannot select more than 5 notes")
-                && v.MemberNames.Contains("SelectedEvidenceNotePairs"));
+                && v.MemberNames.Contains(ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError));
         }
 
-        [Fact(Skip = "CHECK AND FIX")]
+        [Fact]
         public void Validate_GivenFivesNotesSelected_ValidationResultShouldBeEmpty()
         {
             //arrange
-            var result = new TransferEvidenceNotesViewModel();
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            var result = new TransferEvidenceNotesViewModel()
+            {
+                EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>()
+                {
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel()
+                }
+            };
 
             //act
             var validationResults = result.Validate(new ValidationContext(result));
@@ -83,12 +92,20 @@
             validationResults.Should().BeEmpty();
         }
 
-        [Fact(Skip = "CHECK AND FIX")]
+        [Fact]
         public void Validate_GivenSingleNoteSelected_ValidationResultShouldBeEmpty()
         {
             //arrange
-            var result = new TransferEvidenceNotesViewModel();
-            //result.SelectedEvidenceNotePairs.Add(new GenericControlPair<Guid, bool>(Guid.NewGuid(), true));
+            var result = new TransferEvidenceNotesViewModel()
+            {
+                EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>()
+                {
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel(),
+                    new ViewEvidenceNoteViewModel()
+                }
+            };
 
             //act
             var validationResults = result.Validate(new ValidationContext(result));
