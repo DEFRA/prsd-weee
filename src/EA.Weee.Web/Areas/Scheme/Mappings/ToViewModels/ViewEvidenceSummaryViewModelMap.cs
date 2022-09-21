@@ -9,14 +9,19 @@
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Areas.Shared.ToViewModels;
     using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using EA.Weee.Web.ViewModels.Shared;
 
     public class ViewEvidenceSummaryViewModelMap : ObligationEvidenceSummaryDataToViewModel<SummaryEvidenceViewModel, ViewEvidenceSummaryViewModelMapTransfer>,
         IMap<ViewEvidenceSummaryViewModelMapTransfer, SummaryEvidenceViewModel>
     {
-        public ViewEvidenceSummaryViewModelMap(ITonnageUtilities tonnageUtilities) : base(tonnageUtilities)
-        { 
+        private readonly ConfigurationService configurationService;
+
+        public ViewEvidenceSummaryViewModelMap(ITonnageUtilities tonnageUtilities, 
+                                                ConfigurationService configurationService) : base(tonnageUtilities)
+        {
+            this.configurationService = configurationService;
         }
 
         public SummaryEvidenceViewModel Map(ViewEvidenceSummaryViewModelMapTransfer source)
@@ -28,11 +33,12 @@
                 ObligationEvidenceValues = new List<ObligationEvidenceValue>(),
             };
 
-            var complianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate);
+            var complianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate);
 
             model.ManageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel
             {
-                ComplianceYearList = complianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(source.CurrentDate),
+                OrganisationId = source.OrganisationId,
+                ComplianceYearList = complianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
                 SelectedComplianceYear = source.ComplianceYear,
                 ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)
             };

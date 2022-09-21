@@ -31,13 +31,9 @@
             return list.OrderByDescending(x => x).ToList();
         }
 
-        public static List<int> FetchCurrentComplianceYearsForEvidence(DateTime systemDateTime)
+        public static List<int> FetchCurrentComplianceYearsForEvidence(DateTime evidenceDate, DateTime systemDateTime)
         {
-            var currentYear = systemDateTime.Year;
-
-            var listYears = new List<int>() { currentYear, currentYear - 1, currentYear - 2 };
-
-            return listYears.OrderByDescending(x => x).ToList();
+            return Enumerable.Range(evidenceDate.Year, (systemDateTime.Year - evidenceDate.Year) + 1).OrderByDescending(x => x).ToList();
         }
 
         public static int GetSelectedComplianceYear(ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDateTime)
