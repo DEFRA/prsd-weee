@@ -197,5 +197,9 @@
         public virtual string ApprovedRecipientAddress { get; protected set; }
 
         public virtual string ApprovedRecipientSchemeName { get; protected set; }
+
+        public virtual string ApprovedTransfererAddress { get; protected set; }
+
+        public virtual string ApprovedTransfererSchemeName { get; protected set; }
     }
 }
