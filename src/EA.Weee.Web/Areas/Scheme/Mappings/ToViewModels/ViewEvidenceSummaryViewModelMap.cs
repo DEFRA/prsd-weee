@@ -41,8 +41,7 @@
                 OrganisationId = source.OrganisationId,
                 ComplianceYearList = complianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
                 SelectedComplianceYear = source.ComplianceYear,
-                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate),
-                AatfId = source.ManageEvidenceNoteViewModel.AatfId
+                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)
             };
 
             model.SchemeInfo = source.Scheme;

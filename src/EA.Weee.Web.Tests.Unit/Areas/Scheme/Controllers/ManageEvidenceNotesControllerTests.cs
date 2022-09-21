@@ -861,7 +861,7 @@
             A.CallTo(() => Mapper.Map<SummaryEvidenceViewModel>(A<ViewEvidenceSummaryViewModelMapTransfer>._)).Returns(pbsSummaryViewModel);
 
             //act
-            var result = await ManageEvidenceController.CreateAndPopulateEvidenceSummaryViewModel(pcsId, schemeInfo, currentDate, manageEvidenceNoteViewModel) as ViewResult;
+            var result = await ManageEvidenceController.CreateAndPopulateEvidenceSummaryViewModel(pcsId, schemeInfo, currentDate, manageEvidenceNoteViewModel, complianceYear) as ViewResult;
 
             //assert
             result.Model.Should().Be(pbsSummaryViewModel);
