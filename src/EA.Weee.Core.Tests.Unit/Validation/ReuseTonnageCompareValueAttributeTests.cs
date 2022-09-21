@@ -39,7 +39,7 @@
             var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
             var validationContext = new ValidationContext(tonnageValueModel);
 
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(A<string>._)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(received)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
 
             attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
             {
@@ -59,12 +59,12 @@
             // Arrange
             var received = 1;
             var reused = 1;
-            var availableReused = "Test";
-            var availableReceived = 1;
+            var availableReused = 1;
+            var availableReceived = "Test";
             var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
             var validationContext = new ValidationContext(tonnageValueModel);
 
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(A<string>._)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(availableReceived)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
 
             attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
             {
@@ -83,11 +83,13 @@
         {
             // Arrange
             var received = 1;
-            var reused = 1;
-            var availableReused = "Test";
+            var reused = "Test";
+            var availableReused = 1;
             var availableReceived = 1;
             var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
             var validationContext = new ValidationContext(tonnageValueModel);
+
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(reused)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
 
             attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
             {
@@ -107,10 +109,12 @@
             // Arrange
             var received = 1;
             var reused = 1;
-            var availableReused = 1;
-            var availableReceived = "Test";
+            var availableReused = "Test";
+            var availableReceived = 1;
             var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
             var validationContext = new ValidationContext(tonnageValueModel);
+
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(availableReused)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
 
             attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
             {
