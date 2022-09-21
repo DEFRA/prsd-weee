@@ -9,7 +9,6 @@
     using EA.Weee.Requests.Admin;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn;
     using System;
     using System.Data.Entity;
     using System.Linq;

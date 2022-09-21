@@ -6,7 +6,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Admin.Obligation;
     using EA.Weee.Core.Helpers;
-    using EA.Weee.Web.Areas.Aatf.Helpers;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Areas.Shared.ToViewModels;
     using EA.Weee.Web.Extensions;
