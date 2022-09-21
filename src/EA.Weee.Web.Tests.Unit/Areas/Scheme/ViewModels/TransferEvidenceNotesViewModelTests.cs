@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Constant;
@@ -112,6 +113,41 @@
 
             //assert
             validationResults.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("")]
+        [InlineData(null)]
+        public void SearchPerformed_GivenNoSearchRef_ShouldReturnFalse(string search)
+        {
+            //arrange
+            var model = new TransferEvidenceNotesViewModel() { SearchRef = search };
+
+            //act
+            var result = model.SearchPerformed;
+
+            //assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void SearchPerformed_GivenSearchRef_ShouldReturnTrue()
+        {
+            //arrange
+            var model = new TransferEvidenceNotesViewModel() { SearchRef = "search" };
+
+            //act
+            var result = model.SearchPerformed;
+
+            //assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void SearchRef_ShouldHaveDisplayAttribute()
+        {
+            typeof(TransferEvidenceNotesViewModel).GetProperty("SearchRef").Should().BeDecoratedWith<DisplayAttribute>().Which.Name.Should().Be("Search by reference ID");
         }
     }
 }
