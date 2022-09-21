@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System;
     using Core.Shared;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
-    using Services;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
 
@@ -18,8 +16,6 @@
         }
 
         public T MapSchemeBase(EvidenceNoteSearchDataResult noteData,
-            DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
             SchemePublicInfo scheme,
             int pageNumber,
             int pageSize)

@@ -81,7 +81,8 @@
         public void Map_GivenSource_AatfHelperShouldBeCalled()
         {
             //arrange
-            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
+            var source = new ManageEvidenceNoteTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<AatfData>(), TestFixture.CreateMany<AatfData>().ToList(),
+                null, null, null, TestFixture.Create<int>(), DateTime.UtcNow);
 
             //act
             map.Map(source);
@@ -94,10 +95,12 @@
         public void Map_GivenSourceWithSingle_SingleAatfShouldBeTrue()
         {
             //arrange
-            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
+            var listOfAatfs = TestFixture.CreateMany<AatfData>(1).ToList();
+            var source = new ManageEvidenceNoteTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<AatfData>(), listOfAatfs,
+             null, null, null, TestFixture.Create<int>(), DateTime.UtcNow);
 
             A.CallTo(() => aatfEvidenceHelper.GroupedValidAatfs(A<List<AatfData>>._))
-                .Returns(TestFixture.CreateMany<AatfData>(1).ToList());
+                .Returns(listOfAatfs);
 
             //act
             var model = map.Map(source);
@@ -233,6 +236,10 @@
             //arrange
             var currentDate = new DateTime(2019, 1, 1);
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, TestFixture.CreateMany<AatfData>().ToList(), null, null, null, TestFixture.Create<int>(), currentDate);
+
+            var evidenceNoteStartDate = currentDate.AddYears(-2);
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
 
             //act
             var model = map.Map(source);
