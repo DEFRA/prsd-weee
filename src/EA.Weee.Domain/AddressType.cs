@@ -8,6 +8,10 @@
         public static readonly AddressType RegisteredOrPPBAddress = new AddressType(2, "Registered or PPB address");
         public static readonly AddressType ServiceOfNoticeAddress = new AddressType(3, "Service of notice address");
 
+        protected AddressType()
+        {
+        }
+
         private AddressType(int value, string displayName)
             : base(value, displayName)
         {

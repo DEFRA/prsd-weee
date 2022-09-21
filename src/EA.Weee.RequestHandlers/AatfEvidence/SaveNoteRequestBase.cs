@@ -4,16 +4,17 @@
     using System.Threading.Tasks;
     using Core.AatfEvidence;
     using Core.Helpers;
+    using Core.Shared;
     using CuttingEdge.Conditions;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
     using Domain.Organisation;
-    using Domain.Scheme;
     using Factories;
     using Prsd.Core.Domain;
     using Security;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
+    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public abstract class SaveNoteRequestBase
     {

@@ -54,7 +54,9 @@
 
         public EvidenceNoteDbSetup WithAatf(Guid aatfId)
         {
-            instance.UpdateAatf(aatfId);
+            ObjectInstantiator<Note>.SetProperty(o => o.Aatf, null, instance);
+            ObjectInstantiator<Note>.SetProperty(o => o.AatfId, aatfId, instance);
+
             return this;
         }
 
