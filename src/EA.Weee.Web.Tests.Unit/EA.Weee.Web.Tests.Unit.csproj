@@ -345,6 +345,7 @@
     <Compile Include="Areas\Aatf\Controller\EvidenceTonnageValueCopyPasteControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceNotesReportTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerIndexTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerEditEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceNoteTests.cs" />
@@ -383,6 +384,7 @@
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBaseTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckSchemeNoteAttributeBaseTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\RequiredTransferTonnageAttributeTests.cs" />
+    <Compile Include="Areas\Scheme\Controllers\ManageEvidenceNotesControllerDownloadEvidenceNotesReportTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\EvidenceNoteHistoryDataViewModelMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\SchemeDataOrganisationMapTests.cs" />
     <Compile Include="Areas\Scheme\Mapping\ViewEvidenceSummaryViewModelMapTests.cs" />
