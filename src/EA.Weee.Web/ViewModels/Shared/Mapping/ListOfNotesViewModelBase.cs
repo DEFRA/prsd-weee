@@ -1,15 +1,11 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Mapping
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
-    using Core.Helpers;
     using Core.Shared.Paging;
     using CuttingEdge.Conditions;
-    using Extensions;
     using Prsd.Core.Mapper;
-    using Services;
 
     public abstract class ListOfNotesViewModelBase<T> where T : IManageEvidenceViewModel, new()
     {

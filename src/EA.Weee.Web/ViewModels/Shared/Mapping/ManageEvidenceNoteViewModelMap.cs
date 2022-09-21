@@ -27,8 +27,6 @@
             {
                 OrganisationId = source.OrganisationId,
                 ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
-                CanCreateEdit = (aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear) && 
-                                 WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate)),
                 ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate),
                 AatfId = source.AatfId
             };
@@ -39,6 +37,8 @@
 
                 model.AatfName = source.AatfData.Name;
                 model.SingleAatf = aatfs.Count == 1;
+                model.CanCreateEdit = (aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear) &&
+                                       WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate));
             }
 
             if (source.FilterViewModel != null)
