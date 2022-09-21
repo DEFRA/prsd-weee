@@ -1,4 +1,5 @@
 @import "../govuk_frontend/components/button/_button";
+@import "../govuk_frontend/helpers/_spacing";
 
 $govuk-button-colour: #00823b;
 $button-shadow-size: $govuk-border-width-form-element;
@@ -26,7 +27,7 @@ $govuk-button-shadow-colour: darken($govuk-button-colour, 15%);
 }
 
 .weee-search-button {
-    left: -5px;
+    left: govuk-spacing(-1);
 }
 
 @media only screen and (max-width: 640px) {
