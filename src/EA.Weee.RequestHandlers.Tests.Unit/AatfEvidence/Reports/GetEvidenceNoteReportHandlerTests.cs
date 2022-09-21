@@ -297,28 +297,52 @@
         public async Task HandleAsync_GivenCsvData_CsvFileDataShouldBeReturned(TonnageToDisplayReportEnum tonnageToDisplay, string expected)
         {
             //arrange
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(A<Guid>._)).Returns<Aatf>(null);
+            var date = new DateTime(2020, 12, 31, 11, 13, 14);
+            SystemTime.Freeze(date);
+            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
+                null,
+                tonnageToDisplay,
+                TestFixture.Create<int>());
+
+            var content = TestFixture.Create<string>();
+            A.CallTo(() => evidenceWriter.Write(A<IEnumerable<EvidenceNoteReportData>>._)).Returns(content);
+
+            //act
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.FileContent.Should().Be(content);
+            result.FileName.Should().Be($"{request.ComplianceYear}_Evidence notes {expected}{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenAatfCsvData_CsvFileDataShouldBeReturned()
+        {
+            //arrange
             Aatf aatf = A.Fake<Aatf>();
             A.CallTo(() => aatf.ApprovalNumber).Returns<string>("123456");
             A.CallTo(() => genericDataAccess.GetById<Aatf>(A<Guid>._)).Returns<Aatf>(aatf);
 
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), 
+            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(),
                 TestFixture.Create<Guid>(),
                 TestFixture.Create<Guid>(),
-                tonnageToDisplay,
+                TonnageToDisplayReportEnum.OriginalTonnages,
                 TestFixture.Create<int>());
 
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<EvidenceNoteReportData>>._)).Returns(content);
-            
+
             //act
             var result = await handler.HandleAsync(request);
 
             //assert
             result.FileContent.Should().Be(content);
-            result.FileName.Should()
-                .Be($"{request.ComplianceYear}_{aatf.ApprovalNumber}_Evidence notes {expected}{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
+            result.FileName.Should().Be($"{request.ComplianceYear}_{aatf.ApprovalNumber}_Evidence notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
             SystemTime.Unfreeze();
         }
     }

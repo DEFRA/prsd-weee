@@ -114,7 +114,12 @@
                 ? "original tonnages"
                 : "net of transfer";
 
-            var fileName = $"{request.ComplianceYear}{aatfApprovalNumber}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+            var fileName = $"{request.ComplianceYear}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+
+            if (request.AatfId.HasValue)
+            {
+                fileName = $"{request.ComplianceYear}{aatfApprovalNumber}_Evidence notes report{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+            }
 
             return new CSVFileData
             {
