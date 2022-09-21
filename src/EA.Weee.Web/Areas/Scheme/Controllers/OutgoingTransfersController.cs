@@ -257,7 +257,7 @@
         [HttpGet]
         [CheckCanEditTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId, int page = 1)
+        public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId, int page = 1, string searchRef = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -271,13 +271,13 @@
                     return RedirectToManageEvidence(pcsId);
                 }
 
-                var model = await TransferEvidenceNotesViewModel(pcsId, evidenceNoteId, page, client, transferRequest);
+                var model = await TransferEvidenceNotesViewModel(pcsId, evidenceNoteId, page, client, transferRequest, searchRef);
 
                 return this.View("EditTransferFrom", model);
             }
         }
 
-        private async Task<TransferEvidenceNotesViewModel> TransferEvidenceNotesViewModel(Guid pcsId, Guid evidenceNoteId, int page, IWeeeClient client, TransferEvidenceNoteRequest transferRequest)
+        private async Task<TransferEvidenceNotesViewModel> TransferEvidenceNotesViewModel(Guid pcsId, Guid evidenceNoteId, int page, IWeeeClient client, TransferEvidenceNoteRequest transferRequest, string searchRef)
         {
             var noteData =
                 await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
@@ -292,11 +292,11 @@
             }
 
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, transferRequest.EvidenceNoteIds, null, page,
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, transferRequest.EvidenceNoteIds, searchRef, page,
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(currentSelectedNotes, availableNotes,
-                transferRequest, noteData, pcsId, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
+                transferRequest, noteData, pcsId, searchRef, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
@@ -322,7 +322,7 @@
             {
                 using (var client = this.apiClient())
                 {
-                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, model.PageNumber, client, outgoingTransfer);
+                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, model.PageNumber, client, outgoingTransfer, null);
                 }
 
                 return View("EditTransferFrom", model);
@@ -334,7 +334,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model)
+        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null)
         {
             await SetBreadcrumb(model.PcsId);
 
@@ -347,7 +347,7 @@
 
             using (var client = apiClient())
             {
-                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.EditEvidenceNoteId, model.Page, client, transferRequest);
+                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.EditEvidenceNoteId, model.Page, client, transferRequest, searchRef);
 
                 return View("EditTransferFrom", newModel);
             }

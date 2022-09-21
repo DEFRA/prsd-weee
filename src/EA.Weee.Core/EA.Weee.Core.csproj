@@ -146,6 +146,7 @@
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
     <Compile Include="Scheme\OrganisationSchemeData.cs" />
+    <Compile Include="Shared\AddressUtilities.cs" />
     <Compile Include="Shared\CategoryValue.cs" />
     <Compile Include="Shared\CsvReading\CsvValidationException.cs" />
     <Compile Include="Shared\CsvReading\CsvReaderException.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Shared\CsvReading\WeeeCsvReader.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Shared\FileHelper.cs" />
+    <Compile Include="Shared\IAddressUtilities.cs" />
     <Compile Include="Shared\IFileHelper.cs" />
     <Compile Include="Users\UserFilter.cs" />
     <Compile Include="AatfReturn\AatfSchemeData.cs" />
@@ -358,6 +360,7 @@
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
     <Compile Include="Validation\ITonnageValueValidator.cs" />
     <Compile Include="Validation\MinimumElementAttribute.cs" />
+    <Compile Include="Validation\ReuseTonnageCompareValueAttribute.cs" />
     <Compile Include="Validation\TonnageCompareValueAttribute.cs" />
     <Compile Include="Validation\TonnageValidationResult.cs" />
     <Compile Include="Validation\TonnageValidationTypeEnum.cs" />
