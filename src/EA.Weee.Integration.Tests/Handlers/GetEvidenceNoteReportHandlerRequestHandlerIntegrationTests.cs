@@ -196,6 +196,8 @@
                 var aatf1 = AatfDbSetup.Init().WithOrganisation(originatorOrganisation1.Id).Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, originatorOrganisation1.Id).Create();
 
+                aatfApprovalNumber = aatf1.ApprovalNumber;
+
                 var tonnages1 = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 1, 2),
@@ -357,7 +359,7 @@
                     $"E3,Approved,{note3SubmittedDate},Household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_{aatfApprovalNumber}_Evidence notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
@@ -1528,6 +1530,8 @@
                 var aatf1 = AatfDbSetup.Init().WithOrganisation(originatorOrganisation1.Id).Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, originatorOrganisation1.Id).Create();
 
+                aatfApprovalNumber = aatf1.ApprovalNumber;
+
                 var tonnages1 = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 1, 2),
@@ -1801,7 +1805,8 @@
                     $"E4,Approved,{note4SubmittedDate},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},Reuse network PWP,10.244,9.322,10.266,9.099,10.288,7.077,9.122,2.033,9.311,9.144,9.166,10.299,5.055,1.011,111.437,10.255,10.233,10.277,9.011,10.299,8.088,9.133,4.044,9.322,9.155,10.177,9.311,6.066,2.022,117.393\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes net of transfer{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_{aatfApprovalNumber}_Evidence notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                //result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes net of transfer{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
@@ -1813,6 +1818,7 @@
             protected static CSVFileData result;
             protected static List<Note> notes;
             protected static Fixture fixture;
+            protected static string aatfApprovalNumber;
 
             public static IntegrationTestSetupBuilder LocalInternalSetup()
             {

@@ -42,7 +42,7 @@
                 request.Categories.Select(c => c.ToInt()).ToList(),
                 request.ExcludeEvidenceNotes, 
                 request.ComplianceYear, 
-                request.Reference,
+                request.SearchReference,
                 request.PageNumber, 
                 request.PageSize);
 

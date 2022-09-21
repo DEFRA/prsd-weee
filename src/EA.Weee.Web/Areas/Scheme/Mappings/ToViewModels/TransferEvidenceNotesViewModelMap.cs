@@ -28,7 +28,7 @@
             model.EvidenceNotesDataListPaged = 
                 model.EvidenceNotesDataListPaged.ToPagedList(source.PageNumber - 1, source.PageSize, source.AvailableNotes.NoteCount) as PagedList<EvidenceNoteRowViewModel>;
 
-            //TEST FOR THIS
+            model.SearchRef = source.SearchRef;
             model.PageNumber = source.PageNumber;
 
             return model;
