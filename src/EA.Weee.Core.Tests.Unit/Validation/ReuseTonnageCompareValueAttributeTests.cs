@@ -25,6 +25,7 @@
         {
             tonnageTonnageValueValidator = A.Fake<ITonnageValueValidator>();
             A.CallTo(() => tonnageTonnageValueValidator.Validate(A<object>._)).Returns(TonnageValidationResult.Success);
+            A.CallTo(() => tonnageTonnageValueValidator.Validate("Test")).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
         }
 
         [Fact]
@@ -88,8 +89,6 @@
             var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
             var validationContext = new ValidationContext(tonnageValueModel);
 
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(A<string>._)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
-
             attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
             {
                 TonnageValueValidator = tonnageTonnageValueValidator
@@ -113,8 +112,6 @@
             var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
             var validationContext = new ValidationContext(tonnageValueModel);
 
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(A<string>._)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
-
             attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
             {
                 TonnageValueValidator = tonnageTonnageValueValidator
@@ -137,8 +134,6 @@
             var availableReceived = 1;
             var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
             var validationContext = new ValidationContext(tonnageValueModel);
-
-            A.CallTo(() => tonnageTonnageValueValidator.Validate(A<object>._)).Returns(new TonnageValidationResult(TonnageValidationTypeEnum.NotNumerical));
 
             attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
             {
