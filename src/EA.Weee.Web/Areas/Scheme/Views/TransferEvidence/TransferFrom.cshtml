@@ -16,8 +16,6 @@
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<TransferEvidenceController>(a => a.TransferEvidenceNote(Model.PcsId, Model.ComplianceYear))))
 
-    <button class="govuk-visually-hidden" aria-hidden="true" style="z-index: -1" name="Action" value="@ActionEnum.Continue" form="@formName"></button>
-
     <h1 class="govuk-heading-l">
         From which evidence notes would you like to transfer tonnage to @Model.RecipientName?
     </h1>

@@ -30,6 +30,7 @@
             builder.RegisterType<PasteProcessor>().As<IPasteProcessor>();
             builder.RegisterType<FileHelper>().As<IFileHelper>();
             builder.RegisterType<TonnageValueValidator>().As<ITonnageValueValidator>();
+            builder.RegisterType<AddressUtilities>().As<IAddressUtilities>();
         }
     }
 }

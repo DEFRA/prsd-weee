@@ -223,103 +223,6 @@
         }
 
         [Fact]
-        public void Map_GivenCurrentDate_ComplianceYearsListShouldBeReturned()
-        {
-            //arrange
-            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
-            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-            var date = new DateTime(2022, 1, 1);
-
-            var source = new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
-                noteData,
-                TestFixture.Create<SchemePublicInfo>(),
-                date,
-                model,
-                1, 2);
-
-            //act
-            var result = transferredOutEvidenceViewModelMap.Map(source);
-
-            //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYearList.Count().Should().Be(3);
-            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(0).Should().Be(2022);
-            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(1).Should().Be(2021);
-            result.ManageEvidenceNoteViewModel.ComplianceYearList.ElementAt(2).Should().Be(2020);
-        }
-
-        [Theory]
-        [InlineData(2021)]
-        [InlineData(2020)]
-        [InlineData(2022)]
-        public void Map_GivenCurrentDateAndManageEvidenceViewModelIsNull_SelectedComplianceYearShouldBeSet(int year)
-        {
-            //arrange
-            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
-            var date = new DateTime(year, 1, 1);
-
-            var source = new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
-                noteData,
-                TestFixture.Create<SchemePublicInfo>(),
-                date,
-                null,
-                1, 2);
-
-            //act
-            var result = transferredOutEvidenceViewModelMap.Map(source);
-
-            //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(year);
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-1)]
-        public void Map_GivenCurrentDateAndManageEvidenceViewModelSelectedComplianceYearIsNotGreaterThanZero_SelectedComplianceYearShouldBeSet(int selectedComplianceYear)
-        {
-            //arrange
-            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
-            var date = new DateTime(2022, 1, 1);
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, selectedComplianceYear).Create();
-
-            var source = new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
-                noteData,
-                TestFixture.Create<SchemePublicInfo>(),
-                date,
-                model,
-                1, 2);
-
-            //act
-            var result = transferredOutEvidenceViewModelMap.Map(source);
-
-            //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2022);
-        }
-
-        [Fact]
-        public void Map_GivenCurrentDateAndManageEvidenceViewModelWithSelectedComplianceYear_SelectedComplianceYearShouldBeSet()
-        {
-            //arrange
-            var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
-            var date = new DateTime(2022, 1, 1);
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, 2021).Create();
-
-            var source = new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
-                noteData,
-                TestFixture.Create<SchemePublicInfo>(),
-                date,
-                model,
-                1, 2);
-
-            //act
-            var result = transferredOutEvidenceViewModelMap.Map(source);
-
-            //assert
-            result.ManageEvidenceNoteViewModel.SelectedComplianceYear.Should().Be(2021);
-        }
-
-        [Fact]
         public void Map_GivenSourceWithScheme_SchemeShouldBeSet()
         {
             //arrange
@@ -447,54 +350,6 @@
             result.CanSchemeManageEvidence.Should().BeFalse();
         }
 
-        [Theory]
-        [ClassData(typeof(OutOfComplianceYearData))]
-        public void Map_GivenSourceWithNotWithdrawnSchemeAndComplianceYearIsClosed_CanSchemeManageEvidenceShouldBeFalse(DateTime currentDate, int complianceYear)
-        {
-            //arrange
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, complianceYear).Create();
-
-            var organisationId = TestFixture.Create<Guid>();
-            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
-
-            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
-                TestFixture.Create<EvidenceNoteSearchDataResult>(),
-                scheme,
-                currentDate,
-                model,
-                1, 2);
-
-            //act
-            var result = transferredOutEvidenceViewModelMap.Map(transfer);
-
-            //assert
-            result.CanSchemeManageEvidence.Should().BeFalse();
-        }
-
-        [Theory]
-        [ClassData(typeof(OutOfComplianceYearData))]
-        public void Map_GivenComplianceYearIsClosed_ComplianceYearClosedShouldBeTrue(DateTime currentDate, int complianceYear)
-        {
-            //arrange
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, complianceYear).Create();
-            var organisationId = TestFixture.Create<Guid>();
-
-            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
-                TestFixture.Create<EvidenceNoteSearchDataResult>(),
-                TestFixture.Create<SchemePublicInfo>(),
-                currentDate,
-                model,
-                1, 2);
-
-            //act
-            var result = transferredOutEvidenceViewModelMap.Map(transfer);
-
-            //assert
-            result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeTrue();
-        }
-
         [Fact]
         public void Map_GivenComplianceYearIsNotClosed_ComplianceYearClosedShouldBeFalse()
         {
@@ -609,46 +464,6 @@
                 .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
             var organisationId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
-            var notesRow = new List<EvidenceNoteRowViewModel>
-            {
-                new EvidenceNoteRowViewModel()
-                {
-                    Status = NoteStatus.Returned
-                },
-                new EvidenceNoteRowViewModel()
-                {
-                    Status = NoteStatus.Draft
-                }
-            };
-
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(notesRow);
-
-            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
-                TestFixture.Create<EvidenceNoteSearchDataResult>(),
-                scheme,
-                currentDate,
-                model,
-                1, 2);
-
-            //act
-            var result = transferredOutEvidenceViewModelMap.Map(transfer);
-
-            //assert
-            result.EvidenceNotesDataList.Should().AllSatisfy(e =>
-            {
-                e.DisplayEditLink.Should().BeFalse();
-            });
-        }
-
-        [Theory]
-        [ClassData(typeof(OutOfComplianceYearData))]
-        public void Map_GivenComplianceYearIsClosedAndSchemeIsNotWithdrawnAndEvidenceNotesAreInEditableState_DisplayEditLinkShouldBeFalse(DateTime currentDate, int complianceYear)
-        {
-            //arrange
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, complianceYear).Create();
-            var organisationId = TestFixture.Create<Guid>();
-            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
             var notesRow = new List<EvidenceNoteRowViewModel>
             {
                 new EvidenceNoteRowViewModel()

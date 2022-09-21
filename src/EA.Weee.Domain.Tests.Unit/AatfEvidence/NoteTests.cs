@@ -448,6 +448,78 @@
             tonnage.Should().NotContain(t => t.CategoryId == WeeeCategory.ConsumerEquipment);
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void SetApprovedRecipientAddress_GivenEmptyAddress_ArgumentExceptionExpected(string address)
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedRecipientAddress("name", address));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void SetApprovedRecipientAddress_GivenEmptyName_ArgumentExceptionExpected(string name)
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedRecipientAddress(name, "address"));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void SetApprovedRecipientAddress_GivenNullName_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedRecipientAddress(null, "address"));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void SetApprovedRecipientAddress_GivenNullAddress_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedRecipientAddress("name", null));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void SetApprovedRecipientAddress_GivenNameAndAddress_ApprovedDetailsShouldBeSet()
+        {
+            //arrange
+            var note = CreateNote();
+            const string address = "address";
+            const string schemeName = "name";
+
+            //act
+            note.SetApprovedRecipientAddress(schemeName, address);
+
+            //assert
+            note.ApprovedRecipientSchemeName.Should().Be(schemeName);
+            note.ApprovedRecipientAddress.Should().Be(address);
+        }
+
         private void ShouldBeEqualTo(Note result, DateTime date)
         {
             result.Organisation.Should().Be(organisation);
