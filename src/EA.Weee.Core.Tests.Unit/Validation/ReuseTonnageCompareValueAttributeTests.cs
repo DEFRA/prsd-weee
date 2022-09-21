@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
     using Core.Validation;
     using DataReturns;
