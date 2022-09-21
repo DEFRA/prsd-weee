@@ -2,16 +2,16 @@
 {
     using AutoFixture;
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using EA.Weee.Web.Services;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Web.Areas.Aatf.Helpers;
+    using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -23,12 +23,14 @@
         private readonly AatfData aatfData;
         private readonly List<AatfData> aatfDataList;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
+        private readonly ConfigurationService configurationService;
 
         public ManageEvidenceNotesViewModelMapTests()
         {
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
+            configurationService = A.Fake<ConfigurationService>();
 
-            map = new ManageEvidenceNoteViewModelMap(aatfEvidenceHelper);
+            map = new ManageEvidenceNoteViewModelMap(aatfEvidenceHelper, configurationService);
             organisationId = Guid.NewGuid();
             aatfId = Guid.NewGuid();
             aatfData = TestFixture.Create<AatfData>();
@@ -59,7 +61,7 @@
         }
 
         [Fact]
-        public void Map_GivenSource_PropertiesShouldBeMapped()
+        public void Map_GivenSourceWithAatfDetails_PropertiesShouldBeMapped()
         {
             //arrange
             var aatfDataList = new List<AatfData>();
@@ -76,10 +78,39 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithNoAatfList_AatfListPropertiesShouldBeSet()
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
+            model.AatfName.Should().BeNullOrEmpty();
+            model.SingleAatf.Should().BeFalse();
+            model.CanCreateEdit.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithNoAatfData_AatfListPropertiesShouldBeSet()
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
+            model.AatfName.Should().BeNullOrWhiteSpace();
+        }
+
+        [Fact]
         public void Map_GivenSource_AatfHelperShouldBeCalled()
         {
             //arrange
-            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
+            var source = new ManageEvidenceNoteTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<AatfData>(), TestFixture.CreateMany<AatfData>().ToList(),
+                null, null, null, TestFixture.Create<int>(), DateTime.UtcNow);
 
             //act
             map.Map(source);
@@ -92,10 +123,12 @@
         public void Map_GivenSourceWithSingle_SingleAatfShouldBeTrue()
         {
             //arrange
-            var source = TestFixture.Create<ManageEvidenceNoteTransfer>();
+            var listOfAatfs = TestFixture.CreateMany<AatfData>(1).ToList();
+            var source = new ManageEvidenceNoteTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<AatfData>(), listOfAatfs,
+             null, null, null, TestFixture.Create<int>(), DateTime.UtcNow);
 
             A.CallTo(() => aatfEvidenceHelper.GroupedValidAatfs(A<List<AatfData>>._))
-                .Returns(TestFixture.CreateMany<AatfData>(1).ToList());
+                .Returns(listOfAatfs);
 
             //act
             var model = map.Map(source);
@@ -232,6 +265,10 @@
             var currentDate = new DateTime(2019, 1, 1);
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, TestFixture.CreateMany<AatfData>().ToList(), null, null, null, TestFixture.Create<int>(), currentDate);
 
+            var evidenceNoteStartDate = currentDate.AddYears(-2);
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
+
             //act
             var model = map.Map(source);
 
@@ -342,6 +379,21 @@
 
             //assert
             result.ComplianceYearClosed.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenNullFilters_FiltersShouldBeInitialised()
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, new List<AatfData>(), null, null, null, TestFixture.Create<int>(), TestFixture.Create<DateTime>());
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.FilterViewModel.Should().NotBeNull();
+            result.RecipientWasteStatusFilterViewModel.Should().NotBeNull();
+            result.SubmittedDatesFilterViewModel.Should().NotBeNull();
         }
     }
 }

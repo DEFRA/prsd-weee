@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Aatf.Mappings.ToViewModel;
     using Attributes;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -60,6 +61,7 @@
                 await SetBreadcrumb(pcsId);
 
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                var selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
                 if (tab == null) 
                 { 
@@ -71,15 +73,15 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesDisplayOptions.Summary:
-                        return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, selectedComplianceYear);
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
-                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
+                        return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page, selectedComplianceYear);
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
-                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
+                        return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page, selectedComplianceYear);
                     case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
-                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page);
+                        return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page, selectedComplianceYear);
                     default:
-                        return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel);
+                        return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, selectedComplianceYear);
                 }
             }
         }
@@ -95,17 +97,20 @@
             SchemePublicInfo scheme,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
-            int pageNumber)
+            int pageNumber, int selectedComplianceYear)
         {
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
-                    new List<NoteStatus>() { NoteStatus.Submitted }, 
-                    SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue));
+                    new List<NoteStatus>() { NoteStatus.Submitted },
+                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber, int.MaxValue));
+
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
+                    (new ManageEvidenceNoteTransfer(organisationId, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("ReviewSubmittedEvidence", model);
             }
@@ -115,7 +120,7 @@
             SchemePublicInfo scheme,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
-            int pageNumber)
+            int pageNumber, int selectedComplianceYear)
         {
             using (var client = this.apiClient())
             {
@@ -126,10 +131,12 @@
                         NoteStatus.Rejected,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("ViewAndTransferEvidence", model);
             }
@@ -139,7 +146,7 @@
             SchemePublicInfo scheme,
             DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
-            int pageNumber)
+            int pageNumber, int selectedComplianceYear)
         {
             using (var client = this.apiClient())
             {
@@ -152,10 +159,12 @@
                         NoteStatus.Submitted,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel), new List<NoteType>() { NoteType.Transfer }, true, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Transfer }, true, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("OutgoingTransfers", model);
             }
@@ -235,33 +244,35 @@
 
         [HttpGet]
         public async Task<ActionResult> CreateAndPopulateEvidenceSummaryViewModel(Guid pcsId, SchemePublicInfo scheme, DateTime currentDate, 
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int selectedComplianceYear)
         {
             using (var client = apiClient())
             {
-                var complianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
-
                 GetObligationSummaryRequest request = null;
                 if (scheme.IsBalancingScheme)
                 {
                     // PBS do not have a scheme id - we send a null to the Stored Proc which will use organisation id instead
-                    request = new GetObligationSummaryRequest(null, pcsId, complianceYear);
+                    request = new GetObligationSummaryRequest(null, pcsId, selectedComplianceYear);
 
                     var evidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
 
                     var pbsSummaryModel = mapper.Map<SummaryEvidenceViewModel>
-                        (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, evidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
+                        (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, evidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, selectedComplianceYear));
+
+                    pbsSummaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
 
                     return View("SummaryEvidencePBS", pbsSummaryModel);
                 }
 
                 // used by Scheme users
-                request = new GetObligationSummaryRequest(scheme.SchemeId, pcsId, complianceYear);
+                request = new GetObligationSummaryRequest(scheme.SchemeId, pcsId, selectedComplianceYear);
 
                 var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
 
                 var summaryModel = mapper.Map<SummaryEvidenceViewModel>
-                    (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, complianceYear));
+                    (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, selectedComplianceYear));
+
+                summaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("SummaryEvidence", summaryModel);
             }
