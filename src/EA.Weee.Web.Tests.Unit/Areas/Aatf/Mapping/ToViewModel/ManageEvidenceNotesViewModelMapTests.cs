@@ -61,7 +61,7 @@
         }
 
         [Fact]
-        public void Map_GivenSource_PropertiesShouldBeMapped()
+        public void Map_GivenSourceWithAatfDetails_PropertiesShouldBeMapped()
         {
             //arrange
             var aatfDataList = new List<AatfData>();
@@ -75,6 +75,34 @@
             model.AatfName.Should().Be(source.AatfData.Name);
             model.OrganisationId.Should().Be(source.OrganisationId);
             model.AatfId.Should().Be(source.AatfId);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithNoAatfList_AatfListPropertiesShouldBeSet()
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
+            model.AatfName.Should().BeNullOrEmpty();
+            model.SingleAatf.Should().BeFalse();
+            model.CanCreateEdit.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithNoAatfData_AatfListPropertiesShouldBeSet()
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+
+            //act
+            var model = map.Map(source);
+
+            // assert 
+            model.AatfName.Should().BeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -351,6 +379,21 @@
 
             //assert
             result.ComplianceYearClosed.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Map_GivenNullFilters_FiltersShouldBeInitialised()
+        {
+            //arrange
+            var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, new List<AatfData>(), null, null, null, TestFixture.Create<int>(), TestFixture.Create<DateTime>());
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.FilterViewModel.Should().NotBeNull();
+            result.RecipientWasteStatusFilterViewModel.Should().NotBeNull();
+            result.SubmittedDatesFilterViewModel.Should().NotBeNull();
         }
     }
 }
