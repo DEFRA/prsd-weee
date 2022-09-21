@@ -11,6 +11,7 @@
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Areas.Shared.ToViewModels;
+    using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
@@ -21,11 +22,14 @@
     {
         private readonly ViewEvidenceSummaryViewModelMap mapper;
         private readonly ITonnageUtilities tonnageUtilities;
+        private readonly ConfigurationService configurationService;
 
         public ViewEvidenceSummaryViewModelMapTests()
         {
             tonnageUtilities = A.Fake<ITonnageUtilities>();
-            mapper = new ViewEvidenceSummaryViewModelMap(tonnageUtilities);
+            configurationService = A.Fake<ConfigurationService>();
+
+            mapper = new ViewEvidenceSummaryViewModelMap(tonnageUtilities, configurationService);
         }
 
         [Fact]
@@ -144,9 +148,14 @@
         public void Map_GivenSourceWithCurrentDate_ComplianceYearListShouldBeMapped()
         {
             //arrange
-            var currentDate = new DateTime(2019, 1, 1);
+            var configDate = new DateTime(2018, 1, 1);
+            var currentDate = new DateTime(2021, 1, 1);
             var complianceYear = DateTime.Now.Year;
             var organisationId = TestFixture.Create<Guid>();
+
+            var evidenceNoteStartDate = configDate.AddDays(1);
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
 
             var source = new ViewEvidenceSummaryViewModelMapTransfer(organisationId, null, null, null,
              currentDate, complianceYear);
@@ -155,7 +164,7 @@
             var model = mapper.Map(source);
 
             // assert 
-            model.ManageEvidenceNoteViewModel.ComplianceYearList.Should().BeEquivalentTo(new List<int>() { 2019, 2018, 2017 });
+            model.ManageEvidenceNoteViewModel.ComplianceYearList.Should().BeEquivalentTo(new List<int>() {2021, 2020, 2019, 2018 });
         }
 
         [Fact]
