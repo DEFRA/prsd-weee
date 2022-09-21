@@ -26,7 +26,7 @@
         {
             Condition.Requires(noteData).IsNotNull();
 
-            var model = MapBase(noteData, currentDate, manageEvidenceNoteViewModel, pageNumber, pageSize);
+            var model = MapBase(noteData, pageNumber, pageSize);
             model.SchemeInfo = scheme;
             model.CanSchemeManageEvidence = scheme != null && 
                                             scheme.Status != SchemeStatus.Withdrawn && 

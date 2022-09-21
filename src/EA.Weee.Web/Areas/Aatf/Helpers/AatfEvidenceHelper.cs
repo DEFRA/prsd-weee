@@ -18,7 +18,7 @@
 
         public bool AatfCanEditCreateNotes(List<AatfData> aatfs, Guid aatfId, int complianceYear)
         {
-            var currentAatf = aatfs.FirstOrDefault(a => a.Id == aatfId);
+            var currentAatf = aatfs?.FirstOrDefault(a => a.Id == aatfId);
 
             Condition.Requires(currentAatf).IsNotNull();
 

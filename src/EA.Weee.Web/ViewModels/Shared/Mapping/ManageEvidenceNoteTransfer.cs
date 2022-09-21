@@ -50,8 +50,11 @@
         }
 
         public ManageEvidenceNoteTransfer(Guid organisationId,
-            FilterViewModel filterViewModel, RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
-            SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int complianceYear, DateTime currentDate)
+                                        FilterViewModel filterViewModel, 
+                                        RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
+                                        SubmittedDatesFilterViewModel submittedDatesFilterViewModel,
+                                        int complianceYear, 
+                                        DateTime currentDate)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             
