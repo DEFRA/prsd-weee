@@ -7,17 +7,22 @@
     using System;
     using System.Threading.Tasks;
     using Core.AatfEvidence;
+    using Core.Shared;
     using DataAccess.DataAccess;
     using Requests.AatfEvidence;
 
     public class SetNoteStatusRequestHandler : SaveNoteRequestBase, IRequestHandler<SetNoteStatusRequest, Guid>
     {
+        private readonly IAddressUtilities addressUtilities;
+
         public SetNoteStatusRequestHandler(
             WeeeContext context,
             IUserContext userContext,
             IWeeeAuthorization authorization, 
-            ISystemDataDataAccess systemDataDataAccess) : base(context, userContext, authorization, systemDataDataAccess)
+            ISystemDataDataAccess systemDataDataAccess,
+            IAddressUtilities addressUtilities) : base(context, userContext, authorization, systemDataDataAccess)
         {
+            this.addressUtilities = addressUtilities;
         }
 
         public async Task<Guid> HandleAsync(SetNoteStatusRequest message)
@@ -33,6 +38,22 @@
             var currentDate = await SystemDataDataAccess.GetSystemDateTime();
 
             ValidToSave(evidenceNote.Recipient, evidenceNote.ComplianceYear, currentDate);
+
+            if (message.Status == NoteStatus.Approved && evidenceNote.Recipient.IsBalancingScheme == false)
+            {
+                var organisationAddress = evidenceNote.Recipient.HasBusinessAddress
+                    ? evidenceNote.Recipient.BusinessAddress
+                    : evidenceNote.Recipient.NotificationAddress;
+
+                evidenceNote.SetApprovedRecipientAddress(evidenceNote.Recipient.Scheme.SchemeName, addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Recipient.Scheme.SchemeName,
+                    evidenceNote.Recipient.OrganisationName,
+                    organisationAddress.Address1,
+                    organisationAddress.Address2,
+                    organisationAddress.TownOrCity,
+                    organisationAddress.CountyOrRegion,
+                    organisationAddress.Postcode,
+                    null));
+            }
 
             return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);
         }

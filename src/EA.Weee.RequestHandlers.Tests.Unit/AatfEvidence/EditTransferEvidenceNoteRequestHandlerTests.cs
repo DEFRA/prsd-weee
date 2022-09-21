@@ -7,6 +7,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Shared;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -25,6 +26,7 @@
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
+    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class EditTransferEvidenceNoteRequestHandlerTests : SimpleUnitTestBase
     {
