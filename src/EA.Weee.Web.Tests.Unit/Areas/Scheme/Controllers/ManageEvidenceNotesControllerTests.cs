@@ -25,6 +25,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Web.Filters;
@@ -195,6 +196,34 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("outgoing-transfers")]
+        public async void IndexGet_GivenManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
+        {
+            //arrange
+            var complianceYear = TestFixture.Create<short>();
+            var currentDate = TestFixture.Create<DateTime>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                    .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, tab, model);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
+                m.ComplianceYear == complianceYear &&
+                m.OrganisationId == OrganisationId &&
+                m.CurrentDate == currentDate)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]

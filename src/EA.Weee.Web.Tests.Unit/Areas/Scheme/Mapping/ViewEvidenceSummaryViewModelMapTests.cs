@@ -186,6 +186,74 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithSelectedComplianceYear_OrganisationIdShouldBeMapped()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+
+            var source = new ViewEvidenceSummaryViewModelMapTransfer(organisationId, null, null, null,
+             DateTime.Now, DateTime.Now.Year);
+
+            //act
+            var model = mapper.Map(source);
+
+            // assert 
+            model.ManageEvidenceNoteViewModel.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSelectedComplianceYear_ComplianceYearClosedShouldBeMapped()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+
+            var source = new ViewEvidenceSummaryViewModelMapTransfer(organisationId, null, null, null,
+             DateTime.Now, DateTime.Now.Year);
+
+            //act
+            var model = mapper.Map(source);
+
+            // assert 
+            model.ManageEvidenceNoteViewModel.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSelectedComplianceYear_ComplianceYearClosedShouldBeMappedAndFalse()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var currentDate = DateTime.Now;
+            var complianceYear = currentDate.Year;
+
+            var source = new ViewEvidenceSummaryViewModelMapTransfer(organisationId, null, null, null,
+             currentDate, complianceYear);
+
+            //act
+            var model = mapper.Map(source);
+
+            // assert 
+            model.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().Be(false);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithSelectedComplianceYear_ComplianceYearClosedShouldBeMappedAndTrue()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var currentDate = DateTime.Now;
+            var complianceYear = currentDate.Year + 2;
+
+            var source = new ViewEvidenceSummaryViewModelMapTransfer(organisationId, null, null, null,
+             currentDate, complianceYear);
+
+            //act
+            var model = mapper.Map(source);
+
+            // assert 
+            model.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().Be(true);
+        }
+
+        [Fact]
         public void Map_GivenObligationSummaryData_ObligationEvidenceValuesShouldBeSet()
         {
             //arrange
