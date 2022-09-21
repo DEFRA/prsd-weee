@@ -152,11 +152,11 @@
 
             }
 
-            <div class="govuk-form-group govuk-grid-column-two-thirds govuk-!-padding-left-2 govuk-!-padding-top-4">
+            <div class="govuk-form-group govuk-grid-column-one-half govuk-!-padding-left-2 govuk-!-padding-top-4">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchRef)">
                     @Html.Gds().LabelFor(m => m.SearchRef, new { @class = "govuk-label--s" }, false)
                     @Html.Gds().TextBoxFor(m => m.SearchRef, new { type = "search" })
-                    <button class="govuk-button"><span class="fa fa-search" aria-hidden="true" title="search by reference"></span><span class="sr-only">Search by reference number</span></button>
+                    <button class="govuk-button weee-search-button"><span class="fa fa-search" aria-hidden="true" title="search by reference"></span><span class="sr-only">Search by reference number</span></button>
                     
                     @Html.ActionLink("Clear filter", postAction, controller,
                         clearFilterRouteValues, new { @class = "link-submit govuk-link govuk-link--no-visited-state govuk-!-padding-left-3" })
