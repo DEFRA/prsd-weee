@@ -140,12 +140,13 @@
             throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
         }
 
-        public void UpdateAatf(Guid aatfId)
+        public void SetApprovedRecipientAddress(string name, string address)
         {
-            Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
+            Condition.Requires(address).IsNotNullOrWhiteSpace();
+            Condition.Requires(name).IsNotNullOrWhiteSpace();
 
-            AatfId = aatfId;
-            Aatf = null;
+            ApprovedRecipientAddress = address;
+            ApprovedRecipientSchemeName = name;
         }
 
         public virtual Guid OrganisationId { get; set; }
@@ -192,5 +193,13 @@
         public virtual ICollection<NoteTransferTonnage> NoteTransferTonnage { get; protected set; }
 
         public virtual int ComplianceYear { get; set; }
+
+        public virtual string ApprovedRecipientAddress { get; protected set; }
+
+        public virtual string ApprovedRecipientSchemeName { get; protected set; }
+
+        public virtual string ApprovedTransfererAddress { get; protected set; }
+
+        public virtual string ApprovedTransfererSchemeName { get; protected set; }
     }
 }

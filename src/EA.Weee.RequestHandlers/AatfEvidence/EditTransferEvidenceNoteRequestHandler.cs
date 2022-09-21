@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Helpers;
+    using Core.Shared;
     using CuttingEdge.Conditions;
     using DataAccess;
     using DataAccess.DataAccess;
