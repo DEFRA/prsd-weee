@@ -40,6 +40,8 @@
 
         public int PageSize { get; private set; } = 10;
 
+        public string SearchRef { get; private set; }
+
         public TransferEvidenceNotesViewModelMapTransfer(
             EvidenceNoteSearchDataResult selectedNotes,
             TransferEvidenceNoteRequest request,
@@ -66,6 +68,7 @@
             TransferEvidenceNoteRequest request,
             TransferEvidenceNoteData transferNoteData,
             Guid organisationId,
+            string searchRef,
             int pageNumber = 1,
             int pageSize = 10)
         {
@@ -81,6 +84,7 @@
             OrganisationId = organisationId;
             PageNumber = pageNumber;
             PageSize = pageSize;
+            SearchRef = searchRef;
         }
 
         public TransferEvidenceNotesViewModelMapTransfer(
@@ -89,6 +93,7 @@
             EvidenceNoteSearchDataResult availableNotes,
             TransferEvidenceNoteRequest request,
             Guid organisationId,
+            string searchRef,
             int pageNumber = 1,
             int pageSize = 10)
         {
@@ -104,6 +109,7 @@
             ComplianceYear = complianceYear;
             PageNumber = pageNumber;
             PageSize = pageSize;
+            SearchRef = searchRef;
         }
 
         public TransferEvidenceNotesViewModelMapTransfer(

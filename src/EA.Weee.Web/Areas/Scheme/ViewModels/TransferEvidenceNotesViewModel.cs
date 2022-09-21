@@ -13,6 +13,8 @@
         [Display(Name = "Search by reference ID")]
         public string SearchRef { get; set; }
 
+        public bool SearchPerformed => !string.IsNullOrWhiteSpace(SearchRef);
+
         public ActionEnum Action { get; set; }
 
         public int PageNumber { get; set; }
