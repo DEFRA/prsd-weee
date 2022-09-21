@@ -87,6 +87,18 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithSearchRef_SearchRefShouldBeSet()
+        {
+            //arrange
+            var source = GetTransferObject();
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.SearchRef.Should().Be(source.SearchRef);
+        }
+        [Fact]
         public void Map_GivenSource_SchemeNameShouldBeRetrievedFromCacheAndSet()
         {
             //arrange
@@ -114,7 +126,7 @@
             var source = new TransferEvidenceNotesViewModelMapTransfer(
                 new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
                 new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
-                null, noteData, TestFixture.Create<Guid>());
+                null, noteData, TestFixture.Create<Guid>(), TestFixture.Create<string>());
 
             A.CallTo(() => cache.FetchSchemePublicInfo(source.TransferEvidenceNoteData.RecipientOrganisationData.Id)).Returns(new SchemePublicInfo()
             {
@@ -163,7 +175,7 @@
 
             var source = new TransferEvidenceNotesViewModelMapTransfer(selectedEvidenceNoteData,
                 TestFixture.Create<EvidenceNoteSearchDataResult>(), request,
-                TestFixture.Create<TransferEvidenceNoteData>(), organisationId);
+                TestFixture.Create<TransferEvidenceNoteData>(), organisationId, TestFixture.Create<string>());
 
             A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
                             v => v.IncludeAllCategories.Equals(false) && 
@@ -211,7 +223,9 @@
 
             var source = new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 availableEvidenceNoteData, request,
-                TestFixture.Create<TransferEvidenceNoteData>(), organisationId,
+                TestFixture.Create<TransferEvidenceNoteData>(), 
+                organisationId,
+                TestFixture.Create<string>(),
                 pageNumber,
                 pageSize);
 
@@ -270,10 +284,11 @@
             var pageSize = TestFixture.Create<int>();
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(e => e.CategoryIds, new List<int>() { Core.DataReturns.WeeeCategory.ConsumerEquipment.ToInt(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
+            var searchRef = TestFixture.Create<string>();
 
             var organisationId = TestFixture.Create<Guid>();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), pagedNotes, selectedNotes, request, organisationId, pageNumber, pageSize);
+            return new TransferEvidenceNotesViewModelMapTransfer(TestFixture.Create<int>(), pagedNotes, selectedNotes, request, organisationId, searchRef, pageNumber, pageSize);
         }
 
         private TransferEvidenceNotesViewModelMapTransfer GetTransferNoteDataTransferObject()
@@ -296,7 +311,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            return new TransferEvidenceNotesViewModelMapTransfer(selectedEvidenceNotes, availableEvidenceNotes, request, transferNoteData, organisationId);
+            return new TransferEvidenceNotesViewModelMapTransfer(selectedEvidenceNotes, availableEvidenceNotes, request, transferNoteData, organisationId, TestFixture.Create<string>());
         }
 
         private TransferEvidenceNoteRequest TransferEvidenceNoteRequest()

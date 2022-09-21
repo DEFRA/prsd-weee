@@ -1,4 +1,6 @@
-﻿/* Pager */
+﻿@import "../govuk_frontend/settings/_colours-applied";
+
+/* Pager */
 .pager
 {
 	margin: 0px 0px 5px 0px;
@@ -7,18 +9,17 @@
 }
 
 .pager .disabled {
-	color: #999;
+	color: $govuk-secondary-text-colour;
 	padding: 0px 3px 3px 3px;
 	margin-top: 4px;
 	text-align: right;
 }
 
-.pager .current
-{
-    color:#333333;			
+.pager .current {
+	color: $govuk-link-active-colour;
 	margin-top: 0px;
 	padding: 0px 5px 3px 5px;
- 	text-align: right;
+	text-align: right;
 }
 
 .pager span, .pager a

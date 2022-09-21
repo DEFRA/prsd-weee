@@ -17,7 +17,6 @@
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using FakeItEasy;
     using FluentAssertions;
     using IdentityModel;

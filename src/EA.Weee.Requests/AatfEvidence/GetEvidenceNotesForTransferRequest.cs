@@ -20,13 +20,13 @@
 
         public int PageSize { get; private set; }
 
-        public int? Reference { get; private set; }
+        public string SearchReference { get; private set; }
 
         public GetEvidenceNotesForTransferRequest(Guid organisationId, 
             List<int> categories, 
             int complianceYear,
             List<Guid> excludeEvidenceNotes,
-            int? reference = null,
+            string searchReference = null,
             int pageNumber = 1,
             int pageSize = 10)
         {
@@ -37,7 +37,7 @@
             Categories = categories;
             ComplianceYear = complianceYear;
             ExcludeEvidenceNotes = excludeEvidenceNotes ?? new List<Guid>();
-            Reference = reference;
+            SearchReference = searchReference;
             PageNumber = pageNumber;
             PageSize = pageSize;
         }

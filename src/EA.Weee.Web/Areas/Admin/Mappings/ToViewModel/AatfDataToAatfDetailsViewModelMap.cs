@@ -5,10 +5,10 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
-    using EA.Weee.Web.ViewModels.Shared.Utilities;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Shared;
     using ViewModels.Shared;
 
     public class AatfDataToAatfDetailsViewModelMap : IMap<AatfDataToAatfDetailsViewModelMapTransfer, AatfDetailsViewModel>

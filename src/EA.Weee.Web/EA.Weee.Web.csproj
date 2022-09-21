@@ -651,8 +651,6 @@
     <Compile Include="ViewModels\Shared\Aatf\Mapping\AatfEditContactTransfer.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ViewEvidenceNoteMapTransfer.cs" />
     <Compile Include="ViewModels\Shared\Mapping\ViewEvidenceNoteViewModelMap.cs" />
-    <Compile Include="ViewModels\Shared\Utilities\AddressUtilities.cs" />
-    <Compile Include="ViewModels\Shared\Utilities\IAddressUtilities.cs" />
     <Compile Include="Areas\AeReturn\Controllers\AeReturnBaseController.cs" />
     <Compile Include="Areas\AeReturn\Controllers\HoldingController.cs" />
     <Compile Include="Areas\AeReturn\ViewModels\ExportedWholeWeeeViewModel.cs" />
@@ -1855,6 +1853,7 @@
     <Folder Include="Areas\AeReturn\Views\Shared\" />
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
+    <Folder Include="ViewModels\Shared\Utilities\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
