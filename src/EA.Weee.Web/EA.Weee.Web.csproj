@@ -556,8 +556,8 @@
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\CreateNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EditDraftReturnNotesViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\EvidenceNotesViewModelTransfer.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteTransfer.cs" />
-    <Compile Include="Areas\Aatf\Mappings\ToViewModel\ManageEvidenceNoteViewModelMap.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\ManageEvidenceNoteTransfer.cs" />
+    <Compile Include="ViewModels\Shared\Mapping\ManageEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Mappings\ToViewModel\ModifyNoteTransfer.cs" />
     <Compile Include="ViewModels\Shared\Mapping\EvidenceNoteRowViewModelMap.cs" />
     <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreator.cs" />
