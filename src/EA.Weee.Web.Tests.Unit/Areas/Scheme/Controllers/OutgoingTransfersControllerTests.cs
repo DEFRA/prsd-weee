@@ -1532,9 +1532,15 @@
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async Task EditTransferFromGet_GivenNotes_ModelMapperShouldBeCalled(int page)
+        [InlineData(1, null)]
+        [InlineData(2, null)]
+        [InlineData(1, "search")]
+        [InlineData(2, "search")]
+        [InlineData(1, "")]
+        [InlineData(2, "")]
+        [InlineData(1, " ")]
+        [InlineData(2, " ")]
+        public async Task EditTransferFromGet_GivenNotes_ModelMapperShouldBeCalled(int page, string searchRef)
         {
             //arrange
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -1560,7 +1566,7 @@
                 A<HttpSessionStateBase>._, A<string>._)).Returns(request);
 
             //act
-            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>(), page);
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>(), page, searchRef);
 
             //assert
             A.CallTo(() => mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(
@@ -1571,7 +1577,8 @@
                         t.AvailableNotes.Equals(availableEvidenceNoteData) &&
                         t.OrganisationId == organisationId &&
                         t.PageSize == DefaultPageSize &&
-                        t.PageNumber == page)))
+                        t.PageNumber == page &&
+                        t.SearchRef == searchRef)))
                 .MustHaveHappenedOnceExactly();
         }
 

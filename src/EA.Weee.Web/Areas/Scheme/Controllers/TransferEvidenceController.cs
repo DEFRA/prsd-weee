@@ -154,7 +154,9 @@
                 currentSelectedNotes,
                 availableNotes,
                 transferRequest,
-                pcsId, pageNumber,
+                pcsId,
+                searchRef,
+                pageNumber,
                 configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
             var model =

@@ -296,7 +296,7 @@
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(currentSelectedNotes, availableNotes,
-                transferRequest, noteData, pcsId, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
+                transferRequest, noteData, pcsId, searchRef, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
