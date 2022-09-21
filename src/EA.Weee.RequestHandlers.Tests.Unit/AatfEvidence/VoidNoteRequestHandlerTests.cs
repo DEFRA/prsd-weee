@@ -5,6 +5,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Shared;
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain.Evidence;
@@ -24,6 +25,7 @@
     using Xunit;
     using NoteStatus = Domain.Evidence.NoteStatus;
     using NoteType = Domain.Evidence.NoteType;
+    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class VoidNoteRequestHandlerTests : SimpleUnitTestBase
     {
