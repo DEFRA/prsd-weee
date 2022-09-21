@@ -31,14 +31,18 @@
                 AatfId = source.AatfId
             };
 
-            if (source.AatfData != null)
+            if (source.Aatfs != null)
             {
                 var aatfs = aatfEvidenceHelper.GroupedValidAatfs(source.Aatfs);
 
-                model.AatfName = source.AatfData.Name;
                 model.SingleAatf = aatfs.Count == 1;
                 model.CanCreateEdit = (aatfEvidenceHelper.AatfCanEditCreateNotes(source.Aatfs, source.AatfId, source.ComplianceYear) &&
                                        WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate));
+            }
+
+            if (source.AatfData != null)
+            {
+                model.AatfName = source.AatfData.Name;
             }
 
             if (source.FilterViewModel != null)
