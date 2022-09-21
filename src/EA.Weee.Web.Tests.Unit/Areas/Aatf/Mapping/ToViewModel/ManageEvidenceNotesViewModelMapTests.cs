@@ -2,10 +2,9 @@
 {
     using AutoFixture;
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using EA.Weee.Web.Services;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -24,12 +23,14 @@
         private readonly AatfData aatfData;
         private readonly List<AatfData> aatfDataList;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
+        private readonly ConfigurationService configurationService;
 
         public ManageEvidenceNotesViewModelMapTests()
         {
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
+            configurationService = A.Fake<ConfigurationService>();
 
-            map = new ManageEvidenceNoteViewModelMap(aatfEvidenceHelper);
+            map = new ManageEvidenceNoteViewModelMap(aatfEvidenceHelper, configurationService);
             organisationId = Guid.NewGuid();
             aatfId = Guid.NewGuid();
             aatfData = TestFixture.Create<AatfData>();
