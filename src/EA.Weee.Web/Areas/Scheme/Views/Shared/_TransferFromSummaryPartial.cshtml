@@ -74,7 +74,7 @@
                         @Model.EvidenceNotesDataList[i].SubmittedBy
                     </td>
                     <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataList[i].TotalReceivedDisplay</td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell govuk-!-padding-left-5">
                         @using (Html.BeginForm(actionName: "DeselectEvidenceNote", controllerName: controller, method: FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
@@ -88,7 +88,7 @@
                                 @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "deselect-evidence-id" + i })
                             }
 
-                            <button class="link-submit govuk-!-padding-left-5 transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
+                            <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
                         }
                     </td>
                 </tr>
@@ -158,8 +158,10 @@
                     @Html.Gds().TextBoxFor(m => m.SearchRef, new { type = "search" })
                     <button class="govuk-button weee-search-button"><span class="fa fa-search" aria-hidden="true" title="search by reference"></span><span class="sr-only">Search by reference number</span></button>
                     
-                    @Html.ActionLink("Clear filter", postAction, controller,
-                        clearFilterRouteValues, new { @class = "link-submit govuk-link govuk-link--no-visited-state govuk-!-padding-left-3" })
+                    <span class="govuk-!-padding-left-3">
+                        @Html.ActionLink("Clear filter", postAction, controller,
+                            clearFilterRouteValues, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
+                    </span>
                 </div>
             </div>
 
@@ -200,7 +202,7 @@
                         @Model.EvidenceNotesDataListPaged[i].SubmittedBy
                     </td>
                     <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataListPaged[i].TotalReceived</td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell govuk-!-padding-left-5">
                         @using (Html.BeginForm(actionName: "SelectEvidenceNote", controllerName: controller, method: FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
@@ -217,7 +219,7 @@
                                 @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "select-evidence-id" + i })
                             }
 
-                            <button class="link-submit govuk-!-padding-left-5 transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
+                            <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
                         }
                     </td>
                 </tr>
