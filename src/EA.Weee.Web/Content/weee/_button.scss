@@ -24,3 +24,14 @@ $govuk-button-shadow-colour: darken($govuk-button-colour, 15%);
     -webkit-appearance: none;
     margin-bottom: 0px !important;
 }
+
+.weee-search-button {
+    left: -5px;
+}
+
+@media only screen and (max-width: 640px) {
+    .weee-search-button {
+        left: 0px;
+    }
+}
+
