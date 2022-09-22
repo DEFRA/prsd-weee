@@ -324,6 +324,7 @@
                         await client.SendAsync(User.GetAccessToken(), model.Request);
 
                         await cache.InvalidateAatfCache(model.OrganisationId);
+                        await cache.InvalidateAatfDataForOrganisationDataCache(model.OrganisationId);
 
                         return Redirect(Url.Action("Details", new { id = model.AatfId }));
                     }
