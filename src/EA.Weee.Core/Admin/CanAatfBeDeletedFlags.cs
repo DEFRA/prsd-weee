@@ -9,7 +9,6 @@
         OrganisationHasActiveUsers = 2,
         CanDelete = 4,
         CanDeleteOrganisation = 8,
-        HasNotes = 9,
         IsNotLatest = 10,
     }
 }
