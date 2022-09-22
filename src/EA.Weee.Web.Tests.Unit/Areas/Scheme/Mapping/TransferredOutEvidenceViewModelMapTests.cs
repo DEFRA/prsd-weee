@@ -46,7 +46,7 @@
                 null,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 1, 2));
 
             //assert
@@ -61,7 +61,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 1, 2));
 
             //assert
@@ -79,7 +79,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(), 
+                TestFixture.Create<int>(), 
                 1, 2);
 
             //act
@@ -100,7 +100,7 @@
                 noteData,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 1, 2);
 
             //act
@@ -122,7 +122,7 @@
                 noteData,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 1, 2);
 
             //act
@@ -143,7 +143,7 @@
                 noteData,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 1, 2);
 
             //act
@@ -172,7 +172,7 @@
                 noteData,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 1, 3);
 
             A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>._)).Returns(returnedNotes);
@@ -206,7 +206,7 @@
                 noteData,
                 TestFixture.Create<SchemePublicInfo>(),
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 pageNumber,
                 pageSize);
 
@@ -234,7 +234,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(),
+                TestFixture.Create<int>(),
                 1, 2);
 
             //act
@@ -256,7 +256,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(), 
+                TestFixture.Create<int>(), 
                 1, 2);
 
             //act
@@ -284,7 +284,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 TestFixture.Create<DateTime>(),
-                TestFixture.Create<ManageEvidenceNoteViewModel>(), 
+                TestFixture.Create<int>(), 
                 1, 2);
 
             //act
@@ -315,7 +315,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 currentDate,
-                model, 
+                currentDate.Year, 
                 1, 2);
 
             //act
@@ -330,9 +330,6 @@
         {
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
-
             var organisationId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
 
@@ -340,7 +337,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 currentDate,
-                model, 
+                currentDate.Year, 
                 1, 2);
 
             //act
@@ -355,15 +352,13 @@
         {
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
             var organisationId = TestFixture.Create<Guid>();
 
             var transfer = new SchemeTabViewModelMapTransfer(organisationId,
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 TestFixture.Create<SchemePublicInfo>(),
                 currentDate,
-                model,
+                currentDate.Year,
                 1, 2);
 
             //act
@@ -384,8 +379,6 @@
 
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
             var organisationId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
             var notesRow = new List<EvidenceNoteRowViewModel>
@@ -402,7 +395,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 currentDate,
-                model,
+                currentDate.Year,
                 1, 2);
 
             //act
@@ -420,8 +413,6 @@
         {
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
             var organisationId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
             var notesRow = new List<EvidenceNoteRowViewModel>
@@ -442,7 +433,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 currentDate,
-                model,
+                currentDate.Year,
                 1, 2);
 
             //act
@@ -460,8 +451,6 @@
         {
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
-            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
-                .With(m => m.SelectedComplianceYear, currentDate.Year).Create();
             var organisationId = TestFixture.Create<Guid>();
             var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Withdrawn).Create();
             var notesRow = new List<EvidenceNoteRowViewModel>
@@ -482,7 +471,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 scheme,
                 currentDate,
-                model,
+                currentDate.Year,
                 1, 2);
 
             //act
