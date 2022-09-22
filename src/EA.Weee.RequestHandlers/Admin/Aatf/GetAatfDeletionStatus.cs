@@ -43,7 +43,7 @@
             var hasNotes = await aatfDataAccess.HasEvidenceNotes(aatfId);
             if (hasNotes)
             {
-                result |= CanAatfBeDeletedFlags.HasNotes;
+                result |= CanAatfBeDeletedFlags.HasData;
                 return result;
             }
 
