@@ -54,11 +54,7 @@
                 }
                 else
                 {
-                    <p class="govuk-details__text govuk-!-margin-bottom-4 govuk-!-margin-bottom-4">
-                        The data shown in the table is for household evidence.
-                        <br />
-                        The evidence column includes approved evidence and net transfer.
-                    </p>
+                    @Html.Partial("_EvidenceReportHintText")
                 }
 
                 <table id="evidence-summary-table" class="govuk-table">
