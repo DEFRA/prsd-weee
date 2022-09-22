@@ -35,6 +35,23 @@
             </p>
         </div>
     }
+    else if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.HasNotes) || Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.HasData))
+    {
+        <header class="hgroup">
+            <div>
+                <h1 class="govuk-heading-l">Unable to delete this @facilityType</h1>
+            </div>
+        </header>
+        <div>
+            <p>
+                This @facilityType cannot be deleted due to having returns or evidence data
+            </p>
+
+            <p>
+                <a class="govuk-button" href="@(Url.UrlFor<AatfController>(u => u.Details(Model.AatfId, null)))">Continue</a>
+            </p>
+        </div>
+    }
     else if (!Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete))
     {
         <header class="hgroup">
@@ -66,41 +83,41 @@
             if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete)
                 && Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDeleteOrganisation))
             {
-            <div>
-                @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
-                {
+                <div>
+                    @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
+                    {
 
-                    <div class="govuk-warning-text">
-                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                        <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">Warning</span>
-                            The organisation that operates this AATF has active users. If you delete the @facilityType these external users will no longer be able to see the @facilityType or the organisation.
-                        </strong>
-                    </div>
-                }
-                <p>
-                    The @facilityType and the organisation that operates it will be deleted
-                </p>
-            </div>
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">Warning</span>
+                                The organisation that operates this AATF has active users. If you delete the @facilityType these external users will no longer be able to see the @facilityType or the organisation.
+                            </strong>
+                        </div>
+                    }
+                    <p>
+                        The @facilityType and the organisation that operates it will be deleted
+                    </p>
+                </div>
             }
             else if (Model.DeletionData.CanAatfBeDeletedFlags.HasFlag(CanAatfBeDeletedFlags.CanDelete))
             {
-<div>
-    @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
-    {
+                <div>
+                    @if (Model.DeletionData.CanOrganisationBeDeletedFlags.HasFlag(CanOrganisationBeDeletedFlags.HasActiveUsers))
+                    {
 
-        <div class="govuk-warning-text">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">Warning</span>
-                The organisation that operates this @facilityType has active users. If you delete the @facilityType these external users will no longer be able to see it.
-            </strong>
-        </div>
-    }
-    <p>
-        The @facilityType will be deleted and removed from any existing returns. The organisation that operates it will not be affected because it operates other AATFs, AEs or PCSs or because there are records or data for other compliance years.
-    </p>
-</div>
+                        <div class="govuk-warning-text">
+                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                            <strong class="govuk-warning-text__text">
+                                <span class="govuk-warning-text__assistive">Warning</span>
+                                The organisation that operates this @facilityType has active users. If you delete the @facilityType these external users will no longer be able to see it.
+                            </strong>
+                        </div>
+                    }
+                    <p>
+                        The @facilityType will be deleted and removed from any existing returns. The organisation that operates it will not be affected because it operates other AATFs, AEs or PCSs or because there are records or data for other compliance years.
+                    </p>
+                </div>
             }
 
             @Html.AntiForgeryToken()
