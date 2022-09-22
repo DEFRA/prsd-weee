@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Scheme;
+    using CuttingEdge.Conditions;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -29,6 +31,8 @@
 
         public DateTime CurrentDate { get; protected set; }
 
+        public SchemePublicInfo SchemePublicInfo { get; protected set; }
+
         public ManageEvidenceNoteTransfer(Guid organisationId, Guid aatfId, AatfData aatfData, List<AatfData> aatfs,
             FilterViewModel filterViewModel, RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
             SubmittedDatesFilterViewModel submittedDatesFilterViewModel, int complianceYear, DateTime currentDate)
@@ -50,6 +54,7 @@
         }
 
         public ManageEvidenceNoteTransfer(Guid organisationId,
+                                        SchemePublicInfo schemePublicInfo,
                                         FilterViewModel filterViewModel, 
                                         RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
                                         SubmittedDatesFilterViewModel submittedDatesFilterViewModel,
@@ -57,7 +62,9 @@
                                         DateTime currentDate)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-            
+            Condition.Requires(schemePublicInfo).IsNotNull();
+
+            SchemePublicInfo = schemePublicInfo;
             OrganisationId = organisationId;
             FilterViewModel = filterViewModel;
             RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;
