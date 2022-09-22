@@ -215,6 +215,7 @@
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttributeTests.cs" />
     <Compile Include="Validation\InternalEmailAddressAttributeTests.cs" />
+    <Compile Include="Validation\ReuseTonnageCompareValueAttributeTests.cs" />
     <Compile Include="Validation\TonnageCompareValueAttributeTests.cs" />
     <Compile Include="Validation\TonnageValueAttributeTests.cs" />
     <Compile Include="Validation\TonnageValueValidatorTests.cs" />
