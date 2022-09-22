@@ -40,6 +40,13 @@
                 return result;
             }
 
+            var hasNotes = await aatfDataAccess.HasEvidenceNotes(aatfId);
+            if (hasNotes)
+            {
+                result |= CanAatfBeDeletedFlags.HasData;
+                return result;
+            }
+
             var organisationDeletionStatus = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id, aatf.ComplianceYear, aatf.FacilityType);
 
             if (organisationDeletionStatus.HasFlag(CanOrganisationBeDeletedFlags.HasReturns) &&
