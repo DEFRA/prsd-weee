@@ -2,7 +2,6 @@
 {
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
-    using EA.Weee.Web.ViewModels.Shared;
     using System;
     using CuttingEdge.Conditions;
     using Prsd.Core;
@@ -17,7 +16,7 @@
 
         public DateTime CurrentDate { get; protected set; }
 
-        public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; protected set; }
+        public int SelectedComplianceYear { get; protected set; }
 
         public int PageNumber { get; protected set; }
 
@@ -27,7 +26,7 @@
             EvidenceNoteSearchDataResult noteData,
             SchemePublicInfo scheme,
             DateTime currentDate,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel,
+            int selectedComplianceYear,
             int pageNumber,
             int pageSize)
         {
@@ -36,11 +35,11 @@
             Condition.Requires(pageNumber).IsNotLessOrEqual(0);
             Condition.Requires(pageSize).IsNotLessOrEqual(0);
 
+            SelectedComplianceYear = selectedComplianceYear;
             OrganisationId = organisationId;
             NoteData = noteData;
             Scheme = scheme;
             CurrentDate = currentDate;
-            ManageEvidenceNoteViewModel = manageEvidenceNoteViewModel;
             PageNumber = pageNumber;
             PageSize = pageSize;
         }
