@@ -34,5 +34,7 @@
         Task<bool> IsLatestAatf(Guid id, Guid aatfId);
 
         Task<List<Aatf>> GetAatfsForOrganisation(Guid organisationId);
+
+        Task<bool> HasEvidenceNotes(Guid aatfId);
     }
 }
