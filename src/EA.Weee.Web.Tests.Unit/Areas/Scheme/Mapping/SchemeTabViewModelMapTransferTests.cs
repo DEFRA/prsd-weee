@@ -24,7 +24,7 @@
                 null,
                 TestFixture.Create<SchemePublicInfo>(),
                 SystemTime.Now,
-                null,
+                TestFixture.Create<int>(),
                 PageNumber,
                 PageSize));
 
@@ -40,7 +40,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 TestFixture.Create<SchemePublicInfo>(),
                 SystemTime.Now,
-                null,
+                TestFixture.Create<int>(),
                 PageNumber,
                 PageSize));
 
@@ -58,7 +58,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 TestFixture.Create<SchemePublicInfo>(),
                 SystemTime.Now,
-                null,
+                TestFixture.Create<int>(),
                 pageNumber,
                 PageSize));
 
@@ -76,7 +76,7 @@
                 TestFixture.Create<EvidenceNoteSearchDataResult>(),
                 TestFixture.Create<SchemePublicInfo>(),
                 SystemTime.Now,
-                null,
+                TestFixture.Create<int>(),
                 PageNumber,
                 pageSize));
 
@@ -92,16 +92,16 @@
             var aatfId = TestFixture.Create<Guid>();
             var noteData = TestFixture.Create<EvidenceNoteSearchDataResult>();
             var currentDate = TestFixture.Create<DateTime>();
-            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var complianceYear = TestFixture.Create<int>();
             var schemeInfo = TestFixture.Create<SchemePublicInfo>();
 
             //act
-            var mapper = new SchemeTabViewModelMapTransfer(organisationId, noteData, schemeInfo, currentDate, model, PageNumber, PageSize);
+            var mapper = new SchemeTabViewModelMapTransfer(organisationId, noteData, schemeInfo, currentDate, complianceYear, PageNumber, PageSize);
 
             //assert
             mapper.Scheme.Should().Be(schemeInfo);
             mapper.CurrentDate.Should().Be(currentDate);
-            mapper.ManageEvidenceNoteViewModel.Should().Be(model);
+            mapper.SelectedComplianceYear.Should().Be(complianceYear);
             mapper.NoteData.Should().Be(noteData);
             mapper.PageNumber.Should().Be(PageNumber);
             mapper.PageSize.Should().Be(PageSize);

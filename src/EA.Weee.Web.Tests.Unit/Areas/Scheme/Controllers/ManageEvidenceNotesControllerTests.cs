@@ -408,7 +408,6 @@
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel.Equals(model) &&
                          a.PageNumber == 1 &&
                          a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
         }
@@ -487,7 +486,6 @@
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel.Equals(model) &&
                          a.PageNumber == 1 &&
                          a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
@@ -815,7 +813,6 @@
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel == model &&
                          a.PageNumber == pageNumber &&
                          a.PageSize == pageSize))).MustHaveHappenedOnceExactly();
         }
@@ -921,7 +918,6 @@
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
-                         a.ManageEvidenceNoteViewModel.Equals(model) &&
                          a.PageNumber == pageNumber &&
                          a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }

@@ -109,10 +109,10 @@
                     selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber, int.MaxValue));
+                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, int.MaxValue));
 
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
-                    (new ManageEvidenceNoteTransfer(organisationId, null, null, null, selectedComplianceYear, currentDate));
+                    (new ManageEvidenceNoteTransfer(organisationId, scheme, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("ReviewSubmittedEvidence", model);
             }
@@ -136,9 +136,9 @@
                     }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
-                 new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                 new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, scheme, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("ViewAndTransferEvidence", model);
             }
@@ -164,9 +164,9 @@
                     }, selectedComplianceYear, new List<NoteType>() { NoteType.Transfer }, true, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
-                      new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, manageEvidenceNoteViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                      new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, scheme, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("OutgoingTransfers", model);
             }
@@ -261,7 +261,7 @@
                     var pbsSummaryModel = mapper.Map<SummaryEvidenceViewModel>
                         (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, evidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, selectedComplianceYear));
 
-                    pbsSummaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
+                    pbsSummaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, scheme, null, null, null, selectedComplianceYear, currentDate));
 
                     return View("SummaryEvidencePBS", pbsSummaryModel);
                 }
@@ -274,7 +274,7 @@
                 var summaryModel = mapper.Map<SummaryEvidenceViewModel>
                     (new ViewEvidenceSummaryViewModelMapTransfer(pcsId, obligationEvidenceSummaryData, manageEvidenceNoteViewModel, scheme, currentDate, selectedComplianceYear));
 
-                summaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
+                summaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, scheme, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("SummaryEvidence", summaryModel);
             }
