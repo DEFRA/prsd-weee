@@ -15,6 +15,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Organisation;
+    using Domain.Scheme;
     using Weee.Requests.AatfEvidence.Reports;
     using Weee.Tests.Core;
     using Xunit;
@@ -41,7 +43,7 @@
         public async Task HandleAsync_GivenRequest_EvidenceReportsAuthenticationCheckShouldBeCalled()
         {
             //arrange
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<TonnageToDisplayReportEnum>(),
+            var request = new GetEvidenceNoteReportRequest(null, null, null, TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
 
             //act
@@ -53,16 +55,36 @@
         [Theory]
         [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, false)]
         [InlineData(TonnageToDisplayReportEnum.Net, true)]
-        public async Task HandleAsync_GivenRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled(TonnageToDisplayReportEnum tonnageToDisplay, bool expected)
+        public async Task HandleAsync_GivenAllReportDataRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled(TonnageToDisplayReportEnum tonnageToDisplay, bool expected)
         {
             //arrange
-            var originatingOrganisationId = TestFixture.Create<Guid>();
-            var recipientOrganisationId = TestFixture.Create<Guid>();
+            var complianceYear = TestFixture.Create<int>();
+
+            var request = new GetEvidenceNoteReportRequest(null,
+                null,
+                null,
+                tonnageToDisplay,
+                complianceYear);
+
+            //act
+            await handler.HandleAsync(request);
+
+            A.CallTo(() =>
+                evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
+                    null, null, null, expected)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, false)]
+        [InlineData(TonnageToDisplayReportEnum.Net, true)]
+        public async Task HandleAsync_GivenAatfReportDataRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled(TonnageToDisplayReportEnum tonnageToDisplay, bool expected)
+        {
+            //arrange
             var aatfId = TestFixture.Create<Guid>();
             var complianceYear = TestFixture.Create<int>();
 
-            var request = new GetEvidenceNoteReportRequest(recipientOrganisationId, 
-                originatingOrganisationId,
+            var request = new GetEvidenceNoteReportRequest(null,
+                null,
                 aatfId,
                 tonnageToDisplay,
                 complianceYear);
@@ -72,15 +94,38 @@
 
             A.CallTo(() =>
                 evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
-                    originatingOrganisationId, recipientOrganisationId, aatfId, expected)).MustHaveHappenedOnceExactly();
+                    null, null, aatfId, expected)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, false)]
+        [InlineData(TonnageToDisplayReportEnum.Net, true)]
+        public async Task HandleAsync_GivenOriginatorReportDataRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled(TonnageToDisplayReportEnum tonnageToDisplay, bool expected)
+        {
+            //arrange
+            var originatorOrganisation = TestFixture.Create<Guid>();
+            var complianceYear = TestFixture.Create<int>();
+
+            var request = new GetEvidenceNoteReportRequest(null,
+                originatorOrganisation,
+                null,
+                tonnageToDisplay,
+                complianceYear);
+
+            //act
+            await handler.HandleAsync(request);
+
+            A.CallTo(() =>
+                evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
+                    originatorOrganisation, null, null, expected)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_AatfCsvShouldBeDefined()
         {
             //arrange
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), 
-                TestFixture.Create<Guid>(),
+            var request = new GetEvidenceNoteReportRequest(null, 
+                null,
                 TestFixture.Create<Guid>(),
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
@@ -269,9 +314,9 @@
         public async Task HandleAsync_GivenReportData_CsvShouldBeCreated()
         {
             //arrange
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(), 
-                TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(),
+            var request = new GetEvidenceNoteReportRequest(null,
+                null,
+                null,
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
 
@@ -297,11 +342,10 @@
         public async Task HandleAsync_GivenCsvData_CsvFileDataShouldBeReturned(TonnageToDisplayReportEnum tonnageToDisplay, string expected)
         {
             //arrange
-            A.CallTo(() => genericDataAccess.GetById<Aatf>(A<Guid>._)).Returns<Aatf>(null);
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(),
+            var request = new GetEvidenceNoteReportRequest(null,
+                null,
                 null,
                 tonnageToDisplay,
                 TestFixture.Create<int>());
@@ -322,15 +366,17 @@
         public async Task HandleAsync_GivenAatfCsvData_CsvFileDataShouldBeReturned()
         {
             //arrange
-            Aatf aatf = A.Fake<Aatf>();
-            A.CallTo(() => aatf.ApprovalNumber).Returns<string>("123456");
-            A.CallTo(() => genericDataAccess.GetById<Aatf>(A<Guid>._)).Returns<Aatf>(aatf);
-
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(),
+            var aatfId = TestFixture.Create<Guid>();
+            var aatf = A.Fake<Aatf>();
+            
+            A.CallTo(() => aatf.ApprovalNumber).Returns("123456");
+            A.CallTo(() => genericDataAccess.GetById<Aatf>(aatfId)).Returns(aatf);
+            
+            var request = new GetEvidenceNoteReportRequest(null,
+                null,
+                aatfId,
                 TonnageToDisplayReportEnum.OriginalTonnages,
                 TestFixture.Create<int>());
 
@@ -343,6 +389,43 @@
             //assert
             result.FileContent.Should().Be(content);
             result.FileName.Should().Be($"{request.ComplianceYear}_{aatf.ApprovalNumber}_Evidence notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
+            SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, "original tonnages")]
+        [InlineData(TonnageToDisplayReportEnum.Net, "net of transfer")]
+        public async Task HandleAsync_GivenRecipientOrganisationThatIsNotBalancingSchemeCsvData_CsvFileDataShouldBeReturned(TonnageToDisplayReportEnum tonnageToDisplay, string expected)
+        {
+            //arrange
+            var date = new DateTime(2020, 12, 31, 11, 13, 14);
+            SystemTime.Freeze(date);
+
+            var recipientOrganisationId = TestFixture.Create<Guid>();
+            var approvalNumber = TestFixture.Create<string>();
+            var recipientOrganisation = A.Fake<Organisation>();
+            var recipientScheme = A.Fake<Scheme>();
+
+            A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(null);
+            A.CallTo(() => recipientScheme.ApprovalNumber).Returns(approvalNumber);
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(recipientOrganisationId)).Returns(recipientOrganisation);
+            
+            var request = new GetEvidenceNoteReportRequest(recipientOrganisationId,
+                null,
+                null,
+                tonnageToDisplay,
+                TestFixture.Create<int>());
+
+            var content = TestFixture.Create<string>();
+            A.CallTo(() => evidenceWriter.Write(A<IEnumerable<EvidenceNoteReportData>>._)).Returns(content);
+
+            //act
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            result.FileContent.Should().Be(content);
+            result.FileName.Should().Be($"{request.ComplianceYear}_{approvalNumber}_Evidence notes {expected}{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
             SystemTime.Unfreeze();
         }
     }
