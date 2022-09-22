@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Aatf.Mappings.ToViewModel;
@@ -11,6 +12,7 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Requests.AatfEvidence.Reports;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -275,6 +277,21 @@
                 summaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("SummaryEvidence", summaryModel);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceNotesReport(Guid pcsId, int complianceYear, TonnageToDisplayReportEnum tonnageToDisplay)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteReportRequest(pcsId, null, null, tonnageToDisplay, complianceYear);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
             }
         }
 
