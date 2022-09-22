@@ -103,5 +103,19 @@
                     t.ComparePropertyName.Equals("AvailableReceived") &&
                     t.ErrorMessage.Equals("The transfer received in tonnes for category {0} must be equivalent or lower than the total received available"));
         }
+
+        [Fact]
+        public void TransferEvidenceCategoryValue_ReceivedProperty_ShouldBeDecoratedWith_ReuseTonnageValueAttribute()
+        {
+            typeof(TransferEvidenceCategoryValue).GetProperty("Received")
+                .Should()
+                .BeDecoratedWith<ReuseTonnageCompareValueAttribute>(t =>
+                    t.CategoryProperty.Equals("CategoryId") &&
+                    t.TransferReceievedName.Equals("Received") &&
+                    t.AvailableRecievedName.Equals("AvailableReceived") &&
+                    t.TransferReusedName.Equals("Reused") &&
+                    t.AvailableReusedName.Equals("AvailableReused") &&
+                    t.ErrorMessage.Equals("The transfer reused in tonnes for category {0} is too low. After the transfer, the remaining total reused available must be equivalent or lower than the remaining total received available"));
+        }
     }
 }
