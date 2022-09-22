@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence.Reports
 {
+    using System;
     using Core.AatfEvidence;
     using Core.Admin;
     using Core.Constants;
@@ -12,6 +13,8 @@
     using Prsd.Core;
     using Requests.AatfEvidence.Reports;
     using System.Threading.Tasks;
+    using CuttingEdge.Conditions;
+    using Domain.Organisation;
 
     internal class GetEvidenceNoteReportHandler : IRequestHandler<GetEvidenceNoteReportRequest, CSVFileData>
     {
@@ -35,12 +38,9 @@
         {
             await evidenceReportsAuthenticationCheck.EnsureIsAuthorised(request);
 
-            string aatfApprovalNumber = string.Empty;
-
-            if (request.AatfId.HasValue)
+            if (request.AatfId.HasValue && request.RecipientOrganisationId.HasValue)
             {
-                var aatf = await genericDataAccess.GetById<Aatf>(request.AatfId.Value);
-                aatfApprovalNumber = "_" + aatf.ApprovalNumber;
+                throw new InvalidOperationException("GetEvidenceNoteReportHandler only a single report parameter should be specified");
             }
 
             var reportData = await evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(
@@ -110,15 +110,28 @@
 
             var fileContent = csvWriter.Write(reportData);
             var timestamp = SystemTime.Now;
-            var type = request.TonnageToDisplay == TonnageToDisplayReportEnum.OriginalTonnages
-                ? "original tonnages"
-                : "net of transfer";
+            var type = request.TonnageToDisplay == TonnageToDisplayReportEnum.OriginalTonnages ? "original tonnages" : "net of transfer";
 
+            // default file name in case of error
             var fileName = $"{request.ComplianceYear}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
 
             if (request.AatfId.HasValue)
             {
+                // an aatf specific report
+                var aatf = await genericDataAccess.GetById<Aatf>(request.AatfId.Value);
+                var aatfApprovalNumber = "_" + aatf.ApprovalNumber;
+
                 fileName = $"{request.ComplianceYear}{aatfApprovalNumber}_Evidence notes report{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+            }
+            else if (request.RecipientOrganisationId.HasValue)
+            {
+                // an recipient organisation / scheme report
+                var organisation = await genericDataAccess.GetById<Organisation>(request.RecipientOrganisationId.Value);
+
+                if (!organisation.IsBalancingScheme)
+                {
+                    fileName = $"{request.ComplianceYear}_{organisation.Scheme.ApprovalNumber}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+                }
             }
 
             return new CSVFileData
