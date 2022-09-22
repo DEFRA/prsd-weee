@@ -246,5 +246,10 @@
 
             return latestAatf != null && latestAatf.Id.Equals(id);
         }
+
+        public async Task<bool> HasEvidenceNotes(Guid aatfId)
+        {
+            return await context.Notes.AnyAsync(x => x.AatfId == aatfId);
+        }
     }
 }
