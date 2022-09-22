@@ -111,6 +111,14 @@
                 transferNoteTonnage.Received.Should().Be(2);
                 transferNoteTonnage.Reused.Should().Be(2);
             };
+
+            private readonly It shouldHaveNotSetApprovedDetails = () =>
+            {
+                note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeName.Should().BeNull();
+                note.ApprovedTransfererAddress.Should().BeNull();
+                note.ApprovedTransfererSchemeName.Should().BeNull();
+            };
         }
 
         [Component]
@@ -211,6 +219,14 @@
                 history.FromStatus.Should().Be(NoteStatus.Draft);
                 history.ToStatus.Should().Be(NoteStatus.Submitted);
             };
+
+            private readonly It shouldHaveNotSetApprovedDetails = () =>
+            {
+                note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeName.Should().BeNull();
+                note.ApprovedTransfererAddress.Should().BeNull();
+                note.ApprovedTransfererSchemeName.Should().BeNull();
+            };
         }
 
         [Component]
@@ -303,6 +319,14 @@
             {
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Draft);
+            };
+
+            private readonly It shouldHaveNotSetApprovedDetails = () =>
+            {
+                note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeName.Should().BeNull();
+                note.ApprovedTransfererAddress.Should().BeNull();
+                note.ApprovedTransfererSchemeName.Should().BeNull();
             };
         }
 
