@@ -25,7 +25,8 @@ SELECT
 		n.RecipientId AS RecipientOrganisationId,
 		n.AatfId,
 		aa.[Name] AS AatfName,
-		n.ComplianceYear
+		n.ComplianceYear,
+		n.Status AS StatusId
 FROM
 	[Evidence].Note n
 	INNER JOIN [Lookup].EvidenceNoteStatus ens ON n.[Status] = ens.Id
