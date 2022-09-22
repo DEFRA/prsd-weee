@@ -17,7 +17,6 @@
         private readonly IWeeeClient client;
         private readonly IHttpContextService httpContextService;
         private readonly EvidenceNoteStartDateAttribute attribute;
-        private readonly EvidenceNoteStartDateAttribute attributeWithNoComplianceYearCheck;
         private readonly DateTime currentDate;
 
         public EvidenceNoteStartDateAttributeTests()
@@ -25,13 +24,7 @@
             client = A.Fake<IWeeeClient>();
             httpContextService = A.Fake<IHttpContextService>();
 
-            attribute = new EvidenceNoteStartDateAttribute("EndDate", true)
-            {
-                Client = () => client,
-                HttpContextService = httpContextService
-            };
-
-            attributeWithNoComplianceYearCheck = new EvidenceNoteStartDateAttribute("EndDate", false)
+            attribute = new EvidenceNoteStartDateAttribute("EndDate")
             {
                 Client = () => client,
                 HttpContextService = httpContextService
@@ -52,7 +45,7 @@
         public void EvidenceNoteStartDateAttribute_CurrentDateShouldBeRetrievedFromCache()
         {
             //arrange
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = currentDate.AddDays(1) };
+            var target = new ValidationTarget() { StartDate = currentDate, EndDate = currentDate.AddDays(1) };
             var context = new ValidationContext(target);
 
             var userToken = "token";
@@ -71,7 +64,7 @@
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
             SystemTime.Freeze(currentDate);
-            var target = new ValidationTargetWithComplianceYearCheck() {StartDate = currentDate.AddDays(1), EndDate = currentDate.AddDays(2) };
+            var target = new ValidationTarget() {StartDate = currentDate.AddDays(1), EndDate = currentDate.AddDays(2) };
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -100,7 +93,7 @@
             //arrange
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = startDate, EndDate = startDate.AddDays(1) };
+            var target = new ValidationTarget() { StartDate = startDate, EndDate = startDate.AddDays(1) };
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -129,7 +122,7 @@
             var currentDate = new DateTime(2020, 12, 31);
             SystemTime.Freeze(currentDate);
             
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = date, EndDate = date.AddDays(1) };
+            var target = new ValidationTarget() { StartDate = date, EndDate = date.AddDays(1) };
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -144,28 +137,6 @@
             SystemTime.Unfreeze();
         }
 
-        [Theory]
-        [MemberData(nameof(InValidStartDates))]
-        public void EvidenceNoteStartDateAttribute_GivenStartDateIsBeforeCurrentComplianceYearAndCheckComplianceYearIsFalse_ValidationExceptionShouldNotBeThrown(DateTime date)
-        {
-            //arrange
-            var currentDate = new DateTime(2020, 12, 31);
-            SystemTime.Freeze(currentDate);
-
-            var target = new ValidationTargetWithoutComplianceYearCheck() { StartDate = date, EndDate = date.AddDays(1) };
-            var context = new ValidationContext(target);
-
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
-
-            //act
-            var result = Record.Exception(() => attributeWithNoComplianceYearCheck.Validate(target.StartDate, context)) as ValidationException;
-
-            //assert
-            result.Should().BeNull();
-
-            SystemTime.Unfreeze();
-        }
-
         [Fact]
         public void EvidenceNoteStartDateAttribute_GivenStartDateIsAfterEndDate_ValidationExceptionShouldBeThrown()
         {
@@ -173,7 +144,7 @@
             var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate.AddDays(-1), EndDate = currentDate.AddDays(-2) };
+            var target = new ValidationTarget() { StartDate = currentDate.AddDays(-1), EndDate = currentDate.AddDays(-2) };
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -195,7 +166,7 @@
             var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = currentDate };
+            var target = new ValidationTarget() { StartDate = currentDate, EndDate = currentDate };
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -216,7 +187,7 @@
             var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = DateTime.MinValue };
+            var target = new ValidationTarget() { StartDate = currentDate, EndDate = DateTime.MinValue };
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -237,7 +208,7 @@
             var currentDate = new DateTime(2020, 2, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = new ValidationTargetWithComplianceYearCheck() { StartDate = currentDate, EndDate = null };
+            var target = new ValidationTarget() { StartDate = currentDate, EndDate = null };
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -251,17 +222,9 @@
             SystemTime.Unfreeze();
         }
 
-        private class ValidationTargetWithComplianceYearCheck
+        private class ValidationTarget
         {
-            [EvidenceNoteStartDate(nameof(EndDate), true)]
-            public DateTime? StartDate { get; set; }
-
-            public DateTime? EndDate { get; set; }
-        }
-
-        private class ValidationTargetWithoutComplianceYearCheck
-        {
-            [EvidenceNoteStartDate(nameof(EndDate), false)]
+            [EvidenceNoteStartDate(nameof(EndDate))]
             public DateTime? StartDate { get; set; }
 
             public DateTime? EndDate { get; set; }

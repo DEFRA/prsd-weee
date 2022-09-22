@@ -10,12 +10,9 @@
     {
         public string CompareDatePropertyName { get; set; }
 
-        public bool CheckComplianceYear { get; set; }
-
-        public EvidenceNoteStartDateAttribute(string compareDatePropertyName, bool checkComplianceYear)
+        public EvidenceNoteStartDateAttribute(string compareDatePropertyName)
         {
             CompareDatePropertyName = compareDatePropertyName;
-            CheckComplianceYear = checkComplianceYear;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -31,14 +28,11 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (CheckComplianceYear)
+            if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
-                if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
-                {
-                    return new ValidationResult("The start date must be within the current compliance year");
-                }
+                return new ValidationResult("The start date must be within the current compliance year");
             }
-
+            
             return ValidateStartDate(thisDate, otherDate, currentDate);
         }
     }
