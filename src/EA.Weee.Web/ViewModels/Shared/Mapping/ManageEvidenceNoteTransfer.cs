@@ -54,7 +54,6 @@
         }
 
         public ManageEvidenceNoteTransfer(Guid organisationId,
-                                        SchemePublicInfo schemePublicInfo,
                                         FilterViewModel filterViewModel, 
                                         RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
                                         SubmittedDatesFilterViewModel submittedDatesFilterViewModel,
@@ -62,9 +61,7 @@
                                         DateTime currentDate)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
-            Condition.Requires(schemePublicInfo).IsNotNull();
 
-            SchemePublicInfo = schemePublicInfo;
             OrganisationId = organisationId;
             FilterViewModel = filterViewModel;
             RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;

@@ -82,7 +82,7 @@
         public void Map_GivenSourceWithNoAatfList_AatfListPropertiesShouldBeSet()
         {
             //arrange
-            var source = new ManageEvidenceNoteTransfer(organisationId, TestFixture.Create<SchemePublicInfo>(), null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -97,7 +97,7 @@
         public void Map_GivenSourceWithNoAatfData_AatfListPropertiesShouldBeSet()
         {
             //arrange
-            var source = new ManageEvidenceNoteTransfer(organisationId, TestFixture.Create<SchemePublicInfo>(), null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
