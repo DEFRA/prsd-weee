@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using EA.Weee.Core.Admin.Obligation;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
 
     public class SummaryEvidenceViewModel : ManageEvidenceNoteSchemeViewModel, IObligationSummaryBase
     {
