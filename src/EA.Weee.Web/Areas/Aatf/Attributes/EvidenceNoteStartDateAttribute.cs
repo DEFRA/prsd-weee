@@ -38,21 +38,8 @@
                     return new ValidationResult("The start date must be within the current compliance year");
                 }
             }
-          
-            if (thisDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
-            {
-                return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
-            }
 
-            if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))
-            {
-                if (thisDate > otherDate.Value.Date)
-                {
-                    return new ValidationResult("Ensure the start date is before the end date");
-                }
-            }
-
-            return ValidationResult.Success;
+            return ValidateStartDate(thisDate, otherDate, currentDate);
         }
     }
 }
