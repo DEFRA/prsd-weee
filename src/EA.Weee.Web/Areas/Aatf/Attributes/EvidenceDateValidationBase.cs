@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
+    using Antlr.Runtime;
     using Api.Client;
     using Filters;
     using Prsd.Core;
@@ -28,11 +29,11 @@
 
         public DateTime GetCurrentDateTime()
         {
-            return AsyncHelpers.RunSync(async () =>
+            return AsyncHelpers.RunSync(() =>
             {
                 using (var c = Client())
                 {
-                    return await c.SendAsync(HttpContextService.GetAccessToken(), new GetApiDate());
+                    return c.SendAsync(HttpContextService.GetAccessToken(), new GetApiDate());
                 }
             });
         }
