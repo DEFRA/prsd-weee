@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
+    using System;
+    using Core.Helpers;
     using Core.Shared;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
@@ -17,16 +19,20 @@
 
         public T MapSchemeBase(EvidenceNoteSearchDataResult noteData,
             SchemePublicInfo scheme,
+            DateTime currentDate,
+            int complianceYear,
             int pageNumber,
             int pageSize)
         {
             Condition.Requires(noteData).IsNotNull();
 
             var model = MapBase(noteData, pageNumber, pageSize);
+
+            model.CanSchemeManageEvidence = scheme != null &&
+                                            scheme.Status != SchemeStatus.Withdrawn &&
+                                            WindowHelper.IsDateInComplianceYear(complianceYear, currentDate);
             model.SchemeInfo = scheme;
-            model.CanSchemeManageEvidence = scheme != null && 
-                                            scheme.Status != SchemeStatus.Withdrawn && 
-                                            !model.ManageEvidenceNoteViewModel.ComplianceYearClosed;
+
             return model;
         }
     }

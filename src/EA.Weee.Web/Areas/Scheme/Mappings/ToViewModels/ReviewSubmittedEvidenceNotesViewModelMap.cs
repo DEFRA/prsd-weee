@@ -14,7 +14,8 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var model = MapSchemeBase(source.NoteData, source.Scheme, source.PageNumber, source.PageSize);
+            var model = MapSchemeBase(source.NoteData, source.Scheme, source.CurrentDate, source.SelectedComplianceYear, source.PageNumber, source.PageSize);
+
             model.OrganisationId = source.OrganisationId;
 
             return model;
