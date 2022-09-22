@@ -63,6 +63,14 @@
                 history.ToStatus.Should().Be(NoteStatus.Void);
                 history.Reason.Should().Be("reason");
             };
+
+            private readonly It shouldHaveNotSetApprovedDetails = () =>
+            {
+                note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeName.Should().BeNull();
+                note.ApprovedTransfererAddress.Should().BeNull();
+                note.ApprovedTransfererSchemeName.Should().BeNull();
+            };
         }
 
         [Component]
@@ -109,6 +117,14 @@
                 history.FromStatus.Should().Be(NoteStatus.Approved);
                 history.ToStatus.Should().Be(NoteStatus.Void);
                 history.Reason.Should().Be("reason");
+            };
+
+            private readonly It shouldHaveNotSetApprovedDetails = () =>
+            {
+                note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeName.Should().BeNull();
+                note.ApprovedTransfererAddress.Should().BeNull();
+                note.ApprovedTransfererSchemeName.Should().BeNull();
             };
         }
 
