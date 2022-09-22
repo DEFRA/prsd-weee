@@ -37,16 +37,8 @@
                     return new ValidationResult("The end date must be within the current compliance year");
                 }
             }
-           
-            if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))
-            {
-                if (thisDate < otherDate)
-                {
-                    return new ValidationResult("Ensure the end date is after the start date");
-                }
-            }
 
-            return ValidationResult.Success;
+            return ValidateEndDate(otherDate, thisDate);
         }
     }
 }
