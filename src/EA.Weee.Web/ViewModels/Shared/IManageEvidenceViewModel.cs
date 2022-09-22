@@ -5,7 +5,5 @@
     public interface IManageEvidenceViewModel
     {
         PagedList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
-
-        ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
     }
 }
