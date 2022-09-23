@@ -21,7 +21,7 @@
         public async Task<List<WeeeSearchedAnAatfListData>> HandleAsync(GetAatfAddressBySearchId model)
         {
             authorization.EnsureCanAccessExternalArea();
-            var aatfAddressDataList = await searchedAatfResultListDataAccess.GetAnAatfBySearchId(model.SearchedAatfId);
+            var aatfAddressDataList = await searchedAatfResultListDataAccess.GetAnAatfBySearchId(model.SearchedAatfId, model.SearchedTerm, model.CurrentSelectedAatfId);
 
             return aatfAddressDataList;
         }

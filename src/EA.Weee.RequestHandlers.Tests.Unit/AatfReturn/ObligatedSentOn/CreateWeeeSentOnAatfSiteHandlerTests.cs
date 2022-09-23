@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.ObligatedSentOn
 {
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn.Obligated;
@@ -15,15 +16,17 @@
     public class CreateWeeeSentOnAatfSiteHandlerTests
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
         private readonly CreateWeeeSentOnAatfSiteHandler handler;
 
         public CreateWeeeSentOnAatfSiteHandlerTests()
         {
             this.authorization = A.Fake<IWeeeAuthorization>();
-            this.getSentOnAatfSiteDataAccess = A.Fake<IWeeeSentOnDataAccess>();
+            this.sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
+            this.genericDataAccess = A.Fake<IGenericDataAccess>();
 
-            handler = new CreateWeeeSentOnAatfSiteHandler(authorization, getSentOnAatfSiteDataAccess);
+            handler = new CreateWeeeSentOnAatfSiteHandler(authorization, sentOnDataAccess, genericDataAccess);
         }
 
         [Fact]
@@ -31,7 +34,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new CreateWeeeSentOnAatfSiteHandler(authorization, getSentOnAatfSiteDataAccess);
+            var handler = new CreateWeeeSentOnAatfSiteHandler(authorization, sentOnDataAccess, genericDataAccess);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<CreateWeeeSentOnAatfSite>());
 
@@ -50,11 +53,11 @@
 
             var createWeeeSentOnAatf = A.Fake<CreateWeeeSentOnAatfSite>();
 
-            var requestHandler = new CreateWeeeSentOnAatfSiteHandler(authorization, getSentOnAatfSiteDataAccess);
+            var requestHandler = new CreateWeeeSentOnAatfSiteHandler(authorization, sentOnDataAccess, genericDataAccess);
 
             await requestHandler.HandleAsync(createWeeeSentOnAatf);
 
-            A.CallTo(() => getSentOnAatfSiteDataAccess.Submit(A<WeeeSentOn>.That.IsSameAs(weeeSentOn)));
+            A.CallTo(() => sentOnDataAccess.Submit(A<WeeeSentOn>.That.IsSameAs(weeeSentOn)));
         }
     }
 }

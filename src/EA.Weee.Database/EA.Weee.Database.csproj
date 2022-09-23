@@ -318,6 +318,9 @@
     <Content Include="scripts\Update\Release 2\Support01\20191112-1554-alter-getAllAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 4\20210706-1645-missing-producer-data-report-changes.sql" />
     <Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
+    <Content Include="scripts\Update\Release 4\20220923-1751-remove-weeesenton-table-relation.sql">
+      <SubType>Component</SubType>
+    </Content>
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />

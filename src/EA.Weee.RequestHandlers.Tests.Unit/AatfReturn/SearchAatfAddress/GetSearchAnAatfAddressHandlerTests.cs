@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn.SearchAatfAddress
 {
-    using Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.SearchAatfAddress;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
@@ -11,9 +10,6 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Lookup;
-    using EA.Weee.Domain.Organisation;
     using Xunit;
 
     public class GetSearchAnAatfAddressHandlerTests
@@ -59,23 +55,17 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var getSearchAatfAddress = new GetSearchAatfAddress("Test", aatfId);
             DateTime date = DateTime.Now;
+            var getSearchAatfAddress = new GetSearchAatfAddress("Test", aatfId);
 
-            Aatf aatf1 = new Aatf("Test 1", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), AatfSize.Large, date, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
-            Aatf aatf2 = new Aatf("Test 2", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), AatfSize.Large, date, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
-            Aatf aatf3 = new Aatf("Test 3", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), AatfSize.Large, date, A.Fake<AatfContact>(), FacilityType.Ae, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
+            List<Core.AatfReturn.ReturnAatfAddressResult> returnAatfAddressResults = new List<Core.AatfReturn.ReturnAatfAddressResult>();
+            returnAatfAddressResults.Add(new Core.AatfReturn.ReturnAatfAddressResult() { OrganisationId = Guid.NewGuid(), SearchTermId = Guid.NewGuid(), SearchTermName = "Test 1" });
 
-            var aatfs = new List<Aatf>()
-            {
-               aatf1, aatf2, aatf3
-            };
-
-            A.CallTo(() => getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(getSearchAatfAddress)).Returns(aatfs);
+            A.CallTo(() => getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(getSearchAatfAddress)).Returns(returnAatfAddressResults);
 
             var result = await handler.HandleAsync(getSearchAatfAddress);
 
-            result.Count.Should().Be(3);
+            result.Count.Should().Be(1);
         }
 
         [Fact]
@@ -83,17 +73,14 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var getSearchAatfAddress = new GetSearchAatfAddress("Test 1", aatfId);
             DateTime date = DateTime.Now;
 
-            Aatf aatf1 = new Aatf("Test 1", A.Dummy<UKCompetentAuthority>(), "1234", AatfStatus.Approved, A.Fake<Organisation>(), A.Dummy<AatfAddress>(), AatfSize.Large, date, A.Fake<AatfContact>(), FacilityType.Aatf, 2019, A.Fake<LocalArea>(), A.Fake<PanArea>());            
+            var getSearchAatfAddress = new GetSearchAatfAddress("Test 1", aatfId);
 
-            var aatfs = new List<Aatf>()
-            {
-               aatf1
-            };
-            
-            A.CallTo(() => getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(getSearchAatfAddress)).Returns(aatfs);
+            List<Core.AatfReturn.ReturnAatfAddressResult> returnAatfAddressResults = new List<Core.AatfReturn.ReturnAatfAddressResult>();
+            returnAatfAddressResults.Add(new Core.AatfReturn.ReturnAatfAddressResult() { OrganisationId = Guid.NewGuid(), SearchTermId = Guid.NewGuid(), SearchTermName = "Test 1" });
+
+            A.CallTo(() => getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(getSearchAatfAddress)).Returns(returnAatfAddressResults);
 
             var result = await handler.HandleAsync(getSearchAatfAddress);
 

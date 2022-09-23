@@ -7,6 +7,6 @@
 
     public interface ISearchedAatfResultListDataAccess
     {
-        Task<List<WeeeSearchedAnAatfListData>> GetAnAatfBySearchId(Guid selectedAatfId);
+        Task<List<WeeeSearchedAnAatfListData>> GetAnAatfBySearchId(Guid selectedAatfId, string searchedTerm, Guid currentSelectedAatfId);
     }
 }

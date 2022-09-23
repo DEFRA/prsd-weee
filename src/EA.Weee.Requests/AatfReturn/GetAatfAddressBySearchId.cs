@@ -9,9 +9,15 @@
     {
         public Guid SearchedAatfId { get; set; }
 
-        public GetAatfAddressBySearchId(Guid searchedAatfId)
+        public string SearchedTerm { get; set; }
+
+        public Guid CurrentSelectedAatfId { get; set; }
+
+        public GetAatfAddressBySearchId(Guid searchedAatfId, string searchedTerm, Guid currentSelectedAatfId)
         {
             SearchedAatfId = searchedAatfId;
+            SearchedTerm = searchedTerm;
+            CurrentSelectedAatfId = currentSelectedAatfId;
         }
     }
 }

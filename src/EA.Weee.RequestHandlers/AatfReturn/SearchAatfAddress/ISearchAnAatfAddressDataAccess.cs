@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn.SearchAatfAddress
 {
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
     using System;
@@ -8,6 +9,6 @@
 
     public interface ISearchAnAatfAddressDataAccess
     {
-        Task<List<Aatf>> GetSearchAnAatfAddressBySearchTerm(GetSearchAatfAddress searchAatfAddress);
+        Task<List<ReturnAatfAddressResult>> GetSearchAnAatfAddressBySearchTerm(GetSearchAatfAddress searchAatfAddress);
     }
 }
