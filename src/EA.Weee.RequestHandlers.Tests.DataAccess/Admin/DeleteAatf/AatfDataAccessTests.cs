@@ -5,7 +5,6 @@
     using Domain.DataReturns;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.AatfReturn;
     using RequestHandlers.Factories;
     using System;
     using System.Collections.Generic;
@@ -908,6 +907,32 @@
                 AssertAllAatfDataTrue(databaseWrapper, @return2, aatf2, aatf2ReceivedReturn2, aatf2ReusedReturn2, aatf2SentOnReturn2);
                 AssertAllAatfDataTrue(databaseWrapper, @return2, aatf, aatf1ReceivedReturn2, aatf1ReusedReturn2, aatf1SentOnReturn2);
                 AssertAllAatfDataFalse(databaseWrapper, @return, aatf, aatf1ReceivedReturn1, aatf1ReusedReturn1, aatf1SentOnReturn1);
+            }
+        }
+
+        [Fact]
+        public async void HasEvidenceNotes_ReturnsTrue_IfNotePresent()
+        {
+            var aatfId = Guid.NewGuid();
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                //var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                //databaseWrapper.WeeeContext.Notes.Add(new Domain.Evidence.Note() { AatfId = aatfId, Status = Domain.Evidence.NoteStatus.Submitted });
+                //await databaseWrapper.WeeeContext.SaveChangesAsync();
+                //var result = await aatfDataAccess.HasEvidenceNotes(aatfId);
+                //result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async void HasEvidenceNotes_ReturnsFalse_IfNoNotePresent()
+        {
+            var aatfId = Guid.NewGuid();
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var result = await aatfDataAccess.HasEvidenceNotes(aatfId);
+                result.Should().BeTrue();
             }
         }
 
