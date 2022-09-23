@@ -1,28 +1,29 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.DeleteAatf
 {
     using AutoFixture;
-    using Domain.AatfReturn;
-    using Domain.DataReturns;
+    using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.Domain.Evidence;
+    using EA.Weee.RequestHandlers.Aatf;
+    using EA.Weee.RequestHandlers.Factories;
+    using EA.Weee.Tests.Core;
+    using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
-    using RequestHandlers.Factories;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using RequestHandlers.Aatf;
-    using Weee.DataAccess.DataAccess;
-    using Weee.Tests.Core;
-    using Weee.Tests.Core.Model;
     using Xunit;
-    using Organisation = Domain.Organisation.Organisation;
-    using Return = Domain.AatfReturn.Return;
-    using WeeeReceived = Domain.AatfReturn.WeeeReceived;
-    using WeeeReceivedAmount = Domain.AatfReturn.WeeeReceivedAmount;
-    using WeeeReused = Domain.AatfReturn.WeeeReused;
-    using WeeeReusedAmount = Domain.AatfReturn.WeeeReusedAmount;
-    using WeeeReusedSite = Domain.AatfReturn.WeeeReusedSite;
-    using WeeeSentOn = Domain.AatfReturn.WeeeSentOn;
-    using WeeeSentOnAmount = Domain.AatfReturn.WeeeSentOnAmount;
+    using Organisation = EA.Weee.Domain.Organisation.Organisation;
+    using Return = EA.Weee.Domain.AatfReturn.Return;
+    using WeeeReceived = EA.Weee.Domain.AatfReturn.WeeeReceived;
+    using WeeeReceivedAmount = EA.Weee.Domain.AatfReturn.WeeeReceivedAmount;
+    using WeeeReused = EA.Weee.Domain.AatfReturn.WeeeReused;
+    using WeeeReusedAmount = EA.Weee.Domain.AatfReturn.WeeeReusedAmount;
+    using WeeeReusedSite = EA.Weee.Domain.AatfReturn.WeeeReusedSite;
+    using WeeeSentOn = EA.Weee.Domain.AatfReturn.WeeeSentOn;
+    using WeeeSentOnAmount = EA.Weee.Domain.AatfReturn.WeeeSentOnAmount;
 
     public class AatfDataAccessTests
     {
@@ -916,11 +917,25 @@
             var aatfId = Guid.NewGuid();
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                //var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
-                //databaseWrapper.WeeeContext.Notes.Add(new Domain.Evidence.Note() { AatfId = aatfId, Status = Domain.Evidence.NoteStatus.Submitted });
-                //await databaseWrapper.WeeeContext.SaveChangesAsync();
-                //var result = await aatfDataAccess.HasEvidenceNotes(aatfId);
-                //result.Should().BeTrue();
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation = Organisation.CreateRegisteredCompany("Test Organisation", "1234565");
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation);
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation1);
+                databaseWrapper.WeeeContext.Organisations.Add(recipientOrganisation);
+                databaseWrapper.WeeeContext.Schemes.Add(scheme);
+
+                var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation1);
+
+                databaseWrapper.WeeeContext.Aatfs.Add(aatf1);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                databaseWrapper.WeeeContext.Notes.Add(new Domain.Evidence.Note(organisation1, recipientOrganisation, DateTime.Now, DateTime.Now, Domain.Evidence.WasteType.HouseHold, Domain.Evidence.Protocol.Actual, aatf1, databaseWrapper.WeeeContext.GetCurrentUser().ToString(), new List<NoteTonnage>()));
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+                var result = await aatfDataAccess.HasEvidenceNotes(aatfId);
+                result.Should().BeTrue();
             }
         }
 
