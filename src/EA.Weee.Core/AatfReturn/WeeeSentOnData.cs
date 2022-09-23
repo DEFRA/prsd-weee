@@ -23,6 +23,8 @@
 
         public List<WeeeObligatedData> Tonnages { get; set; }
 
+        public virtual string ApprovalNumber { get; set; }
+
         public WeeeSentOnData()
         {
         }

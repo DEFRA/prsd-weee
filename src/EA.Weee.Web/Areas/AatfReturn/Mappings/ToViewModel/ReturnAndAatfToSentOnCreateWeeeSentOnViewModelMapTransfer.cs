@@ -10,7 +10,7 @@
 
         public Guid AatfId { get; set; }
 
-        public Guid SelectedWeeeSentOnId { get; set; }
+        public Guid SelectedAatfId { get; set; }
 
         public Guid? WeeeSentOnId { get; set; }
     }

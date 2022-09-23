@@ -11,22 +11,25 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IWeeeSentOnDataAccess sentOnDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
-        public CreateWeeeSentOnAatfSiteHandler(IWeeeAuthorization authorization, IWeeeSentOnDataAccess sentOnDataAccess)
+        public CreateWeeeSentOnAatfSiteHandler(IWeeeAuthorization authorization, IWeeeSentOnDataAccess sentOnDataAccess, IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.sentOnDataAccess = sentOnDataAccess;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<Guid> HandleAsync(CreateWeeeSentOnAatfSite message)
         {
             authorization.EnsureCanAccessExternalArea();
-            var weeeSentOn = await sentOnDataAccess.GetWeeeSentOnById(message.SelectedWeeeSentOnId);
+            
+            var aatfData = await genericDataAccess.GetById<Aatf>(message.SelectedAatfId);
+            var weeeSentOn = new WeeeSentOn(message.ReturnId, message.AatfId, aatfData.Organisation.BusinessAddress.Id, aatfData.SiteAddress.Id);
 
-            var createWeeeSentOnSite = new WeeeSentOn(message.ReturnId, message.AatfId, weeeSentOn.OperatorAddressId, weeeSentOn.SiteAddressId);
-            await sentOnDataAccess.Submit(createWeeeSentOnSite);
+            await sentOnDataAccess.Submit(weeeSentOn);
 
-            return createWeeeSentOnSite.Id;
+            return weeeSentOn.Id;
         }
     }
 }

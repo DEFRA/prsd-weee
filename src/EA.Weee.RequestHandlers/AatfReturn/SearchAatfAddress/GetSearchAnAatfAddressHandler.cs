@@ -22,21 +22,9 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var aatfAddressDataList = new List<ReturnAatfAddressResult>();
-            var aatfAddresses = await getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(message);
+            var resultsAATFAddresses = await getSearchAnAatfAddressDataAccess.GetSearchAnAatfAddressBySearchTerm(message);
 
-            foreach (var item in aatfAddresses)
-            {
-                var returnAatfAddressData = new ReturnAatfAddressResult()
-                {
-                    SearchTermId = item.Id,
-                    SearchTermName = item.Name
-                };
-
-                aatfAddressDataList.Add(returnAatfAddressData);
-            }            
-
-            return aatfAddressDataList;
+            return resultsAATFAddresses;
         }
     }
 }

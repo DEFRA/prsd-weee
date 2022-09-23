@@ -2,13 +2,14 @@
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchedAatfResultListViewModel
+
 @{
     ViewBag.Title = "Index";
 }
 
 <section id="main-content">
     <h1 class="govuk-heading-l" style="padding-top: 0px;">Search Results</h1>
-    <h3 class="govuk-heading-m">We found no results for '@Model.AatfName'</h3>
+    <h3 class="govuk-heading-m">We found results for '@Model.AatfName'</h3>
 
     @using (Html.BeginForm("Index", "SearchedAatfResultList", FormMethod.Post))
     {
@@ -28,7 +29,7 @@
                 <div class="govuk-table__head">
                     <div class="govuk-grid-row govuk-table__row govuk-table__header">
                         <div class="govuk-grid-column-one-quarter">
-                            AATF / ATF name and address
+                            AATF name and address
                         </div>
                         <div class="govuk-grid-column-one-quarter">
                             Operator name and <br />
@@ -42,20 +43,20 @@
                         </div>
                     </div>
                 </div>
-                foreach (var address in Model.Sites)
+                foreach (var weeeSentOn in Model.Sites)
                 {
                     <div class="govuk-grid-row govuk-table__cell">
-                        <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
-                            @Html.Raw(Model.CreateLongAddress(address.SiteAddress))
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
-                            @Html.Raw(Model.CreateLongAddress(address.OperatorAddress))
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
-                            @Html.Raw(address.ApprovalNumber)
+                        <div class="govuk-grid-column-one-quarter">
+                            @Html.Raw(Model.CreateLongAddress(weeeSentOn.SiteAddress))
                         </div>
                         <div class="govuk-grid-column-one-quarter">
-                            @Html.RadioButtonFor(m => m.SelectedWeeeSentOnId, address.WeeeSentOnId, new { @onclick = "setSiteName('" + address.SiteAddress.Name + "')" })
+                            @Html.Raw(Model.CreateLongAddress(weeeSentOn.OperatorAddress))
+                        </div>
+                        <div class="govuk-grid-column-one-quarter">
+                            @Html.Raw(weeeSentOn.ApprovalNumber)
+                        </div>
+                        <div class="govuk-grid-column-one-quarter">
+                            @Html.RadioButtonFor(m => m.SelectedAatfId, weeeSentOn.WeeeAatfId, new { @onclick = "setSiteSelectedId('" + weeeSentOn.WeeeAatfId + "','" + weeeSentOn.SiteAddress.Name + "')" })
                         </div>
                     </div>
                 }
@@ -69,7 +70,7 @@
         <div class="govuk-!-padding-bottom-2"></div>
 
         <p class="govuk-body">
-            @Html.RouteLink("Can't find the treatment facility you're looking for?", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, isCanNotFindLinkClick = true, organisationId = Model.OrganisationId, action = "Index", controller = "CanNotFoundTreatmentFacility" }, null)
+            @Html.RouteLink("Can't find the AATF you're looking for?", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, isCanNotFindLinkClick = true, organisationId = Model.OrganisationId, action = "Index", controller = "CanNotFoundTreatmentFacility" }, null)
         </p>
 
         <div class="govuk-!-padding-bottom-4"></div>
@@ -83,7 +84,8 @@
     }
 </section>
 <script type="text/javascript">
-    function setSiteName(siteName) {
+    function setSiteSelectedId(siteValue, siteName) {
+        document.getElementById("SelectedAatfId").value = siteValue;
         document.getElementById("SelectedSiteName").value = siteName;
     }
 </script>

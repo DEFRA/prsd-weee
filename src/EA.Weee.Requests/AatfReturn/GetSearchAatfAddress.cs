@@ -11,10 +11,13 @@
 
         public Guid CurrentSelectedAatfId { get; set; }
 
-        public GetSearchAatfAddress(string searchTerm, Guid currentSelectedAatfId)
+        public bool IsGeneralSearch { get; set; }
+
+        public GetSearchAatfAddress(string searchTerm, Guid currentSelectedAatfId, bool isGeneralSearch = false)
         {
             this.SearchTerm = searchTerm;
             this.CurrentSelectedAatfId = currentSelectedAatfId;
+            this.IsGeneralSearch = isGeneralSearch;
         }
     }
 }

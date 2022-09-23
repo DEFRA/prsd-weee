@@ -13,8 +13,8 @@
                 }
             })
         },
-        minLength: 3,
-        select: function (event, ui) {            
+        minLength: 1,
+        select: function (event, ui) {
             $("#hdnSelectedAatfId").val(ui.item.id);
         },
         messages: {

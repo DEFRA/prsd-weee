@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
+    using EA.Weee.Core.DataStandards;
     using System;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     public class SearchAnAatfViewModel
@@ -16,8 +18,8 @@
         public Guid SelectedAatfId { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Search Term must have min length of 3 and max Length of 50")]
-        [Display(Name = "Search Term")]
+        [DisplayName("Search term")]
+        [MaxLength(CommonMaxFieldLengths.DefaultString)]
         public string SearchTerm { get; set; }
     }
 }

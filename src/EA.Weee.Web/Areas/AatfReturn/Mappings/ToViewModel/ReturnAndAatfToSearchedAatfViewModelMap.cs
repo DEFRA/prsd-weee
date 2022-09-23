@@ -20,21 +20,32 @@
                 AatfName = source.AatfName,
                 SelectedAatfId = source.SelectedAatfId,
                 SelectedAatfName = source.SelectedAatfName,
-                SelectedWeeeSentOnId = source.SelectedWeeeSentOnId
+                SelectedSiteName = source.SelectedSiteName
             };
 
             var siteList = new List<WeeeSearchedAnAatfListData>();
 
-            foreach (var item in source.Sites)
+            foreach (var item in source.AatfDataList)
             {
-                var siteData = new WeeeSearchedAnAatfListData()
-                {                    
+                siteList.Add(new WeeeSearchedAnAatfListData()
+                {
                     SiteAddress = item.SiteAddress,
-                    OperatorAddress = item.OperatorAddress,
+                    OperatorAddress = new AatfAddressData()
+                    {
+                        Address1 = item.Organisation.BusinessAddress.Address1,
+                        Address2 = item.Organisation.BusinessAddress.Address2,
+                        Countries = item.Organisation.BusinessAddress.Countries,
+                        CountryName = item.Organisation.BusinessAddress.CountryName,
+                        TownOrCity = item.Organisation.BusinessAddress.TownOrCity,
+                        Postcode = item.Organisation.BusinessAddress.Postcode,
+                        CountyOrRegion = item.Organisation.BusinessAddress.CountyOrRegion,
+                        Name = item.Organisation.Name,
+                        CountryId = item.Organisation.BusinessAddress.CountryId,
+                        Id = item.Organisation.BusinessAddress.Id
+                    },
                     ApprovalNumber = item.ApprovalNumber,
-                    WeeeSentOnId = item.WeeeSentOnId
-                };                
-                siteList.Add(siteData);
+                    WeeeAatfId = item.Id
+                });
             }
 
             viewModel.Sites = siteList;

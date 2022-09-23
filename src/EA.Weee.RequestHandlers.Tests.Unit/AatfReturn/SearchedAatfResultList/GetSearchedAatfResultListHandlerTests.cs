@@ -44,11 +44,14 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var getSearchedAatfAddress = new GetAatfAddressBySearchId(aatfId);
+            var currentSelectedAatfId = Guid.NewGuid();
+            var searchedTerm = "Test";
+
+            var getSearchedAatfAddress = new GetAatfAddressBySearchId(aatfId, searchedTerm, currentSelectedAatfId);
 
             await handler.HandleAsync(getSearchedAatfAddress);
 
-            A.CallTo(() => searchedAatfResultListDataAccess.GetAnAatfBySearchId(getSearchedAatfAddress.SearchedAatfId)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => searchedAatfResultListDataAccess.GetAnAatfBySearchId(getSearchedAatfAddress.SearchedAatfId, searchedTerm, currentSelectedAatfId)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -57,16 +60,19 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var selectedAatfId = Guid.NewGuid();
-            var getSearchAatfAddress = new GetAatfAddressBySearchId(aatfId);            
+            var currentSelectedAatfId = Guid.NewGuid();
+            var searchedTerm = "Test";
+
+            var getSearchAatfAddress = new GetAatfAddressBySearchId(aatfId, searchedTerm, currentSelectedAatfId);
 
             var returnAatfAddressResult = new List<WeeeSearchedAnAatfListData>()
             {
-                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1234RE/ATF", WeeeSentOnId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() },
-                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1235RE/ATF", WeeeSentOnId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() },
-                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1236RE/ATF", WeeeSentOnId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() }
+                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1234RE/ATF", WeeeAatfId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() },
+                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1235RE/ATF", WeeeAatfId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() },
+                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1236RE/ATF", WeeeAatfId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() }
             };
 
-            A.CallTo(() => searchedAatfResultListDataAccess.GetAnAatfBySearchId(getSearchAatfAddress.SearchedAatfId)).Returns(returnAatfAddressResult);
+            A.CallTo(() => searchedAatfResultListDataAccess.GetAnAatfBySearchId(getSearchAatfAddress.SearchedAatfId, searchedTerm, currentSelectedAatfId)).Returns(returnAatfAddressResult);
 
             var result = await handler.HandleAsync(getSearchAatfAddress);
 
@@ -79,14 +85,17 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var selectedAatfId = Guid.NewGuid();
-            var getSearchAatfAddress = new GetAatfAddressBySearchId(aatfId);
+            var currentSelectedAatfId = Guid.NewGuid();
+            var searchedTerm = "Test";
+
+            var getSearchAatfAddress = new GetAatfAddressBySearchId(aatfId, searchedTerm, currentSelectedAatfId);
 
             var returnAatfAddressResult = new List<WeeeSearchedAnAatfListData>()
             {
-                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1234RE/ATF", WeeeSentOnId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() }
+                new WeeeSearchedAnAatfListData() { ApprovalNumber = "WEE/QW1234RE/ATF", WeeeAatfId = selectedAatfId, OperatorAddress = new AatfAddressData(), SiteAddress = new AatfAddressData() }
             };
 
-            A.CallTo(() => searchedAatfResultListDataAccess.GetAnAatfBySearchId(getSearchAatfAddress.SearchedAatfId)).Returns(returnAatfAddressResult);
+            A.CallTo(() => searchedAatfResultListDataAccess.GetAnAatfBySearchId(getSearchAatfAddress.SearchedAatfId, searchedTerm, currentSelectedAatfId)).Returns(returnAatfAddressResult);
 
             var result = await handler.HandleAsync(getSearchAatfAddress);
 
