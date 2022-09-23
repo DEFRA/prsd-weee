@@ -17,30 +17,47 @@
             this.context = context;
         }
 
-        public async Task<List<WeeeSearchedAnAatfListData>> GetAnAatfBySearchId(Guid selectedAatfId)
+        public async Task<List<WeeeSearchedAnAatfListData>> GetAnAatfBySearchId(Guid selectedAatfId, string searchedTerm, Guid currentSelectedAatfId)
         {
-            var sentOnList = await context.WeeeSentOn.Where(w => w.AatfId == selectedAatfId)
-                .Include(w => w.OperatorAddress)
-                .Include(w => w.Aatf)
-                .Include(w => w.SiteAddress)
-                .ToListAsync();
-
             var returnSearchedAatfAddressListDatas = new List<WeeeSearchedAnAatfListData>();
-            if (sentOnList != null && sentOnList.Count > 0)
+
+            if (selectedAatfId != null)
             {
-                foreach (var sentOn in sentOnList)
+                var sentOnList = await context.Aatfs.Where(w => w.Id == selectedAatfId)
+                                                    .Include(w => w.SiteAddress)
+                                                    .Include(w => w.Organisation.BusinessAddress)
+                                                    .ToListAsync();
+                
+                if (sentOnList != null && sentOnList.Count > 0)
                 {
-                    var returnSearchedAatfAddressListData = new WeeeSearchedAnAatfListData()
+                    foreach (var sentOn in sentOnList)
                     {
-                        ApprovalNumber = sentOn.Aatf.ApprovalNumber,
-                        WeeeSentOnId = sentOn.Id,
-                        OperatorAddress = new AatfAddressData(sentOn.OperatorAddress.Name, sentOn.OperatorAddress.Address1, sentOn.OperatorAddress.Address2, sentOn.OperatorAddress.TownOrCity, sentOn.OperatorAddress.CountyOrRegion, sentOn.OperatorAddress.Postcode, sentOn.OperatorAddress.CountryId, sentOn.OperatorAddress.Country.Name),
-                        SiteAddress = new AatfAddressData(sentOn.SiteAddress.Name, sentOn.SiteAddress.Address1, sentOn.SiteAddress.Address2, sentOn.SiteAddress.TownOrCity, sentOn.SiteAddress.CountyOrRegion, sentOn.SiteAddress.Postcode, sentOn.SiteAddress.CountryId, sentOn.SiteAddress.Country.Name)                        
-                    };
-                    returnSearchedAatfAddressListDatas.Add(returnSearchedAatfAddressListData);
+                        var returnSearchedAatfAddressListData = new WeeeSearchedAnAatfListData()
+                        {
+                            ApprovalNumber = sentOn.ApprovalNumber,
+                            WeeeAatfId = sentOn.Id,
+                            OperatorAddress = new AatfAddressData(sentOn.Organisation.Name, sentOn.Organisation.BusinessAddress.Address1, sentOn.Organisation.BusinessAddress.Address2, sentOn.Organisation.BusinessAddress.TownOrCity, sentOn.Organisation.BusinessAddress.CountyOrRegion, sentOn.Organisation.BusinessAddress.Postcode, sentOn.Organisation.BusinessAddress.CountryId, sentOn.Organisation.BusinessAddress.Country.Name),
+                            SiteAddress = new AatfAddressData(sentOn.SiteAddress.Name, sentOn.SiteAddress.Address1, sentOn.SiteAddress.Address2, sentOn.SiteAddress.TownOrCity, sentOn.SiteAddress.CountyOrRegion, sentOn.SiteAddress.Postcode, sentOn.SiteAddress.CountryId, sentOn.SiteAddress.Country.Name)
+                        };
+                        returnSearchedAatfAddressListDatas.Add(returnSearchedAatfAddressListData);
+                    }
                 }
+                return returnSearchedAatfAddressListDatas;
             }
-            return returnSearchedAatfAddressListDatas;
+            else
+            {
+                var selectedAatf = await context.Aatfs.Where(a => a.Id == currentSelectedAatfId).SingleOrDefaultAsync();
+
+                var result = await context.Aatfs.Where(x => (x.Name.Contains(searchedTerm) ||
+                                                       x.ApprovalNumber.Contains(searchedTerm) ||
+                                                       x.Organisation.Name.Contains(searchedTerm)) &&
+                                                      (x.Id != currentSelectedAatfId && x.ComplianceYear == selectedAatf.ComplianceYear))
+                                         .Select(x => new ReturnAatfAddressResult { SearchTermId = x.Id, SearchTermName = x.Name })
+                                         .OrderBy(x => x.SearchTermName)
+                                         .ToListAsync();
+
+                return returnSearchedAatfAddressListDatas;
+            }
         }
     }
 }

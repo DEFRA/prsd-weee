@@ -20,6 +20,10 @@
 
         public string SelectedAatfName { get; set; }
 
+        public string SelectedSiteName { get; set; }
+
         public List<WeeeSearchedAnAatfListData> Sites { get; set; }
+
+        public List<AatfData> AatfDataList { get; set; }
     }
 }

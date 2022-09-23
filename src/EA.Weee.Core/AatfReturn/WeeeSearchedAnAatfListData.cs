@@ -10,6 +10,6 @@
 
         public virtual string ApprovalNumber { get; set; }
 
-        public virtual Guid WeeeSentOnId { get; set; }
+        public virtual Guid WeeeAatfId { get; set; }
     }
 }

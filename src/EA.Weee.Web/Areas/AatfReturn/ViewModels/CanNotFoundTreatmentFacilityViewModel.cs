@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.ViewModels
 {
     using System;
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
     public class CanNotFoundTreatmentFacilityViewModel
     {

@@ -12,7 +12,7 @@
 
             var viewModel = new CreateWeeeSentOnViewModel()
             {
-                SelectedWeeeSentOnId = source.SelectedWeeeSentOnId,
+                SelectedAatfId = source.SelectedAatfId,
                 AatfId = source.AatfId,
                 OrganisationId = source.OrganisationId,
                 ReturnId = source.ReturnId,

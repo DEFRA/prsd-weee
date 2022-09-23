@@ -12,7 +12,7 @@
                 OrganisationId = viewModel.OrganisationId,
                 ReturnId = viewModel.ReturnId,
                 AatfId = viewModel.AatfId,
-                SelectedWeeeSentOnId = viewModel.SelectedWeeeSentOnId
+                SelectedAatfId = viewModel.SelectedAatfId
             };
 
             return aatfSite;

@@ -17,16 +17,14 @@
 
         public List<WeeeSearchedAnAatfListData> Sites { get; set; }
 
-        [Required(ErrorMessage = "You must select a scheme to manage")]
-        public Guid? SelectedWeeeSentOnId { get; set; }
-
         public Guid SelectedAatfId { get; set; }
 
         public string SelectedAatfName { get; set; }
 
+        [Required(ErrorMessage = "Select an AATF")]
         public string SelectedSiteName { get; set; }
 
-        public string CreateLongAddress(AatfAddressData address)
+        public string CreateLongAddress(AddressData address)
         {
             if (address != null)
             {

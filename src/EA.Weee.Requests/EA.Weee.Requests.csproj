@@ -60,6 +60,7 @@
     <Compile Include="AatfReturn\GetSearchAatfAddress.cs" />
     <Compile Include="AatfReturn\Obligated\CopyPreviousQuarterAatfData.cs" />
     <Compile Include="AatfReturn\Obligated\CreateWeeeSentOnAatfSite.cs" />
+    <Compile Include="Aatf\GetAatfByIdExternalSearch.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsv.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsv.cs" />
     <Compile Include="Admin\AatfReports\GetPcsAatfComparisonData.cs" />

@@ -65,17 +65,17 @@ a {
     visibility: hidden;
 }
 
-#global-header-bar, 
-#global-cookie-message p, 
-#global-cookie-accept-message p, 
+#global-header-bar,
+#global-cookie-message p,
+#global-cookie-accept-message p,
 #global-cookie-reject-message p {
     max-width: 960px;
     margin: 0 15px;
 }
 
 @media (min-width: 641px) {
-    #global-cookie-message p, 
-    #global-cookie-accept-message p, 
+    #global-cookie-message p,
+    #global-cookie-accept-message p,
     #global-cookie-reject-message p {
         margin: 0 30px;
     }
@@ -83,8 +83,8 @@ a {
 
 
 @media (min-width: 1020px) {
-    #global-cookie-message p, 
-    #global-cookie-accept-message p, 
+    #global-cookie-message p,
+    #global-cookie-accept-message p,
     #global-cookie-reject-message p {
         margin: 0 auto;
     }
@@ -1236,7 +1236,7 @@ details summary::-ms-details-marker {
 
 #tbSessionCookies th, #tbSessionCookies td,
 #tbGoogleAnalytics th, #tbGoogleAnalytics td,
-#tbIntroductoryCookies th, #tbIntroductoryCookies td{
+#tbIntroductoryCookies th, #tbIntroductoryCookies td {
     line-height: 1.31579 !important;
     font-size: 16px !important;
 }
@@ -1259,9 +1259,9 @@ details summary::-ms-details-marker {
     margin-bottom: 15px !important;
 }
 
-.accessibility-l{
+.accessibility-l {
     padding-top: 0px !important;
-    margin-bottom : 15px !important;
+    margin-bottom: 15px !important;
 }
 
 #dvAccessbility a:visited {
@@ -1292,4 +1292,8 @@ input[type='radio']:before {
 
 input[type='radio']:checked:before {
     background: black;
+}
+
+.govuk-grid-column-one-six {
+    max-width: 16.66%;
 }

@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfReturn
 {
-    using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public class CopyPreviousQuarterAatfDataHandler : IRequestHandler<CopyPreviousQuarterAatf, bool>
@@ -18,21 +15,18 @@
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess;
-        private readonly IMap<AatfAddress, AatfAddressData> addressMapper;
         private readonly IObligatedSentOnDataAccess obligatedSentOnDataAccess;
 
         public CopyPreviousQuarterAatfDataHandler(IWeeeAuthorization authorization,
                                                   IReturnDataAccess returnDataAccess,
                                                   IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess,
                                                   IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess,
-                                                  IMap<AatfAddress, AatfAddressData> addressMapper,
                                                   IObligatedSentOnDataAccess obligatedSentOnDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
             this.fetchWeeeSentOnAmountDataAccess = fetchWeeeSentOnAmountDataAccess;
-            this.addressMapper = addressMapper;
             this.obligatedSentOnDataAccess = obligatedSentOnDataAccess;
         }
 

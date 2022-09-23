@@ -9,5 +9,7 @@
         public Guid SearchTermId { get; set; }
 
         public string SearchTermName { get; set; }
+
+        public Guid OrganisationId { get; set; }
     }
 }

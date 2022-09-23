@@ -38,16 +38,19 @@
 
             var weeeSentOnAmount = await obligatedWeeeDataAccess.FetchObligatedWeeeSentOnForReturn(message.WeeeSentOnId);
 
-            var weeeSentOnListBySite = await sentOnDataAccess.GetWeeeSentOnBySiteId(weeeSentOn.SiteAddressId);
-            if (weeeSentOnListBySite == 1)
+            if (message.IsAatf == false)
             {
-                genericDataAccess.Remove(weeeSentOn.SiteAddress);
-            }
+                var weeeSentOnListBySite = await sentOnDataAccess.GetWeeeSentOnBySiteId(weeeSentOn.SiteAddressId);
+                if (weeeSentOnListBySite == 1)
+                {
+                    genericDataAccess.Remove(weeeSentOn.SiteAddress);
+                }
 
-            var weeeSentOnListByOperator = await sentOnDataAccess.GetWeeeSentOnByOperatorId(weeeSentOn.OperatorAddressId);
-            if (weeeSentOnListByOperator == 1)
-            {
-                genericDataAccess.Remove(weeeSentOn.OperatorAddress);
+                var weeeSentOnListByOperator = await sentOnDataAccess.GetWeeeSentOnByOperatorId(weeeSentOn.OperatorAddressId);
+                if (weeeSentOnListByOperator == 1)
+                {
+                    genericDataAccess.Remove(weeeSentOn.OperatorAddress);
+                }
             }
 
             genericDataAccess.Remove(weeeSentOn);

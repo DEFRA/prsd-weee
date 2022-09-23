@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
@@ -23,6 +24,7 @@
         private readonly IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess;
         private readonly IMap<AatfAddress, AatfAddressData> addressMapper;
         private readonly GetWeeeSentOnByIdHandler handler;
+        private readonly WeeeContext context;
 
         public GetWeeeSentOnByIdHandlerTests()
         {
@@ -30,8 +32,9 @@
             this.getSentOnAatfSiteDataAccess = A.Fake<IWeeeSentOnDataAccess>();
             this.fetchWeeeSentOnAmountDataAccess = A.Fake<IFetchObligatedWeeeForReturnDataAccess>();
             this.addressMapper = A.Fake<IMap<AatfAddress, AatfAddressData>>();
+            this.context = A.Fake<WeeeContext>();
 
-            handler = new GetWeeeSentOnByIdHandler(authorization, getSentOnAatfSiteDataAccess, fetchWeeeSentOnAmountDataAccess, addressMapper);
+            handler = new GetWeeeSentOnByIdHandler(authorization, getSentOnAatfSiteDataAccess, fetchWeeeSentOnAmountDataAccess, addressMapper, context);
         }
 
         [Fact]
@@ -39,7 +42,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            var handler = new GetWeeeSentOnHandler(authorization, getSentOnAatfSiteDataAccess, fetchWeeeSentOnAmountDataAccess, addressMapper);
+            var handler = new GetWeeeSentOnHandler(authorization, getSentOnAatfSiteDataAccess, fetchWeeeSentOnAmountDataAccess, addressMapper, context);
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetWeeeSentOn>());
 

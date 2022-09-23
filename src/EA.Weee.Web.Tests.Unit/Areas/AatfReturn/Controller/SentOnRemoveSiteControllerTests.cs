@@ -76,7 +76,7 @@
             A.CallTo(() => cache.FetchAatfData(organisationId, aatfId)).Returns(aatfInfo);
             A.CallTo(() => aatfInfo.Name).Returns(aatfName);
 
-            await controller.Index(organisationId, A.Dummy<Guid>(), aatfId, A.Dummy<Guid>());
+            await controller.Index(organisationId, A.Dummy<Guid>(), aatfId, A.Dummy<Guid>(), false);
 
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
             breadcrumb.ExternalOrganisation.Should().Be(orgName);
@@ -124,7 +124,7 @@
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>.That.Matches(w => w.WeeeSentOnId == weeeSentOnId))).Returns(weeeSentOn);
 
-            await controller.Index(organisationId, returnId, aatfId, weeeSentOnId);
+            await controller.Index(organisationId, returnId, aatfId, weeeSentOnId, false);
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer>.That.Matches(t => t.OrganisationId == organisationId
                 && t.ReturnId == returnId
@@ -199,7 +199,7 @@
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOnById>._)).Returns(weeeSentOnResult);
 
-            RedirectToRouteResult result = await controller.Index(organisationId, returnId, aatfId, weeeSentOnId) as RedirectToRouteResult;
+            RedirectToRouteResult result = await controller.Index(organisationId, returnId, aatfId, weeeSentOnId, false) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
