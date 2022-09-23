@@ -15,6 +15,12 @@
 
                 <section class="govuk-tabs__panel" id="allOtherNotes">
 
+                    <header class="hgroup">
+                        <h2 class="govuk-heading-m">
+                            <span>View all other evidence notes</span>
+                        </h2>
+                    </header>
+
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
@@ -39,7 +45,7 @@
                                             </div>
                                             <div class="govuk-grid-column-one-quarter govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0">
                                                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                                                   new ViewDataDictionary() { new KeyValuePair<string, object>("tab", Model.ActiveOverviewDisplayOption) })
+                                                                        new ViewDataDictionary() { new KeyValuePair<string, object>("tab", Model.ActiveOverviewDisplayOption) })
                                             </div>
                                         </div>
                                     </div>
@@ -130,21 +136,21 @@
                     <br />
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                        {
+                                    {
                             {
                                 "pagerRouteValues", new
                                 {
                                     tab = DisplayExtensions.ToDisplayString(Model.ActiveOverviewDisplayOption),
 
                                     manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate = 
+                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate =
                                         Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
-                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate = 
+                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate =
                                         Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
                                     manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_ReceivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
-                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue = 
+                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue =
                                         Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
-                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue = 
+                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
                                         Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null
                                 }
                             }
