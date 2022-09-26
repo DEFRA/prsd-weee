@@ -22,8 +22,15 @@
 
         public async Task<List<OrganisationSchemeData>> HandleAsync(GetOrganisationSchemeDataForFilterRequest request)
         {
-            weeeAuthorization.EnsureCanAccessExternalArea();
-            weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId);
+            if (request.OrganisationId.HasValue)
+            {
+                weeeAuthorization.EnsureCanAccessExternalArea();
+                weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId.Value);
+            }
+            else
+            {
+                weeeAuthorization.EnsureCanAccessInternalArea();
+            }
 
             var organisations =
                 await evidenceDataAccess.GetRecipientOrganisations(request.OrganisationId, request.ComplianceYear);
