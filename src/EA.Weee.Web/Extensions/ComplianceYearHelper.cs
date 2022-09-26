@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using CuttingEdge.Conditions;
     using ViewModels.Shared;
 
     public class ComplianceYearHelper
@@ -33,6 +34,8 @@
 
         public static List<int> FetchCurrentComplianceYearsForEvidence(DateTime evidenceDate, DateTime systemDateTime)
         {
+            Condition.Requires(evidenceDate.Year).IsLessOrEqual(systemDateTime.Year);
+
             return Enumerable.Range(evidenceDate.Year, (systemDateTime.Year - evidenceDate.Year) + 1).OrderByDescending(x => x).ToList();
         }
 
