@@ -12,6 +12,7 @@
     using Core.Tests.Unit.Helpers;
     using FakeItEasy;
     using FluentAssertions;
+    using Services.Caching;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Helpers;
     using Web.ViewModels.Shared;
@@ -27,12 +28,15 @@
         private readonly ActionExecutingContext context;
         private readonly IWeeeClient client;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
+        private readonly IWeeeCache cache;
 
         public CheckCanEditEvidenceAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
-            attribute = new CheckCanEditEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
+            cache = A.Fake<IWeeeCache>();
+
+            attribute = new CheckCanEditEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper, Cache = cache };
             context = A.Fake<ActionExecutingContext>();
 
             var routeData = new RouteData();
@@ -190,10 +194,7 @@
 
                 A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(note);
 
-                A.CallTo(() => client.SendAsync(A<string>._,
-                        A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == note.AatfData.Organisation.Id)))
-                    .Returns(aatfs);
-
+                A.CallTo(() => cache.FetchAatfDataForOrganisationData(note.AatfData.Organisation.Id)).Returns(aatfs);
                 A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, note.AatfData.Id, note.ComplianceYear))
                     .Returns(false);
 
@@ -259,11 +260,7 @@
                 var aatfs = TestFixture.CreateMany<AatfData>().ToList();
 
                 A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(note);
-
-                A.CallTo(() => client.SendAsync(A<string>._,
-                        A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == note.AatfData.Organisation.Id)))
-                    .Returns(aatfs);
-
+                A.CallTo(() => cache.FetchAatfDataForOrganisationData(note.AatfData.Organisation.Id)).Returns(aatfs);
                 A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, note.AatfData.Id, note.ComplianceYear))
                     .Returns(true);
 
@@ -287,11 +284,7 @@
                 var aatfs = TestFixture.CreateMany<AatfData>().ToList();
 
                 A.CallTo(() => client.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(note);
-
-                A.CallTo(() => client.SendAsync(A<string>._,
-                        A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == note.AatfData.Organisation.Id)))
-                    .Returns(aatfs);
-
+                A.CallTo(() => cache.FetchAatfDataForOrganisationData(note.AatfData.Organisation.Id)).Returns(aatfs);
                 A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, note.AatfData.Id, note.ComplianceYear))
                     .Returns(true);
 
