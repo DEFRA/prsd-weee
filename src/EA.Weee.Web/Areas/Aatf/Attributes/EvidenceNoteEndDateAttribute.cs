@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
+    using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteEndDateAttribute : EvidenceDateValidationBase
@@ -32,7 +33,19 @@
                 return new ValidationResult("The end date must be within the current compliance year");
             }
 
-            return ValidateEndDate(otherDate, thisDate);
+            if (!(validationContext.ObjectInstance is EvidenceNoteViewModel evidenceNoteModel))
+            {
+                return new ValidationResult("Unable to validate the evidence note details");
+            }
+
+            var endDateValid = ValidateEndDate(otherDate, thisDate);
+
+            if (endDateValid != ValidationResult.Success)
+            {
+                return endDateValid;
+            }
+
+            return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
         }
     }
 }
