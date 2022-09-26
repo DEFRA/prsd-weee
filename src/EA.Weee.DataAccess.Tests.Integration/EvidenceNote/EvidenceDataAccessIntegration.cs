@@ -113,7 +113,7 @@
 
                 var actionList = await dataAccess.GetComplianceYearsForNotes(new List<int> { 2, 3, 4, 5, 6 });
 
-                // asset
+                // assert
                 var result = actionList.Except(listOfExistingComplianceYears).ToList();
 
                 result.Should().BeEmpty();
@@ -162,7 +162,7 @@
 
                 var recipientList = await dataAccess.GetRecipientOrganisations(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 recipientList.Count.Should().Be(2);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
@@ -210,7 +210,7 @@
 
                 var recipientList = await dataAccess.GetRecipientOrganisations(null, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 recipientList.Count.Should().BeGreaterOrEqualTo(3);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
@@ -248,7 +248,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeTrue();
             }
         }
@@ -283,7 +283,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeFalse();
             }
         }
@@ -318,7 +318,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeFalse();
             }
         }
@@ -373,7 +373,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeFalse();
             }
         }
