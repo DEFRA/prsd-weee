@@ -1,35 +1,57 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Attributes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using Api.Client;
+    using AutoFixture;
+    using Core.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Web.Areas.Aatf.Attributes;
+    using Web.ViewModels.Shared;
     using Weee.Requests.Shared;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class EvidenceNoteEndDateAttributeTests
+    public class EvidenceNoteEndDateAttributeTests : SimpleUnitTestBase
     {
         private readonly IWeeeClient client;
         private readonly IHttpContextService httpContextService;
+        private readonly IWeeeCache cache;
         private readonly EvidenceNoteEndDateAttribute attribute;
         private readonly DateTime currentDate;
+        private readonly Guid organisationId;
+        private readonly Guid aatfId;
 
         public EvidenceNoteEndDateAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
             httpContextService = A.Fake<IHttpContextService>();
+            cache = A.Fake<IWeeeCache>();
+
+            organisationId = TestFixture.Create<Guid>();
+            aatfId = TestFixture.Create<Guid>();
 
             attribute = new EvidenceNoteEndDateAttribute("StartDate")
             {
-                Client = () => client, HttpContextService = httpContextService
+                Client = () => client, HttpContextService = httpContextService, Cache = cache
             };
 
             currentDate = new DateTime(2020, 1, 1);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(new List<AatfData>()
+            {
+                new AatfData()
+                {
+                    ApprovalDate = new DateTime(2020, 1, 1),
+                    ComplianceYear = (short)currentDate.Year,
+                    Id = aatfId,
+                    AatfId = aatfId
+                }
+            });
         }
 
         [Fact]
@@ -40,10 +62,10 @@
         }
 
         [Fact]
-        public void EvidenceNoteEndDateAttribute_CurrentDateShouldBeRetrievedFromCache()
+        public void EvidenceNoteEndDateAttribute_CurrentDateShouldBeRetrievedFromApi()
         {
             //arrange
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = currentDate };
+            var target = GetValidationDefaultTarget(currentDate, currentDate);
             var context = new ValidationContext(target);
 
             var userToken = "token";
@@ -62,7 +84,7 @@
             //arrange
             var currentDate = new DateTime(2020, 1, 2);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = currentDate.AddDays(-1) };
+            var target = GetValidationDefaultTarget(currentDate, currentDate.AddDays(-1));
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
@@ -81,7 +103,7 @@
             var currentDate = new DateTime(2020, 12, 31);
             var outOfComplianceYear = new DateTime(2021, 1, 1);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = outOfComplianceYear };
+            var target = GetValidationDefaultTarget(currentDate, outOfComplianceYear);
             var context = new ValidationContext(target);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
@@ -106,7 +128,7 @@
             //arrange
             var endDate = new DateTime(2020, 12, 31);
 
-            var target = new ValidationTarget() { StartDate = endDate.AddDays(-1), EndDate = endDate };
+            var target = GetValidationDefaultTarget(endDate.AddDays(-1), endDate);
             var context = new ValidationContext(target);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
@@ -132,7 +154,7 @@
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
 
-            var target = new ValidationTarget() { StartDate = endDate.AddDays(-1), EndDate = endDate };
+            var target = GetValidationDefaultTarget(endDate.AddDays(-1), endDate);
             var context = new ValidationContext(target);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
@@ -150,7 +172,7 @@
             var endDate = new DateTime(2020, 12, 31);
             var currentDate = new DateTime(2021, 2, 1);
 
-            var target = new ValidationTarget() { StartDate = endDate.AddDays(-1), EndDate = endDate };
+            var target = GetValidationDefaultTarget(endDate.AddDays(-1), endDate);
             var context = new ValidationContext(target);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
@@ -168,7 +190,7 @@
             var currentDate = new DateTime(2020, 12, 31);
             var outOfComplianceYear = new DateTime(2021, 1, 1);
 
-            var target = new ValidationTarget() { StartDate = currentDate, EndDate = outOfComplianceYear };
+            var target = GetValidationDefaultTarget(currentDate, outOfComplianceYear);
             var context = new ValidationContext(target);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
@@ -185,7 +207,7 @@
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
-            var target = new ValidationTarget() { StartDate = DateTime.MinValue, EndDate = currentDate };
+            var target = GetValidationDefaultTarget(DateTime.MinValue, currentDate);
             var context = new ValidationContext(target);
 
             //act
@@ -201,7 +223,7 @@
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
 
-            var target = new ValidationTarget() { StartDate = null, EndDate = currentDate };
+            var target = GetValidationDefaultTarget(null, currentDate);
             var context = new ValidationContext(target);
 
             //act
@@ -211,11 +233,174 @@
             result.Should().BeNull();
         }
 
-        private class ValidationTarget
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenModelIsNotBasedOnEvidenceNoteViewModel_ValidationExceptionShouldBeThrown()
         {
-            public DateTime? StartDate { get; set; }
+            //arrange
+            var target = new InvalidValidationTarget() { StartDate = currentDate, EndDate = currentDate };
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("Unable to validate the evidence note details");
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenValidStartAndEndDates_AatfsForOrganisationShouldBeRetrievedFromCache()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var target = GetValidationDefaultTarget(currentDate, currentDate);
+            target.OrganisationId = organisationId;
+
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+
+            //act
+            attribute.Validate(target.StartDate, context);
+
+            //assert
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(organisationId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenValidStartAndEndDatesAndNoAatfCouldBeFound_ValidationExceptionShouldBeThrown()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var aatfId = TestFixture.Create<Guid>();
+            var target = GetValidationDefaultTarget(currentDate, currentDate);
+            target.OrganisationId = organisationId;
+            target.AatfId = aatfId;
+
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(new List<AatfData>());
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("Aatf is invalid to save evidence notes.");
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenValidStartAndEndDatesAndNoAatfCouldBeFoundWithApprovalDateBeforeEnteredDate_ValidationExceptionShouldBeThrown()
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var aatfId = TestFixture.Create<Guid>();
+            var groupedAatfId = TestFixture.Create<Guid>();
+            var target = GetValidationDefaultTarget(currentDate, currentDate);
+            target.OrganisationId = organisationId;
+            target.AatfId = aatfId;
+
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(new List<AatfData>()
+            {
+                new AatfData()
+                {
+                    Id = aatfId,
+                    AatfId = groupedAatfId,
+                    ComplianceYear = (short)currentDate.Year,
+                    ApprovalDate = currentDate.AddDays(1)
+                },
+                new AatfData()
+                {
+                    Id = aatfId,
+                    AatfId = TestFixture.Create<Guid>(),
+                    ComplianceYear = (short)currentDate.Year,
+                    ApprovalDate = currentDate.AddDays(1)
+                },
+                new AatfData()
+                {
+                    Id = aatfId,
+                    AatfId = groupedAatfId,
+                    ComplianceYear = (short)(currentDate.Year + 1),
+                    ApprovalDate = currentDate
+                },
+                new AatfData()
+                {
+                    Id = aatfId,
+                    AatfId = groupedAatfId,
+                    ComplianceYear = (short)(currentDate.Year - 1),
+                    ApprovalDate = currentDate
+                }
+            });
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("CONTENT NEEDED FOR THIS MESSAGE");
+        }
+
+        public static IEnumerable<object[]> ValidEndAndApprovalDates =>
+            new List<object[]>
+            {
+                new object[] { new DateTime(2020, 1, 1), new DateTime(2020, 1, 1) },
+                new object[] { new DateTime(2020, 1, 2), new DateTime(2020, 1, 1) },
+            };
+
+        [Theory]
+        [MemberData(nameof(ValidEndAndApprovalDates))]
+        public void EvidenceNoteEndDateAttribute_GivenValidStartAndEndDatesAndAatfCanBeFoundWithApprovalDateBeforeEnteredDate_NoValidationExceptionShouldBeThrown(DateTime endDate, DateTime approvalDate)
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var aatfId = TestFixture.Create<Guid>();
+            var groupedAatfId = TestFixture.Create<Guid>();
+            var target = GetValidationDefaultTarget(endDate, endDate);
+            target.OrganisationId = organisationId;
+            target.AatfId = aatfId;
+
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(endDate);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(new List<AatfData>()
+            {
+                new AatfData()
+                {
+                    Id = aatfId,
+                    AatfId = groupedAatfId,
+                    ComplianceYear = (short)endDate.Year,
+                    ApprovalDate = approvalDate
+                }
+            });
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.Should().BeNull();
+        }
+
+        private ValidationTarget GetValidationDefaultTarget(DateTime? startDate, DateTime endDateTime)
+        {
+            return new ValidationTarget() { StartDate = startDate, EndDate = endDateTime, AatfId = aatfId, OrganisationId = organisationId };
+        }
+
+        private class ValidationTarget : EvidenceNoteViewModel
+        {
+            public override DateTime? StartDate { get; set; }
 
             [EvidenceNoteEndDate(nameof(StartDate))]
+            public override DateTime? EndDate { get; set; }
+        }
+
+        private class InvalidValidationTarget
+        {
+           public DateTime? StartDate { get; set; }
+
+            [EvidenceNoteStartDate(nameof(StartDate))]
             public DateTime? EndDate { get; set; }
         }
     }

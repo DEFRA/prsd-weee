@@ -4,14 +4,12 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Web.Mvc;
-    using Antlr.Runtime;
     using Api.Client;
     using Filters;
     using Helpers;
     using Prsd.Core;
     using Services;
     using Services.Caching;
-    using Weee.Requests.AatfReturn;
     using Weee.Requests.Shared;
 
     public class EvidenceDateValidationBase : ValidationAttribute
@@ -39,45 +37,36 @@
             set => cache = value;
         }
 
-        private IAatfEvidenceHelper aatfEvidenceHelper;
-
-        public IAatfEvidenceHelper AatfEvidenceHelper
-        {
-            get => aatfEvidenceHelper ?? DependencyResolver.Current.GetService<IAatfEvidenceHelper>();
-            set => aatfEvidenceHelper = value;
-        }
-
         public DateTime GetCurrentDateTime()
         {
-            return AsyncHelpers.RunSync(() =>
+            return AsyncHelpers.RunSync(async () =>
             {
                 using (var c = Client())
                 {
-                    return c.SendAsync(HttpContextService.GetAccessToken(), new GetApiDate());
+                    return await c.SendAsync(HttpContextService.GetAccessToken(), new GetApiDate());
                 }
             });
         }
 
         public ValidationResult ValidateDateAgainstAatfApprovalDate(DateTime date, Guid organisationId, Guid aatfId)
         {
-            var aatfs = AsyncHelpers.RunSync(() =>
+            var aatfs = AsyncHelpers.RunSync(async () => await Cache.FetchAatfDataForOrganisationData(organisationId));
+
+            var aatfById = aatfs.FirstOrDefault(a => a.Id == aatfId);
+
+            if (aatfById == null)
             {
-                using (var c = Client())
-                {
-                    return c.SendAsync(HttpContextService.GetAccessToken(), new GetAatfByOrganisation(organisationId));
-                }
-            });
+                return new ValidationResult("Aatf is invalid to save evidence notes.");
+            }
 
-            var groupedAatfs = aatfEvidenceHelper.GroupedValidAatfs(aatfs);
+            var groupedAatfs = aatfs.Any(a => a.AatfId == 
+                aatfById.AatfId && 
+                a.ComplianceYear == date.Year &&
+                a.ApprovalDate.GetValueOrDefault() <= date);
 
-            var aatf = groupedAatfs.FirstOrDefault(a => a.ComplianceYear == date.Year);
-
-            if (aatf != null)
+            if (!groupedAatfs)
             {
-                if (aatf.ApprovalDate > date)
-                {
-                    return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
-                }
+                return new ValidationResult("CONTENT NEEDED FOR THIS MESSAGE");
             }
 
             return ValidationResult.Success;
