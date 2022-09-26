@@ -220,9 +220,57 @@
             await ManageEvidenceController.Index(OrganisationId, tab, model);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
-                m.ComplianceYear == complianceYear &&
                 m.OrganisationId == OrganisationId &&
-                m.CurrentDate == currentDate)))
+                m.CurrentDate == currentDate &&
+                m.ComplianceYear == complianceYear)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("outgoing-transfers")]
+        public async void IndexGet_GivenMappedManageEvidenceNotesViewModel_MappedModelShouldBeReturned(string tab)
+        {
+            //arrange
+            var currentDate = TestFixture.Create<DateTime>();
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(model);
+            
+            //act
+            var result = await ManageEvidenceController.Index(OrganisationId, tab, model) as ViewResult;
+
+            var convertedModel = result.Model as ManageEvidenceNoteSchemeViewModel;
+
+            convertedModel.ManageEvidenceNoteViewModel.Should().Be(model);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-and-transfer-evidence")]
+        [InlineData("review-submitted-evidence")]
+        [InlineData("evidence-summary")]
+        [InlineData("outgoing-transfers")]
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
+        {
+            //arrange
+            var currentDate = TestFixture.Create<DateTime>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, tab, null);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
+                    m.OrganisationId == OrganisationId &&
+                    m.CurrentDate == currentDate &&
+                    m.ComplianceYear == currentDate.Year)))
                 .MustHaveHappenedOnceExactly();
         }
 
