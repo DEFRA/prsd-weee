@@ -72,7 +72,7 @@
         }
 
         [Fact]
-        public void FetchCurrentComplianceYearsForEvidence_ShouldThrowAnError()
+        public void FetchCurrentComplianceYearsForEvidence_GivenEvidenceDateIsGreaterThanSystemDate_ShouldThrowAnError()
         {
             // arrange
             DateTime evidenceDate = new DateTime(2022, 01, 01);
@@ -92,7 +92,7 @@
         [InlineData("01/01/2019", "01/01/2022", new int[] { 2022, 2021, 2020, 2019 })]
         [InlineData("01/12/2020", "01/10/2020", new int[] { 2020 })]
         [InlineData("01/31/2010", "01/01/2020", new int[] { 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010 })]
-        public void FetchCurrentComplianceYearsForEvidence_GivenEvidenceDateAndSystemDateAreNotNull_(DateTime evidenceDate, DateTime systemDateTime, int[] yearList)
+        public void FetchCurrentComplianceYearsForEvidence_GivenEvidenceDateAndSystemDateAreNotNull_ShouldReturnAListOfComplianceYears(DateTime evidenceDate, DateTime systemDateTime, int[] yearList)
         {
             // arrange
             SystemTime.Freeze(new DateTime(evidenceDate.Year, evidenceDate.Month, evidenceDate.Day));
