@@ -914,7 +914,6 @@
         [Fact]
         public async void HasEvidenceNotes_ReturnsTrue_IfNotePresent()
         {
-            var aatfId = Guid.NewGuid();
             using (var databaseWrapper = new DatabaseWrapper())
             {
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
@@ -926,15 +925,16 @@
                 databaseWrapper.WeeeContext.Schemes.Add(scheme);
 
                 var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation1);
-
                 databaseWrapper.WeeeContext.Aatfs.Add(aatf1);
 
                 await databaseWrapper.WeeeContext.SaveChangesAsync();
 
                 var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
-                databaseWrapper.WeeeContext.Notes.Add(new Domain.Evidence.Note(organisation1, recipientOrganisation, DateTime.Now, DateTime.Now, Domain.Evidence.WasteType.HouseHold, Domain.Evidence.Protocol.Actual, aatf1, databaseWrapper.WeeeContext.GetCurrentUser().ToString(), new List<NoteTonnage>()));
+                var note = new Domain.Evidence.Note(organisation1, recipientOrganisation, DateTime.Now, DateTime.Now, Domain.Evidence.WasteType.HouseHold, Domain.Evidence.Protocol.Actual, aatf1, databaseWrapper.WeeeContext.GetCurrentUser().ToString(), new List<NoteTonnage>());
+                var note1 = NoteCommon.CreateNote(databaseWrapper, organisation1, recipientOrganisation, aatf1, WasteType.HouseHold, Protocol.Actual);
+                databaseWrapper.WeeeContext.Notes.Add(note1);
                 await databaseWrapper.WeeeContext.SaveChangesAsync();
-                var result = await aatfDataAccess.HasEvidenceNotes(aatfId);
+                var result = await aatfDataAccess.HasEvidenceNotes(aatf1.Id);
                 result.Should().BeTrue();
             }
         }
@@ -947,7 +947,7 @@
             {
                 var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
                 var result = await aatfDataAccess.HasEvidenceNotes(aatfId);
-                result.Should().BeTrue();
+                result.Should().BeFalse();
             }
         }
 
