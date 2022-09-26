@@ -69,5 +69,21 @@
             ComplianceYear = complianceYear;
             CurrentDate = currentDate;
         }
+
+        public ManageEvidenceNoteTransfer(FilterViewModel filterViewModel,
+            RecipientWasteStatusFilterViewModel recipientWasteStatusFilterViewModel,
+            SubmittedDatesFilterViewModel submittedDatesFilterViewModel,
+            int complianceYear,
+            DateTime currentDate,
+            List<int> complianceYearList)
+        {
+            FilterViewModel = filterViewModel;
+            RecipientWasteStatusFilterViewModel = recipientWasteStatusFilterViewModel;
+            SubmittedDatesFilterViewModel = submittedDatesFilterViewModel;
+            ComplianceYear = complianceYear;
+            CurrentDate = currentDate;
+
+            ComplianceYearList = complianceYearList;
+        }
     }
 }
