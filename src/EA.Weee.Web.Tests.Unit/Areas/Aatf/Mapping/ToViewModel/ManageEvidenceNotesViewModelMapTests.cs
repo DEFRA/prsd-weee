@@ -396,5 +396,20 @@
             result.RecipientWasteStatusFilterViewModel.Should().NotBeNull();
             result.SubmittedDatesFilterViewModel.Should().NotBeNull();
         }
+
+        [Fact]
+        public void Map_GivenSourceWithComplianceYearsList_ComplianceYearsShouldBeSet()
+        {
+            //arrange
+            var list = TestFixture.CreateMany<int>().ToList();
+            var source = new ManageEvidenceNoteTransfer(null, null, null, TestFixture.Create<int>(),
+                TestFixture.Create<DateTime>(), list);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ComplianceYearList.Should().BeEquivalentTo(list);
+        }
     }
 }
