@@ -26,7 +26,7 @@
             var model = new ManageEvidenceNoteViewModel()
             {
                 OrganisationId = source.OrganisationId,
-                ComplianceYearList = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
+                ComplianceYearList = source.ComplianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
                 ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate),
                 AatfId = source.AatfId
             };

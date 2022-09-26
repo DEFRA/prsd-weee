@@ -254,6 +254,8 @@
             var model = mapper.Map<ViewAllEvidenceNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
 
+            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(null, null, null, selectedComplianceYear, currentDate, complianceYearsList));
+
             return View("ViewAllEvidenceNotes", model);
         }
 
@@ -275,6 +277,8 @@
 
             var model = mapper.Map<ViewAllTransferNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
+
+            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(null, null, null, selectedComplianceYear, currentDate, complianceYearsList));
 
             return View("ViewAllTransferNotes", model);
         }
