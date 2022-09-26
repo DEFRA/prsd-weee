@@ -82,7 +82,7 @@
         public void Map_GivenSourceWithNoAatfList_AatfListPropertiesShouldBeSet()
         {
             //arrange
-            var source = new ManageEvidenceNoteTransfer(organisationId, TestFixture.Create<SchemePublicInfo>(), null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -97,7 +97,7 @@
         public void Map_GivenSourceWithNoAatfData_AatfListPropertiesShouldBeSet()
         {
             //arrange
-            var source = new ManageEvidenceNoteTransfer(organisationId, TestFixture.Create<SchemePublicInfo>(), null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
+            var source = new ManageEvidenceNoteTransfer(organisationId, null, null, null, SystemTime.UtcNow.Year, SystemTime.UtcNow);
 
             //act
             var model = map.Map(source);
@@ -395,6 +395,21 @@
             result.FilterViewModel.Should().NotBeNull();
             result.RecipientWasteStatusFilterViewModel.Should().NotBeNull();
             result.SubmittedDatesFilterViewModel.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithComplianceYearsList_ComplianceYearsShouldBeSet()
+        {
+            //arrange
+            var list = TestFixture.CreateMany<int>().ToList();
+            var source = new ManageEvidenceNoteTransfer(null, null, null, TestFixture.Create<int>(),
+                TestFixture.Create<DateTime>(), list);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.ComplianceYearList.Should().BeEquivalentTo(list);
         }
     }
 }
