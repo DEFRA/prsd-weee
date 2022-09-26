@@ -359,5 +359,27 @@
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
         }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenSourceWithNotWithdrawnSchemeAndComplianceYearIsClosed_CanSchemeManageEvidenceShouldBeFalse(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                complianceYear,
+                1, 2);
+
+            //act
+            var result = reviewSubmittedEvidenceNotesViewModelMap.Map(transfer);
+
+            //assert
+            result.CanSchemeManageEvidence.Should().BeFalse();
+        }
     }
 }
