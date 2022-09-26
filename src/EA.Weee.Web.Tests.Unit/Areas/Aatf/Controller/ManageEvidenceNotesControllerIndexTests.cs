@@ -104,6 +104,28 @@
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
+        public async void IndexGet_GivenMappedEvidenceNotesViewModel_MappedManageEvidenceNotesModelShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            //arrange
+            var currentDate = Fixture.Create<DateTime>();
+            var model = Fixture.Create<ManageEvidenceNoteViewModel>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(model);
+            
+            //act
+            var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
+
+            var convertedModel = result.Model as ManageManageEvidenceNoteOverviewViewModel;
+
+            convertedModel.ManageEvidenceNoteViewModel.Should().Be(model);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
         public async void IndexGet_GivenOrganisationId_ApiShouldBeCalled(ManageEvidenceOverviewDisplayOption selectedTab)
         {
             var organisationId = Guid.NewGuid();
