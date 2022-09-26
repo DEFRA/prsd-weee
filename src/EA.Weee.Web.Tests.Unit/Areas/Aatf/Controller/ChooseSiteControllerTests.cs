@@ -293,16 +293,20 @@
         [Fact]
         public async void IndexPost_GivenInvalidModel_ApiShouldBeCalled()
         {
+            //arrange
             var organisationId = Guid.NewGuid();
 
-            var result = await controller.Index(organisationId);
+            //act
+            await controller.Index(organisationId);
 
+            //assert
             A.CallTo(() => cache.FetchAatfDataForOrganisationData(organisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
         public async void IndexPost_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
+            //arrange
             var organisationName = "Organisation";
             var model = new SelectYourAatfViewModel()
             {
@@ -314,8 +318,10 @@
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
+            //act
             await controller.Index(model);
 
+            //assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
         }
