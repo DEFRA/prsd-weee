@@ -113,7 +113,7 @@
 
                 var actionList = await dataAccess.GetComplianceYearsForNotes(new List<int> { 2, 3, 4, 5, 6 });
 
-                // asset
+                // assert
                 var result = actionList.Except(listOfExistingComplianceYears).ToList();
 
                 result.Should().BeEmpty();
@@ -162,10 +162,59 @@
 
                 var recipientList = await dataAccess.GetRecipientOrganisations(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 recipientList.Count.Should().Be(2);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetRecipientOrganisations_GivenComplianceYear_RecipientOrganisationsShouldBeReturned()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+                var recipientOrganisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation2);
+
+                var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
+                var note2NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: organisation1);
+                var note3NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2, organisation: organisation1);
+                var note4Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation2);
+                var note5Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation2);
+
+                // act
+                context.Schemes.Add(scheme1);
+                context.Schemes.Add(scheme2);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1Match);
+                context.Notes.Add(note2NoMatchCy);
+                context.Notes.Add(note3NoMatchCy);
+                context.Notes.Add(note4Match);
+                context.Notes.Add(note5Match);
+
+                await context.SaveChangesAsync();
+
+                var recipientList = await dataAccess.GetRecipientOrganisations(null, SystemTime.UtcNow.Year);
+
+                // assert
+                recipientList.Count.Should().BeGreaterOrEqualTo(3);
+                recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
+                recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
+                recipientList.Should().Contain(r => r.Id == note4Match.Recipient.Id);
             }
         }
 
@@ -199,7 +248,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeTrue();
             }
         }
@@ -234,7 +283,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeFalse();
             }
         }
@@ -269,7 +318,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeFalse();
             }
         }
@@ -324,7 +373,7 @@
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(organisation1.Id, SystemTime.UtcNow.Year);
 
-                // asset
+                // assert
                 hasApprovedWaste.Should().BeFalse();
             }
         }
