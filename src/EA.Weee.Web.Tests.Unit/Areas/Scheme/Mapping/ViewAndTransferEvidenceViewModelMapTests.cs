@@ -12,7 +12,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Shared;
-    using Services;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
@@ -498,6 +497,49 @@
 
             //assert
             result.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenApprovedEvidenceNotesAndSchemeIsNotWithDrawnButComplianceYearIsClosed_DisplayTransferButtonShouldBeSetToFalse(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
+                .With(e => e.HasApprovedEvidenceNotes, true).Create();
+
+            //act
+            var result = viewAndTransferEvidenceViewModelMap.Map(new SchemeTabViewModelMapTransfer(TestFixture.Create<Guid>(),
+                noteData,
+                scheme,
+                currentDate,
+                complianceYear,
+                1, 2));
+
+            //assert
+            result.DisplayTransferButton.Should().BeFalse();
+        }
+
+        [Theory]
+        [ClassData(typeof(OutOfComplianceYearData))]
+        public void Map_GivenSourceWithNotWithdrawnSchemeAndComplianceYearIsClosed_CanSchemeManageEvidenceShouldBeFalse(DateTime currentDate, int complianceYear)
+        {
+            //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var scheme = TestFixture.Build<SchemePublicInfo>().With(s => s.Status, SchemeStatus.Approved).Create();
+
+            var transfer = new SchemeTabViewModelMapTransfer(organisationId,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(),
+                scheme,
+                currentDate,
+                complianceYear,
+                1, 2);
+
+            //act
+            var result = viewAndTransferEvidenceViewModelMap.Map(transfer);
+
+            //assert
+            result.CanSchemeManageEvidence.Should().BeFalse();
         }
     }
 }
