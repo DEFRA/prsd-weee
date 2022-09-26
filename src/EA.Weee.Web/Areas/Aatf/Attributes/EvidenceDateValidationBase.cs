@@ -2,12 +2,16 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
     using Antlr.Runtime;
     using Api.Client;
     using Filters;
+    using Helpers;
     using Prsd.Core;
     using Services;
+    using Services.Caching;
+    using Weee.Requests.AatfReturn;
     using Weee.Requests.Shared;
 
     public class EvidenceDateValidationBase : ValidationAttribute
@@ -27,6 +31,22 @@
             set => httpContextService = value;
         }
 
+        private IWeeeCache cache;
+
+        public IWeeeCache Cache
+        {
+            get => cache ?? DependencyResolver.Current.GetService<IWeeeCache>();
+            set => cache = value;
+        }
+
+        private IAatfEvidenceHelper aatfEvidenceHelper;
+
+        public IAatfEvidenceHelper AatfEvidenceHelper
+        {
+            get => aatfEvidenceHelper ?? DependencyResolver.Current.GetService<IAatfEvidenceHelper>();
+            set => aatfEvidenceHelper = value;
+        }
+
         public DateTime GetCurrentDateTime()
         {
             return AsyncHelpers.RunSync(() =>
@@ -36,6 +56,31 @@
                     return c.SendAsync(HttpContextService.GetAccessToken(), new GetApiDate());
                 }
             });
+        }
+
+        public ValidationResult ValidateDateAgainstAatfApprovalDate(DateTime date, Guid organisationId, Guid aatfId)
+        {
+            var aatfs = AsyncHelpers.RunSync(() =>
+            {
+                using (var c = Client())
+                {
+                    return c.SendAsync(HttpContextService.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+                }
+            });
+
+            var groupedAatfs = aatfEvidenceHelper.GroupedValidAatfs(aatfs);
+
+            var aatf = groupedAatfs.FirstOrDefault(a => a.ComplianceYear == date.Year);
+
+            if (aatf != null)
+            {
+                if (aatf.ApprovalDate > date)
+                {
+                    return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
+                }
+            }
+
+            return ValidationResult.Success;
         }
 
         protected ValidationResult ValidateStartDate(DateTime thisDate, DateTime? otherDate, DateTime currentDate)
