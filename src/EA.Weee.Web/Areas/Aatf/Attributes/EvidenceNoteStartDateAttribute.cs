@@ -4,6 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
     using EA.Prsd.Core;
+    using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteStartDateAttribute : EvidenceDateValidationBase
@@ -28,12 +29,24 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
+            if (!(validationContext.ObjectInstance is EvidenceNoteViewModel evidenceNoteModel))
+            {
+                return new ValidationResult("Unable to validate the evidence note details");
+            }
+
             if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
                 return new ValidationResult("The start date must be within the current compliance year");
             }
             
-            return ValidateStartDate(thisDate, otherDate, currentDate);
+            var startDateValid = ValidateStartDate(thisDate, otherDate, currentDate);
+
+            if (startDateValid != ValidationResult.Success)
+            {
+                return startDateValid;
+            }
+
+            return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
         }
     }
 }
