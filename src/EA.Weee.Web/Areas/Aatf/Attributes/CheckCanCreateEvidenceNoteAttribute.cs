@@ -6,14 +6,13 @@
     using Api.Client;
     using Filters;
     using Helpers;
-    using Infrastructure;
-    using Weee.Requests.AatfReturn;
+    using Services.Caching;
 
     public class CheckCanCreateEvidenceNoteAttribute : ActionFilterAttribute
     {
-        public Func<IWeeeClient> Client { get; set; }
-
         public IAatfEvidenceHelper AatfEvidenceHelper { get; set; }
+
+        public IWeeeCache Cache { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -52,16 +51,13 @@
 
         private async Task OnAuthorizationAsync(ActionExecutingContext filterContext, Guid organisationId, Guid aatfId, int complianceYear)
         {
-            using (var client = Client())
+            var allAatfsAndAes = await Cache.FetchAatfDataForOrganisationData(organisationId);
+
+            var canEdit = AatfEvidenceHelper.AatfCanEditCreateNotes(allAatfsAndAes, aatfId, complianceYear);
+
+            if (!canEdit)
             {
-                var allAatfsAndAes = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
-
-                var canEdit = AatfEvidenceHelper.AatfCanEditCreateNotes(allAatfsAndAes, aatfId, complianceYear);
-
-                if (!canEdit)
-                {
-                    throw new InvalidOperationException($"Evidence for organisation ID {organisationId} with aatf ID {aatfId} cannot be created");
-                }
+                throw new InvalidOperationException($"Evidence for organisation ID {organisationId} with aatf ID {aatfId} cannot be created");
             }
         }
     }
