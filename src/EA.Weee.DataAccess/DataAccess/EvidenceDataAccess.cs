@@ -300,10 +300,14 @@
             return note;
         }
 
-        public async Task<List<Organisation>> GetRecipientOrganisations(Guid organisationId, int complianceYear)
+        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? organisationId, int complianceYear)
         {
-            var notes = context.Notes
-                .Where(n => n.ComplianceYear == complianceYear && n.OrganisationId == organisationId);
+            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear);
+
+            if (organisationId.HasValue)
+            {
+                notes = notes.Where(n => n.OrganisationId == organisationId);
+            }
 
             return await notes.Select(n => n.Recipient)
                 .Distinct()
