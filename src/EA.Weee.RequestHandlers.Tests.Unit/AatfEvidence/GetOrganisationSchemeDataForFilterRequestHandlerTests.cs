@@ -28,7 +28,7 @@
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             noteDataAccess = A.Fake<IEvidenceDataAccess>();
 
-            request = new GetOrganisationSchemeDataForFilterRequest(TestFixture.Create<Guid>(),
+            request = new GetOrganisationSchemeDataForFilterRequest(TestFixture.Create<Guid?>(),
                 TestFixture.Create<int>());
 
             handler = new GetOrganisationSchemeDataForFilterRequestHandler(weeeAuthorization, noteDataAccess);
@@ -64,18 +64,32 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckOrganisationAccess()
+        public async Task HandleAsync_GivenRequestWithOrganisationId_ShouldCheckOrganisationAccess()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId))
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId.Value))
                 .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ShouldCheckExternalAccess()
+        public async Task HandleAsync_GivenRequestWithNoOrganisationId_ShouldCheckInternalAccess()
+        {
+            //arrange
+            var request = new GetOrganisationSchemeDataForFilterRequest(null, TestFixture.Create<int>());
+
+            //act
+
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => weeeAuthorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithOrganisationId_ShouldCheckExternalAccess()
         {
             //act
             await handler.HandleAsync(request);
