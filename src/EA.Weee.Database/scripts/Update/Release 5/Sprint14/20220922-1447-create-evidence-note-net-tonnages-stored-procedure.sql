@@ -1,11 +1,11 @@
-IF OBJECT_ID('[Evidence].[getEvidenceNotesOriginalTonnage]', 'P') IS NOT NULL
-	DROP PROC [Evidence].[getEvidenceNotesOriginalTonnage]
+IF OBJECT_ID('[Evidence].[getEvidenceNotesNetTonnage]', 'P') IS NOT NULL
+	DROP PROC [Evidence].getEvidenceNotesNetTonnage
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [Evidence].[getEvidenceNotesOriginalTonnage]
+CREATE PROCEDURE [Evidence].getEvidenceNotesNetTonnage
 	@ComplianceYear SMALLINT,
 	@OriginatingOrganisationId UNIQUEIDENTIFIER = NULL,
 	@RecipientOrganisationId UNIQUEIDENTIFIER = NULL,
@@ -28,7 +28,7 @@ SELECT
 	*
 FROM 
 	[Evidence].[vwEvidenceSummary] es 
-	INNER JOIN [Evidence].vwEvidenceByCategory ec WITH (NOLOCK) ON es.Id = ec.Id
+	INNER JOIN [Evidence].vwEvidenceByCategoryNetOfTransfer ec WITH (NOLOCK) ON es.Id = ec.Id
 WHERE
 	es.NoteType = 1 AND
 	(es.ComplianceYear = @ComplianceYear) AND
@@ -36,7 +36,8 @@ WHERE
 			(@OriginatingOrganisationId IS NULL OR es.OriginatingOrganisationId = @OriginatingOrganisationId) AND
 			(@RecipientOrganisationId IS NULL OR es.RecipientOrganisationId = @RecipientOrganisationId) AND
 			(@AatfId IS NULL OR es.AatfId = @AatfId)
-		)
+		) AND
+	((NOT @RecipientOrganisationId IS NULL AND es.StatusId  <> 1) OR @RecipientOrganisationId IS NULL)
 ORDER BY
 	es.ReferenceId ASC
 
