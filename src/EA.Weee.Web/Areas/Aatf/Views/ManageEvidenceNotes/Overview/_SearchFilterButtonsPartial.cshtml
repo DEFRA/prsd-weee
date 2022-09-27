@@ -1,7 +1,4 @@
-﻿@using EA.Weee.Core.DataStandards
-@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Areas.Aatf.ViewModels
-@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
 <div class="govuk-button-group govuk-!-padding-top-4 govuk-!-padding-left-1 govuk-!-padding-right-1">
@@ -10,7 +7,8 @@
 
 
     @Html.ActionLink("Clear filter", "Index", "ManageEvidenceNotes",
-    new { selectedComplianceYear = Model.SelectedComplianceYear, organisationId = Model.OrganisationId, aatfId = @Model.AatfId, tab = ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString() }, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
+    new { selectedComplianceYear = Model.SelectedComplianceYear, organisationId = Model.OrganisationId, aatfId = @Model.AatfId, tab = @ViewData["tab"].ToString() },
+    new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
 
 </div>
 

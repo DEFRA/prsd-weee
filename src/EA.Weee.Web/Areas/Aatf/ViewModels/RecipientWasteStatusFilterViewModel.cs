@@ -13,13 +13,18 @@
 
         public IEnumerable<SelectListItem> RecipientList { get; set; }
 
-        [Display(Name = "Type of waste")]
+        [Display(Name = "Obligation type")]
         public WasteType? WasteTypeValue { get; set; }
 
         public IEnumerable<SelectListItem> WasteTypeList { get; set; }
 
         [Display(Name = "Status")]
         public NoteStatus? NoteStatusValue { get; set; }
+
+        [Display(Name = "Submitted by")]
+        public Guid? SubmittedBy { get; set; }
+
+        public IEnumerable<SelectListItem> SubmittedByList { get; set; }
 
         public IEnumerable<SelectListItem> NoteStatusList { get; set; }
     }

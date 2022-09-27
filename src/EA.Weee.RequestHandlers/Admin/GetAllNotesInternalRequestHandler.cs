@@ -10,7 +10,6 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Admin;
-    using Mappings;
     using Security;
     using NoteType = Domain.Evidence.NoteType;
 
@@ -41,7 +40,13 @@
             {
                 NoteTypeFilter = message.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                ComplianceYear = message.ComplianceYear
+                ComplianceYear = message.ComplianceYear,
+                StartDateSubmitted = message.StartDateSubmittedFilter,
+                EndDateSubmitted = message.EndDateSubmittedFilter,
+                RecipientId = message.RecipientIdFilter,
+                NoteStatusId = (int?)message.NoteStatusFilter,
+                WasteTypeId = (int?)message.ObligationTypeFilter,
+                AatfId = message.SubmittedByAatfIdFilter
             };
 
             var noteData = await noteDataAccess.GetAllNotes(noteFilter);
