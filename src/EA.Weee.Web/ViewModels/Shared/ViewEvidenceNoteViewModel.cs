@@ -56,7 +56,7 @@
 
         public bool DisplayH2Title { get; set; }
 
-        public IList<EvidenceNoteHistoryViewModel> EvidenceNoteHistoryData { get; set; }
+        public IList<EvidenceNoteRowViewModel> EvidenceNoteHistoryData { get; set; }
 
         public bool DisplayEvidenceNoteHistoryData => EvidenceNoteHistoryData != null && EvidenceNoteHistoryData.Count > 0;
 
@@ -97,6 +97,10 @@
         public bool CanDisplayNotesMessage { get; set; }
 
         public bool IsPrintable { get; set; }
+
+        public bool OpenedInNewTab { get; set; }
+
+        public int Page { get; set; }
 
         public ViewEvidenceNoteViewModel()
         {

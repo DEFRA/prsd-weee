@@ -667,9 +667,17 @@
             };
             source.EvidenceNoteData.EvidenceNoteHistoryData = history;
 
-            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).Returns(new List<EvidenceNoteHistoryViewModel>()
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteRowViewModel>>(history)).Returns(new List<EvidenceNoteRowViewModel>()
             {
-                new EvidenceNoteHistoryViewModel(data.Id, data.Reference, data.TransferredTo, data.Type, data.Status, data.SubmittedDate),
+                new EvidenceNoteRowViewModel()
+                {
+                    Id = data.Id,
+                    ReferenceId = data.Reference,
+                    TransferredTo = data.TransferredTo,
+                    Type = data.Type,
+                    Status = data.Status,
+                    SubmittedDate = data.SubmittedDate
+                }
             });
 
             //act
@@ -678,12 +686,12 @@
             //assert
             result.EvidenceNoteHistoryData.First().Id.Should().Be(history.First().Id);
             result.EvidenceNoteHistoryData.First().Status.Should().Be(history.First().Status);
-            result.EvidenceNoteHistoryData.First().Reference.Should().Be(history.First().Reference);
+            result.EvidenceNoteHistoryData.First().ReferenceId.Should().Be(history.First().Reference);
             result.EvidenceNoteHistoryData.First().Type.Should().Be(history.First().Type);
             result.EvidenceNoteHistoryData.First().SubmittedDate.Should().Be(history.First().SubmittedDate);
             result.EvidenceNoteHistoryData.First().TransferredTo.Should().Be(history.First().TransferredTo);
 
-            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteRowViewModel>>(history)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]

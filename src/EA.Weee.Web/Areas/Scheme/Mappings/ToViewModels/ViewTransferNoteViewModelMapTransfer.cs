@@ -19,6 +19,10 @@
 
         public string RedirectTab { get; set; }
 
+        public bool OpenedInNewTab { get; set; }
+
+        public int Page { get; set; }
+
         public DateTime SystemDateTime { get; set; }
 
         public IPrincipal User { get; private set; }
