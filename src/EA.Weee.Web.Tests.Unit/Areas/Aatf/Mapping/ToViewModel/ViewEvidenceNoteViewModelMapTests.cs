@@ -123,7 +123,7 @@
         }
 
         [Fact]
-        public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToBusinessAddress()
+        public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToApprovedRecipientDetails()
         {
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
@@ -149,7 +149,7 @@
             var result = map.Map(source);
 
             //assert
-            result.RecipientAddress.Should().Be(recipientAddress);
+            result.RecipientAddress.Should().Be(evidenceData.ApprovedRecipientDetails);
         }
 
         [Fact]
@@ -161,6 +161,7 @@
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
+                .With(f => f.ApprovedRecipientDetails, string.Empty)
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
 
