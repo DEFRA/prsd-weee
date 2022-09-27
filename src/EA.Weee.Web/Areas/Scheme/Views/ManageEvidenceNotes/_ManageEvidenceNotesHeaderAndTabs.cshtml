@@ -42,11 +42,11 @@
         Url.Action("Index", "ManageEvidenceNotes",
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)
-    @this.WeeeGds().Tab("View and transfer evidence",
+    @this.WeeeGds().Tab("View all reviewed evidence or transfer evidence",
         Url.Action("Index", "ManageEvidenceNotes",
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence)
-    @this.WeeeGds().Tab("Outgoing transfers",
+    @this.WeeeGds().Tab("View evidence that has been transferred",
         Url.Action("Index", "ManageEvidenceNotes",
             new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
         Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
