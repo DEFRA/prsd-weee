@@ -48,6 +48,21 @@
             });
         }
 
+        public string ApprovalDateValidationMessage { get; private set; }
+
+        public string CompareDatePropertyName { get; private set; }
+
+        public EvidenceDateValidationBase(string compareDatePropertyName)
+        {
+            CompareDatePropertyName = compareDatePropertyName;
+        }
+
+        public EvidenceDateValidationBase(string compareDatePropertyName, string approvalDateValidationMessage)
+        {
+            CompareDatePropertyName = compareDatePropertyName;
+            ApprovalDateValidationMessage = approvalDateValidationMessage;
+        }
+
         public ValidationResult ValidateDateAgainstAatfApprovalDate(DateTime date, Guid organisationId, Guid aatfId)
         {
             var aatfs = AsyncHelpers.RunSync(async () => await Cache.FetchAatfDataForOrganisationData(organisationId));
@@ -66,7 +81,7 @@
 
             if (!groupedAatfs)
             {
-                return new ValidationResult("CONTENT NEEDED FOR THIS MESSAGE");
+                return new ValidationResult(ApprovalDateValidationMessage);
             }
 
             return ValidationResult.Success;

@@ -25,6 +25,7 @@
         private readonly DateTime currentDate;
         private readonly Guid organisationId;
         private readonly Guid aatfId;
+        private const string AatfApprovalError = "Aatf approval error";
 
         public EvidenceNoteEndDateAttributeTests()
         {
@@ -35,7 +36,7 @@
             organisationId = TestFixture.Create<Guid>();
             aatfId = TestFixture.Create<Guid>();
 
-            attribute = new EvidenceNoteEndDateAttribute("StartDate")
+            attribute = new EvidenceNoteEndDateAttribute("StartDate", AatfApprovalError)
             {
                 Client = () => client, HttpContextService = httpContextService, Cache = cache
             };
@@ -340,7 +341,7 @@
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("CONTENT NEEDED FOR THIS MESSAGE");
+            result.ValidationResult.ErrorMessage.Should().Be(AatfApprovalError);
         }
 
         public static IEnumerable<object[]> ValidEndAndApprovalDates =>
@@ -392,7 +393,7 @@
         {
             public override DateTime? StartDate { get; set; }
 
-            [EvidenceNoteEndDate(nameof(StartDate))]
+            [EvidenceNoteEndDate(nameof(StartDate), AatfApprovalError)]
             public override DateTime? EndDate { get; set; }
         }
 
@@ -400,7 +401,7 @@
         {
            public DateTime? StartDate { get; set; }
 
-            [EvidenceNoteStartDate(nameof(StartDate))]
+            [EvidenceNoteStartDate(nameof(StartDate), AatfApprovalError)]
             public DateTime? EndDate { get; set; }
         }
     }
