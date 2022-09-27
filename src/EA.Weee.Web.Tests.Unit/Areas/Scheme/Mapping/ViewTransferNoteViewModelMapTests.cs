@@ -87,6 +87,53 @@
             model.ReturnToView.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithOpenedInNewTab_PropertiesShouldBeSet(bool openedInNewTab)
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+                {
+                    OpenedInNewTab = openedInNewTab
+                };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.OpenedInNewTab.Should().Be(openedInNewTab);
+        }
+
+        [Fact]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithPage_PagePropertyShouldBeSet()
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+            var page = TestFixture.Create<int>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+            {
+                Page = page
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Page.Should().Be(page);
+        }
+
         [Fact]
         public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsTrue_ShouldSetReturnToView()
         {

@@ -428,7 +428,6 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMapTransfer.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\EvidenceNoteHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IObligationSummaryBase.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SummaryEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />

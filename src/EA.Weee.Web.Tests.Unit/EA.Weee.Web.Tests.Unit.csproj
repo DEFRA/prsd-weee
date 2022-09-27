@@ -431,7 +431,6 @@
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModelTests.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\EvidenceNoteHistoryViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotesDisplayOptionsTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewEvidenceNoteViewModelTests.cs" />
