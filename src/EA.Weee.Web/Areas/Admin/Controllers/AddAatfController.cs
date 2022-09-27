@@ -159,10 +159,11 @@ namespace EA.Weee.Web.Areas.Admin.Controllers
                 await client.SendAsync(User.GetAccessToken(), request);
 
                 await cache.InvalidateAatfCache(request.OrganisationId);
+                await cache.InvalidateAatfDataForOrganisationDataCache(request.OrganisationId);
 
                 await client.SendAsync(User.GetAccessToken(), new CompleteOrganisationAdmin() { OrganisationId = viewModel.OrganisationId });
                 await cache.InvalidateOrganisationSearch();
-
+                
                 return RedirectToAction("ManageAatfs", "Aatf", new { viewModel.FacilityType });
             }
         }

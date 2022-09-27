@@ -324,6 +324,7 @@
                         await client.SendAsync(User.GetAccessToken(), model.Request);
 
                         await cache.InvalidateAatfCache(model.OrganisationId);
+                        await cache.InvalidateAatfDataForOrganisationDataCache(model.OrganisationId);
 
                         return Redirect(Url.Action("Details", new { id = model.AatfId }));
                     }
@@ -346,7 +347,7 @@
                 await client.SendAsync(User.GetAccessToken(), new DeleteAnAatf(viewModel.AatfId, viewModel.OrganisationId));
 
                 await cache.InvalidateOrganisationSearch();
-
+                await cache.InvalidateAatfDataForOrganisationDataCache(viewModel.OrganisationId);
                 await cache.InvalidateAatfCache(viewModel.OrganisationId);
 
                 return RedirectToAction("ManageAatfs", new { facilityType = viewModel.FacilityType });
@@ -444,6 +445,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
 
                     await cache.InvalidateAatfCache(existingAatf.Organisation.Id);
+                    await cache.InvalidateAatfDataForOrganisationDataCache(existingAatf.Organisation.Id);
 
                     return Redirect(Url.Action("Details", new { area = "Admin", viewModel.Id }));
                 }
