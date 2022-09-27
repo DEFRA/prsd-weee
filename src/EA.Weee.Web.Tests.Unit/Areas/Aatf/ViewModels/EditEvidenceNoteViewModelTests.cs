@@ -121,14 +121,14 @@
         public void EvidenceNoteViewModel_StartDate_ShouldHaveStartDateAttribute()
         {
             typeof(EditEvidenceNoteViewModel).GetProperty("StartDate").Should()
-                .BeDecoratedWith<EvidenceNoteStartDateAttribute>().Which.ApprovalDateValidationMessage.Should().Be("Enter a start date after your date of AATF approval");
+                .BeDecoratedWith<EvidenceNoteStartDateAttribute>().Which.ApprovalDateValidationMessage.Should().Be("Enter a start date on or after the date of your AATF approval");
         }
 
         [Fact]
         public void EvidenceNoteViewModel_EndDate_ShouldHaveStartDateAttribute()
         {
             typeof(EditEvidenceNoteViewModel).GetProperty("EndDate").Should()
-                .BeDecoratedWith<EvidenceNoteEndDateAttribute>().Which.ApprovalDateValidationMessage.Should().Be("Enter an end date after your date of AATF approval");
+                .BeDecoratedWith<EvidenceNoteEndDateAttribute>().Which.ApprovalDateValidationMessage.Should().Be("Enter an end date on or after the date of your AATF approval");
         }
 
         [Fact]

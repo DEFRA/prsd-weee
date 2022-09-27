@@ -87,16 +87,16 @@
             return ValidationResult.Success;
         }
 
-        protected ValidationResult ValidateStartDate(DateTime thisDate, DateTime? otherDate, DateTime currentDate)
+        protected ValidationResult ValidateStartDate(DateTime startDate, DateTime? endDate, DateTime currentDate)
         {
-            if (thisDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
+            if (startDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
             {
                 return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
             }
 
-            if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))
+            if (endDate.HasValue && !endDate.Equals(DateTime.MinValue))
             {
-                if (thisDate > otherDate.Value.Date)
+                if (startDate > endDate.Value.Date)
                 {
                     return new ValidationResult("Ensure the start date is before the end date");
                 }
@@ -105,11 +105,11 @@
             return ValidationResult.Success;
         }
 
-        protected ValidationResult ValidateEndDate(DateTime? otherDate, DateTime thisDate)
+        protected ValidationResult ValidateEndDate(DateTime? endDate, DateTime startDate)
         {
-            if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))
+            if (endDate.HasValue && !endDate.Equals(DateTime.MinValue))
             {
-                if (thisDate < otherDate)
+                if (startDate < endDate)
                 {
                     return new ValidationResult("Ensure the end date is after the start date");
                 }
