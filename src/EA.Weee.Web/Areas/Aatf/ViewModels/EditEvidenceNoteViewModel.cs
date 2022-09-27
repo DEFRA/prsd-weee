@@ -15,14 +15,14 @@
     {
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
-        [EvidenceNoteStartDate(nameof(EndDate))]
+        [EvidenceNoteStartDate(nameof(EndDate), "Enter a start date after your date of AATF approval")]
         [DataType(DataType.Date)]
         public override DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Enter an end date")]
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
-        [EvidenceNoteEndDate(nameof(StartDate))]
+        [EvidenceNoteEndDate(nameof(StartDate), "Enter an end date after your date of AATF approval")]
         public override DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "Select a recipient")]

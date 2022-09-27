@@ -8,11 +8,8 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteEndDateAttribute : EvidenceDateValidationBase
     {
-        public string CompareDatePropertyName { get; set; }
-
-        public EvidenceNoteEndDateAttribute(string compareDatePropertyName)
+        public EvidenceNoteEndDateAttribute(string compareDatePropertyName, string approvalDateValidationMessage) : base(compareDatePropertyName, approvalDateValidationMessage)
         {
-            CompareDatePropertyName = compareDatePropertyName;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
