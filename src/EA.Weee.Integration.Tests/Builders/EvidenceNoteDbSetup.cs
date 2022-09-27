@@ -158,5 +158,12 @@
 
             return this;
         }
+
+        public EvidenceNoteDbSetup WithApprovedSchemeName(string approvedSchemeName)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientSchemeName, approvedSchemeName, instance);
+
+            return this;
+        }
     }
 }
