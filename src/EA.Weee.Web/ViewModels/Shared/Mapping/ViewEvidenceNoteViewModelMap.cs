@@ -88,7 +88,7 @@
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
-                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
+                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteRowViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
                 CanVoid = !source.PrintableVersion &&
                           InternalAdmin(source.User) && 
                           source.EvidenceNoteData.Status == NoteStatus.Approved && 
