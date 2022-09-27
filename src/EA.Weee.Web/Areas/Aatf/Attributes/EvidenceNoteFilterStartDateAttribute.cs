@@ -6,11 +6,8 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteFilterStartDateAttribute : EvidenceDateValidationBase
     {
-        public string CompareDatePropertyName { get; set; }
-
-        public EvidenceNoteFilterStartDateAttribute(string compareDatePropertyName)
+        public EvidenceNoteFilterStartDateAttribute(string compareDatePropertyName) : base(compareDatePropertyName)
         {
-            CompareDatePropertyName = compareDatePropertyName;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
