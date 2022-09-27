@@ -96,7 +96,7 @@
                 int selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
                 var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
-                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+                var allAatfsAndAes = await cache.FetchAatfDataForOrganisationData(organisationId);
 
                 switch (value)
                 {
