@@ -8,6 +8,7 @@
     using Filters;
     using Helpers;
     using Infrastructure;
+    using Services.Caching;
     using Web.ViewModels.Shared;
     using Weee.Requests.AatfEvidence;
     using Weee.Requests.AatfReturn;
@@ -17,6 +18,8 @@
         public Func<IWeeeClient> Client { get; set; }
 
         public IAatfEvidenceHelper AatfEvidenceHelper { get; set; }
+
+        public IWeeeCache Cache { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -65,7 +68,7 @@
                     throw new InvalidOperationException($"Evidence note {evidenceNoteData.Id} is incorrect state to be edited");
                 }
 
-                var allAatfsAndAes = await client.SendAsync(filterContext.HttpContext.User.GetAccessToken(), new GetAatfByOrganisation(evidenceNoteData.AatfData.Organisation.Id));
+                var allAatfsAndAes = await Cache.FetchAatfDataForOrganisationData(evidenceNoteData.AatfData.Organisation.Id);
 
                 var canEdit = AatfEvidenceHelper.AatfCanEditCreateNotes(allAatfsAndAes, evidenceNoteData.AatfData.Id,
                     evidenceNoteData.ComplianceYear);

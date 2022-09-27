@@ -11,6 +11,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using Services.Caching;
     using Web.Areas.Aatf.Attributes;
     using Web.Areas.Aatf.Helpers;
     using Weee.Requests.AatfReturn;
@@ -21,7 +22,7 @@
     {
         private readonly CheckCanCreateEvidenceNoteAttribute attribute;
         private readonly ActionExecutingContext context;
-        private readonly IWeeeClient client;
+        private readonly IWeeeCache cache;
         private readonly IAatfEvidenceHelper aatfEvidenceHelper;
 
         private readonly Guid organisationId;
@@ -30,10 +31,10 @@
 
         public CheckCanCreateEvidenceAttributeTests()
         {
-            client = A.Fake<IWeeeClient>();
+            cache = A.Fake<IWeeeCache>();
             aatfEvidenceHelper = A.Fake<IAatfEvidenceHelper>();
 
-            attribute = new CheckCanCreateEvidenceNoteAttribute { Client = () => client, AatfEvidenceHelper = aatfEvidenceHelper };
+            attribute = new CheckCanCreateEvidenceNoteAttribute { Cache = cache, AatfEvidenceHelper = aatfEvidenceHelper };
             context = A.Fake<ActionExecutingContext>();
 
             organisationId = TestFixture.Create<Guid>();
@@ -134,9 +135,7 @@
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
 
-            A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == organisationId))).Returns(aatfs);
-
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(organisationId)).Returns(aatfs);
             A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, aatfId, complianceYear)).Returns(false);
 
             //act
@@ -155,9 +154,7 @@
             //arrange
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
 
-            A.CallTo(() => client.SendAsync(A<string>._,
-                A<GetAatfByOrganisation>.That.Matches(r => r.OrganisationId == organisationId))).Returns(aatfs);
-
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(organisationId)).Returns(aatfs);
             A.CallTo(() => aatfEvidenceHelper.AatfCanEditCreateNotes(aatfs, aatfId, complianceYear)).Returns(true);
 
             //act
