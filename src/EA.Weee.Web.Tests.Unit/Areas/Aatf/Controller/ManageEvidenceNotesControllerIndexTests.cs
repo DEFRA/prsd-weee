@@ -150,7 +150,7 @@
 
             await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), null, 1);
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId.Equals(organisationId)))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => Cache.FetchAatfDataForOrganisationData(organisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Theory]
@@ -165,7 +165,7 @@
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => Cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
@@ -191,7 +191,7 @@
             var aatfs = Fixture.CreateMany<AatfData>().ToList();
             var aatfData = Fixture.Create<AatfData>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => Cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
@@ -219,7 +219,7 @@
             var aatfData = Fixture.Create<AatfData>();
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => Cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
@@ -254,7 +254,7 @@
                     A<RecipientWasteStatusFilterBase>._))
                 .Returns(recipientFilter);
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => Cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
@@ -289,7 +289,7 @@
                     A<SubmittedDateFilterBase>._))
                 .Returns(submittedDateFilter);
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => Cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act
@@ -318,7 +318,7 @@
             var aatfData = Fixture.Create<AatfData>();
             var filter = Fixture.Create<ManageEvidenceNoteViewModel>();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => Cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfByIdExternal>._)).Returns(aatfData);
 
             //act

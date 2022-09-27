@@ -76,16 +76,13 @@
 
         private async Task<SelectYourAatfViewModel> GenerateSelectYourAatfViewModel(Guid organisationId)
         {
-            using (var client = apiClient())
-            {
-                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+            var allAatfsAndAes = await cache.FetchAatfDataForOrganisationData(organisationId);
 
-                return mapper.Map<SelectYourAatfViewModel>(new AatfEvidenceToSelectYourAatfViewModelMapTransfer()
-                {
-                    AatfList = allAatfsAndAes, 
-                    OrganisationId = organisationId
-                });
-            }
+            return mapper.Map<SelectYourAatfViewModel>(new AatfEvidenceToSelectYourAatfViewModelMapTransfer()
+            {
+                AatfList = allAatfsAndAes, 
+                OrganisationId = organisationId
+            });
         }
     }
 }

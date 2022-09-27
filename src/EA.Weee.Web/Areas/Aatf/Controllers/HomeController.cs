@@ -35,7 +35,7 @@
         {
             using (var client = apiClient())
             {
-                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+                var allAatfsAndAes = await cache.FetchAatfDataForOrganisationData(organisationId);
 
                 var model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = organisationId, FacilityType = facilityType });
 
@@ -61,7 +61,7 @@
 
             using (var client = apiClient())
             {
-                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(model.OrganisationId));
+                var allAatfsAndAes = await cache.FetchAatfDataForOrganisationData(model.OrganisationId);
 
                 model = mapper.Map(new AatfDataToHomeViewModelMapTransfer() { AatfList = allAatfsAndAes, OrganisationId = model.OrganisationId, FacilityType = model.FacilityType });
             }

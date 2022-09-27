@@ -2,10 +2,14 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
     using Api.Client;
     using Filters;
+    using Helpers;
+    using Prsd.Core;
     using Services;
+    using Services.Caching;
     using Weee.Requests.Shared;
 
     public class EvidenceDateValidationBase : ValidationAttribute
@@ -25,6 +29,14 @@
             set => httpContextService = value;
         }
 
+        private IWeeeCache cache;
+
+        public IWeeeCache Cache
+        {
+            get => cache ?? DependencyResolver.Current.GetService<IWeeeCache>();
+            set => cache = value;
+        }
+
         public DateTime GetCurrentDateTime()
         {
             return AsyncHelpers.RunSync(async () =>
@@ -34,6 +46,76 @@
                     return await c.SendAsync(HttpContextService.GetAccessToken(), new GetApiDate());
                 }
             });
+        }
+
+        public string ApprovalDateValidationMessage { get; private set; }
+
+        public string CompareDatePropertyName { get; private set; }
+
+        public EvidenceDateValidationBase(string compareDatePropertyName)
+        {
+            CompareDatePropertyName = compareDatePropertyName;
+        }
+
+        public EvidenceDateValidationBase(string compareDatePropertyName, string approvalDateValidationMessage)
+        {
+            CompareDatePropertyName = compareDatePropertyName;
+            ApprovalDateValidationMessage = approvalDateValidationMessage;
+        }
+
+        public ValidationResult ValidateDateAgainstAatfApprovalDate(DateTime date, Guid organisationId, Guid aatfId)
+        {
+            var aatfs = AsyncHelpers.RunSync(async () => await Cache.FetchAatfDataForOrganisationData(organisationId));
+
+            var aatfById = aatfs.FirstOrDefault(a => a.Id == aatfId);
+
+            if (aatfById == null)
+            {
+                return new ValidationResult("Aatf is invalid to save evidence notes.");
+            }
+
+            var groupedAatfs = aatfs.Any(a => a.AatfId == 
+                aatfById.AatfId && 
+                a.ComplianceYear == date.Year &&
+                a.ApprovalDate.GetValueOrDefault() <= date);
+
+            if (!groupedAatfs)
+            {
+                return new ValidationResult(ApprovalDateValidationMessage);
+            }
+
+            return ValidationResult.Success;
+        }
+
+        protected ValidationResult ValidateStartDate(DateTime startDate, DateTime? endDate, DateTime currentDate)
+        {
+            if (startDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
+            {
+                return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
+            }
+
+            if (endDate.HasValue && !endDate.Equals(DateTime.MinValue))
+            {
+                if (startDate > endDate.Value.Date)
+                {
+                    return new ValidationResult("Ensure the start date is before the end date");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+
+        protected ValidationResult ValidateEndDate(DateTime? endDate, DateTime startDate)
+        {
+            if (endDate.HasValue && !endDate.Equals(DateTime.MinValue))
+            {
+                if (startDate < endDate)
+                {
+                    return new ValidationResult("Ensure the end date is after the start date");
+                }
+            }
+
+            return ValidationResult.Success;
         }
     }
 }
