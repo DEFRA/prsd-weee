@@ -82,7 +82,7 @@
                 notesSet.Add(evidenceWithVoidStatus);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    startDateSubmittedFilter, endDateSubmittedFilter, recipientIdFilter, noteStatusFilter, obligationTypeFilter, submittedAatfIdFilter);
+                    null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -128,7 +128,7 @@
                 notesSet.Add(evidenceWithDraftStatus2);
 
                 request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue,
-                    startDateSubmittedFilter, endDateSubmittedFilter, recipientIdFilter, noteStatusFilter, obligationTypeFilter, submittedAatfIdFilter);
+                    null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
