@@ -12,6 +12,10 @@
         public virtual string TransferredIn { get; set; }
         public virtual string Difference { get; set; }
 
+        public virtual string EvidenceOriginal { get; set; }
+
+        public virtual string EvidenceDifference { get; set; }
+
         public ObligationEvidenceValue(WeeeCategory categoryId) : base(categoryId)
         {
         }
