@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Authentication;
     using System.Threading.Tasks;
     using System.Web;
     using Weee.Requests.AatfReturn;
@@ -22,6 +23,7 @@
         private readonly ICacheProvider provider;
         private readonly ConfigurationService configurationService;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IHttpContextService httpContextService;
 
         public Cache<Guid, string> UserNames { get; private set; }
         public Cache<Guid, string> OrganisationNames { get; private set; }
@@ -30,7 +32,11 @@
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
         public Cache<Guid, IList<AatfData>> AatfPublicInfo { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfosBySchemeId { get; private set; }
+
+        public Cache<Guid, List<AatfData>> OrganisationAatfDetails { get; private set; }
+
         public Cache<Guid, IList<ObligatedCategoryValue>> CategoryValues { get; private set; }
+
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
@@ -38,11 +44,12 @@
 
         private readonly string accessToken;
 
-        public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient, ConfigurationService configService)
+        public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient, ConfigurationService configService, IHttpContextService httpContextService)
         {
             this.provider = provider;
             this.apiClient = apiClient;
             this.configurationService = configService;
+            this.httpContextService = httpContextService;
 
             if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
@@ -115,6 +122,13 @@
                 "CurrentUtcSystemDate",
                 (DateTime.Today.AddDays(1).Subtract(DateTime.Now)),
                 FetchCurrentUtcDateTime);
+
+            OrganisationAatfDetails = new Cache<Guid, List<AatfData>>(
+                provider,
+                "OrganisationAatfData",
+                TimeSpan.FromDays(1),
+                (organisationId => organisationId.ToString()),
+                FetchAatfsForOrganisation);
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
@@ -229,6 +243,17 @@
             }
         }
 
+        private async Task<List<AatfData>> FetchAatfsForOrganisation(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetAatfByOrganisation(organisationId);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         public Task<string> FetchOrganisationName(Guid organisationId)
         {
             return OrganisationNames.Fetch(organisationId);
@@ -264,11 +289,6 @@
             return FetchProducerSearchResultList();
         }
 
-        public Task<DateTime> FetchCurrentDate()
-        {
-            return CurrentDate.Fetch();
-        }
-        
         public async Task InvalidateProducerSearch()
         {
             await ProducerSearchResultList.InvalidateCache();
@@ -314,6 +334,22 @@
         public async Task InvalidateSchemePublicInfoCache(Guid organisationId)
         {
             await SchemePublicInfos.InvalidateCache(organisationId);
+        }
+
+        public async Task<List<AatfData>> FetchAatfDataForOrganisationData(Guid organisationId)
+        {
+            var hasAccess = httpContextService.HasOrganisationClaim(organisationId);
+            if (!hasAccess)
+            {
+                throw new AuthenticationException($"User does not have access to organisation cache {organisationId}");
+            }
+            
+            return await OrganisationAatfDetails.Fetch(organisationId);
+        }
+
+        public async Task InvalidateAatfDataForOrganisationDataCache(Guid organisationId)
+        {
+            await OrganisationAatfDetails.InvalidateCache(organisationId);
         }
     }
 }

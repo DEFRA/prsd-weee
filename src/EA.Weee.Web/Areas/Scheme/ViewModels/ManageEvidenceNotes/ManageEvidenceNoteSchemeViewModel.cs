@@ -13,6 +13,7 @@
         public Guid OrganisationId { get; set; }
 
         public string OrganisationName { get; set; }
+
         public PagedList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
         public ManageEvidenceNotesDisplayOptions ActiveDisplayOption { get; set; }
