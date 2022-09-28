@@ -11,5 +11,9 @@
         public decimal? TransferredOut { get; set; }
         public decimal? TransferredIn { get; set; }
         public decimal? ObligationDifference { get; set; }
+
+        public decimal? EvidenceOriginal { get; set; }
+
+        public decimal? EvidenceDifference { get; set; }
     }
 }
