@@ -14,7 +14,7 @@
     <div class="govuk-grid-row ">
 
         <div class="govuk-grid-column-two-thirds">
-            <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-margin-right-0">
+            <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-margin-right-0" style="width:210px">
                 <div class="govuk-form-group govuk-!-padding-top-20 @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
                     @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @class = "govuk-label--s" }, false)
                     @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
@@ -28,7 +28,7 @@
                 </span>
             </div>
 
-            <div class="govuk-grid-column-one-third govuk-!-padding-left-2">
+            <div class="govuk-grid-column-one-third govuk-!-padding-left-2" style="width:210px">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.EndDate)">
                     @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @class = "govuk-label--s" }, false)
                     @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.EndDate)
