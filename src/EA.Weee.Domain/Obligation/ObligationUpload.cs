@@ -39,7 +39,7 @@
             string data,
             string fileName)
         {
-            Condition.Requires(data).IsNotNullOrWhiteSpace();
+            Condition.Requires(data).IsNotNull();
             Condition.Requires(fileName).IsNotNullOrWhiteSpace();
             Condition.Requires(uploadedById).IsNotNullOrWhiteSpace();
             Condition.Requires(competentAuthority).IsNotNull();

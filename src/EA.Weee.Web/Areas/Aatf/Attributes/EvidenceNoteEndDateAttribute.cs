@@ -3,18 +3,13 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
+    using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteEndDateAttribute : EvidenceDateValidationBase
     {
-        public string CompareDatePropertyName { get; set; }
-
-        public bool CheckComplianceYear { get; set; }
-
-        public EvidenceNoteEndDateAttribute(string compareDatePropertyName, bool checkComplianceYear)
+        public EvidenceNoteEndDateAttribute(string compareDatePropertyName, string approvalDateValidationMessage) : base(compareDatePropertyName, approvalDateValidationMessage)
         {
-            CompareDatePropertyName = compareDatePropertyName;
-            CheckComplianceYear = checkComplianceYear;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -30,23 +25,24 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (CheckComplianceYear)
+            if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
-                if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
-                {
-                    return new ValidationResult("The end date must be within the current compliance year");
-                }
-            }
-           
-            if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))
-            {
-                if (thisDate < otherDate)
-                {
-                    return new ValidationResult("Ensure the end date is after the start date");
-                }
+                return new ValidationResult("The end date must be within the current compliance year");
             }
 
-            return ValidationResult.Success;
+            if (!(validationContext.ObjectInstance is EvidenceNoteViewModel evidenceNoteModel))
+            {
+                return new ValidationResult("Unable to validate the evidence note details");
+            }
+
+            var endDateValid = ValidateEndDate(otherDate, thisDate);
+
+            if (endDateValid != ValidationResult.Success)
+            {
+                return endDateValid;
+            }
+
+            return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
         }
     }
 }

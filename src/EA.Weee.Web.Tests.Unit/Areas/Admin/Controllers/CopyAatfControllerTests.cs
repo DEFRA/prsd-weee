@@ -310,6 +310,7 @@
             var result = await controller.CopyAatfDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -376,6 +377,7 @@
             var result = await controller.CopyAeDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

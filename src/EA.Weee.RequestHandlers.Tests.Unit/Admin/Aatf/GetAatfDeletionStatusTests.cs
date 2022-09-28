@@ -121,5 +121,47 @@
             result.Should().HaveFlag(CanAatfBeDeletedFlags.IsNotLatest);
             result.Should().NotHaveFlag(CanAatfBeDeletedFlags.CanDelete);
         }
+
+        [Fact]
+        public async Task Validate_HasNotes_HasDataFlagIsPresent()
+        {
+            // arrange
+            var aatfId = fixture.Create<Guid>();
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+            A.CallTo(() => aatf.AatfId).Returns(aatfId);
+            A.CallTo(() => aatfDataAccess.GetDetails(aatfId)).Returns(aatf);
+            A.CallTo(() => aatfDataAccess.IsLatestAatf(aatfId, aatfId)).Returns(true);
+            A.CallTo(() => aatfDataAccess.HasAatfData(aatfId)).Returns(false);
+            A.CallTo(() => aatfDataAccess.HasEvidenceNotes(aatfId)).Returns(true);
+
+            // act
+            var result = await getAatfDeletionStatus.Validate(aatfId);
+
+            // assert
+            result.Should().HaveFlag(CanAatfBeDeletedFlags.HasData);
+        }
+
+        [Fact]
+        public async Task Validate_HasNoNotes_HasDataFlagIsNotPresent()
+        {
+            // arrange
+            var aatfId = fixture.Create<Guid>();
+            var aatf = A.Fake<Aatf>();
+
+            A.CallTo(() => aatf.Id).Returns(aatfId);
+            A.CallTo(() => aatf.AatfId).Returns(aatfId);
+            A.CallTo(() => aatfDataAccess.GetDetails(aatfId)).Returns(aatf);
+            A.CallTo(() => aatfDataAccess.IsLatestAatf(aatf.Id, aatfId)).Returns(true);
+            A.CallTo(() => aatfDataAccess.HasAatfData(aatfId)).Returns(false);
+            A.CallTo(() => aatfDataAccess.HasEvidenceNotes(aatfId)).Returns(false);
+
+            // act
+            var result = await getAatfDeletionStatus.Validate(aatfId);
+
+            // assert
+            result.Should().NotHaveFlag(CanAatfBeDeletedFlags.HasData);
+        }
     }
 }
