@@ -9,8 +9,8 @@
     public class SubmittedDatesFilterViewModelTests
     {
         [Theory]
-        [InlineData("StartDate", "Submitted date")]
-        [InlineData("EndDate", "Submitted date")]
+        [InlineData("StartDate", "Submitted start date")]
+        [InlineData("EndDate", "Submitted end date")]
         public void SubmittedDatesFilterViewModel_Properties_ShouldHaveDisplayNameAttribute(string property, string description)
         {
             typeof(SubmittedDatesFilterViewModel)
