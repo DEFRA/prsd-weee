@@ -32,5 +32,13 @@
           string DifferenceTotal { get; set; }
 
           string Difference210Total { get; set; }
+
+          string EvidenceOriginalTotal { get; set; }
+
+          string EvidenceOriginal210Total { get; set; }
+
+          string EvidenceDifferenceTotal { get; set; }
+
+          string EvidenceDifference210Total { get; set; }
     }
 }
