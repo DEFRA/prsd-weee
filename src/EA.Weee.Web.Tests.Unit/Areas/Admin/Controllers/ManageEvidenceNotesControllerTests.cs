@@ -1,9 +1,15 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
@@ -12,11 +18,6 @@
     using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Prsd.Core;
     using Web.Filters;
     using Web.ViewModels.Shared.Mapping;
@@ -137,11 +138,8 @@
             convertedModel.ManageEvidenceNoteViewModel.Should().Be(model);
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("view-all-evidence-notes")]
-        [InlineData("view-all-evidence-transfers")]
-        public async void IndexGet_GivenManageEvidenceNotesViewModel_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
+        [Fact]
+        public async void IndexGet_GivenManageEvidenceNotesViewModelAndViewAllEvidenceTransfers_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues()
         {
             //arrange
             var complianceYear = TestFixture.Create<short>();
@@ -155,7 +153,7 @@
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
             //act
-            await ManageEvidenceController.Index(tab, model);
+            await ManageEvidenceController.Index("view-all-evidence-transfers", model);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
                     m.FilterViewModel == null &&
@@ -171,15 +169,76 @@
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        [InlineData("view-all-evidence-transfers")]
-        public async void IndexGet_GivenNullManageEvidenceNotesViewModel_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
+        public async void IndexGet_GivenManageEvidenceNotesViewModelAndViewAllEvidenceNotesAndNullTabs_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
+        {
+            //arrange
+            var complianceYear = TestFixture.Create<short>();
+            var currentDate = TestFixture.Create<DateTime>();
+            var complianceYearList = new List<int> { 2019, 2020 };
+            var recipientWasteStatusViewModel = TestFixture.Create<RecipientWasteStatusFilterViewModel>();
+            var submittedDatesFilterViewModel = TestFixture.Create<SubmittedDatesFilterViewModel>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYearList);
+            A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(A<RecipientWasteStatusFilterBase>._)).Returns(recipientWasteStatusViewModel);
+            A.CallTo(() => Mapper.Map<SubmittedDatesFilterViewModel>(A<SubmittedDateFilterBase>._)).Returns(submittedDatesFilterViewModel);
+
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            //act
+            await ManageEvidenceController.Index(tab, model);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
+                    m.FilterViewModel == null &&
+                    m.AatfData == null &&
+                    m.RecipientWasteStatusFilterViewModel == recipientWasteStatusViewModel &&
+                    m.SubmittedDatesFilterViewModel == submittedDatesFilterViewModel &&
+                    m.CurrentDate == currentDate &&
+                    m.ComplianceYear == complianceYear &&
+                    m.ComplianceYearList.SequenceEqual(complianceYearList))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndViewAllEvidenceTransfersTab_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues()
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
             var complianceYearList = new List<int> { 2019, 2020 };
+           
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYearList);
+
+            //act
+            await ManageEvidenceController.Index("view-all-evidence-transfers", null);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
+                    m.FilterViewModel == null &&
+                    m.AatfData == null &&
+                    m.RecipientWasteStatusFilterViewModel == null &&
+                    m.SubmittedDatesFilterViewModel == null &&
+                    m.CurrentDate == currentDate &&
+                    m.ComplianceYear == complianceYearList.ElementAt(0) &&
+                    m.ComplianceYearList.SequenceEqual(complianceYearList))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndViewAllEvidenceNotesOrNullTabs_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
+        {
+            //arrange
+            var currentDate = TestFixture.Create<DateTime>();
+            var complianceYearList = new List<int> { 2019, 2020 };
+            var recipientWasteStatusViewModel = TestFixture.Create<RecipientWasteStatusFilterViewModel>();
+            var submittedDatesFilterViewModel = TestFixture.Create<SubmittedDatesFilterViewModel>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYearList);
+            A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(A<RecipientWasteStatusFilterBase>._)).Returns(recipientWasteStatusViewModel);
+            A.CallTo(() => Mapper.Map<SubmittedDatesFilterViewModel>(A<SubmittedDateFilterBase>._)).Returns(submittedDatesFilterViewModel);
 
             //act
             await ManageEvidenceController.Index(tab, null);
@@ -187,8 +246,8 @@
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
                     m.FilterViewModel == null &&
                     m.AatfData == null &&
-                    m.RecipientWasteStatusFilterViewModel == null &&
-                    m.SubmittedDatesFilterViewModel == null &&
+                    m.RecipientWasteStatusFilterViewModel == recipientWasteStatusViewModel &&
+                    m.SubmittedDatesFilterViewModel == submittedDatesFilterViewModel &&
                     m.CurrentDate == currentDate &&
                     m.ComplianceYear == complianceYearList.ElementAt(0) &&
                     m.ComplianceYearList.SequenceEqual(complianceYearList))))
