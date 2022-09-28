@@ -23,6 +23,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Extensions;
     using ViewModels;
     using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
@@ -384,7 +385,7 @@
         [ValidateAntiForgeryToken]
         public override ActionResult DeselectEvidenceNote(TransferDeselectEvidenceNoteModel model)
         {
-            DeselectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
+            DeselectEvidenceNote(model.DeselectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
 
             return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, model.Page });
         }

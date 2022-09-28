@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Constant;
 
     public class TransferSelectEvidenceNoteModel : TransferSelectEvidenceNoteModelBase, IValidatableObject
     {
+        public Guid SelectedEvidenceNoteId { get; set; }
+
         public int NumberOfSelectedNotes { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
