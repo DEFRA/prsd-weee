@@ -51,6 +51,8 @@
                     FixCurrentDate = settings.FixCurrentDate,
                     CurrentDate = settings.CurrentDate
                 });
+
+                cache.Clear();
             }
 
             return RedirectToAction("SettingsUpdated", "ManagePcsReturnsSubmissionWindow");
