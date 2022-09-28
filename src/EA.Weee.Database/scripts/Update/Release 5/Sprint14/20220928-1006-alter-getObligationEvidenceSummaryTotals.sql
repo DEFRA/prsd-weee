@@ -102,7 +102,7 @@ SELECT
 	TransferEvidenceReceivedIn AS TransferredIn,
 	CASE WHEN EvidenceReceivedInTotal IS NULL AND TransferEvidenceReceivedIn IS NULL AND TransferEvidenceReceivedOut IS NULL AND Obligation IS NULL THEN NULL ELSE
 		(COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0))) - COALESCE(Obligation, 0) END AS ObligationDifference,
-	COALESCE(EvidenceReceivedInTotal, 0) AS EvidenceOriginal,
+	EvidenceReceivedInTotal AS EvidenceOriginal,
 	CASE WHEN EvidenceReceivedInTotal IS NULL AND TransferEvidenceReceivedOut IS NULL THEN NULL ELSE
 		COALESCE(EvidenceReceivedInTotal, 0) - COALESCE(TransferEvidenceReceivedOut, 0) END AS EvidenceDifference
 

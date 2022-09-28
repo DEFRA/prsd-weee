@@ -241,9 +241,9 @@
             var complianceYears = TestFixture.CreateMany<int>().ToList();
             var obligationTonnageValues = new List<ObligationEvidenceTonnageData>()
             {
-                new ObligationEvidenceTonnageData(WeeeCategory.ITAndTelecommsEquipment, 100M, null, 20M, 0, 3.89M, 20M),
-                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, 50.534M, null, 40M, null, null),
-                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 0, 0, 0, 0, 0, 0)
+                new ObligationEvidenceTonnageData(WeeeCategory.ITAndTelecommsEquipment, 100M, null, 20M, 0, 3.89M, 20M, 17.7M, 21M),
+                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, 50.534M, null, 40M, null, null, null, null),
+                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 0, 0, 0, 0, 0, 0, 0, 0)
             };
 
             var obligationSummaryData = new ObligationEvidenceSummaryData(obligationTonnageValues);
@@ -256,6 +256,8 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).TransferredOut)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).TransferredIn)).Returns("3.890");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).Difference)).Returns("20.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).EvidenceOriginal)).Returns("17.700");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).EvidenceDifference)).Returns("21.000");
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).Obligation)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).Evidence)).Returns("50.534");
@@ -263,6 +265,8 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).TransferredOut)).Returns("40.000");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).TransferredIn)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).Difference)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).EvidenceOriginal)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).EvidenceDifference)).Returns("-");
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).Obligation)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).Evidence)).Returns("-");
@@ -270,6 +274,8 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).TransferredOut)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).TransferredIn)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).Difference)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).EvidenceOriginal)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).EvidenceOriginal)).Returns("-");
 
             //act
             var result = mapper.Map(mapObject);
@@ -282,6 +288,8 @@
             result.ObligationEvidenceValues.ElementAt(0).TransferredOut.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(0).TransferredIn.Should().Be("3.890");
             result.ObligationEvidenceValues.ElementAt(0).Difference.Should().Be("20.000");
+            result.ObligationEvidenceValues.ElementAt(0).EvidenceOriginal.Should().Be("17.700");
+            result.ObligationEvidenceValues.ElementAt(0).EvidenceDifference.Should().Be("21.000");
 
             result.ObligationEvidenceValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.ElectricalAndElectronicTools.ToInt());
             result.ObligationEvidenceValues.ElementAt(1).Obligation.Should().Be("-");
@@ -290,6 +298,8 @@
             result.ObligationEvidenceValues.ElementAt(1).TransferredOut.Should().Be("40.000");
             result.ObligationEvidenceValues.ElementAt(1).TransferredIn.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(1).Difference.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(1).EvidenceOriginal.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(1).EvidenceDifference.Should().Be("-");
 
             result.ObligationEvidenceValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
             result.ObligationEvidenceValues.ElementAt(2).Obligation.Should().Be("-");
@@ -298,6 +308,8 @@
             result.ObligationEvidenceValues.ElementAt(2).TransferredOut.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(2).TransferredIn.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(2).Difference.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(2).EvidenceOriginal.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(2).EvidenceDifference.Should().Be("-");
         }
 
         [Fact]
@@ -308,14 +320,14 @@
 
             var obligationTonnageValues = new List<ObligationEvidenceTonnageData>()
             {
-                new ObligationEvidenceTonnageData(WeeeCategory.LargeHouseholdAppliances, 1, 2, 3, 4, 5, 6),
-                new ObligationEvidenceTonnageData(WeeeCategory.DisplayEquipment, 7, 8, 9, 10, 11, 12),
-                new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, 13, 14, 15, 16, 17, 18),
-                new ObligationEvidenceTonnageData(WeeeCategory.GasDischargeLampsAndLedLightSources, 19, 20, 21, 22, 23, 24),
-                new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, 25, 26, 27, 28, 29, 30),
-                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 1, 2, 3, 4, 5, 6),
-                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 7, 8, 8, 10, 11, 12),
-                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, 13, 14, 15, 16, 17, 18),
+                new ObligationEvidenceTonnageData(WeeeCategory.LargeHouseholdAppliances, 1, 2, 3, 4, 5, 6, 100, 101),
+                new ObligationEvidenceTonnageData(WeeeCategory.DisplayEquipment, 7, 8, 9, 10, 11, 12, 200, 201),
+                new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, 13, 14, 15, 16, 17, 18, 300, 301),
+                new ObligationEvidenceTonnageData(WeeeCategory.GasDischargeLampsAndLedLightSources, 19, 20, 21, 22, 23, 24, 400, 401),
+                new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, 25, 26, 27, 28, 29, 30, 500, 501),
+                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 1, 2, 3, 4, 5, 6, 600, 601),
+                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 7, 8, 8, 10, 11, 12, 700, 701),
+                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, 13, 14, 15, 16, 17, 18, 800, 801),
             };
 
             var excludedCategories = new List<WeeeCategory>()
@@ -331,24 +343,47 @@
             var mapObject =
                 new ViewObligationsAndEvidenceSummaryViewModelMapTransfer(null, obligationSummaryData, complianceYears, null);
 
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.Obligation))).Returns("86.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.Obligation))).Returns("86.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.Obligation))).Returns("21.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.Evidence))).Returns("94.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.Evidence))).Returns("94.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.Evidence))).Returns("24.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.Difference))).Returns("126.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.Difference))).Returns("126.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.Difference))).Returns("36.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.Reuse))).Returns("101.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.Reuse))).Returns("101.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.Reuse))).Returns("26.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.TransferredIn))).Returns("118.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.TransferredIn))).Returns("118.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.TransferredIn))).Returns("33.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.TransferredOut))).Returns("110.000");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.TransferredOut))).Returns("110.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.TransferredOut))).Returns("30.000");
+
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.EvidenceOriginal))).Returns("3600.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+                .Sum(x => x.EvidenceOriginal))).Returns("2100.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Sum(x => x.EvidenceDifference))).Returns("3614.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData
+                .ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+                .Sum(x => x.EvidenceDifference))).Returns("2103.000");
 
             //act
             var result = mapper.Map(mapObject);
@@ -366,6 +401,10 @@
             result.TransferredInTotal.Should().Be("118.000");
             result.TransferredOut210Total.Should().Be("30.000");
             result.TransferredOutTotal.Should().Be("110.000");
+            result.EvidenceOriginalTotal.Should().Be("3600.000");
+            result.EvidenceDifferenceTotal.Should().Be("3614.000");
+            result.EvidenceOriginal210Total.Should().Be("2100.000");
+            result.EvidenceDifference210Total.Should().Be("2103.000");
         }
     }
 }
