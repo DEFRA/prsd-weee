@@ -2104,10 +2104,14 @@
             var date = new DateTime(2022, 09, 2, 13, 22, 0);
             SystemTime.Freeze(date);
             var pdf = TestFixture.Create<byte[]>();
-            var model = TestFixture.Create<ViewTransferNoteViewModel>();
-            var reference = 151;
-            model.Reference = reference;
+            
+            var data = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.ComplianceYear, 2022).Create();
+            var model = TestFixture.Build<ViewTransferNoteViewModel>()
+                .With(v => v.Reference, 151)
+                .With(v => v.Type, NoteType.Transfer).Create();
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(data);
             A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
 
@@ -2116,7 +2120,7 @@
 
             //assert
             result.FileContents.Should().BeSameAs(pdf);
-            result.FileDownloadName.Should().Be("T151_2022_02/09/2022_1422.pdf");
+            result.FileDownloadName.Should().Be("2022_T151_020922_1422.pdf");
             result.ContentType.Should().Be("application/pdf");
             SystemTime.Unfreeze();
         }
