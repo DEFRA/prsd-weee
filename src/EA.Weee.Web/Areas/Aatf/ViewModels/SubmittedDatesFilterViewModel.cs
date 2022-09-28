@@ -9,12 +9,12 @@
     {
         [Display(Name = "Submitted start date")]
         [DataType(DataType.Date)]
-        [EvidenceNoteStartDate(nameof(EndDate), false)]
+        [EvidenceNoteFilterStartDate(nameof(EndDate))]
         public DateTime? StartDate { get; set; }
 
         [Display(Name = "Submitted end date")]
         [DataType(DataType.Date)]
-        [EvidenceNoteEndDate(nameof(StartDate), false)]
+        [EvidenceNoteFilterEndDate(nameof(StartDate))]
         public DateTime? EndDate { get; set; }
     }
 }

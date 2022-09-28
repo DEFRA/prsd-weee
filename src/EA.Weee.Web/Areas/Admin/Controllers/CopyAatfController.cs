@@ -163,6 +163,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
 
                     await cache.InvalidateAatfCache(request.OrganisationId);
+                    await cache.InvalidateAatfDataForOrganisationDataCache(request.OrganisationId);
                 }
 
                 return RedirectToAction("ManageAatfs", "Aatf", new { viewModel.FacilityType });
