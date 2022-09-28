@@ -40,6 +40,19 @@
 
             var allowVoidStatus = new List<NoteStatus>() { NoteStatus.Void, NoteStatus.Rejected };
 
+            var recipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme 
+                ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName 
+                : (string.IsNullOrEmpty(source.EvidenceNoteData.ApprovedRecipientDetails) 
+                    ? addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
+                        source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
+                        organisationAddress.Address1,
+                        organisationAddress.Address2,
+                        organisationAddress.TownOrCity,
+                        organisationAddress.CountyOrRegion,
+                        organisationAddress.Postcode,
+                        null)
+                    : source.EvidenceNoteData.ApprovedRecipientDetails);
+
             var model = new ViewEvidenceNoteViewModel
             {
                 Id = source.EvidenceNoteData.Id,
@@ -75,15 +88,7 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
-                RecipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName :
-                        addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
-                    source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
-                    organisationAddress.Address1,
-                    organisationAddress.Address2,
-                    organisationAddress.TownOrCity,
-                    organisationAddress.CountyOrRegion,
-                    organisationAddress.Postcode,
-                    null),
+                RecipientAddress = recipientAddress,
                 SchemeId = source.SchemeId, 
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
