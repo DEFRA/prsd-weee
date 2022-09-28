@@ -9,8 +9,9 @@
     {
         [Theory]
         [InlineData("ReceivedId", "Recipient")]
-        [InlineData("WasteTypeValue", "Type of waste")]
+        [InlineData("WasteTypeValue", "Obligation type")]
         [InlineData("NoteStatusValue", "Status")]
+        [InlineData("SubmittedBy", "Submitted by")]
         public void RecipientWasteStatusFilterViewModel_Properties_ShouldHaveDisplayAttributes(string property, string display)
         {
             typeof(RecipientWasteStatusFilterViewModel).GetProperty(property).Should()
