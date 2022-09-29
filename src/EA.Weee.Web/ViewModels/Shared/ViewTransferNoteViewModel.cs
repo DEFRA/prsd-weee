@@ -43,7 +43,5 @@
         }
 
         public bool ReturnToView { get; set; }
-
-        public bool IsInternalUser { get; set; }
     }
 }
