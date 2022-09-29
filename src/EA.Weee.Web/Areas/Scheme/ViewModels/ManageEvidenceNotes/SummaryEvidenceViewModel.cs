@@ -39,6 +39,14 @@
 
         public virtual string Difference210Total { get; set; }
 
+        public virtual string EvidenceOriginalTotal { get; set; }
+
+        public virtual string EvidenceDifferenceTotal { get; set; }
+
+        public virtual string EvidenceOriginal210Total { get; set; }
+
+        public virtual string EvidenceDifference210Total { get; set; }
+
         public SummaryEvidenceViewModel()
         : base(ManageEvidenceNotesDisplayOptions.Summary)
         {

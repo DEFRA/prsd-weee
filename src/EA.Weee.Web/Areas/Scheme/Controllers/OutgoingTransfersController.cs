@@ -357,7 +357,7 @@
         [ValidateAntiForgeryToken]
         public override ActionResult DeselectEvidenceNote(TransferDeselectEvidenceNoteModel model)
         {
-            DeselectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.OutgoingTransferKey);
+            DeselectEvidenceNote(model.DeselectedEvidenceNoteId, SessionKeyConstant.OutgoingTransferKey);
 
             return RedirectToAction("EditTransferFrom", new { pcsId = model.PcsId, evidenceNoteId = model.EditEvidenceNoteId, model.Page });
         }

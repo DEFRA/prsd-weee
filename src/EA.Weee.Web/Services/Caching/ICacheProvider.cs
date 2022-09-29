@@ -31,5 +31,10 @@
         /// <param name="key"></param>
         /// <returns></returns>
         Task Remove(string cache, string key);
+
+        /// <summary>
+        /// Disposes of the current cache to create new
+        /// </summary>
+        void ClearCache();
     }
 }

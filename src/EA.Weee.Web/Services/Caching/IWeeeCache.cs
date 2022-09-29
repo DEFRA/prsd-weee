@@ -38,5 +38,7 @@
         Task<List<AatfData>> FetchAatfDataForOrganisationData(Guid organisationId);
 
         Task InvalidateAatfDataForOrganisationDataCache(Guid organisationId);
+
+        void Clear();
     }
 }

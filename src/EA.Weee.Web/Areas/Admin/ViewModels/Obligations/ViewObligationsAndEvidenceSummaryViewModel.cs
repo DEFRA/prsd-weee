@@ -29,7 +29,11 @@
 
         public virtual string EvidenceTotal { get; set; }
 
+        public virtual string EvidenceOriginalTotal { get; set; }
+
         public virtual string Evidence210Total { get; set; }
+
+        public virtual string EvidenceOriginal210Total { get; set; }
 
         public virtual string ReuseTotal { get; set; }
 
@@ -45,6 +49,10 @@
 
         public virtual string DifferenceTotal { get; set; }
 
+        public virtual string EvidenceDifferenceTotal { get; set; }
+
         public virtual string Difference210Total { get; set; }
+
+        public virtual string EvidenceDifference210Total { get; set; }
     }
 }
