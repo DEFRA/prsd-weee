@@ -314,11 +314,6 @@
             await AatfPublicInfo.InvalidateCache(id);
         }
 
-        public async Task InvalidateCurrentDate()
-        {
-            await CurrentDate.InvalidateCache();
-        }
-
         public async Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId)
         {
             var aatfInfo = await AatfPublicInfo.Fetch(organisationId);
@@ -343,13 +338,18 @@
             {
                 throw new AuthenticationException($"User does not have access to organisation cache {organisationId}");
             }
-            
+
             return await OrganisationAatfDetails.Fetch(organisationId);
         }
 
         public async Task InvalidateAatfDataForOrganisationDataCache(Guid organisationId)
         {
             await OrganisationAatfDetails.InvalidateCache(organisationId);
+        }
+
+        public void Clear()
+        {
+            provider.ClearCache();
         }
     }
 }
