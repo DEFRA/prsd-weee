@@ -102,6 +102,8 @@
 
         public int Page { get; set; }
 
+        public bool IsInternalUser { get; set; }
+
         public ViewEvidenceNoteViewModel()
         {
             AddTransferCategoryValues(new EvidenceCategoryValues());
