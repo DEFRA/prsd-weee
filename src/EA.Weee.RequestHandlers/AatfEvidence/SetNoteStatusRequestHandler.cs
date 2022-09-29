@@ -53,6 +53,16 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null));
+
+                //GC: not sure as TransferredOrganisationData is on TransferEvidenceNoteData object
+                evidenceNote.SetApprovedTransfererAddress(evidenceNote.Recipient.Scheme.SchemeName, addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Recipient.Scheme.SchemeName,
+                    evidenceNote.Recipient.OrganisationName,
+                    organisationAddress.Address1,
+                    organisationAddress.Address2,
+                    organisationAddress.TownOrCity,
+                    organisationAddress.CountyOrRegion,
+                    organisationAddress.Postcode,
+                    null));
             }
 
             return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);
