@@ -8,7 +8,6 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Prsd.Core;
-    using EA.Weee.Api.Client.Actions;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -19,7 +18,6 @@
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
-    using IdentityModel;
     using Web.ViewModels.Shared;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;

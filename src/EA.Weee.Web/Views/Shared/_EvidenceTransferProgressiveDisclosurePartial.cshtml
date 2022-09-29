@@ -31,7 +31,14 @@
                     <p class="govuk-body" id="HistoryStatus-@i">@Model.EvidenceNoteHistoryData[i].Status</p>
                 </td>
                 <td class="govuk-table__cell">
-                    @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNoteHistoryData[i].SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference {0}", @Model.EvidenceNoteHistoryData[i].ReferenceId)))
+                    @if (Model.IsInternalUser)
+                    {
+                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.Action("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { area = "admin", evidenceNoteId = Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference {0}", @Model.EvidenceNoteHistoryData[i].ReferenceId)))
+                    }
+                    else
+                    {
+                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNoteHistoryData[i].SchemeViewRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = @Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference {0}", @Model.EvidenceNoteHistoryData[i].ReferenceId)))
+                    }
                 </td>
             </tr>
         }
