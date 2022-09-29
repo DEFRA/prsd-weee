@@ -33,9 +33,9 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(FormCollection form)
+        public ActionResult Index(FormCollection form)
         {
-            await cache.InvalidateProducerSearch();
+            cache.Clear();
 
             return View("CacheCleared");
         }
