@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Requests.AatfEvidence.Reports
 {
     using System;
-    using Core.AatfEvidence;
     using Core.Admin;
     using Prsd.Core.Mediator;
 
