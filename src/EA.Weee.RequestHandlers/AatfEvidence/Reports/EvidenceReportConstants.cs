@@ -44,5 +44,17 @@
         public const string Cat13Reused = "Cat 13 reuse (t)";
         public const string Cat14Reused = "Cat 14 reuse (t)";
         public const string TotalReused = "Total reused (t)";
+
+        public const string SchemeName = "PCS name";
+        public const string SchemeApprovalNumber = "PCS approval number";
+        public const string Category = "Category";
+        public const string HouseholdObligation = "Household obligation (tonnes)";
+        public const string HouseholdEvidence = "Household evidence  (tonnes)";
+        public const string HouseholdReuse = "Household reuse (tonnes)";
+        public const string TransferredOut = "Transferred out (tonnes)";
+        public const string TransferredIn = "Transferred In (tonnes)";
+        public const string Difference = "Difference (tonnes)";
+        public const string NonHouseholdEvidence = "Non household evidence (tonnes)";
+        public const string NonHouseholdReuse = "Non household reuse (tonnes)";
     }
 }
