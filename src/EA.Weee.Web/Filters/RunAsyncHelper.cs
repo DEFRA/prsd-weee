@@ -28,8 +28,14 @@
                     synch.EndMessageLoop();
                 }
             }, null);
-            synch.BeginMessageLoop();
-            SynchronizationContext.SetSynchronizationContext(oldContext);
+            try
+            {
+                synch.BeginMessageLoop();
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(oldContext);
+            }
         }
 
         public static T RunSync<T>(Func<Task<T>> task)
@@ -54,8 +60,14 @@
                     synch.EndMessageLoop();
                 }
             }, null);
-            synch.BeginMessageLoop();
-            SynchronizationContext.SetSynchronizationContext(oldContext);
+            try
+            {
+                synch.BeginMessageLoop();
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(oldContext);
+            }
             return ret;
         }
 

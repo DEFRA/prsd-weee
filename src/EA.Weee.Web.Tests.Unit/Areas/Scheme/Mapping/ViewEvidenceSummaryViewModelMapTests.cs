@@ -100,9 +100,9 @@
             var complianceYear = TestFixture.Create<int>();
             var currentDate = DateTime.Now;
 
-            var obligation1 = new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null, null, null, null, null);
-            var obligation2 = new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, null, null, null, null, null);
-            var obligation3 = new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, null, null, null, null, null, null);
+            var obligation1 = new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null, null, null, null, null, null, null);
+            var obligation2 = new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, null, null, null, null, null, null, null);
+            var obligation3 = new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, null, null, null, null, null, null, null, null);
 
             var obligationValuesList = new List<ObligationEvidenceTonnageData> { obligation1, obligation2, obligation3 };
 
@@ -126,9 +126,9 @@
             var complianceYear = TestFixture.Create<int>();
             var currentDate = DateTime.Now;
 
-            var obligation1 = new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, 0, null, null, null, null);
-            var obligation2 = new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, null, null, null, null, 11);
-            var obligation3 = new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, null, null, null, null, null, null);
+            var obligation1 = new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, null, 0, null, null, null, null, null, null);
+            var obligation2 = new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, null, null, null, null, 11, null, null);
+            var obligation3 = new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, null, null, null, null, null, null, null, null);
 
             var obligationValuesList = new List<ObligationEvidenceTonnageData> { obligation1, obligation2, obligation3 };
 
@@ -263,10 +263,10 @@
 
             var obligationTonnageValues = new List<ObligationEvidenceTonnageData>()
             {
-                new ObligationEvidenceTonnageData(WeeeCategory.ITAndTelecommsEquipment, 100M, null, 5M, 0, 3.89M, 18M),
-                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, 50.534M, null, 40M, null, null),
-                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 0, 0, 0, 0, 0, 0),
-                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 0, 1M, 0, 23M, 199M, null)
+                new ObligationEvidenceTonnageData(WeeeCategory.ITAndTelecommsEquipment, 100M, null, 5M, 0, 3.89M, 18M, 19M, 20M),
+                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, null, 50.534M, null, 40M, null, null, null, null),
+                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 0, 0, 0, 0, 0, 0, 1.22M, 2.44M),
+                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 0, 1M, 0, 23M, 199M, null, 0, 0)
             };
 
             var obligationSummaryData = new ObligationEvidenceSummaryData(obligationTonnageValues);
@@ -280,6 +280,8 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).TransferredOut)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).TransferredIn)).Returns("3.890");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).Difference)).Returns("18.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).EvidenceOriginal)).Returns("19.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(0).EvidenceDifference)).Returns("20.000");
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).Obligation)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).Evidence)).Returns("50.534");
@@ -287,6 +289,8 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).TransferredOut)).Returns("40.000");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).TransferredIn)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).Difference)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).EvidenceOriginal)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(1).EvidenceDifference)).Returns("-");
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).Obligation)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).Evidence)).Returns("-");
@@ -294,6 +298,8 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).TransferredOut)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).TransferredIn)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).Difference)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).EvidenceOriginal)).Returns("1.220");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(2).EvidenceDifference)).Returns("2.440");
 
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(3).Obligation)).Returns("-");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(3).Evidence)).Returns("1.000");
@@ -301,6 +307,8 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(3).TransferredOut)).Returns("199.000");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(3).TransferredIn)).Returns("23.000");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(3).Difference)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(3).EvidenceOriginal)).Returns("-");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.ElementAt(3).EvidenceDifference)).Returns("-");
 
             //act
             var result = mapper.Map(mapObject);
@@ -313,6 +321,8 @@
             result.ObligationEvidenceValues.ElementAt(0).TransferredOut.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(0).TransferredIn.Should().Be("3.890");
             result.ObligationEvidenceValues.ElementAt(0).Difference.Should().Be("18.000");
+            result.ObligationEvidenceValues.ElementAt(0).EvidenceOriginal.Should().Be("19.000");
+            result.ObligationEvidenceValues.ElementAt(0).EvidenceDifference.Should().Be("20.000");
 
             result.ObligationEvidenceValues.ElementAt(1).CategoryId.Should().Be(WeeeCategory.ElectricalAndElectronicTools.ToInt());
             result.ObligationEvidenceValues.ElementAt(1).Obligation.Should().Be("-");
@@ -321,6 +331,8 @@
             result.ObligationEvidenceValues.ElementAt(1).TransferredOut.Should().Be("40.000");
             result.ObligationEvidenceValues.ElementAt(1).TransferredIn.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(1).Difference.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(1).EvidenceOriginal.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(1).EvidenceDifference.Should().Be("-");
 
             result.ObligationEvidenceValues.ElementAt(2).CategoryId.Should().Be(WeeeCategory.MedicalDevices.ToInt());
             result.ObligationEvidenceValues.ElementAt(2).Obligation.Should().Be("-");
@@ -329,6 +341,8 @@
             result.ObligationEvidenceValues.ElementAt(2).TransferredOut.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(2).TransferredIn.Should().Be("-");
             result.ObligationEvidenceValues.ElementAt(2).Difference.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(2).EvidenceOriginal.Should().Be("1.220");
+            result.ObligationEvidenceValues.ElementAt(2).EvidenceDifference.Should().Be("2.440");
 
             result.ObligationEvidenceValues.ElementAt(3).CategoryId.Should().Be(WeeeCategory.ToysLeisureAndSports.ToInt());
             result.ObligationEvidenceValues.ElementAt(3).Obligation.Should().Be("-");
@@ -337,6 +351,8 @@
             result.ObligationEvidenceValues.ElementAt(3).TransferredOut.Should().Be("199.000");
             result.ObligationEvidenceValues.ElementAt(3).TransferredIn.Should().Be("23.000");
             result.ObligationEvidenceValues.ElementAt(3).Difference.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(3).EvidenceOriginal.Should().Be("-");
+            result.ObligationEvidenceValues.ElementAt(3).EvidenceDifference.Should().Be("-");
         }
 
         [Fact]
@@ -349,15 +365,15 @@
 
             var obligationTonnageValues = new List<ObligationEvidenceTonnageData>()
             {
-                new ObligationEvidenceTonnageData(WeeeCategory.LargeHouseholdAppliances, 1, 2, 3, 4, 5, 6),  // ex
-                new ObligationEvidenceTonnageData(WeeeCategory.DisplayEquipment, 7, 8, 9, 10, 11, 12),     // ex
-                new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, 13, 14, 15, 16, 17, 18), // ex
-                new ObligationEvidenceTonnageData(WeeeCategory.GasDischargeLampsAndLedLightSources, 19, 20, 21, 22, 23, 24),   //ex
-                new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, 25, 26, 27, 28, 29, 30),   //ex
-                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 1, 2, 3, 4, 5, 6),
-                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 7, 8, 8, 10, 11, 12),
-                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, 13, 14, 15, 16, 17, 18),
-                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 7, 7, 7, 19, 7, 2)
+                new ObligationEvidenceTonnageData(WeeeCategory.LargeHouseholdAppliances, 1, 2, 3, 4, 5, 6, 7, 8),  // ex
+                new ObligationEvidenceTonnageData(WeeeCategory.DisplayEquipment, 7, 8, 9, 10, 11, 12, 13, 14),     // ex
+                new ObligationEvidenceTonnageData(WeeeCategory.CoolingApplicancesContainingRefrigerants, 13, 14, 15, 16, 17, 18, 19, 20), // ex
+                new ObligationEvidenceTonnageData(WeeeCategory.GasDischargeLampsAndLedLightSources, 19, 20, 21, 22, 23, 24, 25, 26),   //ex
+                new ObligationEvidenceTonnageData(WeeeCategory.PhotovoltaicPanels, 25, 26, 27, 28, 29, 30, 31, 32),   //ex
+                new ObligationEvidenceTonnageData(WeeeCategory.MedicalDevices, 1, 2, 3, 4, 5, 6, 1, 2),
+                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 7, 8, 8, 10, 11, 12, 3, 4),
+                new ObligationEvidenceTonnageData(WeeeCategory.ElectricalAndElectronicTools, 13, 14, 15, 16, 17, 18, 5, 6),
+                new ObligationEvidenceTonnageData(WeeeCategory.ToysLeisureAndSports, 7, 7, 7, 19, 7, 2, 7, 8)
             };
 
             var excludedCategories = new List<WeeeCategory>()
@@ -392,6 +408,12 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.TransferredOut))).Returns("129.000");
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.TransferredOut))).Returns("49.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.EvidenceOriginal))).Returns("2000.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+                .Sum(x => x.EvidenceOriginal))).Returns("2001.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Sum(x => x.EvidenceDifference))).Returns("3000.000");
+            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(obligationSummaryData.ObligationEvidenceValues.Where(x => !excludedCategories.Contains(x.CategoryId))
+                .Sum(x => x.EvidenceDifference))).Returns("3001.000");
 
             //act
             var result = mapper.Map(mapObject);
@@ -409,6 +431,10 @@
             result.TransferredInTotal.Should().Be("125.000");
             result.TransferredOut210Total.Should().Be("49.000");
             result.TransferredOutTotal.Should().Be("129.000");
+            result.EvidenceOriginalTotal.Should().Be("2000.000");
+            result.EvidenceOriginal210Total.Should().Be("2001.000");
+            result.EvidenceDifferenceTotal.Should().Be("3000.000");
+            result.EvidenceDifference210Total.Should().Be("3001.000");
         }
     }
 }

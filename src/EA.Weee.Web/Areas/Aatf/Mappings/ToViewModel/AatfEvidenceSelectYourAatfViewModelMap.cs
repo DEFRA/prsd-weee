@@ -31,7 +31,7 @@
 
             foreach (var aatfData in aatfList)
             {
-                aatfData.Name = $"{aatfData.Name} ({aatfData.ApprovalNumber})";
+                aatfData.AatfContactDetailsName = $"{aatfData.Name} ({aatfData.ApprovalNumber})";
             }
 
             var model = new SelectYourAatfViewModel

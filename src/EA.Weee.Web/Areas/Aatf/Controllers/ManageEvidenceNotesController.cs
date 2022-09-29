@@ -96,7 +96,7 @@
                 int selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
                 var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
-                var allAatfsAndAes = await client.SendAsync(User.GetAccessToken(), new GetAatfByOrganisation(organisationId));
+                var allAatfsAndAes = await cache.FetchAatfDataForOrganisationData(organisationId);
 
                 switch (value)
                 {
@@ -238,7 +238,7 @@
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 
                 var timestamp = SystemTime.Now;
-                var fileName = $"{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+                var fileName = $"{result.ComplianceYear}_{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.pdf";
 
                 return File(pdf, "application/pdf", fileName);
             }

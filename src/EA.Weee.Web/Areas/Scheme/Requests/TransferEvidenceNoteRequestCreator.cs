@@ -42,7 +42,8 @@
                 viewModel.OrganisationId,
                 viewModel.SelectedSchema.Value,
                 selectedIds,
-                evidenceNoteIds);
+                evidenceNoteIds,
+                existingEvidenceNoteRequest == null ? new List<Guid>() : existingEvidenceNoteRequest.DeselectedEvidenceNoteIds);
 
             return newRequest;
         }

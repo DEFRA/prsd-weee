@@ -85,7 +85,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationId_ApiShouldBeCalled()
+        public async void IndexGet_GivenOrganisationId_AatfsForOrganisationShouldBeRetrievedFromCache()
         {
             var organisationId = Guid.NewGuid();
             var model = new SelectYourAatfViewModel()
@@ -97,7 +97,7 @@
 
             await controller.Index(organisationId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(organisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -179,7 +179,7 @@
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
             var evidenceNoteStartDate = TestFixture.Create<DateTime>();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
             A.CallTo(() => configuration.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
                 .Returns(evidenceNoteStartDate);
@@ -257,7 +257,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             var aatfs = TestFixture.CreateMany<AatfData>().ToList();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>._)).Returns(aatfs);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(aatfs);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
 
             controller.ModelState.AddModelError("error", "error");
@@ -293,16 +293,20 @@
         [Fact]
         public async void IndexPost_GivenInvalidModel_ApiShouldBeCalled()
         {
+            //arrange
             var organisationId = Guid.NewGuid();
 
-            var result = await controller.Index(organisationId);
+            //act
+            await controller.Index(organisationId);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
+            //assert
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(organisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
         public async void IndexPost_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
+            //arrange
             var organisationName = "Organisation";
             var model = new SelectYourAatfViewModel()
             {
@@ -314,8 +318,10 @@
             A.CallTo(() => mapper.Map<SelectYourAatfViewModel>(A<AatfDataToSelectYourAatfViewModelMapTransfer>._)).Returns(model);
             A.CallTo(() => cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
+            //act
             await controller.Index(model);
 
+            //assert
             breadcrumb.ExternalOrganisation.Should().Be(organisationName);
             breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfManageEvidence);
         }
