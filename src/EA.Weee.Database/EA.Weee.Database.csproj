@@ -375,6 +375,8 @@
     <Content Include="scripts\Update\Release 5\Sprint13\20220909-1642-create-evidence-by-category-net-of-transfer.sql" />
     <Content Include="scripts\Update\Release 5\Sprint13\20220909-0638-create-evidence-by-category.sql" />
     <Content Include="scripts\Update\Release 5\Sprint13\20220913-1447-create-evidence-note-original-tonnages-stored-procedure.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint14\20220928-1006-alter-getObligationEvidenceSummaryTotals.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint14\20220927-1356-alter-evidence-summary.sql" />
     <Content Include="scripts\Update\Release 5\Sprint14\20220922-1400-create-evidence-summary.sql" />
     <Content Include="scripts\Update\Release 5\Sprint14\20220920-1740-add-approved-pcs-address.sql" />
     <Content Include="scripts\Update\Release 5\Sprint14\20220922-1447-create-evidence-note-net-tonnages-stored-procedure.sql" />

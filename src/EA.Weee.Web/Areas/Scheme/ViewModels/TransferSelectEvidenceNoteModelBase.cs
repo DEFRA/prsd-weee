@@ -6,8 +6,6 @@
     {
         public Guid EditEvidenceNoteId { get; set; }
 
-        public Guid SelectedEvidenceNoteId { get; set; }
-
         public Guid PcsId { get; set; }
 
         public int ComplianceYear { get; set; }

@@ -34,5 +34,11 @@
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
 
         Task InvalidateSchemePublicInfoCache(Guid organisationId);
+
+        Task<List<AatfData>> FetchAatfDataForOrganisationData(Guid organisationId);
+
+        Task InvalidateAatfDataForOrganisationDataCache(Guid organisationId);
+
+        void Clear();
     }
 }

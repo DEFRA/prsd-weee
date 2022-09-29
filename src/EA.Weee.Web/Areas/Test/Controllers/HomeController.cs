@@ -30,7 +30,7 @@
                     case HomeViewModel.ManageCache:
                         return RedirectToAction("Index", "ManageCache");
 
-                    case HomeViewModel.ManagePcsReturnsSubmissionWindow:
+                    case HomeViewModel.ManageSystemDate:
                         return RedirectToAction("Settings", "ManagePcsReturnsSubmissionWindow");
 
                     case HomeViewModel.CopyAndPaste:

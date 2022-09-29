@@ -33,17 +33,19 @@
         public TransferEvidenceNoteRequest(Guid organisationId,
             Guid recipientId,
             List<int> categoryIds,
-            List<Guid> evidenceNoteIds)
+            List<Guid> evidenceNoteIds,
+            List<Guid> deselectedEvidenceNoteIds)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categoryIds).IsNotEmpty().IsNotNull();
+            Condition.Requires(categoryIds).IsNotNull();
 
             OrganisationId = organisationId;
             RecipientId = recipientId;
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
-            DeselectedEvidenceNoteIds = new List<Guid>();
+            DeselectedEvidenceNoteIds = deselectedEvidenceNoteIds;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
