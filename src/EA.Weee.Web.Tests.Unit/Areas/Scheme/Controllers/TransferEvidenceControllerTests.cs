@@ -2099,11 +2099,14 @@
             var date = new DateTime(2022, 09, 2, 13, 22, 0);
             SystemTime.Freeze(date);
             var pdf = TestFixture.Create<byte[]>();
+            
+            var data = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.ComplianceYear, 2022).Create();
             var model = TestFixture.Build<ViewTransferNoteViewModel>()
-                .With(n => n.Type, NoteType.Transfer).Create();
-            var reference = 151;
-            model.Reference = reference;
+                .With(v => v.Reference, 151)
+                .With(v => v.Type, NoteType.Transfer).Create();
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(data);
             A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>._)).Returns(model);
 
@@ -2112,7 +2115,7 @@
 
             //assert
             result.FileContents.Should().BeSameAs(pdf);
-            result.FileDownloadName.Should().Be("T151_2022_02/09/2022_1422.pdf");
+            result.FileDownloadName.Should().Be("2022_T151_020922_1422.pdf");
             result.ContentType.Should().Be("application/pdf");
             SystemTime.Unfreeze();
         }
@@ -2209,13 +2212,13 @@
         }
 
         [Fact]
-        public void DeselectEvidenceNotePost_GivenSelectedEvidenceNote_TransferRequestShouldBeUpdated()
+        public void DeselectEvidenceNotePost_GivenDeSelectedEvidenceNote_TransferRequestShouldBeUpdated()
         {
             //arrange
             var model = TestFixture.Create<TransferDeselectEvidenceNoteModel>();
 
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
-                .With(r => r.EvidenceNoteIds, new List<Guid>() { model.SelectedEvidenceNoteId }).Create();
+                .With(r => r.EvidenceNoteIds, new List<Guid>() { model.DeselectedEvidenceNoteId }).Create();
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                 A<HttpSessionStateBase>._, SessionKeyConstant.TransferNoteKey)).Returns(request);
@@ -2224,8 +2227,8 @@
             transferEvidenceController.DeselectEvidenceNote(model);
 
             //assert
-            request.DeselectedEvidenceNoteIds.Should().Contain(model.SelectedEvidenceNoteId);
-            request.EvidenceNoteIds.Should().NotContain(model.SelectedEvidenceNoteId);
+            request.DeselectedEvidenceNoteIds.Should().Contain(model.DeselectedEvidenceNoteId);
+            request.EvidenceNoteIds.Should().NotContain(model.DeselectedEvidenceNoteId);
         }
 
         [Fact]

@@ -50,7 +50,9 @@
                         Reused = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.Reuse),
                         TransferredOut = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.TransferredOut),
                         TransferredIn = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.TransferredIn),
-                        Difference = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.Difference)
+                        Difference = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.Difference),
+                        EvidenceOriginal = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.EvidenceOriginal),
+                        EvidenceDifference = tonnageUtilities.CheckIfTonnageIsNull(summaryCategory.EvidenceDifference)
                     });
                 }
 
@@ -78,6 +80,14 @@
                 model.Difference210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues
                     .Where(x => !excludedCategories.Contains(x.CategoryId))
                     .Sum(x => x.Difference));
+                model.EvidenceOriginalTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.EvidenceOriginal));
+                model.EvidenceOriginal210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues
+                    .Where(x => !excludedCategories.Contains(x.CategoryId))
+                    .Sum(x => x.EvidenceOriginal));
+                model.EvidenceDifferenceTotal = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues.Sum(x => x.EvidenceDifference));
+                model.EvidenceDifference210Total = tonnageUtilities.CheckIfTonnageIsNull(source.ObligationEvidenceSummaryData.ObligationEvidenceValues
+                    .Where(x => !excludedCategories.Contains(x.CategoryId))
+                    .Sum(x => x.EvidenceDifference));
             }
         }
     }

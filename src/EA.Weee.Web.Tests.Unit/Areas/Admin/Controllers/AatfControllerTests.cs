@@ -990,6 +990,7 @@
             await controller.ManageAatfDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1078,6 +1079,7 @@
             await controller.ManageAeDetails(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(aatfData.Organisation.Id)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1575,6 +1577,7 @@
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -1697,6 +1700,7 @@
             await controller.UpdateApproval(model);
 
             A.CallTo(() => cache.InvalidateAatfCache(model.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(model.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

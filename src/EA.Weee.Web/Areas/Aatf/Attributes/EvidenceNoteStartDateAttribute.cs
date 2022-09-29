@@ -4,18 +4,13 @@
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
     using EA.Prsd.Core;
+    using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteStartDateAttribute : EvidenceDateValidationBase
     {
-        public string CompareDatePropertyName { get; set; }
-
-        public bool CheckComplianceYear { get; set; }
-
-        public EvidenceNoteStartDateAttribute(string compareDatePropertyName, bool checkComplianceYear)
+        public EvidenceNoteStartDateAttribute(string compareDatePropertyName, string approvalDateValidationMessage) : base(compareDatePropertyName, approvalDateValidationMessage)
         {
-            CompareDatePropertyName = compareDatePropertyName;
-            CheckComplianceYear = checkComplianceYear;
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
@@ -31,28 +26,24 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            if (CheckComplianceYear)
+            if (!(validationContext.ObjectInstance is EvidenceNoteViewModel evidenceNoteModel))
             {
-                if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
-                {
-                    return new ValidationResult("The start date must be within the current compliance year");
-                }
-            }
-          
-            if (thisDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
-            {
-                return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
+                return new ValidationResult("Unable to validate the evidence note details");
             }
 
-            if (otherDate.HasValue && !otherDate.Equals(DateTime.MinValue))
+            if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
-                if (thisDate > otherDate.Value.Date)
-                {
-                    return new ValidationResult("Ensure the start date is before the end date");
-                }
+                return new ValidationResult("The start date must be within the current compliance year");
+            }
+            
+            var startDateValid = ValidateStartDate(thisDate, otherDate, currentDate);
+
+            if (startDateValid != ValidationResult.Success)
+            {
+                return startDateValid;
             }
 
-            return ValidationResult.Success;
+            return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
         }
     }
 }

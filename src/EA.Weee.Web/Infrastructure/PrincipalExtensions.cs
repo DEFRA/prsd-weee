@@ -3,6 +3,7 @@
     using IdentityModel;
     using System.Security.Claims;
     using System.Security.Principal;
+    using Core;
 
     public static class PrincipalExtensions
     {
@@ -55,6 +56,11 @@
             Claim claim = principal.FindFirst(type);
 
             return claim != null ? claim.Value : null;
+        }
+
+        public static bool HasClaimValue(this ClaimsPrincipal principal, string type, string value)
+        {
+            return principal.HasClaim(type, value);
         }
 
         public static string GetEmailAddress(this IPrincipal principal)

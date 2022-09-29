@@ -228,6 +228,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
             await controller.AddAatf(viewModel);
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
         }
 
@@ -339,6 +340,7 @@ namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 
             A.CallTo(() => cache.InvalidateAatfCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => cache.InvalidateAatfDataForOrganisationDataCache(viewModel.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]

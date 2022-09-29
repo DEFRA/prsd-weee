@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core;
     using System;
+    using System.Linq;
     using System.Runtime.Caching;
     using System.Threading.Tasks;
 
@@ -67,6 +68,12 @@
             memoryCache.Remove(fullKey);
 
             return Task.FromResult<object>(null);
+        }
+
+        public void ClearCache()
+        {
+            var allKeys = memoryCache.Select(o => o.Key);
+            Parallel.ForEach(allKeys, key => memoryCache.Remove(key));
         }
     }
 }

@@ -104,7 +104,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationId_ApiShouldBeCalled()
+        public async void IndexGet_GivenOrganisationId_AatfsForOrganisationShouldBeRetrievedFromCache()
         {
             var organisationId = Guid.NewGuid();
             var model = new HomeViewModel()
@@ -116,7 +116,7 @@
 
             await controller.Index(organisationId, fixture.Create<FacilityType>());
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAatfByOrganisation>.That.Matches(w => w.OrganisationId == organisationId))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(organisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
