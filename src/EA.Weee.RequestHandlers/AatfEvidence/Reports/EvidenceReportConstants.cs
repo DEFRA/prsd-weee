@@ -49,7 +49,7 @@
         public const string SchemeApprovalNumber = "PCS approval number";
         public const string Category = "Category";
         public const string HouseholdObligation = "Household obligation (tonnes)";
-        public const string HouseholdEvidence = "Household evidence  (tonnes)";
+        public const string HouseholdEvidence = "Household evidence (tonnes)";
         public const string HouseholdReuse = "Household reuse (tonnes)";
         public const string TransferredOut = "Transferred out (tonnes)";
         public const string TransferredIn = "Transferred In (tonnes)";
