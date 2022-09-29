@@ -68,8 +68,8 @@
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
                 note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
                 
-                note.ApprovedTransfererAddress.Should().BeNull();     //TODO: fix
-                note.ApprovedTransfererSchemeName.Should().BeNull();  //TODO: fix
+                note.ApprovedTransfererAddress.Should().BeNull();     //TODO: will be fixed soon
+                note.ApprovedTransfererSchemeName.Should().BeNull();  //TODO: will be fixed soon
             };
         }
 
