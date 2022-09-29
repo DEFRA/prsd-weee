@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Security.Principal;
     using AutoFixture;
     using Core.AatfEvidence;
@@ -12,7 +13,6 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
     using Security;
@@ -1359,6 +1359,55 @@
             result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Reused.Should().Be("0.000");
             result.TransferReceivedRemainingTotalDisplay.Should().Be("0.000");
             result.TransferReusedRemainingTotalDisplay.Should().Be("0.000");
+        }
+
+        [Fact]
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithNullUser_ViewEvidenceNoteViewModelIsInternalUserShouldBeFalse()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsInternalUser.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithUserThatDoesNotHaveInternalUserClaim_ViewEvidenceNoteViewModelIsInternalUserShouldBeFalse()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, A.Fake<IPrincipal>());
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsInternalUser.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithUserThatDoesHaveInternalUserClaim_ViewEvidenceNoteViewModelIsInternalUserShouldBeTrue()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+            var identity = new ClaimsIdentity();
+            var user = A.Fake<IPrincipal>();
+            identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea));
+            A.CallTo(() => user.Identity).Returns(identity);
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, user);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsInternalUser.Should().BeTrue();
         }
     }
 }
