@@ -103,14 +103,24 @@
             SystemTime.Freeze(date);
             var pdf = Fixture.Create<byte[]>();
 
+            var data = Fixture.Build<EvidenceNoteData>()
+                .With(e => e.ComplianceYear, 2022)
+                .Create();
+
+            var model = Fixture.Build<ViewEvidenceNoteViewModel>()
+                .With(v => v.Reference, 200)
+                .With(v => v.Type, NoteType.Evidence).Create();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
             A.CallTo(() => PdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
             //act
             var result = await ManageEvidenceController.DownloadEvidenceNote(EvidenceNoteId) as FileContentResult;
 
             //assert
             result.FileContents.Should().BeSameAs(pdf);
-            result.FileDownloadName.Should().Be("E1_2022_02/09/2022_1422.pdf");
+            result.FileDownloadName.Should().Be("2022_E200_020922_1422.pdf");
             result.ContentType.Should().Be("application/pdf");
             SystemTime.Unfreeze();
         }

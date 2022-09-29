@@ -79,6 +79,7 @@
             request.RecipientId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeNullOrEmpty();
+            request.DeselectedEvidenceNoteIds.Should().BeEmpty();
         }
 
         [Fact]
@@ -99,6 +100,27 @@
             request.RecipientId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void SelectCategoriesToRequest_GivenValidModelAndExistingRequestWithNullDeSelectedEvidenceNotes_CreateTransferNoteRequestShouldBeCreated()
+        {
+            //arrange
+            var organisationId = Guid.NewGuid();
+            var selectedScheme = Guid.NewGuid();
+
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
+
+            //act
+            var request = requestCreator.SelectCategoriesToRequest(model, new TransferEvidenceNoteRequest());
+
+            //assert
+            request.CategoryIds.Should().BeEquivalentTo(selectedIds);
+            request.RecipientId.Should().Be(selectedScheme);
+            request.OrganisationId.Should().Be(organisationId);
+            request.EvidenceNoteIds.Should().BeEmpty();
+            request.DeselectedEvidenceNoteIds.Should().BeEmpty();
         }
 
         [Fact]
@@ -131,9 +153,10 @@
             var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
             var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
             var evidenceIds = TestFixture.CreateMany<Guid>().ToList();
+            var deselectedEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
 
             var existingRequest =
-                new TransferEvidenceNoteRequest(organisationId, selectedScheme, selectedIds, evidenceIds);
+                new TransferEvidenceNoteRequest(organisationId, selectedScheme, selectedIds, evidenceIds, deselectedEvidenceNoteIds);
 
             //act
             var request = requestCreator.SelectCategoriesToRequest(model, existingRequest);
@@ -143,6 +166,7 @@
             request.RecipientId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeEquivalentTo(evidenceIds);
+            request.DeselectedEvidenceNoteIds.Should().BeEquivalentTo(deselectedEvidenceNoteIds);
         }
 
         [Theory]
@@ -155,6 +179,7 @@
             var schemeId = TestFixture.Create<Guid>();
             var categories = TestFixture.CreateMany<int>().ToList();
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var deselectedEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
             var complianceYear = TestFixture.Create<int>();
 
             var transferCategoryTonnage = new List<TransferEvidenceCategoryValue>()
@@ -166,7 +191,8 @@
             var request = new TransferEvidenceNoteRequest(organisationId,
                 schemeId,
                 categories,
-                evidenceNoteIds);
+                evidenceNoteIds,
+                deselectedEvidenceNoteIds);
 
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(v => v.Action, action)
@@ -183,6 +209,7 @@
             result.Status.Should().Be(expectedStatus);
             result.CategoryIds.Should().BeEquivalentTo(categories);
             result.EvidenceNoteIds.Should().BeEquivalentTo(evidenceNoteIds);
+            result.DeselectedEvidenceNoteIds.Should().BeEmpty();
             result.ComplianceYear.Should().Be(complianceYear);
             var category1ToFind = transferCategoryTonnage.ElementAt(0);
             result.TransferValues.Should().Contain(t =>
@@ -264,7 +291,6 @@
             var schemeId = TestFixture.Create<Guid>();
             var evidenceNoteId = TestFixture.Create<Guid>();
             var electricalAndElectronicToolsTonnageId = TestFixture.Create<Guid>();
-            var complianceYear = TestFixture.Create<int>();
 
             var transferCategoryTonnage = new List<TransferEvidenceCategoryValue>()
             {
@@ -283,6 +309,7 @@
             var request = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
                 schemeId,
                 TestFixture.CreateMany<int>().ToList(),
+                TestFixture.CreateMany<Guid>().ToList(),
                 TestFixture.CreateMany<Guid>().ToList());
 
             //act

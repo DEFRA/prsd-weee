@@ -50,7 +50,7 @@
             {
                 model.DisplayNoDataMessage = source.ObligationEvidenceSummaryData.ObligationEvidenceValues.All(s => s.Difference == null
                                   && s.Evidence == null && s.Obligation == null && s.Reuse == null && s.TransferredIn == null &&
-                                  s.TransferredOut == null);
+                                  s.TransferredOut == null && s.EvidenceDifference == null && s.EvidenceOriginal == null);
             }
 
             MapToViewModel(model, source);
