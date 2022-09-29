@@ -137,8 +137,8 @@
 
             //assert
             result.AatfList.Count.Should().Be(2);
-            result.AatfList.Should().Contain(a => a.Name == $"{aatfName1} ({aatfApprovalNumber1})");
-            result.AatfList.Should().Contain(a => a.Name == $"{aatfName2} ({aatfApprovalNumber2})");
+            result.AatfList.Should().Contain(a => a.AatfContactDetailsName == $"{aatfName1} ({aatfApprovalNumber1})");
+            result.AatfList.Should().Contain(a => a.AatfContactDetailsName == $"{aatfName2} ({aatfApprovalNumber2})");
         }
     }
 }
