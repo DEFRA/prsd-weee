@@ -17,7 +17,9 @@
         public void GetAllNotes_Constructor_GivenNullAllowedStatusesList()
         {
             // act
-            var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), null, SystemTime.Now.Year, TestFixture.Create<int>(), TestFixture.Create<int>()));
+            var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), null, SystemTime.Now.Year, TestFixture.Create<int>(), TestFixture.Create<int>(),
+                TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>()));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -27,7 +29,9 @@
         public void GetAllNotes_Constructor_GivenEmptyAllowedStatusesList()
         {
             // act
-            var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), new List<NoteStatus>(), SystemTime.Now.Year, TestFixture.Create<int>(), TestFixture.Create<int>()));
+            var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), new List<NoteStatus>(), SystemTime.Now.Year, TestFixture.Create<int>(), 
+                TestFixture.Create<int>(), TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -38,7 +42,9 @@
         {
             // act
             var result = Record.Exception(() => new GetAllNotesInternal(null, new List<NoteStatus>(), 
-                SystemTime.Now.Year, TestFixture.Create<int>(), TestFixture.Create<int>()));
+                SystemTime.Now.Year, TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<DateTime>(), 
+                TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -51,7 +57,8 @@
         {
             // act
             var result = Record.Exception(() => new GetAllNotesInternal(null, new List<NoteStatus>(),
-                SystemTime.Now.Year, 1, pageSize));
+                SystemTime.Now.Year, 1, pageSize, TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -64,7 +71,8 @@
         {
             // act
             var result = Record.Exception(() => new GetAllNotesInternal(null, new List<NoteStatus>(),
-                SystemTime.Now.Year, pageNumber, 1));
+                SystemTime.Now.Year, pageNumber, 1, TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -81,7 +89,8 @@
             const int pageNumber = 2;
 
             // act
-            var result = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, selectedComplianceYear, pageNumber, pageSize);
+            var result = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, selectedComplianceYear, pageNumber, pageSize, TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>());
 
             // assert
             result.AllowedStatuses.Should().BeEquivalentTo(allowedStatuses);
