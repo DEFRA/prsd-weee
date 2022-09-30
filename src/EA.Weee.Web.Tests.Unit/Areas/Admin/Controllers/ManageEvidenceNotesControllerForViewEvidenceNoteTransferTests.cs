@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.Net;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
@@ -11,9 +10,7 @@
     using Core.Helpers;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
@@ -53,7 +50,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNoteTransfer", new[]
                 {
                     typeof(Guid),
-                    typeof(int)
+                    typeof(int),
+                    typeof(bool)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -65,7 +63,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNoteTransfer", new[]
                 {
                     typeof(Guid),
-                    typeof(int)
+                    typeof(int),
+                    typeof(bool)
                 }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
@@ -85,7 +84,7 @@
         }
 
         [Fact]
-        public async Task ViewEvidenceNoteTransferGet_GivenDefaultPageSize_PageSizeShouldBeSetInViewBag()
+        public async Task ViewEvidenceNoteTransferGet_GivenDefaultPageSize_MapperShouldBeCalledWithPageSize()
         {
             //arrange
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
@@ -94,12 +93,48 @@
             await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId);
 
             //assert
-            var page = (int)ManageEvidenceController.ViewBag.Page;
-            page.Should().Be(1);
+            A.CallTo(() =>
+                    Mapper.Map<ViewTransferNoteViewModel>(
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.Page == 1)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task ViewEvidenceNoteTransferGet_GivenPageSize_PageSizeShouldBeSetInViewBag()
+        public async Task ViewEvidenceNoteTransferGet_GivenDefaultOpenedInNewTab_MapperShouldBeCalledWithDefaultOpenInNewTab()
+        {
+            //arrange
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId);
+
+            //assert
+            A.CallTo(() =>
+                    Mapper.Map<ViewTransferNoteViewModel>(
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.OpenedInNewTab == false)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ViewEvidenceNoteTransferGet_GivenOpenedInNewTab_MapperShouldBeCalledWithOpenInNewTab(bool openedInNewTab)
+        {
+            //arrange
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId, openedInNewTab: openedInNewTab);
+
+            //assert
+            A.CallTo(() =>
+                    Mapper.Map<ViewTransferNoteViewModel>(
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.OpenedInNewTab == openedInNewTab)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteTransferGet_GivenPageSize_MapperShouldBeCalledWithPageSize()
         {
             //arrange
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteTransfersForInternalUserRequest>._)).Returns(TransferEvidenceNoteData);
@@ -110,8 +145,10 @@
             await ManageEvidenceController.ViewEvidenceNoteTransfer(EvidenceNoteId, pageSize);
 
             //assert
-            var page = (int)ManageEvidenceController.ViewBag.Page;
-            page.Should().Be(pageSize);
+            A.CallTo(() =>
+                    Mapper.Map<ViewTransferNoteViewModel>(
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.Page == pageSize)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]

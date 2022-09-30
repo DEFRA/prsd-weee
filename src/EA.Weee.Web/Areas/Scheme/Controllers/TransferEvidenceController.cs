@@ -250,7 +250,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1, bool openedInNewTab = false)
         {
             await SetBreadcrumb(pcsId);
 
@@ -265,10 +265,10 @@
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
                     RedirectTab = redirectTab,
-                    SystemDateTime = currentDateTime
+                    SystemDateTime = currentDateTime,
+                    Page = page,
+                    OpenedInNewTab = openedInNewTab
                 });
-
-                ViewBag.Page = page;
 
                 return View("TransferredEvidence", model);
             }

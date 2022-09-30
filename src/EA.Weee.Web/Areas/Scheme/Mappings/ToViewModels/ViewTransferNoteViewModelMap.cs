@@ -99,7 +99,9 @@
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
                                     && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime),
-                CanVoid = InternalAdmin(source.User)
+                CanVoid = HasClaim(source.User, Claims.InternalAdmin),
+                Page = source.Page,
+                OpenedInNewTab = source.OpenedInNewTab
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
@@ -107,14 +109,14 @@
             return model;
         }
 
-        private bool InternalAdmin(IPrincipal user)
+        private bool HasClaim(IPrincipal user, string claim)
         {
             if (user == null)
             {
                 return false;
             }
             var claimsPrincipal = new ClaimsPrincipal(user);
-            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+            return claimsPrincipal.HasClaim(p => p.Value == claim);
         }
 
         private void SetSuccessMessage(TransferEvidenceNoteData note, object displayMessageStatus, ViewTransferNoteViewModel model)

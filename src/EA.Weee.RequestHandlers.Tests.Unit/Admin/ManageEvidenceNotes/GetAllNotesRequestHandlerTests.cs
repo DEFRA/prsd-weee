@@ -38,8 +38,13 @@
             mapper = A.Fake<IMapper>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
-            message = new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3);
-            messageWithEmptyNoteInternalTypeList = new GetAllNotesInternal(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3);
+            message = new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3,
+                TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved, 
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>());
+
+            messageWithEmptyNoteInternalTypeList = new GetAllNotesInternal(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3,
+                TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>());
 
             handler = new GetAllNotesInternalRequestHandler(weeeAuthorization, noteDataAccess, mapper, systemDataDataAccess);
         }
@@ -170,7 +175,9 @@
 
         private GetAllNotesInternal GetAllNotes()
         {
-            return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 1, 2);    
+            return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 1, 2,
+                TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>());    
         }
     }
 }

@@ -8,7 +8,6 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Prsd.Core;
-    using EA.Weee.Api.Client.Actions;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -19,7 +18,6 @@
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
-    using IdentityModel;
     using Web.ViewModels.Shared;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
@@ -85,6 +83,53 @@
 
             //assert
             model.ReturnToView.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithOpenedInNewTab_PropertiesShouldBeSet(bool openedInNewTab)
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+                {
+                    OpenedInNewTab = openedInNewTab
+                };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.OpenedInNewTab.Should().Be(openedInNewTab);
+        }
+
+        [Fact]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithPage_PagePropertyShouldBeSet()
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+            var page = TestFixture.Create<int>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+            {
+                Page = page
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Page.Should().Be(page);
         }
 
         [Fact]

@@ -4,16 +4,25 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
     using System.Collections.Generic;
+    using Web.ViewModels.Shared;
 
-    public class EvidenceNoteHistoryDataViewModelMap : IMap<List<EvidenceNoteHistoryData>, IList<EvidenceNoteHistoryViewModel>>
+    public class EvidenceNoteHistoryDataViewModelMap : IMap<List<EvidenceNoteHistoryData>, IList<EvidenceNoteRowViewModel>>
     {
-        public IList<EvidenceNoteHistoryViewModel> Map(List<EvidenceNoteHistoryData> source)
+        public IList<EvidenceNoteRowViewModel> Map(List<EvidenceNoteHistoryData> source)
         {
-            var model = new List<EvidenceNoteHistoryViewModel>();
+            var model = new List<EvidenceNoteRowViewModel>();
 
             foreach (var historyData in source)
             {
-                model.Add(new EvidenceNoteHistoryViewModel(historyData.Id, historyData.Reference, historyData.TransferredTo, historyData.Type, historyData.Status, historyData.SubmittedDate));
+                model.Add(new EvidenceNoteRowViewModel()
+                {
+                    Id = historyData.Id,
+                    ReferenceId = historyData.Reference,
+                    TransferredTo = historyData.TransferredTo,
+                    Type = historyData.Type,
+                    Status = historyData.Status,
+                    SubmittedDate = historyData.SubmittedDate
+                });
             }
 
             return model;
