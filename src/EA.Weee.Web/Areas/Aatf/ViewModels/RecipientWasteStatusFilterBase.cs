@@ -7,6 +7,8 @@
 
     public class RecipientWasteStatusFilterBase
     {
+        public bool Interal { get; set; }
+
         public List<OrganisationSchemeData> RecipientList { get; set; }
 
         public Guid? ReceivedId { get; set; }
@@ -15,12 +17,20 @@
 
         public NoteStatus? NoteStatus { get; set; }
 
-        public RecipientWasteStatusFilterBase(List<OrganisationSchemeData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus)
+        public Guid? SubmittedBy { get; set; }
+
+        public List<OrganisationSchemeData> SubmittedByList { get; set; }
+
+        public RecipientWasteStatusFilterBase(List<OrganisationSchemeData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus, 
+            Guid? submittedBy, List<OrganisationSchemeData> submittedByList, bool internalUser)
         {
             RecipientList = recipientList;
             ReceivedId = receivedId;
             WasteType = wasteType;
             NoteStatus = noteStatus;
+            SubmittedBy = submittedBy;
+            SubmittedByList = submittedByList;
+            Interal = internalUser;
         }
     }
 }
