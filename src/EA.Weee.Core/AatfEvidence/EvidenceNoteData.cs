@@ -31,8 +31,6 @@
 
         public string ApprovedRecipientDetails { get; set; }
 
-        public string ApprovedTransfererDetails { get; set; }
-
         public List<EvidenceNoteHistoryData> EvidenceNoteHistoryData { get; set; }
 
         public decimal? TotalReceived { get; set; }
