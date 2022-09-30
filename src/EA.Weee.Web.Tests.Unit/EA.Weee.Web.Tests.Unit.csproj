@@ -433,7 +433,6 @@
     <Compile Include="Areas\Scheme\Requests\TransferEvidenceNoteRequestTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\CategoryBooleanViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModelTests.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\EvidenceNoteHistoryViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotesDisplayOptionsTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewEvidenceNoteViewModelTests.cs" />
@@ -451,6 +450,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferNoteViewModelTests.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensionTests.cs" />
+    <Compile Include="RazorHelpers\GdsActionLinkUnitTests.cs" />
     <Compile Include="RazorHelpers\GdsWarningUnitTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelMapTests.cs" />
     <Compile Include="ViewModels\EvidenceNoteRowViewModelTests.cs" />
