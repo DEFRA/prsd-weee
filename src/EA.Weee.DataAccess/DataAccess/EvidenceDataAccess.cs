@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
     using Domain.Organisation;
+    using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Evidence;
     using Prsd.Core.Domain;
 
@@ -155,6 +156,11 @@
             var complianceYearsList = await notes.Select(x => x.ComplianceYear).Distinct().OrderByDescending(y => y).ToListAsync();
 
             return complianceYearsList;
+        }
+
+        public async Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear)
+        {
+            return await context.Notes.Where(n => n.ComplianceYear == complianceYear).Select(s => s.Aatf).Distinct().ToListAsync();
         }
 
         public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
