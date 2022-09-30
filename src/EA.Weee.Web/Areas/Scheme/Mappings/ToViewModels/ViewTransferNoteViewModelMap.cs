@@ -59,6 +59,8 @@
 
             var model = new ViewTransferNoteViewModel
             {
+                ApprovedRecipientDetails = source.TransferEvidenceNoteData.ApprovedTransfererDetails,
+                ApprovedTransfererDetails = source.TransferEvidenceNoteData.ApprovedTransfererDetails,
                 RedirectTab = source.RedirectTab,
                 ReturnToView = source.ReturnToView ?? false,
                 EditMode = source.Edit,
