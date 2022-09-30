@@ -19,6 +19,7 @@
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
+    using WasteType = Core.AatfEvidence.WasteType;
 
     public class GetAllNotesRequestHandlerForTransfersIntegrationTests : IntegrationTestBase
     {
@@ -78,7 +79,8 @@
                 notesSet.Add(noteReturnedStatus);
                 notesSet.Add(noteVoidStatus);
 
-                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue);
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue, 
+                    null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -123,7 +125,8 @@
                 notesSet.Add(noteWithDraftStatus1);
                 notesSet.Add(noteWithDraftStatus2);
 
-                request = new GetAllNotesInternal(noteTypeFilterForEvidenceNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue);
+                request = new GetAllNotesInternal(noteTypeFilterForEvidenceNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue,
+                    null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -154,6 +157,12 @@
             protected static IRequestHandler<GetAllNotesInternal, EvidenceNoteSearchDataResult> handler;
             protected static Fixture fixture;
             protected static GetAllNotesInternal request;
+            protected static DateTime? startDateSubmittedFilter;
+            protected static DateTime? endDateSubmittedFilter;
+            protected static Guid? recipientIdFilter;
+            protected static NoteStatus? noteStatusFilter;
+            protected static WasteType? obligationTypeFilter;
+            protected static Guid? submittedAatfIdFilter;
 
             public static void LocalSetup()
             {
@@ -177,6 +186,12 @@
                 noteTypeFilter = new List<NoteType> { NoteType.Transfer };
                 noteTypeFilterForEvidenceNote = new List<NoteType> { NoteType.Evidence };
                 handler = Container.Resolve<IRequestHandler<GetAllNotesInternal, EvidenceNoteSearchDataResult>>();
+                startDateSubmittedFilter = DateTime.Now.AddDays(-10);
+                endDateSubmittedFilter = DateTime.Now.AddDays(10);
+                recipientIdFilter = fixture.Create<Guid>();
+                noteStatusFilter = NoteStatus.Approved;
+                obligationTypeFilter = WasteType.Household;
+                submittedAatfIdFilter = fixture.Create<Guid>();
             }
         }
     }

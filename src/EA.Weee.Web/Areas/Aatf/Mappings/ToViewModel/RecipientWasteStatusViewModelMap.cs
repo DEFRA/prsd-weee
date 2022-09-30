@@ -24,6 +24,11 @@
                 { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
             };
 
+            if (source.Interal)
+            {
+                sortedList.Add((int)NoteStatus.Returned, NoteStatus.Returned.ToString());
+            }
+          
             viewModel.RecipientList = source.RecipientList != null ? new SelectList(source.RecipientList, "Id", "DisplayName") : 
                 new SelectList(new List<OrganisationSchemeData>(), "Id", "DisplayName");
 
@@ -32,7 +37,11 @@
             viewModel.ReceivedId = source.ReceivedId;
             viewModel.NoteStatusValue = source.NoteStatus;
             viewModel.WasteTypeValue = source.WasteType;
-       
+            viewModel.SubmittedBy = source.SubmittedBy;
+
+            viewModel.SubmittedByList = source.SubmittedByList != null ? new SelectList(source.SubmittedByList, "Id", "DisplayName") :
+         new SelectList(new List<OrganisationSchemeData>(), "Id", "DisplayName");
+
             return viewModel;
         }
     }

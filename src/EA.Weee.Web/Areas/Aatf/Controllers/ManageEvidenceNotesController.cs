@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
     using Attributes;
@@ -9,10 +15,8 @@
     using Core.Helpers;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Scheme;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.AatfEvidence.Reports;
-    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Constant;
     using Extensions;
@@ -25,12 +29,6 @@
     using Prsd.Core.Web.ApiClient;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
@@ -396,7 +394,8 @@
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 
-                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, new List<OrganisationSchemeData>(), false));
 
             var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
                         new SubmittedDateFilterBase(manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));
