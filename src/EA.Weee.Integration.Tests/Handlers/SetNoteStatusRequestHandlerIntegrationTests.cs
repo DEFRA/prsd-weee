@@ -67,6 +67,7 @@
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
                 note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                note.ApprovedRecipientSchemeApprovalNumber.Should().Be(note.Recipient.Scheme.ApprovalNumber);
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
             };
@@ -123,6 +124,7 @@
             {
                 note.ApprovedRecipientSchemeName.Should().BeNull();
                 note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeApprovalNumber.Should().BeNull();
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
             };
@@ -178,6 +180,7 @@
             private readonly It shouldHaveNotHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().BeNull();
+                note.ApprovedRecipientSchemeApprovalNumber.Should().BeNull();
                 note.ApprovedRecipientAddress.Should().BeNull();
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
@@ -232,6 +235,7 @@
             {
                 note.ApprovedRecipientSchemeName.Should().BeNull();
                 note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeApprovalNumber.Should().BeNull();
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
             };

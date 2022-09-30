@@ -45,14 +45,14 @@
                     ? evidenceNote.Recipient.BusinessAddress
                     : evidenceNote.Recipient.NotificationAddress;
 
-                evidenceNote.SetApprovedRecipientAddress(evidenceNote.Recipient.Scheme.SchemeName, addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Recipient.Scheme.SchemeName,
+                evidenceNote.SetApprovedRecipientDetails(evidenceNote.Recipient.Scheme.SchemeName, addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Recipient.Scheme.SchemeName,
                     evidenceNote.Recipient.OrganisationName,
                     organisationAddress.Address1,
                     organisationAddress.Address2,
                     organisationAddress.TownOrCity,
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
-                    null));
+                    null), evidenceNote.Recipient.Scheme.ApprovalNumber);
             }
 
             return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);

@@ -165,5 +165,12 @@
 
             return this;
         }
+
+        public EvidenceNoteDbSetup WithApprovedSchemeApprovalNumber(string approvalNumber)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientSchemeApprovalNumber, approvalNumber, instance);
+
+            return this;
+        }
     }
 }

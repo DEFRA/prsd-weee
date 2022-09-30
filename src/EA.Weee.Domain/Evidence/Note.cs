@@ -140,13 +140,15 @@
             throw new InvalidOperationException(string.Format(StatusTransitionError, Status, newStatus));
         }
 
-        public void SetApprovedRecipientAddress(string name, string address)
+        public void SetApprovedRecipientDetails(string name, string address, string approvalNumber)
         {
             Condition.Requires(address).IsNotNullOrWhiteSpace();
             Condition.Requires(name).IsNotNullOrWhiteSpace();
+            Condition.Requires(approvalNumber).IsNotNullOrWhiteSpace();
 
             ApprovedRecipientAddress = address;
             ApprovedRecipientSchemeName = name;
+            ApprovedRecipientSchemeApprovalNumber = approvalNumber;
         }
 
         public virtual Guid OrganisationId { get; set; }
@@ -201,5 +203,9 @@
         public virtual string ApprovedTransfererAddress { get; protected set; }
 
         public virtual string ApprovedTransfererSchemeName { get; protected set; }
+
+        public virtual string ApprovedRecipientSchemeApprovalNumber { get; protected set; }
+
+        public virtual string ApprovedTransfererSchemeApprovalNumber { get; protected set; }
     }
 }

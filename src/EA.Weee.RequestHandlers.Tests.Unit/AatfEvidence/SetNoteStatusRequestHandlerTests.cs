@@ -359,6 +359,7 @@
             A.CallTo(() => recipient.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
             A.CallTo(() => note.ApprovedRecipientAddress).Returns(null);
             A.CallTo(() => note.ApprovedRecipientSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedRecipientSchemeApprovalNumber).Returns(null);
             A.CallTo(() => note.Recipient).Returns(recipient);
 
             var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
@@ -370,6 +371,7 @@
             // Assert
             note.ApprovedRecipientAddress.Should().BeNull();
             note.ApprovedRecipientSchemeName.Should().BeNull();
+            note.ApprovedRecipientSchemeApprovalNumber.Should().BeNull();
         }
 
         [Fact]
@@ -383,6 +385,7 @@
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
             A.CallTo(() => note.ApprovedRecipientAddress).Returns(null);
             A.CallTo(() => note.ApprovedRecipientSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedRecipientSchemeApprovalNumber).Returns(null);
             A.CallTo(() => note.Recipient).Returns(recipient);
 
             var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
@@ -394,6 +397,7 @@
             // Assert
             note.ApprovedRecipientAddress.Should().BeNull();
             note.ApprovedRecipientSchemeName.Should().BeNull();
+            note.ApprovedRecipientSchemeApprovalNumber.Should().BeNull();
         }
 
         [Theory]
@@ -407,6 +411,8 @@
 
             var evidenceNote = new Note();
             var address = TestFixture.Create<string>();
+            var approvalNumber = TestFixture.Create<string>();
+
             var recipient = Organisation.CreateRegisteredCompany(TestFixture.Create<string>(), "12345678");
             var recipientAddress = new Address("address1", "address2",
                 "town", "county", "postcode",
@@ -416,6 +422,7 @@
 
             A.CallTo(() => scheme.SchemeName).Returns(TestFixture.Create<string>());
             A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Approved);
+            A.CallTo(() => scheme.ApprovalNumber).Returns(approvalNumber);
 
             recipient.AddOrUpdateAddress(Enumeration.FromValue<AddressType>(addressType), recipientAddress);
             ObjectInstantiator<Organisation>.SetProperty(o => o.Schemes, new List<Scheme>() { scheme }, recipient);
@@ -423,6 +430,7 @@
             ObjectInstantiator<Organisation>.SetProperty(o => o.BusinessAddress, recipientAddress, recipient);
             ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientAddress, null, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientSchemeName, null, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientSchemeApprovalNumber, null, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Recipient, recipient, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ComplianceYear, currentDate.Year, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Status, NoteStatus.Submitted, evidenceNote);
@@ -440,6 +448,7 @@
             // Assert
             evidenceNote.ApprovedRecipientSchemeName.Should().Be(scheme.SchemeName);
             evidenceNote.ApprovedRecipientAddress.Should().Be(address);
+            evidenceNote.ApprovedRecipientSchemeApprovalNumber.Should().Be(approvalNumber);
         }
     }
 }

@@ -24,8 +24,10 @@
             Property(n => n.NoteType.Value).HasColumnName("NoteType").IsRequired();
             Property(n => n.ApprovedRecipientAddress).HasColumnName("ApprovedRecipientAddress").IsOptional().HasMaxLength(2000);
             Property(n => n.ApprovedRecipientSchemeName).HasColumnName("ApprovedRecipientSchemeName").IsOptional().HasMaxLength(1000);
+            Property(n => n.ApprovedRecipientSchemeApprovalNumber).HasColumnName("ApprovedRecipientSchemeApprovalNumber").IsOptional().HasMaxLength(16);
             Property(n => n.ApprovedTransfererAddress).HasColumnName("ApprovedTransfererAddress").IsOptional().HasMaxLength(2000);
             Property(n => n.ApprovedTransfererSchemeName).HasColumnName("ApprovedTransfererSchemeName").IsOptional().HasMaxLength(1000);
+            Property(n => n.ApprovedTransfererSchemeApprovalNumber).HasColumnName("ApprovedTransfererSchemeApprovalNumber").IsOptional().HasMaxLength(16);
 
             HasRequired(n => n.Organisation);
             HasRequired(n => n.Recipient);

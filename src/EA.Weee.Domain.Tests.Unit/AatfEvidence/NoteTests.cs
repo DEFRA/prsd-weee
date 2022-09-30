@@ -457,7 +457,7 @@
             var note = CreateNote();
 
             //act
-            var exception = Record.Exception(() => note.SetApprovedRecipientAddress("name", address));
+            var exception = Record.Exception(() => note.SetApprovedRecipientDetails("name", address, "approval"));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -472,7 +472,22 @@
             var note = CreateNote();
 
             //act
-            var exception = Record.Exception(() => note.SetApprovedRecipientAddress(name, "address"));
+            var exception = Record.Exception(() => note.SetApprovedRecipientDetails(name, "address", "approval"));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void SetApprovedRecipientAddress_GivenEmptyApprovaleNumber_ArgumentExceptionExpected(string approval)
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedRecipientDetails("name", "address", approval));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -485,7 +500,7 @@
             var note = CreateNote();
 
             //act
-            var exception = Record.Exception(() => note.SetApprovedRecipientAddress(null, "address"));
+            var exception = Record.Exception(() => note.SetApprovedRecipientDetails(null, "address", "approval"));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -498,7 +513,20 @@
             var note = CreateNote();
 
             //act
-            var exception = Record.Exception(() => note.SetApprovedRecipientAddress("name", null));
+            var exception = Record.Exception(() => note.SetApprovedRecipientDetails("name", null, "approval"));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void SetApprovedRecipientAddress_GivenNullApproval_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var note = CreateNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedRecipientDetails("name", "address", null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -511,13 +539,15 @@
             var note = CreateNote();
             const string address = "address";
             const string schemeName = "name";
+            const string approvalNumber = "approval";
 
             //act
-            note.SetApprovedRecipientAddress(schemeName, address);
+            note.SetApprovedRecipientDetails(schemeName, address, approvalNumber);
 
             //assert
             note.ApprovedRecipientSchemeName.Should().Be(schemeName);
             note.ApprovedRecipientAddress.Should().Be(address);
+            note.ApprovedRecipientSchemeApprovalNumber.Should().Be(approvalNumber);
         }
 
         private void ShouldBeEqualTo(Note result, DateTime date)

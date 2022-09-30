@@ -146,8 +146,9 @@
 
                 //approved note with approved changes, should show those stored on note
                 approvedSchemeName = fixture.Create<string>();
+                approvedSchemeApprovalNumber = "123456789";
                 var recipientOrganisation4 = OrganisationDbSetup.Init().Create();
-                var schemeApproved2 = SchemeDbSetup.Init().WithOrganisation(recipientOrganisation4.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation4.Id).Create();
                 var originatorOrganisation4 = OrganisationDbSetup.Init().Create();
                 var aatf4 = AatfDbSetup.Init()
                     .WithAppropriateAuthority(CompetentAuthority.Scotland)
@@ -174,6 +175,7 @@
 
                 var approvedNote2 = EvidenceNoteDbSetup.Init()
                     .WithApprovedSchemeName(approvedSchemeName)
+                    .WithApprovedSchemeApprovalNumber(approvedSchemeApprovalNumber)
                     .WithAatf(aatf4.Id)
                     .WithTonnages(tonnages4)
                     .WithOrganisation(originatorOrganisation4.Id)
@@ -221,7 +223,7 @@
 
                     $"E3,Approved,SEPA,{note3SubmittedDate},{note3.Aatf.Name},{note3.Aatf.ApprovalNumber},Household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},{note3.Recipient.Name},,Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n" +
 
-                    $"E4,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{note4.Recipient.Scheme.ApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
+                    $"E4,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{approvedSchemeApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -679,6 +681,7 @@
 
                 //approved note with approved scheme note details
                 approvedSchemeName = fixture.Create<string>();
+                approvedSchemeApprovalNumber = "123456789";
                 var approvedNoteWithSchemeNameUpdateOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(approvedNoteWithSchemeNameUpdateOrganisation.Id).Create();
                 var approvedNoteWithOriginatorOrganisation = OrganisationDbSetup.Init().Create();
@@ -707,6 +710,7 @@
 
                 var approvedNoteWithSchemeNameUpdate = EvidenceNoteDbSetup.Init()
                     .WithApprovedSchemeName(approvedSchemeName)
+                    .WithApprovedSchemeApprovalNumber(approvedSchemeApprovalNumber)
                     .WithAatf(aatfForNoteWithSchemeNameUpdate.Id)
                     .WithTonnages(approvedNoteWithSchemeNameUpdateTonnages)
                     .WithOrganisation(approvedNoteWithOriginatorOrganisation.Id)
@@ -759,7 +763,7 @@
 
                     $"E4,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{note4.Recipient.Name},,Reuse network PWP,10.244,9.322,10.266,9.099,10.288,7.077,9.122,2.033,9.311,9.144,9.166,10.299,5.055,1.011,111.437,10.255,10.233,10.277,9.011,10.299,8.088,9.133,4.044,9.322,9.155,10.177,9.311,6.066,2.022,117.393\r\n" +
 
-                    $"E8,Approved,SEPA,{note5SubmittedDate},{note5.Aatf.Name},{note5.Aatf.ApprovalNumber},Household,{note5.StartDate.ToShortDateString()},{note5.EndDate.ToShortDateString()},{approvedSchemeName},{note5.Recipient.Scheme.ApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
+                    $"E8,Approved,SEPA,{note5SubmittedDate},{note5.Aatf.Name},{note5.Aatf.ApprovalNumber},Household,{note5.StartDate.ToShortDateString()},{note5.EndDate.ToShortDateString()},{approvedSchemeName},{approvedSchemeApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes net of transfer{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -859,6 +863,7 @@
 
                 //approved note with approved scheme name
                 approvedSchemeName = fixture.Create<string>();
+                approvedSchemeApprovalNumber = "123456789";
                 var approvedNoteWithSchemeNameUpdateOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(approvedNoteWithSchemeNameUpdateOrganisation.Id).Create();
 
@@ -882,6 +887,7 @@
 
                 var approvedNoteWithSchemeNameUpdate = EvidenceNoteDbSetup.Init()
                     .WithApprovedSchemeName(approvedSchemeName)
+                    .WithApprovedSchemeApprovalNumber(approvedSchemeApprovalNumber)
                     .WithAatf(aatf1.Id)
                     .WithTonnages(approvedNoteWithSchemeNameUpdateTonnages)
                     .WithOrganisation(originatorOrganisation1.Id)
@@ -920,7 +926,7 @@
 
                     $"E2,Submitted,EA,{note2SubmittedDate},{note2.Aatf.Name},{note2.Aatf.ApprovalNumber},Household,{note2.StartDate.ToShortDateString()},{note2.EndDate.ToShortDateString()},{note2.Recipient.Scheme.SchemeName},{note2.Recipient.Scheme.ApprovalNumber},Actual,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n" +
 
-                    $"E5,Approved,EA,{note3SubmittedDate},{note3.Aatf.Name},{note3.Aatf.ApprovalNumber},Household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},{approvedSchemeName},{note3.Recipient.Scheme.ApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
+                    $"E5,Approved,EA,{note3SubmittedDate},{note3.Aatf.Name},{note3.Aatf.ApprovalNumber},Household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},{approvedSchemeName},{approvedSchemeApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -1193,6 +1199,7 @@
 
                 //approved note with approved scheme name
                 approvedSchemeName = fixture.Create<string>();
+                approvedSchemeApprovalNumber = "123456789";
                 var approvedNoteWithSchemeNameUpdateOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(approvedNoteWithSchemeNameUpdateOrganisation.Id).Create();
 
@@ -1216,6 +1223,7 @@
 
                 var approvedNoteWithSchemeNameUpdate = EvidenceNoteDbSetup.Init()
                     .WithApprovedSchemeName(approvedSchemeName)
+                    .WithApprovedSchemeApprovalNumber(approvedSchemeApprovalNumber)
                     .WithAatf(aatf1.Id)
                     .WithTonnages(approvedNoteWithSchemeNameUpdateTonnages)
                     .WithOrganisation(originatorOrganisation1.Id)
@@ -1258,7 +1266,7 @@
 
                     $"E4,Approved,SEPA,{note3SubmittedDate},{note3.Aatf.Name},{note3.Aatf.ApprovalNumber},Household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},{note3.Recipient.Name},,Reuse network PWP,10.244,9.322,10.266,9.099,10.288,7.077,9.122,2.033,9.311,9.144,9.166,10.299,5.055,1.011,111.437,10.255,10.233,10.277,9.011,10.299,8.088,9.133,4.044,9.322,9.155,10.177,9.311,6.066,2.022,117.393\r\n" +
 
-                    $"E10,Approved,EA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{note4.Recipient.Scheme.ApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
+                    $"E10,Approved,EA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{approvedSchemeApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence notes net of transfer{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -1391,6 +1399,7 @@
 
                 //approved note with approved scheme name
                 approvedSchemeName = fixture.Create<string>();
+                approvedSchemeApprovalNumber = "123456789";
                 var approvedNoteWithOriginatorOrganisation = OrganisationDbSetup.Init().Create();
                 var aatfForNoteWithSchemeNameUpdate = AatfDbSetup.Init()
                     .WithAppropriateAuthority(CompetentAuthority.Scotland)
@@ -1417,6 +1426,7 @@
 
                 var approvedNoteWithSchemeNameUpdate = EvidenceNoteDbSetup.Init()
                     .WithApprovedSchemeName(approvedSchemeName)
+                    .WithApprovedSchemeApprovalNumber(approvedSchemeApprovalNumber)
                     .WithAatf(aatfForNoteWithSchemeNameUpdate.Id)
                     .WithTonnages(approvedNoteWithSchemeNameUpdateTonnages)
                     .WithOrganisation(approvedNoteWithOriginatorOrganisation.Id)
@@ -1457,7 +1467,7 @@
 
                     $"E3,Returned,EA,{note3SubmittedDate},{note3.Aatf.Name},{note3.Aatf.ApprovalNumber},Non-household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},{note3.Recipient.Scheme.SchemeName},{note3.Recipient.Scheme.ApprovalNumber},Reuse network PWP,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
 
-                    $"E6,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{note4.Recipient.Scheme.ApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
+                    $"E6,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{approvedSchemeApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_{note1.Recipient.Scheme.ApprovalNumber}_Evidence notes original tonnages{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -1769,6 +1779,7 @@
 
                 //approved note with approved scheme name
                 approvedSchemeName = fixture.Create<string>();
+                approvedSchemeApprovalNumber = "123456789";
                 var approvedNoteWithOriginatorOrganisation = OrganisationDbSetup.Init().Create();
                 var aatfForNoteWithSchemeNameUpdate = AatfDbSetup.Init()
                     .WithAppropriateAuthority(CompetentAuthority.Scotland)
@@ -1795,6 +1806,7 @@
 
                 var approvedNoteWithSchemeNameUpdate = EvidenceNoteDbSetup.Init()
                     .WithApprovedSchemeName(approvedSchemeName)
+                    .WithApprovedSchemeApprovalNumber(approvedSchemeApprovalNumber)
                     .WithAatf(aatfForNoteWithSchemeNameUpdate.Id)
                     .WithTonnages(approvedNoteWithSchemeNameUpdateTonnages)
                     .WithOrganisation(approvedNoteWithOriginatorOrganisation.Id)
@@ -1835,7 +1847,7 @@
 
                     $"E10,Returned,EA,{note3SubmittedDate},{note3.Aatf.Name},{note3.Aatf.ApprovalNumber},Non-household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},{note3.Recipient.Scheme.SchemeName},{note3.Recipient.Scheme.ApprovalNumber},Site specific protocol,21.000,19.000,23.000,9.000,25.000,7.000,11.000,3.000,27.000,13.000,15.000,17.000,5.000,1.000,196.000,22.000,20.000,24.000,10.000,26.000,8.000,12.000,4.000,28.000,14.000,16.000,18.000,6.000,2.000,210.000\r\n" +
 
-                    $"E11,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{note4.Recipient.Scheme.ApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
+                    $"E11,Approved,SEPA,{note4SubmittedDate},{note4.Aatf.Name},{note4.Aatf.ApprovalNumber},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{approvedSchemeName},{approvedSchemeApprovalNumber},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_{note1.Recipient.Scheme.ApprovalNumber}_Evidence notes net of transfer{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -2146,6 +2158,7 @@
             protected static Fixture fixture;
             protected static string aatfApprovalNumber;
             protected static string approvedSchemeName;
+            protected static string approvedSchemeApprovalNumber;
 
             public static IntegrationTestSetupBuilder LocalInternalSetup()
             {
