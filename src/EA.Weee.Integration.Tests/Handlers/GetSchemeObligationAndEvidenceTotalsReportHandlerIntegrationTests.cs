@@ -369,7 +369,7 @@
                     .WithStatusUpdate(NoteStatus.Approved)
                     .Create();
 
-                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(scheme.Id, 2022);
+                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(scheme.Id, null, 2022);
             };
 
             private readonly Because of = () =>
