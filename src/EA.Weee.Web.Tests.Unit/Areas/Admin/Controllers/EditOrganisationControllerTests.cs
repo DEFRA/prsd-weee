@@ -502,6 +502,7 @@
             await controller.EditPartnershipOrganisationDetails(model);
 
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateOrganisationNameCache(model.OrgId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -645,6 +646,7 @@
             await controller.EditSoleTraderOrganisationDetails(model);
 
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateOrganisationNameCache(model.OrgId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -837,6 +839,7 @@
             await controller.EditRegisteredCompanyOrganisationDetails(model);
 
             A.CallTo(() => cache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => cache.InvalidateOrganisationNameCache(model.OrgId)).MustHaveHappenedOnceExactly();
         }
 
         public static IEnumerable<object> Guids

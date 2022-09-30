@@ -347,6 +347,11 @@
             await OrganisationAatfDetails.InvalidateCache(organisationId);
         }
 
+        public async Task InvalidateOrganisationNameCache(Guid organisationId)
+        {
+            await OrganisationNames.InvalidateCache(organisationId);
+        }
+
         public void Clear()
         {
             provider.ClearCache();
