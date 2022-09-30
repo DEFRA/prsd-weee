@@ -7,13 +7,12 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [Evidence].[getSchemeObligationAndEvidenceTotals]
 	@ComplianceYear SMALLINT,
-	@SchemeId UNIQUEIDENTIFIER = NULL
+	@SchemeId UNIQUEIDENTIFIER = NULL,
+	@AppropriateAuthorityId UNIQUEIDENTIFIER = NULL
 AS
 
 BEGIN
 SET NOCOUNT ON;
-
-SET @ComplianceYear = 2022
 
 IF OBJECT_ID('tempdb..#EvidenceSummaryWithTotals') IS NOT NULL 
 BEGIN
@@ -79,9 +78,11 @@ FROM
 	#EvidenceSummaryWithTotals s
 	LEFT JOIN [PCS].ObligationSchemeAmount osa ON s.CategoryId = osa.CategoryId
 	LEFT JOIN [PCS].ObligationScheme os ON os.Id = osa.ObligationSchemeId AND os.SchemeId = s.SchemeId
+	LEFT JOIN [PCS].Scheme sch ON sch.Id = os.SchemeId 
 WHERE
 	os.ComplianceYear = @ComplianceYear
 	AND (os.SchemeId = @SchemeId OR @SchemeId IS NULL)
+	AND (sch.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 
 UPDATE 
 	s
@@ -94,6 +95,7 @@ FROM
 	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL) 
+	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 
 UPDATE 
 	s
@@ -106,6 +108,7 @@ FROM
 	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL) 
+	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 
 UPDATE 
 	s
@@ -118,6 +121,7 @@ FROM
 	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL)
+	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 
 UPDATE 
 	s
@@ -130,6 +134,7 @@ FROM
 	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL)
+	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 
 -- this is the category 2-10 totals
 UPDATE
