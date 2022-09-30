@@ -1,8 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.Extensions
-@using EA.Weee.Web.Infrastructure.Paging
 
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllEvidenceNotesViewModel
 
@@ -18,13 +16,37 @@
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
-                        @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-all-evidence" })
+                        @Html.Hidden("tab", Model.ActiveDisplayOption.ToDisplayString(), new { id = "tab-all-evidence" })
+
+                        <h2 class="govuk-heading-m govuk-!-padding-bottom-2">
+                            View all evidence notes
+                        </h2>
+
+                        <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+
+                            <div class="govuk-grid-row">
+                                <div class="govuk-!-padding-right-1 govuk-!-padding-left-3">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel", new { htmlAttributes = new { @class = "govuk-grid-column-half" } })
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByRecipientFiltersViewModel", new { htmlAttributes = new { @class = "govuk-grid-column-half" } })
+                                </div>
+                            </div>
+                            <div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-1 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                                <div class="govuk-grid-row">
+                                    <div class="govuk-grid-column-full">
+                                        <div class="govuk-grid-row">
+                                            <div class="govuk-grid-column-three-quarters govuk-!-padding-right-1">
+                                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeStatusFiltersViewModel")
+                                            </div>
+                                            <div class="govuk-grid-column-one-quarter govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0">
+                                                @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                                                                         new ViewDataDictionary() { new KeyValuePair<string, object>("tab", "view-all-evidence-notes") })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }
-
-                    <h2 class="govuk-heading-m govuk-!-padding-bottom-8">
-                        View all evidence notes
-                    </h2>
-
                     <table id="all-evidence-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">All evidence notes</caption>
                         <thead class="govuk-table__head">
@@ -75,7 +97,7 @@
                             }
                             else
                             {
-                                Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml");
+                                Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are no search results with those search terms. Please try again with another search term.</p>") });
                             }
                         </tbody>
                     </table>

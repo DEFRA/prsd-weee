@@ -39,6 +39,7 @@
 
         Task InvalidateAatfDataForOrganisationDataCache(Guid organisationId);
 
+        Task InvalidateOrganisationNameCache(Guid organisationId);
         void Clear();
     }
 }

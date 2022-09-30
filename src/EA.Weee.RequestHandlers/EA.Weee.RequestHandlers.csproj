@@ -116,6 +116,7 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesForTransferRequestHandler.cs" />
     <Compile Include="AatfEvidence\ITransferTonnagesValidator.cs" />
     <Compile Include="AatfEvidence\Reports\EvidenceReportsAuthenticationCheck.cs" />
+    <Compile Include="AatfEvidence\Reports\GetSchemeObligationAndEvidenceTotalsReportHandler.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceNoteReportHandler.cs" />
     <Compile Include="AatfEvidence\Reports\EvidenceReportConstants.cs" />
     <Compile Include="AatfEvidence\Reports\IEvidenceReportsAuthenticationCheck.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="AatfReturn\AddReturnSchemeHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
+    <Compile Include="Admin\GetAllAatfsForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
     <Compile Include="Admin\GetComplianceYearsFilterHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />
     <Compile Include="Mappings\AatfSimpleMap.cs" />
+    <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
@@ -162,7 +165,7 @@
     <Compile Include="Mappings\EvidenceNoteRowMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteWithCriteriaMap.cs" />
     <Compile Include="Mappings\ObligationSummaryTotalsMap.cs" />
-    <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
+    <Compile Include="Mappings\AatfNameMapping.cs" />
     <Compile Include="Mappings\SchemeObligationDataMap.cs" />
     <Compile Include="Mappings\SchemeObligationUploadDataMap.cs" />
     <Compile Include="Mappings\SchemeOrganisationMap.cs" />

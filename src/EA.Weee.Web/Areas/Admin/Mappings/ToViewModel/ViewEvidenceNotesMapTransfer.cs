@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using CuttingEdge.Conditions;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.ViewModels.Shared;
 
     public class ViewEvidenceNotesMapTransfer
