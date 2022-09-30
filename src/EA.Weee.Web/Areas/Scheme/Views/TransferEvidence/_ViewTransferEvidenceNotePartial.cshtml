@@ -215,21 +215,20 @@ else
         <tbody class="govuk-table__body">
         @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
         {
-            var note = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount);
+            var note = aatf.Notes.ElementAt(noteCount);
                
             for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
             {
                 var category = note.CategoryValues.ElementAt(categoryCount);
 
                 <tr class="govuk-table__row">
-                        
                     @if (categoryCount == 0)
                     {
-                        <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count + 1)">
+                        <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count)">
                             @note.ReferenceDisplay
                         </td>
                     }
-                        
+
                     <td class="govuk-table__cell govuk-!-text-align-left">
                         @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
                     </td>
