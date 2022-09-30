@@ -25,5 +25,6 @@
         public const string EvidenceNotesReports = "Evidence and evidence transfers reports";
         public const string EvidenceNoteData = "Evidence notes report";
         public const string EvidenceTransfersData = "Evidence transfers report";
+        public const string PcsEvidenceAndObligationProgressData = "PCS evidence and obligation progress report";
     }
 }
