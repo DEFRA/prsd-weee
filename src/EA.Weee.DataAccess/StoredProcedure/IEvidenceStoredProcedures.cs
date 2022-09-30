@@ -12,7 +12,7 @@
 
         Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId, Guid? aatfId, bool netTonnage);
 
-        Task<List<InternalObligationAndEvidenceSummaryTotalsData>> GetSchemeObligationAndEvidenceTotals(Guid? pcsId,
+        Task<List<InternalObligationAndEvidenceSummaryTotalsData>> GetSchemeObligationAndEvidenceTotals(Guid? pcsId, Guid? appropriateAuthorityId,
             int complianceYear);
     }
 }
