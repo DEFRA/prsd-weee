@@ -33,7 +33,7 @@
         {
             weeeAuthorization.EnsureCanAccessInternalArea();
 
-            var reportData = await evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(request.SchemeId, request.ComplianceYear);
+            var reportData = await evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(request.SchemeId, request.AppropriateAuthorityId, request.ComplianceYear);
             
             csvWriter.DefineColumn(EvidenceReportConstants.SchemeName, x => x.SchemeName);
             csvWriter.DefineColumn(EvidenceReportConstants.SchemeApprovalNumber, x => x.ApprovalNumber);

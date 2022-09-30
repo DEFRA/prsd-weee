@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence.Reports
 {
     using AutoFixture;
-    using Core.AatfEvidence;
     using Core.Constants;
     using Core.Shared;
     using DataAccess.StoredProcedure;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.AatfReturn;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -15,7 +13,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Organisation;
     using Domain.Scheme;
     using RequestHandlers.Security;
     using Weee.Requests.AatfEvidence.Reports;
@@ -44,7 +41,7 @@
         public async Task HandleAsync_GivenRequest_InternalAccessShouldBeChecked()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
@@ -58,21 +55,22 @@
             //arrange
             var complianceYear = TestFixture.Create<int>();
             var schemeId = TestFixture.Create<Guid?>();
+            var authority = TestFixture.Create<Guid?>();
 
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, complianceYear);
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, authority, complianceYear);
 
             //act
             await handler.HandleAsync(request);
 
             A.CallTo(() =>
-                evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(schemeId, complianceYear)).MustHaveHappenedOnceExactly();
+                evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(schemeId, authority, complianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenRequest_SchemeObligationAndEvidenceTotalsCsvShouldBeDefined()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
@@ -106,11 +104,11 @@
         public async Task HandleAsync_GivenReportData_CsvShouldBeCreated()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
             var reportData = TestFixture.CreateMany<InternalObligationAndEvidenceSummaryTotalsData>().ToList();
 
-            A.CallTo(() => evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(A<Guid?>._, A<int>._)).Returns(reportData);
+            A.CallTo(() => evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(A<Guid?>._, A<Guid?>._, A<int>._)).Returns(reportData);
 
             //act
             await handler.HandleAsync(request);
@@ -123,7 +121,7 @@
         public async Task HandleAsync_GivenRequestWithScheme_SchemeShouldBeRetrieved()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             
             //act
             await handler.HandleAsync(request);
@@ -142,7 +140,7 @@
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.ApprovalNumber).Returns(approvalNumber);
 
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<InternalObligationAndEvidenceSummaryTotalsData>>._)).Returns(content);
             A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns(scheme);
@@ -163,7 +161,7 @@
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
 
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<InternalObligationAndEvidenceSummaryTotalsData>>._)).Returns(content);
 
