@@ -12,7 +12,7 @@
             return new EvidenceNoteRowViewModel
             {
                 Recipient = source.RecipientOrganisationData.IsBalancingScheme ? 
-                    source.RecipientOrganisationData.OrganisationName : source.RecipientSchemeData.SchemeName,
+                    source.RecipientOrganisationData.OrganisationName : (!string.IsNullOrWhiteSpace(source.ApprovedRecipientDetails) ? source.ApprovedRecipientDetails : source.RecipientSchemeData.SchemeName),
                 ReferenceId = source.Reference,
                 Status = source.Status,
                 TypeOfWaste = source.WasteType,

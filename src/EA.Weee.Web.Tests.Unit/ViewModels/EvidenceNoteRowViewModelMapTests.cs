@@ -73,6 +73,28 @@
         }
 
         [Fact]
+        public void Map_GivenEvidenceNoteDataWithApprovedRecipientDetails_SubmittedByShouldBeSetToApprovedDetails()
+        {
+            //arrange
+            var schemeName = TestFixture.Create<string>();
+            var approvedSchemeName = TestFixture.Create<string>();
+
+            var evidenceNoteData = new EvidenceNoteData(
+                new SchemeData() { SchemeName = schemeName },
+                new AatfData())
+            {
+                RecipientOrganisationData = new OrganisationData(),
+                ApprovedRecipientDetails = approvedSchemeName
+            };
+
+            //act
+            var result = map.Map(evidenceNoteData);
+
+            //assert
+            result.Recipient.Should().Be(approvedSchemeName);
+        }
+
+        [Fact]
         public void Map_GivenEvidenceNoteDataWithOrganisationAsPbs_PropertiesShouldBeMapped()
         {
             //arrange

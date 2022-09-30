@@ -45,7 +45,8 @@
                     Name = source.Note.Organisation.Name,
                     TradingName = source.Note.Organisation.TradingName,
                     OrganisationName = source.Note.Organisation.OrganisationName
-                }
+                },
+                ApprovedRecipientDetails = source.Note.ApprovedRecipientSchemeName
             };
 
             if (source.IncludeTotal)

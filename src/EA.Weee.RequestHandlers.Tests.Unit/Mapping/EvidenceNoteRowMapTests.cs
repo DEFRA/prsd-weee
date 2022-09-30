@@ -60,6 +60,22 @@
             result.ComplianceYear.Should().Be(complianceYear);
         }
 
+        [Fact]
+        public void Map_GivenNoteWithApprovedSchemeName_ApprovedRecipientDetailsShouldBeSet()
+        {
+            //arrange
+            var schemeName = TestFixture.Create<string>();
+
+            var note = A.Fake<Note>();
+            A.CallTo(() => note.ApprovedRecipientSchemeName).Returns(schemeName);
+
+            //act
+            var result = map.Map(EvidenceNoteWithCriteriaMap(note));
+
+            //assert
+            result.ApprovedRecipientDetails.Should().Be(schemeName);
+        }
+
         [Theory]
         [ClassData(typeof(NoteStatusData))]
         public void Map_GivenNoteWithOtherHistory_SubmittedDateShouldNotBeSet(NoteStatus noteStatus)
