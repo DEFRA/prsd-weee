@@ -86,13 +86,13 @@
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -1987,9 +1987,15 @@
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task TransferredEvidenceGet_GivenNoteDataAndDisplayNotification_ModelMapperShouldBeCalled(bool displayNotification)
+        [InlineData(true, true, 1)]
+        [InlineData(false, true, 1)]
+        [InlineData(true, false, 1)]
+        [InlineData(false, false, 1)]
+        [InlineData(true, true, 2)]
+        [InlineData(false, true, 2)]
+        [InlineData(true, false, 2)]
+        [InlineData(false, false, 2)]
+        public async Task TransferredEvidenceGet_GivenNoteDataAndDisplayNotificationWithActionParameters_ModelMapperShouldBeCalled(bool displayNotification, bool openedInNewTab, int page)
         {
             // arrange 
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
@@ -2001,7 +2007,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab);
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab, page, openedInNewTab);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
@@ -2009,21 +2015,10 @@
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification.Equals(displayNotification) &&
                          t.RedirectTab == redirectTab &&
-                         t.SystemDateTime == currentDate)))
+                         t.SystemDateTime == currentDate &&
+                         t.OpenedInNewTab == openedInNewTab &&
+                         t.Page == page)))
                 .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task TransferredEvidenceGet_GivenPageNumber_ShouldPopulateViewBagWithPageNumber()
-        {
-            // Arrange
-            var pageNumber = 3;
-
-            //act
-            var result = await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), "view-and-transfer-evidence", pageNumber) as ViewResult;
-
-            //assert
-            Assert.Equal(pageNumber, result.ViewBag.Page);
         }
 
         [Fact]

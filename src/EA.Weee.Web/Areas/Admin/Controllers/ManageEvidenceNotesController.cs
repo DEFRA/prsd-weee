@@ -98,7 +98,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId, int page = 1)
+        public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId, int page = 1, bool openedInNewTab = false)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -109,9 +109,11 @@
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(result.TransferredOrganisationData.Id,
-                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User));
-
-                ViewBag.Page = page;
+                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User)
+                {
+                    OpenedInNewTab = openedInNewTab,
+                    Page = page
+                });
 
                 return View(model);
             }
