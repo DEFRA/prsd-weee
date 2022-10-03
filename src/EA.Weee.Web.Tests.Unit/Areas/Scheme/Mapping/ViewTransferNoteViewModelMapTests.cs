@@ -16,6 +16,7 @@
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Shared;
@@ -601,6 +602,66 @@
             //assert
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
                 A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatDoesNotHaveApprovedTransfererDetails_RecipientAddressShouldBeSetToApprovedRecipientAddress()
+        {
+            //arrange
+            var organisation = TestFixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .With(f => f.ApprovedRecipientDetails, "approved recipient details")
+                .With(g => g.ApprovedTransfererDetails, string.Empty)
+                .Create();
+            var source = new ViewTransferNoteViewModelMapTransfer(organisation.Id, evidenceData, null);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
+                null)).Returns("recipientAddress");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be("approved recipient details");
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatHasApprovedTransfererDetails_TransferredByAddressShouldBeSetToApprovedTransfererAddress()
+        {
+            //arrange
+            var organisation = TestFixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                //.With(f => f.ApprovedRecipientDetails, "approved recipient details")
+                .With(g => g.ApprovedTransfererDetails, "approved transferer details")
+                .Create();
+            var source = new ViewTransferNoteViewModelMapTransfer(organisation.Id, evidenceData, null);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
+                null)).Returns("recipientAddress");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TransferredByAddress.Should().Be("approved transferer details");
         }
 
         [Fact]
