@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Scheme;
@@ -35,7 +36,9 @@
                 throw new ArgumentException($"Aatfs not found for a compliance year {message.ComplianceYear}");
             }
 
-            return mapper.Map<List<Domain.AatfReturn.Aatf>, List<OrganisationSchemeData>>(listAatfs);
+            var result = mapper.Map<List<Domain.AatfReturn.Aatf>, List<OrganisationSchemeData>>(listAatfs);
+
+            return result.OrderBy(n => n.DisplayName).ToListDynamic();
         }
     }
 }
