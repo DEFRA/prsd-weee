@@ -16,17 +16,17 @@
     using System.Web.Mvc;
 
     [ValidateReturnCreatedActionFilter]
-    public class CanNotFoundTreatmentFacilityController : ExternalSiteController
+    public class CanNotFindAatfController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IMap<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer, CanNotFoundTreatmentFacilityViewModel> mapper;
+        private readonly IMap<ReturnCanNotFindAatfViewModelMapTransfer, CanNotFindAatfViewModel> mapper;
 
-        public CanNotFoundTreatmentFacilityController(Func<IWeeeClient> apiClient,
+        public CanNotFindAatfController(Func<IWeeeClient> apiClient,
                                                       BreadcrumbService breadcrumb,
                                                       IWeeeCache cache,
-                                                      IMap<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer, CanNotFoundTreatmentFacilityViewModel> mapper)
+                                                      IMap<ReturnCanNotFindAatfViewModelMapTransfer, CanNotFindAatfViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -41,7 +41,7 @@
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
-                var viewModel = mapper.Map(new ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer()
+                var viewModel = mapper.Map(new ReturnCanNotFindAatfViewModelMapTransfer()
                 {
                     Return = @return,
                     AatfId = aatfId,

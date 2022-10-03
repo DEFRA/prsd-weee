@@ -162,7 +162,7 @@
         {
             SetupControllerRequest();
 
-            var exception = await Record.ExceptionAsync(() => controller.SearchAatf(A.Dummy<string>(), A.Dummy<Guid>()));
+            var exception = await Record.ExceptionAsync(() => controller.SearchAatf(A.Dummy<string>(), A.Dummy<Guid>(), A.Dummy<Guid>()));
 
             exception.Should().BeOfType<InvalidOperationException>();
         }
@@ -174,7 +174,7 @@
 
             controller.ModelState.AddModelError("error", "error");
 
-            var result = await controller.SearchAatf(A.Dummy<string>(), A.Dummy<Guid>()) as JsonResult;
+            var result = await controller.SearchAatf(A.Dummy<string>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as JsonResult;
 
             result.JsonRequestBehavior.Should().Be(JsonRequestBehavior.AllowGet);
             result.Data.Should().BeNull();
@@ -191,7 +191,7 @@
             };
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetSearchAatfAddress>._)).Returns(returnAatfAddressResult);
 
-            var jsonResult = await controller.SearchAatf("Test Aatf", A.Dummy<Guid>()) as JsonResult;
+            var jsonResult = await controller.SearchAatf("Test Aatf", A.Dummy<Guid>(), A.Dummy<Guid>()) as JsonResult;
 
             var serializer = new JavaScriptSerializer();
             var result = serializer.Deserialize<List<ReturnAatfAddressResult>>(serializer.Serialize(jsonResult.Data));

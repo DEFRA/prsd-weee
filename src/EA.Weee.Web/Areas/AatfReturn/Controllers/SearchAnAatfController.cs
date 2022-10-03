@@ -101,7 +101,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> SearchAatf(string searchTerm, Guid aatfId)
+        public async Task<JsonResult> SearchAatf(string searchTerm, Guid aatfId, Guid returnId)
         {
             if (!this.Request.IsAjaxRequest())
             {
@@ -115,7 +115,7 @@
 
             using (var client = apiClient())
             {
-                var returnData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchTerm, aatfId));
+                var returnData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchTerm, aatfId, returnId));
                 return Json(returnData, JsonRequestBehavior.AllowGet);
             }
         }

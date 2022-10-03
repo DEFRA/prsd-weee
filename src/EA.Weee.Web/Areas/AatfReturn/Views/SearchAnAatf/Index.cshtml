@@ -39,17 +39,17 @@
         </h2>
         <p>
             Use the search to find and add an AATF for this compliance year. If you are unsure if the treatment facility is an AATF or ATF, perform a search.
-        </p>
-        <p class="govuk-body">
-            Search for the AATF by name, operator name or approval number
-        </p>
+        </p>        
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
+            <label class="govuk-body" style="font-size: 16px">
+                Search for the AATF by name, operator name or approval number <br />
+            </label>
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
             @Html.HiddenFor(model => model.SelectedAatfId, new { id = "hdnSelectedAatfId" })
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "govuk-!-width-full" })
-            <button type="submit" class="govuk-button">
+            <button id="searchButton" type="submit" class="govuk-button">
                 <img src="@Url.Content("~/Content/weee/images/icon-search.png")" alt="Search" />
             </button>
         </div>
@@ -62,7 +62,7 @@
         If you know the treatment facility is an ATF, use the link to add it. If you are unsure if the treatment facility is an ATF or an AATF, perform a search.
     </p>
     <p class="govuk-body">
-        @Html.RouteLink("Add an ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SentOnCreateSite" }, null)
+        @Html.RouteLink("Add an ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, isAddDetails = true, action = "Index", controller = "SentOnCreateSite" }, null)
     </p>    
 
     <p class="govuk-body">

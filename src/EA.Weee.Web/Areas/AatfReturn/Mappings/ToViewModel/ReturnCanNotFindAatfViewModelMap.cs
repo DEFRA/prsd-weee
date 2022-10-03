@@ -2,16 +2,15 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
 
-    public class ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMap : IMap<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer, CanNotFoundTreatmentFacilityViewModel>
+    public class ReturnCanNotFindAatfViewModelMap : IMap<ReturnCanNotFindAatfViewModelMapTransfer, CanNotFindAatfViewModel>
     {
-        public CanNotFoundTreatmentFacilityViewModel Map(ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer source)
+        public CanNotFindAatfViewModel Map(ReturnCanNotFindAatfViewModelMapTransfer source)
         {
             Guard.ArgumentNotNull(() => source, source);
 
-            var viewModel = new CanNotFoundTreatmentFacilityViewModel()
+            var viewModel = new CanNotFindAatfViewModel()
             {
                 ReturnId = source.Return.Id,
                 AatfId = source.AatfId,

@@ -34,7 +34,14 @@
 
         @(this.WeeeGds().Submit("Save and continue"))
     }
-    @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
+    @if (Model.IsAddDetails.Value)
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, isAddDetails = true, action = "Index", controller = "SearchAnAATF" }, new { @class = "govuk-back-link" })
+    }
+    else
+    {
+        @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
+    }
 </section>
 
 @Scripts.Render("~/bundles/sent-on-operator-address")

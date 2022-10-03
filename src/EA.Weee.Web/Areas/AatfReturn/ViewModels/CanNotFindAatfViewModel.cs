@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class CanNotFoundTreatmentFacilityViewModel
+    public class CanNotFindAatfViewModel
     {
         public Guid OrganisationId { get; set; }
 

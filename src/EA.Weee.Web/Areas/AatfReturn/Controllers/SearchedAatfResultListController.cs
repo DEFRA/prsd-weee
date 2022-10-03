@@ -64,7 +64,7 @@
                 }
                 else
                 {
-                    var resultData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(selectedAatfName, aatfId, true));
+                    var resultData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(selectedAatfName, aatfId, returnId, true));
                     if (resultData != null && resultData.Count > 0)
                     {
                         foreach (var item in resultData)
@@ -91,8 +91,8 @@
                     }
                     else
                     {
-                        return await Task.Run<ActionResult>(() => RedirectToAction("Index", "CanNotFoundTreatmentFacility", new { area = "AatfReturn", returnId = returnId, aatfId = aatfId, aatfName = selectedAatfName, isCanNotFindLinkClick = false }));
-                    }                    
+                        return await Task.Run<ActionResult>(() => RedirectToAction("Index", "NoResultsFound", new { area = "AatfReturn", returnId = returnId, aatfId = aatfId, aatfName = selectedAatfName, isCanNotFindLinkClick = false }));                        
+                    }
                 }
             }
         }
@@ -126,7 +126,7 @@
                 using (var client = apiClient())
                 {
                     List<AatfData> aatfDatas = new List<AatfData>();
-                    var resultData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchedAatfModel.SelectedAatfName, searchedAatfModel.AatfId, true));
+                    var resultData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchedAatfModel.SelectedAatfName, searchedAatfModel.AatfId, searchedAatfModel.ReturnId, true));
                     if (resultData != null && resultData.Count > 0)
                     {
                         foreach (var item in resultData)

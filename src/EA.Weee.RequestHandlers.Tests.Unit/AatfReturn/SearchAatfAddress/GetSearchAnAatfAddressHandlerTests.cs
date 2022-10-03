@@ -43,7 +43,7 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
-            var getSearchAatfAddress = new GetSearchAatfAddress("Test", aatfId);
+            var getSearchAatfAddress = new GetSearchAatfAddress("Test", aatfId, returnId);
 
             await handler.HandleAsync(getSearchAatfAddress);
 
@@ -56,7 +56,7 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             DateTime date = DateTime.Now;
-            var getSearchAatfAddress = new GetSearchAatfAddress("Test", aatfId);
+            var getSearchAatfAddress = new GetSearchAatfAddress("Test", aatfId, returnId);
 
             List<Core.AatfReturn.ReturnAatfAddressResult> returnAatfAddressResults = new List<Core.AatfReturn.ReturnAatfAddressResult>();
             returnAatfAddressResults.Add(new Core.AatfReturn.ReturnAatfAddressResult() { OrganisationId = Guid.NewGuid(), SearchTermId = Guid.NewGuid(), SearchTermName = "Test 1" });
@@ -75,7 +75,7 @@
             var returnId = Guid.NewGuid();
             DateTime date = DateTime.Now;
 
-            var getSearchAatfAddress = new GetSearchAatfAddress("Test 1", aatfId);
+            var getSearchAatfAddress = new GetSearchAatfAddress("Test 1", aatfId, returnId);
 
             List<Core.AatfReturn.ReturnAatfAddressResult> returnAatfAddressResults = new List<Core.AatfReturn.ReturnAatfAddressResult>();
             returnAatfAddressResults.Add(new Core.AatfReturn.ReturnAatfAddressResult() { OrganisationId = Guid.NewGuid(), SearchTermId = Guid.NewGuid(), SearchTermName = "Test 1" });
