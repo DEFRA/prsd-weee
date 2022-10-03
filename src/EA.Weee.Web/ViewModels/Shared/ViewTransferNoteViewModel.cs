@@ -43,9 +43,5 @@
         }
 
         public bool ReturnToView { get; set; }
-
-        public string ApprovedTransfererDetails { get; set; }
-
-        public string ApprovedRecipientDetails { get; set; }
     }
 }
