@@ -464,6 +464,8 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData()).Create(),
                 false);
@@ -513,6 +515,8 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData()).Create(),
                 false);
             const string siteAddress = "siteAddress";
@@ -540,6 +544,8 @@
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .Create(),
                 false);
             const string siteAddress = "siteAddress";
@@ -583,6 +589,8 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
                     .Create(),
                 false);
