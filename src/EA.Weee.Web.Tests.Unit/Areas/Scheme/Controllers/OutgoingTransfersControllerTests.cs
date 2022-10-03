@@ -3321,13 +3321,13 @@
         }
 
         [Fact]
-        public void DeselectEvidenceNotePost_GivenSelectedEvidenceNote_TransferRequestShouldBeUpdated()
+        public void DeselectEvidenceNotePost_GivenDeSelectedEvidenceNote_TransferRequestShouldBeUpdated()
         {
             //arrange
             var model = TestFixture.Create<TransferDeselectEvidenceNoteModel>();
 
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
-                .With(r => r.EvidenceNoteIds, new List<Guid>() { model.SelectedEvidenceNoteId }).Create();
+                .With(r => r.EvidenceNoteIds, new List<Guid>() { model.DeselectedEvidenceNoteId }).Create();
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
                 A<HttpSessionStateBase>._, SessionKeyConstant.OutgoingTransferKey)).Returns(request);
@@ -3336,8 +3336,8 @@
             outgoingTransferEvidenceController.DeselectEvidenceNote(model);
 
             //assert
-            request.DeselectedEvidenceNoteIds.Should().Contain(model.SelectedEvidenceNoteId);
-            request.EvidenceNoteIds.Should().NotContain(model.SelectedEvidenceNoteId);
+            request.DeselectedEvidenceNoteIds.Should().Contain(model.DeselectedEvidenceNoteId);
+            request.EvidenceNoteIds.Should().NotContain(model.DeselectedEvidenceNoteId);
         }
 
         [Fact]

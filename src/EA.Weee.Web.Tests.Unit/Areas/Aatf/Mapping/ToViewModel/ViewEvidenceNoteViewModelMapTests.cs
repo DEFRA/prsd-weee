@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Security.Principal;
     using AutoFixture;
     using Core.AatfEvidence;
@@ -12,7 +13,6 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
     using Security;
@@ -79,6 +79,21 @@
         }
 
         [Fact]
+        public void Map_GivenSource_WithBalancingScheme_RecipientAddressShouldBeMapped()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+            evidenceNoteData.RecipientOrganisationData.IsBalancingScheme = true;
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, NoteUpdatedStatusEnum.Draft, true);
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be(source.EvidenceNoteData.RecipientOrganisationData.OrganisationName);
+        }
+
+        [Fact]
         public void Map_GivenSource_OperatorAddressShouldBeSet()
         {
             //arrange
@@ -123,7 +138,7 @@
         }
 
         [Fact]
-        public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToBusinessAddress()
+        public void Map_GivenSourceWithRecipientThatHasBusinessAddress_RecipientAddressShouldBeSetToApprovedRecipientDetails()
         {
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
@@ -149,7 +164,7 @@
             var result = map.Map(source);
 
             //assert
-            result.RecipientAddress.Should().Be(recipientAddress);
+            result.RecipientAddress.Should().Be(evidenceData.ApprovedRecipientDetails);
         }
 
         [Fact]
@@ -161,6 +176,7 @@
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
+                .With(f => f.ApprovedRecipientDetails, string.Empty)
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
 
@@ -180,6 +196,35 @@
 
             //assert
             result.RecipientAddress.Should().Be(recipientAddress);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatDoesNotHaveApprovedRecipientDetails_RecipientAddressShouldBeSetToNotificationAddress()
+        {
+            //arrange
+            var organisation = TestFixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .With(f => f.ApprovedRecipientDetails, "approved recipient details")
+                .Create();
+            var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
+                null)).Returns("recipientAddress");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be("approved recipient details");
         }
 
         [Fact]
@@ -667,9 +712,17 @@
             };
             source.EvidenceNoteData.EvidenceNoteHistoryData = history;
 
-            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).Returns(new List<EvidenceNoteHistoryViewModel>()
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteRowViewModel>>(history)).Returns(new List<EvidenceNoteRowViewModel>()
             {
-                new EvidenceNoteHistoryViewModel(data.Id, data.Reference, data.TransferredTo, data.Type, data.Status, data.SubmittedDate),
+                new EvidenceNoteRowViewModel()
+                {
+                    Id = data.Id,
+                    ReferenceId = data.Reference,
+                    TransferredTo = data.TransferredTo,
+                    Type = data.Type,
+                    Status = data.Status,
+                    SubmittedDate = data.SubmittedDate
+                }
             });
 
             //act
@@ -678,12 +731,12 @@
             //assert
             result.EvidenceNoteHistoryData.First().Id.Should().Be(history.First().Id);
             result.EvidenceNoteHistoryData.First().Status.Should().Be(history.First().Status);
-            result.EvidenceNoteHistoryData.First().Reference.Should().Be(history.First().Reference);
+            result.EvidenceNoteHistoryData.First().ReferenceId.Should().Be(history.First().Reference);
             result.EvidenceNoteHistoryData.First().Type.Should().Be(history.First().Type);
             result.EvidenceNoteHistoryData.First().SubmittedDate.Should().Be(history.First().SubmittedDate);
             result.EvidenceNoteHistoryData.First().TransferredTo.Should().Be(history.First().TransferredTo);
 
-            A.CallTo(() => mapper.Map<IList<EvidenceNoteHistoryViewModel>>(history)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<IList<EvidenceNoteRowViewModel>>(history)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -1306,6 +1359,55 @@
             result.RemainingTransferCategoryValues.Where(x => (WeeeCategory)x.CategoryId == WeeeCategory.LargeHouseholdAppliances).FirstOrDefault().Reused.Should().Be("0.000");
             result.TransferReceivedRemainingTotalDisplay.Should().Be("0.000");
             result.TransferReusedRemainingTotalDisplay.Should().Be("0.000");
+        }
+
+        [Fact]
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithNullUser_ViewEvidenceNoteViewModelIsInternalUserShouldBeFalse()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsInternalUser.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithUserThatDoesNotHaveInternalUserClaim_ViewEvidenceNoteViewModelIsInternalUserShouldBeFalse()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, A.Fake<IPrincipal>());
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsInternalUser.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithUserThatDoesHaveInternalUserClaim_ViewEvidenceNoteViewModelIsInternalUserShouldBeTrue()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+            var identity = new ClaimsIdentity();
+            var user = A.Fake<IPrincipal>();
+            identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea));
+            A.CallTo(() => user.Identity).Returns(identity);
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, user);
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsInternalUser.Should().BeTrue();
         }
     }
 }

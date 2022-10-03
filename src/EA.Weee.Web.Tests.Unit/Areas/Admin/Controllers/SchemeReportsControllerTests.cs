@@ -33,16 +33,18 @@
         private readonly SchemeReportsController controller;
         private readonly IWeeeClient client;
         private readonly BreadcrumbService breadcrumbService;
+        private readonly ConfigurationService configurationService;
 
         public SchemeReportsControllerTests()
         {
             fixture = new Fixture();
             client = A.Fake<IWeeeClient>();
             breadcrumbService = A.Fake<BreadcrumbService>();
+            configurationService = A.Fake<ConfigurationService>();
 
             A.CallTo(() => client.SendAsync(A<string>._, A<IRequest<UserStatus>>._)).Returns(UserStatus.Active);
 
-            controller = new SchemeReportsController(() => client, breadcrumbService);
+            controller = new SchemeReportsController(() => client, breadcrumbService, configurationService);
         }
 
         [Fact]

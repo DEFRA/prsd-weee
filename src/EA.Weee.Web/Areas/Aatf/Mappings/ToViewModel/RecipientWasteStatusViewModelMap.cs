@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Helpers;
@@ -16,23 +17,23 @@
             Guard.ArgumentNotNull(() => source, source);
             var viewModel = new RecipientWasteStatusFilterViewModel();
 
-            var sortedList = new Dictionary<int, string>
+            var sortedListOfNoteStatus = new List<KeyValuePair<int, string>>
             {
-                { (int)NoteStatus.Submitted, NoteStatus.Submitted.ToString() },
-                { (int)NoteStatus.Approved, NoteStatus.Approved.ToString() },
-                { (int)NoteStatus.Rejected, NoteStatus.Rejected.ToString() },
-                { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
+                new KeyValuePair<int, string>((int)NoteStatus.Submitted, NoteStatus.Submitted.ToString()),
+                new KeyValuePair<int, string>((int)NoteStatus.Approved, NoteStatus.Approved.ToString()),
+                new KeyValuePair<int, string>((int)NoteStatus.Rejected, NoteStatus.Rejected.ToString()),
+                new KeyValuePair<int, string>((int)NoteStatus.Void, NoteStatus.Void.ToString()),
             };
 
-            if (source.Interal)
+            if (source.Internal)
             {
-                sortedList.Add((int)NoteStatus.Returned, NoteStatus.Returned.ToString());
+                sortedListOfNoteStatus.Insert(3, new KeyValuePair<int, string>((int)NoteStatus.Returned, NoteStatus.Returned.ToString()));
             }
-          
+
             viewModel.RecipientList = source.RecipientList != null ? new SelectList(source.RecipientList, "Id", "DisplayName") : 
                 new SelectList(new List<OrganisationSchemeData>(), "Id", "DisplayName");
 
-            viewModel.NoteStatusList = new SelectList(sortedList, "Key", "Value");
+            viewModel.NoteStatusList = new SelectList(sortedListOfNoteStatus, "Key", "Value");
             viewModel.WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value");
             viewModel.ReceivedId = source.ReceivedId;
             viewModel.NoteStatusValue = source.NoteStatus;
