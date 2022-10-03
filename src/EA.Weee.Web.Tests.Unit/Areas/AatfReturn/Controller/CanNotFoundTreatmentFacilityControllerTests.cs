@@ -28,29 +28,29 @@
         private readonly IWeeeClient apiClient;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
-        private readonly IMap<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer, CanNotFoundTreatmentFacilityViewModel> mapper;
-        private readonly CanNotFoundTreatmentFacilityController controller;        
+        private readonly IMap<ReturnCanNotFindAatfViewModelMapTransfer, CanNotFindAatfViewModel> mapper;
+        private readonly CanNotFindAatfController controller;        
 
         public CanNotFoundTreatmentFacilityControllerTests()
         {
             this.apiClient = A.Fake<IWeeeClient>();
             this.breadcrumb = A.Fake<BreadcrumbService>();
             this.cache = A.Fake<IWeeeCache>();
-            this.mapper = A.Fake<IMap<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer, CanNotFoundTreatmentFacilityViewModel>>();
+            this.mapper = A.Fake<IMap<ReturnCanNotFindAatfViewModelMapTransfer, CanNotFindAatfViewModel>>();
 
-            controller = new CanNotFoundTreatmentFacilityController(() => apiClient, breadcrumb, cache, mapper);
+            controller = new CanNotFindAatfController(() => apiClient, breadcrumb, cache, mapper);
         }
 
         [Fact]
         public void CheckCanNotFoundTreatmentFacilityControllerInheritsFromExternalSiteController()
         {
-            typeof(CanNotFoundTreatmentFacilityController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
+            typeof(CanNotFindAatfController).BaseType.Name.Should().Be(typeof(ExternalSiteController).Name);
         }
 
         [Fact]
         public void CheckCanNotFoundTreatmentFacilityController_ShouldHaveValidateReturnActionFilterAttribute()
         {
-            typeof(CanNotFoundTreatmentFacilityController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
+            typeof(CanNotFindAatfController).Should().BeDecoratedWith<ValidateReturnCreatedActionFilterAttribute>();
         }
 
         [Fact]
@@ -109,14 +109,14 @@
             var selectedAatfId = Guid.NewGuid();
             var selectedAatfName = "Test";            
 
-            var model = new CanNotFoundTreatmentFacilityViewModel()
+            var model = new CanNotFindAatfViewModel()
             {
                 AatfId = aatfId,
                 ReturnId = returnId,
                 OrganisationId = organisationId                
             };
 
-            A.CallTo(() => mapper.Map(A<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer>._)).Returns(model);
+            A.CallTo(() => mapper.Map(A<ReturnCanNotFindAatfViewModelMapTransfer>._)).Returns(model);
 
             var result = await controller.Index(returnId, aatfId, selectedAatfName) as ViewResult;
 
@@ -132,7 +132,7 @@
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<string>());
 
-            A.CallTo(() => mapper.Map(A<ReturnAndAatfToCanNotFoundTreatmentFacilityViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => mapper.Map(A<ReturnCanNotFindAatfViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
         }        
     }
 }

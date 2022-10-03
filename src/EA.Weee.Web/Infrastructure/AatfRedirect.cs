@@ -81,9 +81,9 @@
             return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "SearchAnAatf", action = "Index", returnId = returnId, aatfId = aatfId }));
         }
 
-        public static RedirectToRouteResult CanNotFoundTreatmentFacility(Guid returnId, Guid aatfId)
+        public static RedirectToRouteResult CanNotFindAatf(Guid returnId, Guid aatfId)
         {
-            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "CanNotFoundTreatmentFacility", action = "Index", returnId = returnId, aatfId = aatfId }));
+            return new RedirectToRouteResult(AatfOrganisationSelectedRoute, new RouteValueDictionary(new { controller = "CanNotFindAatf", action = "Index", returnId = returnId, aatfId = aatfId }));
         }
 
         public static RedirectToRouteResult SentOnSummaryList(Guid organisationId, Guid returnId, Guid aatfId)
