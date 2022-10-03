@@ -7,7 +7,7 @@
 
     public class RecipientWasteStatusFilterBase
     {
-        public bool Interal { get; set; }
+        public bool Internal { get; set; }
 
         public List<OrganisationSchemeData> RecipientList { get; set; }
 
@@ -30,7 +30,7 @@
             NoteStatus = noteStatus;
             SubmittedBy = submittedBy;
             SubmittedByList = submittedByList;
-            Interal = internalUser;
+            Internal = internalUser;
         }
     }
 }
