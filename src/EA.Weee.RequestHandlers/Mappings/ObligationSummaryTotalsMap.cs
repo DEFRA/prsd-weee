@@ -23,7 +23,9 @@
                     total.Reuse,
                     total.TransferredOut,
                     total.TransferredIn,
-                    total.ObligationDifference));
+                    total.ObligationDifference,
+                    total.EvidenceOriginal,
+                    total.EvidenceDifference));
             }
 
             var data = new ObligationEvidenceSummaryData(obligationEvidenceValues);

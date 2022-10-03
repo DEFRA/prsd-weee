@@ -25,11 +25,13 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumb;
+        private readonly ConfigurationService configurationService;
 
-        public SchemeReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb) : base(apiClient, breadcrumb)
+        public SchemeReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb, ConfigurationService configurationService) : base(apiClient, breadcrumb)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
+            this.configurationService = configurationService;
         }
 
         public async Task<ActionResult> Index()

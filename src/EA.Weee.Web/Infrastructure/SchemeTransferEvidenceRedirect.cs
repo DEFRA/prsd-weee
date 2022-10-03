@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
+    using Core.AatfEvidence;
+
     public static class SchemeTransferEvidenceRedirect
     {
         public static string ViewDraftTransferEvidenceRouteName = "Scheme_view_transfer";
@@ -16,5 +18,43 @@
         public static string ViewReturnedEvidenceNoteRouteName = "Scheme_returned_evidence_note";
         public static string ViewSubmittedEvidenceNoteRouteName = "Scheme_submitted_evidence_note";
         public static string ViewVoidedEvidenceNoteRouteName = "Scheme_void_evidence_note";
+
+        public static string SchemeViewRouteName(NoteType noteType, NoteStatus noteStatus)
+        {
+            if (noteType == NoteType.Transfer)
+            {
+                switch (noteStatus)
+                {
+                    case NoteStatus.Draft:
+                        return SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
+                    case NoteStatus.Submitted:
+                        return SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName;
+                    case NoteStatus.Approved:
+                        return SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName;
+                    case NoteStatus.Rejected:
+                        return SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName;
+                    case NoteStatus.Returned:
+                        return SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName;
+                    case NoteStatus.Void:
+                        return SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName;
+                }
+            }
+
+            switch (noteStatus)
+            {
+                case NoteStatus.Approved:
+                    return SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName;
+                case NoteStatus.Rejected:
+                    return SchemeTransferEvidenceRedirect.ViewRejectedEvidenceNoteRouteName;
+                case NoteStatus.Returned:
+                    return SchemeTransferEvidenceRedirect.ViewReturnedEvidenceNoteRouteName;
+                case NoteStatus.Submitted:
+                    return SchemeTransferEvidenceRedirect.ViewSubmittedEvidenceNoteRouteName;
+                case NoteStatus.Void:
+                    return SchemeTransferEvidenceRedirect.ViewVoidedEvidenceNoteRouteName;
+            }
+
+            return string.Empty;
+        }
     }
 }
