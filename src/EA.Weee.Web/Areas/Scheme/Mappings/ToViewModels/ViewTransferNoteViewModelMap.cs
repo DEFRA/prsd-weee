@@ -47,7 +47,7 @@
             }
             else
             {
-                transferredByFormattedAddress = string.IsNullOrEmpty(source.TransferEvidenceNoteData.ApprovedRecipientDetails)
+                transferredByFormattedAddress = string.IsNullOrEmpty(source.TransferEvidenceNoteData.ApprovedTransfererDetails)
                     ? addressUtilities.FormattedCompanyPcsAddress(
                     source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
                     source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName,
@@ -56,7 +56,7 @@
                     transferOrganisationAddress.TownOrCity,
                     transferOrganisationAddress.CountyOrRegion,
                     transferOrganisationAddress.Postcode)
-                    : source.TransferEvidenceNoteData.ApprovedRecipientDetails;
+                    : source.TransferEvidenceNoteData.ApprovedTransfererDetails;
             }
 
             var recipientAddress = source.TransferEvidenceNoteData.RecipientOrganisationData.IsBalancingScheme
