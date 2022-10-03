@@ -68,7 +68,7 @@
             var result = await controller.Index(organisationId, returnId, aatfId, Guid.Empty, selectedAatfName) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("CanNotFoundTreatmentFacility");
+            result.RouteValues["controller"].Should().Be("NoResultsFound");
             result.RouteValues["returnId"].Should().Be(returnId);
             result.RouteValues["aatfId"].Should().Be(aatfId);
             result.RouteValues["aatfName"].Should().Be(selectedAatfName);
