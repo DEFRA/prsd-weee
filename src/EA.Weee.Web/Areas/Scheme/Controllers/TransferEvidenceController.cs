@@ -23,6 +23,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Extensions;
     using ViewModels;
     using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
@@ -249,7 +250,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1, bool openedInNewTab = false)
         {
             await SetBreadcrumb(pcsId);
 
@@ -264,10 +265,10 @@
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
                     RedirectTab = redirectTab,
-                    SystemDateTime = currentDateTime
+                    SystemDateTime = currentDateTime,
+                    Page = page,
+                    OpenedInNewTab = openedInNewTab
                 });
-
-                ViewBag.Page = page;
 
                 return View("TransferredEvidence", model);
             }
@@ -324,7 +325,7 @@
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 
                 var timestamp = SystemTime.Now;
-                var fileName = $"{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+                var fileName = $"{result.ComplianceYear}_{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.pdf";
 
                 return File(pdf, "application/pdf", fileName);
             }
@@ -384,7 +385,7 @@
         [ValidateAntiForgeryToken]
         public override ActionResult DeselectEvidenceNote(TransferDeselectEvidenceNoteModel model)
         {
-            DeselectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
+            DeselectEvidenceNote(model.DeselectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
 
             return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, model.Page });
         }

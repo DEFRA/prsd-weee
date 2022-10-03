@@ -236,7 +236,7 @@
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 
                 var timestamp = SystemTime.Now;
-                var fileName = $"{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.FilenameTimestampFormat)}.pdf";
+                var fileName = $"{result.ComplianceYear}_{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.pdf";
 
                 return File(pdf, "application/pdf", fileName);
             }

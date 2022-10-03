@@ -11,7 +11,6 @@
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Security;
-    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
 
@@ -39,6 +38,19 @@
                 : source.EvidenceNoteData.RecipientOrganisationData.NotificationAddress;
 
             var allowVoidStatus = new List<NoteStatus>() { NoteStatus.Void, NoteStatus.Rejected };
+
+            var recipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme 
+                ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName 
+                : (string.IsNullOrEmpty(source.EvidenceNoteData.ApprovedRecipientDetails) 
+                    ? addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
+                        source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
+                        organisationAddress.Address1,
+                        organisationAddress.Address2,
+                        organisationAddress.TownOrCity,
+                        organisationAddress.CountyOrRegion,
+                        organisationAddress.Postcode,
+                        null)
+                    : source.EvidenceNoteData.ApprovedRecipientDetails);
 
             var model = new ViewEvidenceNoteViewModel
             {
@@ -75,26 +87,19 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.CountyOrRegion,
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
-                RecipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName :
-                        addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
-                    source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
-                    organisationAddress.Address1,
-                    organisationAddress.Address2,
-                    organisationAddress.TownOrCity,
-                    organisationAddress.CountyOrRegion,
-                    organisationAddress.Postcode,
-                    null),
+                RecipientAddress = recipientAddress,
                 SchemeId = source.SchemeId, 
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
-                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteHistoryViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
+                EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteRowViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
                 CanVoid = !source.PrintableVersion &&
-                          InternalAdmin(source.User) && 
+                          HasClaim(source.User, Claims.InternalAdmin) && 
                           source.EvidenceNoteData.Status == NoteStatus.Approved && 
                           source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => allowVoidStatus.Contains(e.Status)),
                 CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status)),
-                IsPrintable = source.PrintableVersion
+                IsPrintable = source.PrintableVersion,
+                IsInternalUser = HasClaim(source.User, Claims.CanAccessInternalArea)
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
@@ -171,14 +176,14 @@
             return model;
         }
 
-        private bool InternalAdmin(IPrincipal user)
+        private bool HasClaim(IPrincipal user, string claim)
         {
             if (user == null)
             {
                 return false;
             }
             var claimsPrincipal = new ClaimsPrincipal(user);
-            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+            return claimsPrincipal.HasClaim(p => p.Value == claim);
         }
 
         private void SetSuccessMessage(EvidenceNoteData note, object noteStatus, ViewEvidenceNoteViewModel model)
