@@ -10,6 +10,7 @@
     using Builders;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Evidence;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Requests.Admin;
@@ -590,6 +591,184 @@
             private readonly It shouldHaveExpectedData = () =>
             {
                 foreach (var note1 in notesSet.Skip(4))
+                {
+                    var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
+                    evidenceNote.Should().BeTrue();
+                }
+            };
+        }
+
+        [Component]
+        public class WhenIGetAListOfEvidenceNoteDataAsNotesWithObligationTypeSetInFilter : GetAllNotesRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var complianceYear = fixture.Create<int>();
+
+                var evidence1HouseholdType = EvidenceNoteDbSetup.Init()
+                 .With(n =>
+                 {
+                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                 })
+                 .WithComplianceYear(complianceYear)
+                 .WithWasteType(Domain.Evidence.WasteType.HouseHold)
+                 .Create();
+
+                var evidence2HouseholdType = EvidenceNoteDbSetup.Init()
+                  .With(n =>
+                  {
+                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                  })
+                  .WithComplianceYear(complianceYear)
+                  .WithWasteType(Domain.Evidence.WasteType.HouseHold)
+                  .Create();
+
+                var evidence1NonHouseholdType = EvidenceNoteDbSetup.Init()
+                 .With(n =>
+                 {
+                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                 })
+                 .WithComplianceYear(complianceYear)
+                 .WithWasteType(Domain.Evidence.WasteType.NonHouseHold)
+                 .Create();
+
+                notesSet.Add(evidence1HouseholdType);
+                notesSet.Add(evidence2HouseholdType);
+                notesSet.Add(evidence1NonHouseholdType);
+
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
+                    null, null, null, null, WasteType.Household, null);
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldReturnListOfEvidenceNotes = () =>
+            {
+                evidenceNoteData.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
+            {
+                evidenceNoteData.Results.Should().HaveCount(2);
+                evidenceNoteData.NoteCount.Should().Be(2);
+            };
+
+            private readonly It shouldHaveExpectedData = () =>
+            {
+                foreach (var note1 in notesSet.Take(2))
+                {
+                    var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
+                    evidenceNote.Should().BeTrue();
+                }
+            };
+        }
+
+        [Component]
+        public class WhenIGetAListOfEvidenceNoteDataAsNotesWithSubmittedByAatfIdSetInFilter : GetAllNotesRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+                var organisationWithSelectedAatf = OrganisationDbSetup.Init().Create();
+
+                var organisationWithNonSelectedAatf = OrganisationDbSetup.Init().Create();
+
+                var aatfSelected = AatfDbSetup.Init()
+                  .WithAppropriateAuthority(CompetentAuthority.Scotland)
+                  .WithOrganisation(organisationWithSelectedAatf.Id)
+                  .Create();
+
+                var aatfNonSelected = AatfDbSetup.Init()
+                .WithAppropriateAuthority(CompetentAuthority.Wales)
+                .WithOrganisation(organisationWithNonSelectedAatf.Id)
+                .Create();
+
+                var complianceYear = fixture.Create<int>();
+
+                var evidence1WithSelectedAatf = EvidenceNoteDbSetup.Init()
+                 .With(n =>
+                 {
+                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                 })
+                 .WithComplianceYear(complianceYear)
+                 .WithAatf(aatfSelected.Id)
+                 .Create();
+
+                var evidence2WithSelectedAatf = EvidenceNoteDbSetup.Init()
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-1));
+                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                })
+                .WithComplianceYear(complianceYear)
+                .WithAatf(aatfSelected.Id)
+                .Create();
+
+                var evidence3WithSelectedAatf = EvidenceNoteDbSetup.Init()
+                .With(n =>
+                {
+                    n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                })
+                .WithComplianceYear(complianceYear)
+                .WithAatf(aatfSelected.Id)
+                .Create();
+
+                var evidence1WithNonSelectedAatf = EvidenceNoteDbSetup.Init()
+                  .With(n =>
+                  {
+                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                  })
+                  .WithComplianceYear(complianceYear)
+                  .WithAatf(aatfNonSelected.Id)
+                  .Create();
+
+                var evidence2WithNonSelectedAatf = EvidenceNoteDbSetup.Init()
+                 .With(n =>
+                 {
+                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                 })
+                 .WithComplianceYear(complianceYear)
+                 .WithAatf(aatfNonSelected.Id)
+                 .Create();
+
+                notesSet.Add(evidence1WithSelectedAatf);
+                notesSet.Add(evidence2WithSelectedAatf);
+                notesSet.Add(evidence3WithSelectedAatf);
+                notesSet.Add(evidence1WithNonSelectedAatf);
+                notesSet.Add(evidence2WithNonSelectedAatf);
+
+                request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
+                    null, null, null, null, null, aatfSelected.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldReturnListOfEvidenceNotes = () =>
+            {
+                evidenceNoteData.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
+            {
+                evidenceNoteData.Results.Should().HaveCount(3);
+                evidenceNoteData.NoteCount.Should().Be(3);
+            };
+
+            private readonly It shouldHaveExpectedData = () =>
+            {
+                foreach (var note1 in notesSet.Take(3))
                 {
                     var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
                     evidenceNote.Should().BeTrue();
