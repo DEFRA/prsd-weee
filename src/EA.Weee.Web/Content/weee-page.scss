@@ -1297,3 +1297,19 @@ input[type='radio']:checked:before {
 .govuk-grid-column-one-six {
     max-width: 16.66%;
 }
+
+#searchButton {
+    font-size: 0px !important;
+    margin-left: -4px !important;
+    height: 38px !important;
+    width: 45px !important;
+}
+
+#searchButton img {
+    margin-top: -2px;
+}
+
+.govuk-grid-column-one-quarter {
+    overflow-wrap: break-word !important;
+    padding-right: 15px !important;
+}

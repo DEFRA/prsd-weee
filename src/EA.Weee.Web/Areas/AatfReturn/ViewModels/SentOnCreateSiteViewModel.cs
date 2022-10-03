@@ -22,5 +22,7 @@
         public bool? IsEditDetails { get; set; }
 
         public bool? IsEditTonnage { get; set; }
+
+        public bool? IsAddDetails { get; set; }
     }
 }
