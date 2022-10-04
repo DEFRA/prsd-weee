@@ -321,7 +321,6 @@
     <Content Include="scripts\Update\Release 4\20220923-1751-remove-weeesenton-table-relation.sql">
       <SubType>Component</SubType>
     </Content>
-    <Content Include="scripts\Update\Release 4\20221004-0950-getAllAatfSentOnCsvData-report.sql" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
