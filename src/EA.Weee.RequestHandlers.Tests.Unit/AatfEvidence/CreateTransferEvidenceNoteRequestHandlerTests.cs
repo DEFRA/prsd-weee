@@ -374,6 +374,78 @@
             A.CallTo(() => transactionAdapter.Commit(null)).MustNotHaveHappened();
         }
 
+        [Fact]
+        public async Task HandleAsync_SubmittedTransferNote_RemovesZeroedOrNullTonnages()
+        {
+            //arrange
+            var transferNoteId = TestFixture.Create<Guid>();
+            var note = A.Fake<Note>();
+            var regularTonnage = new TransferTonnageValue(TestFixture.Create<Guid>(), 1, 1, 1, transferNoteId);
+            var emptyTonnage = new TransferTonnageValue(TestFixture.Create<Guid>(), 2, 0, 0, transferNoteId);
+            var nullTonnage = new TransferTonnageValue(TestFixture.Create<Guid>(), 3, null, null, transferNoteId);
+            var transferTonnages = new List<TransferTonnageValue>()
+            {
+                regularTonnage,
+                emptyTonnage,
+                nullTonnage
+            };
+
+            request.TransferValues = transferTonnages;
+            request.Status = Core.AatfEvidence.NoteStatus.Submitted;
+
+            A.CallTo(() => note.Id).Returns(transferNoteId);
+
+            A.CallTo(() =>
+                evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
+                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).Returns(note);
+
+            //act
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() =>
+                    evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
+                        A<List<NoteTransferTonnage>>.That.Matches(t => t.Count(
+                            t1 => t1.Received == null || t1.Received == 0) > 0), A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
+                    .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_DraftTransferNote_DoesNot_RemoveZeroedOrNullTonnages()
+        {
+            //arrange
+            var transferNoteId = TestFixture.Create<Guid>();
+            var note = A.Fake<Note>();
+            var regularTonnage = new TransferTonnageValue(TestFixture.Create<Guid>(), 1, 1, 1, transferNoteId);
+            var emptyTonnage = new TransferTonnageValue(TestFixture.Create<Guid>(), 2, 0, 0, transferNoteId);
+            var nullTonnage = new TransferTonnageValue(TestFixture.Create<Guid>(), 3, null, null, transferNoteId);
+            var transferTonnages = new List<TransferTonnageValue>()
+            {
+                regularTonnage,
+                emptyTonnage,
+                nullTonnage
+            };
+
+            request.TransferValues = transferTonnages;
+            request.Status = Core.AatfEvidence.NoteStatus.Draft;
+
+            A.CallTo(() => note.Id).Returns(transferNoteId);
+
+            A.CallTo(() =>
+                evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
+                    A<List<NoteTransferTonnage>>._, A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._)).Returns(note);
+
+            //act
+            var result = await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() =>
+                    evidenceDataAccess.AddTransferNote(A<Organisation>._, A<Organisation>._,
+                        A<List<NoteTransferTonnage>>.That.Matches(t => t.Count(
+                            t1 => t1.Received == null || t1.Received == 0) == transferTonnages.Count), A<NoteStatus>._, A<int>._, A<string>._, A<DateTime>._))
+                    .MustNotHaveHappened();
+        }
+
         private TransferEvidenceNoteRequest Request()
         {
             return new TransferEvidenceNoteRequest(organisation.Id, scheme.Id, 

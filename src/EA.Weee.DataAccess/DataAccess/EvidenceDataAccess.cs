@@ -289,7 +289,7 @@
             }
 
             var itemsToRemove =
-                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId));
+                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId) || (((ntt.Received == 0.00m && ntt.Reused == 0.00m) || (ntt.Received == null && ntt.Reused == null)) && status.Equals(NoteStatus.Submitted)));
 
             genericDataAccess.RemoveMany(itemsToRemove);
             
@@ -321,6 +321,19 @@
                                n.RecipientId == recipientId && 
                                n.Status.Value == NoteStatus.Approved.Value &&
                                n.WasteType.Value == WasteType.HouseHold);
+        }
+
+        public Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type)
+        {
+            if (status.Equals(NoteStatus.Submitted) && type.Equals(NoteType.TransferNote))
+            {
+                var itemsToRemove =
+                    note.NoteTransferTonnage.Where(ntt => (ntt.Received == 0.00m && ntt.Reused == 0.00m) || (ntt.Received == null && ntt.Reused == null));
+
+                genericDataAccess.RemoveMany(itemsToRemove);
+            }
+
+            return note;
         }
     }
 }

@@ -65,6 +65,18 @@
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
+                    if (request.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
+                    {
+                        for (int i = transferNoteTonnages.Count - 1; i >= 0; i--)
+                        {
+                            var noteTonnage = transferNoteTonnages[i];
+                            if ((noteTonnage.Reused == 0.00m && noteTonnage.Received == 0.00m) || (noteTonnage.Reused == null && noteTonnage.Received == null))
+                            {
+                                transferNoteTonnages.RemoveAt(i);
+                            }
+                        }
+                    }
+
                     note = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), request.ComplianceYear,
                         UserContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
