@@ -29,8 +29,6 @@
 
         public OrganisationData RecipientOrganisationData { get; set; }
 
-        public string ApprovedRecipientDetails { get; set; }
-
         public List<EvidenceNoteHistoryData> EvidenceNoteHistoryData { get; set; }
 
         public decimal? TotalReceived { get; set; }

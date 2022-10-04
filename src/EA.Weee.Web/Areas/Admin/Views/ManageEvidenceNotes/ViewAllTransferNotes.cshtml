@@ -73,7 +73,7 @@
                             }
                             else
                             {
-                                Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml");
+                                   Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are currently no evidence transfers to view</p>") });
                             }
 
                         </tbody>

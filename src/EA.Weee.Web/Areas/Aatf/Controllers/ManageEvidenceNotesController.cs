@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using AatfEvidence.Controllers;
     using Api.Client;
     using Attributes;
@@ -12,7 +18,6 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.AatfEvidence.Reports;
-    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Constant;
     using Extensions;
@@ -25,18 +30,11 @@
     using Prsd.Core.Web.ApiClient;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels;
     using Web.Requests.Base;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
-    using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;
 
     public class ManageEvidenceNotesController : AatfEvidenceBaseController
@@ -392,11 +390,12 @@
                 sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
             }
 
-            schemeData = sessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
+            schemeData = sessionService.GetTransferSessionObject<List<EntityIdDisplayNameData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 
-                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, new List<EntityIdDisplayNameData>(), false));
 
             var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
                         new SubmittedDateFilterBase(manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));

@@ -42,7 +42,7 @@
             TransferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
             A.CallTo(() => ConfigurationService.CurrentConfiguration.DefaultInternalPagingPageSize).Returns(PageSize);
 
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, ConfigurationService);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, ConfigurationService, SessionService);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(SystemTime.Now);
         }

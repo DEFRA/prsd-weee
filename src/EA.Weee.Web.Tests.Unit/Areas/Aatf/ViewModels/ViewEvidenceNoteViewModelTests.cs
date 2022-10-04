@@ -281,7 +281,7 @@
             //Act
             var model = new ViewEvidenceNoteViewModel()
             {
-                EvidenceNoteHistoryData = fixture.Create<IList<EvidenceNoteHistoryViewModel>>(),
+                EvidenceNoteHistoryData = fixture.Create<IList<EvidenceNoteRowViewModel>>(),
             };
 
             //Assert

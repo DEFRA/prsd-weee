@@ -14,6 +14,8 @@
                 Reference = note.Reference,
                 Type = (Core.AatfEvidence.NoteType)note.NoteType.Value,
                 Status = (Core.AatfEvidence.NoteStatus)note.Status.Value,
+                ApprovedRecipientDetails = note.ApprovedRecipientAddress,
+                ApprovedTransfererDetails = note.ApprovedTransfererAddress,
                 WasteType = note.WasteType.HasValue ? (Core.AatfEvidence.WasteType?)note.WasteType.Value : null,
                 ComplianceYear = note.ComplianceYear,
                 ReturnedReason = note.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned)

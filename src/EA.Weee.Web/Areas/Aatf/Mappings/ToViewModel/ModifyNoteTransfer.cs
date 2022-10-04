@@ -2,14 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using Prsd.Core;
     using ViewModels;
-    using Web.ViewModels.Shared;
 
     public abstract class ModifyNoteTransfer
     {
-        public List<OrganisationSchemeData> Schemes { get; private set; }
+        public List<EntityIdDisplayNameData> Schemes { get; private set; }
 
         public EditEvidenceNoteViewModel ExistingModel { get; set; }
 
@@ -19,7 +18,7 @@
 
         public int ComplianceYear { get; protected set; }
 
-        protected ModifyNoteTransfer(List<OrganisationSchemeData> schemes,
+        protected ModifyNoteTransfer(List<EntityIdDisplayNameData> schemes,
             EditEvidenceNoteViewModel existingModel,
             Guid organisationId,
             Guid aatfId)

@@ -74,5 +74,24 @@
 
             return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter).ToListAsync();
         }
+
+        public async Task<List<InternalObligationAndEvidenceSummaryTotalsData>> GetSchemeObligationAndEvidenceTotals(Guid? pcsId, Guid? appropriateAuthorityId, int complianceYear)
+        {
+            var queryString = "[Evidence].[getSchemeObligationAndEvidenceTotals] @ComplianceYear, @SchemeId ";
+
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
+            var pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier)
+            {
+                IsNullable = true,
+                Value = pcsId ?? (object)DBNull.Value
+            };
+            var appropriateAuthorityIdParameter = new SqlParameter("@AppropriateAuthorityId", SqlDbType.UniqueIdentifier)
+            {
+                IsNullable = true,
+                Value = appropriateAuthorityId ?? (object)DBNull.Value
+            };
+
+            return await context.Database.SqlQuery<InternalObligationAndEvidenceSummaryTotalsData>(queryString, complianceYearParameter, pcsIdParameter, appropriateAuthorityIdParameter).ToListAsync();
+        }
     }
 }

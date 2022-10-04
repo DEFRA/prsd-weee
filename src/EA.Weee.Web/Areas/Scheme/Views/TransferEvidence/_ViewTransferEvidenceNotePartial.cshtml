@@ -86,28 +86,28 @@
 <!-- screen 6.07a -->
 
 
-<div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0 printable-padding-top-3">
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="site" class="govuk-label--s">Transferred by</span><br />
-        <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.TransferredByAddress)</p>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="recipient" class="govuk-label--s">Recipient</span><br />
-        <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
-    </div>
+    <div class="govuk-width-container govuk-!-padding-top-3 govuk-!-padding-left-0 printable-padding-top-3">
 
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="site" class="govuk-label--s">Transferred by</span><br />
+            <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.TransferredByAddress)</p>
+        </div>
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+            <span id="recipient" class="govuk-label--s">Recipient</span><br />
+            <p aria-labelledby="recipient" class="govuk-body weee-word-break"> @Html.Raw(Model.RecipientAddress)</p>
+        </div>
 
-    @if (Model.EditMode && !Model.HasBeenReturned)
-    {
+        @if (Model.EditMode && !Model.HasBeenReturned)
+        {
         <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
             @Html.NavigationRouteLink("Edit recipient and categories", "Edit recipient and categories for transfer note " + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
         </div>
-    }
-    else
-    {
+        }
+        else
+        {
         <div class="govuk-grid-column-one-third">&nbsp;</div>
-    }
-</div>
+        }
+    </div>
 <div class="ui-helper-clearfix"></div>
 @{
     var transferredTitle = "Total transferred (tonnes)";
@@ -152,8 +152,8 @@ else
                 <td class="govuk-table__cell govuk-!-padding-left-2">
                     @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
                 </td>
-                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReceived</td>
-                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2 printable-text-align-right">@Model.TotalCategoryValues.ElementAt(categoryCount).TotalReused</td>
+                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
+                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2 printable-text-align-right">@Model.TotalCategoryValues[categoryCount].TotalReused</td>
             </tr>
         }
     </tbody>
@@ -213,31 +213,34 @@ else
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-            @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
+        @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
+        {
+            var note = aatf.Notes.ElementAt(noteCount);
+               
+            for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
             {
-                var note = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount);
+                var category = note.CategoryValues.ElementAt(categoryCount);
 
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count + 1)">
-                        @note.ReferenceDisplay
+                    @if (categoryCount == 0)
+                    {
+                        <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count)">
+                            @note.ReferenceDisplay
+                        </td>
+                    }
+
+                    <td class="govuk-table__cell govuk-!-text-align-left">
+                        @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-3">
+                        @category.Received
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-1">
+                        @category.Reused
                     </td>
                 </tr>
-                for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
-                {
-                    var category = Model.Summary.ElementAt(aatfCount).Notes.ElementAt(noteCount).CategoryValues.ElementAt(categoryCount);
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-text-align-left">
-                            @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
-                        </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-3">
-                            @category.Received
-                        </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-1">
-                            @category.Reused
-                        </td>
-                    </tr>
-                }
             }
+        }
         </tbody>
     </table>
 }

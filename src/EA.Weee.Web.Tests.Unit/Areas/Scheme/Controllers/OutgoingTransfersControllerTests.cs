@@ -7,6 +7,7 @@
     using Core.Helpers;
     using Core.Scheme;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Extensions;
@@ -2160,7 +2161,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
-            var recipients = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipients = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetOrganisationScheme>._)).Returns(recipients);
 
@@ -2599,7 +2600,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
 
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetOrganisationScheme>._)).Returns(recipientData);
 

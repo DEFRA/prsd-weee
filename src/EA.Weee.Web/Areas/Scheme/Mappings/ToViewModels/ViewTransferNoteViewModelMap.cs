@@ -47,15 +47,30 @@
             }
             else
             {
-                transferredByFormattedAddress = addressUtilities.FormattedCompanyPcsAddress(
+                transferredByFormattedAddress = string.IsNullOrEmpty(source.TransferEvidenceNoteData.ApprovedTransfererDetails)
+                    ? addressUtilities.FormattedCompanyPcsAddress(
                     source.TransferEvidenceNoteData.TransferredSchemeData.SchemeName,
                     source.TransferEvidenceNoteData.TransferredOrganisationData.OrganisationName,
                     transferOrganisationAddress.Address1,
                     transferOrganisationAddress.Address2,
                     transferOrganisationAddress.TownOrCity,
                     transferOrganisationAddress.CountyOrRegion,
-                    transferOrganisationAddress.Postcode);
+                    transferOrganisationAddress.Postcode)
+                    : source.TransferEvidenceNoteData.ApprovedTransfererDetails;
             }
+
+            var recipientAddress = source.TransferEvidenceNoteData.RecipientOrganisationData.IsBalancingScheme
+                ? source.TransferEvidenceNoteData.RecipientOrganisationData.OrganisationName
+                : (string.IsNullOrEmpty(source.TransferEvidenceNoteData.ApprovedRecipientDetails)
+                    ? addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
+                        source.TransferEvidenceNoteData.RecipientOrganisationData.OrganisationName,
+                        recipientOrganisationAddress.Address1,
+                        recipientOrganisationAddress.Address2,
+                        recipientOrganisationAddress.TownOrCity,
+                        recipientOrganisationAddress.CountyOrRegion,
+                        recipientOrganisationAddress.Postcode,
+                        null)
+                    : source.TransferEvidenceNoteData.ApprovedRecipientDetails);
 
             var model = new ViewTransferNoteViewModel
             {
@@ -83,21 +98,16 @@
                         TotalReceived = n.Sum(e => e.EvidenceTonnageData.TransferredReceived).ToString(),
                         TotalReused = n.Sum(e => e.EvidenceTonnageData.TransferredReused).ToString(),
                     }).OrderBy(n => n.CategoryId).ToList(),
-                RecipientAddress = addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
-                    source.TransferEvidenceNoteData.RecipientOrganisationData.OrganisationName,
-                    recipientOrganisationAddress.Address1,
-                    recipientOrganisationAddress.Address2,
-                    recipientOrganisationAddress.TownOrCity,
-                    recipientOrganisationAddress.CountyOrRegion,
-                    recipientOrganisationAddress.Postcode,
-                    null),
+                RecipientAddress = recipientAddress,
                 TransferredByAddress = transferredByFormattedAddress,
                 Summary = GenerateNotesModel(source),
                 DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned)
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
                                     && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime),
-                CanVoid = InternalAdmin(source.User)
+                CanVoid = HasClaim(source.User, Claims.InternalAdmin),
+                Page = source.Page,
+                OpenedInNewTab = source.OpenedInNewTab
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
@@ -105,14 +115,14 @@
             return model;
         }
 
-        private bool InternalAdmin(IPrincipal user)
+        private bool HasClaim(IPrincipal user, string claim)
         {
             if (user == null)
             {
                 return false;
             }
             var claimsPrincipal = new ClaimsPrincipal(user);
-            return claimsPrincipal.HasClaim(p => p.Value == Claims.InternalAdmin);
+            return claimsPrincipal.HasClaim(p => p.Value == claim);
         }
 
         private void SetSuccessMessage(TransferEvidenceNoteData note, object displayMessageStatus, ViewTransferNoteViewModel model)
