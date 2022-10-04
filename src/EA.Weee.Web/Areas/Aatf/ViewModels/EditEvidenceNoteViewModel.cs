@@ -7,7 +7,7 @@
     using Attributes;
     using Core.AatfEvidence;
     using Core.Helpers;
-    using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using Web.ViewModels.Shared;
 
     [Serializable]
@@ -29,7 +29,7 @@
         [Display(Name = "Recipient")]
         public Guid? RecipientId { get; set; }
 
-        public List<OrganisationSchemeData> SchemeList { get; set; }
+        public List<EntityIdDisplayNameData> SchemeList { get; set; }
 
         [Display(Name = "Recipient")]
         public string SelectedSchemeName { get; set; }

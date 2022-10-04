@@ -7,8 +7,8 @@
     using Core.AatfEvidence;
     using Core.DataReturns;
     using Core.Helpers;
-    using Core.Organisations;
     using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mapper;
@@ -90,7 +90,7 @@
             //arrange
             var transferNoteData = TestFixture.Build<TransferEvidenceNoteData>().Create();
             var organisationId = TestFixture.Create<Guid>();
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>(3).ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>(3).ToList();
             recipientData.ElementAt(1).Id = organisationId;
 
             var transfer = new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, recipientData, organisationId, null);
@@ -109,7 +109,7 @@
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
             {
                 TestFixture
@@ -186,7 +186,7 @@
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var transferNoteTonnageData = new List<TransferEvidenceNoteTonnageData>()
             {
                 TestFixture
@@ -249,7 +249,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
 
             return new TransferEvidenceNotesViewModelMapTransfer(transferNoteData, recipientData, organisationId, existingModel);
         }

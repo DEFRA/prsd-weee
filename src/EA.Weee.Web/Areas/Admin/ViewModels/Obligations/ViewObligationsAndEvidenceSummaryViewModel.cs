@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Obligations
 {
-    using EA.Weee.Core.Admin.Obligation;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using Core.Scheme;
+    using EA.Weee.Core.Admin.Obligation;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
 
     public class ViewObligationsAndEvidenceSummaryViewModel : IObligationSummaryBase
@@ -17,7 +17,7 @@
         [DisplayName("PCS")]
         public Guid? SchemeId { get; set; }
 
-        public List<OrganisationSchemeData> SchemeList { get; set; }
+        public List<EntityIdDisplayNameData> SchemeList { get; set; }
 
         public IList<ObligationEvidenceValue> ObligationEvidenceValues { get; set; }
 

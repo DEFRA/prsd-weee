@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
     using System;
-    using EA.Weee.Core.AatfEvidence;
     using System.Collections.Generic;
-    using Core.Scheme;
     using CuttingEdge.Conditions;
+    using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Shared;
     using ViewModels;
     using Weee.Requests.Scheme;
 
@@ -22,7 +22,7 @@
 
         public TransferEvidenceNoteData TransferEvidenceNoteData { get; }
 
-        public IList<OrganisationSchemeData> RecipientData { get; set; }
+        public IList<EntityIdDisplayNameData> RecipientData { get; set; }
 
         public IList<int> Categories { get; }
 
@@ -133,7 +133,7 @@
         }
 
         public TransferEvidenceNotesViewModelMapTransfer(TransferEvidenceNoteData transferNoteData,
-            IList<OrganisationSchemeData> recipientData,
+            IList<EntityIdDisplayNameData> recipientData,
             Guid organisationId,
             TransferEvidenceNoteCategoriesViewModel existingModel)
         {
