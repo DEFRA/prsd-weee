@@ -306,13 +306,31 @@
             return note;
         }
 
-        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? organisationId, int complianceYear)
+        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, int complianceYear)
         {
             var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear);
 
-            if (organisationId.HasValue)
+            if (aatfId.HasValue)
             {
-                notes = notes.Where(n => n.OrganisationId == organisationId);
+                var groupedAatf = await context.Aatfs.Where(a => a.Id == aatfId.Value).FirstOrDefaultAsync();
+
+                if (groupedAatf != null)
+                {
+                    var aatf = await context.Aatfs.Where(a => a.AatfId == groupedAatf.AatfId && a.ComplianceYear == complianceYear).FirstOrDefaultAsync();
+
+                    if (aatf != null)
+                    {
+                        notes = notes.Where(n => n.AatfId == aatf.Id);
+                    }
+                    else
+                    {
+                        return new List<Organisation>();
+                    }
+                }
+                else
+                {
+                    return new List<Organisation>();
+                }
             }
 
             return await notes.Select(n => n.Recipient)
