@@ -295,7 +295,7 @@
             }
 
             var itemsToRemove =
-                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId) || (((ntt.Received == 0.00m && ntt.Reused == 0.00m) || (ntt.Received == null && ntt.Reused == null)) && status.Equals(NoteStatus.Submitted)));
+                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId) || (ntt.Received == 0.00m || ntt.Received == null) && status.Equals(NoteStatus.Submitted));
 
             genericDataAccess.RemoveMany(itemsToRemove);
             
