@@ -33,11 +33,11 @@
                 <td class="govuk-table__cell">
                     @if (Model.IsInternalUser)
                     {
-                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.Action("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { area = "admin", evidenceNoteId = Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference {0}", @Model.EvidenceNoteHistoryData[i].ReferenceId)))
+                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.Action("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { area = "admin", evidenceNoteId = Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference {0}", @Model.EvidenceNoteHistoryData[i].ReferenceDisplay)))
                     }
                     else
                     {
-                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNoteHistoryData[i].SchemeViewRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = @Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference {0}", @Model.EvidenceNoteHistoryData[i].ReferenceId)))
+                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNoteHistoryData[i].SchemeViewRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = @Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference {0}", @Model.EvidenceNoteHistoryData[i].ReferenceDisplay)))
                     }
                 </td>
             </tr>
