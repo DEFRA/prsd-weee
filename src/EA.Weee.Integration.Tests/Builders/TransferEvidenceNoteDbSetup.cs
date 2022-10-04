@@ -71,5 +71,14 @@
 
             return this;
         }
+
+        public TransferEvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
+        {
+            var date = SystemTime.UtcNow;
+
+            instance.UpdateStatus(statusToUpdate, user, new DateTime(instance.ComplianceYear, date.Month, date.Day, date.Hour, date.Minute, date.Second));
+
+            return this;
+        }
     }
 }
