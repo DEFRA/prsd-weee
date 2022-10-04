@@ -83,9 +83,9 @@
             //assert
             model.HintItems.ElementAt(0).Value.Should().Be(null);
             model.HintItems.ElementAt(0).Key.Should().Be("Approve evidence note");
-            model.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note");
+            model.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note to have it replaced. If the note has been sent to you by mistake, it must be rejected.");
             model.HintItems.ElementAt(1).Key.Should().Be("Reject evidence note");
-            model.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note if there are some minor updates to be made by the AATF");
+            model.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note to have amendments made to it.");
             model.HintItems.ElementAt(2).Key.Should().Be("Return evidence note");
         }
 
