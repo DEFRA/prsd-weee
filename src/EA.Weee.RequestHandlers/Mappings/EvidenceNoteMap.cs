@@ -73,8 +73,6 @@
             }
             data.EvidenceNoteHistoryData = history;
 
-            data.ApprovedRecipientDetails = source.Note.ApprovedRecipientAddress;
-
             return data;
         }
     }
