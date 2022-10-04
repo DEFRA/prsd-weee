@@ -140,8 +140,10 @@
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageEvidenceNotes);
-            viewModel.PossibleValues.Add(InternalUserActivity.ViewPCSObligationAndEvidenceSummary);
-
+            if (configuration.EnablePCSObligations)
+            {
+                viewModel.PossibleValues.Add(InternalUserActivity.ViewPCSObligationAndEvidenceSummary);
+            }
             if (configuration.EnablePCSObligations && isAdmin)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsObligations);
