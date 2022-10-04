@@ -8,7 +8,6 @@
     using Core.Scheme;
     using Core.Shared;
     using EA.Prsd.Core;
-    using EA.Weee.Api.Client.Actions;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Organisations;
@@ -17,9 +16,9 @@
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
+    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
-    using IdentityModel;
     using Web.ViewModels.Shared;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
@@ -85,6 +84,53 @@
 
             //assert
             model.ReturnToView.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithOpenedInNewTab_PropertiesShouldBeSet(bool openedInNewTab)
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+                {
+                    OpenedInNewTab = openedInNewTab
+                };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.OpenedInNewTab.Should().Be(openedInNewTab);
+        }
+
+        [Fact]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithPage_PagePropertyShouldBeSet()
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+            var page = TestFixture.Create<int>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+            {
+                Page = page
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.Page.Should().Be(page);
         }
 
         [Fact]
@@ -419,6 +465,8 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData()).Create(),
                 false);
@@ -468,6 +516,8 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .With(x => x.RecipientOrganisationData, CreateOrganisationData()).Create(),
                 false);
             const string siteAddress = "siteAddress";
@@ -495,6 +545,8 @@
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData())
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .Create(),
                 false);
             const string siteAddress = "siteAddress";
@@ -538,6 +590,8 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
+                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
                     .Create(),
                 false);
@@ -548,6 +602,66 @@
             //assert
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
                 A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatDoesNotHaveApprovedTransfererDetails_RecipientAddressShouldBeSetToApprovedRecipientAddress()
+        {
+            //arrange
+            var organisation = TestFixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                .With(f => f.ApprovedRecipientDetails, "approved recipient details")
+                .With(g => g.ApprovedTransfererDetails, string.Empty)
+                .Create();
+            var source = new ViewTransferNoteViewModelMapTransfer(organisation.Id, evidenceData, null);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
+                null)).Returns("recipientAddress");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientAddress.Should().Be("approved recipient details");
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRecipientThatHasApprovedTransfererDetails_TransferredByAddressShouldBeSetToApprovedTransfererAddress()
+        {
+            //arrange
+            var organisation = TestFixture.Build<OrganisationData>()
+                .With(o => o.HasBusinessAddress, false)
+                .With(o => o.OrganisationName, "org").Create();
+            var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(e => e.RecipientOrganisationData, organisation)
+                //.With(f => f.ApprovedRecipientDetails, "approved recipient details")
+                .With(g => g.ApprovedTransfererDetails, "approved transferer details")
+                .Create();
+            var source = new ViewTransferNoteViewModelMapTransfer(organisation.Id, evidenceData, null);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
+                organisation.OrganisationName,
+                organisation.NotificationAddress.Address1,
+                organisation.NotificationAddress.Address2,
+                organisation.NotificationAddress.TownOrCity,
+                organisation.NotificationAddress.CountyOrRegion,
+                organisation.NotificationAddress.Postcode,
+                null)).Returns("recipientAddress");
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.TransferredByAddress.Should().Be("approved transferer details");
         }
 
         [Fact]

@@ -158,6 +158,7 @@
 
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
 
+                await cache.InvalidateOrganisationNameCache(model.OrgId);
                 await cache.InvalidateOrganisationSearch();
             }
 
@@ -202,6 +203,7 @@
 
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
 
+                await cache.InvalidateOrganisationNameCache(model.OrgId);
                 await cache.InvalidateOrganisationSearch();
             }
 
@@ -245,6 +247,7 @@
 
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
 
+                await cache.InvalidateOrganisationNameCache(model.OrgId);
                 await cache.InvalidateOrganisationSearch();
             }
 

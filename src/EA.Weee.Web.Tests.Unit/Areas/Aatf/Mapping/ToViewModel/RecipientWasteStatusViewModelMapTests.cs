@@ -7,6 +7,7 @@
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.Mappings;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using FluentAssertions;
@@ -37,9 +38,9 @@
         {
             //arrange
             var source = TestFixture.Build<RecipientWasteStatusFilterBase>()
-                .With(r => r.RecipientList, (List<OrganisationSchemeData>)null).Create();
+                .With(r => r.RecipientList, (List<EntityIdDisplayNameData>)null).Create();
 
-            var emptyList = new List<OrganisationSchemeData>();
+            var emptyList = new List<EntityIdDisplayNameData>();
             //act
             var model = mapper.Map(source);
 
@@ -87,7 +88,7 @@
             return new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value");
         }
 
-        private IEnumerable<SelectListItem> GetSchemeListDropDownForm(IList<OrganisationSchemeData> list)
+        private IEnumerable<SelectListItem> GetSchemeListDropDownForm(IList<EntityIdDisplayNameData> list)
         {
             return new SelectList(list, "Id", "DisplayName");
         }

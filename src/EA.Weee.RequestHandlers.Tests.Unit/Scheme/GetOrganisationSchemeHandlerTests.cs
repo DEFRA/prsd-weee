@@ -8,7 +8,7 @@
     using AutoFixture;
     using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Scheme;
     using EA.Weee.RequestHandlers.Security;
@@ -18,21 +18,22 @@
     using FakeItEasy;
     using FluentAssertions;
     using Xunit;
+    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class GetOrganisationSchemeHandlerTests : SimpleUnitTestBase
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetSchemesDataAccess dataAccess;
-        private readonly IMap<Scheme, OrganisationSchemeData> schemeOrganisationMap;
-        private readonly IMap<ProducerBalancingScheme, OrganisationSchemeData> producerBalancingSchemeOrganisationMap;
+        private readonly IMap<Scheme, EntityIdDisplayNameData> schemeOrganisationMap;
+        private readonly IMap<ProducerBalancingScheme, EntityIdDisplayNameData> producerBalancingSchemeOrganisationMap;
         private GetOrganisationSchemeHandler handler;
 
         public GetOrganisationSchemeHandlerTests()
         {
             this.authorization = A.Fake<IWeeeAuthorization>();
             this.dataAccess = A.Fake<IGetSchemesDataAccess>();
-            this.schemeOrganisationMap = A.Fake<IMap<Scheme, OrganisationSchemeData>>();
-            this.producerBalancingSchemeOrganisationMap = A.Fake<IMap<ProducerBalancingScheme, OrganisationSchemeData>>();
+            this.schemeOrganisationMap = A.Fake<IMap<Scheme, EntityIdDisplayNameData>>();
+            this.producerBalancingSchemeOrganisationMap = A.Fake<IMap<ProducerBalancingScheme, EntityIdDisplayNameData>>();
 
             handler = new GetOrganisationSchemeHandler(dataAccess, schemeOrganisationMap, producerBalancingSchemeOrganisationMap, authorization);
         }
@@ -380,9 +381,9 @@
             return new GetOrganisationScheme(includePbs);
         }
 
-        private OrganisationSchemeData GetOrganisationSchemeData(string displayName, Guid organisationId)
+        private EntityIdDisplayNameData GetOrganisationSchemeData(string displayName, Guid organisationId)
         {
-            return new OrganisationSchemeData
+            return new EntityIdDisplayNameData
             {
                  DisplayName = displayName,
                  Id = organisationId

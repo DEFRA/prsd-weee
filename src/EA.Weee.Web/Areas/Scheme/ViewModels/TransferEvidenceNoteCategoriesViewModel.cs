@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -14,7 +15,7 @@
         [Display(Name = "Who would you like to transfer evidence to?")]
         public Guid? SelectedSchema { get; set; }
 
-        public IList<OrganisationSchemeData> SchemasToDisplay { get; set; }
+        public IList<EntityIdDisplayNameData> SchemasToDisplay { get; set; }
 
         public CategoryValues<CategoryBooleanViewModel> CategoryBooleanViewModels { get; set; }
 

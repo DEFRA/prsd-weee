@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.AatfEvidence;
@@ -12,10 +10,12 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Security;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes;
@@ -36,15 +36,19 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IMapper mapper;
         private readonly ConfigurationService configurationService;
+        private readonly ISessionService sessionService;
 
         public ManageEvidenceNotesController(IMapper mapper,
          BreadcrumbService breadcrumb,
          IWeeeCache cache,
-         Func<IWeeeClient> apiClient, ConfigurationService configurationService) : base(breadcrumb, cache)
+         Func<IWeeeClient> apiClient, 
+         ConfigurationService configurationService,
+         ISessionService sessionService) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
             this.configurationService = configurationService;
+            this.sessionService = sessionService;
         }
 
         [HttpGet]
@@ -98,7 +102,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId, int page = 1)
+        public async Task<ActionResult> ViewEvidenceNoteTransfer(Guid evidenceNoteId, int page = 1, bool openedInNewTab = false)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -109,9 +113,11 @@
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(result.TransferredOrganisationData.Id,
-                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User));
-
-                ViewBag.Page = page;
+                   result, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification], this.User)
+                {
+                    OpenedInNewTab = openedInNewTab,
+                    Page = page
+                });
 
                 return View(model);
             }
@@ -249,12 +255,42 @@
 
             var selectedComplianceYear = SelectedComplianceYear(complianceYearsList, manageEvidenceNoteViewModel);
 
-            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize));
+            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, 
+                allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
+                manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate,
+                manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy));
+
+            var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
+                    new SubmittedDateFilterBase(manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate));
+
+            var schemeData = await client.SendAsync(User.GetAccessToken(),
+               new GetOrganisationSchemeDataForFilterRequest(null, selectedComplianceYear));
+
+            var aatfData = await client.SendAsync(User.GetAccessToken(),
+                   new GetAllAatfsForComplianceYearRequest(selectedComplianceYear));
+
+            if (schemeData.Any())
+            {
+                sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
+            }
+
+            schemeData = sessionService.GetTransferSessionObject<List<EntityIdDisplayNameData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
+
+            var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
+                        new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true));
 
             var model = mapper.Map<ViewAllEvidenceNotesViewModel>(
-                new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
+                new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
+                complianceYearsList));
 
-            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(null, null, null, selectedComplianceYear, currentDate, complianceYearsList));
+            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(null, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate, complianceYearsList));
 
             return View("ViewAllEvidenceNotes", model);
         }
@@ -273,7 +309,14 @@
             var selectedComplianceYear = SelectedComplianceYear(complianceYearsList, manageEvidenceNoteViewModel);
 
             var notes = await client.SendAsync(User.GetAccessToken(), 
-                new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize));
+                new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear, pageNumber, 
+                configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
+                manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate,
+                manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy));
 
             var model = mapper.Map<ViewAllTransferNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));

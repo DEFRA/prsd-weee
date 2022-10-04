@@ -1,14 +1,19 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Attributes;
     using Constant;
     using Core.AatfEvidence;
     using Core.Constants;
     using Core.Helpers;
-    using Core.Scheme;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
     using Filters;
@@ -18,12 +23,6 @@
     using Requests;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Extensions;
     using ViewModels;
     using ViewModels.ManageEvidenceNotes;
     using Weee.Requests.AatfEvidence;
@@ -250,7 +249,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1, bool openedInNewTab = false)
         {
             await SetBreadcrumb(pcsId);
 
@@ -265,10 +264,10 @@
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
                     RedirectTab = redirectTab,
-                    SystemDateTime = currentDateTime
+                    SystemDateTime = currentDateTime,
+                    Page = page,
+                    OpenedInNewTab = openedInNewTab
                 });
-
-                ViewBag.Page = page;
 
                 return View("TransferredEvidence", model);
             }
@@ -407,7 +406,7 @@
             }
         }
 
-        private async Task<List<OrganisationSchemeData>> GetApprovedSchemes(Guid pcsId)
+        private async Task<List<EntityIdDisplayNameData>> GetApprovedSchemes(Guid pcsId)
         {
             using (var client = apiClient())
             {

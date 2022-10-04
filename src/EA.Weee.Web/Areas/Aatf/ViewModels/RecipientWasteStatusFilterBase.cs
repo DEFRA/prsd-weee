@@ -3,11 +3,13 @@
     using System;
     using System.Collections.Generic;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
 
     public class RecipientWasteStatusFilterBase
     {
-        public List<OrganisationSchemeData> RecipientList { get; set; }
+        public bool Internal { get; set; }
+
+        public List<EntityIdDisplayNameData> RecipientList { get; set; }
 
         public Guid? ReceivedId { get; set; }
 
@@ -15,12 +17,20 @@
 
         public NoteStatus? NoteStatus { get; set; }
 
-        public RecipientWasteStatusFilterBase(List<OrganisationSchemeData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus)
+        public Guid? SubmittedBy { get; set; }
+
+        public List<EntityIdDisplayNameData> SubmittedByList { get; set; }
+
+        public RecipientWasteStatusFilterBase(List<EntityIdDisplayNameData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus, 
+            Guid? submittedBy, List<EntityIdDisplayNameData> submittedByList, bool internalUser)
         {
             RecipientList = recipientList;
             ReceivedId = receivedId;
             WasteType = wasteType;
             NoteStatus = noteStatus;
+            SubmittedBy = submittedBy;
+            SubmittedByList = submittedByList;
+            Internal = internalUser;
         }
     }
 }

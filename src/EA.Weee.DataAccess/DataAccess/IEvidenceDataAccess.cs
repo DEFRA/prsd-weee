@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Organisation;
+    using EA.Weee.Domain.AatfReturn;
 
     public interface IEvidenceDataAccess
     {
@@ -56,6 +57,8 @@
         Task<List<Organisation>> GetRecipientOrganisations(Guid? organisationId, int complianceYear);
 
         Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear);
+
+        Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear);
 
         Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type);
     }
