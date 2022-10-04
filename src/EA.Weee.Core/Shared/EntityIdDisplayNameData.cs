@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Core.Scheme
+﻿namespace EA.Weee.Core.Shared
 {
     using System;
 
     [Serializable]
-    public class OrganisationSchemeData
+    public class EntityIdDisplayNameData
     {
         public Guid Id { get; set; }
 

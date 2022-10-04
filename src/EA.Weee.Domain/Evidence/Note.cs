@@ -149,6 +149,15 @@
             ApprovedRecipientSchemeName = name;
         }
 
+        public void SetApprovedTransfererAddress(string name, string address)
+        {
+            Condition.Requires(address).IsNotNullOrWhiteSpace();
+            Condition.Requires(name).IsNotNullOrWhiteSpace();
+
+            ApprovedTransfererAddress = address;
+            ApprovedTransfererSchemeName = name;
+        }
+
         public virtual Guid OrganisationId { get; set; }
 
         public virtual Guid? AatfId { get; set; }
