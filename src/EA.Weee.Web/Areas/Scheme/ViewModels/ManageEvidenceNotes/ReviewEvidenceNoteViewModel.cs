@@ -49,8 +49,8 @@
             new Dictionary<string, string>
             {
                 { ApproveEvidenceNote, null },
-                { RejectEvidenceNote, "Reject an evidence note if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note" },
-                { ReturnEvidenceNote, "Return an evidence note if there are some minor updates to be made by the AATF" }
+                { RejectEvidenceNote, "Reject an evidence note to have it replaced. If the note has been sent to you by mistake, it must be rejected." },
+                { ReturnEvidenceNote, "Return an evidence note to have amendments made to it." }
             };
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
