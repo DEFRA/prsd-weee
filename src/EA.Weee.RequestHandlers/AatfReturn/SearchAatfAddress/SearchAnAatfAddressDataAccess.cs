@@ -63,7 +63,7 @@
                                                        x.Organisation.Name.Contains(searchAatfAddress.SearchTerm)) &&
                                                       (!(aatfIdList.Contains(x.Id)) && x.ComplianceYear == selectedAatf.ComplianceYear && x.AatfStatus.Value == AatfStatus.Approved.Value))
 
-                                         .Select(x => new ReturnAatfAddressResult { SearchTermId = x.Id, SearchTermName = (x.Name + "  " + x.ApprovalNumber), OrganisationId = x.Organisation.Id })
+                                         .Select(x => new ReturnAatfAddressResult { SearchTermId = x.Id, SearchTermName = (x.Name + " - " + x.ApprovalNumber), OrganisationId = x.Organisation.Id })
                                          .Take(25)
                                          .OrderBy(x => x.SearchTermName)
                                          .ToListAsync();
