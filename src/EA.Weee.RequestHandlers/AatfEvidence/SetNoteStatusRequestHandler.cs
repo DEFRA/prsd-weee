@@ -1,28 +1,32 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
+    using Core.AatfEvidence;
+    using Core.Shared;
     using DataAccess;
+    using EA.Weee.Core.Helpers;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Security;
     using System;
     using System.Threading.Tasks;
-    using Core.AatfEvidence;
-    using Core.Shared;
     using DataAccess.DataAccess;
     using Requests.AatfEvidence;
 
     public class SetNoteStatusRequestHandler : SaveNoteRequestBase, IRequestHandler<SetNoteStatusRequest, Guid>
     {
         private readonly IAddressUtilities addressUtilities;
+        private readonly IEvidenceDataAccess evidenceDataAccess;
 
         public SetNoteStatusRequestHandler(
             WeeeContext context,
             IUserContext userContext,
             IWeeeAuthorization authorization, 
             ISystemDataDataAccess systemDataDataAccess,
-            IAddressUtilities addressUtilities) : base(context, userContext, authorization, systemDataDataAccess)
+            IAddressUtilities addressUtilities,
+            IEvidenceDataAccess evidenceDataAccess) : base(context, userContext, authorization, systemDataDataAccess)
         {
             this.addressUtilities = addressUtilities;
+            this.evidenceDataAccess = evidenceDataAccess;
         }
 
         public async Task<Guid> HandleAsync(SetNoteStatusRequest message)
@@ -38,6 +42,8 @@
             var currentDate = await SystemDataDataAccess.GetSystemDateTime();
 
             ValidToSave(evidenceNote.Recipient, evidenceNote.ComplianceYear, currentDate);
+
+            evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(evidenceNote, message.Status.ToDomainEnumeration<Domain.Evidence.NoteStatus>(), evidenceNote.NoteType);
 
             if (message.Status == NoteStatus.Approved && evidenceNote.Recipient.IsBalancingScheme == false)
             {

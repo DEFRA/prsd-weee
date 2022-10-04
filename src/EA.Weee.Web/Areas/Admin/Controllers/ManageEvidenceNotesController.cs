@@ -273,13 +273,6 @@
             var aatfData = await client.SendAsync(User.GetAccessToken(),
                    new GetAllAatfsForComplianceYearRequest(selectedComplianceYear));
 
-            if (schemeData.Any())
-            {
-                sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
-            }
-
-            schemeData = sessionService.GetTransferSessionObject<List<EntityIdDisplayNameData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
-
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
