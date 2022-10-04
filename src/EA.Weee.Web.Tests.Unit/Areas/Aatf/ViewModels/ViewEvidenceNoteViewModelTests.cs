@@ -36,7 +36,7 @@
         [Theory]
         [InlineData("ReferenceDisplay", "Reference ID")]
         [InlineData("ProtocolDisplay", "Actual or protocol")]
-        [InlineData("WasteDisplay", "Type of waste")]
+        [InlineData("WasteDisplay", "Obligation type")]
         [InlineData("ComplianceYearDisplay", "Compliance year")]
         public void ViewEvidenceNoteViewModel_Properties_ShouldHaveDisplayAttributes(string property, string display)
         {
