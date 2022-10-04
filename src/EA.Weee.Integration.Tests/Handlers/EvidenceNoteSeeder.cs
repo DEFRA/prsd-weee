@@ -17,11 +17,9 @@
     using EA.Weee.Domain.Lookup;
     using NUnit.Framework;
     using NUnit.Specifications;
-    using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
-    using Requests.Admin.Obligations;
     using Requests.Shared;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
 
@@ -287,14 +285,14 @@
                                     noteTonnage14.Id, NextTonnage(tonnageRandom, noteTonnage14.Received - 3), NextTonnage(tonnageRandom, noteTonnage14.Reused - 2)),
                             };
 
-                            var transferNoteOrg = OrganisationDbSetup.Init().Create();
+                            var filterSchemes = schemesList.Where(s => s.OrganisationId != organisation.Id).ToList();
+                            var randomTransfer = filterSchemes.ElementAt(randomRecipient.Next(0, filterSchemes.Count - 1));
 
-                            TransferEvidenceNoteDbSetup.Init().With(t =>
-                                {
-                                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
-                                }).WithTonnages(newTransferNoteTonnage1)
-                                .WithOrganisation(transferNoteOrg.Id)
+                            TransferEvidenceNoteDbSetup.Init()
+                                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
+                                .WithTonnages(newTransferNoteTonnage1)
+                                .WithOrganisation(randomTransfer.OrganisationId)
                                 .WithWasteType(WasteType.HouseHold)
                                 .WithComplianceYear(year)
                                 .WithRecipient(organisation.Id)
@@ -375,14 +373,13 @@
                             var filterSchemes = schemesList.Where(s => s.OrganisationId != organisation.Id).ToList();
                             var recipient = filterSchemes.ElementAt(randomRecipient.Next(0, filterSchemes.Count - 1));
 
-                            TransferEvidenceNoteDbSetup.Init().With(t =>
-                            {
-                                t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                                t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
-                            }).WithTonnages(newTransferNoteTonnage1)
+                            TransferEvidenceNoteDbSetup.Init()
+                                .WithTonnages(newTransferNoteTonnage1)
                                 .WithOrganisation(organisation.Id)
                                 .WithWasteType(WasteType.HouseHold)
                                 .WithComplianceYear(year)
+                                .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                                .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                                 .WithRecipient(recipient.OrganisationId)
                                 .Create();
                         }

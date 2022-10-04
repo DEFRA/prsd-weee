@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
+    using System.ComponentModel;
     using Core.AatfEvidence;
     using Core.Helpers;
     using Infrastructure;
@@ -28,6 +29,8 @@
 
         public string SubmittedBy { get; set; }
 
+        public string TransferredTo { get; set; }
+
         public Guid Id { get; set; }
 
         public NoteType Type { get; set; }
@@ -36,6 +39,7 @@
 
         public bool DisplayEditLink { get; set; }
 
+        [DisplayName("Reference ID")]
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{ReferenceId}";
 
         public string SubmittedDateDisplay => SubmittedDate.HasValue ? SubmittedDate.Value.ToShortDateString() : "-";
@@ -64,46 +68,7 @@
             }
         }
 
-        public string SchemeViewRouteName
-        {
-            get
-            {
-                if (Type == NoteType.Transfer)
-                {
-                    switch (Status)
-                    {
-                        case NoteStatus.Draft:
-                            return SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
-                        case NoteStatus.Submitted:
-                            return SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName;
-                        case NoteStatus.Approved:
-                            return SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName;
-                        case NoteStatus.Rejected:
-                            return SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName;
-                        case NoteStatus.Returned:
-                            return SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName;
-                        case NoteStatus.Void:
-                            return SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName;
-                    }
-                }
-
-                switch (Status)
-                {
-                    case NoteStatus.Approved:
-                        return SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName;
-                    case NoteStatus.Rejected:
-                        return SchemeTransferEvidenceRedirect.ViewRejectedEvidenceNoteRouteName;
-                    case NoteStatus.Returned:
-                        return SchemeTransferEvidenceRedirect.ViewReturnedEvidenceNoteRouteName;
-                    case NoteStatus.Submitted:
-                        return SchemeTransferEvidenceRedirect.ViewSubmittedEvidenceNoteRouteName;
-                    case NoteStatus.Void:
-                        return SchemeTransferEvidenceRedirect.ViewVoidedEvidenceNoteRouteName;
-                }
-
-                return string.Empty;
-            }
-        }
+        public string SchemeViewRouteName => SchemeTransferEvidenceRedirect.SchemeViewRouteName(Type, Status);
 
         public string TotalReceived { get; set; }
     }

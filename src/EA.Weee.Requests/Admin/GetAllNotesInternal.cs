@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
+    using System;
     using System.Collections.Generic;
     using AatfEvidence;
     using Core.AatfEvidence;
@@ -8,11 +9,29 @@
 
     public class GetAllNotesInternal : EvidenceNoteFilterBaseRequest
     {
+        public DateTime? StartDateSubmittedFilter { get; set; }
+
+        public DateTime? EndDateSubmittedFilter { get; set; }
+
+        public Guid? RecipientIdFilter { get; set; }
+
+        public NoteStatus? NoteStatusFilter { get; set; }
+
+        public WasteType? ObligationTypeFilter { get; set; }
+
+        public Guid? SubmittedByAatfIdFilter { get; set; }
+
         public GetAllNotesInternal(List<NoteType> noteTypeFilterList, 
             List<NoteStatus> allowedStatuses, 
             int complianceYear,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            DateTime? startDateSubmitted,
+            DateTime? endDateSubmitted,
+            Guid? recipientId,
+            NoteStatus? noteStatus,
+            WasteType? obligationType,
+            Guid? submittedAatfIdBy)
         {
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
@@ -26,6 +45,12 @@
             ComplianceYear = complianceYear;
             PageNumber = pageNumber;
             PageSize = pageSize;
+            StartDateSubmittedFilter = startDateSubmitted;
+            EndDateSubmittedFilter = endDateSubmitted;
+            RecipientIdFilter = recipientId;
+            NoteStatusFilter = noteStatus;
+            ObligationTypeFilter = obligationType;
+            SubmittedByAatfIdFilter = submittedAatfIdBy;
         }
     }
 }

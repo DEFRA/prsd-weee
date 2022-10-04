@@ -33,7 +33,7 @@
 
             //assert
             result.First().Id.Should().Be(data.First().Id);
-            result.First().Reference.Should().Be(data.First().Reference);
+            result.First().ReferenceId.Should().Be(data.First().Reference);
             result.First().Status.Should().Be(data.First().Status);
             result.First().Type.Should().Be(data.First().Type);
             result.First().TransferredTo.Should().Be(data.First().TransferredTo);

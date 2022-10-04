@@ -505,7 +505,7 @@
         }
 
         [Fact]
-        public void SetApprovedRecipientAddress_GivenNameAndAddress_ApprovedDetailsShouldBeSet()
+        public void SetApprovedRecipientAddress_GivenNameAndAddress_ApprovedRecipientDetailsShouldBeSet()
         {
             //arrange
             var note = CreateNote();
@@ -518,6 +518,80 @@
             //assert
             note.ApprovedRecipientSchemeName.Should().Be(schemeName);
             note.ApprovedRecipientAddress.Should().Be(address);
+        }
+
+        // ---
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void SetApprovedTransfererAddress_GivenEmptyAddress_ArgumentExceptionExpected(string address)
+        {
+            //arrange
+            var note = CreateTransferNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedTransfererAddress("name", address));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void SetApprovedTransfererAddress_GivenEmptyName_ArgumentExceptionExpected(string name)
+        {
+            //arrange
+            var note = CreateTransferNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedTransfererAddress(name, "address"));
+
+            //assert
+            exception.Should().BeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void SetApprovedTransfererAddress_GivenNullName_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var note = CreateTransferNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedTransfererAddress(null, "address"));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void SetApprovedTransfererAddress_GivenNullAddress_ArgumentNullExceptionExpected()
+        {
+            //arrange
+            var note = CreateTransferNote();
+
+            //act
+            var exception = Record.Exception(() => note.SetApprovedTransfererAddress("name", null));
+
+            //assert
+            exception.Should().BeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void SetApprovedTransfererAddress_GivenNameAndAddress_ApprovedTransfererDetailsShouldBeSet()
+        {
+            //arrange
+            var note = CreateTransferNote();
+            const string address = "address";
+            const string schemeName = "name";
+
+            //act
+            note.SetApprovedTransfererAddress(schemeName, address);
+
+            //assert
+            note.ApprovedTransfererSchemeName.Should().Be(schemeName);
+            note.ApprovedTransfererAddress.Should().Be(address);
         }
 
         private void ShouldBeEqualTo(Note result, DateTime date)
