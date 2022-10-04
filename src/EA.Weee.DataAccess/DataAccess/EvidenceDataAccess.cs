@@ -334,7 +334,7 @@
             if (status.Equals(NoteStatus.Submitted) && type.Equals(NoteType.TransferNote))
             {
                 var itemsToRemove =
-                    note.NoteTransferTonnage.Where(ntt => (ntt.Received == 0.00m && ntt.Reused == 0.00m) || (ntt.Received == null && ntt.Reused == null));
+                    note.NoteTransferTonnage.Where(ntt => (ntt.Received == 0.00m || ntt.Received == null));
 
                 genericDataAccess.RemoveMany(itemsToRemove);
             }

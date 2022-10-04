@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Helpers;
@@ -67,14 +68,7 @@
 
                     if (request.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
                     {
-                        for (int i = transferNoteTonnages.Count - 1; i >= 0; i--)
-                        {
-                            var noteTonnage = transferNoteTonnages[i];
-                            if ((noteTonnage.Reused == 0.00m && noteTonnage.Received == 0.00m) || (noteTonnage.Reused == null && noteTonnage.Received == null))
-                            {
-                                transferNoteTonnages.RemoveAt(i);
-                            }
-                        }
+                        DeleteZeroOrNullTonnage(transferNoteTonnages);
                     }
 
                     note = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
@@ -91,6 +85,20 @@
 
                 return note.Id;
             }
+        }
+
+        private List<NoteTransferTonnage> DeleteZeroOrNullTonnage(List<NoteTransferTonnage> transferNoteTonnages)
+        {
+            for (int i = transferNoteTonnages.Count - 1; i >= 0; i--)
+            {
+                var noteTonnage = transferNoteTonnages[i];
+                if (noteTonnage.Received == 0.00m || noteTonnage.Received == null)
+                {
+                    transferNoteTonnages.RemoveAt(i);
+                }
+            }
+
+            return transferNoteTonnages;
         }
     }
 }
