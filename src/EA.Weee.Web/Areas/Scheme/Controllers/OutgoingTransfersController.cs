@@ -206,7 +206,7 @@
                 {
                     OrganisationId = pcsId,
                     ReturnToView = returnToView,
-                    RedirectTab = redirectTab,
+                    RedirectTab = redirectTab
                 });
 
                 return this.View("SubmittedTransfer", model);
