@@ -53,7 +53,7 @@
         public async Task HandleAsync_GivenNoOrganisationAccess_ShouldThrowSecurityException()
         {
             //arrange
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyAatfAccess().Build();
             handler = new GetOrganisationSchemeDataForFilterRequestHandler(authorization, noteDataAccess);
 
             //act
@@ -70,7 +70,7 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId.Value))
+            A.CallTo(() => weeeAuthorization.EnsureAatfHasOrganisationAccess(request.AatfId.Value))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -105,7 +105,7 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => noteDataAccess.GetRecipientOrganisations(request.OrganisationId,
+            A.CallTo(() => noteDataAccess.GetRecipientOrganisations(request.AatfId,
                 request.ComplianceYear)).MustHaveHappenedOnceExactly();
         }
 
