@@ -31,5 +31,9 @@
         public string VoidedReason { get; set; }
 
         public WasteType? WasteType { get; set; }
+
+        public string ApprovedTransfererDetails { get; set; }
+
+        public string ApprovedRecipientDetails { get; set; }
     }
 }

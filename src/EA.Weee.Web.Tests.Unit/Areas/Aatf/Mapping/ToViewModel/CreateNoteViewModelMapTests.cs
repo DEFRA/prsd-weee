@@ -6,6 +6,7 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using FluentAssertions;
     using Prsd.Core.Helpers;
     using Web.Areas.Aatf.Mappings.ToViewModel;
@@ -37,7 +38,7 @@
         public void Map_GivenOrganisationGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(TestFixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.Empty, Guid.NewGuid(), TestFixture.Create<int>()));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(TestFixture.CreateMany<EntityIdDisplayNameData>().ToList(), null, Guid.Empty, Guid.NewGuid(), TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -47,7 +48,7 @@
         public void Map_GivenAatfIdGuidIsEmpty_ArgumentNullExceptionExpected()
         {
             //act
-            var exception = Record.Exception(() => new CreateNoteMapTransfer(TestFixture.CreateMany<OrganisationSchemeData>().ToList(), null, Guid.NewGuid(), Guid.Empty, TestFixture.Create<int>()));
+            var exception = Record.Exception(() => new CreateNoteMapTransfer(TestFixture.CreateMany<EntityIdDisplayNameData>().ToList(), null, Guid.NewGuid(), Guid.Empty, TestFixture.Create<int>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -57,7 +58,7 @@
         public void Map_GivenTransferWithoutViewModel_CreateNoteViewModelShouldBeReturned()
         {
             //arrange
-            var schemes = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var complianceYear = TestFixture.Create<int>();
@@ -83,7 +84,7 @@
         public void Map_GivenTransferWithViewModel_CreateNoteViewModelShouldBeReturned()
         {
             //arrange
-            var schemes = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var complianceYear = TestFixture.Create<int>();

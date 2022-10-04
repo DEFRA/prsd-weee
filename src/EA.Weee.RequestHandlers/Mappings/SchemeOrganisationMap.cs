@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Core.Scheme;
     using CuttingEdge.Conditions;
     using Domain.Scheme;
+    using EA.Weee.Core.Shared;
     using Prsd.Core.Mapper;
 
-    public class SchemeOrganisationMap : IMap<Scheme, OrganisationSchemeData>
+    public class SchemeOrganisationMap : IMap<Scheme, EntityIdDisplayNameData>
     {
         private readonly IMapper mapper;
 
@@ -14,11 +14,11 @@
             this.mapper = mapper;
         }
 
-        public OrganisationSchemeData Map(Scheme source)
+        public EntityIdDisplayNameData Map(Scheme source)
         {
             Condition.Requires(source).IsNotNull();
 
-            return new OrganisationSchemeData
+            return new EntityIdDisplayNameData
             {
                 DisplayName = source.SchemeName,
                 Id = source.OrganisationId
