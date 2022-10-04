@@ -22,10 +22,10 @@
 
         public async Task<List<EntityIdDisplayNameData>> HandleAsync(GetOrganisationSchemeDataForFilterRequest request)
         {
-            if (request.OrganisationId.HasValue)
+            if (request.AatfId.HasValue)
             {
                 weeeAuthorization.EnsureCanAccessExternalArea();
-                weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId.Value);
+                weeeAuthorization.EnsureAatfHasOrganisationAccess(request.AatfId.Value);
             }
             else
             {
@@ -33,7 +33,7 @@
             }
 
             var organisations =
-                await evidenceDataAccess.GetRecipientOrganisations(request.OrganisationId, request.ComplianceYear);
+                await evidenceDataAccess.GetRecipientOrganisations(request.AatfId, request.ComplianceYear);
 
             return organisations.Select(x =>
                     new EntityIdDisplayNameData() { DisplayName = x.IsBalancingScheme ? x.OrganisationName : x.Scheme.SchemeName, Id = x.Id })

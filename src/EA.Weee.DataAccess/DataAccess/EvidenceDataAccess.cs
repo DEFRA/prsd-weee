@@ -295,7 +295,7 @@
             }
 
             var itemsToRemove =
-                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId));
+                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId) || (ntt.Received == 0.00m || ntt.Received == null) && status.Equals(NoteStatus.Submitted));
 
             genericDataAccess.RemoveMany(itemsToRemove);
             
@@ -306,13 +306,31 @@
             return note;
         }
 
-        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? organisationId, int complianceYear)
+        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, int complianceYear)
         {
             var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear);
 
-            if (organisationId.HasValue)
+            if (aatfId.HasValue)
             {
-                notes = notes.Where(n => n.OrganisationId == organisationId);
+                var groupedAatf = await context.Aatfs.Where(a => a.Id == aatfId.Value).FirstOrDefaultAsync();
+
+                if (groupedAatf != null)
+                {
+                    var aatf = await context.Aatfs.Where(a => a.AatfId == groupedAatf.AatfId && a.ComplianceYear == complianceYear).FirstOrDefaultAsync();
+
+                    if (aatf != null)
+                    {
+                        notes = notes.Where(n => n.AatfId == aatf.Id);
+                    }
+                    else
+                    {
+                        return new List<Organisation>();
+                    }
+                }
+                else
+                {
+                    return new List<Organisation>();
+                }
             }
 
             return await notes.Select(n => n.Recipient)
@@ -327,6 +345,19 @@
                                n.RecipientId == recipientId && 
                                n.Status.Value == NoteStatus.Approved.Value &&
                                n.WasteType.Value == WasteType.HouseHold);
+        }
+
+        public Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type)
+        {
+            if (status.Equals(NoteStatus.Submitted) && type.Equals(NoteType.TransferNote))
+            {
+                var itemsToRemove =
+                    note.NoteTransferTonnage.Where(ntt => (ntt.Received == 0.00m || ntt.Received == null));
+
+                genericDataAccess.RemoveMany(itemsToRemove);
+            }
+
+            return note;
         }
     }
 }

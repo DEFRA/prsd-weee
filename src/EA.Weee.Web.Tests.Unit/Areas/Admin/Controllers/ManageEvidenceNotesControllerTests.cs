@@ -511,7 +511,7 @@
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == model.SelectedComplianceYear &&
-                     g.OrganisationId == null))).MustHaveHappenedOnceExactly();
+                     g.AatfId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -529,30 +529,7 @@
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == complianceYears[0] &&
-                     g.OrganisationId == null))).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("view-all-evidence-notes")]
-        public async void IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GivenSchemeOrganisationData_SessionObjectShouldBeSet(string tab)
-        {
-            // arrange
-            var organisationSchemeData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
-
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>._))
-                .Returns(organisationSchemeData);
-
-            // act
-            await ManageEvidenceController.Index(tab);
-
-            // assert
-            A.CallTo(() =>
-             SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<EntityIdDisplayNameData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
-
-            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session,
-                   A<List<EntityIdDisplayNameData>>.That.IsSameSequenceAs(organisationSchemeData),
-                          SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+                     g.AatfId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
