@@ -5,7 +5,6 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.AatfEvidence;
     using Core.Shared;
     using DataAccess;
     using DataAccess.DataAccess;
@@ -455,7 +454,7 @@
 
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var recipient = A.Fake<Organisation>();
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(null);
@@ -480,7 +479,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var recipient = A.Fake<Organisation>();
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
@@ -506,7 +505,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var evidenceNote = new Note();
             var address = TestFixture.Create<string>();
@@ -546,7 +545,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_Calls_DeleteZeroTonnageFromSubmittedTransferNote_Once()
+        public async void HandleAsync_Calls_DeleteZeroTonnageFromSubmittedTransferNote_InTheCorrectOrder()
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
@@ -585,7 +584,10 @@
             await handler.HandleAsync(message);
 
             // Assert
-            A.CallTo(() => evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(A<Note>._, A<NoteStatus>._, A<Domain.Evidence.NoteType>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(A<Note>._, A<NoteStatus>._, A<Domain.Evidence.NoteType>._))
+                .MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => context.SaveChangesAsync())
+                .MustHaveHappenedOnceExactly());
         }
     }
 }
