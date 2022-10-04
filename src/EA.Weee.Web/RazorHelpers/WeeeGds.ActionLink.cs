@@ -6,7 +6,7 @@
     {
         public MvcHtmlString ActionLinkToNewTab(string linkText, string url, string additionalMessage = null)
         {
-            var span = $"{linkText}<span class=\"govuk-visually-hidden\">{additionalMessage} This link opens in a new browser window</span>";
+            var span = $"{linkText}<span class=\"govuk-visually-hidden\">{additionalMessage} This link opens in a new tab</span>";
 
             var tagBuilder = new TagBuilder("a");
             tagBuilder.Attributes.Add("href", url);
