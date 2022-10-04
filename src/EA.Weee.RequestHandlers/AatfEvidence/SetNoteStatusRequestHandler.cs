@@ -39,11 +39,11 @@
                 ? evidenceNote.Organisation.Id
                 : evidenceNote.Recipient.Id);
 
-            evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(evidenceNote, message.Status.ToDomainEnumeration<Domain.Evidence.NoteStatus>(), evidenceNote.NoteType);
-
             var currentDate = await SystemDataDataAccess.GetSystemDateTime();
 
             ValidToSave(evidenceNote.Recipient, evidenceNote.ComplianceYear, currentDate);
+
+            evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(evidenceNote, message.Status.ToDomainEnumeration<Domain.Evidence.NoteStatus>(), evidenceNote.NoteType);
 
             if (message.Status == NoteStatus.Approved && evidenceNote.Recipient.IsBalancingScheme == false)
             {
