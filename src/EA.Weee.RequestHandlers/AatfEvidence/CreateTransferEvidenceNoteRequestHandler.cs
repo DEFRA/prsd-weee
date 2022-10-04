@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Helpers;
@@ -65,6 +66,11 @@
                         t.FirstTonnage,
                         t.SecondTonnage)).ToList();
 
+                    if (request.Status.Equals(Core.AatfEvidence.NoteStatus.Submitted))
+                    {
+                        DeleteZeroOrNullTonnage(transferNoteTonnages);
+                    }
+
                     note = await evidenceDataAccess.AddTransferNote(organisation, recipientOrganisation,
                         transferNoteTonnages, request.Status.ToDomainEnumeration<NoteStatus>(), request.ComplianceYear,
                         UserContext.UserId.ToString(), CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate));
@@ -79,6 +85,20 @@
 
                 return note.Id;
             }
+        }
+
+        private List<NoteTransferTonnage> DeleteZeroOrNullTonnage(List<NoteTransferTonnage> transferNoteTonnages)
+        {
+            for (int i = transferNoteTonnages.Count - 1; i >= 0; i--)
+            {
+                var noteTonnage = transferNoteTonnages[i];
+                if (noteTonnage.Received == 0.00m || noteTonnage.Received == null)
+                {
+                    transferNoteTonnages.RemoveAt(i);
+                }
+            }
+
+            return transferNoteTonnages;
         }
     }
 }
