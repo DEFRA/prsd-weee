@@ -9,6 +9,7 @@
     using Core.Helpers;
     using Core.Scheme;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
     using EA.Weee.Web.Areas.Shared.ToViewModels;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -69,7 +70,7 @@
             //assert
             foreach (var data in schemeData)
             {
-                result.SchemeList.Should().ContainEquivalentOf(new OrganisationSchemeData()
+                result.SchemeList.Should().ContainEquivalentOf(new EntityIdDisplayNameData()
                 {
                     DisplayName = data.SchemeName,
                     Id = data.Id

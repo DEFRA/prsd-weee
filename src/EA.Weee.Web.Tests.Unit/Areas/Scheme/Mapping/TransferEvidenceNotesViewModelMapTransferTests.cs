@@ -5,6 +5,7 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using FluentAssertions;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.ViewModels;
@@ -136,7 +137,7 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenTransferCategoryConstructorValues_PropertiesShouldBeSet()
         {
             //arrange
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             var organisationId = TestFixture.Create<Guid>();
 
@@ -154,7 +155,7 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenTransferCategoryConstructorValuesWithExistingModel_PropertiesShouldBeSet()
         {
             //arrange
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
             var organisationId = TestFixture.Create<Guid>();
             var model = TestFixture.Build<TransferEvidenceNoteCategoriesViewModel>()
@@ -174,7 +175,7 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenCategoryConstructorAndTransferNoteDataIsNull_ArgumentNullExceptionExpected()
         {
             //arrange
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var organisationId = TestFixture.Create<Guid>();
 
             //act
@@ -202,7 +203,7 @@
         public void TransferEvidenceNotesViewModelMapTransfer_GivenCategoryConstructorAndOrganisationIdIsEmpty_ArgumentExceptionExpected()
         {
             //arrange
-            var recipientData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var recipientData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
 
             //act

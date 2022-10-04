@@ -8,6 +8,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Tests.Core.DataHelpers;
     using EA.Weee.Web.Areas.Scheme.Controllers;
@@ -328,10 +329,10 @@
         public async Task TransferEvidenceNoteGet_GivenSchemesList_ModelSchemesShouldBeSet()
         {
             // arrange
-            var schemeData = new List<OrganisationSchemeData>()
+            var schemeData = new List<EntityIdDisplayNameData>()
             {
-                TestFixture.Build<OrganisationSchemeData>().With(s => s.Id, organisationId).Create(),
-                TestFixture.Create<OrganisationSchemeData>(),
+                TestFixture.Build<EntityIdDisplayNameData>().With(s => s.Id, organisationId).Create(),
+                TestFixture.Create<EntityIdDisplayNameData>(),
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
 
@@ -503,10 +504,10 @@
             {
                 OrganisationId = organisationId
             };
-            var schemeData = new List<OrganisationSchemeData>()
+            var schemeData = new List<EntityIdDisplayNameData>()
             {
-                TestFixture.Build<OrganisationSchemeData>().With(s => s.Id, organisationId).Create(),
-                TestFixture.Create<OrganisationSchemeData>(),
+                TestFixture.Build<EntityIdDisplayNameData>().With(s => s.Id, organisationId).Create(),
+                TestFixture.Create<EntityIdDisplayNameData>(),
             };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemeData);
             AddModelError();

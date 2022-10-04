@@ -9,7 +9,7 @@
     using AutoFixture;
     using Constant;
     using Core.AatfEvidence;
-    using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Web.ApiClient;
@@ -101,7 +101,7 @@
         {
             //arrange
             var complianceYear = Fixture.Create<int>();
-            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //act
@@ -175,7 +175,7 @@
         public async Task CreateEvidenceNotePost_GivenInvalidModel_ViewModelMapperShouldBeCalled()
         {
             //arrange
-            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
             var model = A.Dummy<EditEvidenceNoteViewModel>();
             AddModelError();
@@ -403,7 +403,7 @@
             var model = ValidModel();
             A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
 
-            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             var complianceYear = Fixture.Create<int>();
@@ -423,7 +423,7 @@
         public async Task CreateEvidenceNoteGet_GivenFalseReturnFromCopyPaste_Should_CallMapperWithoutExistingModel()
         {
             //Arrange
-            var schemes = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             var complianceYear = Fixture.Create<int>();

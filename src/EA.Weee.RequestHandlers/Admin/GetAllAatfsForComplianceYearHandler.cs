@@ -5,13 +5,13 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Requests.Admin;
     using Prsd.Core.Mediator;
     using Security;
 
-    public class GetAllAatfsForComplianceYearHandler : IRequestHandler<GetAllAatfsForComplianceYearRequest, List<OrganisationSchemeData>>
+    public class GetAllAatfsForComplianceYearHandler : IRequestHandler<GetAllAatfsForComplianceYearRequest, List<EntityIdDisplayNameData>>
     { 
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess evidenceDataAccess;
@@ -25,7 +25,7 @@
             this.mapper = mapper;
         }
 
-        public async Task<List<OrganisationSchemeData>> HandleAsync(GetAllAatfsForComplianceYearRequest message)
+        public async Task<List<EntityIdDisplayNameData>> HandleAsync(GetAllAatfsForComplianceYearRequest message)
         {
             authorization.EnsureCanAccessInternalArea();
 
@@ -36,7 +36,7 @@
                 throw new ArgumentException($"Aatfs not found for a compliance year {message.ComplianceYear}");
             }
 
-            var result = mapper.Map<List<Domain.AatfReturn.Aatf>, List<OrganisationSchemeData>>(listAatfs);
+            var result = mapper.Map<List<Domain.AatfReturn.Aatf>, List<EntityIdDisplayNameData>>(listAatfs);
 
             return result.OrderBy(n => n.DisplayName).ToListDynamic();
         }
