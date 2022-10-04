@@ -7,6 +7,8 @@
     using System.Web.Mvc;
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -492,6 +494,99 @@
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>.That.Matches(
                 g => status.SequenceEqual(g.AllowedStatuses)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async void IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GivenManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab)
+        {
+            // arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+              .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
+
+            // act
+            await ManageEvidenceController.Index(tab, model);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == model.SelectedComplianceYear &&
+                     g.OrganisationId == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async void IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GivenManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab)
+        {
+            // arrange
+            var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
+
+            // act
+            await ManageEvidenceController.Index(tab);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == complianceYears[0] &&
+                     g.OrganisationId == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async void IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GivenSchemeOrganisationData_SessionObjectShouldBeSet(string tab)
+        {
+            // arrange
+            var organisationSchemeData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>._))
+                .Returns(organisationSchemeData);
+
+            // act
+            await ManageEvidenceController.Index(tab);
+
+            // assert
+            A.CallTo(() =>
+             SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<EntityIdDisplayNameData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+
+            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session,
+                   A<List<EntityIdDisplayNameData>>.That.IsSameSequenceAs(organisationSchemeData),
+                          SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async void IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GivenManageEvidenceNoteViewModel_GetAllAatfsForComplianceYearRequest(string tab)
+        {
+            // arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+              .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
+
+            // act
+            await ManageEvidenceController.Index(tab, model);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllAatfsForComplianceYearRequest>.That.Matches(
+                g => g.ComplianceYear == model.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async void IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GivenManageEvidenceNoteViewModelIsNull_GetAllAatfsForComplianceYearRequest(string tab)
+        {
+            // arrange
+            var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
+
+            // act
+            await ManageEvidenceController.Index(tab);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllAatfsForComplianceYearRequest>.That.Matches(
+                g => g.ComplianceYear == complianceYears[0]))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
