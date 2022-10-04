@@ -110,6 +110,18 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> EvidenceAndObligationProgress()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            var model = new EvidenceAndObligationProgressViewModel();
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> ProducerDetails()
         {
             SetBreadcrumb();
@@ -441,6 +453,18 @@
             var data = new UTF8Encoding().GetBytes(fileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
+
+        private async Task PopulateFilters(EvidenceAndObligationProgressViewModel model)
+        {
+            var years = await FetchComplianceYearsForMemberRegistrations();
+            var schemes = await FetchSchemes();
+            var authorities = await FetchAuthorities();
+
+            model.ComplianceYears = new SelectList(years);
+            model.Schemes = new SelectList(schemes, "Id", "SchemeName");
+            model.AppropriateAuthorities = new SelectList(authorities, "Id", "Abbreviation");
+        }
+
 
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
