@@ -111,9 +111,9 @@
             result.HintItems.ElementAt(0).Key.Should().Be("Approve evidence note transfer");
             result.HintItems.ElementAt(0).Value.Should().BeNull();
             result.HintItems.ElementAt(1).Key.Should().Be("Reject evidence note transfer");
-            result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note transfer if the evidence has been sent to you by mistake or if there is a large number of updates to make that it is quicker to create a new evidence note transfer");
+            result.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note transfer to have it replaced. If the note has been sent to you by mistake, it must be rejected.");
             result.HintItems.ElementAt(2).Key.Should().Be("Return evidence note transfer");
-            result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note transfer if there are some minor updates");
+            result.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note transfer to have amendments made to it.");
         }
 
         [Fact]
