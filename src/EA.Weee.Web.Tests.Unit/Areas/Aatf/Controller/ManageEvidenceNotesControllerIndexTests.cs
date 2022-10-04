@@ -14,6 +14,7 @@
     using Core.Organisations;
     using Core.Scheme;
     using EA.Prsd.Core;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.ViewModels.Shared;
@@ -716,7 +717,7 @@
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>._)).Returns(noteData);
             A.CallTo(() => Mapper.Map<AllOtherManageEvidenceNotesViewModel>(A<EvidenceNotesViewModelTransfer>._)).Returns(allOtherNotes);
-            A.CallTo(() => SessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(ManageEvidenceController.Session,
+            A.CallTo(() => SessionService.GetTransferSessionObject<List<EntityIdDisplayNameData>>(ManageEvidenceController.Session,
                   SessionKeyConstant.FilterRecipientNameKey)).Returns(ordered);
 
             //act
@@ -787,7 +788,7 @@
             await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes));
 
             // assert
-           A.CallTo(() => SessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(ManageEvidenceController.Session,
+           A.CallTo(() => SessionService.GetTransferSessionObject<List<EntityIdDisplayNameData>>(ManageEvidenceController.Session,
                SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
         }
 
@@ -826,7 +827,7 @@
         public async void IndexGetWithViewAllOtherEvidenceNotesTabSelected_GivenSchemeOrganisationData_SessionObjectShouldBeSet()
         {
             // arrange
-            var organisationSchemeData = Fixture.CreateMany<OrganisationSchemeData>().ToList();
+            var organisationSchemeData = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>._))
                 .Returns(organisationSchemeData);
@@ -836,10 +837,10 @@
 
             // assert
             A.CallTo(() =>
-             SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<OrganisationSchemeData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+             SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<EntityIdDisplayNameData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
           
               A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, 
-                     A<List<OrganisationSchemeData>>.That.IsSameSequenceAs(organisationSchemeData), 
+                     A<List<EntityIdDisplayNameData>>.That.IsSameSequenceAs(organisationSchemeData), 
                             SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
         }
 
