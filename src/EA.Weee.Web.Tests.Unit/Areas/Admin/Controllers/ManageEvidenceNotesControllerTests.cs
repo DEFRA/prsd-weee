@@ -7,7 +7,7 @@
     using System.Web.Mvc;
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
@@ -538,7 +538,7 @@
         public async void IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GivenSchemeOrganisationData_SessionObjectShouldBeSet(string tab)
         {
             // arrange
-            var organisationSchemeData = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var organisationSchemeData = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>._))
                 .Returns(organisationSchemeData);
@@ -548,10 +548,10 @@
 
             // assert
             A.CallTo(() =>
-             SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<OrganisationSchemeData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
+             SessionService.SetTransferSessionObject(ManageEvidenceController.Session, An<List<EntityIdDisplayNameData>>.That.IsNotNull(), SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
 
             A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session,
-                   A<List<OrganisationSchemeData>>.That.IsSameSequenceAs(organisationSchemeData),
+                   A<List<EntityIdDisplayNameData>>.That.IsSameSequenceAs(organisationSchemeData),
                           SessionKeyConstant.FilterRecipientNameKey)).MustHaveHappenedOnceExactly();
         }
 

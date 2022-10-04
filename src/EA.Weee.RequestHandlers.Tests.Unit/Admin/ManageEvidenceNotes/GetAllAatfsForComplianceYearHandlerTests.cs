@@ -8,7 +8,7 @@
     using AutoFixture;
     using DataAccess.DataAccess;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.Admin;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin;
@@ -104,7 +104,7 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<List<AatfDomain>, List<OrganisationSchemeData>>(A<List<AatfDomain>>
+            A.CallTo(() => mapper.Map<List<AatfDomain>, List<EntityIdDisplayNameData>>(A<List<AatfDomain>>
                 .That.IsSameSequenceAs(aatfs))).MustHaveHappenedOnceExactly();
         }
 
@@ -118,11 +118,11 @@
 
             var aatfs = new List<AatfDomain> { aatf1, aatf2, aatf3 };
 
-            var listOrganisationSchemeData = new List<OrganisationSchemeData>();
+            var listOrganisationSchemeData = new List<EntityIdDisplayNameData>();
 
             foreach (var aatf in aatfs)
             {
-                listOrganisationSchemeData.Add(new OrganisationSchemeData { Id = aatf.Id, DisplayName = aatf.Name });
+                listOrganisationSchemeData.Add(new EntityIdDisplayNameData { Id = aatf.Id, DisplayName = aatf.Name });
             }
 
             listOrganisationSchemeData.OrderBy(d => d.DisplayName);
@@ -130,7 +130,7 @@
             A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear))
               .Returns(aatfs);
 
-              A.CallTo(() => mapper.Map<List<AatfDomain>, List<OrganisationSchemeData>>(A<List<AatfDomain>>._))
+              A.CallTo(() => mapper.Map<List<AatfDomain>, List<EntityIdDisplayNameData>>(A<List<AatfDomain>>._))
                 .Returns(listOrganisationSchemeData);
 
             // act

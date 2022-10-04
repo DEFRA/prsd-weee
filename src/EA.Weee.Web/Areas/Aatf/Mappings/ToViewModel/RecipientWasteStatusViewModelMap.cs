@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Web.Mvc;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
 
     public class RecipientWasteStatusViewModelMap : IMap<RecipientWasteStatusFilterBase, RecipientWasteStatusFilterViewModel>
@@ -31,7 +30,7 @@
             }
 
             viewModel.RecipientList = source.RecipientList != null ? new SelectList(source.RecipientList, "Id", "DisplayName") : 
-                new SelectList(new List<OrganisationSchemeData>(), "Id", "DisplayName");
+                new SelectList(new List<EntityIdDisplayNameData>(), "Id", "DisplayName");
 
             viewModel.NoteStatusList = new SelectList(sortedListOfNoteStatus, "Key", "Value");
             viewModel.WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value");
@@ -41,7 +40,7 @@
             viewModel.SubmittedBy = source.SubmittedBy;
 
             viewModel.SubmittedByList = source.SubmittedByList != null ? new SelectList(source.SubmittedByList, "Id", "DisplayName") :
-         new SelectList(new List<OrganisationSchemeData>(), "Id", "DisplayName");
+         new SelectList(new List<EntityIdDisplayNameData>(), "Id", "DisplayName");
 
             return viewModel;
         }

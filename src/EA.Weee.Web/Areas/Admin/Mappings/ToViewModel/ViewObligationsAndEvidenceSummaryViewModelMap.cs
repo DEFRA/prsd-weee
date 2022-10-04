@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Mappings.ToViewModel
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Admin.Obligation;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Weee.Web.Areas.Shared.ToViewModels;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
 
@@ -20,10 +21,10 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var schemeList = new List<Core.Scheme.OrganisationSchemeData>();
+            var schemeList = new List<EntityIdDisplayNameData>();
             if (source.SchemeData != null)
             {
-                schemeList = source.SchemeData.Select(s => new Core.Scheme.OrganisationSchemeData()
+                schemeList = source.SchemeData.Select(s => new EntityIdDisplayNameData()
                 {
                     DisplayName = s.SchemeName,
                     Id = s.Id

@@ -2,11 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using Prsd.Core.Mediator;
 
     [Serializable]
-    public class GetAllAatfsForComplianceYearRequest : IRequest<List<OrganisationSchemeData>>
+    public class GetAllAatfsForComplianceYearRequest : IRequest<List<EntityIdDisplayNameData>>
     {
         public int ComplianceYear { get; private set; }
 

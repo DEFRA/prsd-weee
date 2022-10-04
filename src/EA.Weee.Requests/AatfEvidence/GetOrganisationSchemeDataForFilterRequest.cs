@@ -2,11 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using Prsd.Core.Mediator;
 
     [Serializable]
-    public class GetOrganisationSchemeDataForFilterRequest : IRequest<List<OrganisationSchemeData>>
+    public class GetOrganisationSchemeDataForFilterRequest : IRequest<List<EntityIdDisplayNameData>>
     {
         public Guid? OrganisationId { get; private set; }
 
