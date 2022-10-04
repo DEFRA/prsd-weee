@@ -74,10 +74,10 @@
 
                                         <td class="govuk-table__cell">@note.Status.ToString() </td>
                                         <td class="govuk-table__cell">
-                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceId, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)<br />
+                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)<br />
                                             @if (Model.ManageEvidenceNoteViewModel.CanCreateEdit)
                                             {
-                                                @Html.NavigationRouteLink("Edit", "Edit evidence note with reference " + @note.ReferenceId, AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                                @Html.NavigationRouteLink("Edit", "Edit evidence note with reference " + @note.ReferenceDisplay, AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
                                             }
                                         </td>
                                     </tr>
