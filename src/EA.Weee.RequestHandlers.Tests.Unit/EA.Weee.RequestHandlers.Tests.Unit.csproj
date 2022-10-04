@@ -223,6 +223,7 @@
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandlerTests.cs" />
+    <Compile Include="Admin\ManageEvidenceNotes\GetAllAatfsForComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetAllNotesRequestHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandlerTests.cs" />
@@ -230,6 +231,7 @@
     <Compile Include="Admin\ManageEvidenceNotes\GetComplianceYearsFilterHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteForInternalUserRequestHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetEvidenceNoteTransfersForInternalUserRequestHandlerTests.cs" />
+    <Compile Include="Admin\ManageEvidenceNotes\Requests\GetAllAatfsForComplianceYearRequestTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetAllNotesTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetComplianceYearsFilterTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\Requests\GetEvidenceNoteForInternalUserRequestTests.cs" />

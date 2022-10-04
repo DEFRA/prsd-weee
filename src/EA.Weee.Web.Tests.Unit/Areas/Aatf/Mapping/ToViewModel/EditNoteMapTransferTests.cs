@@ -7,6 +7,7 @@
     using Core.AatfEvidence;
     using Core.Helpers;
     using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using FluentAssertions;
     using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Shared.Mapping;
@@ -36,7 +37,7 @@
             var noteData = TestFixture.Create<EvidenceNoteData>();
 
             //act
-            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<OrganisationSchemeData>(),
+            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<EntityIdDisplayNameData>(),
                 new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), noteData, TestFixture.Create<int>()));
 
             //assert
@@ -50,7 +51,7 @@
             var noteData = TestFixture.Create<EvidenceNoteData>();
 
             //act
-            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<OrganisationSchemeData>(),
+            var exception = Record.Exception(() => new EditNoteMapTransfer(new List<EntityIdDisplayNameData>(),
                 new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, noteData, TestFixture.Create<int>()));
 
             //assert
@@ -61,7 +62,7 @@
         public void GivenValues_PropertiesShouldBeSet()
         {
             //arrange
-            var schemes = TestFixture.CreateMany<OrganisationSchemeData>().ToList();
+            var schemes = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var evidenceModel = TestFixture.Create<EditEvidenceNoteViewModel>();
             var organisationId = TestFixture.Create<Guid>();
             var aatfId = TestFixture.Create<Guid>();
