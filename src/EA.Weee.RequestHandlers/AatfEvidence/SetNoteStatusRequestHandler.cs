@@ -53,6 +53,18 @@
                     organisationAddress.CountyOrRegion,
                     organisationAddress.Postcode,
                     null));
+
+                if (evidenceNote.NoteType == Domain.Evidence.NoteType.TransferNote)
+                {
+                    evidenceNote.SetApprovedTransfererAddress(evidenceNote.Organisation.Scheme.SchemeName, addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Organisation.Scheme.SchemeName,
+                        evidenceNote.Organisation.OrganisationName,
+                        organisationAddress.Address1,
+                        organisationAddress.Address2,
+                        organisationAddress.TownOrCity,
+                        organisationAddress.CountyOrRegion,
+                        organisationAddress.Postcode,
+                        null));
+                }
             }
 
             return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);
