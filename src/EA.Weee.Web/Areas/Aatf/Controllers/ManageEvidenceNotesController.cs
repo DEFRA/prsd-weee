@@ -383,14 +383,7 @@
                 new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var schemeData = await client.SendAsync(User.GetAccessToken(),
-                new GetOrganisationSchemeDataForFilterRequest(organisationId, selectedComplianceYear));
-
-            if (schemeData.Any())
-            {
-                sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
-            }
-
-            schemeData = sessionService.GetTransferSessionObject<List<EntityIdDisplayNameData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
+                new GetOrganisationSchemeDataForFilterRequest(aatfId, selectedComplianceYear));
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 

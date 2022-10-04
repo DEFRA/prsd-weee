@@ -132,19 +132,24 @@
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
 
                 var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation1, SystemTime.UtcNow.Year, false,
+                    false);
                 var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
                 var recipientOrganisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation2);
 
                 var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var aatfNoMatch = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation2, SystemTime.UtcNow.Year, false,
+                    false);
+
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
 
-                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
-                var note2NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: organisation1);
-                var note3NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2, organisation: organisation1);
-                var note4NoMatchOrganisation = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation2);
-                var note5Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation2);
+                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, aatf: aatf, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
+                var note2NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1, aatf: aatf, organisation: organisation1);
+                var note3NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2, aatf: aatf, organisation: organisation1);
+                var note4NoMatchOrganisation = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, aatf: aatfNoMatch, organisation: organisation2);
+                var note5Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, aatf: aatf, organisation: organisation1, recipientOrganisation: recipientOrganisation2);
 
                 // act
                 context.Schemes.Add(scheme1);
@@ -160,7 +165,7 @@
 
                 await context.SaveChangesAsync();
 
-                var recipientList = await dataAccess.GetRecipientOrganisations(organisation1.Id, SystemTime.UtcNow.Year);
+                var recipientList = await dataAccess.GetRecipientOrganisations(aatf.Id, SystemTime.UtcNow.Year);
 
                 // assert
                 recipientList.Count.Should().Be(2);

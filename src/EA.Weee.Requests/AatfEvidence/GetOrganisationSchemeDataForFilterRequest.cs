@@ -8,13 +8,13 @@
     [Serializable]
     public class GetOrganisationSchemeDataForFilterRequest : IRequest<List<EntityIdDisplayNameData>>
     {
-        public Guid? OrganisationId { get; private set; }
+        public Guid? AatfId { get; private set; }
 
         public int ComplianceYear { get; private set; }
     
-        public GetOrganisationSchemeDataForFilterRequest(Guid? organisationId, int complianceYear)
+        public GetOrganisationSchemeDataForFilterRequest(Guid? aatfId, int complianceYear)
         {
-            OrganisationId = organisationId;
+            AatfId = aatfId;
             ComplianceYear = complianceYear;
         }
     }
