@@ -15,6 +15,7 @@
     using Core.Helpers;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.AatfEvidence.Reports;
     using EA.Weee.Requests.Shared;
@@ -34,7 +35,6 @@
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.AatfEvidence;
-    using Weee.Requests.AatfReturn;
     using Weee.Requests.Scheme;
 
     public class ManageEvidenceNotesController : AatfEvidenceBaseController
@@ -390,12 +390,12 @@
                 sessionService.SetTransferSessionObject(Session, schemeData, SessionKeyConstant.FilterRecipientNameKey);
             }
 
-            schemeData = sessionService.GetTransferSessionObject<List<OrganisationSchemeData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
+            schemeData = sessionService.GetTransferSessionObject<List<EntityIdDisplayNameData>>(Session, SessionKeyConstant.FilterRecipientNameKey);
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 
                         manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
-                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, new List<OrganisationSchemeData>(), false));
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, new List<EntityIdDisplayNameData>(), false));
 
             var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
                         new SubmittedDateFilterBase(manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate));

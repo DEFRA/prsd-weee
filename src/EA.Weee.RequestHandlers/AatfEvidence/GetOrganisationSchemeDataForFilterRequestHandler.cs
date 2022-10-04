@@ -3,13 +3,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
 
-    internal class GetOrganisationSchemeDataForFilterRequestHandler : IRequestHandler<GetOrganisationSchemeDataForFilterRequest, List<OrganisationSchemeData>>
+    internal class GetOrganisationSchemeDataForFilterRequestHandler : IRequestHandler<GetOrganisationSchemeDataForFilterRequest, List<EntityIdDisplayNameData>>
     {
         private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly IWeeeAuthorization weeeAuthorization;
@@ -20,7 +20,7 @@
             this.weeeAuthorization = weeeAuthorization;
         }
 
-        public async Task<List<OrganisationSchemeData>> HandleAsync(GetOrganisationSchemeDataForFilterRequest request)
+        public async Task<List<EntityIdDisplayNameData>> HandleAsync(GetOrganisationSchemeDataForFilterRequest request)
         {
             if (request.OrganisationId.HasValue)
             {
@@ -36,7 +36,7 @@
                 await evidenceDataAccess.GetRecipientOrganisations(request.OrganisationId, request.ComplianceYear);
 
             return organisations.Select(x =>
-                    new OrganisationSchemeData() { DisplayName = x.IsBalancingScheme ? x.OrganisationName : x.Scheme.SchemeName, Id = x.Id })
+                    new EntityIdDisplayNameData() { DisplayName = x.IsBalancingScheme ? x.OrganisationName : x.Scheme.SchemeName, Id = x.Id })
                 .OrderBy(x => x.DisplayName)
                 .ToList();
         }
