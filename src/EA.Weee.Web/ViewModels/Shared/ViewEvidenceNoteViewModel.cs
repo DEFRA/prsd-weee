@@ -18,7 +18,7 @@
         [DisplayName("Actual or protocol")]
         public string ProtocolDisplay => ProtocolValue.HasValue ? ProtocolValue.Value.ToDisplayString() : string.Empty;
 
-        [DisplayName("Type of waste")]
+        [DisplayName("Obligation type")]
         public string WasteDisplay => WasteTypeValue.HasValue ? WasteTypeValue.Value.ToDisplayString() : string.Empty;
 
         [DisplayName("Compliance year")]

@@ -40,7 +40,7 @@
         [InlineData("ReferenceDisplay", "Reference ID")]
         [InlineData("StartDate", "Start date")]
         [InlineData("EndDate", "End date")]
-        [InlineData("WasteTypeValue", "Type of waste")]
+        [InlineData("WasteTypeValue", "Obligation type")]
         [InlineData("ProtocolValue", "Actual or protocol")]
         [InlineData("SubmittedDate", "Date submitted")]
         [InlineData("RejectedDate", "Date rejected")]

@@ -44,7 +44,7 @@
 
         [Theory]
         [InlineData("ProtocolValue", "Select actual or protocol")]
-        [InlineData("WasteTypeValue", "Select a type of waste")]
+        [InlineData("WasteTypeValue", "Select an obligation type")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveRequiredSubmitActionAttribute(string property, string description)
         {
             typeof(EditEvidenceNoteViewModel)
@@ -58,7 +58,7 @@
         [InlineData("EndDate", "End date")]
         [InlineData("RecipientId", "Recipient")]
         [InlineData("ProtocolValue", "Actual or protocol")]
-        [InlineData("WasteTypeValue", "Type of waste")]
+        [InlineData("WasteTypeValue", "Obligation type")]
         [InlineData("SelectedSchemeName", "Recipient")]
         public void EvidenceNoteViewModel_Properties_ShouldHaveDisplayAttribute(string property, string description)
         {
