@@ -259,6 +259,41 @@
         }
 
         [Fact]
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenApprovedWasteTransferNotes_ShouldReturnFalse()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                var transferNote = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
+                transferNote.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                transferNote.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
+
+                // act
+                context.Schemes.Add(scheme1);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(transferNote);
+
+                await context.SaveChangesAsync();
+
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
+
+                // assert
+                hasApprovedWaste.Should().BeFalse();
+            }
+        }
+
+        [Fact]
         public async Task HasApprovedWasteHouseHoldEvidence_GivenIncorrectComplianceYear_ShouldReturnFalse()
         {
             // arrange
