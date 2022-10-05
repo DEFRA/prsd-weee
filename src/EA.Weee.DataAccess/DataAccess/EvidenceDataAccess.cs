@@ -344,7 +344,8 @@
                 .AnyAsync(n => n.ComplianceYear == complianceYear && 
                                n.RecipientId == recipientId && 
                                n.Status.Value == NoteStatus.Approved.Value &&
-                               n.WasteType.Value == WasteType.HouseHold);
+                               n.WasteType.Value == WasteType.HouseHold &&
+                               n.NoteType.Value == NoteType.EvidenceNote.Value);
         }
 
         public Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type)
