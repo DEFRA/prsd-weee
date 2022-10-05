@@ -63,5 +63,13 @@
 
             return this;
         }
+
+        public SchemeDbSetup WithNewOrganisation()
+        {
+            var organisation = OrganisationDbSetup.Init().Create();
+            instance.UpdateOrganisation(organisation.Id);
+
+            return this;
+        }
     }
 }
