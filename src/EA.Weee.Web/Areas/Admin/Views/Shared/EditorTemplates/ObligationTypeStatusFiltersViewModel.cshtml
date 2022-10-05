@@ -2,7 +2,7 @@
 
 <style>
 </style>
-<div class="govuk-grid-column-one-quarter govuk-!-padding-left-2 govuk-!-padding-right-2" style="width:210px;">
+<div class="govuk-grid-column-one-quarter govuk-!-padding-left-2 govuk-!-padding-right-3" style="width:210px;">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
@@ -10,7 +10,7 @@
         string.Empty, new { @class = "full-width-important" })
     </div>
 </div>
-<div class="govuk-grid-column-one-quarter govuk-!-padding-left-6 govuk-!-padding-right-0" style="width:220px;">
+<div class="govuk-grid-column-one-quarter govuk-!-padding-left-5 govuk-!-padding-right-0" style="width:225px;">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
