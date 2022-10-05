@@ -112,7 +112,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         public static IEnumerable<object[]> ValidNextYearDates =>
@@ -163,7 +163,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         [Fact]
@@ -181,7 +181,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         [Fact]
@@ -199,7 +199,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         [Fact]
