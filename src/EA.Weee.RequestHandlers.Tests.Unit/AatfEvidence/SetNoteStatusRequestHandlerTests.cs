@@ -172,7 +172,8 @@
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
         }
 
-        [Fact] public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
+        [Fact] 
+        public async Task HandleAsync_GivenNoBalancingSchemeAccess_ShouldThrowSecurityException()
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
@@ -344,7 +345,7 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public async Task HandleAsync_ExternalUser_WithStatusNotApprovedAndRecipientIsNotBalancingScheme_ApprovedRecipientDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
+        public async Task HandleAsync_ExternalUser_WithStatusNotApproved_ApprovedDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
         {
             if (status == Core.AatfEvidence.NoteStatus.Approved)
             {
@@ -360,7 +361,12 @@
             A.CallTo(() => recipient.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
             A.CallTo(() => note.ApprovedRecipientAddress).Returns(null);
             A.CallTo(() => note.ApprovedRecipientSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
             A.CallTo(() => note.Recipient).Returns(recipient);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
 
             var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -371,6 +377,8 @@
             // Assert
             note.ApprovedRecipientAddress.Should().BeNull();
             note.ApprovedRecipientSchemeName.Should().BeNull();
+            note.ApprovedTransfererAddress.Should().BeNull();
+            note.ApprovedTransfererSchemeName.Should().BeNull();
         }
 
         [Fact]
@@ -384,7 +392,11 @@
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
             A.CallTo(() => note.ApprovedRecipientAddress).Returns(null);
             A.CallTo(() => note.ApprovedRecipientSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
             A.CallTo(() => note.Recipient).Returns(recipient);
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
 
             var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -395,12 +407,78 @@
             // Assert
             note.ApprovedRecipientAddress.Should().BeNull();
             note.ApprovedRecipientSchemeName.Should().BeNull();
+            note.ApprovedTransfererAddress.Should().BeNull();
+            note.ApprovedTransfererSchemeName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandleAsync_ExternalUser_WithStatusApprovedAndTransferNoteAndTransferOrganisationIsBalancingScheme_ApprovedDetailsShouldNotBeSet()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
+
+            var transferOrganisation = A.Fake<Organisation>();
+            A.CallTo(() => transferOrganisation.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
+            A.CallTo(() => note.ApprovedRecipientAddress).Returns(null);
+            A.CallTo(() => note.ApprovedRecipientSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
+            A.CallTo(() => note.Organisation).Returns(transferOrganisation);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
+
+            var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
+            // Act
+            await handler.HandleAsync(message);
+
+            // Assert
+            note.ApprovedRecipientAddress.Should().BeNull();
+            note.ApprovedRecipientSchemeName.Should().BeNull();
+            note.ApprovedTransfererAddress.Should().BeNull();
+            note.ApprovedTransfererSchemeName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandleAsync_ExternalUser_WithStatusApprovedAndNotTransferNoteAndTransferOrganisationIsNotBalancingScheme_ApprovedDetailsShouldNotBeSet()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
+
+            var transferOrganisation = A.Fake<Organisation>();
+            A.CallTo(() => note.ApprovedRecipientAddress).Returns(null);
+            A.CallTo(() => note.ApprovedRecipientSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
+            A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
+            A.CallTo(() => note.Organisation).Returns(transferOrganisation);
+            A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
+
+            var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+
+            // Act
+            await handler.HandleAsync(message);
+
+            // Assert
+            note.ApprovedRecipientAddress.Should().BeNull();
+            note.ApprovedRecipientSchemeName.Should().BeNull();
+            note.ApprovedTransfererAddress.Should().BeNull();
+            note.ApprovedTransfererSchemeName.Should().BeNull();
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        public async Task HandleAsync_ExternalUser_WithConditionToSetApprovedDetailsAndRecipientHasBusinessAddress_ApprovedRecipientDetailsShouldBeSet(int addressType)
+        [InlineData(1, 1)]
+        [InlineData(2, 1)]
+        [InlineData(1, 2)]
+        [InlineData(2, 2)]
+        public async Task HandleAsync_ExternalUser_WithConditionToSetApprovedDetailsAndRecipientHasBusinessAddress_ApprovedRecipientDetailsShouldBeSet(int addressType, int noteType)
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
@@ -414,6 +492,7 @@
                 new Country(TestFixture.Create<Guid>(), "address name"), "01483676767",
                 "email");
             var scheme = A.Fake<Scheme>();
+            var transferOrganisation = A.Fake<Organisation>();
 
             A.CallTo(() => scheme.SchemeName).Returns(TestFixture.Create<string>());
             A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Approved);
@@ -425,7 +504,9 @@
             ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientAddress, null, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientSchemeName, null, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Recipient, recipient, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.Organisation, transferOrganisation, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ComplianceYear, currentDate.Year, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.NoteType, Enumeration.FromValue<NoteType>(noteType), evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Status, NoteStatus.Submitted, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.NoteStatusHistory, new List<NoteStatusHistory>(), evidenceNote);
 
@@ -456,12 +537,16 @@
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
-            var recipient = A.Fake<Organisation>();
-            A.CallTo(() => recipient.ProducerBalancingScheme).Returns(null);
-            A.CallTo(() => recipient.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
+            var transferer = A.Fake<Organisation>();
+            A.CallTo(() => transferer.ProducerBalancingScheme).Returns(null);
+            A.CallTo(() => transferer.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
             A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
             A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
-            A.CallTo(() => note.Recipient).Returns(recipient);
+            A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => note.Organisation).Returns(transferer);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
 
             var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -481,11 +566,15 @@
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
             var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
-            var recipient = A.Fake<Organisation>();
-            A.CallTo(() => recipient.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
+            var transferer = A.Fake<Organisation>();
+            A.CallTo(() => transferer.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
             A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
             A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
-            A.CallTo(() => note.Recipient).Returns(recipient);
+            A.CallTo(() => note.Organisation).Returns(transferer);
+            A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
+                A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
 
             var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -501,7 +590,7 @@
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        public async Task HandleAsync_ExternalUser_WithConditionToSetApprovedDetailsAndRecipientHasBusinessAddress_ApprovedTransfererDetailsShouldBeSet(int addressType)
+        public async Task HandleAsync_ExternalUser_WithConditionToSetApprovedDetailsAndTransfererHasAddress_ApprovedTransfererDetailsShouldBeSet(int addressType)
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
@@ -509,32 +598,35 @@
 
             var evidenceNote = new Note();
             var address = TestFixture.Create<string>();
-            var recipient = Organisation.CreateRegisteredCompany(TestFixture.Create<string>(), "12345678");
-            var recipientAddress = new Address("address1", "address2",
+            var transfererOrganisation = Organisation.CreateRegisteredCompany(TestFixture.Create<string>(), "12345678");
+            var transfererAddress = new Address("address1", "address2",
                 "town", "county", "postcode",
                 new Country(TestFixture.Create<Guid>(), "address name"), "01483676767",
                 "email");
             var scheme = A.Fake<Scheme>();
+            var recipientOrganisation = A.Fake<Organisation>();
 
             A.CallTo(() => scheme.SchemeName).Returns(TestFixture.Create<string>());
             A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Approved);
 
-            recipient.AddOrUpdateAddress(Enumeration.FromValue<AddressType>(addressType), recipientAddress);
-            ObjectInstantiator<Organisation>.SetProperty(o => o.Schemes, new List<Scheme>() { scheme }, recipient);
-            ObjectInstantiator<Organisation>.SetProperty(o => o.ProducerBalancingScheme, null, recipient);
-            ObjectInstantiator<Organisation>.SetProperty(o => o.BusinessAddress, recipientAddress, recipient);
+            transfererOrganisation.AddOrUpdateAddress(Enumeration.FromValue<AddressType>(addressType), transfererAddress);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.Schemes, new List<Scheme>() { scheme }, transfererOrganisation);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.ProducerBalancingScheme, null, transfererOrganisation);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.BusinessAddress, transfererAddress, transfererOrganisation);
             ObjectInstantiator<Note>.SetProperty(o => o.ApprovedTransfererAddress, address, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ApprovedTransfererSchemeName, scheme.SchemeName, evidenceNote);
-            ObjectInstantiator<Note>.SetProperty(o => o.Recipient, recipient, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.Organisation, transfererOrganisation, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.Recipient, recipientOrganisation, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.NoteType, NoteType.TransferNote, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ComplianceYear, currentDate.Year, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Status, NoteStatus.Submitted, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.NoteStatusHistory, new List<NoteStatusHistory>(), evidenceNote);
 
             var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(evidenceNote);
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(scheme.SchemeName, recipient.OrganisationName,
-                recipientAddress.Address1, recipientAddress.Address2, recipientAddress.TownOrCity,
-                recipientAddress.CountyOrRegion, recipientAddress.Postcode, null)).Returns(address);
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(scheme.SchemeName, transfererOrganisation.OrganisationName,
+                transfererAddress.Address1, transfererAddress.Address2, transfererAddress.TownOrCity,
+                transfererAddress.CountyOrRegion, transfererAddress.Postcode, null)).Returns(address);
 
             // Act
             await handler.HandleAsync(message);
