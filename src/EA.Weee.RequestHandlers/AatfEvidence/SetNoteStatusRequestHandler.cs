@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
-    using Core.AatfEvidence;
     using Core.Shared;
     using DataAccess;
     using EA.Weee.Core.Helpers;
@@ -10,7 +9,9 @@
     using System;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
+    using Domain.Evidence;
     using Requests.AatfEvidence;
+    using NoteStatus = Core.AatfEvidence.NoteStatus;
 
     public class SetNoteStatusRequestHandler : SaveNoteRequestBase, IRequestHandler<SetNoteStatusRequest, Guid>
     {
@@ -45,24 +46,22 @@
 
             evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(evidenceNote, message.Status.ToDomainEnumeration<Domain.Evidence.NoteStatus>(), evidenceNote.NoteType);
 
-            if (message.Status == NoteStatus.Approved && evidenceNote.Recipient.IsBalancingScheme == false)
+            SetApprovedRecipientAddress(evidenceNote, message.Status);
+            SetApprovedTransferAddress(evidenceNote, message.Status);
+            
+            return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);
+        }
+
+        private void SetApprovedTransferAddress(Note evidenceNote, NoteStatus status)
+        {
+            if (evidenceNote.NoteType == NoteType.TransferNote && status == NoteStatus.Approved && evidenceNote.Organisation.IsBalancingScheme == false)
             {
-                var organisationAddress = evidenceNote.Recipient.HasBusinessAddress
-                    ? evidenceNote.Recipient.BusinessAddress
-                    : evidenceNote.Recipient.NotificationAddress;
+                var organisationAddress = evidenceNote.Organisation.HasBusinessAddress
+                    ? evidenceNote.Organisation.BusinessAddress
+                    : evidenceNote.Organisation.NotificationAddress;
 
-                evidenceNote.SetApprovedRecipientAddress(evidenceNote.Recipient.Scheme.SchemeName, addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Recipient.Scheme.SchemeName,
-                    evidenceNote.Recipient.OrganisationName,
-                    organisationAddress.Address1,
-                    organisationAddress.Address2,
-                    organisationAddress.TownOrCity,
-                    organisationAddress.CountyOrRegion,
-                    organisationAddress.Postcode,
-                    null));
-
-                if (evidenceNote.NoteType == Domain.Evidence.NoteType.TransferNote)
-                {
-                    evidenceNote.SetApprovedTransfererAddress(evidenceNote.Organisation.Scheme.SchemeName, addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Organisation.Scheme.SchemeName,
+                evidenceNote.SetApprovedTransfererAddress(evidenceNote.Organisation.Scheme.SchemeName,
+                    addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Organisation.Scheme.SchemeName,
                         evidenceNote.Organisation.OrganisationName,
                         organisationAddress.Address1,
                         organisationAddress.Address2,
@@ -70,10 +69,27 @@
                         organisationAddress.CountyOrRegion,
                         organisationAddress.Postcode,
                         null));
-                }
             }
+        }
 
-            return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);
+        private void SetApprovedRecipientAddress(Note evidenceNote, NoteStatus status)
+        {
+            if (evidenceNote.Recipient.IsBalancingScheme == false && status == NoteStatus.Approved)
+            {
+                var organisationAddress = evidenceNote.Recipient.HasBusinessAddress
+                    ? evidenceNote.Recipient.BusinessAddress
+                    : evidenceNote.Recipient.NotificationAddress;
+
+                evidenceNote.SetApprovedRecipientAddress(evidenceNote.Recipient.Scheme.SchemeName,
+                    addressUtilities.FormattedCompanyPcsAddress(evidenceNote.Recipient.Scheme.SchemeName,
+                        evidenceNote.Recipient.OrganisationName,
+                        organisationAddress.Address1,
+                        organisationAddress.Address2,
+                        organisationAddress.TownOrCity,
+                        organisationAddress.CountyOrRegion,
+                        organisationAddress.Postcode,
+                        null));
+            }
         }
     }
 }
