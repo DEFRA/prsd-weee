@@ -428,14 +428,14 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
-
+                
                 var transfererOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(transfererOrganisation.Id).Create();
-
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transfererOrganisation.Id).Create();
+                
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
-
+                
                 note = TransferEvidenceNoteDbSetup.Init()
                     .WithRecipient(recipientOrganisation.Id)
                     .WithOrganisation(transfererOrganisation.Id)

@@ -294,10 +294,11 @@
 
                 SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
 
-                TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
-
-                string token = User.GetAccessToken();
+                var token = User.GetAccessToken();
+                
                 await client.SendAsync(token, request);
+
+                TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
                 return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
                 {
