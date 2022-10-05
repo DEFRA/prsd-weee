@@ -56,5 +56,12 @@
 
             return this;
         }
+
+        public SchemeDbSetup WithSchemeName(string name)
+        {
+            ObjectInstantiator<Scheme>.SetProperty(o => o.SchemeName, name, instance);
+
+            return this;
+        }
     }
 }
