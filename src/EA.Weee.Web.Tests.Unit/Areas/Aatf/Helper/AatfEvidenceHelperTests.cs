@@ -211,22 +211,18 @@
             result.Should().BeEmpty();
         }
 
-        public static IEnumerable<object[]> Dates =>
-            new List<object[]>
-            {
-                new object[] { new DateTime(2020, 1, 31) },
-                new object[] { new DateTime(2020, 2, 1) }
-            };
-
-        [Theory]
-        [MemberData(nameof(Dates))]
-        public void GroupedValidAatfs_GivenSourceWithEvidenceNoteStartDateThatIsBeforeOrEqualCurrentDate_AatfListShouldBeReturned(DateTime evidenceNoteStartDate)
+        [Fact]
+        public void GroupedValidAatfs_GivenSourceWithEvidenceNoteStartDateThatIsBeforeOrOnApprovalDateCurrentDate_AatfListShouldBeReturned()
         {
             //arrange
+            var evidenceNoteStartDate = new DateTime(2023, 1, 1);
             var aatfId1 = TestFixture.Create<Guid>();
             var aatfId2 = TestFixture.Create<Guid>();
             var aatfId3 = TestFixture.Create<Guid>();
             var aatfId4 = TestFixture.Create<Guid>();
+
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
 
             var aatfList = new List<AatfData>()
             {
@@ -252,16 +248,14 @@
                     .Create()
             };
 
-            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
-                .Returns(evidenceNoteStartDate);
-
             //act
             var result = aatfHelper.GroupedValidAatfs(aatfList);
 
             //assert
-            result.Count.Should().Be(2);
+            result.Count.Should().Be(3);
             result.FirstOrDefault(a => a.Id == aatfId1).Should().NotBeNull();
             result.FirstOrDefault(a => a.Id == aatfId3).Should().NotBeNull();
+            result.FirstOrDefault(a => a.Id == aatfId4).Should().NotBeNull();
         }
 
         [Fact]
