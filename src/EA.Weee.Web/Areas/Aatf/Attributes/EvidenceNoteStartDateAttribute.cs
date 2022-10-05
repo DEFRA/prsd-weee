@@ -33,7 +33,7 @@
 
             if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
-                return new ValidationResult("The start date must be within the current compliance year");
+                return new ValidationResult("The start date must be within an open compliance year");
             }
             
             var startDateValid = ValidateStartDate(thisDate, otherDate, currentDate);

@@ -27,7 +27,7 @@
 
             if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
-                return new ValidationResult("The end date must be within the current compliance year");
+                return new ValidationResult("The end date must be within an open compliance year");
             }
 
             if (!(validationContext.ObjectInstance is EvidenceNoteViewModel evidenceNoteModel))

@@ -164,7 +164,7 @@
 
             //assert
             result.ValidationResult.ErrorMessage.Should()
-                .Be("The start date must be within the current compliance year");
+                .Be("The start date must be within an open compliance year");
 
             SystemTime.Unfreeze();
         }
