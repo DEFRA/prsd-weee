@@ -24,19 +24,19 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-quarter" })
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-third" })
         </div>
 
         <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedAppropriateAuthority)">
             @Html.Gds().LabelFor(m => m.SelectedAppropriateAuthority)
             @Html.Gds().ValidationMessageFor(m => m.SelectedAppropriateAuthority)
-            @Html.Gds().DropDownListFor(m => m.SelectedAppropriateAuthority, Model.AppropriateAuthorities, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-quarter" })
+            @Html.Gds().DropDownListFor(m => m.SelectedAppropriateAuthority, Model.AppropriateAuthorities, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-third" })
         </div>
 
-        <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
+        <div class="govuk-form-group  govuk-!-width-one-third @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
             @Html.Gds().LabelFor(m => m.SelectedSchemeId)
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchemeId)
-            @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, withLookAhead: true, new { autocomplete = "false", @class = "govuk-!-width-one-quarter" })
+            @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" }, withLookAhead: true)
         </div>
 
         <p>
@@ -51,16 +51,4 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
 
-}
-@section scripts {
-    @if (ViewBag.TriggerDownload)
-    {
-        <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadEvidenceNoteReport", new
-                          {
-                              complianceYear = Model.SelectedYear,
-                              tonnageToDisplay = Model.SelectedTonnageToDisplay
-                          }))";
-        </script>
-    }
 }

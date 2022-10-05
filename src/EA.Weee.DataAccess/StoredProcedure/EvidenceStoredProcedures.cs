@@ -77,7 +77,7 @@
 
         public async Task<List<InternalObligationAndEvidenceSummaryTotalsData>> GetSchemeObligationAndEvidenceTotals(Guid? pcsId, Guid? appropriateAuthorityId, int complianceYear)
         {
-            var queryString = "[Evidence].[getSchemeObligationAndEvidenceTotals] @ComplianceYear, @SchemeId ";
+            var queryString = "[Evidence].[getSchemeObligationAndEvidenceTotals] @ComplianceYear, @SchemeId, @AppropriateAuthorityId ";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
             var pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier)
