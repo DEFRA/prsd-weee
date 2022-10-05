@@ -44,7 +44,9 @@
                     new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1),
                 };
 
-                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+                var note1 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnagesNote1).Create();
 
                 var existingTonnagesNote2 = new List<NoteTonnage>()
                 {
@@ -52,7 +54,9 @@
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 10, 1),
                 };
 
-                var note2 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote2).Create();
+                var note2 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnagesNote2).Create();
 
                 var transferTonnage1 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.DisplayEquipment));

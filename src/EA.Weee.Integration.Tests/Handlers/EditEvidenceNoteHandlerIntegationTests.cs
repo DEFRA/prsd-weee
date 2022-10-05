@@ -185,7 +185,9 @@
                         fixture.Create<decimal?>())
                 };
 
-                existingNote = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnages).Create();
+                existingNote = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnages).Create();
 
                 updatedRecipient = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(updatedRecipient.Id).Create();
