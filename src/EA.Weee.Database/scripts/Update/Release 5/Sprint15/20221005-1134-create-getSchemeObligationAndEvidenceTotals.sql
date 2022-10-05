@@ -68,8 +68,7 @@ FROM
 CROSS JOIN [PCS].Scheme s
 WHERE
 	s.Id = @SchemeId OR @SchemeId IS NULL
-ORDER BY
-	s.Id
+	AND (s.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 
 UPDATE s
 SET 
@@ -236,7 +235,7 @@ GROUP BY
 	CategoryId,
 	CategoryName
 ORDER BY
-	SchemeId,
+	SchemeName,
 	CategoryId
 
 END
