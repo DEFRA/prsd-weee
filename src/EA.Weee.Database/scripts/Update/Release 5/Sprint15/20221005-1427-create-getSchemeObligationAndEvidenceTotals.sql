@@ -190,6 +190,8 @@ FROM
 			s.SchemeId
 		FROM
 			#EvidenceSummaryWithTotals s
+		WHERE
+			s.CategoryId >= 1 AND s.CategoryId <= 14
 		GROUP BY
 			s.SchemeId) cs ON cs.SchemeId = s.SchemeId AND s.CategoryId = 1000
 
