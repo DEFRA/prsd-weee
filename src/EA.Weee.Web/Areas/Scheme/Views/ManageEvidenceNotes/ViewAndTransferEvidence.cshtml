@@ -91,7 +91,7 @@
                                         }
                                         else
                                         {
-                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, null)
+                                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, null)
                                         }
                                     </td>
                                 </tr>

@@ -66,7 +66,7 @@
                                         <td class="govuk-table__cell">@note.Recipient</td>
                                         <td class="govuk-table__cell">@note.Status.ToString() </td>
                                         <td class="govuk-table__cell">
-                                            @Html.NavigationRouteLink("View", "View evidence note with reference " + @note.ReferenceDisplay, "admin_view_evidence_transfer_note_details", new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber }, null)
+                                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "admin_view_evidence_transfer_note_details", new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber }, null)
                                         </td>
                                     </tr>
                                 }
