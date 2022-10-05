@@ -31,7 +31,7 @@
         public List<AatfData> GroupedValidAatfs(List<AatfData> aatfs)
         {
             return aatfs
-                .Where(a => a.EvidenceSiteDisplay && a.ApprovalDate.HasValue && a.ApprovalDate.Value.Date > configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Where(a => a.EvidenceSiteDisplay && a.ApprovalDate.HasValue && a.ApprovalDate.Value.Date >= configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
                 .GroupBy(a => a.AatfId)
                 .Select(a => a.OrderByDescending(a1 => a1.ComplianceYear).First())
                 .OrderBy(a => a.Name)
