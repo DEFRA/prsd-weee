@@ -6,7 +6,6 @@
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Evidence;
     using EA.Weee.RequestHandlers.AatfEvidence;
-    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Tests.Core;
@@ -17,7 +16,6 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using Castle.Core.Internal;
     using Core.Helpers;
     using Domain.Organisation;
     using Xunit;
