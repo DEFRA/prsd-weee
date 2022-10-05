@@ -643,7 +643,6 @@
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
-                //.With(f => f.ApprovedRecipientDetails, "approved recipient details")
                 .With(g => g.ApprovedTransfererDetails, "approved transferer details")
                 .Create();
             var source = new ViewTransferNoteViewModelMapTransfer(organisation.Id, evidenceData, null);
