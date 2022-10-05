@@ -5,7 +5,6 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
-    using Core.AatfEvidence;
     using Core.Shared;
     using DataAccess;
     using DataAccess.DataAccess;
@@ -36,6 +35,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly IAddressUtilities addressUtilities;
+        private readonly IEvidenceDataAccess evidenceDataAccess;
         private readonly Note note;
         private readonly Scheme recipientScheme;
         private readonly Organisation recipientOrganisation;
@@ -49,6 +49,7 @@
             authorization = A.Fake<IWeeeAuthorization>();
             systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             addressUtilities = A.Fake<IAddressUtilities>();
+            evidenceDataAccess = A.Fake<IEvidenceDataAccess>();
             note = A.Fake<Note>();
             currentDate = new DateTime(2020, 1, 1);
 
@@ -74,7 +75,7 @@
         public async Task HandleAsync_GivenRequestedYearIsClosed_InvalidOperationExceptionExpected(DateTime currentDate, int complianceYear, bool balancingScheme)
         {
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -94,7 +95,7 @@
         public async Task HandleAsync_GivenOrganisationIsNotBalancingSchemeAndSchemeIsWithdrawn_InvalidOperationExceptionExpected()
         {
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -117,7 +118,7 @@
         public async Task HandleAsync_GivenOrganisationIsBalancingSchemeAndSchemeIsWithdrawn_NoExceptionExpected()
         {
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -144,7 +145,7 @@
         {
             // Arrange
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var noteId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
             var message = new SetNoteStatusRequest(noteId, Core.AatfEvidence.NoteStatus.Submitted);
 
@@ -159,7 +160,7 @@
         public async Task HandleAsync_GivenRequest_ShouldGetSystemDateTime()
         {
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var message = new SetNoteStatusRequest(TestFixture.Create<Guid>(), TestFixture.Create<EA.Weee.Core.AatfEvidence.NoteStatus>());
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -175,7 +176,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -197,7 +198,7 @@
             }
 
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), status);
 
             var organisation = A.Fake<Organisation>();
@@ -217,7 +218,7 @@
         public async Task HandleAsync_GivenRequestThatIsBeingSubmitted_ShouldCheckOrganisationAccess()
         {
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Submitted);
 
             var organisation = A.Fake<Organisation>();
@@ -237,7 +238,7 @@
         public async Task HandleAsync_GivenRequest_ShouldCheckExternalAccess()
         {
             //arrange
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var request = new SetNoteStatusRequest(TestFixture.Create<Guid>(), Core.AatfEvidence.NoteStatus.Approved);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
@@ -254,7 +255,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns((Note)null);
 
@@ -272,7 +273,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var id = TestFixture.Create<Guid>();
             A.CallTo(() => note.Id).Returns(id);
             A.CallTo(() => context.Notes.FindAsync(id)).Returns(note);
@@ -294,7 +295,7 @@
             // Arrange
             SystemTime.Freeze(DateTime.UtcNow);
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var userId = TestFixture.Create<Guid>();
 
             var message = new SetNoteStatusRequest(note.Id, status);
@@ -322,7 +323,7 @@
             // Arrange
             SystemTime.Freeze(DateTime.UtcNow);
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
             var userId = TestFixture.Create<Guid>();
 
             var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
@@ -352,7 +353,7 @@
 
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var recipient = A.Fake<Organisation>();
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(null);
@@ -377,7 +378,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var recipient = A.Fake<Organisation>();
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
@@ -403,7 +404,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var evidenceNote = new Note();
             var address = TestFixture.Create<string>();
@@ -453,7 +454,7 @@
 
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var recipient = A.Fake<Organisation>();
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(null);
@@ -478,7 +479,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var recipient = A.Fake<Organisation>();
             A.CallTo(() => recipient.ProducerBalancingScheme).Returns(A.Fake<ProducerBalancingScheme>());
@@ -504,7 +505,7 @@
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities);
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
 
             var evidenceNote = new Note();
             var address = TestFixture.Create<string>();
@@ -541,6 +542,52 @@
             // Assert
             evidenceNote.ApprovedTransfererAddress.Should().Be(address);
             evidenceNote.ApprovedTransfererSchemeName.Should().Be(scheme.SchemeName);
+        }
+
+        [Fact]
+        public async void HandleAsync_Calls_DeleteZeroTonnageFromSubmittedTransferNote_InTheCorrectOrder()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
+
+            var evidenceNote = new Note();
+            var address = TestFixture.Create<string>();
+            var recipient = Organisation.CreateRegisteredCompany(TestFixture.Create<string>(), "12345678");
+            var recipientAddress = new Address("address1", "address2",
+                "town", "county", "postcode",
+                new Country(TestFixture.Create<Guid>(), "address name"), "01483676767",
+                "email");
+            var scheme = A.Fake<Scheme>();
+
+            A.CallTo(() => scheme.SchemeName).Returns(TestFixture.Create<string>());
+            A.CallTo(() => scheme.SchemeStatus).Returns(SchemeStatus.Approved);
+
+            recipient.AddOrUpdateAddress(Enumeration.FromValue<AddressType>(1), recipientAddress);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.Schemes, new List<Scheme>() { scheme }, recipient);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.ProducerBalancingScheme, null, recipient);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.BusinessAddress, recipientAddress, recipient);
+            ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientAddress, null, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientSchemeName, null, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.Recipient, recipient, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.ComplianceYear, currentDate.Year, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.Status, NoteStatus.Submitted, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.NoteStatusHistory, new List<NoteStatusHistory>(), evidenceNote);
+
+            var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "test");
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(evidenceNote);
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(scheme.SchemeName, recipient.OrganisationName,
+                recipientAddress.Address1, recipientAddress.Address2, recipientAddress.TownOrCity,
+                recipientAddress.CountyOrRegion, recipientAddress.Postcode, null)).Returns(address);
+
+            // Act
+            await handler.HandleAsync(message);
+
+            // Assert
+            A.CallTo(() => evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(A<Note>._, A<NoteStatus>._, A<Domain.Evidence.NoteType>._))
+                .MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => context.SaveChangesAsync())
+                .MustHaveHappenedOnceExactly());
         }
     }
 }
