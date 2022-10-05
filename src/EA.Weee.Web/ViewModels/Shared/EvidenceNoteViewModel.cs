@@ -27,7 +27,7 @@
 
         public virtual IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
-        [DisplayName("Type of waste")]
+        [DisplayName("Obligation type")]
         public virtual WasteType? WasteTypeValue { get; set; }
 
         [DisplayName("Actual or protocol")]

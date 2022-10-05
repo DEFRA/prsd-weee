@@ -34,8 +34,8 @@
         [Display(Name = "Recipient")]
         public string SelectedSchemeName { get; set; }
 
-        [RequiredSubmitAction(ErrorMessage = "Select a type of waste")]
-        [Display(Name = "Type of waste")]
+        [RequiredSubmitAction(ErrorMessage = "Select an obligation type")]
+        [Display(Name = "Obligation type")]
         public override WasteType? WasteTypeValue { get; set; }
 
         public IEnumerable<SelectListItem> WasteTypeList { get; set; }
