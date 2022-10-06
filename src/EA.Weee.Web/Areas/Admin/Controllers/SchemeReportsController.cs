@@ -118,7 +118,6 @@
         public async Task<ActionResult> EvidenceAndObligationProgress()
         {
             SetBreadcrumb();
-            ViewBag.TriggerDownload = false;
 
             var model = new EvidenceAndObligationProgressViewModel();
             await PopulateFilters(model);
@@ -131,28 +130,25 @@
         public async Task<ActionResult> EvidenceAndObligationProgress(EvidenceAndObligationProgressViewModel model)
         {
             SetBreadcrumb();
-            ViewBag.TriggerDownload = ModelState.IsValid;
 
             if (ModelState.IsValid)
             {
-                return await DownloadEvidenceAndObligationProgressCsv(model.SelectedYear, model.SelectedSchemeId,
-                    model.SelectedAppropriateAuthority);
+                return RedirectToAction("DownloadEvidenceAndObligationProgressCsv",
+                    new { complianceYear = model.SelectedYear, schemeId = model.SelectedSchemeId });
             }
-            else
-            {
-                await PopulateFilters(model);
 
-                return View(model);
-            }
+            await PopulateFilters(model);
+
+            return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceAndObligationProgressCsv(int complianceYear, Guid? schemeId, Guid? authorityId)
+        public async Task<ActionResult> DownloadEvidenceAndObligationProgressCsv(int complianceYear, Guid? schemeId)
         {
             using (var client = apiClient())
             {
                 var request =
-                    new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, authorityId, complianceYear);
+                    new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, null, complianceYear);
 
                 var csvReport = await client.SendAsync(User.GetAccessToken(), request);
 
@@ -502,11 +498,9 @@
                 await FetchCurrentSystemDate());
 
             var schemes = await FetchSchemes();
-            var authorities = await FetchAuthorities();
 
             model.ComplianceYears = new SelectList(years);
             model.Schemes = new SelectList(schemes, "Id", "SchemeName");
-            model.AppropriateAuthorities = new SelectList(authorities, "Id", "Abbreviation");
         }
 
         private async Task PopulateFilters(ReportsFilterViewModel model)

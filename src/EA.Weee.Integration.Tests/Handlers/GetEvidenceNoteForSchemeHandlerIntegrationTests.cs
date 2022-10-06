@@ -278,7 +278,9 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 10, null)
                 };
 
-                transferNote1 = TransferEvidenceNoteDbSetup.Init().With(t =>
+                transferNote1 = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), currentDate);
                     t.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), currentDate);
@@ -292,7 +294,9 @@
                     new NoteTransferTonnage(transferTonnage2.Id, 20, null)
                 };
 
-                transferNote2 = TransferEvidenceNoteDbSetup.Init().With(t =>
+                transferNote2 = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), currentDate);
                 }).WithTonnages(newTransferNoteTonnage2).Create();
@@ -421,7 +425,9 @@
             {
                 LocalSetup();
 
-                note = EvidenceNoteDbSetup.Init().Create();
+                note = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 request = new GetEvidenceNoteForSchemeRequest(note.Id);
             };

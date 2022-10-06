@@ -75,6 +75,7 @@
                 };
 
                 var transferNote = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(transferOrganisation.Id)
                     .WithTonnages(existingTransferTonnages).Create();
 
@@ -145,7 +146,9 @@
                     new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1),
                 };
 
-                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+                var note1 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnagesNote1).Create();
 
                 var existingTonnagesNote2 = new List<NoteTonnage>()
                 {
@@ -153,7 +156,9 @@
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 10, 1),
                 };
 
-                var note2 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote2).Create();
+                var note2 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnagesNote2).Create();
 
                 var transferTonnage1 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.DisplayEquipment));
@@ -173,6 +178,7 @@
                 };
 
                 var transferNote = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(transferOrganisation.Id)
                     .WithTonnages(existingTransferTonnages).Create();
 
@@ -245,14 +251,17 @@
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
 
                 existingRecipientOrganisation = OrganisationDbSetup.Init().Create();
-                var recipientScheme = SchemeDbSetup.Init().WithOrganisation(existingRecipientOrganisation.Id).Create();
+                SchemeDbSetup.Init().WithOrganisation(existingRecipientOrganisation.Id).Create();
 
                 var existingTonnagesNote1 = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 5, 1)
                 };
 
-                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+                var note1 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnagesNote1).Create();
+
                 var transferTonnage1 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
 
@@ -262,7 +271,9 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 2, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().With(t =>
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
@@ -274,7 +285,9 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 2, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().With(t =>
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
@@ -286,7 +299,9 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 1002, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().With(t =>
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3).Create();
@@ -297,6 +312,7 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 1, null)
                 };
                 var editingTransferNote = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(transferOrganisation.Id)
                     .WithTonnages(editingTransferNoteTonnage).Create();
 
@@ -353,7 +369,10 @@
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 5, 1)
                 };
 
-                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+                var note1 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnagesNote1).Create();
+
                 var transferTonnage1 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
 
@@ -363,7 +382,9 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 2, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().With(t =>
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
@@ -375,7 +396,9 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 2, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().With(t =>
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
@@ -387,7 +410,9 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 1002, null)
                 };
 
-                TransferEvidenceNoteDbSetup.Init().With(t =>
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3).Create();
@@ -398,6 +423,7 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 1, null)
                 };
                 var editingTransferNote = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(transferOrganisation.Id)
                     .WithTonnages(editingTransferNoteTonnage).Create();
 
