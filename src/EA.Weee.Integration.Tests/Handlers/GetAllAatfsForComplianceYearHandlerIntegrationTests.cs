@@ -35,52 +35,44 @@
 
                 var complianceYear = 1;
 
-                organisation = OrganisationDbSetup.Init()
-                .Create();
+                organisation = OrganisationDbSetup.Init().Create();
+                aatf1 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                aatf2 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                aatf3 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
-                 aatf1 = AatfDbSetup.Init()
-                .WithOrganisation(organisation.Id)
-                .Create();
-
-                aatf2 = AatfDbSetup.Init()
-                .WithOrganisation(organisation.Id)
-                .Create();
-
-                aatf3 = AatfDbSetup.Init()
-                .WithOrganisation(organisation.Id)
-                .Create();
-
-                OrganisationUserDbSetup.Init()
-                .WithUserIdAndOrganisationId(UserId, organisation.Id)
-                .WithStatus(UserStatus.Active)
-                .Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id)
+                    .WithStatus(UserStatus.Active)
+                    .Create();
 
                 var evidence1 = EvidenceNoteDbSetup.Init()
-                  .With(n =>
-                  {
-                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                  })
-                  .WithComplianceYear(complianceYear)
-                  .WithAatf(aatf1.Id)
-                  .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatf1.Id)
+                    .Create();
 
                 var evidence2 = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .WithAatf(aatf2.Id)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatf2.Id)
+                    .Create();
 
                 var evidence3 = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .WithComplianceYear(complianceYear)
-                .WithAatf(aatf3.Id)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatf3.Id)
+                    .Create();
 
                 notesSet.Add(evidence1);
                 notesSet.Add(evidence2);
@@ -125,39 +117,34 @@
             {
                 LocalSetup();
 
-                organisation = OrganisationDbSetup.Init()
-                .Create();
-
-                aatf1 = AatfDbSetup.Init()
-               .WithOrganisation(organisation.Id)
-               .Create();
-
-                aatf2 = AatfDbSetup.Init()
-                .WithOrganisation(organisation.Id)
-                .Create();
+                organisation = OrganisationDbSetup.Init().Create();
+                aatf1 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                aatf2 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
                 OrganisationUserDbSetup.Init()
-                .WithUserIdAndOrganisationId(UserId, organisation.Id)
-                .WithStatus(UserStatus.Active)
-                .Create();
+                    .WithUserIdAndOrganisationId(UserId, organisation.Id)
+                    .WithStatus(UserStatus.Active)
+                    .Create();
 
                 var evidence1 = EvidenceNoteDbSetup.Init()
-                  .With(n =>
-                  {
-                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                  })
-                  .WithComplianceYear(1)
-                  .WithAatf(aatf1.Id)
-                  .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(1)
+                    .WithAatf(aatf1.Id)
+                    .Create();
 
                 var evidence2 = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(2)
-                 .WithAatf(aatf2.Id)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(2)
+                    .WithAatf(aatf2.Id)
+                    .Create();
 
                 notesSet.Add(evidence1);
                 notesSet.Add(evidence2);

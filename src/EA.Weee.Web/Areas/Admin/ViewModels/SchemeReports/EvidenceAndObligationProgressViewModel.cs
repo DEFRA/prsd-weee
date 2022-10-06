@@ -14,12 +14,6 @@
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [DisplayName("Appropriate authority")]
-
-        public Guid? SelectedAppropriateAuthority { get; set; }
-
-        public IEnumerable<SelectListItem> AppropriateAuthorities { get; set; }
-
         [DisplayName("PCS")]
         public Guid? SelectedSchemeId { get; set; }
 

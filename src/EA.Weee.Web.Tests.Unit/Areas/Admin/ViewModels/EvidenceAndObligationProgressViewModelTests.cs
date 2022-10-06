@@ -10,7 +10,6 @@
     {
         [Theory]
         [InlineData("SelectedYear", "Compliance year")]
-        [InlineData("SelectedAppropriateAuthority", "Appropriate authority")]
         [InlineData("SelectedSchemeId", "PCS")]
         public void EvidenceAndObligationProgressViewModel_PropertiesShouldHaveDisplayNameAttribute(string property, string display)
         {

@@ -133,7 +133,9 @@
             {
                 LocalSetup();
 
-                note = EvidenceNoteDbSetup.Init().Create();
+                note = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 request = new GetEvidenceNotesSelectedForTransferRequest(note.OrganisationId,
                     new List<Guid>() { Guid.NewGuid() }, new List<int>() { 1 });
