@@ -187,7 +187,9 @@
                 notes.Add(approvedNote2);
 
                 // out of compliance year
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
                 request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
             };
@@ -343,7 +345,9 @@
 
                 notes.Add(approved);
 
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
                 var notMatchingTonnage = new List<NoteTonnage>()
                 {
@@ -600,6 +604,7 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage1).Create();
@@ -637,7 +642,9 @@
                         18.8M, 19.9M),
                 };
 
-                TransferEvidenceNoteDbSetup.Init().WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
 
                 // create approved transfer with null values against approved note
                 var newTransferNoteTonnage3 = new List<NoteTransferTonnage>()
@@ -673,6 +680,7 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage3).Create();
@@ -719,7 +727,9 @@
 
                 notes.Add(approvedNoteWithSchemeNameUpdate);
 
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
                 request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
             };
@@ -850,12 +860,15 @@
                 var originatorOrganisation3 = OrganisationDbSetup.Init().Create();
 
                 EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(originatorOrganisation3.Id)
                     .WithComplianceYear(SystemTime.Now.Year)
                     .Create();
 
                 // out of compliance year not included
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
                 //approved note with approved scheme name
                 approvedSchemeName = fixture.Create<string>();
@@ -1111,6 +1124,7 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage1).Create();
@@ -1148,7 +1162,9 @@
                         18.8M, 19.9M),
                 };
 
-                TransferEvidenceNoteDbSetup.Init().WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
 
                 // create another approved transfer from note 1 with null values
                 var newTransferNoteTonnage3 = new List<NoteTransferTonnage>()
@@ -1184,12 +1200,17 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage3).Create();
 
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
-                EvidenceNoteDbSetup.Init().Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 //approved note with approved scheme name
                 approvedSchemeName = fixture.Create<string>();
@@ -1387,7 +1408,9 @@
                     .WithComplianceYear(SystemTime.Now.Year)
                     .Create();
 
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
                 //approved note with approved scheme name
                 approvedSchemeName = fixture.Create<string>();
@@ -1653,6 +1676,7 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage1).Create();
@@ -1690,7 +1714,9 @@
                         18.8M, 19.9M),
                 };
 
-                TransferEvidenceNoteDbSetup.Init().WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
 
                 // create approved transfer with null values against approved note
                 var newTransferNoteTonnage3 = new List<NoteTransferTonnage>()
@@ -1726,14 +1752,19 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage3).Create();
 
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
                 // should not be part of the CSV
-                EvidenceNoteDbSetup.Init().Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 var returnNoteTonnages = new List<NoteTonnage>()
                 {
@@ -2029,6 +2060,7 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage1).Create();
@@ -2066,7 +2098,9 @@
                         18.8M, 19.9M),
                 };
 
-                TransferEvidenceNoteDbSetup.Init().WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString()).WithTonnages(newTransferNoteTonnage2).Create();
 
                 // create approved transfer with null values against approved note
                 var newTransferNoteTonnage3 = new List<NoteTransferTonnage>()
@@ -2102,12 +2136,17 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
                     .WithTonnages(newTransferNoteTonnage3).Create();
 
-                EvidenceNoteDbSetup.Init().WithComplianceYear(SystemTime.Now.Year + 1).Create();
-                EvidenceNoteDbSetup.Init().Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(SystemTime.Now.Year + 1).Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId).Create();
 
                 request = new GetEvidenceNoteReportRequest(null, null, aatf1.Id, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
             };

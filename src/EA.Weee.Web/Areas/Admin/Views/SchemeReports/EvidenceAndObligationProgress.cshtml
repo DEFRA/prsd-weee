@@ -1,0 +1,52 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.EvidenceAndObligationProgressViewModel
+@{
+    ViewBag.Title = "PCS evidence and obligation progress report - GOV.UK";
+}
+@section full_main_content
+{
+    <p>
+        @(this.WeeeGds().BackLink(Url.Action("ChooseReport", "Reports")))
+    </p>
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">PCS evidence and obligation progress report</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p class="govuk-body">This report shows a summary of the evidence a PCS holds including transfers and their household obligation. It also includes amounts of reuse and non-household evidence held.</p>
+        <p class="govuk-body">All data is reported in tonnes (t) to three decimal places.</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-third" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
+            @Html.Gds().LabelFor(m => m.SelectedSchemeId)
+            <p class="govuk-body">If a PCS is not selected, the report will show the UK combined evidence and obligation data followed by all the individual PCS evidence and obligation progress reports</p>
+            @Html.Gds().ValidationMessageFor(m => m.SelectedSchemeId)
+        <div class="govuk-!-width-one-third">
+            @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" }, withLookAhead: true)
+        </div>
+            
+        </div>
+
+        <p>
+            If there is a large amount of data, it may take a while to download the report.
+        </p>
+
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+            "Report download", "PCS evidence and obligation progress report", new Dictionary<string, object> { { "class", "button" } }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+
+}

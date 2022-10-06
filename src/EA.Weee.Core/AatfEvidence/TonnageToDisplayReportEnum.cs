@@ -4,7 +4,7 @@
 
     public enum TonnageToDisplayReportEnum
     {
-        [Display(Name = "Original Tonnages")]
+        [Display(Name = "Original tonnages")]
         OriginalTonnages = 1,
         [Display(Name = "Net of transfers")]
         Net = 2
