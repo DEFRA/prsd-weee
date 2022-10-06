@@ -33,7 +33,7 @@
         [DisplayName("Actual or protocol")]
         public virtual Protocol? ProtocolValue { get; set; }
 
-        [DisplayName("Date submitted")]
+        [DisplayName("Submitted date")]
         public string SubmittedDate { get; set; }
 
         [DisplayName("Date rejected")]
