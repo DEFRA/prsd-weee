@@ -249,7 +249,9 @@
             {
                 LocalSetup();
 
-                note = EvidenceNoteDbSetup.Init().Create();
+                note = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 request = new GetEvidenceNotesForTransferRequest(note.OrganisationId,
                     new List<int>() {1}, note.ComplianceYear, new List<Guid>());

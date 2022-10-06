@@ -13,23 +13,27 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Reports;
     using Web.Areas.Admin.ViewModels.SchemeReports;
+    using Web.Infrastructure;
+    using Weee.Requests.AatfEvidence.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
+    using Weee.Tests.Core;
     using Xunit;
+    using GetSchemes = Weee.Requests.Admin.GetSchemes;
 
-    public class SchemeReportsControllerTests
+    public class SchemeReportsControllerTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
         private readonly SchemeReportsController controller;
         private readonly IWeeeClient client;
         private readonly BreadcrumbService breadcrumbService;
@@ -37,7 +41,6 @@
 
         public SchemeReportsControllerTests()
         {
-            fixture = new Fixture();
             client = A.Fake<IWeeeClient>();
             breadcrumbService = A.Fake<BreadcrumbService>();
             configurationService = A.Fake<ConfigurationService>();
@@ -140,6 +143,7 @@
         [InlineData(Reports.UkEeeData, "UkEeeData")]
         [InlineData(Reports.SchemeObligationData, "SchemeObligationData")]
         [InlineData(Reports.UkWeeeData, "UkWeeeData")]
+        [InlineData(Reports.PcsEvidenceAndObligationProgressData, "EvidenceAndObligationProgress")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction)
         {
             var model = new ChooseSchemeReportViewModel { SelectedValue = selectedValue };
@@ -1220,6 +1224,239 @@
             await controller.MissingProducerData(A.Dummy<MissingProducerDataViewModel>());
 
             Assert.Equal("View reports", breadcrumbService.InternalActivity);
+        }
+
+        [Fact]
+        public void EvidenceAndObligationProgressGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(SchemeReportsController).GetMethod("EvidenceAndObligationProgress", types: Type.EmptyTypes).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_ShouldSetBreadCrumb()
+        {
+            //act
+            await controller.EvidenceAndObligationProgress();
+
+            //assert
+            breadcrumbService.InternalActivity.Should().Be("View reports");
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_SystemDateShouldBeRetrieved()
+        {
+            //act
+            await controller.EvidenceAndObligationProgress();
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_SchemesShouldBeRetrieved()
+        {
+            //act
+            await controller.EvidenceAndObligationProgress();
+
+            //assert
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>.That.Matches(g => g.Filter == GetSchemes.FilterType.ApprovedOrWithdrawn))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_ModelShouldBeBuilt()
+        {
+            //arrange
+            var currentDate = new DateTime(2023, 1, 1);
+            var evidenceStartDate = new DateTime(2020, 1, 1);
+            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceStartDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>._)).Returns(schemeData);
+            //act
+            var result = await controller.EvidenceAndObligationProgress() as ViewResult;
+
+            //assert
+            var convertedModel = result.Model as EvidenceAndObligationProgressViewModel;
+            convertedModel.SelectedSchemeId.Should().BeNull();
+            convertedModel.SelectedYear.Should().Be(0);
+            convertedModel.ComplianceYears.Should().BeEquivalentTo(new SelectList(new List<int>() { 2023, 2022, 2021, 2020 }));
+            convertedModel.Schemes.Should().BeEquivalentTo(new SelectList(schemeData, "Id", "SchemeName"));
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_DefaultViewShouldBeReturned()
+        {
+            //arrange
+            var result = await controller.EvidenceAndObligationProgress() as ViewResult;
+
+            //assert
+            result.ViewName.Should().BeNullOrWhiteSpace();
+        }
+
+        [Fact]
+        public void EvidenceAndObligationProgressPost_ShouldHaveHttpPostAttribute()
+        {
+            typeof(SchemeReportsController).GetMethod("EvidenceAndObligationProgress", types: new[] { typeof(EvidenceAndObligationProgressViewModel) }).Should()
+                .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void EvidenceAndObligationProgressPost_ShouldHaveValidateAntiforgeryAttribute()
+        {
+            typeof(SchemeReportsController).GetMethod("EvidenceAndObligationProgress", types: new[] { typeof(EvidenceAndObligationProgressViewModel) }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressPost_ShouldSetBreadCrumb()
+        {
+            //arrange
+            var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
+            var csv = TestFixture.Create<CSVFileData>();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeObligationAndEvidenceTotalsReportRequest>._))
+                .Returns(csv);
+
+            //act
+            await controller.EvidenceAndObligationProgress(model);
+
+            //assert
+            breadcrumbService.InternalActivity.Should().Be("View reports");
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressPost_GivenInvalidModel_SystemDateShouldBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            //act
+            await controller.EvidenceAndObligationProgress(model);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressPost_GivenInvalidModel_SchemesShouldBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            //act
+            await controller.EvidenceAndObligationProgress(model);
+
+            //assert
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>.That.Matches(g => g.Filter == GetSchemes.FilterType.ApprovedOrWithdrawn))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressPost_GivenInvalidModel_ModelShouldBeBuilt()
+        {
+            //arrange
+            var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            var currentDate = new DateTime(2023, 1, 1);
+            var evidenceStartDate = new DateTime(2020, 1, 1);
+            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceStartDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>._)).Returns(schemeData);
+
+            //act
+            var result = await controller.EvidenceAndObligationProgress(model) as ViewResult;
+
+            //assert
+            var convertedModel = result.Model as EvidenceAndObligationProgressViewModel;
+            convertedModel.SelectedSchemeId.Should().Be(model.SelectedSchemeId);
+            convertedModel.SelectedYear.Should().Be(model.SelectedYear);
+            convertedModel.ComplianceYears.Should().BeEquivalentTo(new SelectList(new List<int>() { 2023, 2022, 2021, 2020 }));
+            convertedModel.Schemes.Should().BeEquivalentTo(new SelectList(schemeData, "Id", "SchemeName"));
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressPost_GivenInvalidModel_DefaultViewShouldBeReturned()
+        {
+            //arrange
+            var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            //arrange
+            var result = await controller.EvidenceAndObligationProgress(model) as ViewResult;
+
+            //assert
+            result.ViewName.Should().BeNullOrWhiteSpace();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressPost_GivenValidModel_ShouldRedirectToDownloadCsvAction()
+        {
+            //arrange
+            var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
+
+            //arrange
+            var result = await controller.EvidenceAndObligationProgress(model) as RedirectToRouteResult;
+
+            //assert
+            result.RouteValues["action"].Should().Be("DownloadEvidenceAndObligationProgressCsv");
+            result.RouteValues["schemeId"].Should().Be(model.SelectedSchemeId);
+            result.RouteValues["complianceYear"].Should().Be(model.SelectedYear);
+        }
+
+        [Fact]
+        public void DownloadEvidenceAndObligationProgressCsv_ShouldHaveHttpGetAttribute()
+        {
+            typeof(SchemeReportsController).GetMethod("DownloadEvidenceAndObligationProgressCsv", new Type[] {typeof(int), typeof(Guid?) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceAndObligationProgressCsv_GivenComplianceYearAndSchemeId_ReportShouldBeRetrieved()
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid?>();
+            var complianceYear = TestFixture.Create<int>();
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligationAndEvidenceTotalsReportRequest>._)).Returns(TestFixture.Create<CSVFileData>());
+
+            //act
+            await controller.DownloadEvidenceAndObligationProgressCsv(complianceYear, schemeId);
+
+            //assert
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligationAndEvidenceTotalsReportRequest>.That.Matches(g =>
+                    g.ComplianceYear  == complianceYear &&
+                    g.AppropriateAuthorityId == null &&
+                    g.SchemeId == schemeId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceAndObligationProgressCsv_GivenCsvData_FileResultShouldBeReturned()
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid?>();
+            var complianceYear = TestFixture.Create<int>();
+            var csvData = TestFixture.Create<CSVFileData>();
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<GetSchemeObligationAndEvidenceTotalsReportRequest>._)).Returns(csvData);
+
+            //act
+            var result = await controller.DownloadEvidenceAndObligationProgressCsv(complianceYear, schemeId) as FileContentResult;
+
+            //assert
+            result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(csvData.FileContent));
+            result.FileDownloadName.Should().BeEquivalentTo(CsvFilenameFormat.FormatFileName(csvData.FileName));
         }
     }
 }

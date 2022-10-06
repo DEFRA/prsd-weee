@@ -33,45 +33,50 @@
                 var complianceYear = fixture.Create<int>();
 
                 var noteRejectedStatus = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString(), "rejected")
                     .WithComplianceYear(complianceYear)
                     .Create();
 
                 var noteApprovedStatus = TransferEvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var notehSubmittedStatus = TransferEvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var noteReturnedStatus = TransferEvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var noteVoidStatus = TransferEvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 notesSet.Add(noteApprovedStatus);
                 notesSet.Add(notehSubmittedStatus);
@@ -117,10 +122,12 @@
                 LocalSetup();
 
                 var noteWithDraftStatus1 = TransferEvidenceNoteDbSetup.Init()
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 var noteWithDraftStatus2 = TransferEvidenceNoteDbSetup.Init()
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 notesSet.Add(noteWithDraftStatus1);
                 notesSet.Add(noteWithDraftStatus2);
