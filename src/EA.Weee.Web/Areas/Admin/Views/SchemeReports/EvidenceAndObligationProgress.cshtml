@@ -1,7 +1,7 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.EvidenceAndObligationProgressViewModel
 @{
-    ViewBag.Title = "Evidence notes report - GOV.UK";
+    ViewBag.Title = "PCS evidence and obligation progress report - GOV.UK";
 }
 @section full_main_content
 {
@@ -18,7 +18,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p class="govuk-body">This report shows a summary of the PCS obligations including household and non-household, reuse and the waste transferred in and out.</p>
+        <p class="govuk-body">This report shows a summary of the evidence a PCS holds including transfers and their household obligation. It also includes amounts of reuse and non-household evidence held.</p>
         <p class="govuk-body">All data is reported in tonnes (t) to three decimal places.</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
@@ -27,16 +27,14 @@
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-third" })
         </div>
 
-        <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedAppropriateAuthority)">
-            @Html.Gds().LabelFor(m => m.SelectedAppropriateAuthority)
-            @Html.Gds().ValidationMessageFor(m => m.SelectedAppropriateAuthority)
-            @Html.Gds().DropDownListFor(m => m.SelectedAppropriateAuthority, Model.AppropriateAuthorities, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-third" })
-        </div>
-
-        <div class="govuk-form-group  govuk-!-width-one-third @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
             @Html.Gds().LabelFor(m => m.SelectedSchemeId)
+            <p class="govuk-body">If a PCS is not selected, the report will show the UK combined evidence and obligation data followed by all the individual PCS evidence and obligation progress reports</p>
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchemeId)
+        <div class="govuk-!-width-one-third">
             @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" }, withLookAhead: true)
+        </div>
+            
         </div>
 
         <p>
