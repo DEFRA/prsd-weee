@@ -42,7 +42,7 @@
         [InlineData("EndDate", "End date")]
         [InlineData("WasteTypeValue", "Obligation type")]
         [InlineData("ProtocolValue", "Actual or protocol")]
-        [InlineData("SubmittedDate", "Date submitted")]
+        [InlineData("SubmittedDate", "Submitted date")]
         [InlineData("RejectedDate", "Date rejected")]
         [InlineData("ReturnedDate", "Date returned")]
         [InlineData("ApprovedDate", "Date approved")]
