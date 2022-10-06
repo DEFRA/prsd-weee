@@ -41,7 +41,9 @@
                     new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 0, 0)
                 };
 
-                note = EvidenceNoteDbSetup.Init().WithTonnages(categories).WithOrganisation(organisation.Id).Create();
+                note = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(categories).WithOrganisation(organisation.Id).Create();
 
                 request = new GetEvidenceNoteForAatfRequest(note.Id);
             };
@@ -83,6 +85,7 @@
                 };
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
@@ -131,6 +134,7 @@
                 };
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
@@ -180,6 +184,7 @@
                 };
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
@@ -229,6 +234,7 @@
                 };
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
@@ -285,7 +291,9 @@
             {
                 LocalSetup();
 
-                note = EvidenceNoteDbSetup.Init().Create();
+                note = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 request = new GetEvidenceNoteForAatfRequest(note.Id);
             };

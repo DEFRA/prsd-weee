@@ -77,7 +77,8 @@
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 0),
                 };
 
-                var note = EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                var note = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithComplianceYear(2022)
@@ -102,7 +103,8 @@
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithComplianceYear(2022)
@@ -114,7 +116,8 @@
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50)
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithComplianceYear(2023)
@@ -128,7 +131,8 @@
 
                 var recipientOrganisation2 = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation2.Id).Create();
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation2.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation2.Id)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithComplianceYear(2023)
@@ -140,7 +144,8 @@
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50)
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages5).Create();
@@ -151,7 +156,8 @@
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50)
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages6).Create();
 
@@ -161,7 +167,8 @@
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50)
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -172,7 +179,8 @@
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50)
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -183,7 +191,8 @@
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50)
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Void, UserId.ToString())
@@ -196,7 +205,8 @@
                     new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 100, 50)
                 };
 
-                EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
                     .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
                     .WithComplianceYear(2022)
@@ -362,7 +372,9 @@
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
                 };
 
-                EvidenceNoteDbSetup.Init().WithOrganisation(recipientOrganisation.Id)
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithOrganisation(recipientOrganisation.Id)
                     .WithTonnages(recipientAsOriginatorTonnages)
                     .WithWasteType(WasteType.HouseHold)
                     .WithStatusUpdate(NoteStatus.Approved)

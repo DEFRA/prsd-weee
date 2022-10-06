@@ -382,7 +382,7 @@
     <Content Include="scripts\Update\Release 5\Sprint14\20220922-1447-create-evidence-note-net-tonnages-stored-procedure.sql" />
     <Content Include="scripts\Update\Release 5\Sprint14\20220922-1447-create-evidence-note-original-tonnages-stored-procedure.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20220929-1023-alter-getObligationEvidenceSummaryTotals.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint15\20220930-1209-create-getSchemeObligationAndEvidenceTotals.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint15\20221005-1427-create-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20220929-1022-report-view-updates.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
