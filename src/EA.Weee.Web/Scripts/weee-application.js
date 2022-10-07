@@ -141,6 +141,11 @@
         $("#ComplianceYearForm").submit();
     });
 
+    setupAutoCompletes();
+});
+
+function setupAutoCompletes() {
+
     var myEvent = new CustomEvent("gds-auto-complete-event", {
         detail: {},
         bubbles: true,
@@ -223,8 +228,7 @@
         element.id = element.id + "-select";
 
     });
-});
-
+}
 function initReviewEvidenceNote() {
     if ($("#ReasonDiv").hasClass("error")) {
         document.getElementById("ReasonDiv").style = "display: block;";
