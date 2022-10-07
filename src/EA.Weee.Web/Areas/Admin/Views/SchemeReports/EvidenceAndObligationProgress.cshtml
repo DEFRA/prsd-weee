@@ -5,8 +5,9 @@
 }
 @section full_main_content
 {
+
     <p>
-        @(this.WeeeGds().BackLink(Url.Action("ChooseReport", "Reports")))
+        @(this.WeeeGds().BackLink(Url.Action("ChooseReport", "SchemeReports")))
     </p>
 
     <header class="hgroup">
@@ -31,10 +32,10 @@
             @Html.Gds().LabelFor(m => m.SelectedSchemeId)
             <p class="govuk-body">If a PCS is not selected, the report will show the UK combined evidence and obligation data followed by all the individual PCS evidence and obligation progress reports</p>
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchemeId)
-        <div class="govuk-!-width-one-third">
-            @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" }, withLookAhead: true)
-        </div>
-            
+            <div class="govuk-!-width-one-third">
+                @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" }, withLookAhead: true)
+            </div>
+
         </div>
 
         <p>
@@ -49,4 +50,24 @@
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
 
+}
+
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+
+            var url = '@Html.Raw(@Url.Action("DownloadEvidenceAndObligationProgressCsv", new
+                       {
+                           complianceYear = Model.SelectedYear,
+                           schemeId = Model.SelectedSchemeId
+                       }))';
+
+            location.href = url;
+
+            setupAutoCompletes();
+        </script>
+    }
 }
