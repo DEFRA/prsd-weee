@@ -1357,13 +1357,18 @@
             A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>.That.Matches(g => g.Filter == GetSchemes.FilterType.ApprovedOrWithdrawn))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task EvidenceAndObligationProgressPost_GivenInvalidModel_ModelShouldBeBuilt()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task EvidenceAndObligationProgressPost_GivenModel_ModelShouldBeBuilt(bool valid)
         {
             //arrange
             var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
-            controller.ModelState.AddModelError("error", "error");
-
+            if (!valid)
+            {
+                controller.ModelState.AddModelError("error", "error");
+            }
+            
             var currentDate = new DateTime(2023, 1, 1);
             var evidenceStartDate = new DateTime(2020, 1, 1);
             var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
@@ -1384,14 +1389,19 @@
             convertedModel.Schemes.Should().BeEquivalentTo(new SelectList(schemeData, "Id", "SchemeName"));
         }
 
-        [Fact]
-        public async Task EvidenceAndObligationProgressPost_GivenInvalidModel_DefaultViewShouldBeReturned()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task EvidenceAndObligationProgressPost_GivenModel_DefaultViewShouldBeReturned(bool valid)
         {
             //arrange
             var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
-            controller.ModelState.AddModelError("error", "error");
+            if (!valid)
+            {
+                controller.ModelState.AddModelError("error", "error");
+            }
 
-            //arrange
+            //act
             var result = await controller.EvidenceAndObligationProgress(model) as ViewResult;
 
             //assert
@@ -1399,18 +1409,40 @@
         }
 
         [Fact]
-        public async Task EvidenceAndObligationProgressPost_GivenValidModel_ShouldRedirectToDownloadCsvAction()
+        public async Task EvidenceAndObligationProgressPost_GivenValidModel_ViewBagTriggerDownloadShouldBeTrue()
         {
             //arrange
             var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
 
-            //arrange
-            var result = await controller.EvidenceAndObligationProgress(model) as RedirectToRouteResult;
+            //act
+            var result = await controller.EvidenceAndObligationProgress(model) as ViewResult;
 
             //assert
-            result.RouteValues["action"].Should().Be("DownloadEvidenceAndObligationProgressCsv");
-            result.RouteValues["schemeId"].Should().Be(model.SelectedSchemeId);
-            result.RouteValues["complianceYear"].Should().Be(model.SelectedYear);
+            ((bool)result.ViewBag.TriggerDownload).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressPost_GivenInValidModel_ViewBagTriggerDownloadShouldBeFalse()
+        {
+            //arrange
+            var model = TestFixture.Create<EvidenceAndObligationProgressViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            //act
+            var result = await controller.EvidenceAndObligationProgress(model) as ViewResult;
+
+            //assert
+            ((bool)result.ViewBag.TriggerDownload).Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_ViewBagTriggerDownloadShouldBeFalse()
+        {
+            //act
+            var result = await controller.EvidenceAndObligationProgress() as ViewResult;
+
+            //assert
+            ((bool)result.ViewBag.TriggerDownload).Should().BeFalse();
         }
 
         [Fact]

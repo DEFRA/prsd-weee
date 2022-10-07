@@ -18,11 +18,11 @@
         }
 
         [Theory]
-        [InlineData("SelectedYear")]
-        public void EvidenceAndObligationProgressViewModel_PropertiesShouldHaveRequiredAttribute(string property)
+        [InlineData("SelectedYear", "Select a compliance year")]
+        public void EvidenceAndObligationProgressViewModel_PropertiesShouldHaveRequiredAttribute(string property, string error)
         {
             typeof(EvidenceAndObligationProgressViewModel).GetProperty(property).Should()
-                .BeDecoratedWith<RequiredAttribute>();
+                .BeDecoratedWith<RequiredAttribute>().Which.ErrorMessage.Should().Be(error);
         }
     }
 }
