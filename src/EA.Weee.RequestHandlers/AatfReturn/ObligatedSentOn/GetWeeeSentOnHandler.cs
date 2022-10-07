@@ -40,46 +40,49 @@
             var weeeSentOnList = new List<WeeeSentOnData>();
             var weeeSentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(message.AatfId, message.ReturnId);
 
-            foreach (var item in weeeSentOn)
+            if (weeeSentOn != null && weeeSentOn.Count > 0)
             {
-                var amount = await fetchWeeeSentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(item.Id);
-
-                var weeeSentOnObligatedData = amount.Select(n => new WeeeObligatedData(n.Id, new AatfData(n.WeeeSentOn.Aatf.Id, n.WeeeSentOn.Aatf.Name, n.WeeeSentOn.Aatf.ApprovalNumber, n.WeeeSentOn.Aatf.ComplianceYear), n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
-
-                var weeeSentOnData = new WeeeSentOnData()
+                foreach (var item in weeeSentOn)
                 {
-                    SiteAddress = addressMapper.Map(item.SiteAddress),
-                    Tonnages = weeeSentOnObligatedData,
-                    WeeeSentOnId = item.Id,
-                    SiteAddressId = item.SiteAddress.Id
-                };
+                    var amount = await fetchWeeeSentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(item.Id);
 
-                if (item.OperatorAddress != null)
-                {
-                    weeeSentOnData.OperatorAddress = addressMapper.Map(item.OperatorAddress);
-                    weeeSentOnData.OperatorAddressId = item.OperatorAddress.Id;
-                }
-                else
-                {
-                    var aatfData = context.Aatfs.Where(x => x.SiteAddressId == item.SiteAddressId && x.Organisation.BusinessAddressId == item.OperatorAddressId).SingleOrDefault();
-                    var country = context.Countries.Where(x => x.Id == aatfData.Organisation.BusinessAddress.CountryId).SingleOrDefault();
+                    var weeeSentOnObligatedData = amount.Select(n => new WeeeObligatedData(n.Id, new AatfData(n.WeeeSentOn.Aatf.Id, n.WeeeSentOn.Aatf.Name, n.WeeeSentOn.Aatf.ApprovalNumber, n.WeeeSentOn.Aatf.ComplianceYear), n.CategoryId, n.NonHouseholdTonnage, n.HouseholdTonnage)).ToList();
 
-                    weeeSentOnData.OperatorAddress = new AatfAddressData()
+                    var weeeSentOnData = new WeeeSentOnData()
                     {
-                        Name = aatfData.Organisation.Name,
-                        Address1 = aatfData.Organisation.BusinessAddress.Address1,
-                        Address2 = aatfData.Organisation.BusinessAddress.Address2,
-                        TownOrCity = aatfData.Organisation.BusinessAddress.TownOrCity,
-                        Postcode = aatfData.Organisation.BusinessAddress.Postcode,
-                        CountryId = aatfData.Organisation.BusinessAddress.CountryId,
-                        CountyOrRegion = aatfData.Organisation.BusinessAddress.CountyOrRegion,
-                        CountryName = country.Name
+                        SiteAddress = addressMapper.Map(item.SiteAddress),
+                        Tonnages = weeeSentOnObligatedData,
+                        WeeeSentOnId = item.Id,
+                        SiteAddressId = item.SiteAddress.Id
                     };
-                    weeeSentOnData.OperatorAddressId = item.OperatorAddressId;
-                    weeeSentOnData.ApprovalNumber = aatfData.ApprovalNumber;
-                }
 
-                weeeSentOnList.Add(weeeSentOnData);
+                    if (item.OperatorAddress != null)
+                    {
+                        weeeSentOnData.OperatorAddress = addressMapper.Map(item.OperatorAddress);
+                        weeeSentOnData.OperatorAddressId = item.OperatorAddress.Id;
+                    }
+                    else
+                    {
+                        var aatfData = context.Aatfs.Where(x => x.SiteAddressId == item.SiteAddressId && x.Organisation.BusinessAddressId == item.OperatorAddressId).SingleOrDefault();
+                        var country = context.Countries.Where(x => x.Id == aatfData.Organisation.BusinessAddress.CountryId).SingleOrDefault();
+
+                        weeeSentOnData.OperatorAddress = new AatfAddressData()
+                        {
+                            Name = aatfData.Organisation.Name,
+                            Address1 = aatfData.Organisation.BusinessAddress.Address1,
+                            Address2 = aatfData.Organisation.BusinessAddress.Address2,
+                            TownOrCity = aatfData.Organisation.BusinessAddress.TownOrCity,
+                            Postcode = aatfData.Organisation.BusinessAddress.Postcode,
+                            CountryId = aatfData.Organisation.BusinessAddress.CountryId,
+                            CountyOrRegion = aatfData.Organisation.BusinessAddress.CountyOrRegion,
+                            CountryName = country.Name
+                        };
+                        weeeSentOnData.OperatorAddressId = item.OperatorAddressId;
+                        weeeSentOnData.ApprovalNumber = aatfData.ApprovalNumber;
+                    }
+
+                    weeeSentOnList.Add(weeeSentOnData);
+                }
             }
 
             if (message.WeeeSentOnId != null)
@@ -88,6 +91,11 @@
                 var weeeSentOnSelected = weeeSentOnList.Where(w => w.WeeeSentOnId == message.WeeeSentOnId).Select(w => w).SingleOrDefault();
                 weeeSentOnListFiltered.Add(weeeSentOnSelected);
                 return weeeSentOnListFiltered;
+            }
+
+            if (weeeSentOnList != null && weeeSentOnList.Count > 0)
+            {
+                weeeSentOnList = weeeSentOnList.OrderBy(x => x.SiteAddress.Name).ToList();
             }
 
             return weeeSentOnList;
