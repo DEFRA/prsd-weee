@@ -1,9 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.RazorHelpers
-@*@using EA.Weee.Web.Areas.Aatf.ViewModels*@
 @using EA.Weee.Web.Areas.Scheme.Controllers
-@*@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes*@
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.Extensions
 @using MvcNavigationHelpers
 
@@ -36,14 +35,22 @@
                     <span class="govuk-!-font-size-36 govuk-!-font-weight-bold govuk-!-padding-left-0"> <span class="govuk-body">Submitted evidence notes for review &nbsp;</span> </span>
                 </p>-->
                 <!-- download links here -->
-                <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-7">
+                <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
                     @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report - original tonnages (CSV)",
                                                                  null,
                                                                  Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.OriginalTonnages)),
                                                                  "Downloads",
                                                                  "Evidence notes report - original tonnages (CSV)"))
                 </p>
-                <!--<p class="govuk-body"><a href="#">Download evidence notes report - net of transfers (CSV)</a></p>-->
+
+                <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-7">
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report - net of transfers (CSV)",
+                                                                 null,
+                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.Net)),
+                                                                 "Downloads",
+                                                                 "Evidence notes report - net of transfers (CSV)"))
+                </p>
+
                 <!--<p class="govuk-body"><a href="#">Download evidence transfers report (CSV)</a></p>-->
 
                 @if (Model.DisplayNoDataMessage)
