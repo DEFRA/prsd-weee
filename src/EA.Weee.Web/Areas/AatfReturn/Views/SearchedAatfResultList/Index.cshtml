@@ -73,7 +73,7 @@
         </p>
 
         <div class="govuk-!-padding-bottom-4"></div>
-        @(this.WeeeGds().Submit("Continue"))
+        @(this.WeeeGds().Submit("Save and continue"))
 
         <p class="govuk-body">
             @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SearchAnAatf" }, new { @class = "govuk-back-link" })
@@ -85,6 +85,7 @@
 <script type="text/javascript">
 
     document.querySelector('input[name="SelectedAatfId"]:checked').checked = false;
+    //document.getElementById("SelectedAatfId").value = "";
 
     function setSiteSelectedId(siteValue, siteName) {
         document.getElementById("SelectedAatfId").value = siteValue;

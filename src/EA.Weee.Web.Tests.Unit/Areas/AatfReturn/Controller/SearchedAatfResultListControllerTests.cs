@@ -9,6 +9,8 @@
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -23,14 +25,18 @@
         private readonly IMap<ReturnAndAatfToSearchedAatfViewModelMapTransfer, SearchedAatfResultListViewModel> mapper;
         private readonly SearchedAatfResultListController controller;
         private readonly ICreateWeeeSentOnAatfRequestCreator requestCreator;
+        private readonly BreadcrumbService breadcrumb;
+        private readonly IWeeeCache cache;
 
         public SearchedAatfResultListControllerTests()
         {
             this.apiClient = A.Fake<IWeeeClient>();
             this.mapper = A.Fake<IMap<ReturnAndAatfToSearchedAatfViewModelMapTransfer, SearchedAatfResultListViewModel>>();
             this.requestCreator = A.Fake<ICreateWeeeSentOnAatfRequestCreator>();
+            this.breadcrumb = A.Fake<BreadcrumbService>();
+            this.cache = A.Fake<IWeeeCache>();
 
-            controller = new SearchedAatfResultListController(() => apiClient, mapper, requestCreator);
+            controller = new SearchedAatfResultListController(() => apiClient, mapper, requestCreator, breadcrumb, cache);
         }
 
         [Fact]

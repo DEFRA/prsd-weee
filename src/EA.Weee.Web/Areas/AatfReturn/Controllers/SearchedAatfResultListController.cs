@@ -9,8 +9,11 @@
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -22,15 +25,21 @@
         private readonly Func<IWeeeClient> apiClient;        
         private readonly IMap<ReturnAndAatfToSearchedAatfViewModelMapTransfer, SearchedAatfResultListViewModel> mapper;
         private readonly ICreateWeeeSentOnAatfRequestCreator requestCreator;
+        private readonly BreadcrumbService breadcrumb;
+        private readonly IWeeeCache cache;
 
         public SearchedAatfResultListController(Func<IWeeeClient> apiClient,
                                                 IMap<ReturnAndAatfToSearchedAatfViewModelMapTransfer,
                                                 SearchedAatfResultListViewModel> mapper,
-                                                ICreateWeeeSentOnAatfRequestCreator requestCreator)
+                                                ICreateWeeeSentOnAatfRequestCreator requestCreator,
+                                                BreadcrumbService breadcrumb,
+                                                IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.mapper = mapper;
             this.requestCreator = requestCreator;
+            this.breadcrumb = breadcrumb;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -39,6 +48,10 @@
             using (var client = apiClient())
             {
                 List<AatfData> aatfDatas = new List<AatfData>();
+
+                var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+
+                await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
                 if (selectedAatfId != Guid.Empty)
                 {
@@ -125,6 +138,10 @@
             {
                 using (var client = apiClient())
                 {
+                    var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(searchedAatfModel.ReturnId, false));
+
+                    await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, searchedAatfModel.AatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
+
                     List<AatfData> aatfDatas = new List<AatfData>();
                     var resultData = await client.SendAsync(User.GetAccessToken(), new GetSearchAatfAddress(searchedAatfModel.SelectedAatfName, searchedAatfModel.AatfId, searchedAatfModel.ReturnId, true));
                     if (resultData != null && resultData.Count > 0)
@@ -153,6 +170,16 @@
                     return View(searchedAatfModel);
                 }
             }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity, Guid aatfId, string quarter)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.OrganisationId = organisationId;
+            var aatfInfo = await cache.FetchAatfData(organisationId, aatfId);
+            breadcrumb.QuarterDisplayInfo = quarter;
+            breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
     }
 }
