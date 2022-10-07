@@ -3,6 +3,7 @@
     using CuttingEdge.Conditions;
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Data;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
@@ -14,6 +15,19 @@
         public EvidenceStoredProcedures(WeeeContext context)
         {
             this.context = context;
+
+            var cmdTimeout = -1;
+            var timeoutSettings = ConfigurationManager.AppSettings["Weee.CommandTimeout"];
+
+            if (!string.IsNullOrEmpty(timeoutSettings))
+            {
+                int.TryParse(timeoutSettings, out cmdTimeout);
+            }
+
+            if (cmdTimeout >= 0)
+            {
+                context.Database.CommandTimeout = cmdTimeout;
+            }
         }
 
         public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(
