@@ -119,6 +119,8 @@
         {
             SetBreadcrumb();
 
+            ViewBag.TriggerDownload = false;
+
             var model = new EvidenceAndObligationProgressViewModel();
             await PopulateFilters(model);
 
@@ -131,11 +133,7 @@
         {
             SetBreadcrumb();
 
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("DownloadEvidenceAndObligationProgressCsv",
-                    new { complianceYear = model.SelectedYear, schemeId = model.SelectedSchemeId });
-            }
+            ViewBag.TriggerDownload = ModelState.IsValid;
 
             await PopulateFilters(model);
 
