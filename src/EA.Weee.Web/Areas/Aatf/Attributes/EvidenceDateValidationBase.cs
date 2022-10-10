@@ -37,6 +37,14 @@
             set => cache = value;
         }
 
+        private ConfigurationService configService;
+
+        public ConfigurationService ConfigService
+        {
+            get => configService ?? DependencyResolver.Current.GetService<ConfigurationService>();
+            set => configService = value;
+        }
+
         public DateTime GetCurrentDateTime()
         {
             return AsyncHelpers.RunSync(async () =>
@@ -112,6 +120,25 @@
                 if (startDate < endDate)
                 {
                     return new ValidationResult("Ensure the end date is after the start date");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+
+        protected ValidationResult ValidateDatesAgainstEvidenceNoteSiteSelectionDateFrom(DateTime startDate, DateTime? endDate)
+        {
+            var configDate = ConfigService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
+
+            if (startDate < configDate.Date)
+            {
+                return new ValidationResult("The start date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
+            }
+            if (endDate.HasValue)
+            {
+                if (endDate.Value < configDate.Date)
+                {
+                    return new ValidationResult("The end date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
                 }
             }
 

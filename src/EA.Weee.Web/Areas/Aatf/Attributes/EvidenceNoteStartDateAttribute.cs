@@ -43,6 +43,13 @@
                 return startDateValid;
             }
 
+            var validateDatesAgainstConfig = ValidateDatesAgainstEvidenceNoteSiteSelectionDateFrom(thisDate, otherDate);
+            
+            if (validateDatesAgainstConfig != ValidationResult.Success)
+            {
+                return validateDatesAgainstConfig;
+            }
+
             return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
         }
     }
