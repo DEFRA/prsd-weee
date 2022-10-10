@@ -31,6 +31,13 @@
                 return new ValidationResult("Unable to validate the evidence note details");
             }
 
+            var validateStartDateAgainstConfigDate = ValidateStartDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate);
+
+            if (validateStartDateAgainstConfigDate != ValidationResult.Success)
+            {
+                return validateStartDateAgainstConfigDate;
+            }
+
             if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
                 return new ValidationResult("The start date must be within an open compliance year");
@@ -41,13 +48,6 @@
             if (startDateValid != ValidationResult.Success)
             {
                 return startDateValid;
-            }
-
-            var validateDatesAgainstConfig = ValidateDatesAgainstEvidenceNoteSiteSelectionDateFrom(thisDate, otherDate);
-            
-            if (validateDatesAgainstConfig != ValidationResult.Success)
-            {
-                return validateDatesAgainstConfig;
             }
 
             return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
