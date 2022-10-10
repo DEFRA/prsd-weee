@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using AutoFixture;
     using Constant;
     using Core.AatfEvidence;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Areas.Aatf.Controllers;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;

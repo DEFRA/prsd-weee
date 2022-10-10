@@ -104,6 +104,8 @@
 
         public bool IsInternalUser { get; set; }
 
+        public bool CanDisplayPdfLink => (Status == NoteStatus.Approved || Status == NoteStatus.Submitted || Status == NoteStatus.Rejected || Status == NoteStatus.Returned);
+
         public ViewEvidenceNoteViewModel()
         {
             AddTransferCategoryValues(new EvidenceCategoryValues());
