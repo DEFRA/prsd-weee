@@ -7,9 +7,12 @@
     using System.Web.Mvc;
     using Aatf.Mappings.ToViewModel;
     using Attributes;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Prsd.Email;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence.Reports;
@@ -17,6 +20,7 @@
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Extensions;
@@ -32,17 +36,23 @@
         private readonly IMapper mapper;
         private readonly ISessionService sessionService;
         private readonly ConfigurationService configurationService;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
             Func<IWeeeClient> apiClient, 
             ISessionService sessionService,
+            IMvcTemplateExecutor templateExecutor, 
+            IPdfDocumentProvider pdfDocumentProvider,
             ConfigurationService configurationService) : base(breadcrumb, cache)
         {
             this.mapper = mapper;
             this.apiClient = apiClient;
             this.sessionService = sessionService;
+            this.templateExecutor = templateExecutor;
+            this.pdfDocumentProvider = pdfDocumentProvider;
             this.configurationService = configurationService;
         }
 
@@ -277,6 +287,28 @@
                 summaryModel.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
 
                 return View("SummaryEvidence", summaryModel);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceNote(Guid evidenceNoteId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
+
+                var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null, true));
+
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadEvidenceNote", model);
+
+                var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+                var timestamp = SystemTime.Now;
+                var fileName = $"{result.ComplianceYear}_{model.ReferenceDisplay}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.pdf";
+
+                return File(pdf, "application/pdf", fileName);
             }
         }
 

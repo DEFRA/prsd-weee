@@ -1,16 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controller
 {
-    using Api.Client;
     using AutoFixture;
     using Core.AatfEvidence;
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.AatfEvidence.Reports;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller;
     using FakeItEasy;
     using FluentAssertions;
-    using Prsd.Core.Mapper;
     using System;
     using System.Text;
     using System.Threading.Tasks;
@@ -20,25 +18,15 @@
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
 
-    public class ManageEvidenceNotesControllerDownloadEvidenceNotesReportTests //: ManageEvidenceNotesControllerTestsBase
+    public class ManageEvidenceNotesControllerDownloadEvidenceNotesReportTests : ManageEvidenceNotesControllerTestsBase
     {
-        protected readonly IWeeeClient WeeeClient;
-        protected readonly Fixture Fixture;
-        protected readonly IMapper Mapper;
-        protected readonly BreadcrumbService Breadcrumb;
-        protected readonly IWeeeCache Cache;
-        protected readonly ISessionService SessionService;
-        protected readonly ConfigurationService ConfigurationService;
         protected readonly ManageEvidenceNotesController Controller;
 
         public ManageEvidenceNotesControllerDownloadEvidenceNotesReportTests()
         {
-            WeeeClient = A.Fake<IWeeeClient>();
-            Fixture = new Fixture();
-            Mapper = A.Fake<IMapper>();
-            SessionService = A.Fake<ISessionService>();
-            ConfigurationService = A.Fake<ConfigurationService>();
             A.CallTo(() => ConfigurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
+            var content = Fixture.Create<string>();
+            A.CallTo(() => TemplateExecutor.RenderRazorView(A<ControllerContext>._, A<string>._, A<object>._)).Returns(content);
 
             var model = Fixture.Build<ViewEvidenceNoteViewModel>()
                 .With(e => e.Reference, 1)
@@ -46,7 +34,7 @@
                 .Create();
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
-            Controller = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, ConfigurationService);
+            Controller = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, TemplateExecutor, PdfDocumentProvider, ConfigurationService);
         }
 
         [Fact]

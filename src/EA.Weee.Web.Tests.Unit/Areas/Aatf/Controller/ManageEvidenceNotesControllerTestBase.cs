@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
-    using System;
-    using System.Collections.Generic;
     using Api.Client;
     using AutoFixture;
     using Core.AatfEvidence;
     using FakeItEasy;
     using Prsd.Core.Mapper;
-    using Prsd.Email;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Collections.Generic;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.Aatf.ViewModels;
     using Web.Infrastructure;
