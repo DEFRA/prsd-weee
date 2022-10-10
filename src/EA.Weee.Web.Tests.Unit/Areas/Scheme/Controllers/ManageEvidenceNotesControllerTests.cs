@@ -1,21 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using AutoFixture;
     using Core.Helpers;
     using EA.Prsd.Core;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Admin.Obligation;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Scheme;
-    using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
@@ -23,41 +15,36 @@
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller;
     using EA.Weee.Web.ViewModels.Shared;
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Filters;
     using Weee.Requests.Shared;
     using Xunit;
 
-    public class ManageEvidenceNotesControllerTests : SimpleUnitTestBase
+    public class ManageEvidenceNotesControllerTests : ManageEvidenceNotesControllerTestsBase
     {
-        protected readonly IWeeeClient WeeeClient;
-        protected readonly IMapper Mapper;
-        protected readonly ManageEvidenceNotesController ManageEvidenceController;
-        protected readonly BreadcrumbService Breadcrumb;
-        protected readonly IWeeeCache Cache;
-        protected readonly Guid OrganisationId;
+        protected new readonly ManageEvidenceNotesController ManageEvidenceController;
         protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
-        protected readonly ISessionService SessionService;
         private readonly ConfigurationService configurationService;
+        protected readonly Fixture TestFixture;
 
         public ManageEvidenceNotesControllerTests()
         {
-            WeeeClient = A.Fake<IWeeeClient>();
-            Breadcrumb = A.Fake<BreadcrumbService>();
-            Cache = A.Fake<IWeeeCache>();
-            Mapper = A.Fake<IMapper>();
-            OrganisationId = Guid.NewGuid();
-            SessionService = A.Fake<ISessionService>();
+            TestFixture = new Fixture();
             configurationService = A.Fake<ConfigurationService>();
             A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
 
             TransferNoteRequestCreator = A.Fake<IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest>>();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, configurationService);
-        
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, TemplateExecutor, PdfDocumentProvider, configurationService);
+
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(DateTime.Now);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = TestFixture.Create<string>() });
         }
@@ -124,18 +111,17 @@
         {
             //arrange
             var schemeName = Faker.Company.Name();
-            var organisationId = Guid.NewGuid();
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
-            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
-            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+            A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(schemeName);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
 
             //act
-            await ManageEvidenceController.Index(organisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
             Breadcrumb.ExternalOrganisation.Should().Be(schemeName);
-            Breadcrumb.OrganisationId.Should().Be(organisationId);
+            Breadcrumb.OrganisationId.Should().Be(OrganisationId);
         }
 
         [Theory]
@@ -148,18 +134,17 @@
         {
             //arrange
             var schemeName = Faker.Company.Name();
-            var organisationId = Guid.NewGuid();
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
-            A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(schemeName);
-            A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
+            A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(schemeName);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
 
             //act
-            await ManageEvidenceController.Index(organisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
             Breadcrumb.ExternalOrganisation.Should().Be(schemeName);
-            Breadcrumb.OrganisationId.Should().Be(organisationId);
+            Breadcrumb.OrganisationId.Should().Be(OrganisationId);
         }
 
         [Theory]
@@ -655,9 +640,7 @@
         public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_ViewAndTransferEvidenceNotesViewModelShouldBeReturned(string tab)
         {
             //arrange
-
             var model = TestFixture.Create<SchemeViewAndTransferManageEvidenceSchemeViewModel>();
-
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act

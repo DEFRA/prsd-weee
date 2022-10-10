@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
     using AutoFixture;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
+    using Core.Scheme;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using EA.Weee.Web.ViewModels.Shared;
     using FakeItEasy;
@@ -18,41 +17,26 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.Scheme;
-    using Core.Tests.Unit.Helpers;
     using Web.Areas.Scheme.Attributes;
     using Web.Extensions;
     using Web.Filters;
     using Web.ViewModels.Shared.Mapping;
-    using Weee.Tests.Core;
     using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
-    public class ManageEvidenceNotesControllerReviewEvidenceNoteTests : SimpleUnitTestBase
+    public class ManageEvidenceNotesControllerReviewEvidenceNoteTests : ManageEvidenceNotesControllerTestsBase
     {
-        protected readonly IWeeeClient WeeeClient;
-        protected readonly IMapper Mapper;
-        protected readonly ManageEvidenceNotesController ManageEvidenceController;
-        protected readonly BreadcrumbService Breadcrumb;
-        protected readonly IWeeeCache Cache;
+        protected new readonly ManageEvidenceNotesController ManageEvidenceController;
         protected readonly Guid RecipientId;
-        protected readonly Guid OrganisationId;
-        protected readonly Guid EvidenceNoteId;
-        protected readonly ISessionService SessionService;
         private readonly ConfigurationService configurationService;
+        private readonly Fixture testFixture;
 
         public ManageEvidenceNotesControllerReviewEvidenceNoteTests()
         {
-            WeeeClient = A.Fake<IWeeeClient>();
-            Breadcrumb = A.Fake<BreadcrumbService>();
-            Cache = A.Fake<IWeeeCache>();
-            Mapper = A.Fake<IMapper>();
-            SessionService = A.Fake<ISessionService>();
             RecipientId = Guid.NewGuid();
-            OrganisationId = Guid.NewGuid();
-            EvidenceNoteId = Guid.NewGuid();
+            testFixture = new Fixture();
             configurationService = A.Fake<ConfigurationService>();
-            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, configurationService);
+            ManageEvidenceController = new ManageEvidenceNotesController(Mapper, Breadcrumb, Cache, () => WeeeClient, SessionService, TemplateExecutor, PdfDocumentProvider, configurationService);
 
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(
                 new ReviewEvidenceNoteViewModel()
@@ -116,7 +100,7 @@
         {
             // arrange 
             var organisationName = "OrganisationName";
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+            var schemeInfo = testFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
 
             A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(organisationName);
@@ -135,7 +119,7 @@
         {
             // arrange 
             var organisationName = "OrganisationName";
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            var schemeInfo = testFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
             A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(organisationName);
 
@@ -152,7 +136,7 @@
         public async Task ViewEvidenceNoteGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
         {
             //act
-            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, TestFixture.Create<Guid>());
+            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, testFixture.Create<Guid>());
 
             //asset
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).MustHaveHappenedOnceExactly();
@@ -174,7 +158,7 @@
         public async Task ViewEvidenceNoteGet_GivenEvidenceNote_ModelMapperShouldBeCalled()
         {
             //arrange
-            var noteData = TestFixture.Create<EvidenceNoteData>();
+            var noteData = testFixture.Create<EvidenceNoteData>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
@@ -194,7 +178,7 @@
         public async Task ViewEvidenceNoteGet_GivenEvidenceNoteAndStatusTempData_ModelMapperShouldBeCalled()
         {
             //arrange
-            var noteData = TestFixture.Create<EvidenceNoteData>();
+            var noteData = testFixture.Create<EvidenceNoteData>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
@@ -217,8 +201,8 @@
         public async Task ViewEvidenceNoteGet_GivenEvidenceNoteDataAndRedirectTab_ModelMapperShouldBeCalled()
         {
             //arrange
-            var noteData = TestFixture.Create<EvidenceNoteData>();
-            var redirectTab = TestFixture.Create<string>();
+            var noteData = testFixture.Create<EvidenceNoteData>();
+            var redirectTab = testFixture.Create<string>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
@@ -241,7 +225,7 @@
         public async Task ViewEvidenceNoteGet_GivenModelIsBuilt_ModelShouldBeReturned()
         {
             //arrange
-            var model = TestFixture.Build<ViewEvidenceNoteViewModel>().With(m => m.RedirectTab, string.Empty).Create();
+            var model = testFixture.Build<ViewEvidenceNoteViewModel>().With(m => m.RedirectTab, string.Empty).Create();
 
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
@@ -283,7 +267,7 @@
         {
             // arrange 
             var organisationName = "OrganisationName";
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+            var schemeInfo = testFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
             A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
@@ -301,7 +285,7 @@
         {
             // arrange 
             var organisationName = "OrganisationName";
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            var schemeInfo = testFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
             A.CallTo(() => Cache.FetchOrganisationName(A<Guid>._)).Returns(organisationName);
 
@@ -330,8 +314,8 @@
         public async Task ReviewEvidenceNoteGet_GivenNote_ModelMapperShouldBeCalled()
         {
             //arrange
-            var noteData = TestFixture.Create<EvidenceNoteData>();
-            var complianceYear = TestFixture.Create<int>();
+            var noteData = testFixture.Create<EvidenceNoteData>();
+            var complianceYear = testFixture.Create<int>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
@@ -357,8 +341,8 @@
             }
 
             //arrange
-            var model = TestFixture.Build<ReviewEvidenceNoteViewModel>()
-                .With(m => m.ViewEvidenceNoteViewModel, TestFixture.Build<ViewEvidenceNoteViewModel>().With(v => v.Status, status).Create()).Create();
+            var model = testFixture.Build<ReviewEvidenceNoteViewModel>()
+                .With(m => m.ViewEvidenceNoteViewModel, testFixture.Build<ViewEvidenceNoteViewModel>().With(v => v.Status, status).Create()).Create();
 
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
@@ -376,7 +360,7 @@
         public async Task ReviewEvidenceNoteGet_GivenMappedModel_ModelShouldBeReturned()
         {
             //arrange
-            var model = TestFixture.Build<ReviewEvidenceNoteViewModel>()
+            var model = testFixture.Build<ReviewEvidenceNoteViewModel>()
                 .With(r => r.ViewEvidenceNoteViewModel, new ViewEvidenceNoteViewModel()
                 {
                     Status = NoteStatus.Submitted
@@ -420,10 +404,10 @@
         public async Task ReviewEvidenceNotePost_GivenInvalidModelAndSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
-            var model = TestFixture.Create<ReviewEvidenceNoteViewModel>();
+            var model = testFixture.Create<ReviewEvidenceNoteViewModel>();
             var organisationId = model.OrganisationId;
             var organisationName = Faker.Company.Name();
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
+            var schemeInfo = testFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
             A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
@@ -442,10 +426,10 @@
         public async Task ReviewEvidenceNotePost_GivenInvalidModelAndSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
-            var model = TestFixture.Create<ReviewEvidenceNoteViewModel>();
+            var model = testFixture.Create<ReviewEvidenceNoteViewModel>();
             var organisationId = model.OrganisationId;
             var organisationName = Faker.Company.Name();
-            var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
+            var schemeInfo = testFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => Cache.FetchOrganisationName(organisationId)).Returns(organisationName);
             A.CallTo(() => Cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
 
@@ -464,10 +448,10 @@
         public async Task ReviewEvidenceNotePost_GivenAModelIsValid_ShouldRedirectToViewEvidenceNoteAction()
         {
             //arrange
-            var organisationId = TestFixture.Create<Guid>();
-            var evidenceNoteId = TestFixture.Create<Guid>();
-            var complianceYear = TestFixture.Create<int>();
-            var selectedComplianceYear = TestFixture.Create<int>();
+            var organisationId = testFixture.Create<Guid>();
+            var evidenceNoteId = testFixture.Create<Guid>();
+            var complianceYear = testFixture.Create<int>();
+            var selectedComplianceYear = testFixture.Create<int>();
 
             var model = GetValidModel();
             model.OrganisationId = organisationId;
@@ -489,9 +473,9 @@
         {
             //arrange
             var httpContext = new HttpContextMocker();
-            var model = TestFixture.Create<ReviewEvidenceNoteViewModel>();
+            var model = testFixture.Create<ReviewEvidenceNoteViewModel>();
             AddModelError();
-            EvidenceNoteData note = TestFixture.Create<EvidenceNoteData>();
+            EvidenceNoteData note = testFixture.Create<EvidenceNoteData>();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForSchemeRequest>._)).Returns(note);
             httpContext.AttachToController(ManageEvidenceController);
 
@@ -506,7 +490,7 @@
         public async Task ReviewEvidenceNotePost_GivenModelIsValid_ApiShouldBeCalled()
         {
             //arrange
-            var model = TestFixture.Build<ReviewEvidenceNoteViewModel>().With(r => r.SelectedValue, "Approve evidence note").Create();
+            var model = testFixture.Build<ReviewEvidenceNoteViewModel>().With(r => r.SelectedValue, "Approve evidence note").Create();
 
             //act
             var result = await ManageEvidenceController.ReviewEvidenceNote(model) as ViewResult;
@@ -540,7 +524,7 @@
         {
             //arrange
             AddModelError();
-            var model = TestFixture.Create<ReviewEvidenceNoteViewModel>();
+            var model = testFixture.Create<ReviewEvidenceNoteViewModel>();
 
             // act
             await ManageEvidenceController.ReviewEvidenceNote(model);
@@ -555,11 +539,11 @@
         public async Task ReviewEvidenceNotePost_GivenExistingModelAndNote_ModelMapperShouldBeCalled()
         {
             //arrange
-            var noteData = TestFixture.Create<EvidenceNoteData>();
+            var noteData = testFixture.Create<EvidenceNoteData>();
             var model = GetValidModel();
-            model.ViewEvidenceNoteViewModel.ComplianceYear = TestFixture.Create<int>();
-            model.ViewEvidenceNoteViewModel.SchemeId = TestFixture.Create<Guid>();
-            model.ViewEvidenceNoteViewModel.Id = TestFixture.Create<Guid>();
+            model.ViewEvidenceNoteViewModel.ComplianceYear = testFixture.Create<int>();
+            model.ViewEvidenceNoteViewModel.SchemeId = testFixture.Create<Guid>();
+            model.ViewEvidenceNoteViewModel.Id = testFixture.Create<Guid>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
@@ -593,14 +577,14 @@
             result.Model.Should().Be(model);
         }
 
-        private void AddModelError()
+        private new void AddModelError()
         {
             ManageEvidenceController.ModelState.AddModelError("error", "error");
         }
 
         private ReviewEvidenceNoteViewModel GetValidModel()
         {
-            return new ReviewEvidenceNoteViewModel { PossibleValues = new List<string> { "Approved" }, SelectedValue = "Approve evidence note", ViewEvidenceNoteViewModel = new ViewEvidenceNoteViewModel() { Id = TestFixture.Create<Guid>() } };
+            return new ReviewEvidenceNoteViewModel { PossibleValues = new List<string> { "Approved" }, SelectedValue = "Approve evidence note", ViewEvidenceNoteViewModel = new ViewEvidenceNoteViewModel() { Id = testFixture.Create<Guid>() } };
         }
     }
 }
