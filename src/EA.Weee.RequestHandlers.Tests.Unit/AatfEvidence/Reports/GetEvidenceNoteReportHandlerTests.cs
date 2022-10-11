@@ -43,13 +43,28 @@
         public async Task HandleAsync_GivenRequest_EvidenceReportsAuthenticationCheckShouldBeCalled()
         {
             //arrange
-            var request = new GetEvidenceNoteReportRequest(null, null, null, TestFixture.Create<TonnageToDisplayReportEnum>(),
+            var request = new GetEvidenceNoteReportRequest(null, null, TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
 
             A.CallTo(() => evidenceReportsAuthenticationCheck.EnsureIsAuthorised(request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithRecipientOrganisation_OrganisationShouldBeRetrieved()
+        {
+            //arrange
+            var recipientOrganisationId = TestFixture.Create<Guid>();
+            var request = new GetEvidenceNoteReportRequest(recipientOrganisationId, null, TestFixture.Create<TonnageToDisplayReportEnum>(),
+                TestFixture.Create<int>());
+
+            //act
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(recipientOrganisationId))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -62,7 +77,6 @@
 
             var request = new GetEvidenceNoteReportRequest(null,
                 null,
-                null,
                 tonnageToDisplay,
                 complianceYear);
 
@@ -70,8 +84,8 @@
             await handler.HandleAsync(request);
 
             A.CallTo(() =>
-                evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
-                    null, null, null, expected)).MustHaveHappenedOnceExactly();
+                evidenceStoredProcedures.GetEvidenceNoteTonnagesReport(complianceYear,
+                    null, null, expected)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -84,7 +98,6 @@
             var complianceYear = TestFixture.Create<int>();
 
             var request = new GetEvidenceNoteReportRequest(null,
-                null,
                 aatfId,
                 tonnageToDisplay,
                 complianceYear);
@@ -93,39 +106,14 @@
             await handler.HandleAsync(request);
 
             A.CallTo(() =>
-                evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
-                    null, null, aatfId, expected)).MustHaveHappenedOnceExactly();
+                evidenceStoredProcedures.GetEvidenceNoteTonnagesReport(complianceYear, null, aatfId, expected)).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(TonnageToDisplayReportEnum.OriginalTonnages, false)]
-        [InlineData(TonnageToDisplayReportEnum.Net, true)]
-        public async Task HandleAsync_GivenOriginatorReportDataRequest_GetEvidenceNoteOriginalTonnagesReportShouldBeCalled(TonnageToDisplayReportEnum tonnageToDisplay, bool expected)
+        [Fact]
+        public async Task HandleAsync_GivenAatfRequest_AatfCsvShouldBeDefined()
         {
             //arrange
-            var originatorOrganisation = TestFixture.Create<Guid>();
-            var complianceYear = TestFixture.Create<int>();
-
             var request = new GetEvidenceNoteReportRequest(null,
-                originatorOrganisation,
-                null,
-                tonnageToDisplay,
-                complianceYear);
-
-            //act
-            await handler.HandleAsync(request);
-
-            A.CallTo(() =>
-                evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(complianceYear,
-                    originatorOrganisation, null, null, expected)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_AatfCsvShouldBeDefined()
-        {
-            //arrange
-            var request = new GetEvidenceNoteReportRequest(null, 
-                null,
                 TestFixture.Create<Guid>(),
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
@@ -139,102 +127,6 @@
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Status,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedDate,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ObligationType,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Protocol,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat2Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat3Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat4Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat5Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat6Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat7Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat8Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat9Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat10Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat11Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat12Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Received,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReceived,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat2Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat3Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat4Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat5Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat6Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat7Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat8Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat9Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat10Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat11Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat12Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Reused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
-        }
-
-        [Fact]
-        public async Task HandleAsync_NonAatfCsvShouldBeDefined()
-        {
-            //arrange
-            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(),
-                null,
-                TestFixture.Create<TonnageToDisplayReportEnum>(),
-                TestFixture.Create<int>());
-
-            //act
-            await handler.HandleAsync(request);
-
-            //assert
-            A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Reference,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly()
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Status,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedDate,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf,
-                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
-                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ObligationType,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
@@ -308,6 +200,210 @@
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
+
+            A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority,
+                A<Func<EvidenceNoteReportData, object>>._, false)).MustNotHaveHappened();
+
+            A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf,
+                A<Func<EvidenceNoteReportData, object>>._, false)).MustNotHaveHappened();
+
+            A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber,
+                A<Func<EvidenceNoteReportData, object>>._, false)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRecipientRequest_CsvShouldBeDefined()
+        {
+            //arrange
+            var request = new GetEvidenceNoteReportRequest(TestFixture.Create<Guid>(),
+                null,
+                TestFixture.Create<TonnageToDisplayReportEnum>(),
+                TestFixture.Create<int>());
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Reference,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Status,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedDate,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ObligationType,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Protocol,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat2Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat3Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat4Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat5Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat6Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat7Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat8Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat9Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat10Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat11Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat12Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReceived,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat2Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat3Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat4Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat5Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat6Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat7Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat8Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat9Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat10Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat11Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat12Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
+
+                A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Recipient,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustNotHaveHappened();
+                
+                A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustNotHaveHappened();
+
+                A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenInternalRequest_AatfAndRecipientIsNull_CsvShouldBeDefined()
+        {
+            //arrange
+            var request = new GetEvidenceNoteReportRequest(null,
+                null,
+                TestFixture.Create<TonnageToDisplayReportEnum>(),
+                TestFixture.Create<int>());
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Reference,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Status,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedDate,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatf,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SubmittedAatfApprovalNumber,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ObligationType,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Protocol,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat2Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat3Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat4Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat5Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat6Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat7Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat8Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat9Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat10Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat11Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat12Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReceived,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat2Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat3Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat4Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat5Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat6Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat7Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat8Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat9Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat10Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat11Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat12Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
         }
 
         [Fact]
@@ -316,15 +412,13 @@
             //arrange
             var request = new GetEvidenceNoteReportRequest(null,
                 null,
-                null,
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
                 TestFixture.Create<int>());
 
             var reportData = TestFixture.CreateMany<EvidenceNoteReportData>().ToList();
 
             A.CallTo(() =>
-                    evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(A<int>._, 
-                        A<Guid?>._, 
+                    evidenceStoredProcedures.GetEvidenceNoteTonnagesReport(A<int>._,
                         A<Guid?>._,
                         A<Guid?>._,
                         A<bool>._)).Returns(reportData);
@@ -345,7 +439,6 @@
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
             var request = new GetEvidenceNoteReportRequest(null,
-                null,
                 null,
                 tonnageToDisplay,
                 TestFixture.Create<int>());
@@ -375,7 +468,6 @@
             A.CallTo(() => genericDataAccess.GetById<Aatf>(aatfId)).Returns(aatf);
             
             var request = new GetEvidenceNoteReportRequest(null,
-                null,
                 aatfId,
                 TonnageToDisplayReportEnum.OriginalTonnages,
                 TestFixture.Create<int>());
@@ -412,7 +504,6 @@
             A.CallTo(() => genericDataAccess.GetById<Organisation>(recipientOrganisationId)).Returns(recipientOrganisation);
             
             var request = new GetEvidenceNoteReportRequest(recipientOrganisationId,
-                null,
                 null,
                 tonnageToDisplay,
                 TestFixture.Create<int>());
