@@ -30,7 +30,7 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
             @Html.Gds().LabelFor(m => m.SelectedSchemeId)
-            <p class="govuk-body">If a PCS is not selected, the report will show the UK combined evidence and obligation data followed by all the individual PCS evidence and obligation progress reports</p>
+            <p class="govuk-hint">If a PCS is not selected, the report will show the UK combined evidence and obligation data followed by all the individual PCS evidence and obligation progress reports</p>
             @Html.Gds().ValidationMessageFor(m => m.SelectedSchemeId)
             <div class="govuk-!-width-one-third">
                 @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { autocomplete = "false" }, withLookAhead: true)
