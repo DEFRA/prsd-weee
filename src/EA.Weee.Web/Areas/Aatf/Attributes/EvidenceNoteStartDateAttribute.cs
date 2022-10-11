@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
-    using EA.Prsd.Core;
     using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -29,6 +28,13 @@
             if (!(validationContext.ObjectInstance is EvidenceNoteViewModel evidenceNoteModel))
             {
                 return new ValidationResult("Unable to validate the evidence note details");
+            }
+
+            var validateStartDateAgainstConfigDate = ValidateStartDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate);
+
+            if (validateStartDateAgainstConfigDate != ValidationResult.Success)
+            {
+                return validateStartDateAgainstConfigDate;
             }
 
             if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
