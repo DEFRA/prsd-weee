@@ -30,21 +30,16 @@
             }
         }
 
-        public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(
-            int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId, Guid? aatfId, bool netTonnage)
+        public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteTonnagesReport(
+            int complianceYear, Guid? recipientOrganisationId, Guid? aatfId, bool netTonnage)
         {
             var storedProcedure = netTonnage
                 ? "[Evidence].[getEvidenceNotesNetTonnage]"
                 : "[Evidence].[getEvidenceNotesOriginalTonnage]";
 
-            var queryString = $"{storedProcedure} @ComplianceYear, @OriginatingOrganisationId, @RecipientOrganisationId, @AatfId";
+            var queryString = $"{storedProcedure} @ComplianceYear, @RecipientOrganisationId, @AatfId";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
-            var orgIdParameter = new SqlParameter("@OriginatingOrganisationId", SqlDbType.UniqueIdentifier)
-                {
-                    IsNullable = true,
-                    Value = originatingOrganisationId ?? (object)DBNull.Value
-                };
             var pcsIdParameter = new SqlParameter("@RecipientOrganisationId", SqlDbType.UniqueIdentifier)
                 {
                     IsNullable = true,
@@ -56,7 +51,7 @@
                 Value = aatfId ?? (object)DBNull.Value
             };
 
-            return await context.Database.SqlQuery<EvidenceNoteReportData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter, aatfIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<EvidenceNoteReportData>(queryString, complianceYearParameter, pcsIdParameter, aatfIdParameter).ToListAsync();
         }
 
         public async Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, int complianceYear)
