@@ -9,18 +9,26 @@
 
         public bool InternalRequest { get; private set; }
 
-        public GetEvidenceNoteReportRequest(Guid? recipientOrganisationId, 
-            Guid? originatorOrganisationId,
+        public GetEvidenceNoteReportRequest(Guid? recipientOrganisationId,
             Guid? aatfId,
             TonnageToDisplayReportEnum tonnageToDisplay,
-            int complianceYear,
-            bool internalRequest) : base(recipientOrganisationId, 
-                                    originatorOrganisationId, 
+            int complianceYear) : base(recipientOrganisationId, 
+                                    null, 
                                     aatfId, 
                                     complianceYear)
         {
+            if (recipientOrganisationId.HasValue && aatfId.HasValue)
+            {
+                throw new InvalidOperationException(
+                    "GetEvidenceNoteReportRequest recipient and aatf cannot both be specified");
+            }
+
+            if (!recipientOrganisationId.HasValue && !aatfId.HasValue)
+            {
+                InternalRequest = true;
+            }
+
             TonnageToDisplay = tonnageToDisplay;
-            InternalRequest = internalRequest;
         }
     }
 }

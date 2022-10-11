@@ -4,7 +4,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 ALTER PROCEDURE [Evidence].[getEvidenceNotesOriginalTonnage]
 	@ComplianceYear SMALLINT,
-	@OriginatingOrganisationId UNIQUEIDENTIFIER = NULL,
 	@RecipientOrganisationId UNIQUEIDENTIFIER = NULL,
 	@AatfId UNIQUEIDENTIFIER = NULL
 WITH RECOMPILE
@@ -31,7 +30,6 @@ WHERE
 	es.NoteType = 1 AND
 	(es.ComplianceYear = @ComplianceYear) AND
 		(
-			(@OriginatingOrganisationId IS NULL OR es.OriginatingOrganisationId = @OriginatingOrganisationId) AND
 			(@RecipientOrganisationId IS NULL OR es.RecipientOrganisationId = @RecipientOrganisationId) AND
 			(@AatfId IS NULL OR es.AatfId = @AatfId)
 	) AND

@@ -17,30 +17,68 @@
         }
 
         [Fact]
-        public void GetEvidenceNoteReportRequest_GivenValues_PropertiesShouldBeSet()
+        public void GetEvidenceNoteReportRequest_GivenRecipientOrganisationId_PropertiesShouldBeSet()
         {
             //arrange
             var recipientOrganisation = TestFixture.Create<Guid?>();
-            var originatingOrganisation = TestFixture.Create<Guid?>();
-            var aatfId = TestFixture.Create<Guid?>();
             var tonnageToDisplay = TestFixture.Create<TonnageToDisplayReportEnum>();
             var complianceYear = TestFixture.Create<int>();
-            var internalRequest = TestFixture.Create<bool>();
 
             //act
-            var request = new GetEvidenceNoteReportRequest(recipientOrganisation, originatingOrganisation,
-                aatfId,
+            var request = new GetEvidenceNoteReportRequest(recipientOrganisation,
+                null,
                 tonnageToDisplay,
-                complianceYear,
-                internalRequest);
+                complianceYear);
 
             //assert
-            request.OriginatorOrganisationId.Should().Be(originatingOrganisation);
             request.RecipientOrganisationId.Should().Be(recipientOrganisation);
+            request.AatfId.Should().Be(null);
+            request.TonnageToDisplay.Should().Be(tonnageToDisplay);
+            request.ComplianceYear.Should().Be(complianceYear);
+            request.InternalRequest.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetEvidenceNoteReportRequest_GivenAatfId_PropertiesShouldBeSet()
+        {
+            //arrange
+            var tonnageToDisplay = TestFixture.Create<TonnageToDisplayReportEnum>();
+            var complianceYear = TestFixture.Create<int>();
+            var aatfId = TestFixture.Create<Guid>();
+
+            //act
+            var request = new GetEvidenceNoteReportRequest(null,
+                aatfId,
+                tonnageToDisplay,
+                complianceYear);
+
+            //assert
+            request.RecipientOrganisationId.Should().BeNull();
             request.AatfId.Should().Be(aatfId);
             request.TonnageToDisplay.Should().Be(tonnageToDisplay);
             request.ComplianceYear.Should().Be(complianceYear);
-            request.InternalRequest.Should().Be(internalRequest);
+            request.InternalRequest.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetEvidenceNoteReportRequest_NullAatfAndOrganisation_PropertiesShouldBeSet()
+        {
+            //arrange
+            var tonnageToDisplay = TestFixture.Create<TonnageToDisplayReportEnum>();
+            var complianceYear = TestFixture.Create<int>();
+            
+            //act
+            var request = new GetEvidenceNoteReportRequest(null,
+                null,
+                tonnageToDisplay,
+                complianceYear);
+
+            //assert
+            request.RecipientOrganisationId.Should().BeNull();
+            request.AatfId.Should().BeNull();
+            request.TonnageToDisplay.Should().Be(tonnageToDisplay);
+            request.ComplianceYear.Should().Be(complianceYear);
+            request.InternalRequest.Should().BeTrue();
         }
     }
 }
