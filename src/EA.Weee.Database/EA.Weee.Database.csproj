@@ -384,8 +384,8 @@
     <Content Include="scripts\Update\Release 5\Sprint15\20221011-1057-alter-getObligationEvidenceSummaryTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20221011-1057-create-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20221011-1058-alter-getAatfEvidenceSummaryTotals.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint15\20221011-1058-alter-getEvidenceNotesOriginalTonnage.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint15\20221011-1058-alter-getEvidenceNotesNetTonnage.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint15\20221011-1412-alter-getEvidenceNotesOriginalTonnage.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint15\20221011-1412-alter-getEvidenceNotesNetTonnage.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20220929-1022-report-view-updates.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
