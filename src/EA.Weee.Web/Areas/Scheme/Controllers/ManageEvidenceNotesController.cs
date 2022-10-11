@@ -291,17 +291,18 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadEvidenceNote(Guid evidenceNoteId)
+        public async Task<ActionResult> DownloadEvidenceNotePdf(Guid evidenceNoteId)
         {
             using (var client = apiClient())
             {
-                var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
+                //var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
+                var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null, true));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null, true) { PrintableVersion = true });
 
-                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadEvidenceNote", model);
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadEvidenceNotePdf", model);
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 

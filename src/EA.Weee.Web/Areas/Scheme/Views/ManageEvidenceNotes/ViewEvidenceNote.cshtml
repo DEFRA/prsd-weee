@@ -57,7 +57,7 @@
     @if (Model.CanDisplayPdfLink)
     {
         <p class="govuk-body govuk-!-margin-top-7">
-            @Html.ActionLink("Download as PDF", "DownloadEvidenceNote", "ManageEvidenceNotes", new { area = "Scheme", evidenceNoteId = @Model.Id }, new { @class = "govuk-link" })
+            @Html.ActionLink("Download as PDF", "DownloadEvidenceNotePdf", "ManageEvidenceNotes", new { area = "Scheme", evidenceNoteId = @Model.Id }, new { @class = "govuk-link" })
         </p>
     }
 }
