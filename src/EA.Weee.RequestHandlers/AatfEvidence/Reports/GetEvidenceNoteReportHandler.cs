@@ -43,6 +43,12 @@
                 throw new InvalidOperationException("GetEvidenceNoteReportHandler only a single report parameter should be specified");
             }
 
+            Organisation recipientOrganisation = null;
+            if (request.RecipientOrganisationId.HasValue)
+            {
+                recipientOrganisation = await genericDataAccess.GetById<Organisation>(request.RecipientOrganisationId.Value);
+            }
+            
             var reportData = await evidenceStoredProcedures.GetEvidenceNoteOriginalTonnagesReport(
                     request.ComplianceYear,
                     request.OriginatorOrganisationId,
@@ -52,6 +58,7 @@
           
             csvWriter.DefineColumn(EvidenceReportConstants.Reference, x => x.Reference);
             csvWriter.DefineColumn(EvidenceReportConstants.Status, x => x.Status);
+            // if request.InternalRequest
             if (!request.AatfId.HasValue) 
             { 
                 csvWriter.DefineColumn(EvidenceReportConstants.AppropriateAuthority, x => x.AppropriateAuthority); 
@@ -68,14 +75,8 @@
             csvWriter.DefineColumn(EvidenceReportConstants.ObligationType, x => x.ObligationType);
             csvWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate, x => x.ReceivedStartDate.ToShortDateString());
             csvWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate, x => x.ReceivedEndDate.ToShortDateString());
-            if (!request.AatfId.HasValue) 
-            { 
-                csvWriter.DefineColumn(EvidenceReportConstants.Recipient, x => x.Recipient); 
-            }
-            if (!request.AatfId.HasValue) 
-            { 
-                csvWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber, x => x.RecipientApprovalNumber); 
-            }
+            csvWriter.DefineColumn(EvidenceReportConstants.Recipient, x => x.Recipient); 
+            csvWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber, x => x.RecipientApprovalNumber);
             csvWriter.DefineColumn(EvidenceReportConstants.Protocol, x => x.Protocol);
             csvWriter.DefineColumn(EvidenceReportConstants.Cat1Received, x => x.Cat1Received.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat2Received, x => x.Cat2Received.ToTonnageDisplay());
@@ -123,14 +124,12 @@
 
                 fileName = $"{request.ComplianceYear}{aatfApprovalNumber}_Evidence notes report{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
             }
-            else if (request.RecipientOrganisationId.HasValue)
+            else if (recipientOrganisation != null)
             {
                 // an recipient organisation / scheme report
-                var organisation = await genericDataAccess.GetById<Organisation>(request.RecipientOrganisationId.Value);
-
-                if (!organisation.IsBalancingScheme)
+                if (!recipientOrganisation.IsBalancingScheme)
                 {
-                    fileName = $"{request.ComplianceYear}_{organisation.Scheme.ApprovalNumber}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+                    fileName = $"{request.ComplianceYear}_{recipientOrganisation.Scheme.ApprovalNumber}_Evidence notes {type}{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
                 }
             }
 

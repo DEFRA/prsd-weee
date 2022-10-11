@@ -9,6 +9,7 @@ CREATE PROCEDURE [Evidence].[getSchemeObligationAndEvidenceTotals]
 	@ComplianceYear SMALLINT,
 	@SchemeId UNIQUEIDENTIFIER = NULL,
 	@AppropriateAuthorityId UNIQUEIDENTIFIER = NULL
+WITH RECOMPILE
 AS
 
 BEGIN
