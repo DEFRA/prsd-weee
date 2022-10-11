@@ -130,14 +130,11 @@
         {
             var configDate = ConfigService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
 
-            if (configDate.Month == 1 && configDate.Year == 2023)
+            if (startDate < configDate.Date)
             {
-                if (startDate < configDate.Date)
-                {
-                    return new ValidationResult("The start date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
-                }
+                return new ValidationResult("The start date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
             }
-
+           
             return ValidationResult.Success;
         }
 
@@ -145,14 +142,11 @@
         {
             var configDate = ConfigService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
 
-            if (configDate.Month == 1 && configDate.Year == 2023)
+            if (endDate < configDate.Date)
             {
-                if (endDate < configDate.Date)
-                {
-                    return new ValidationResult("The end date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
-                }
+                return new ValidationResult("The end date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
             }
-        
+
             return ValidationResult.Success;
         }
     }
