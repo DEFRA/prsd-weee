@@ -22,6 +22,7 @@
         private readonly IWeeeClient client;
         private readonly IHttpContextService httpContextService;
         private readonly IWeeeCache cache;
+        private readonly ConfigurationService configurationService;
         private readonly EvidenceNoteStartDateAttribute attribute;
         private readonly DateTime currentDate;
         private readonly Guid organisationId;
@@ -32,6 +33,7 @@
             client = A.Fake<IWeeeClient>();
             httpContextService = A.Fake<IHttpContextService>();
             cache = A.Fake<IWeeeCache>();
+            configurationService = A.Fake<ConfigurationService>();
 
             organisationId = TestFixture.Create<Guid>();
             aatfId = TestFixture.Create<Guid>();
@@ -39,7 +41,8 @@
             {
                 Client = () => client,
                 HttpContextService = httpContextService,
-                Cache = cache
+                Cache = cache,
+                ConfigService = configurationService
             };
 
             currentDate = new DateTime(2020, 1, 1);
@@ -402,6 +405,47 @@
 
             //assert
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public void EvidenceNoteStartDateAttribute_GivenEvidenceNotesSiteSelectionDateFromIsBeyondStartDate_ValidationExceptionShouldBeThrown()
+        {
+            //arrange
+            var startDate = new DateTime(2021, 1, 1);
+            var evidenceNoteStartDate = startDate.AddDays(1);
+
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
+
+            var target = GetValidationDefaultTarget(startDate, startDate);
+            var context = new ValidationContext(target);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("The start date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
+        }
+
+        [Fact]
+        public void EvidenceNoteStartDateAttribute_GivenEvidenceNotesSiteSelectionDateFromIsBeforeStartDate_ValidateConfigServiceIsCalled()
+        {
+            //arrange
+            var startDate = new DateTime(2020, 1, 1);
+            var evidenceNoteStartDate = startDate.AddDays(-1);
+
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
+
+            var target = GetValidationDefaultTarget(startDate, startDate);
+            var context = new ValidationContext(target);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            attribute.Validate(target.StartDate, context);
+
+            //assert
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom).MustHaveHappenedOnceExactly();
         }
 
         private ValidationTarget GetValidationDefaultTarget(DateTime startDate, DateTime? endDateTime)

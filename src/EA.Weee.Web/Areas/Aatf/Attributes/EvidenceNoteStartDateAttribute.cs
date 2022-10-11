@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
-    using EA.Prsd.Core;
     using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
