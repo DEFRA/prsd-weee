@@ -7,16 +7,20 @@
     {
         public TonnageToDisplayReportEnum TonnageToDisplay { get; private set; }
 
+        public bool InternalRequest { get; private set; }
+
         public GetEvidenceNoteReportRequest(Guid? recipientOrganisationId, 
             Guid? originatorOrganisationId,
             Guid? aatfId,
             TonnageToDisplayReportEnum tonnageToDisplay,
-            int complianceYear) : base(recipientOrganisationId, 
+            int complianceYear,
+            bool internalRequest) : base(recipientOrganisationId, 
                                     originatorOrganisationId, 
                                     aatfId, 
                                     complianceYear)
         {
             TonnageToDisplay = tonnageToDisplay;
+            InternalRequest = internalRequest;
         }
     }
 }
