@@ -44,12 +44,27 @@
         {
             //arrange
             var request = new GetEvidenceNoteReportRequest(null, null, null, TestFixture.Create<TonnageToDisplayReportEnum>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(), TestFixture.Create<bool>());
 
             //act
             await handler.HandleAsync(request);
 
             A.CallTo(() => evidenceReportsAuthenticationCheck.EnsureIsAuthorised(request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithRecipientOrganisation_OrganisationShouldBeRetrieved()
+        {
+            //arrange
+            var recipientOrganisationId = TestFixture.Create<Guid>();
+            var request = new GetEvidenceNoteReportRequest(recipientOrganisationId, null, null, TestFixture.Create<TonnageToDisplayReportEnum>(),
+                TestFixture.Create<int>(), TestFixture.Create<bool>());
+
+            //act
+            await handler.HandleAsync(request);
+
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(recipientOrganisationId))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -64,7 +79,8 @@
                 null,
                 null,
                 tonnageToDisplay,
-                complianceYear);
+                complianceYear,
+                TestFixture.Create<bool>());
 
             //act
             await handler.HandleAsync(request);
@@ -87,7 +103,8 @@
                 null,
                 aatfId,
                 tonnageToDisplay,
-                complianceYear);
+                complianceYear,
+                TestFixture.Create<bool>());
 
             //act
             await handler.HandleAsync(request);
@@ -110,7 +127,8 @@
                 originatorOrganisation,
                 null,
                 tonnageToDisplay,
-                complianceYear);
+                complianceYear,
+                TestFixture.Create<bool>());
 
             //act
             await handler.HandleAsync(request);
@@ -128,7 +146,8 @@
                 null,
                 TestFixture.Create<Guid>(),
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(),
+                TestFixture.Create<bool>());
 
             //act
             await handler.HandleAsync(request);
@@ -145,6 +164,10 @@
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedStartDate,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.ReceivedEndDate,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Recipient,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.RecipientApprovalNumber,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Protocol,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
@@ -218,7 +241,8 @@
                 TestFixture.Create<Guid>(),
                 null,
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(),
+                TestFixture.Create<bool>());
 
             //act
             await handler.HandleAsync(request);
@@ -318,7 +342,8 @@
                 null,
                 null,
                 TestFixture.Create<TonnageToDisplayReportEnum>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(),
+                TestFixture.Create<bool>());
 
             var reportData = TestFixture.CreateMany<EvidenceNoteReportData>().ToList();
 
@@ -348,7 +373,8 @@
                 null,
                 null,
                 tonnageToDisplay,
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(),
+                TestFixture.Create<bool>());
 
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<EvidenceNoteReportData>>._)).Returns(content);
@@ -378,7 +404,8 @@
                 null,
                 aatfId,
                 TonnageToDisplayReportEnum.OriginalTonnages,
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(),
+                TestFixture.Create<bool>());
 
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<EvidenceNoteReportData>>._)).Returns(content);
@@ -415,7 +442,8 @@
                 null,
                 null,
                 tonnageToDisplay,
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(),
+                TestFixture.Create<bool>());
 
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<EvidenceNoteReportData>>._)).Returns(content);
