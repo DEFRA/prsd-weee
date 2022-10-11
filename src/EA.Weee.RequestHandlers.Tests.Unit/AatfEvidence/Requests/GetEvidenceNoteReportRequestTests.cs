@@ -25,12 +25,14 @@
             var aatfId = TestFixture.Create<Guid?>();
             var tonnageToDisplay = TestFixture.Create<TonnageToDisplayReportEnum>();
             var complianceYear = TestFixture.Create<int>();
+            var internalRequest = TestFixture.Create<bool>();
 
             //act
             var request = new GetEvidenceNoteReportRequest(recipientOrganisation, originatingOrganisation,
                 aatfId,
                 tonnageToDisplay,
-                complianceYear);
+                complianceYear,
+                internalRequest);
 
             //assert
             request.OriginatorOrganisationId.Should().Be(originatingOrganisation);
@@ -38,6 +40,7 @@
             request.AatfId.Should().Be(aatfId);
             request.TonnageToDisplay.Should().Be(tonnageToDisplay);
             request.ComplianceYear.Should().Be(complianceYear);
+            request.InternalRequest.Should().Be(internalRequest);
         }
     }
 }

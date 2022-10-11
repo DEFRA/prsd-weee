@@ -329,7 +329,7 @@
         {
             using (var client = apiClient())
             {
-                var request = new GetEvidenceNoteReportRequest(null, null, aatfId, tonnageToDisplay, complianceYear);
+                var request = new GetEvidenceNoteReportRequest(null, null, aatfId, tonnageToDisplay, complianceYear, false);
 
                 var file = await client.SendAsync(User.GetAccessToken(), request);
 
