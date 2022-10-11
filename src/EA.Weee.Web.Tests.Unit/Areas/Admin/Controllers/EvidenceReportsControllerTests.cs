@@ -484,7 +484,8 @@
                 g.OriginatorOrganisationId == null &&
                 g.RecipientOrganisationId == null &&
                 g.AatfId == null &&
-                g.TonnageToDisplay == tonnageToDisplay))).MustHaveHappenedOnceExactly();
+                g.TonnageToDisplay == tonnageToDisplay &&
+                g.InternalRequest == true))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

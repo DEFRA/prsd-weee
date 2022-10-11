@@ -191,7 +191,7 @@
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
-                request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year, true);
             };
 
             private readonly Because of = () =>
@@ -378,7 +378,7 @@
 
                 notes.Add(notMatchingNote);
 
-                request = new GetEvidenceNoteReportRequest(null, null, aatf1.Id, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, null, aatf1.Id, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year, false);
             };
 
             private readonly Because of = () =>
@@ -398,13 +398,13 @@
                     .First(s => s.ToStatus.Value == NoteStatus.Submitted.Value).ChangedDate;
 
                 var expectedCsvData =
-                    "Reference ID,Status,Date submitted (GMT),Obligation type,WEEE received start date,WEEE received end date,Actual or protocol,Cat 1 received (t),Cat 2 received (t),Cat 3 received (t),Cat 4 received (t),Cat 5 received (t),Cat 6 received (t),Cat 7 received (t),Cat 8 received (t),Cat 9 received (t),Cat 10 received (t),Cat 11 received (t),Cat 12 received (t),Cat 13 received (t),Cat 14 received (t),Total received (t),Cat 1 reuse (t),Cat 2 reuse (t),Cat 3 reuse (t),Cat 4 reuse (t),Cat 5 reuse (t),Cat 6 reuse (t),Cat 7 reuse (t),Cat 8 reuse (t),Cat 9 reuse (t),Cat 10 reuse (t),Cat 11 reuse (t),Cat 12 reuse (t),Cat 13 reuse (t),Cat 14 reuse (t),Total reused (t)\r\n" +
+                    "Reference ID,Status,Date submitted (GMT),Obligation type,WEEE received start date,WEEE received end date,Recipient name,Recipient approval number,Actual or protocol,Cat 1 received (t),Cat 2 received (t),Cat 3 received (t),Cat 4 received (t),Cat 5 received (t),Cat 6 received (t),Cat 7 received (t),Cat 8 received (t),Cat 9 received (t),Cat 10 received (t),Cat 11 received (t),Cat 12 received (t),Cat 13 received (t),Cat 14 received (t),Total received (t),Cat 1 reuse (t),Cat 2 reuse (t),Cat 3 reuse (t),Cat 4 reuse (t),Cat 5 reuse (t),Cat 6 reuse (t),Cat 7 reuse (t),Cat 8 reuse (t),Cat 9 reuse (t),Cat 10 reuse (t),Cat 11 reuse (t),Cat 12 reuse (t),Cat 13 reuse (t),Cat 14 reuse (t),Total reused (t)\r\n" +
 
-                    $"E1,Draft,,Non-household,{note1.StartDate.ToShortDateString()},{note1.EndDate.ToShortDateString()},Site specific protocol,21.000,19.000,23.000,9.000,25.000,7.000,11.000,3.000,27.000,13.000,15.000,17.000,5.000,1.000,196.000,22.000,20.000,24.000,10.000,26.000,8.000,12.000,4.000,28.000,14.000,16.000,18.000,6.000,2.000,210.000\r\n" +
+                    $"E1,Draft,,Non-household,{note1.StartDate.ToShortDateString()},{note1.EndDate.ToShortDateString()},{note1.Recipient.Scheme.SchemeName},{note1.Recipient.Scheme.ApprovalNumber},Site specific protocol,21.000,19.000,23.000,9.000,25.000,7.000,11.000,3.000,27.000,13.000,15.000,17.000,5.000,1.000,196.000,22.000,20.000,24.000,10.000,26.000,8.000,12.000,4.000,28.000,14.000,16.000,18.000,6.000,2.000,210.000\r\n" +
 
-                    $"E2,Submitted,{note2SubmittedDate},Household,{note2.StartDate.ToShortDateString()},{note2.EndDate.ToShortDateString()},Actual,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    $"E2,Submitted,{note2SubmittedDate},Household,{note2.StartDate.ToShortDateString()},{note2.EndDate.ToShortDateString()},{note2.Recipient.Scheme.SchemeName},{note2.Recipient.Scheme.ApprovalNumber},Actual,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
 
-                    $"E3,Approved,{note3SubmittedDate},Household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
+                    $"E3,Approved,{note3SubmittedDate},Household,{note3.StartDate.ToShortDateString()},{note3.EndDate.ToShortDateString()},{note3.Recipient.OrganisationName},,Reuse network PWP,22.444,20.222,24.666,9.999,26.888,7.777,11.222,2.333,28.111,13.444,15.666,18.999,5.555,1.111,208.437,23.555,21.333,25.777,10.111,27.999,8.888,12.333,4.444,29.222,14.555,17.777,19.111,6.666,2.222,223.993\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_{aatfApprovalNumber}_Evidence notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -731,7 +731,7 @@
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithComplianceYear(SystemTime.Now.Year + 1).Create();
 
-                request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year, true);
             };
 
             private readonly Because of = () =>
@@ -907,7 +907,7 @@
 
                 notes.Add(approvedNoteWithSchemeNameUpdate);
 
-                request = new GetEvidenceNoteReportRequest(null, originatorOrganisation1.Id, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, originatorOrganisation1.Id, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year, false);
             };
 
             private readonly Because of = () =>
@@ -1249,7 +1249,7 @@
 
                 notes.Add(approvedNoteWithSchemeNameUpdate);
 
-                request = new GetEvidenceNoteReportRequest(null, originatorOrganisation1.Id, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, originatorOrganisation1.Id, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year, false);
             };
 
             private readonly Because of = () =>
@@ -1452,7 +1452,7 @@
 
                 notes.Add(approvedNoteWithSchemeNameUpdate);
 
-                request = new GetEvidenceNoteReportRequest(recipientOrganisation1.Id, null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(recipientOrganisation1.Id, null, null, TonnageToDisplayReportEnum.OriginalTonnages, SystemTime.Now.Year, false);
             };
 
             private readonly Because of = () =>
@@ -1838,7 +1838,7 @@
 
                 notes.Add(approvedNoteWithSchemeNameUpdate);
 
-                request = new GetEvidenceNoteReportRequest(recipientOrganisation1.Id, null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(recipientOrganisation1.Id, null, null, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year, false);
             };
 
             private readonly Because of = () =>
@@ -2148,7 +2148,7 @@
                 EvidenceNoteDbSetup.Init()
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId).Create();
 
-                request = new GetEvidenceNoteReportRequest(null, null, aatf1.Id, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year);
+                request = new GetEvidenceNoteReportRequest(null, null, aatf1.Id, TonnageToDisplayReportEnum.Net, SystemTime.Now.Year, false);
             };
 
             private readonly Because of = () =>
@@ -2164,11 +2164,11 @@
                     .First(s => s.ToStatus.Value == NoteStatus.Submitted.Value).ChangedDate;
 
                 var expectedCsvData =
-                    "Reference ID,Status,Date submitted (GMT),Obligation type,WEEE received start date,WEEE received end date,Actual or protocol,Cat 1 received (t),Cat 2 received (t),Cat 3 received (t),Cat 4 received (t),Cat 5 received (t),Cat 6 received (t),Cat 7 received (t),Cat 8 received (t),Cat 9 received (t),Cat 10 received (t),Cat 11 received (t),Cat 12 received (t),Cat 13 received (t),Cat 14 received (t),Total received (t),Cat 1 reuse (t),Cat 2 reuse (t),Cat 3 reuse (t),Cat 4 reuse (t),Cat 5 reuse (t),Cat 6 reuse (t),Cat 7 reuse (t),Cat 8 reuse (t),Cat 9 reuse (t),Cat 10 reuse (t),Cat 11 reuse (t),Cat 12 reuse (t),Cat 13 reuse (t),Cat 14 reuse (t),Total reused (t)\r\n" +
+                    "Reference ID,Status,Date submitted (GMT),Obligation type,WEEE received start date,WEEE received end date,Recipient name,Recipient approval number,Actual or protocol,Cat 1 received (t),Cat 2 received (t),Cat 3 received (t),Cat 4 received (t),Cat 5 received (t),Cat 6 received (t),Cat 7 received (t),Cat 8 received (t),Cat 9 received (t),Cat 10 received (t),Cat 11 received (t),Cat 12 received (t),Cat 13 received (t),Cat 14 received (t),Total received (t),Cat 1 reuse (t),Cat 2 reuse (t),Cat 3 reuse (t),Cat 4 reuse (t),Cat 5 reuse (t),Cat 6 reuse (t),Cat 7 reuse (t),Cat 8 reuse (t),Cat 9 reuse (t),Cat 10 reuse (t),Cat 11 reuse (t),Cat 12 reuse (t),Cat 13 reuse (t),Cat 14 reuse (t),Total reused (t)\r\n" +
 
-                    $"E1,Draft,,Non-household,{note1.StartDate.ToShortDateString()},{note1.EndDate.ToShortDateString()},Site specific protocol,21.000,19.000,23.000,9.000,25.000,7.000,11.000,3.000,27.000,13.000,15.000,17.000,5.000,1.000,196.000,22.000,20.000,24.000,10.000,26.000,8.000,12.000,4.000,28.000,14.000,16.000,18.000,6.000,2.000,210.000\r\n" +
+                    $"E1,Draft,,Non-household,{note1.StartDate.ToShortDateString()},{note1.EndDate.ToShortDateString()},{note1.Recipient.Scheme.SchemeName},{note1.Recipient.Scheme.ApprovalNumber},Site specific protocol,21.000,19.000,23.000,9.000,25.000,7.000,11.000,3.000,27.000,13.000,15.000,17.000,5.000,1.000,196.000,22.000,20.000,24.000,10.000,26.000,8.000,12.000,4.000,28.000,14.000,16.000,18.000,6.000,2.000,210.000\r\n" +
 
-                    $"E4,Approved,{note4SubmittedDate},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},Reuse network PWP,10.244,9.322,10.266,9.099,10.288,7.077,9.122,2.033,9.311,9.144,9.166,10.299,5.055,1.011,111.437,10.255,10.233,10.277,9.011,10.299,8.088,9.133,4.044,9.322,9.155,10.177,9.311,6.066,2.022,117.393\r\n";
+                    $"E4,Approved,{note4SubmittedDate},Household,{note4.StartDate.ToShortDateString()},{note4.EndDate.ToShortDateString()},{note4.Recipient.OrganisationName},,Reuse network PWP,10.244,9.322,10.266,9.099,10.288,7.077,9.122,2.033,9.311,9.144,9.166,10.299,5.055,1.011,111.437,10.255,10.233,10.277,9.011,10.299,8.088,9.133,4.044,9.322,9.155,10.177,9.311,6.066,2.022,117.393\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_{aatfApprovalNumber}_Evidence notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");

@@ -2,6 +2,7 @@ ALTER PROCEDURE [Evidence].[getObligationEvidenceSummaryTotals]
 	@ComplianceYear SMALLINT,
 	@OrganisationId UNIQUEIDENTIFIER = NULL,
 	@SchemeId UNIQUEIDENTIFIER = NULL
+WITH RECOMPILE
 AS
 BEGIN
 SET NOCOUNT ON;
