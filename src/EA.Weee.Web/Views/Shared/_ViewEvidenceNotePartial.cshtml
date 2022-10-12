@@ -59,7 +59,8 @@ else
         width: 20%;
     }
 
-    .received-column-printable {
+    .received-column-printable
+    {
         padding-right: 40px;
     }
 </style>
@@ -215,7 +216,7 @@ else
             }
             else
             {
-                
+
                 var categoryColumnWidthCss = Model.IsPrintable ? "category-column-printable" : "category-column";
                 var receivedColumnWithCss = Model.IsPrintable ? "received-column-printable" : "received-column";
 
@@ -232,21 +233,21 @@ else
         {
             var category = Model.CategoryValues[i];
 
-        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-            <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1">
-                <div class="category">
-                    <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
-                </div>
-            </td>
-            <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right @tonnageReceivedPadding">
-                @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
-            </td>
-            <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right @tonnageReusedPadding">
-                @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
-            </td>
-            @if (Model.DisplayTransferEvidenceColumns)
-            {
-                var transferCategory = Model.RemainingTransferCategoryValues[i];
+            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1">
+                    <div class="category">
+                        <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                    </div>
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right @tonnageReceivedPadding">
+                    @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right @tonnageReusedPadding">
+                    @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
+                </td>
+                @if (Model.DisplayTransferEvidenceColumns)
+                {
+                    var transferCategory = Model.RemainingTransferCategoryValues[i];
 
                     <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-3">
                         @Html.Gds().VisuallyHidden("Received after for  " + @transferCategory.CategoryDisplay) @transferCategory.Received
@@ -257,37 +258,34 @@ else
                 }
             </tr>
         }
-        
 
-    <tr class="govuk-table__row">
-        <td class="govuk-table__cell govuk-!-text-align-left">
-            <p class="govuk-body"><strong>Total</strong></p>
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right @tonnageReceivedPadding">
-            <p class="govuk-body" id="ReceivedTotal">@Model.ReceivedTotal</p>
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right @tonnageReusedPadding">
-            <p class="govuk-body" id="ReusedTotal">@Model.ReusedTotal</p>
-        </td>
-        @if (Model.DisplayTransferEvidenceColumns)
-        {
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
-                <p class="govuk-body" id="TransferReceivedTotal">@Model.TransferReceivedRemainingTotalDisplay</p>
+
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-!-text-align-left">
+                <p class="govuk-body"><strong>Total</strong></p>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
-                <p class="govuk-body" id="TransferReusedTotal">@Model.TransferReusedRemainingTotalDisplay</p>
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right @tonnageReceivedPadding">
+                <p class="govuk-body" id="ReceivedTotal">@Model.ReceivedTotal</p>
             </td>
-        }
-    </tr>
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right @tonnageReusedPadding">
+                <p class="govuk-body" id="ReusedTotal">@Model.ReusedTotal</p>
+            </td>
+            @if (Model.DisplayTransferEvidenceColumns)
+            {
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
+                    <p class="govuk-body" id="TransferReceivedTotal">@Model.TransferReceivedRemainingTotalDisplay</p>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right">
+                    <p class="govuk-body" id="TransferReusedTotal">@Model.TransferReusedRemainingTotalDisplay</p>
+                </td>
+            }
+        </tr>
 
     </tbody>
 </table>
 
 @if (Model.IsPrintable)
 {
-    @(this.WeeeGds().CreateProgressiveDisclosure("Transfer history",
-                    @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml").ToString(),
-                    "Hidden content",
-                    "Progressive disclosure",
-                    "Transfer history"))
+    <h1>Transfer History</h1>
+    @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml", Model)
 }

@@ -2,7 +2,9 @@
 {
     using AutoFixture;
     using Core.AatfEvidence;
+    using EA.Prsd.Core;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence.Reports;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -40,7 +42,7 @@
         [Fact]
         public void DownloadEvidenceNotesReportGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNotesReport", new[] {typeof(Guid), typeof(int), typeof(TonnageToDisplayReportEnum) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNotesReport", new[] { typeof(Guid), typeof(int), typeof(TonnageToDisplayReportEnum) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -84,6 +86,42 @@
             result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(csvFile.FileContent));
             result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvFile.FileName));
             result.FileDownloadName.Should().Be(csvFile.FileName);
+        }
+
+        [Fact]
+        public void DownloadEvidenceNotePdfGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceNotePdf", new[] { typeof(Guid) }).Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceNotePdfGet_GivenPdf_FileShouldBeReturned()
+        {
+            //arrange
+            SystemTime.Freeze(new DateTime(2022, 10, 5, 13, 22, 10));
+            var pdf = Fixture.Create<byte[]>();
+
+            var data = Fixture.Build<EvidenceNoteData>()
+                .With(e => e.ComplianceYear, 2022)
+                .Create();
+
+            var model = Fixture.Build<ViewEvidenceNoteViewModel>()
+                .With(v => v.Reference, 1200)
+                .With(v => v.Type, NoteType.Evidence).Create();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForSchemeRequest>._)).Returns(data);
+            A.CallTo(() => PdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
+
+            //act
+            var result = await Controller.DownloadEvidenceNotePdf(EvidenceNoteId) as FileContentResult;
+
+            //assert
+            result.FileContents.Should().BeSameAs(pdf);
+            result.FileDownloadName.Should().Be("2022_E1200_051022_1422.pdf");
+            result.ContentType.Should().Be("application/pdf");
+            SystemTime.Unfreeze();
         }
     }
 }
