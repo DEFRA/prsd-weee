@@ -4,10 +4,10 @@
 
     public interface ISessionService
     {
-        void SetTransferSessionObject(HttpSessionStateBase session, object request, string sessionKey);
+        void SetTransferSessionObject(object request, string sessionKey);
 
-        T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey) where T : class;
+        T GetTransferSessionObject<T>(string sessionKey) where T : class;
 
-        void ClearTransferSessionObject(HttpSessionStateBase session, string sessionKey);
+        void ClearTransferSessionObject(string sessionKey);
     }
 }

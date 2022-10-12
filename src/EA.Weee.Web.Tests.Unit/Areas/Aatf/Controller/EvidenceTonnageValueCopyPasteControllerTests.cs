@@ -92,7 +92,7 @@
             await evidenceTonnageValueCopyPasteController.Index(organisationId, string.Empty, TestFixture.Create<int>(), true);
 
             //Assert
-            A.CallTo(() => sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(evidenceTonnageValueCopyPasteController.Session,
+            A.CallTo(() => sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(
                 SessionKeyConstant.EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
         }
 
@@ -176,7 +176,7 @@
             evidenceTonnageValueCopyPasteController.Index(model);
 
             //Assert
-            A.CallTo(() => sessionService.SetTransferSessionObject(evidenceTonnageValueCopyPasteController.Session, A<object>._, SessionKeyConstant.EditEvidenceViewModelKey)).MustNotHaveHappened();
+            A.CallTo(() => sessionService.SetTransferSessionObject(A<object>._, SessionKeyConstant.EditEvidenceViewModelKey)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -191,7 +191,7 @@
             evidenceTonnageValueCopyPasteController.Index(model);
 
             //Assert
-            A.CallTo(() => sessionService.SetTransferSessionObject(evidenceTonnageValueCopyPasteController.Session, A<object>._, SessionKeyConstant.EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => sessionService.SetTransferSessionObject(A<object>._, SessionKeyConstant.EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -236,7 +236,7 @@
             evidenceTonnageValueCopyPasteController.Index(model);
 
             //Assert
-            A.CallTo(() => sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(evidenceTonnageValueCopyPasteController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
         }
 
         private EvidenceTonnageValueCopyPasteViewModel CreateValidModel(string action)
