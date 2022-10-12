@@ -31,7 +31,8 @@
             Guid? recipientId,
             NoteStatus? noteStatus,
             WasteType? obligationType,
-            Guid? submittedAatfIdBy)
+            Guid? submittedAatfIdBy, 
+            string searchRef)
         {
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
@@ -51,6 +52,7 @@
             NoteStatusFilter = noteStatus;
             ObligationTypeFilter = obligationType;
             SubmittedByAatfIdFilter = submittedAatfIdBy;
+            SearchRef = searchRef;
         }
     }
 }
