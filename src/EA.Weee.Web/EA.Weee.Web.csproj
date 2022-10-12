@@ -895,7 +895,6 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\EvidenceAndObligationProgress.cshtml" />
-    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNotePdf.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
