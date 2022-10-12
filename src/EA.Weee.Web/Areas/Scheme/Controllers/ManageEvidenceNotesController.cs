@@ -295,7 +295,6 @@
         {
             using (var client = apiClient())
             {
-                //var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var request = new GetEvidenceNoteForSchemeRequest(evidenceNoteId);
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
