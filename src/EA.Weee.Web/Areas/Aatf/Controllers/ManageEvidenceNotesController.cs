@@ -14,7 +14,6 @@
     using Core.Constants;
     using Core.Helpers;
     using EA.Prsd.Core.Extensions;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.AatfEvidence.Reports;
@@ -138,9 +137,9 @@
             {
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
 
-                var existingModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(Session, SessionKeyConstant.EditEvidenceViewModelKey);
+                var existingModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey);
 
-                sessionService.SetTransferSessionObject(Session, null, SessionKeyConstant.EditEvidenceViewModelKey);
+                sessionService.SetTransferSessionObject(null, SessionKeyConstant.EditEvidenceViewModelKey);
 
                 var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, null, organisationId, aatfId, complianceYear)) 
                     : mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, existingModel, organisationId, aatfId, complianceYear));
@@ -159,7 +158,7 @@
             {
                 if (viewModel.Action == ActionEnum.CopyAndPaste)
                 {
-                    sessionService.SetTransferSessionObject(Session, viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
+                    sessionService.SetTransferSessionObject(viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
                     return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, new { organisationId, returnAction = EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction, complianceYear = viewModel.ComplianceYear });
                 }
 
@@ -251,8 +250,8 @@
             {
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
 
-                var existingModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(Session, SessionKeyConstant.EditEvidenceViewModelKey);
-                sessionService.SetTransferSessionObject(Session, null, SessionKeyConstant.EditEvidenceViewModelKey);
+                var existingModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey);
+                sessionService.SetTransferSessionObject(null, SessionKeyConstant.EditEvidenceViewModelKey);
 
                 var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var result = await client.SendAsync(User.GetAccessToken(), request);
@@ -275,7 +274,7 @@
             {
                 if (viewModel.Action == ActionEnum.CopyAndPaste)
                 {
-                    sessionService.SetTransferSessionObject(Session, viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
+                    sessionService.SetTransferSessionObject(viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
                     return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, 
                         new { organisationId, returnAction = EvidenceCopyPasteActionConstants.EditEvidenceNoteAction, complianceYear = viewModel.ComplianceYear });
                 }

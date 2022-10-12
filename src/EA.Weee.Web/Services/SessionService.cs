@@ -4,27 +4,24 @@
 
     public class SessionService : ISessionService
     {
-        public void SetTransferSessionObject(HttpSessionStateBase session, object request, string sessionKey)
+        public void SetTransferSessionObject(object request, string sessionKey)
         {
-            session[sessionKey] = request;
+            HttpContext.Current.Session[sessionKey] = request;
         }
 
-        public T GetTransferSessionObject<T>(HttpSessionStateBase session, string sessionKey) where T : class
+        public T GetTransferSessionObject<T>(string sessionKey) where T : class
         {
-            if (session[sessionKey] != null)
+            if (HttpContext.Current.Session[sessionKey] != null)
             {
-                return session[sessionKey] as T;
+                return HttpContext.Current.Session[sessionKey] as T;
             }
 
             return null;
         }
 
-        public void ClearTransferSessionObject(HttpSessionStateBase session, string sessionKey)
+        public void ClearTransferSessionObject(string sessionKey)
         {
-            if (session[sessionKey] != null)
-            {
-                session[sessionKey] = null;
-            }
+            HttpContext.Current.Session[sessionKey] = null;
         }
     }
 }

@@ -208,9 +208,6 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="MvcRazorToPdf, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvcRazorToPdf.1.0.2\lib\40\MvcRazorToPdf.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -431,11 +428,13 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ITransferEvidenceNotesViewModelValidator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IObligationSummaryBase.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SummaryEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferDeselectEvidenceNoteModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelValidator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferSelectEvidenceNoteModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferSelectEvidenceNoteModelBase.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
@@ -895,6 +894,7 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\EvidenceAndObligationProgress.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNotePdf.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
