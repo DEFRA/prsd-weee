@@ -829,19 +829,16 @@
                 var complianceYear = fixture.Create<int>();
 
                 var evidenceWithFilteredReference = EvidenceNoteDbSetup.Init()
-                    .WithReference(1111)
                     .WithComplianceYear(complianceYear)
                     .WithRecipient(recipientOrganisation.Id)
                     .Create();
 
                 var evidence1WithNotSelectedReference = EvidenceNoteDbSetup.Init()
-                    .WithReference(2333)
                     .WithRecipient(recipientOrganisation.Id)
                     .WithComplianceYear(complianceYear)
                     .Create();
 
                 var evidence2WithNotSelectedReference = EvidenceNoteDbSetup.Init()
-                    .WithReference(56554)
                     .WithRecipient(recipientOrganisation.Id)
                     .WithComplianceYear(complianceYear)
                     .Create();
@@ -850,8 +847,10 @@
                 notesSet.Add(evidence1WithNotSelectedReference);
                 notesSet.Add(evidence2WithNotSelectedReference);
 
+                filterReference = evidenceWithFilteredReference.Reference;
+
                 request = new GetAllNotesInternal(noteTypeFilter, new List<NoteStatus> { NoteStatus.Draft }, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, null, "E1111");
+                    null, null, null, null, null, null, filterReference.ToString());
             };
 
             private readonly Because of = () =>
@@ -876,7 +875,7 @@
                 {
                     var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
                     evidenceNote.Should().BeTrue();
-                    note1.Reference.Should().Be(1111);
+                    note1.Reference.Should().Be(filterReference);
                 }
             };
         }
@@ -899,6 +898,7 @@
             protected static NoteStatus? noteStatusFilter;
             protected static WasteType? obligationTypeFilter;
             protected static Guid? submittedAatfIdFilter;
+            protected static int filterReference;
 
             public static void LocalSetup()
             {
