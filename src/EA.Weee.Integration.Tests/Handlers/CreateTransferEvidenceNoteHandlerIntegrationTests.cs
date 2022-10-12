@@ -273,6 +273,74 @@
             private readonly It shouldHaveCaughtInvalidOperationException = ShouldThrowException<InvalidOperationException>;
         }
 
+        [Component]
+        public class WhenICreateASubmittedTransferEvidenceNoteWithZeroTonnages : CreateTransferEvidenceNoteHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                transferOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(transferOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transferOrganisation.Id).Create();
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+
+                var existingTonnagesNote1 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
+                };
+
+                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+
+                var newTransferNoteTonnage = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 0, 0)
+                };
+
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage).Create();
+
+                transferTonnageValues = new List<TransferTonnageValue>()
+                {
+                    new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 0, 0, Guid.Empty)
+                };
+
+                request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientOrganisation.Id,
+                    new List<int>()
+                    {
+                        WeeeCategory.DisplayEquipment.ToInt()
+                    },
+                    transferTonnageValues,
+                    new List<Guid>() { note1.Id },
+                    Core.AatfEvidence.NoteStatus.Submitted,
+                    note1.ComplianceYear);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetTransferEvidenceNoteById(result);
+            };
+
+            private readonly It shouldHaveCreatedTheTransferEvidenceNote = () =>
+            {
+                note.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveDeletedTheTransferTonnage = () =>
+            {
+                note.NoteTransferTonnage.Should().BeEmpty();
+            };
+        }
+
         public class CreateTransferEvidenceNoteHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<TransferEvidenceNoteRequest, Guid> handler;
