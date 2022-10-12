@@ -284,7 +284,7 @@
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
                 complianceYearsList));
 
-            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(null, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate, complianceYearsList));
+            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(manageEvidenceNoteViewModel?.FilterViewModel, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate, complianceYearsList));
 
             return View("ViewAllEvidenceNotes", model);
         }
