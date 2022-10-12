@@ -40,11 +40,11 @@
 
             message = new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3,
                 TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved, 
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>());
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>());
 
             messageWithEmptyNoteInternalTypeList = new GetAllNotesInternal(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3,
                 TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>());
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>());
 
             handler = new GetAllNotesInternalRequestHandler(weeeAuthorization, noteDataAccess, mapper, systemDataDataAccess);
         }
@@ -111,7 +111,36 @@
                 e.AllowedStatuses.SequenceEqual(allowedStatuses) &&
                 e.NoteTypeFilter.SequenceEqual(noteTypeFilter) &&
                 e.PageSize == messageWithEmptyNoteInternalTypeList.PageSize &&
-                e.PageNumber == messageWithEmptyNoteInternalTypeList.PageNumber))).MustHaveHappenedOnceExactly();
+                e.PageNumber == messageWithEmptyNoteInternalTypeList.PageNumber)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithFiltersSet_NoteDataAccessShouldBeCalledOnce()
+        {
+            // act
+            var startDate = TestFixture.Create<DateTime?>();
+            var endDate = TestFixture.Create<DateTime?>();
+            var recipientId = TestFixture.Create<Guid>();
+            var noteStatus = TestFixture.Create<NoteStatus?>();
+            var obligationType = TestFixture.Create<Core.AatfEvidence.WasteType?>();
+            var submittedByAatfId = TestFixture.Create<Guid>();
+            var searchRef = TestFixture.Create<string>();
+
+            var request = GetNoteFilter(startDate, endDate, recipientId, noteStatus, obligationType, submittedByAatfId, searchRef);
+
+            // act
+            await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
+                e.StartDateSubmitted == startDate &&
+                e.EndDateSubmitted == endDate &&
+                e.RecipientId == recipientId &&
+                e.NoteStatusId == (int?)noteStatus &&
+                e.WasteTypeId == (int?)obligationType &&
+                e.AatfId == submittedByAatfId &&
+                e.SearchRef == searchRef))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -177,7 +206,14 @@
         {
             return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 1, 2,
                 TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>());    
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>());    
+        }
+
+        private GetAllNotesInternal GetNoteFilter(DateTime? startDateTime, DateTime? endDateTime, Guid? recipientId, NoteStatus? noteStatus, 
+            Core.AatfEvidence.WasteType? obligationType, Guid? submittedByAatfId, string searchRef)
+        {
+            return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 1, 2,
+                startDateTime, endDateTime, recipientId, noteStatus, obligationType, submittedByAatfId, searchRef);
         }
     }
 }
