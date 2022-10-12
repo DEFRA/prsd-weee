@@ -24,6 +24,9 @@
                         </h2>
 
                         <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                              <div class="govuk-form-group govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0 " style="width:370px">
+                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                            </div>
 
                             <div class="govuk-grid-row">
                                 <div class="govuk-!-padding-right-1 govuk-!-padding-left-3">
@@ -38,7 +41,7 @@
                                             <div class="govuk-grid-column-one-half govuk-!-padding-right-0">
                                                 @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeStatusFiltersViewModel")
                                             </div>
-                                            <div class="govuk-grid-column-one-half govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0 govuk-!-padding-left-1">
+                                            <div class="govuk-grid-column-one-half govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0 govuk-!-padding-left-3">
                                                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
                                                                          new ViewDataDictionary() { new KeyValuePair<string, object>("tab", "view-all-evidence-notes") })
                                             </div>

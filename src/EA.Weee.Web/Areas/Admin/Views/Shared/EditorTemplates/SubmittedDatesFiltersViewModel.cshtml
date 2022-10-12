@@ -2,12 +2,12 @@
 
 @model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
-<div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0">
+<div class="govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-2 govuk-!-padding-bottom-0 govuk-!-margin-bottom-1">
     <span class="govuk-label--s" aria-labelledby="ManageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate-label ManageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate-label">
         Filter by
     </span>
 </div>
-<div class="govuk-!-padding-left-0 govuk-!-padding-top-0">
+<div class="govuk-!-padding-left-0 govuk-!-padding-top-0 govuk-!-margin-bottom-2 govuk-!-margin-top-2">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-margin-right-0" style="width:210px">
         <div class="govuk-form-group govuk-!-padding-top-20 @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
             @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @class = "govuk-label--s" }, false)
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7 govuk-body govuk-!-padding-left-0" style="text-align: left; width: 3%;">
+    <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7 govuk-body govuk-!-padding-left-0" style="text-align: left; width: 3.5%;">
         <span>
             to
         </span>
