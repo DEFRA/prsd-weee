@@ -1279,5 +1279,30 @@
                 refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Reused.Should().Be(2);
             }
         }
+
+        [Fact]
+        public async Task DeleteZeroTonnageFromSubmittedTransferNote_RemovesZeroTonnage_FromTransferNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
+
+                var note = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
+                note.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser().ToString(), DateTime.Now);
+
+                note.NoteTransferTonnage.Add(new NoteTransferTonnage(Guid.NewGuid(), 0, null));
+
+                dataAccess.DeleteZeroTonnageFromSubmittedTransferNote(note, note.Status, note.NoteType);
+
+                note.NoteTransferTonnage.Should().BeEmpty();
+            }
+        }
     }
 }
