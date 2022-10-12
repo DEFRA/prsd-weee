@@ -392,8 +392,8 @@
             await ManageEvidenceController.CreateEvidenceNote(OrganisationId, AatfId, Fixture.Create<int>(), true);
 
             //Assert
-            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(A<HttpSessionStateBase>._, A<string>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, null, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => SessionService.SetTransferSessionObject(null, A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -401,7 +401,7 @@
         {
             //Arrange
             var model = ValidModel();
-            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
 
             var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
@@ -482,7 +482,7 @@
             var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
 
             //Assert
-            A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, model, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => SessionService.SetTransferSessionObject(model, A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -496,7 +496,7 @@
             var result = await ManageEvidenceController.CreateEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
 
             //Assert
-            A.CallTo(() => SessionService.SetTransferSessionObject(A<HttpSessionStateBase>._, model, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => SessionService.SetTransferSessionObject(model, A<string>._)).MustNotHaveHappened();
         }
     }
 }
