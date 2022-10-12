@@ -7,7 +7,6 @@
     using System.Web.Mvc;
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
@@ -158,10 +157,10 @@
             await ManageEvidenceController.Index("view-all-evidence-transfers", model);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
-                    m.FilterViewModel == null &&
                     m.AatfData == null &&
                     m.RecipientWasteStatusFilterViewModel == null &&
                     m.SubmittedDatesFilterViewModel == null &&
+                    m.FilterViewModel == null &&
                     m.CurrentDate == currentDate &&
                     m.ComplianceYear == complianceYear &&
                     m.ComplianceYearList.SequenceEqual(complianceYearList))))
@@ -179,7 +178,7 @@
             var complianceYearList = new List<int> { 2019, 2020 };
             var recipientWasteStatusViewModel = TestFixture.Create<RecipientWasteStatusFilterViewModel>();
             var submittedDatesFilterViewModel = TestFixture.Create<SubmittedDatesFilterViewModel>();
-
+  
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYearList);
             A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(A<RecipientWasteStatusFilterBase>._)).Returns(recipientWasteStatusViewModel);
@@ -192,10 +191,10 @@
             await ManageEvidenceController.Index(tab, model);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
-                    m.FilterViewModel == null &&
                     m.AatfData == null &&
                     m.RecipientWasteStatusFilterViewModel == recipientWasteStatusViewModel &&
                     m.SubmittedDatesFilterViewModel == submittedDatesFilterViewModel &&
+                    m.FilterViewModel == model.FilterViewModel &&
                     m.CurrentDate == currentDate &&
                     m.ComplianceYear == complianceYear &&
                     m.ComplianceYearList.SequenceEqual(complianceYearList))))
@@ -292,7 +291,7 @@
             //act
             await ManageEvidenceController.Index(tab);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
@@ -311,7 +310,7 @@
             //act
             await ManageEvidenceController.Index(tab);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
                 .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
                               types.SequenceEqual(g.NoteTypeFilterList) && 
@@ -337,7 +336,7 @@
             //act
             await ManageEvidenceController.Index(tab);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
                 .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
                               types.SequenceEqual(g.NoteTypeFilterList) && 
@@ -364,7 +363,7 @@
             //act
             await ManageEvidenceController.Index(tab, manageEvidenceNoteModel);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
                 .Matches(g => statuses.SequenceEqual(g.AllowedStatuses) && 
                               types.SequenceEqual(g.NoteTypeFilterList) && 
@@ -386,7 +385,7 @@
             //act
             await ManageEvidenceController.Index(tab);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>.That.Matches(
                 g => status.SequenceEqual(g.AllowedStatuses)))).MustHaveHappenedOnceExactly();
         }
@@ -401,7 +400,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => statuses.SequenceEqual(g.AllowedStatuses) &&
                      types.SequenceEqual(g.NoteTypeFilterList) &&
@@ -421,7 +420,7 @@
             //act
             await ManageEvidenceController.Index(tab);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.AllowedStatuses.Contains(statusNotIncluded) &&
                      g.PageNumber == 1 &&
@@ -437,7 +436,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.AllowedStatuses.Contains(statusNotIncluded) &&
                      g.PageNumber == 1 &&
@@ -456,7 +455,7 @@
             //act
             await ManageEvidenceController.Index(tab);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded) &&
                      g.PageNumber == 1 &&
@@ -472,11 +471,64 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.NoteTypeFilterList.Contains(typeFilterNotIncluded) &&
                      g.PageNumber == 1 &&
                      g.PageSize == PageSize))).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async Task IndexGet_GivenViewAllEvidenceTransfersTab_GivenSearchFilterParameters_NoteShouldBeRetrieved(string tab)
+        {
+            // arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(tab, model);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
+                g => g.SearchRef == model.FilterViewModel.SearchRef))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async Task IndexGet_GivenViewAllEvidenceTransfersTab_GivenSubmittedDatesFilterViewModelFilter_NoteShouldBeRetrieved(string tab)
+        {
+            // arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(tab, model);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
+                g => g.StartDateSubmittedFilter == model.SubmittedDatesFilterViewModel.StartDate &&
+                g.EndDateSubmittedFilter == model.SubmittedDatesFilterViewModel.EndDate))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("view-all-evidence-notes")]
+        public async Task IndexGet_GivenViewAllEvidenceTransfersTab_GivenRecipientWasteStatusFilterViewModelFilter_NoteShouldBeRetrieved(string tab)
+        {
+            // arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(tab, model);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
+                g => g.RecipientIdFilter == model.RecipientWasteStatusFilterViewModel.ReceivedId && 
+                g.NoteStatusFilter == model.RecipientWasteStatusFilterViewModel.NoteStatusValue &&
+                g.ObligationTypeFilter == model.RecipientWasteStatusFilterViewModel.WasteTypeValue &&
+                g.SubmittedByAatfIdFilter == model.RecipientWasteStatusFilterViewModel.SubmittedBy)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -491,7 +543,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>.That.Matches(
                 g => status.SequenceEqual(g.AllowedStatuses)))).MustHaveHappenedOnceExactly();
         }
@@ -579,7 +631,7 @@
             //act
             await ManageEvidenceController.Index(tab);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
@@ -597,7 +649,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers");
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
@@ -618,7 +670,7 @@
             //act
             await ManageEvidenceController.Index(tab, manageEvidenceNote);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData && 
@@ -642,7 +694,7 @@
             //act
             await ManageEvidenceController.Index(tab, manageEvidenceNote);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
@@ -688,7 +740,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers", manageEvidenceNote);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
@@ -710,7 +762,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers", manageEvidenceNote);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
@@ -731,7 +783,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-notes", model);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
@@ -751,7 +803,7 @@
             //act
             await ManageEvidenceController.Index("view-all-evidence-transfers", model);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(
                 A<ViewEvidenceNotesMapTransfer>.That.Matches(
                     a => a.NoteData == noteData &&
@@ -798,7 +850,7 @@
             //act
             var result = await ManageEvidenceController.Index(tab) as ViewResult;
 
-            //asset
+            //assert
             result.Model.Should().Be(viewModel);
         }
 
@@ -813,7 +865,7 @@
             //act
             var result = await ManageEvidenceController.Index("view-all-evidence-transfers") as ViewResult;
 
-            //asset
+            //assert
             result.Model.Should().Be(viewModel);
         }
 

@@ -793,8 +793,7 @@
             await ManageEvidenceController.Index(OrganisationId);
 
             // assert
-            A.CallTo(() =>
-                    SessionService.ClearTransferSessionObject(ManageEvidenceController.Session, SessionKeyConstant.TransferNoteKey))
+            A.CallTo(() => SessionService.ClearTransferSessionObject(SessionKeyConstant.TransferNoteKey))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -808,7 +807,7 @@
             await ManageEvidenceController.Index(OrganisationId);
 
             // assert
-            A.CallTo(() => SessionService.ClearTransferSessionObject(ManageEvidenceController.Session, SessionKeyConstant.EditTransferTonnageViewModelKey)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => SessionService.ClearTransferSessionObject(SessionKeyConstant.EditTransferTonnageViewModelKey)).MustHaveHappenedOnceExactly();
         }
 
         public static IEnumerable<object[]> ManageEvidenceModelData =>

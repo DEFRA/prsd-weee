@@ -1,17 +1,36 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
+    using AutoFixture;
+    using Constant;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Services;
+    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Constant;
-    using FluentAssertions;
     using Web.Areas.Scheme.ViewModels;
     using Web.ViewModels.Shared;
+    using Weee.Requests.Scheme;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class TransferEvidenceNotesViewModelTests
+    public class TransferEvidenceNotesViewModelTests : SimpleUnitTestBase
     {
+        private readonly ISessionService service;
+
+        private readonly TransferEvidenceNotesViewModel model;
+
+        public TransferEvidenceNotesViewModelTests()
+        {
+            service = A.Fake<ISessionService>();
+
+            model = new TransferEvidenceNotesViewModel()
+            {
+                SessionService = service
+            };
+        }
+
         [Fact]
         public void TransferEvidenceNotesViewModel_ShouldImplement_IValidatableObject()
         {
@@ -21,22 +40,26 @@
         [Fact]
         public void TransferEvidenceNotesViewModel_Constructor_ShouldInitialiseLists()
         {
-            //act
-            var result = new TransferEvidenceNotesViewModel();
-
             //assert
-            result.EvidenceNotesDataList.Should().NotBeNull();
-            result.CategoryValues.Should().NotBeNull();
+            model.EvidenceNotesDataList.Should().NotBeNull();
+            model.CategoryValues.Should().NotBeNull();
         }
 
-        [Fact]
-        public void Validate_GivenNoNotesSelected_ValidationResultExpected()
+        [Theory]
+        [InlineData("outgoingTransferKey", true)]
+        [InlineData("transferNote", false)]
+        public void Validate_GivenNoNotesSelected_ValidationResultExpected(string sessionKey, bool isEdit)
         {
             //arrange
-            var result = new TransferEvidenceNotesViewModel();
+            model.IsEdit = isEdit;
+            var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), new List<Guid>(), new List<Guid>());
+
+            A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
+                .Returns(transferEvidenceNoteRequest);
 
             //act
-            var validationResults = result.Validate(new ValidationContext(result));
+            var validationResults = model.Validate(new ValidationContext(model));
 
             //assert
             validationResults.Should().Contain(v =>
@@ -44,25 +67,20 @@
                 && v.MemberNames.Contains(ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError));
         }
 
-        [Fact]
-        public void Validate_GivenMoreThanFiveNotesSelected_ValidationResultExpected()
+        [Theory]
+        [InlineData("outgoingTransferKey", true)]
+        [InlineData("transferNote", false)]
+        public void Validate_GivenMoreThanFiveNotesSelected_ValidationResultExpected(string sessionKey, bool isEdit)
         {
-            //arrange
-            var result = new TransferEvidenceNotesViewModel()
-            {
-                EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>()
-                {
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel()
-                }
-            };
+            model.IsEdit = isEdit;
+            var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(6).ToList(), new List<Guid>());
+
+            A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
+                .Returns(transferEvidenceNoteRequest);
 
             //act
-            var validationResults = result.Validate(new ValidationContext(result));
+            var validationResults = model.Validate(new ValidationContext(model));
 
             //assert
             validationResults.Should().Contain(v =>
@@ -70,46 +88,39 @@
                 && v.MemberNames.Contains(ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError));
         }
 
-        [Fact]
-        public void Validate_GivenFivesNotesSelected_ValidationResultShouldBeEmpty()
+        [Theory]
+        [InlineData("outgoingTransferKey", true)]
+        [InlineData("transferNote", false)]
+        public void Validate_GivenFivesNotesSelected_ValidationResultShouldBeEmpty(string sessionKey, bool isEdit)
         {
-            //arrange
-            var result = new TransferEvidenceNotesViewModel()
-            {
-                EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>()
-                {
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel()
-                }
-            };
+            model.IsEdit = isEdit;
+            var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(5).ToList(), new List<Guid>());
+
+            A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
+                .Returns(transferEvidenceNoteRequest);
 
             //act
-            var validationResults = result.Validate(new ValidationContext(result));
+            var validationResults = model.Validate(new ValidationContext(model));
 
             //assert
             validationResults.Should().BeEmpty();
         }
 
-        [Fact]
-        public void Validate_GivenSingleNoteSelected_ValidationResultShouldBeEmpty()
+        [Theory]
+        [InlineData("outgoingTransferKey", true)]
+        [InlineData("transferNote", false)]
+        public void Validate_GivenSingleNoteSelected_ValidationResultShouldBeEmpty(string sessionKey, bool isEdit)
         {
-            //arrange
-            var result = new TransferEvidenceNotesViewModel()
-            {
-                EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>()
-                {
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel(),
-                    new ViewEvidenceNoteViewModel()
-                }
-            };
+            model.IsEdit = isEdit;
+            var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(1).ToList(), new List<Guid>());
+
+            A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
+                .Returns(transferEvidenceNoteRequest);
 
             //act
-            var validationResults = result.Validate(new ValidationContext(result));
+            var validationResults = model.Validate(new ValidationContext(model));
 
             //assert
             validationResults.Should().BeEmpty();
