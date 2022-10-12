@@ -11,10 +11,8 @@
     using Core.AatfEvidence;
     using Core.AatfReturn;
     using Core.Helpers;
-    using Core.Organisations;
     using Core.Scheme;
     using EA.Prsd.Core;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.ViewModels.Shared;

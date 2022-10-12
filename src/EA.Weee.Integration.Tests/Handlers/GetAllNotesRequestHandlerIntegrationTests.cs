@@ -89,7 +89,7 @@
                 notesSet.Add(evidenceWithVoidStatus);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, null);
+                    null, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -137,7 +137,7 @@
                 notesSet.Add(evidenceWithDraftStatus2);
 
                 request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue,
-                    null, null, null, null, null, null);
+                    null, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -229,7 +229,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    startDateSubmittedFilter, endDateSubmittedFilter, null, null, null, null);
+                    startDateSubmittedFilter, endDateSubmittedFilter, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -320,7 +320,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    startDateSubmittedFilter, null, null, null, null, null);
+                    startDateSubmittedFilter, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -401,7 +401,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, endDateSubmittedFilter, null, null, null, null);
+                    null, endDateSubmittedFilter, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -489,7 +489,7 @@
                 notesSet.Add(evidence2NoRecipient);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, recipientOrganisation.Id, null, null, null);
+                    null, null, recipientOrganisation.Id, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -597,7 +597,7 @@
                 notesSet.Add(evidence2WithVoidStatus);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, NoteStatus.Void, null, null);
+                    null, null, null, NoteStatus.Void, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -673,7 +673,7 @@
                 notesSet.Add(evidence1NonHouseholdType);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, WasteType.Household, null);
+                    null, null, null, null, WasteType.Household, null, null);
             };
 
             private readonly Because of = () =>
@@ -783,7 +783,7 @@
                 notesSet.Add(evidence2WithNonSelectedAatf);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, aatfSelected.Id);
+                    null, null, null, null, null, aatfSelected.Id, null);
             };
 
             private readonly Because of = () =>
@@ -808,6 +808,75 @@
                 {
                     var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
                     evidenceNote.Should().BeTrue();
+                }
+            };
+        }
+
+        [Component]
+        public class WhenIGetAListOfEvidenceNoteDataAsNotesWithSearchRefSetInFilter : GetAllNotesRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
+
+                var complianceYear = fixture.Create<int>();
+
+                var evidenceWithFilteredReference = EvidenceNoteDbSetup.Init()
+                    .WithReference(1111)
+                    .WithComplianceYear(complianceYear)
+                    .WithRecipient(recipientOrganisation.Id)
+                    .Create();
+
+                var evidence1WithNotSelectedReference = EvidenceNoteDbSetup.Init()
+                    .WithReference(2333)
+                    .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(complianceYear)
+                    .Create();
+
+                var evidence2WithNotSelectedReference = EvidenceNoteDbSetup.Init()
+                    .WithReference(56554)
+                    .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(complianceYear)
+                    .Create();
+
+                notesSet.Add(evidenceWithFilteredReference);
+                notesSet.Add(evidence1WithNotSelectedReference);
+                notesSet.Add(evidence2WithNotSelectedReference);
+
+                request = new GetAllNotesInternal(noteTypeFilter, new List<NoteStatus> { NoteStatus.Draft }, complianceYear, 1, int.MaxValue,
+                    null, null, null, null, null, null, "E1111");
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldReturnListOfEvidenceNotes = () =>
+            {
+                evidenceNoteData.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
+            {
+                evidenceNoteData.Results.Should().HaveCount(1);
+                evidenceNoteData.NoteCount.Should().Be(1);
+            };
+
+            private readonly It shouldHaveExpectedData = () =>
+            {
+                foreach (var note1 in notesSet.Take(1))
+                {
+                    var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
+                    evidenceNote.Should().BeTrue();
+                    note1.Reference.Should().Be(1111);
                 }
             };
         }

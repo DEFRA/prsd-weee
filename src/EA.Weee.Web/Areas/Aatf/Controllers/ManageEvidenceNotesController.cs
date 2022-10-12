@@ -14,7 +14,6 @@
     using Core.Constants;
     using Core.Helpers;
     using EA.Prsd.Core.Extensions;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.AatfEvidence.Reports;
