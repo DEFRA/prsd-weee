@@ -60,12 +60,6 @@
             return this;
         }
 
-        public EvidenceNoteDbSetup WithReference(int reference)
-        {
-            ObjectInstantiator<Note>.SetProperty(o => o.Reference, reference, instance);
-            return this;
-        }
-
         public EvidenceNoteDbSetup WithStatus(NoteStatus statusToUpdate, string user)
         {
             var date = SystemTime.UtcNow;
