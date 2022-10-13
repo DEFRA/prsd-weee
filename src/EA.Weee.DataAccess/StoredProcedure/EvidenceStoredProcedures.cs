@@ -3,6 +3,7 @@
     using CuttingEdge.Conditions;
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Data;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
@@ -14,23 +15,31 @@
         public EvidenceStoredProcedures(WeeeContext context)
         {
             this.context = context;
+
+            var cmdTimeout = -1;
+            var timeoutSettings = ConfigurationManager.AppSettings["Weee.CommandTimeout"];
+
+            if (!string.IsNullOrEmpty(timeoutSettings))
+            {
+                int.TryParse(timeoutSettings, out cmdTimeout);
+            }
+
+            if (cmdTimeout >= 0)
+            {
+                context.Database.CommandTimeout = cmdTimeout;
+            }
         }
 
-        public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteOriginalTonnagesReport(
-            int complianceYear, Guid? originatingOrganisationId, Guid? recipientOrganisationId, Guid? aatfId, bool netTonnage)
+        public async Task<List<EvidenceNoteReportData>> GetEvidenceNoteTonnagesReport(
+            int complianceYear, Guid? recipientOrganisationId, Guid? aatfId, bool netTonnage)
         {
             var storedProcedure = netTonnage
                 ? "[Evidence].[getEvidenceNotesNetTonnage]"
                 : "[Evidence].[getEvidenceNotesOriginalTonnage]";
 
-            var queryString = $"{storedProcedure} @ComplianceYear, @OriginatingOrganisationId, @RecipientOrganisationId, @AatfId";
+            var queryString = $"{storedProcedure} @ComplianceYear, @RecipientOrganisationId, @AatfId";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
-            var orgIdParameter = new SqlParameter("@OriginatingOrganisationId", SqlDbType.UniqueIdentifier)
-                {
-                    IsNullable = true,
-                    Value = originatingOrganisationId ?? (object)DBNull.Value
-                };
             var pcsIdParameter = new SqlParameter("@RecipientOrganisationId", SqlDbType.UniqueIdentifier)
                 {
                     IsNullable = true,
@@ -42,7 +51,7 @@
                 Value = aatfId ?? (object)DBNull.Value
             };
 
-            return await context.Database.SqlQuery<EvidenceNoteReportData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter, aatfIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<EvidenceNoteReportData>(queryString, complianceYearParameter, pcsIdParameter, aatfIdParameter).ToListAsync();
         }
 
         public async Task<List<AatfEvidenceSummaryTotalsData>> GetAatfEvidenceSummaryTotals(Guid aatfId, int complianceYear)
@@ -77,7 +86,7 @@
 
         public async Task<List<InternalObligationAndEvidenceSummaryTotalsData>> GetSchemeObligationAndEvidenceTotals(Guid? pcsId, Guid? appropriateAuthorityId, int complianceYear)
         {
-            var queryString = "[Evidence].[getSchemeObligationAndEvidenceTotals] @ComplianceYear, @SchemeId ";
+            var queryString = "[Evidence].[getSchemeObligationAndEvidenceTotals] @ComplianceYear, @SchemeId, @AppropriateAuthorityId ";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
             var pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier)

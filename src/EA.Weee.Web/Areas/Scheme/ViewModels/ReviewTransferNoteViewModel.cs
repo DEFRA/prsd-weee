@@ -52,7 +52,7 @@
             new Dictionary<string, string>
             {
                 { ApproveEvidenceNote, null },
-                { RejectEvidenceNote, "Reject an evidence note transfer to have it replaced. If the note has been sent to you by mistake, it must be rejected." },
+                { RejectEvidenceNote, "Reject an evidence note transfer to have it replaced. If the transfer has been sent to you by mistake, it must be rejected." },
                 { ReturnEvidenceNote, "Return an evidence note transfer to have amendments made to it." }
             };
 

@@ -81,7 +81,7 @@
             //assert
             model.HintItems.ElementAt(0).Value.Should().Be(null);
             model.HintItems.ElementAt(0).Key.Should().Be("Approve evidence note transfer");
-            model.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note transfer to have it replaced. If the note has been sent to you by mistake, it must be rejected.");
+            model.HintItems.ElementAt(1).Value.Should().Be("Reject an evidence note transfer to have it replaced. If the transfer has been sent to you by mistake, it must be rejected.");
             model.HintItems.ElementAt(1).Key.Should().Be("Reject evidence note transfer");
             model.HintItems.ElementAt(2).Value.Should().Be("Return an evidence note transfer to have amendments made to it.");
             model.HintItems.ElementAt(2).Key.Should().Be("Return evidence note transfer");

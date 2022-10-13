@@ -42,11 +42,10 @@
 
         public static Organisation DefaultIntegrationOrganisation { get; set; }
 
-        public static Scheme DefaultScheme { get; set; }
-
         public static Aatf DefaultAatf { get; set; }
 
         public static ClaimsPrincipal Principal { get; set; }
+
         public static ApplicationUser User { get; set; }
 
         public static Guid UserId => User != null ? Guid.Parse(User.Id) : Guid.Empty;
@@ -194,7 +193,6 @@
                     Principal = userc.Principal;
                     var weeContext = Container.Resolve<WeeeContext>();
                     DefaultIntegrationOrganisation = weeContext.Organisations.FirstOrDefault(o => o.Name.Equals(TestingConstants.TestCompanyName));
-                    DefaultScheme = weeContext.Schemes.FirstOrDefault(s => s.SchemeName.Equals(TestingConstants.TestCompanyName));
                     DefaultAatf = weeContext.Aatfs.FirstOrDefault(a => a.Name.Equals(TestingConstants.TestCompanyName));
 
                     if (DefaultIntegrationOrganisation == null)
@@ -202,13 +200,6 @@
                         DefaultIntegrationOrganisation = OrganisationDbSetup.Init().With(o =>
                             o.UpdateRegisteredCompanyDetails(TestingConstants.TestCompanyName,
                                 Faker.RandomNumber.Next(10000000, 99999999).ToString(), "trading")).Create();
-                    }
-
-                    if (DefaultScheme == null)
-                    {
-                        DefaultScheme = SchemeDbSetup.Init()
-                            .With(s => s.UpdateScheme(TestingConstants.TestCompanyName, s.ApprovalNumber, s.IbisCustomerReference, s.ObligationType, s.CompetentAuthority))
-                            .Create();
                     }
 
                     if (DefaultAatf == null)

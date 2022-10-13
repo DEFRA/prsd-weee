@@ -56,5 +56,20 @@
 
             return this;
         }
+
+        public SchemeDbSetup WithSchemeName(string name)
+        {
+            ObjectInstantiator<Scheme>.SetProperty(o => o.SchemeName, name, instance);
+
+            return this;
+        }
+
+        public SchemeDbSetup WithNewOrganisation()
+        {
+            var organisation = OrganisationDbSetup.Init().Create();
+            instance.UpdateOrganisation(organisation.Id);
+
+            return this;
+        }
     }
 }

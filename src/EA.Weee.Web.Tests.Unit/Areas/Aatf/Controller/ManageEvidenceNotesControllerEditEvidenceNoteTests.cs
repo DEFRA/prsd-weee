@@ -446,7 +446,7 @@
             var result = await ManageEvidenceController.EditEvidenceNote(model, OrganisationId, AatfId) as RedirectToRouteResult;
 
             //Assert
-            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, model, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => SessionService.SetTransferSessionObject(model, A<string>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -460,7 +460,7 @@
             await ManageEvidenceController.EditEvidenceNote(model, OrganisationId, AatfId);
 
             //Assert
-            A.CallTo(() => SessionService.SetTransferSessionObject(ManageEvidenceController.Session, model, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => SessionService.SetTransferSessionObject(model, A<string>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -508,7 +508,7 @@
         {
             //Arrange
             var model = ValidModel();
-            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(ManageEvidenceController.Session, SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey)).Returns(model);
 
             var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);

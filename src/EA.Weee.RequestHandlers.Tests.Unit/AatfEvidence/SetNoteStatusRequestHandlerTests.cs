@@ -12,7 +12,10 @@
     using Domain.Evidence;
     using Domain.Organisation;
     using Domain.Scheme;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Organisations;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -26,6 +29,7 @@
     using Xunit;
     using AddressType = Domain.AddressType;
     using NoteStatus = Domain.Evidence.NoteStatus;
+    using NoteType = Core.AatfEvidence.NoteType;
     using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class SetNoteStatusRequestHandlerTests : SimpleUnitTestBase
@@ -455,7 +459,7 @@
             A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
             A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
             A.CallTo(() => note.Organisation).Returns(transferOrganisation);
-            A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => note.NoteType).Returns(Domain.Evidence.NoteType.TransferNote);
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
                 A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
@@ -506,7 +510,7 @@
             ObjectInstantiator<Note>.SetProperty(o => o.Recipient, recipient, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Organisation, transferOrganisation, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ComplianceYear, currentDate.Year, evidenceNote);
-            ObjectInstantiator<Note>.SetProperty(o => o.NoteType, Enumeration.FromValue<NoteType>(noteType), evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.NoteType, Enumeration.FromValue<Domain.Evidence.NoteType>(noteType), evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Status, NoteStatus.Submitted, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.NoteStatusHistory, new List<NoteStatusHistory>(), evidenceNote);
 
@@ -542,7 +546,7 @@
             A.CallTo(() => transferer.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
             A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
             A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
-            A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => note.NoteType).Returns(Domain.Evidence.NoteType.TransferNote);
             A.CallTo(() => note.Organisation).Returns(transferer);
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
@@ -571,7 +575,7 @@
             A.CallTo(() => note.ApprovedTransfererAddress).Returns(null);
             A.CallTo(() => note.ApprovedTransfererSchemeName).Returns(null);
             A.CallTo(() => note.Organisation).Returns(transferer);
-            A.CallTo(() => note.NoteType).Returns(NoteType.TransferNote);
+            A.CallTo(() => note.NoteType).Returns(Domain.Evidence.NoteType.TransferNote);
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
                 A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
@@ -617,7 +621,7 @@
             ObjectInstantiator<Note>.SetProperty(o => o.ApprovedTransfererSchemeName, scheme.SchemeName, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Organisation, transfererOrganisation, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Recipient, recipientOrganisation, evidenceNote);
-            ObjectInstantiator<Note>.SetProperty(o => o.NoteType, NoteType.TransferNote, evidenceNote);
+            ObjectInstantiator<Note>.SetProperty(o => o.NoteType, Domain.Evidence.NoteType.TransferNote, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.ComplianceYear, currentDate.Year, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.Status, NoteStatus.Submitted, evidenceNote);
             ObjectInstantiator<Note>.SetProperty(o => o.NoteStatusHistory, new List<NoteStatusHistory>(), evidenceNote);
@@ -680,6 +684,45 @@
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => context.SaveChangesAsync())
                 .MustHaveHappenedOnceExactly());
+        }
+
+        [Fact]
+        public async Task HandleAsync_ExternalUser_WithConditionToSetApprovedDetailsAndEvidenceNoteTypeIsEvidenceNote_ApprovedTransfererDetailsShouldNotBeSet()
+        {
+            // Arrange
+            var scheme = A.Fake<Scheme>();
+            var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
+            var handler = new SetNoteStatusRequestHandler(context, userContext, authorization, systemDataDataAccess, addressUtilities, evidenceDataAccess);
+            var recipient = Organisation.CreateRegisteredCompany(TestFixture.Create<string>(), "12345678");
+            var recipientAddress = new Address("address1", "address2",
+                "town", "county", "postcode",
+                new Country(TestFixture.Create<Guid>(), "address name"), "01483676767",
+                "email");
+            var notificationAddress = new Address("address1", "address2",
+                "town", "county", "postcode",
+                new Country(TestFixture.Create<Guid>(), "address name"), "01483676767",
+                "email");
+            ObjectInstantiator<Organisation>.SetProperty(o => o.ProducerBalancingScheme, null, recipient);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.Schemes, new List<Scheme>() { scheme }, recipient);
+            ObjectInstantiator<Organisation>.SetProperty(o => o.NotificationAddress, notificationAddress, recipient);
+            A.CallTo(() => scheme.SchemeName).Returns(TestFixture.Create<string>());
+            A.CallTo(() => note.NoteType).Returns(Domain.Evidence.NoteType.EvidenceNote);
+            A.CallTo(() => note.Recipient).Returns(recipient);
+            A.CallTo(() => note.ComplianceYear).Returns(2020);
+            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(scheme.SchemeName, recipient.OrganisationName,
+                recipientAddress.Address1, recipientAddress.Address2, recipientAddress.TownOrCity,
+                recipientAddress.CountyOrRegion, recipientAddress.Postcode, null)).Returns("address");
+            A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
+            var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
+
+            // Act
+            await handler.HandleAsync(message);
+
+            // Assert
+            note.ApprovedTransfererAddress.Should().BeNullOrEmpty();
+            note.ApprovedTransfererSchemeName.Should().BeNullOrEmpty();
+            note.ApprovedRecipientAddress.Should().NotBeNullOrEmpty();
+            note.ApprovedRecipientSchemeName.Should().NotBeNullOrEmpty();
         }
     }
 }

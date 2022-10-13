@@ -12,8 +12,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Extensions;
     using ViewModels.Reports;
     using ViewModels.SchemeReports;
+    using Weee.Requests.AatfEvidence.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.AatfReports;
     using Weee.Requests.Admin.GetActiveComplianceYears;
@@ -104,8 +106,53 @@
                 case Reports.MissingProducerData:
                     return RedirectToAction(nameof(MissingProducerData), "SchemeReports");
 
+                case Reports.PcsEvidenceAndObligationProgressData:
+                    return RedirectToAction(nameof(EvidenceAndObligationProgress), "SchemeReports");
+
                 default:
                     throw new NotSupportedException();
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EvidenceAndObligationProgress()
+        {
+            SetBreadcrumb();
+
+            ViewBag.TriggerDownload = false;
+
+            var model = new EvidenceAndObligationProgressViewModel();
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EvidenceAndObligationProgress(EvidenceAndObligationProgressViewModel model)
+        {
+            SetBreadcrumb();
+
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            await PopulateFilters(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceAndObligationProgressCsv(int complianceYear, Guid? schemeId)
+        {
+            using (var client = apiClient())
+            {
+                var request =
+                    new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, null, complianceYear);
+
+                var csvReport = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(csvReport.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvReport.FileName));
             }
         }
 
@@ -442,6 +489,18 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
+        private async Task PopulateFilters(EvidenceAndObligationProgressViewModel model)
+        {
+            var years = ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(
+                configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom,
+                await FetchCurrentSystemDate());
+
+            var schemes = await FetchSchemes();
+
+            model.ComplianceYears = new SelectList(years);
+            model.Schemes = new SelectList(schemes, "Id", "SchemeName");
+        }
+
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             var years = await FetchComplianceYearsForMemberRegistrations();
@@ -522,6 +581,16 @@
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
+            }
+        }
+
+        private async Task<DateTime> FetchCurrentSystemDate()
+        {
+            using (var client = ApiClient())
+            {
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
+                return currentDate;
             }
         }
     }

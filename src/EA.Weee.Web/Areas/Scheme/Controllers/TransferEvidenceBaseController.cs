@@ -26,8 +26,7 @@
 
         protected void DeselectEvidenceNote(Guid evidenceNoteId, string sessionKey)
         {
-            var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                sessionKey);
+            var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey);
 
             transferRequest.EvidenceNoteIds.Remove(evidenceNoteId);
             transferRequest.DeselectedEvidenceNoteIds.Add(evidenceNoteId);
@@ -35,8 +34,7 @@
 
         public TransferEvidenceNoteRequest SelectEvidenceNote(Guid evidenceNoteId, string sessionKey)
         {
-            var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                sessionKey);
+            var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey);
 
             if (ModelState.IsValid)
             {

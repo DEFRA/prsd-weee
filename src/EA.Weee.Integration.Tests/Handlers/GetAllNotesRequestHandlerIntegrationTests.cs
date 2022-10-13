@@ -35,47 +35,52 @@
                 var complianceYear = fixture.Create<int>();
 
                 var evidenceWithApprovedStatus = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidenceWithSubmittedStatus = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidenceWithReturnedStatus = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidenceWithRejectedStatus = EvidenceNoteDbSetup.Init()
-                  .With(n =>
-                  {
-                      n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
-                  })
-                  .WithComplianceYear(complianceYear)
-                  .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidenceWithVoidStatus = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 notesSet.Add(evidenceWithApprovedStatus);
                 notesSet.Add(evidenceWithSubmittedStatus);
@@ -84,7 +89,7 @@
                 notesSet.Add(evidenceWithVoidStatus);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, null);
+                    null, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -121,16 +126,18 @@
                 LocalSetup();
 
                 var evidenceWithDraftStatus1 = EvidenceNoteDbSetup.Init()
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 var evidenceWithDraftStatus2 = EvidenceNoteDbSetup.Init()
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
 
                 notesSet.Add(evidenceWithDraftStatus1);
                 notesSet.Add(evidenceWithDraftStatus2);
 
                 request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue,
-                    null, null, null, null, null, null);
+                    null, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -160,53 +167,59 @@
                 var complianceYear = fixture.Create<int>();
 
                 var evidence1WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(9));
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(9));
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-9));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence3WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence4WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(3));
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(3));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence1NotInSubmittedDates = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(11));
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(11));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2NotInSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-11));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-11));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 notesSet.Add(evidence1WithinSubmittedDates);
                 notesSet.Add(evidence2WithinSubmittedDates);
@@ -216,7 +229,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    startDateSubmittedFilter, endDateSubmittedFilter, null, null, null, null);
+                    startDateSubmittedFilter, endDateSubmittedFilter, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -255,45 +268,50 @@
                 var complianceYear = fixture.Create<int>();
 
                 var evidence1WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-10));
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-10));
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-9));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-9));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence3WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence1NotInSubmittedDates = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-11));
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-11));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2NotInSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-40));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-40));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 notesSet.Add(evidence1WithinSubmittedDates);
                 notesSet.Add(evidence2WithinSubmittedDates);
@@ -302,7 +320,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    startDateSubmittedFilter, null, null, null, null, null);
+                    startDateSubmittedFilter, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -341,37 +359,41 @@
                 var complianceYear = fixture.Create<int>();
 
                 var evidence1WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2WithinSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence1NotInSubmittedDates = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(14));
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(14));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2NotInSubmittedDates = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(40));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(40));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 notesSet.Add(evidence1WithinSubmittedDates);
                 notesSet.Add(evidence2WithinSubmittedDates);
@@ -379,7 +401,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, endDateSubmittedFilter, null, null, null, null);
+                    null, endDateSubmittedFilter, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -467,7 +489,7 @@
                 notesSet.Add(evidence2NoRecipient);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, recipientOrganisation.Id, null, null, null);
+                    null, null, recipientOrganisation.Id, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -506,60 +528,66 @@
                 var complianceYear = fixture.Create<int>();
 
                 var evidence1NotVoidStatus = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2NotVoidStatus = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-3));
-                     n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-3));
+                        n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence3NotVoidStatus = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                    n.UpdateStatus(NoteStatusDomain.Draft, UserId.ToString(), SystemTime.UtcNow.AddDays(2));
-                })
-                .WithComplianceYear(complianceYear)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Draft, UserId.ToString(), SystemTime.UtcNow.AddDays(2));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence4NotVoidStatus = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-1));
-                     n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow.AddDays(1));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-1));
+                        n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow.AddDays(1));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence1WithVoidStatus = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 var evidence2WithVoidStatus = EvidenceNoteDbSetup.Init()
-               .With(n =>
-               {
-                   n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                   n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(-1));
-                   n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow.AddDays(4));
-               })
-               .WithComplianceYear(complianceYear)
-               .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(-1));
+                        n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow.AddDays(4));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .Create();
 
                 notesSet.Add(evidence1NotVoidStatus);
                 notesSet.Add(evidence2NotVoidStatus);
@@ -569,7 +597,7 @@
                 notesSet.Add(evidence2WithVoidStatus);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, NoteStatus.Void, null, null);
+                    null, null, null, NoteStatus.Void, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -608,41 +636,44 @@
                 var complianceYear = fixture.Create<int>();
 
                 var evidence1HouseholdType = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .WithWasteType(Domain.Evidence.WasteType.HouseHold)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithWasteType(Domain.Evidence.WasteType.HouseHold)
+                    .Create();
 
                 var evidence2HouseholdType = EvidenceNoteDbSetup.Init()
-                  .With(n =>
-                  {
-                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
-                  })
-                  .WithComplianceYear(complianceYear)
-                  .WithWasteType(Domain.Evidence.WasteType.HouseHold)
-                  .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithWasteType(Domain.Evidence.WasteType.HouseHold)
+                    .Create();
 
                 var evidence1NonHouseholdType = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                     n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .WithWasteType(Domain.Evidence.WasteType.NonHouseHold)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddDays(10));
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithWasteType(Domain.Evidence.WasteType.NonHouseHold)
+                    .Create();
 
                 notesSet.Add(evidence1HouseholdType);
                 notesSet.Add(evidence2HouseholdType);
                 notesSet.Add(evidence1NonHouseholdType);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, WasteType.Household, null);
+                    null, null, null, null, WasteType.Household, null, null);
             };
 
             private readonly Because of = () =>
@@ -682,63 +713,68 @@
                 var organisationWithNonSelectedAatf = OrganisationDbSetup.Init().Create();
 
                 var aatfSelected = AatfDbSetup.Init()
-                  .WithAppropriateAuthority(CompetentAuthority.Scotland)
-                  .WithOrganisation(organisationWithSelectedAatf.Id)
-                  .Create();
+                    .WithAppropriateAuthority(CompetentAuthority.Scotland)
+                    .WithOrganisation(organisationWithSelectedAatf.Id)
+                    .Create();
 
                 var aatfNonSelected = AatfDbSetup.Init()
-                .WithAppropriateAuthority(CompetentAuthority.Wales)
-                .WithOrganisation(organisationWithNonSelectedAatf.Id)
-                .Create();
+                    .WithAppropriateAuthority(CompetentAuthority.Wales)
+                    .WithOrganisation(organisationWithNonSelectedAatf.Id)
+                    .Create();
 
                 var complianceYear = fixture.Create<int>();
 
                 var evidence1WithSelectedAatf = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .WithAatf(aatfSelected.Id)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatfSelected.Id)
+                    .Create();
 
                 var evidence2WithSelectedAatf = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-1));
-                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .WithComplianceYear(complianceYear)
-                .WithAatf(aatfSelected.Id)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddDays(-1));
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatfSelected.Id)
+                    .Create();
 
                 var evidence3WithSelectedAatf = EvidenceNoteDbSetup.Init()
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .WithComplianceYear(complianceYear)
-                .WithAatf(aatfSelected.Id)
-                .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatfSelected.Id)
+                    .Create();
 
                 var evidence1WithNonSelectedAatf = EvidenceNoteDbSetup.Init()
-                  .With(n =>
-                  {
-                      n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                      n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                  })
-                  .WithComplianceYear(complianceYear)
-                  .WithAatf(aatfNonSelected.Id)
-                  .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatfNonSelected.Id)
+                    .Create();
 
                 var evidence2WithNonSelectedAatf = EvidenceNoteDbSetup.Init()
-                 .With(n =>
-                 {
-                     n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                 })
-                 .WithComplianceYear(complianceYear)
-                 .WithAatf(aatfNonSelected.Id)
-                 .Create();
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatfNonSelected.Id)
+                    .Create();
 
                 notesSet.Add(evidence1WithSelectedAatf);
                 notesSet.Add(evidence2WithSelectedAatf);
@@ -747,7 +783,7 @@
                 notesSet.Add(evidence2WithNonSelectedAatf);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, aatfSelected.Id);
+                    null, null, null, null, null, aatfSelected.Id, null);
             };
 
             private readonly Because of = () =>
@@ -776,6 +812,74 @@
             };
         }
 
+        [Component]
+        public class WhenIGetAListOfEvidenceNoteDataAsNotesWithSearchRefSetInFilter : GetAllNotesRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, recipientOrganisation.Id).Create();
+
+                var complianceYear = fixture.Create<int>();
+
+                var evidenceWithFilteredReference = EvidenceNoteDbSetup.Init()
+                    .WithComplianceYear(complianceYear)
+                    .WithRecipient(recipientOrganisation.Id)
+                    .Create();
+
+                var evidence1WithNotSelectedReference = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(complianceYear)
+                    .Create();
+
+                var evidence2WithNotSelectedReference = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(complianceYear)
+                    .Create();
+
+                notesSet.Add(evidenceWithFilteredReference);
+                notesSet.Add(evidence1WithNotSelectedReference);
+                notesSet.Add(evidence2WithNotSelectedReference);
+
+                filterReference = evidenceWithFilteredReference.Reference;
+
+                request = new GetAllNotesInternal(noteTypeFilter, new List<NoteStatus> { NoteStatus.Draft }, complianceYear, 1, int.MaxValue,
+                    null, null, null, null, null, null, filterReference.ToString());
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldReturnListOfEvidenceNotes = () =>
+            {
+                evidenceNoteData.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
+            {
+                evidenceNoteData.Results.Should().HaveCount(1);
+                evidenceNoteData.NoteCount.Should().Be(1);
+            };
+
+            private readonly It shouldHaveExpectedData = () =>
+            {
+                foreach (var note1 in notesSet.Take(1))
+                {
+                    var evidenceNote = evidenceNoteData.Results.ToList().Exists(n => n.Id == note1.Id);
+                    evidenceNote.Should().BeTrue();
+                    note1.Reference.Should().Be(filterReference);
+                }
+            };
+        }
+
         public class GetAllNotesRequestHandlerTestBase : WeeeContextSpecification
         {
             protected static EvidenceNoteSearchDataResult evidenceNoteData;
@@ -794,6 +898,7 @@
             protected static NoteStatus? noteStatusFilter;
             protected static WasteType? obligationTypeFilter;
             protected static Guid? submittedAatfIdFilter;
+            protected static int filterReference;
 
             public static void LocalSetup()
             {
