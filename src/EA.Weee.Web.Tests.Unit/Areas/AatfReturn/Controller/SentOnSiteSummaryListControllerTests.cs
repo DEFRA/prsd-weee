@@ -116,6 +116,12 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var weeeSentOnList = A.Fake<List<WeeeSentOnSummaryListData>>();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
 
             var model = new SentOnSiteSummaryListViewModel()
             {
@@ -127,6 +133,8 @@
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).Returns(model);
 
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
             var result = await controller.Index(organisationId, returnId, aatfId) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(model);
@@ -136,33 +144,20 @@
         public async void IndexGet_GivenReturn_SentOnSiteSummaryListViewModelShouldBeBuilt()
         {
             var weeeSentOnList = A.Fake<List<WeeeSentOnData>>();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
-        {
-            var organisationId = Guid.NewGuid();
-            var aatfId = Guid.NewGuid();
-            var returnId = Guid.NewGuid();            
-
-            controller.ModelState.AddModelError("error", "Please select copy selection from previous quarter");
-            var viewModel = new SentOnSiteSummaryListViewModel()
-            {
-                OrganisationId = organisationId,
-                AatfId = aatfId,
-                ReturnId = returnId
-            };
-
-            await controller.Index(viewModel);
-
-            breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.AatfReturn);
-        }
+        }        
 
         [Fact]
         public async void IndexPost_OnSubmit_CopyPreviousQuarterData_And_PageRedirectsToSentOnSiteSummaryList()
@@ -170,12 +165,22 @@
             var returnId = new Guid();
             var organisationId = new Guid();
             var aatfId = new Guid();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
             var model = new SentOnSiteSummaryListViewModel()
             {
                 ReturnId = returnId,
                 OrganisationId = organisationId,
                 AatfId = aatfId
             };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
