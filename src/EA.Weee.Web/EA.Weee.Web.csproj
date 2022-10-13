@@ -428,11 +428,13 @@
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\TransferredOutEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewEvidenceSummaryViewModelMapTransfer.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ITransferEvidenceNotesViewModelValidator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\IObligationSummaryBase.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SummaryEvidenceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\TransferredOutEvidenceNotesSchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ReviewTransferNoteViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferDeselectEvidenceNoteModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\TransferEvidenceNotesViewModelValidator.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferSelectEvidenceNoteModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\TransferSelectEvidenceNoteModelBase.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
@@ -892,6 +894,7 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\EvidenceAndObligationProgress.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
