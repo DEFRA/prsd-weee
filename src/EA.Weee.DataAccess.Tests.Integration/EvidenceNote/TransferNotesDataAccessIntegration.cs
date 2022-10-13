@@ -1134,6 +1134,8 @@
                 var noteToBeTransferred1 = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
                 noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 1, null));
                 noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.SmallHouseholdAppliances, 2, null));
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, null));
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.MedicalDevices, 2, null));
 
                 context.Notes.Add(noteToBeTransferred1);
 
@@ -1182,7 +1184,9 @@
                 {
                     new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, 2, 1),
                     new NoteTransferTonnage(noteToBeTransferred3.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports)).Id, 6, 2),
-                    new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LightingEquipment)).Id, 4, null)
+                    new NoteTransferTonnage(noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LightingEquipment)).Id, 4, null),
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.AutomaticDispensers)).Id, null, null),
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.MedicalDevices)).Id, 0, 0)
                 };
 
                 await dataAccess.UpdateTransfer(refreshedTransferNote, newTransferOrganisation, newTransferTonnages,
@@ -1191,12 +1195,14 @@
                 refreshedTransferNote = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(newTransferNote.Id));
 
                 refreshedTransferNote.RecipientId.Should().Be(newTransferOrganisation.Id);
-                refreshedTransferNote.NoteTransferTonnage.Count.Should().Be(3);
+                refreshedTransferNote.NoteTransferTonnage.Count.Should().Be(5);
                 refreshedTransferNote.Status.Should().Be(NoteStatus.Draft);
                 var noteTonnage1 = noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances));
                 var noteTonnage2 = noteToBeTransferred2.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LightingEquipment));
                 var noteTonnage3 = noteToBeTransferred3.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports));
-                
+                var noteTonnage4 = noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.AutomaticDispensers));
+                var noteTonnage5 = noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.MedicalDevices));
+
                 refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage1.Id).Should().NotBeNull();
                 refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Received.Should().Be(2);
                 refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Reused.Should().Be(1);
@@ -1206,6 +1212,12 @@
                 refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage3.Id).Should().NotBeNull();
                 refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage3.Id).Received.Should().Be(6);
                 refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage3.Id).Reused.Should().Be(2);
+                refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage4.Id).Should().NotBeNull();
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage4.Id).Received.Should().BeNull();
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage4.Id).Reused.Should().BeNull();
+                refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage5.Id).Should().NotBeNull();
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage5.Id).Received.Should().Be(0);
+                refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage5.Id).Reused.Should().Be(0);
             }
         }
 
@@ -1225,6 +1237,9 @@
 
                 var noteToBeTransferred1 = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
                 noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 1, null));
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.CoolingApplicancesContainingRefrigerants, 1, null));
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.AutomaticDispensers, 1, null));
+                noteToBeTransferred1.NoteTonnage.Add(new NoteTonnage(WeeeCategory.MedicalDevices, 1, null));
 
                 context.Notes.Add(noteToBeTransferred1);
 
@@ -1256,7 +1271,10 @@
 
                 var newTransferTonnages = new List<NoteTransferTonnage>
                 {
-                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, 4, 2)
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances)).Id, 4, 2),
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.CoolingApplicancesContainingRefrigerants)).Id, null, null),
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.AutomaticDispensers)).Id, 0, 0),
+                    new NoteTransferTonnage(noteToBeTransferred1.NoteTonnage.First(c => c.CategoryId.Equals(WeeeCategory.MedicalDevices)).Id, null, null)
                 };
 
                 await dataAccess.UpdateTransfer(refreshedTransferNote, newTransferOrganisation, newTransferTonnages,
@@ -1277,6 +1295,33 @@
                 refreshedTransferNote.NoteTransferTonnage.FirstOrDefault(nt => nt.NoteTonnageId == noteTonnage1.Id).Should().NotBeNull();
                 refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Received.Should().Be(4);
                 refreshedTransferNote.NoteTransferTonnage.First(nt => nt.NoteTonnageId == noteTonnage1.Id).Reused.Should().Be(2);
+                refreshedTransferNote.NoteTransferTonnage.Count(nt => nt.Received == null).Should().Be(0);
+                refreshedTransferNote.NoteTransferTonnage.Count(nt => nt.Received == 0.00M).Should().Be(0);
+            }
+        }
+
+        [Fact]
+        public async Task DeleteZeroTonnageFromSubmittedTransferNote_RemovesZeroTonnage_FromTransferNote()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                context.Schemes.Add(scheme);
+
+                var note = await SetupSingleNote(context, database, NoteType.TransferNote, organisation1);
+                note.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser().ToString(), DateTime.Now);
+
+                note.NoteTransferTonnage.Add(new NoteTransferTonnage(Guid.NewGuid(), 0, null));
+
+                dataAccess.DeleteZeroTonnageFromSubmittedTransferNote(note, note.Status, note.NoteType);
+
+                note.NoteTransferTonnage.Should().BeEmpty();
             }
         }
     }
