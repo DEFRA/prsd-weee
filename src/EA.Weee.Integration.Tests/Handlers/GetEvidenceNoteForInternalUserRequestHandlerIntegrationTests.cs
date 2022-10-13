@@ -39,6 +39,7 @@
 
                 note = EvidenceNoteDbSetup
                         .Init()
+                        .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                         .WithTonnages(categories)
                         .With(n =>
                         {
@@ -82,6 +83,7 @@
 
                 note = EvidenceNoteDbSetup
                 .Init()
+                .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                 .WithTonnages(categories)
                 .With(n =>
                 {
@@ -126,6 +128,7 @@
 
                 note = EvidenceNoteDbSetup
                 .Init()
+                .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                 .WithTonnages(categories)
                 .With(n =>
                 {
@@ -172,6 +175,7 @@
 
                 note = EvidenceNoteDbSetup
                 .Init()
+                .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                 .WithTonnages(categories)
                 .With(n =>
                 {
@@ -220,11 +224,12 @@
                 };
 
                 note = EvidenceNoteDbSetup.Init().WithTonnages(categories)
-                     .With(n =>
-                     {
-                         n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                         n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
-                     })
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    { 
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                    })
                     .Create();
 
                 var transferTonnage1 =
@@ -236,11 +241,13 @@
                     new NoteTransferTonnage(transferTonnage1.Id, 10, null)
                 };
 
-                note1 = TransferEvidenceNoteDbSetup.Init().With(t =>
-                {
-                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                    t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
-                }).WithTonnages(newTransferNoteTonnage1).Create();
+                note1 = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
+                    {
+                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                    }).WithTonnages(newTransferNoteTonnage1).Create();
 
                 var transferTonnage2 =
                     note.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.CoolingApplicancesContainingRefrigerants));
@@ -250,7 +257,9 @@
                     new NoteTransferTonnage(transferTonnage2.Id, 20, null)
                 };
 
-                note2 = TransferEvidenceNoteDbSetup.Init().With(t =>
+                note2 = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(t =>
                 {
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage2).Create();
@@ -307,15 +316,16 @@
                 };
 
                 note = EvidenceNoteDbSetup
-                .Init()
-                .WithTonnages(categories)
-                .With(n =>
-                {
-                    n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddHours(-1));
-                    n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddMinutes(-1));
-                    n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
-                })
-                .Create();
+                        .Init()
+                        .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithTonnages(categories)
+                        .With(n =>
+                        {
+                            n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow.AddHours(-1));
+                            n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddMinutes(-1));
+                            n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                        })
+                        .Create();
 
                 request = new GetEvidenceNoteForInternalUserRequest(note.Id);
             };

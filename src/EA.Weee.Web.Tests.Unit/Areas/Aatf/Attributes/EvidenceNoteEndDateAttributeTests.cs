@@ -21,6 +21,7 @@
         private readonly IWeeeClient client;
         private readonly IHttpContextService httpContextService;
         private readonly IWeeeCache cache;
+        private readonly ConfigurationService configurationService;
         private readonly EvidenceNoteEndDateAttribute attribute;
         private readonly DateTime currentDate;
         private readonly Guid organisationId;
@@ -32,13 +33,14 @@
             client = A.Fake<IWeeeClient>();
             httpContextService = A.Fake<IHttpContextService>();
             cache = A.Fake<IWeeeCache>();
+            configurationService = A.Fake<ConfigurationService>();
 
             organisationId = TestFixture.Create<Guid>();
             aatfId = TestFixture.Create<Guid>();
 
             attribute = new EvidenceNoteEndDateAttribute("StartDate", AatfApprovalError)
             {
-                Client = () => client, HttpContextService = httpContextService, Cache = cache
+                Client = () => client, HttpContextService = httpContextService, Cache = cache, ConfigService = configurationService
             };
 
             currentDate = new DateTime(2020, 1, 1);
@@ -112,7 +114,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         public static IEnumerable<object[]> ValidNextYearDates =>
@@ -163,7 +165,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         [Fact]
@@ -181,7 +183,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         [Fact]
@@ -199,7 +201,7 @@
             var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within the current compliance year");
+            result.ValidationResult.ErrorMessage.Should().Be("The end date must be within an open compliance year");
         }
 
         [Fact]
@@ -382,6 +384,47 @@
 
             //assert
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenEvidenceNotesSiteSelectionDateFromIsBeyondEndDate_ValidationExceptionShouldBeThrown()
+        {
+            //arrange
+            var endDate = new DateTime(2021, 1, 1);
+            var evidenceNoteStartDate = endDate.AddDays(1);
+
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
+
+            var target = GetValidationDefaultTarget(endDate, endDate);
+            var context = new ValidationContext(target);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.EndDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("The end date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
+        }
+
+        [Fact]
+        public void EvidenceNoteEndDateAttribute_GivenEvidenceNotesSiteSelectionDateFromIsBeforeEndDate_ValidateConfigServiceIsCalled()
+        {
+            //arrange
+            var endDate = new DateTime(2020, 1, 1);
+            var evidenceNoteStartDate = endDate.AddDays(-1);
+   
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceNoteStartDate);
+
+            var target = GetValidationDefaultTarget(endDate, endDate);
+            var context = new ValidationContext(target);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            attribute.Validate(target.EndDate, context);
+
+            //assert
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom).MustHaveHappenedOnceExactly();
         }
 
         private ValidationTarget GetValidationDefaultTarget(DateTime? startDate, DateTime endDateTime)

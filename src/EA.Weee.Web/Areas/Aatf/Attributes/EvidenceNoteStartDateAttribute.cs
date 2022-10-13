@@ -3,7 +3,6 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using Core.Helpers;
-    using EA.Prsd.Core;
     using Web.ViewModels.Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -31,9 +30,16 @@
                 return new ValidationResult("Unable to validate the evidence note details");
             }
 
+            var validateStartDateAgainstConfigDate = ValidateStartDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate);
+
+            if (validateStartDateAgainstConfigDate != ValidationResult.Success)
+            {
+                return validateStartDateAgainstConfigDate;
+            }
+
             if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
-                return new ValidationResult("The start date must be within the current compliance year");
+                return new ValidationResult("The start date must be within an open compliance year");
             }
             
             var startDateValid = ValidateStartDate(thisDate, otherDate, currentDate);
