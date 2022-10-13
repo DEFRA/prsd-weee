@@ -262,7 +262,8 @@
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
-                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy));
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, 
+                manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
             var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
                     new SubmittedDateFilterBase(manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate));
@@ -283,7 +284,7 @@
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
                 complianceYearsList));
 
-            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(null, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate, complianceYearsList));
+            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(manageEvidenceNoteViewModel?.FilterViewModel, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate, complianceYearsList));
 
             return View("ViewAllEvidenceNotes", model);
         }
@@ -309,7 +310,8 @@
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
-                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy));
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
             var model = mapper.Map<ViewAllTransferNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));

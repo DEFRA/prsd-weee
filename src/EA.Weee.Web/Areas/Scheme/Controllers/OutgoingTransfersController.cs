@@ -79,7 +79,7 @@
 
             if (model.Action == ActionEnum.Back)
             {
-                SessionService.SetTransferSessionObject(Session, model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+                SessionService.SetTransferSessionObject(model, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
 
                 if (model.ReturnToEditDraftTransfer.Value)
                 {
@@ -95,7 +95,7 @@
             {
                 if (ModelState.IsValid)
                 {
-                    var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+                    var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.OutgoingTransferKey);
 
                     var updatedRequest = transferEvidenceRequestCreator.EditSelectTonnageToRequest(transferRequest, model);
 
@@ -263,8 +263,7 @@
 
             using (var client = apiClient())
             {
-                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session,
-                    SessionKeyConstant.OutgoingTransferKey);
+                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.OutgoingTransferKey);
 
                 if (transferRequest == null)
                 {
@@ -309,7 +308,7 @@
         {
             await SetBreadcrumb(model.PcsId);
 
-            var outgoingTransfer = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+            var outgoingTransfer = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.OutgoingTransferKey);
 
             if (outgoingTransfer == null)
             {
@@ -389,11 +388,11 @@
 
             if (ModelState.IsValid)
             {
-                var existingRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+                var existingRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.OutgoingTransferKey);
 
                 var transferRequest = transferEvidenceRequestCreator.SelectCategoriesToRequest(model, existingRequest);
 
-                SessionService.SetTransferSessionObject(Session, transferRequest, SessionKeyConstant.OutgoingTransferKey);
+                SessionService.SetTransferSessionObject(transferRequest, SessionKeyConstant.OutgoingTransferKey);
 
                 return RedirectToRoute("Scheme_edit_transfer_notes",
                     new { pcsId = model.PcsId, evidenceNoteId = model.ViewTransferNoteViewModel.EvidenceNoteId });
@@ -430,10 +429,10 @@
                 await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var request =
-                SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+                SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.OutgoingTransferKey);
 
-            var existingModel = SessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
-            SessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+            var existingModel = SessionService.GetTransferSessionObject<TransferEvidenceTonnageViewModel>(SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+            SessionService.ClearTransferSessionObject(SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
 
             var existingEvidenceNoteIds = noteData.TransferEvidenceNoteTonnageData.Select(t => t.OriginalNoteId).ToList();
 
@@ -467,7 +466,7 @@
 
         private void MananageCategoryIdsInSession(TransferEvidenceNoteCategoriesViewModel model)
         {
-            var existingRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(Session, SessionKeyConstant.OutgoingTransferKey);
+            var existingRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.OutgoingTransferKey);
 
             if (existingRequest != null)
             {
@@ -485,8 +484,8 @@
 
         private void ClearSessionValues()
         {
-            SessionService.ClearTransferSessionObject(Session, SessionKeyConstant.OutgoingTransferKey);
-            SessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
+            SessionService.ClearTransferSessionObject(SessionKeyConstant.OutgoingTransferKey);
+            SessionService.ClearTransferSessionObject(SessionKeyConstant.EditTransferEvidenceTonnageViewModel);
         }
     }
 }
