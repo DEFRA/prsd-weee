@@ -92,6 +92,15 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
@@ -102,6 +111,14 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>(), returnId, aatfId);
 
