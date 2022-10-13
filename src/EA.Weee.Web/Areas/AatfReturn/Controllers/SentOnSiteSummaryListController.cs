@@ -25,10 +25,11 @@
         private readonly IWeeeCache cache;
         private readonly IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel> mapper;
 
-        public SentOnSiteSummaryListController(Func<IWeeeClient> apiClient, 
-                                               BreadcrumbService breadcrumb, 
-                                               IWeeeCache cache, 
-                                               IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer, SentOnSiteSummaryListViewModel> mapper)
+        public SentOnSiteSummaryListController(Func<IWeeeClient> apiClient,
+                                               BreadcrumbService breadcrumb,
+                                               IWeeeCache cache,
+                                               IMap<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer,
+                                               SentOnSiteSummaryListViewModel> mapper)
         {
             this.apiClient = apiClient;
             this.breadcrumb = breadcrumb;
@@ -57,7 +58,7 @@
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfReturn, aatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
 
                 //Added Copy Previous Quater logic
-                model.IsChkCopyPreviousQuarterVisible = IsChkCopyPreviousQuarterVisiable(weeeSentOn.Count);
+                model.IsChkCopyPreviousQuarterVisible = IsChkCopyPreviousQuarterVisiable(weeeSentOn.Count, organisationId, returnId, aatfId, @return.Quarter.Year, (int)@return.Quarter.Q);
 
                 return View(model);
             }
@@ -67,47 +68,28 @@
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> Index(SentOnSiteSummaryListViewModel viewModel)
         {
-            if (!ModelState.IsValid)
+            using (var client = apiClient())
             {
-                using (var client = apiClient())
+                var copyPreviousQuarterAatfDataViewModel = new CopyPreviousQuarterAatf()
                 {
-                    var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(viewModel.AatfId, viewModel.ReturnId, null));
+                    AatfId = viewModel.AatfId,
+                    OrganisationId = viewModel.OrganisationId,
+                    ReturnId = viewModel.ReturnId,
+                    IsPreviousQuarterDataCheck = false
+                };
 
-                    var model = mapper.Map(new ReturnAndAatfToSentOnSummaryListViewModelMapTransfer()
-                    {
-                        WeeeSentOnDataItems = weeeSentOn,
-                        AatfId = viewModel.AatfId,
-                        ReturnId = viewModel.ReturnId,
-                        OrganisationId = viewModel.OrganisationId,
-                        AatfName = (await cache.FetchAatfData(viewModel.OrganisationId, viewModel.AatfId)).Name
-                    });
+                var result = await client.SendAsync(User.GetAccessToken(), copyPreviousQuarterAatfDataViewModel);
 
-                    var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(viewModel.ReturnId, false));
-
-                    await SetBreadcrumb(viewModel.OrganisationId, BreadCrumbConstant.AatfReturn, viewModel.AatfId, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
-
-                    //Added Copy Previous Quater logic
-                    model.IsChkCopyPreviousQuarterVisible = IsChkCopyPreviousQuarterVisiable(weeeSentOn.Count);
-
-                    return View(model);
-                }
-            }
-            else
-            {
-                using (var client = apiClient())
-                {
-                    var copyPreviousQuarterAatfDataViewModel = new CopyPreviousQuarterAatf()
-                    {
-                        AatfId = viewModel.AatfId,
-                        OrganisationId = viewModel.OrganisationId,
-                        ReturnId = viewModel.ReturnId
-                    };
-                    
-                    var result = await client.SendAsync(User.GetAccessToken(), copyPreviousQuarterAatfDataViewModel);
-
-                    return await Task.Run<ActionResult>(() =>
-                                    RedirectToAction("Index", "SentOnSiteSummaryList", new { area = "AatfReturn", organisationId = viewModel.OrganisationId, returnId = viewModel.ReturnId, aatfId = viewModel.AatfId }));
-                }
+                return await Task.Run<ActionResult>(() =>
+                                RedirectToAction("Index",
+                                                 "SentOnSiteSummaryList",
+                                                 new
+                                                 {
+                                                     area = "AatfReturn",
+                                                     organisationId = viewModel.OrganisationId,
+                                                     returnId = viewModel.ReturnId,
+                                                     aatfId = viewModel.AatfId
+                                                 }));
             }
         }
 
@@ -121,17 +103,46 @@
             breadcrumb.AatfDisplayInfo = DisplayHelper.ReportingOnValue(aatfInfo.Name, aatfInfo.ApprovalNumber);
         }
 
-        private bool IsChkCopyPreviousQuarterVisiable(int weeeSentOnListCount)
+        private bool IsChkCopyPreviousQuarterVisiable(int weeeSentOnListCount, Guid organisationId, Guid returnId, Guid aatfId, int selectedYear, int selectedQuater)
         {
             DateTime copyPreviousQuarterDataDisabledDate = Convert.ToDateTime(ConfigurationManager.AppSettings["Weee.CopyPreviousQuarterDataDisabledDate"]);
             DateTime utcCurrentDate = DateTime.UtcNow;
+            var isPreviousQuarterHasData = false;
+            var isCurrentDateIsInSelectedQuater = false;
+            var currentDateQuarter = GetCurrentQuarter(utcCurrentDate);
 
-            if (utcCurrentDate > copyPreviousQuarterDataDisabledDate && weeeSentOnListCount == 0)
+            if (utcCurrentDate.Year == selectedYear && currentDateQuarter == selectedQuater)
+            {
+                isCurrentDateIsInSelectedQuater = true;
+            }
+
+            using (var client = apiClient())
+            {
+                var copyPreviousQuarterAatfDataViewModel = new CopyPreviousQuarterAatf()
+                {
+                    AatfId = aatfId,
+                    OrganisationId = organisationId,
+                    ReturnId = returnId,
+                    IsPreviousQuarterDataCheck = true
+                };
+
+                isPreviousQuarterHasData = client.SendAsync(User.GetAccessToken(), copyPreviousQuarterAatfDataViewModel).Result;
+            }
+
+            if (utcCurrentDate > copyPreviousQuarterDataDisabledDate &&
+                weeeSentOnListCount == 0 &&
+                isPreviousQuarterHasData == true &&
+                isCurrentDateIsInSelectedQuater == true)
             {
                 return true;
             }
 
             return false;
+        }
+
+        private static int GetCurrentQuarter(DateTime date)
+        {
+            return (date.Month + 2) / 3;
         }
     }
 }

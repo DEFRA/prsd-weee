@@ -16,20 +16,18 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.ReturnId)
-        @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.OrganisationId, new { id = "OrganisationId" })
+        @Html.HiddenFor(m => m.ReturnId, new { id = "ReturnId" })
+        @Html.HiddenFor(m => m.AatfId, new { id = "AatfId" })
 
         if (Model.IsChkCopyPreviousQuarterVisible)
         {
-            <div class="govuk-body govuk-form-group @Html.Gds().FormGroupClass(m => m.IsCopyChecked)">
-                @Html.Gds().ValidationMessageFor(m => m.IsCopyChecked)
-                <label>
-                    @Html.CheckBoxFor(m => Model.IsCopyChecked, "chkCopyPreviousQuater") copy selection from previous quarter
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="chkCopyPreviousQuater" name="chkCopyPreviousQuater" type="checkbox" onclick="copyPreviousQuaterData();">
+                <label class="govuk-label govuk-checkboxes__label" for="chkCopyPreviousQuater">
+                    Copy selection from previous quarter
                 </label>
             </div>
-
-            @(this.WeeeGds().Submit("Copy"))
         }
     }
     <div class="govuk-table govuk-grid-column-full">
@@ -104,3 +102,24 @@
     </p>
 
 </section>
+
+<script type="text/javascript">
+
+    function copyPreviousQuaterData() {
+        $.ajax({
+            url: "SentOnSiteSummaryList/Index",
+            type: "POST",
+            dataType: "json",
+            data: {
+                AatfId: $("[name=AatfId]").val(),
+                IsCopyChecked: true,
+                ReturnId: $("[name=ReturnId]").val(),
+                OrganisationId: $("[name=OrganisationId]").val(),
+                __RequestVerificationToken: $("[name=__RequestVerificationToken]").val()
+            },
+            complete: function () {
+                window.location.reload();
+            }
+        });
+    }
+</script>
