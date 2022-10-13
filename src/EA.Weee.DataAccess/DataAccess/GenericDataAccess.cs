@@ -49,10 +49,6 @@
             {
                 context.Entry(entities.ElementAt(idx)).State = System.Data.Entity.EntityState.Deleted;
             }
-            //foreach (var amount in entities)
-            //{
-            //    context.Entry(amount).State = System.Data.Entity.EntityState.Deleted;
-            //}
         }
 
         public async Task<IEnumerable<TEntity>> GetAll<TEntity>() where TEntity : class
