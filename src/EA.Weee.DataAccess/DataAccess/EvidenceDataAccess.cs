@@ -18,7 +18,7 @@
         private readonly IUserContext userContext;
         private readonly IGenericDataAccess genericDataAccess;
 
-        public EvidenceDataAccess(WeeeContext context, 
+        public EvidenceDataAccess(WeeeContext context,
             IUserContext userContext, IGenericDataAccess genericDataAccess)
         {
             this.context = context;
@@ -171,7 +171,7 @@
             return note.ComplianceYear;
         }
 
-        public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
+        public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId,
             List<int> categories,
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
@@ -234,10 +234,10 @@
                 .CountAsync();
         }
 
-        public async Task<Note> AddTransferNote(Organisation organisation, 
+        public async Task<Note> AddTransferNote(Organisation organisation,
             Organisation recipientOrganisation,
-            List<NoteTransferTonnage> transferTonnage, 
-            NoteStatus status, 
+            List<NoteTransferTonnage> transferTonnage,
+            NoteStatus status,
             int complianceYear,
             string userId,
             DateTime date)
@@ -294,11 +294,25 @@
                 }
             }
 
+            // remove the tonnages that are no longer selected
             var itemsToRemove =
-                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId) || (ntt.Received == 0.00m || ntt.Received == null) && status.Equals(NoteStatus.Submitted));
+                note.NoteTransferTonnage.Where(ntt => tonnages.All(t => t.NoteTonnageId != ntt.NoteTonnageId)).ToList();
 
             genericDataAccess.RemoveMany(itemsToRemove);
-            
+
+            // if we are submitting the note then remove any null / zero tonnage values. Some may already be persisted to the database and some may not. 
+            if (status == NoteStatus.Submitted)
+            {
+                for (var idx = note.NoteTransferTonnage.Count() - 1; idx >= 0; idx--)
+                {
+                    var noteTransferTonnage = note.NoteTransferTonnage.ElementAt(idx);
+                    if (noteTransferTonnage.Received == 0.00m || noteTransferTonnage.Received == null)
+                    {
+                        context.NoteTransferTonnage.Remove(noteTransferTonnage);
+                    }
+                }
+            }
+
             note.Update(recipient);
 
             await context.SaveChangesAsync();
@@ -341,8 +355,8 @@
         public Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear)
         {
             return context.Notes
-                .AnyAsync(n => n.ComplianceYear == complianceYear && 
-                               n.RecipientId == recipientId && 
+                .AnyAsync(n => n.ComplianceYear == complianceYear &&
+                               n.RecipientId == recipientId &&
                                n.Status.Value == NoteStatus.Approved.Value &&
                                n.WasteType.Value == WasteType.HouseHold);
         }
