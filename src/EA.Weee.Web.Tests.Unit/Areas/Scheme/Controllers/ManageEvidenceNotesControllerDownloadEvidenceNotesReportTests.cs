@@ -3,6 +3,7 @@
     using AutoFixture;
     using Core.AatfEvidence;
     using EA.Prsd.Core;
+    using EA.Prsd.Email;
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence.Reports;
@@ -110,9 +111,12 @@
                 .With(v => v.Reference, 1200)
                 .With(v => v.Type, NoteType.Evidence).Create();
 
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForSchemeRequest>._)).Returns(data);
-            A.CallTo(() => PdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
-            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
+            var content = Fixture.Create<string>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForSchemeRequest>.That.Matches(g => g.EvidenceNoteId == EvidenceNoteId))).Returns(data);
+            A.CallTo(() => TemplateExecutor.RenderRazorView(A<ControllerContext>._, "DownloadEvidenceNotePdf", model)).Returns(content);
+            A.CallTo(() => PdfDocumentProvider.GeneratePdfFromHtml(content, null)).Returns(pdf);
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(h => h.EvidenceNoteData == data))).Returns(model);
 
             //act
             var result = await Controller.DownloadEvidenceNotePdf(EvidenceNoteId) as FileContentResult;
