@@ -3,7 +3,7 @@
     /// <summary>
     /// Maps to [Evidence].[getSchemeObligationAndEvidenceTotals]
     /// </summary>
-    public class InternalObligationAndEvidenceSummaryTotalsData
+    public class ObligationAndEvidenceProgressSummaryData
     {
         public string SchemeName { get; set; }
 
