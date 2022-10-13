@@ -387,6 +387,10 @@
     <Content Include="scripts\Update\Release 5\Sprint15\20221011-1412-alter-getEvidenceNotesOriginalTonnage.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20221011-1412-alter-getEvidenceNotesNetTonnage.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20220929-1022-report-view-updates.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint16\20221013-1000-update-evidence-summary-view.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint16\20221013-1040-create-transfer-tonnage-summary.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint16\20221013-1040-create-getTransferNotes.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint16\20221012-1000-create-transfer-evidence-summary.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
