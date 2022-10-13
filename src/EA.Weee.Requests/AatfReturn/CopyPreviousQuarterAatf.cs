@@ -10,5 +10,7 @@
         public Guid ReturnId { get; set; }
 
         public Guid AatfId { get; set; }
+
+        public bool IsPreviousQuarterDataCheck { get; set; }
     }
 }
