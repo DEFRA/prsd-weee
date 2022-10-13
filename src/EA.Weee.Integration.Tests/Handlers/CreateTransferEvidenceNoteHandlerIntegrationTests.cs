@@ -47,6 +47,8 @@
                 {
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
                     new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1),
+                    new NoteTonnage(WeeeCategory.MedicalDevices, 4, 1),
+                    new NoteTonnage(WeeeCategory.SmallHouseholdAppliances, 5, 1),
                 };
 
                 var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
@@ -61,17 +63,22 @@
 
                 var transferTonnage1 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.DisplayEquipment));
-
                 var transferTonnage2 =
                     note2.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances));
                 var transferTonnage3 =
                     note2.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments));
+                var transferTonnage4 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MedicalDevices));
+                var transferTonnage5 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.SmallHouseholdAppliances));
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
                     new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 1, null, Guid.Empty),
                     new TransferTonnageValue(transferTonnage2.Id, WeeeCategory.LargeHouseholdAppliances.ToInt(), 3, 1, Guid.Empty),
                     new TransferTonnageValue(transferTonnage3.Id, WeeeCategory.MonitoringAndControlInstruments.ToInt(), 7, 1, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage4.Id, WeeeCategory.MedicalDevices.ToInt(), null, null, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage5.Id, WeeeCategory.SmallHouseholdAppliances.ToInt(), 0, 0, Guid.Empty),
                 };
 
                 request = new TransferEvidenceNoteRequest(transferOrganisation.Id, recipientOrganisation.Id, new List<int>()
@@ -110,6 +117,14 @@
                 note.ApprovedRecipientSchemeName.Should().BeNull();
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
+            };
+
+            private readonly It shouldNotHaveRemovedNullAndZeroTonnages = () =>
+            {
+                note.NoteTransferTonnage.First(ntt => ntt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.MedicalDevices.ToInt())
+                    .Received.Should().BeNull();
+                note.NoteTransferTonnage.First(ntt => ntt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.SmallHouseholdAppliances.ToInt())
+                    .Received.Should().Be(0);
             };
         }
 

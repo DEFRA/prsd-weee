@@ -438,7 +438,17 @@
                 
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
-                
+
+
+                var existingTonnagesNote1 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
+                    new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1)
+                };
+                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+
+
+
                 note = TransferEvidenceNoteDbSetup.Init()
                     .WithRecipient(recipientOrganisation.Id)
                     .WithOrganisation(transfererOrganisation.Id)
