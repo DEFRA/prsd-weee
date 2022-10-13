@@ -1,13 +1,17 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Autofac;
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Helpers;
     using Domain.Evidence;
     using Domain.Organisation;
+    using EA.Weee.Domain.Lookup;
     using FluentAssertions;
     using NUnit.Specifications;
     using Prsd.Core.Autofac;
@@ -435,8 +439,32 @@
                 
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
-                
+
+                var existingTonnagesNote1 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
+                    new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1),
+                    new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 3, 1)
+                };
+
+                var note1 = EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id).WithTonnages(existingTonnagesNote1).Create();
+
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+                var transferTonnage2 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.DisplayEquipment));
+                var transferTonnage3 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.PhotovoltaicPanels));
+
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, null, null),
+                    new NoteTransferTonnage(transferTonnage2.Id, 0, null),
+                    new NoteTransferTonnage(transferTonnage3.Id, 1, null)
+                };
+
                 note = TransferEvidenceNoteDbSetup.Init()
+                    .WithTonnages(newTransferNoteTonnage1)
                     .WithRecipient(recipientOrganisation.Id)
                     .WithOrganisation(transfererOrganisation.Id)
                     .Create();
@@ -472,6 +500,72 @@
                 note.ApprovedRecipientAddress.Should().BeNull();
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
+            };
+
+            private readonly It shouldHaveRemovedNullAndZeroTonnageValues = () =>
+            {
+                note.NoteTransferTonnage
+                    .First(ntt => ntt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.PhotovoltaicPanels.ToInt())
+                    .Received.Should().Be(1);
+                note.NoteTransferTonnage.Count(ntt => ntt.Received == null || ntt.Received == 0.000M).Should().Be(0);
+            };
+        }
+
+        [Component]
+        public class WhenIUpdateATransferNoteWithZeroTonnagesStatusToSubmitted : SetNoteStatusRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                organisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
+
+                var transfererOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(transfererOrganisation.Id).Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transfererOrganisation.Id).Create();
+
+                var recipientOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
+
+                var existingTonnagesNote1 = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
+                };
+
+                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+
+                var newTransferNoteTonnage = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 0, 0)
+                };
+
+                note = TransferEvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
+                    .WithOrganisation(transfererOrganisation.Id)
+                    .WithTonnages(newTransferNoteTonnage)
+                    .Create();
+
+                request = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Submitted, null);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+
+                note = Query.GetTransferEvidenceNoteById(note.Id);
+            };
+
+            private readonly It shouldHaveUpdatedTheEvidenceNoteWithStatusSubmitted = () =>
+            {
+                note.Status.Should().Be(NoteStatus.Submitted);
+            };
+
+            private readonly It shouldHaveRemovedTheEmptyTonnage = () =>
+            {
+                note.NoteTransferTonnage.Should().BeEmpty();
             };
         }
 

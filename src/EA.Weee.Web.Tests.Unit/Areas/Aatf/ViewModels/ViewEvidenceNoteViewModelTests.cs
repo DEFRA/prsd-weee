@@ -275,6 +275,28 @@
             result.Should().Be(expected);
         }
 
+        [Theory]
+        [InlineData(NoteStatus.Draft, false)]
+        [InlineData(NoteStatus.Rejected, true)]
+        [InlineData(NoteStatus.Approved, true)]
+        [InlineData(NoteStatus.Returned, true)]
+        [InlineData(NoteStatus.Submitted, true)]
+        [InlineData(NoteStatus.Void, false)]
+        public void CanDisplayPdfLink_GivenNoteStatus_ShouldHaveCorrectValue(NoteStatus status, bool expected)
+        {
+            //arrange
+            var model = new ViewEvidenceNoteViewModel()
+            {
+                Status = status
+            };
+
+            //act
+            var result = model.CanDisplayPdfLink;
+
+            //assert
+            result.Should().Be(expected);
+        }
+
         [Fact]
         public void DisplayEvidenceNoteHistoryData_ShouldBeTrue_IfEvidenceNoteHistoryViewModel_IsPresent()
         {
