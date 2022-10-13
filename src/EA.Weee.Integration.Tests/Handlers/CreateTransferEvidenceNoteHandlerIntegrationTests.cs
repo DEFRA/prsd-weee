@@ -324,20 +324,12 @@
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
                 };
 
-                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
-                var transferTonnage1 =
-                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+                var note1 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(recipientOrganisation.Id)
+                    .WithTonnages(existingTonnagesNote1)
+                    .Create();
 
-                var newTransferNoteTonnage = new List<NoteTransferTonnage>()
-                {
-                    new NoteTransferTonnage(transferTonnage1.Id, 0, 0)
-                };
-
-                TransferEvidenceNoteDbSetup.Init().With(t =>
-                {
-                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                    t.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
-                }).WithTonnages(newTransferNoteTonnage).Create();
+                var transferTonnage1 = note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
 
                 transferTonnageValues = new List<TransferTonnageValue>()
                 {
