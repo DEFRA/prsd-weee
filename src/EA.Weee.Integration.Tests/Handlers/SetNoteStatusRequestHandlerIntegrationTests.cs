@@ -8,6 +8,7 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Helpers;
     using Domain.Evidence;
     using Domain.Organisation;
     using EA.Weee.Domain.Lookup;
@@ -439,17 +440,31 @@
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 
-
                 var existingTonnagesNote1 = new List<NoteTonnage>()
                 {
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
-                    new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1)
+                    new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1),
+                    new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 3, 1)
                 };
-                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
 
+                var note1 = EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id).WithTonnages(existingTonnagesNote1).Create();
 
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+                var transferTonnage2 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.DisplayEquipment));
+                var transferTonnage3 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.PhotovoltaicPanels));
+
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, null, null),
+                    new NoteTransferTonnage(transferTonnage2.Id, 0, null),
+                    new NoteTransferTonnage(transferTonnage3.Id, 1, null)
+                };
 
                 note = TransferEvidenceNoteDbSetup.Init()
+                    .WithTonnages(newTransferNoteTonnage1)
                     .WithRecipient(recipientOrganisation.Id)
                     .WithOrganisation(transfererOrganisation.Id)
                     .Create();
@@ -485,6 +500,14 @@
                 note.ApprovedRecipientAddress.Should().BeNull();
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
+            };
+
+            private readonly It shouldHaveRemovedNullAndZeroTonnageValues = () =>
+            {
+                note.NoteTransferTonnage
+                    .First(ntt => ntt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.PhotovoltaicPanels.ToInt())
+                    .Received.Should().Be(1);
+                note.NoteTransferTonnage.Count(ntt => ntt.Received == null || ntt.Received == 0.000M).Should().Be(0);
             };
         }
 

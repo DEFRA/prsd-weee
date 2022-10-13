@@ -93,7 +93,7 @@
                 {
                     new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 1, null, Guid.Empty),
                     new TransferTonnageValue(transferTonnage4.Id, WeeeCategory.ConsumerEquipment.ToInt(), 2, 2, Guid.Empty),
-                    new TransferTonnageValue(transferTonnage6.Id, WeeeCategory.ConsumerEquipment.ToInt(), 0, 0, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage6.Id, WeeeCategory.AutomaticDispensers.ToInt(), 0, 0, Guid.Empty),
                     new TransferTonnageValue(transferTonnage5.Id, WeeeCategory.LargeHouseholdAppliances.ToInt(), null, null, Guid.Empty),
                 };
 
@@ -125,7 +125,7 @@
 
             private readonly It shouldHaveUpdatedTransferTonnagesWithExpectedValues = () =>
             {
-                note.NoteTransferTonnage.Count.Should().Be(2);
+                note.NoteTransferTonnage.Count.Should().Be(4);
                 var transferNoteTonnage = note.NoteTransferTonnage.First(nt =>
                     nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.DisplayEquipment.ToInt());
                 transferNoteTonnage.Received.Should().Be(1);
@@ -134,6 +134,14 @@
                     nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.ConsumerEquipment.ToInt());
                 transferNoteTonnage.Received.Should().Be(2);
                 transferNoteTonnage.Reused.Should().Be(2);
+                transferNoteTonnage = note.NoteTransferTonnage.First(nt =>
+                    nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt());
+                transferNoteTonnage.Received.Should().Be(0);
+                transferNoteTonnage.Reused.Should().Be(0);
+                transferNoteTonnage = note.NoteTransferTonnage.First(nt =>
+                    nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.LargeHouseholdAppliances.ToInt());
+                transferNoteTonnage.Received.Should().Be(null);
+                transferNoteTonnage.Reused.Should().Be(null);
             };
 
             private readonly It shouldHaveNotSetApprovedDetails = () =>
