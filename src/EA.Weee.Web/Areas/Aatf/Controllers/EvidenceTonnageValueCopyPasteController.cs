@@ -33,7 +33,7 @@
         { 
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
-            var evidenceModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(Session, SessionKeyConstant.EditEvidenceViewModelKey);
+            var evidenceModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey);
 
             if (redirect)
             {
@@ -56,7 +56,7 @@
         [ValidateAntiForgeryToken]
         public virtual ActionResult Index(EvidenceTonnageValueCopyPasteViewModel model)
         {
-            var evidenceModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(Session, SessionKeyConstant.EditEvidenceViewModelKey);
+            var evidenceModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey);
             var receivedContent = model.ReceievedPastedValues.First();
             var reusedContent = model.ReusedPastedValues.First();
 
@@ -69,7 +69,7 @@
 
                 evidenceModel.CategoryValues = pasteProcessor.ParseEvidencePastedValues(evidencePastedValues, evidenceModel.CategoryValues);
 
-                sessionService.SetTransferSessionObject(Session, evidenceModel, SessionKeyConstant.EditEvidenceViewModelKey);
+                sessionService.SetTransferSessionObject(evidenceModel, SessionKeyConstant.EditEvidenceViewModelKey);
             }
             return ReturnLinkCase(model.Action, evidenceModel, evidenceModel.ComplianceYear);
         }

@@ -53,8 +53,8 @@
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
             int page = 1)
         {
-            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.EditTransferTonnageViewModelKey);
-            sessionService.ClearTransferSessionObject(Session, SessionKeyConstant.TransferNoteKey);
+            sessionService.ClearTransferSessionObject(SessionKeyConstant.EditTransferTonnageViewModelKey);
+            sessionService.ClearTransferSessionObject(SessionKeyConstant.TransferNoteKey);
 
             using (var client = this.apiClient())
             {
