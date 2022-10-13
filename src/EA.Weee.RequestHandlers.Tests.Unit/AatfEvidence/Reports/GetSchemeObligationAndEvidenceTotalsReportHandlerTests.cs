@@ -23,14 +23,14 @@
     {
         private readonly GetSchemeObligationAndEvidenceTotalsReportHandler handler;
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
-        private readonly ICsvWriter<InternalObligationAndEvidenceSummaryTotalsData> evidenceWriter;
+        private readonly ICsvWriter<ObligationAndEvidenceProgressSummaryData> evidenceWriter;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IWeeeAuthorization authorization;
 
         public GetSchemeObligationAndEvidenceTotalsReportHandlerTests()
         {
             evidenceStoredProcedures = A.Fake<IEvidenceStoredProcedures>();
-            evidenceWriter = A.Fake<ICsvWriter<InternalObligationAndEvidenceSummaryTotalsData>>();
+            evidenceWriter = A.Fake<ICsvWriter<ObligationAndEvidenceProgressSummaryData>>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             authorization = A.Fake<IWeeeAuthorization>();
 
@@ -77,27 +77,27 @@
 
             //assert
             A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SchemeName,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly()
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.SchemeApprovalNumber,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Category,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.HouseholdObligation,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.HouseholdEvidence,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.HouseholdReuse,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TransferredOut,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TransferredIn,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Difference,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.NonHouseholdEvidence,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly())
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.NonHouseholdReuse,
-                    A<Func<InternalObligationAndEvidenceSummaryTotalsData, object>>._, false)).MustHaveHappenedOnceExactly());
+                    A<Func<ObligationAndEvidenceProgressSummaryData, object>>._, false)).MustHaveHappenedOnceExactly());
         }
 
         [Fact]
@@ -106,7 +106,7 @@
             //arrange
             var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
-            var reportData = TestFixture.CreateMany<InternalObligationAndEvidenceSummaryTotalsData>().ToList();
+            var reportData = TestFixture.CreateMany<ObligationAndEvidenceProgressSummaryData>().ToList();
 
             A.CallTo(() => evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(A<Guid?>._, A<Guid?>._, A<int>._)).Returns(reportData);
 
@@ -142,7 +142,7 @@
 
             var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             var content = TestFixture.Create<string>();
-            A.CallTo(() => evidenceWriter.Write(A<IEnumerable<InternalObligationAndEvidenceSummaryTotalsData>>._)).Returns(content);
+            A.CallTo(() => evidenceWriter.Write(A<IEnumerable<ObligationAndEvidenceProgressSummaryData>>._)).Returns(content);
             A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns(scheme);
 
             //act
@@ -163,7 +163,7 @@
 
             var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             var content = TestFixture.Create<string>();
-            A.CallTo(() => evidenceWriter.Write(A<IEnumerable<InternalObligationAndEvidenceSummaryTotalsData>>._)).Returns(content);
+            A.CallTo(() => evidenceWriter.Write(A<IEnumerable<ObligationAndEvidenceProgressSummaryData>>._)).Returns(content);
 
             //act
             var result = await handler.HandleAsync(request);

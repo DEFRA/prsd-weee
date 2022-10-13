@@ -56,5 +56,44 @@
         public const string Difference = "Difference (tonnes)";
         public const string NonHouseholdEvidence = "Non household evidence (tonnes)";
         public const string NonHouseholdReuse = "Non household reuse (tonnes)";
+
+        public const string TransferReference = "Transfer reference ID";
+        public const string TransferApprovalDate = "Transfer approval date (GMT)";
+        public const string TransferredByName = "Transferred by name";
+        public const string TransferredByApprovalNumber = "Transferred by approval number";
+        public const string EvidenceNoteReference = "Evidence note reference ID";
+        public const string EvidenceNoteApprovedDate = "Evidence note approval date (GMT)";
+        public const string AatfEvidenceIssuedByName = "AATF evidence issued by name";
+        public const string AatfEvidenceIssuedByApprovalNumber = "AATF evidence issued by approval number";
+        public const string Cat1Transferred = "Cat 1 transferred (t)";
+        public const string Cat2Transferred = "Cat 2 transferred (t)";
+        public const string Cat3Transferred = "Cat 3 transferred (t)";
+        public const string Cat4Transferred = "Cat 4 transferred (t)";
+        public const string Cat5Transferred = "Cat 5 transferred (t)";
+        public const string Cat6Transferred = "Cat 6 transferred (t)";
+        public const string Cat7Transferred = "Cat 7 transferred (t)";
+        public const string Cat8Transferred = "Cat 8 transferred (t)";
+        public const string Cat9Transferred = "Cat 9 transferred (t)";
+        public const string Cat10Transferred = "Cat 10 transferred (t)";
+        public const string Cat11Transferred = "Cat 11 transferred (t)";
+        public const string Cat12Transferred = "Cat 12 transferred (t)";
+        public const string Cat13Transferred = "Cat 13 transferred (t)";
+        public const string Cat14Transferred = "Cat 14 transferred (t)";
+        public const string TotalTransferred = "Total transferred (t)";
+        public const string Cat1ReusedTransferred = "Cat 1 reuse transferred (t)";
+        public const string Cat2ReusedTransferred = "Cat 2 reuse transferred (t)";
+        public const string Cat3ReusedTransferred = "Cat 3 reuse transferred (t)";
+        public const string Cat4ReusedTransferred = "Cat 4 reuse transferred (t)";
+        public const string Cat5ReusedTransferred = "Cat 5 reuse transferred (t)";
+        public const string Cat6ReusedTransferred = "Cat 6 reuse transferred (t)";
+        public const string Cat7ReusedTransferred = "Cat 7 reuse transferred (t)";
+        public const string Cat8ReusedTransferred = "Cat 8 reuse transferred (t)";
+        public const string Cat9ReusedTransferred = "Cat 9 reuse transferred (t)";
+        public const string Cat10ReusedTransferred = "Cat 10 reuse transferred (t)";
+        public const string Cat11ReusedTransferred = "Cat 11 reuse transferred (t)";
+        public const string Cat12ReusedTransferred = "Cat 12 reuse transferred (t)";
+        public const string Cat13ReusedTransferred = "Cat 13 reuse transferred (t)";
+        public const string Cat14ReusedTransferred = "Cat 14 reuse transferred (t)";
+        public const string TotalReusedTransferred = "Total reuse transferred (t)";
     }
 }

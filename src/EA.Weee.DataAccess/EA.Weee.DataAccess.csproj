@@ -175,7 +175,8 @@
     <Compile Include="StoredProcedure\EvidenceStoredProcedures.cs" />
     <Compile Include="StoredProcedure\IEvidenceStoredProcedures.cs" />
     <Compile Include="StoredProcedure\MissingProducerDataCsvData.cs" />
-    <Compile Include="StoredProcedure\InternalObligationAndEvidenceSummaryTotalsData.cs" />
+    <Compile Include="StoredProcedure\TransferNoteData.cs" />
+    <Compile Include="StoredProcedure\ObligationAndEvidenceProgressSummaryData.cs" />
     <Compile Include="StoredProcedure\ObligationEvidenceSummaryTotalsData.cs" />
     <Compile Include="StoredProcedure\PcsAatfComparisonDataCsvData.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
