@@ -30,11 +30,11 @@
             this.obligatedSentOnDataAccess = obligatedSentOnDataAccess;
         }
 
-        public async Task<bool> HandleAsync(CopyPreviousQuarterAatf message)
+        public async Task<bool> HandleAsync(CopyPreviousQuarterAatf copyPreviousQuarterAatf)
         {
             authorization.EnsureCanAccessExternalArea();
             var weeeSentOnList = new List<WeeeSentOn>();
-            var aatfReturnData = await returnDataAccess.GetById(message.ReturnId);
+            var aatfReturnData = await returnDataAccess.GetById(copyPreviousQuarterAatf.ReturnId);
             if (aatfReturnData != null)
             {
                 int currentAatfQuater = (int)aatfReturnData.Quarter.Q;
@@ -53,33 +53,34 @@
                     copyAatfYQuarter = currentAatfQuater - 1;
                 }                
                 
-                var returnData = await returnDataAccess.GetByYearAndQuarter(message.OrganisationId, copyAatfYear, copyAatfYQuarter);
-                var previousQuarterWeeeSentOnList = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(message.AatfId, returnData.Id);
-
-                foreach (var weeeSentOnItem in previousQuarterWeeeSentOnList)
+                var returnData = await returnDataAccess.GetByYearAndQuarter(copyPreviousQuarterAatf.OrganisationId, copyAatfYear, copyAatfYQuarter);
+                if (returnData != null)
                 {
-                    var copyWeeeSentOn = new WeeeSentOn(message.ReturnId, message.AatfId, weeeSentOnItem.OperatorAddressId, weeeSentOnItem.SiteAddressId);
-                    weeeSentOnList.Add(copyWeeeSentOn);
-                }
+                    var previousQuarterWeeeSentOnList = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(copyPreviousQuarterAatf.AatfId, returnData.Id);
 
-                await getSentOnAatfSiteDataAccess.Submit(weeeSentOnList);
-
-                var currentQuarterAmounts = new List<WeeeSentOnAmount>();
-
-                foreach (var weeeSentOnItem in previousQuarterWeeeSentOnList)
-                {
-                    var previousQuarterAmounts = await fetchWeeeSentOnAmountDataAccess.FetchObligatedWeeeSentOnForReturn(weeeSentOnItem.Id);
-                    var currentCopyWeeeSentOn = weeeSentOnList.Find(x => x.OperatorAddressId == weeeSentOnItem.OperatorAddressId && x.SiteAddressId == weeeSentOnItem.SiteAddressId);
-                    
-                    foreach (var previousQuarterAmount in previousQuarterAmounts)
+                    if (copyPreviousQuarterAatf.IsPreviousQuarterDataCheck)
                     {
-                        var weeeSentOnAmount = new WeeeSentOnAmount(currentCopyWeeeSentOn, previousQuarterAmount.CategoryId, previousQuarterAmount.HouseholdTonnage, previousQuarterAmount.NonHouseholdTonnage);
-                        currentQuarterAmounts.Add(weeeSentOnAmount);
-                    }                    
-                }
+                        if (previousQuarterWeeeSentOnList != null && previousQuarterWeeeSentOnList.Count > 0)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var weeeSentOnItem in previousQuarterWeeeSentOnList)
+                        {
+                            var copyWeeeSentOn = new WeeeSentOn(copyPreviousQuarterAatf.ReturnId, copyPreviousQuarterAatf.AatfId, weeeSentOnItem.OperatorAddressId, weeeSentOnItem.SiteAddressId);
+                            weeeSentOnList.Add(copyWeeeSentOn);
+                        }
 
-                await obligatedSentOnDataAccess.Submit(currentQuarterAmounts);
-            }            
+                        await getSentOnAatfSiteDataAccess.Submit(weeeSentOnList);
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
             return true;
         }
