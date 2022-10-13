@@ -80,5 +80,19 @@
 
             return this;
         }
+
+        public TransferEvidenceNoteDbSetup WithApprovedRecipientSchemeName(string approvedSchemeName)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.ApprovedRecipientSchemeName, approvedSchemeName, instance);
+
+            return this;
+        }
+
+        public TransferEvidenceNoteDbSetup WithApprovedTransferSchemeName(string approvedSchemeName)
+        {
+            ObjectInstantiator<Note>.SetProperty(o => o.ApprovedTransfererSchemeName, approvedSchemeName, instance);
+
+            return this;
+        }
     }
 }
