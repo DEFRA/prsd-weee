@@ -15,12 +15,12 @@
     internal class GetSchemeObligationAndEvidenceTotalsReportHandler : IRequestHandler<GetSchemeObligationAndEvidenceTotalsReportRequest, CSVFileData>
     {
         private readonly IEvidenceStoredProcedures evidenceStoredProcedures;
-        private readonly ICsvWriter<InternalObligationAndEvidenceSummaryTotalsData> csvWriter;
+        private readonly ICsvWriter<ObligationAndEvidenceProgressSummaryData> csvWriter;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IWeeeAuthorization weeeAuthorization;
 
         public GetSchemeObligationAndEvidenceTotalsReportHandler(IEvidenceStoredProcedures evidenceStoredProcedures, 
-            ICsvWriter<InternalObligationAndEvidenceSummaryTotalsData> csvWriter, 
+            ICsvWriter<ObligationAndEvidenceProgressSummaryData> csvWriter, 
             IGenericDataAccess genericDataAccess, IWeeeAuthorization weeeAuthorization)
         {
             this.evidenceStoredProcedures = evidenceStoredProcedures;
