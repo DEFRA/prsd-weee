@@ -124,7 +124,7 @@
             {
                 using (var client = ApiClient())
                 {
-                    var request = new GetEvidenceNoteReportRequest(null, null, null, tonnageToDisplay, complianceYear);
+                    var request = new GetEvidenceNoteReportRequest(null, null, tonnageToDisplay, complianceYear);
 
                     var file = await client.SendAsync(User.GetAccessToken(), request);
 

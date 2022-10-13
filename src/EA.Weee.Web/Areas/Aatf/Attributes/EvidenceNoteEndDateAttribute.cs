@@ -25,9 +25,16 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
+            var validateEndDateAgainstConfigDate = ValidateEndDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate);
+
+            if (validateEndDateAgainstConfigDate != ValidationResult.Success)
+            {
+                return validateEndDateAgainstConfigDate;
+            }
+
             if (!WindowHelper.IsDateInComplianceYear(thisDate.Year, currentDate))
             {
-                return new ValidationResult("The end date must be within the current compliance year");
+                return new ValidationResult("The end date must be within an open compliance year");
             }
 
             if (!(validationContext.ObjectInstance is EvidenceNoteViewModel evidenceNoteModel))

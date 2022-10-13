@@ -9,6 +9,7 @@ CREATE PROCEDURE [Evidence].[getSchemeObligationAndEvidenceTotals]
 	@ComplianceYear SMALLINT,
 	@SchemeId UNIQUEIDENTIFIER = NULL,
 	@AppropriateAuthorityId UNIQUEIDENTIFIER = NULL
+WITH RECOMPILE
 AS
 
 BEGIN
@@ -59,17 +60,16 @@ FROM
 	UNION ALL
 	SELECT 
 		1000 As Id,
-		'Total (tonnes)' AS NAME
+		'Category 2-10 summary' AS NAME
 	UNION ALL
 	SELECT 
 		1001 As Id,
-		'Category 2-10 summary' AS NAME
+		'Total (tonnes)' AS NAME
 ) c
 CROSS JOIN [PCS].Scheme s
 WHERE
 	s.Id = @SchemeId OR @SchemeId IS NULL
-ORDER BY
-	s.Id
+	AND (s.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 
 UPDATE s
 SET 
@@ -164,7 +164,7 @@ FROM
 		WHERE
 			s.CategoryId >= 2 AND s.CategoryId <= 10
 		GROUP BY
-			s.SchemeId) cs ON cs.SchemeId = s.SchemeId AND s.CategoryId = 1001
+			s.SchemeId) cs ON cs.SchemeId = s.SchemeId AND s.CategoryId = 1000
 
 -- this is the total calculation
 UPDATE
@@ -191,8 +191,10 @@ FROM
 			s.SchemeId
 		FROM
 			#EvidenceSummaryWithTotals s
+		WHERE
+			s.CategoryId >= 1 AND s.CategoryId <= 14
 		GROUP BY
-			s.SchemeId) cs ON cs.SchemeId = s.SchemeId AND s.CategoryId = 1000
+			s.SchemeId) cs ON cs.SchemeId = s.SchemeId AND s.CategoryId = 1001
 
 SELECT 
 	CategoryId,
@@ -236,7 +238,7 @@ GROUP BY
 	CategoryId,
 	CategoryName
 ORDER BY
-	SchemeId,
+	SchemeName,
 	CategoryId
 
 END

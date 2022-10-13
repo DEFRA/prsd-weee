@@ -42,10 +42,25 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
                 };
+                var note1 = EvidenceNoteDbSetup
+                    .Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(categories).Create();
 
-                note = EvidenceNoteDbSetup
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+
+                // create transfer from note 1
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 2, null)
+                };
+
+                note = TransferEvidenceNoteDbSetup
                         .Init()
-                        .WithTonnages(categories)
+                        .WithOrganisation(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithTonnages(newTransferNoteTonnage1)
                         .With(n =>
                         {
                             n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
@@ -58,7 +73,7 @@
             {
                 data = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
@@ -90,10 +105,25 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
                 };
+                var note1 = EvidenceNoteDbSetup
+                    .Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(categories).Create();
 
-                note = EvidenceNoteDbSetup
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+
+                // create transfer from note 1
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 2, null)
+                };
+
+                note = TransferEvidenceNoteDbSetup
                         .Init()
-                        .WithTonnages(categories)
+                        .WithOrganisation(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithTonnages(newTransferNoteTonnage1)
                         .With(n =>
                         {
                             n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
@@ -107,7 +137,7 @@
             {
                 data = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
@@ -139,10 +169,25 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
                 };
+                var note1 = EvidenceNoteDbSetup
+                    .Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(categories).Create();
 
-                note = EvidenceNoteDbSetup
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+
+                // create transfer from note 1
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 2, null)
+                };
+
+                note = TransferEvidenceNoteDbSetup
                         .Init()
-                        .WithTonnages(categories)
+                        .WithOrganisation(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithTonnages(newTransferNoteTonnage1)
                         .With(n =>
                         {
                             n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
@@ -156,7 +201,7 @@
             {
                 data = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
@@ -188,10 +233,25 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
                 };
+                var note1 = EvidenceNoteDbSetup
+                    .Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(categories).Create();
 
-                note = EvidenceNoteDbSetup
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+
+                // create transfer from note 1
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 2, null)
+                };
+
+                note = TransferEvidenceNoteDbSetup
                         .Init()
-                        .WithTonnages(categories)
+                        .WithOrganisation(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithTonnages(newTransferNoteTonnage1)
                         .With(n =>
                         {
                             n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
@@ -206,7 +266,7 @@
             {
                 data = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveReturnedTheTransferEvidenceNote = () =>
@@ -238,10 +298,25 @@
                     new NoteTonnage(WeeeCategory.AutomaticDispensers, 2, 1),
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
                 };
+                var note1 = EvidenceNoteDbSetup
+                    .Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(categories).Create();
 
-                note = EvidenceNoteDbSetup
+                var transferTonnage1 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+
+                // create transfer from note 1
+                var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(transferTonnage1.Id, 2, null)
+                };
+
+                note = TransferEvidenceNoteDbSetup
                         .Init()
-                        .WithTonnages(categories)
+                        .WithOrganisation(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                        .WithTonnages(newTransferNoteTonnage1)
                         .With(n =>
                         {
                             n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
@@ -256,7 +331,7 @@
             {
                 data = Task.Run(async () => await handler.HandleAsync(request)).Result;
 
-                note = Query.GetEvidenceNoteById(note.Id);
+                note = Query.GetTransferEvidenceNoteById(note.Id);
             };
 
             private readonly It shouldHaveVoidedTheTransferEvidenceNote = () =>

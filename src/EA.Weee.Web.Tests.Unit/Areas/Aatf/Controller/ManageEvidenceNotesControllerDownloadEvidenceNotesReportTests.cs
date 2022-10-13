@@ -57,7 +57,8 @@
                 g.OriginatorOrganisationId == null &&
                 g.RecipientOrganisationId == null &&
                 g.AatfId == aatfId &&
-                g.TonnageToDisplay == tonnageToDisplay))).MustHaveHappenedOnceExactly();
+                g.TonnageToDisplay == tonnageToDisplay &&
+                g.InternalRequest == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
