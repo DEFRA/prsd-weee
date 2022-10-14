@@ -111,19 +111,18 @@
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
                                                 { { "pagerRouteValues", new {
-                            tab = Model.ActiveDisplayOption.ToDisplayString(),
-                            selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-
-                            manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate =
+                                    tab = Model.ActiveDisplayOption.ToDisplayString(), 
+                                                    manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, 
+                                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate =
                             Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
-                            manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate =
+                                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate =
                             Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
-                            manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_ReceivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
-                            manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue =
+                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_ReceivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId, 
+                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue =
                             Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
-                            manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
+                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
                             Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
-                            manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_SubmittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_SubmittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                         }
                             }
                         });

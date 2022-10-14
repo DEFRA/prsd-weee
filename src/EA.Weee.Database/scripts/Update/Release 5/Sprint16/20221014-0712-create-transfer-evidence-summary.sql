@@ -39,3 +39,4 @@ FROM
 					nsh.ChangedDate DESC) as approvedHistory
 WHERE
 	n.NoteType = 2
+
