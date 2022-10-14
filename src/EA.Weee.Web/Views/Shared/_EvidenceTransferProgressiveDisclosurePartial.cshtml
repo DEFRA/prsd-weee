@@ -24,25 +24,25 @@
                 <td class="govuk-table__cell govuk-!-text-align-left">
                     <p class="govuk-body">@Model.EvidenceNoteHistoryData[i].ReferenceDisplay</p>
                 </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                <td class="govuk-table__cell govuk-!-text-align-left">
                     <p class="govuk-body" id="SubmittedDateDisplay-@i">@Model.EvidenceNoteHistoryData[i].SubmittedDateDisplay</p>
                 </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                <td class="govuk-table__cell govuk-!-text-align-left">
                     <p class="govuk-body" id="TransferredTo-@i">@Model.EvidenceNoteHistoryData[i].TransferredTo</p>
                 </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-left">
+                <td class="govuk-table__cell govuk-!-text-align-left">
                     <p class="govuk-body" id="HistoryStatus-@i">@Model.EvidenceNoteHistoryData[i].Status</p>
                 </td>
                 @if (!Model.IsPrintable)
                 {
                     <td class="govuk-table__cell">
-                        if (Model.IsInternalUser)
+                        @if (Model.IsInternalUser)
                         {
-                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.Action("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { area = "admin", evidenceNoteId = Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference ID {0}", @Model.EvidenceNoteHistoryData[i].ReferenceDisplay)))
+                            @(this.WeeeGds().ActionLinkToNewTab("View", @Url.Action("ViewEvidenceNoteTransfer", "ManageEvidenceNotes", new { area = "admin", evidenceNoteId = Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference ID {0}", @Model.EvidenceNoteHistoryData[i].ReferenceDisplay)))
                         }
                         else
                         {
-                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNoteHistoryData[i].SchemeViewRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = @Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference ID {0}", @Model.EvidenceNoteHistoryData[i].ReferenceDisplay)))
+                            @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNoteHistoryData[i].SchemeViewRouteName, new { pcsId = Model.SchemeId, evidenceNoteId = @Model.EvidenceNoteHistoryData[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference ID {0}", @Model.EvidenceNoteHistoryData[i].ReferenceDisplay)))
                         }
                     </td>
                 }
