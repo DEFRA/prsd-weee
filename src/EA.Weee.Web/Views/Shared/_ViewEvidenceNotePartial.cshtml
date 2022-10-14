@@ -38,9 +38,17 @@ else
         width: 25%;
     }
 
+    .transfer-category-column-printable {
+        width: 20% !important;
+    }
+
     .transfer-column
     {
         width: 18.75%;
+    }
+
+    .transfer-column-printable {
+        width: 20% !important;
     }
 
     .category-column-printable
@@ -66,8 +74,9 @@ else
 </style>
 
 @{
-    var tonnageReusedPadding = Model.IsPrintable ? "govuk-!-padding-right-3" : "govuk-!-padding-right-7";
-    var tonnageReceivedPadding = Model.IsPrintable ? "received-column-printable" : "govuk-!-padding-right-9";
+
+    var tonnageReusedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "govuk-!-padding-right-3" : "govuk-!-padding-right-7");
+    var tonnageReceivedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "received-column-printable" : "govuk-!-padding-right-9");
 }
 
 <div class="govuk-width-container govuk-!-margin-top-3">
@@ -208,11 +217,14 @@ else
         <tr class="govuk-table__row">
             @if (Model.DisplayTransferEvidenceColumns)
             {
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-category-column">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column govuk-!-padding-left-5">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused as whole appliances (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total after transfer (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left transfer-column">Total reused after transfer (tonnes)</th>
+                var transferCategoryColumn = Model.IsPrintable ? "transfer-category-column-printable" : "transfer-category-column";
+                var transferColumn = Model.IsPrintable ? "transfer-column-printable" : "transfer-column";
+
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left @transferCategoryColumn">Category</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left @transferColumn">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left @transferColumn">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left @transferColumn">Total after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left @transferColumn">Total reused after transfer (tonnes)</th>
             }
             else
             {
@@ -249,11 +261,11 @@ else
                 {
                     var transferCategory = Model.RemainingTransferCategoryValues[i];
 
-                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-3">
-                        @Html.Gds().VisuallyHidden("Received after for  " + @transferCategory.CategoryDisplay) @transferCategory.Received
+                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-3 printable-text-align-right">
+                      @Html.Gds().VisuallyHidden("Received after for  " + @transferCategory.CategoryDisplay) @transferCategory.Received
                     </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-3">
-                        @Html.Gds().VisuallyHidden("Reused after for " + @transferCategory.CategoryDisplay) @transferCategory.Reused
+                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-3 printable-text-align-right">
+                      @Html.Gds().VisuallyHidden("Reused after for " + @transferCategory.CategoryDisplay) @transferCategory.Reused
                     </td>
                 }
             </tr>
@@ -284,8 +296,8 @@ else
     </tbody>
 </table>
 
-@if (Model.IsPrintable)
+@if (Model.IsPrintable && Model.DisplayEvidenceNoteHistoryData)
 {
-    <h1>Transfer History</h1>
+    <h2 class="govuk-heading-m">Transfer History</h2>
     @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml", Model)
 }
