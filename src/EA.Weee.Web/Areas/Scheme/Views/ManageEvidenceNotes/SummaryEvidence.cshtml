@@ -30,32 +30,9 @@
                     </h2>
                 </header>
 
-                <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report - original tonnages (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.OriginalTonnages)),
-                                                                 "Downloads",
-                                                                 "Evidence notes report - original tonnages (CSV)"))
-                </p>
+                @Html.Partial("_EvidenceNotesReportsLinks", Model)
 
-                <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-7">
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report - net of transfers (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.Net)),
-                                                                 "Downloads",
-                                                                 "Evidence notes report - net of transfers (CSV)"))
-                </p>
-
-                @if (Model.DisplayNoDataMessage)
-                {
-                    <p class="govuk-details__text govuk-!-margin-bottom-4 govuk-!-margin-bottom-4">
-                        Evidence column includes approved evidence and net transfer
-                    </p>
-                }
-                else
-                {
-                    @Html.Partial("_EvidenceReportHintText")
-                }
+                @Html.Partial("_EvidenceReportHintText")
 
                 <table id="evidence-summary-table" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
@@ -89,29 +66,29 @@
                         {
                             var category = Model.ObligationEvidenceValues[i];
 
-                            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                                <td class="govuk-table__cell">
-                                    <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Obligation
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Evidence
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Reused
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.TransferredOut
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.TransferredIn
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Difference
-                                </td>
-                            </tr>
+                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                            <td class="govuk-table__cell">
+                                <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Obligation
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Evidence
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Reused
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.TransferredOut
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.TransferredIn
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Difference
+                            </td>
+                        </tr>
                         }
 
                         <tr class="govuk-table__row govuk-panel-grey-background">
