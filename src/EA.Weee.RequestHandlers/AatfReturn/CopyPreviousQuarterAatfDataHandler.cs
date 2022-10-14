@@ -2,8 +2,8 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn.AatfTaskList;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
+    using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using System.Collections.Generic;
@@ -14,46 +14,48 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IReturnDataAccess returnDataAccess;
         private readonly IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess;
-        private readonly IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess;
-        private readonly IObligatedSentOnDataAccess obligatedSentOnDataAccess;
+        private readonly IOrganisationDetailsDataAccess organisationDetailsDataAccess;
+        private readonly IGenericDataAccess genericDataAccess;
 
         public CopyPreviousQuarterAatfDataHandler(IWeeeAuthorization authorization,
                                                   IReturnDataAccess returnDataAccess,
                                                   IWeeeSentOnDataAccess getSentOnAatfSiteDataAccess,
-                                                  IFetchObligatedWeeeForReturnDataAccess fetchWeeeSentOnAmountDataAccess,
-                                                  IObligatedSentOnDataAccess obligatedSentOnDataAccess)
+                                                  IOrganisationDetailsDataAccess organisationDetailsDataAccess,
+                                                  IGenericDataAccess genericDataAccess)
         {
             this.authorization = authorization;
             this.returnDataAccess = returnDataAccess;
             this.getSentOnAatfSiteDataAccess = getSentOnAatfSiteDataAccess;
-            this.fetchWeeeSentOnAmountDataAccess = fetchWeeeSentOnAmountDataAccess;
-            this.obligatedSentOnDataAccess = obligatedSentOnDataAccess;
+            this.organisationDetailsDataAccess = organisationDetailsDataAccess;
+            this.genericDataAccess = genericDataAccess;
         }
 
         public async Task<bool> HandleAsync(CopyPreviousQuarterAatf copyPreviousQuarterAatf)
         {
             authorization.EnsureCanAccessExternalArea();
+
             var weeeSentOnList = new List<WeeeSentOn>();
+
             var aatfReturnData = await returnDataAccess.GetById(copyPreviousQuarterAatf.ReturnId);
             if (aatfReturnData != null)
             {
                 int currentAatfQuater = (int)aatfReturnData.Quarter.Q;
                 int currentAatfYear = aatfReturnData.Quarter.Year;
 
-                int copyAatfYQuarter = currentAatfQuater;
+                int copyAatfQuarter = currentAatfQuater;
                 int copyAatfYear = currentAatfYear;
 
                 if (currentAatfQuater == 1)
                 {
                     copyAatfYear = currentAatfYear - 1;
-                    copyAatfYQuarter = 4;
+                    copyAatfQuarter = 4;
                 }
                 else
                 {
-                    copyAatfYQuarter = currentAatfQuater - 1;
+                    copyAatfQuarter = currentAatfQuater - 1;
                 }                
                 
-                var returnData = await returnDataAccess.GetByYearAndQuarter(copyPreviousQuarterAatf.OrganisationId, copyAatfYear, copyAatfYQuarter);
+                var returnData = await returnDataAccess.GetByYearAndQuarter(copyPreviousQuarterAatf.OrganisationId, copyAatfYear, copyAatfQuarter);
                 if (returnData != null)
                 {
                     var previousQuarterWeeeSentOnList = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(copyPreviousQuarterAatf.AatfId, returnData.Id);
@@ -69,8 +71,41 @@
                     {
                         foreach (var weeeSentOnItem in previousQuarterWeeeSentOnList)
                         {
-                            var copyWeeeSentOn = new WeeeSentOn(copyPreviousQuarterAatf.ReturnId, copyPreviousQuarterAatf.AatfId, weeeSentOnItem.OperatorAddressId, weeeSentOnItem.SiteAddressId);
-                            weeeSentOnList.Add(copyWeeeSentOn);
+                            if (weeeSentOnItem != null && weeeSentOnItem.OperatorAddress != null) //The Operator Address is null then it is an AATF record
+                            {
+                                var siteCountry = await organisationDetailsDataAccess.FetchCountryAsync(weeeSentOnItem.SiteAddress.CountryId);
+                                var operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(weeeSentOnItem.OperatorAddress.CountryId);
+
+                                var @return = await returnDataAccess.GetById(copyPreviousQuarterAatf.ReturnId);
+
+                                var aatf = await genericDataAccess.GetById<Aatf>(copyPreviousQuarterAatf.AatfId);
+
+                                var siteAddress = new AatfAddress(
+                                    weeeSentOnItem.SiteAddress.Name,
+                                    weeeSentOnItem.SiteAddress.Address1,
+                                    weeeSentOnItem.SiteAddress.Address2,
+                                    weeeSentOnItem.SiteAddress.TownOrCity,
+                                    weeeSentOnItem.SiteAddress.CountyOrRegion,
+                                    weeeSentOnItem.SiteAddress.Postcode,
+                                    siteCountry);
+
+                                var operatorAddress = new AatfAddress(
+                                    weeeSentOnItem.OperatorAddress.Name,
+                                    weeeSentOnItem.OperatorAddress.Address1,
+                                    weeeSentOnItem.OperatorAddress.Address2,
+                                    weeeSentOnItem.OperatorAddress.TownOrCity,
+                                    weeeSentOnItem.OperatorAddress.CountyOrRegion,
+                                    weeeSentOnItem.OperatorAddress.Postcode,
+                                    operatorCountry);
+
+                                var weeeSentOn = new WeeeSentOn(operatorAddress, siteAddress, aatf, @return);
+                                weeeSentOnList.Add(weeeSentOn);
+                            }
+                            else
+                            {
+                                var copyWeeeSentOn = new WeeeSentOn(copyPreviousQuarterAatf.ReturnId, copyPreviousQuarterAatf.AatfId, weeeSentOnItem.OperatorAddressId, weeeSentOnItem.SiteAddressId);
+                                weeeSentOnList.Add(copyWeeeSentOn);
+                            }                            
                         }
 
                         await getSentOnAatfSiteDataAccess.Submit(weeeSentOnList);
