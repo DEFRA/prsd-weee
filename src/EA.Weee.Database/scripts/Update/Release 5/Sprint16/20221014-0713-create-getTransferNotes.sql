@@ -61,5 +61,8 @@ SET NOCOUNT ON;
 		INNER JOIN Evidence.vwEvidenceSummary es ON es.Id = tts.OriginalNoteId
 	WHERE
 		ts.ComplianceYear = @ComplianceYear
+		AND (ts.RecipientOrganisationId = @OrganisationId OR ts.OriginatingOrganisationId = @OrganisationId OR @OrganisationId IS NULL)
+	ORDER BY
+		ts.ReferenceId ASC
 
 END
