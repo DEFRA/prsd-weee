@@ -100,9 +100,9 @@
             return await context.Database.SqlQuery<ObligationEvidenceSummaryTotalsData>(queryString, complianceYearParameter, orgIdParameter, pcsIdParameter).ToListAsync();
         }
 
-        public async Task<List<ObligationAndEvidenceProgressSummaryData>> GetSchemeObligationAndEvidenceTotals(Guid? pcsId, Guid? appropriateAuthorityId, int complianceYear)
+        public async Task<List<ObligationAndEvidenceProgressSummaryData>> GetSchemeObligationAndEvidenceProgress(Guid? pcsId, Guid? appropriateAuthorityId, Guid? organisationId, int complianceYear)
         {
-            var queryString = "[Evidence].[getSchemeObligationAndEvidenceTotals] @ComplianceYear, @SchemeId, @AppropriateAuthorityId ";
+            var queryString = "[Evidence].[getSchemeObligationAndEvidenceTotals] @ComplianceYear, @SchemeId, @AppropriateAuthorityId, @OrganisationId ";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);
             var pcsIdParameter = new SqlParameter("@SchemeId", SqlDbType.UniqueIdentifier)
@@ -115,8 +115,13 @@
                 IsNullable = true,
                 Value = appropriateAuthorityId ?? (object)DBNull.Value
             };
+            var organisationIdParameter = new SqlParameter("@OrganisationId", SqlDbType.UniqueIdentifier)
+            {
+                IsNullable = true,
+                Value = organisationId ?? (object)DBNull.Value
+            };
 
-            return await context.Database.SqlQuery<ObligationAndEvidenceProgressSummaryData>(queryString, complianceYearParameter, pcsIdParameter, appropriateAuthorityIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<ObligationAndEvidenceProgressSummaryData>(queryString, complianceYearParameter, pcsIdParameter, appropriateAuthorityIdParameter, organisationIdParameter).ToListAsync();
         }
     }
 }
