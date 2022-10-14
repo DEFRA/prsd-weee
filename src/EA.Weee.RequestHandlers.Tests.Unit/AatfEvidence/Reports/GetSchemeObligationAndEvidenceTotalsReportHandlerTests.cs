@@ -41,7 +41,7 @@
         public async Task HandleAsync_GivenRequest_InternalAccessShouldBeChecked()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
@@ -56,21 +56,22 @@
             var complianceYear = TestFixture.Create<int>();
             var schemeId = TestFixture.Create<Guid?>();
             var authority = TestFixture.Create<Guid?>();
+            var organisationId = TestFixture.Create<Guid?>();
 
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, authority, complianceYear);
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, authority, organisationId, complianceYear);
 
             //act
             await handler.HandleAsync(request);
 
             A.CallTo(() =>
-                evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(schemeId, authority, complianceYear)).MustHaveHappenedOnceExactly();
+                evidenceStoredProcedures.GetSchemeObligationAndEvidenceProgress(schemeId, authority, organisationId, complianceYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_GivenRequest_SchemeObligationAndEvidenceTotalsCsvShouldBeDefined()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
@@ -104,11 +105,11 @@
         public async Task HandleAsync_GivenReportData_CsvShouldBeCreated()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
 
             var reportData = TestFixture.CreateMany<ObligationAndEvidenceProgressSummaryData>().ToList();
 
-            A.CallTo(() => evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(A<Guid?>._, A<Guid?>._, A<int>._)).Returns(reportData);
+            A.CallTo(() => evidenceStoredProcedures.GetSchemeObligationAndEvidenceProgress(A<Guid?>._, A<Guid?>._, A<Guid?>._, A<int>._)).Returns(reportData);
 
             //act
             await handler.HandleAsync(request);
@@ -121,7 +122,7 @@
         public async Task HandleAsync_GivenRequestWithScheme_SchemeShouldBeRetrieved()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             
             //act
             await handler.HandleAsync(request);
@@ -140,7 +141,7 @@
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.ApprovalNumber).Returns(approvalNumber);
 
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid>(), TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<ObligationAndEvidenceProgressSummaryData>>._)).Returns(content);
             A.CallTo(() => genericDataAccess.GetById<Scheme>(A<Guid>._)).Returns(scheme);
@@ -161,7 +162,7 @@
             var date = new DateTime(2020, 12, 31, 11, 13, 14);
             SystemTime.Freeze(date);
 
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
             var content = TestFixture.Create<string>();
             A.CallTo(() => evidenceWriter.Write(A<IEnumerable<ObligationAndEvidenceProgressSummaryData>>._)).Returns(content);
 

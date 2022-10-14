@@ -31,9 +31,17 @@
 
         public async Task<CSVFileData> HandleAsync(GetSchemeObligationAndEvidenceTotalsReportRequest request)
         {
-            weeeAuthorization.EnsureCanAccessInternalArea();
-
-            var reportData = await evidenceStoredProcedures.GetSchemeObligationAndEvidenceTotals(request.SchemeId, request.AppropriateAuthorityId, request.ComplianceYear);
+            if (request.OrganisationId.HasValue)
+            {
+                weeeAuthorization.EnsureCanAccessExternalArea();
+                weeeAuthorization.EnsureOrganisationAccess(request.OrganisationId.Value);
+            }
+            else
+            {
+                weeeAuthorization.EnsureCanAccessInternalArea();
+            }
+            
+            var reportData = await evidenceStoredProcedures.GetSchemeObligationAndEvidenceProgress(request.SchemeId, request.AppropriateAuthorityId,  request.OrganisationId, request.ComplianceYear);
             
             csvWriter.DefineColumn(EvidenceReportConstants.SchemeName, x => x.SchemeName);
             csvWriter.DefineColumn(EvidenceReportConstants.SchemeApprovalNumber, x => x.ApprovalNumber);

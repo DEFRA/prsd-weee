@@ -15,6 +15,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
+    using Core.Constants;
     using Domain.Scheme;
     using FluentAssertions;
     using Requests.AatfEvidence.Reports;
@@ -372,7 +373,7 @@
                     .WithStatusUpdate(NoteStatus.Approved)
                     .Create();
 
-                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(scheme.Id, null, 2022);
+                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(scheme.Id, null, null, 2022);
             };
 
             private readonly Because of = () =>
@@ -400,6 +401,9 @@
 {scheme.SchemeName},{scheme.ApprovalNumber},Category 2-10 summary,2671.735,750.280,97.000,101.000,72.280,-1921.455,0.000,0.000
 {scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4438.735,1386.069,262.000,101.000,72.280,-3052.666,100.000,50.000
 ");
+
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_{scheme.ApprovalNumber}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().EndWith(".csv");
             };
         }
 
@@ -848,7 +852,7 @@
                     .WithComplianceYear(2022)
                     .WithTonnages(nonHouseHoldTonnages).Create();
 
-                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, 2022);
+                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, null, 2022);
             };
 
             private readonly Because of = () =>
@@ -940,6 +944,9 @@
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Category 2-10 summary,0.000,9.000,9.000,0.000,0.000,9.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Total (tonnes),0.000,14.000,14.000,0.000,0.000,14.000,0.000,0.000
 ");
+
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().EndWith(".csv");
             };
         }
 
@@ -1398,7 +1405,7 @@
                     .WithComplianceYear(2022)
                     .WithTonnages(nonHouseHoldTonnages).Create();
 
-                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, eaAuthority.Id, 2022);
+                request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, eaAuthority.Id, null, 2022);
             };
 
             private readonly Because of = () =>
@@ -1474,6 +1481,9 @@
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,0.000,0.000,106.000,106.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,0.000,0.000,106.000,106.000,0.000,0.000
 ");
+
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().EndWith(".csv");
             };
         }
 
