@@ -1469,7 +1469,8 @@
                 A<GetSchemeObligationAndEvidenceTotalsReportRequest>.That.Matches(g =>
                     g.ComplianceYear  == complianceYear &&
                     g.AppropriateAuthorityId == null &&
-                    g.SchemeId == schemeId))).MustHaveHappenedOnceExactly();
+                    g.SchemeId == schemeId &&
+                    g.OrganisationId == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

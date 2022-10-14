@@ -200,6 +200,7 @@
     <Compile Include="DatabaseSeedingException.cs" />
     <Compile Include="Handlers\EditTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAllAatfsForComplianceYearHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetEvidenceTransferNoteReportHandlerRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteReportHandlerRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAllNotesRequestHandlerForTransfersIntegrationTests.cs" />
     <Compile Include="Handlers\GetComplianceYearsFilterHandlerIntegrationTests.cs" />
