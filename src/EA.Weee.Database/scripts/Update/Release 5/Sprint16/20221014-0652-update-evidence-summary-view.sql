@@ -1,9 +1,4 @@
-GO
-IF OBJECT_ID('Evidence.vwEvidenceSummary', 'V') IS NOT NULL
-	DROP VIEW Evidence.vwEvidenceSummary;
-GO
-
-CREATE VIEW [Evidence].[vwEvidenceSummary] AS
+ALTER VIEW [Evidence].[vwEvidenceSummary] AS
 SELECT
 		n.Id,
 		n.NoteType,
@@ -18,7 +13,7 @@ SELECT
 		ews.[Name] AS ObligationType,
 		n.StartDate AS ReceivedStartDate,
 		n.EndDate AS ReceivedEndDate,
-		CASE WHEN pbs.OrganisationId IS NULL THEN s.SchemeName ELSE o.[Name] END AS Recipient,
+		CASE WHEN pbs.OrganisationId IS NULL THEN (CASE WHEN n.ApprovedRecipientSchemeName IS NOT NULL THEN n.ApprovedRecipientSchemeName ELSE s.SchemeName END) ELSE o.[Name] END AS Recipient,
 		s.ApprovalNumber AS RecipientApprovalNumber,
 		ep.[Name] AS Protocol,
 		s.Id AS RecipientSchemeId,
