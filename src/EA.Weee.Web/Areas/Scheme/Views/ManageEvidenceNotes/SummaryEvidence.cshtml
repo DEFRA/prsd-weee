@@ -46,6 +46,14 @@
                                                                  "Evidence notes report - net of transfers (CSV)"))
                 </p>
 
+                <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-7">
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence transfers report (CSV)",
+                                                                 null,
+                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceTransfersReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
+                                                                 "Downloads",
+                                                                 "Evidence evidence transfers report (CSV)"))
+                </p>
+
                 @Html.Partial("_EvidenceReportHintText")
 
                 <table id="evidence-summary-table" class="govuk-table">
