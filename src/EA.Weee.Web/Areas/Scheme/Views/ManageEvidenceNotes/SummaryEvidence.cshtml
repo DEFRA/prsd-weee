@@ -30,21 +30,7 @@
                     </h2>
                 </header>
 
-                <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report - original tonnages (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.OriginalTonnages)),
-                                                                 "Downloads",
-                                                                 "Evidence notes report - original tonnages (CSV)"))
-                </p>
-
-                <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-7">
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report - net of transfers (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.Net)),
-                                                                 "Downloads",
-                                                                 "Evidence notes report - net of transfers (CSV)"))
-                </p>
+                @Html.Partial("_EvidenceNotesReportsLinks", Model)
 
                 @Html.Partial("_EvidenceReportHintText")
 
@@ -80,29 +66,29 @@
                         {
                             var category = Model.ObligationEvidenceValues[i];
 
-                            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                                <td class="govuk-table__cell">
-                                    <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Obligation
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Evidence
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Reused
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.TransferredOut
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.TransferredIn
-                                </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right break-word">
-                                    @category.Difference
-                                </td>
-                            </tr>
+                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                            <td class="govuk-table__cell">
+                                <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Obligation
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Evidence
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Reused
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.TransferredOut
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.TransferredIn
+                            </td>
+                            <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                                @category.Difference
+                            </td>
+                        </tr>
                         }
 
                         <tr class="govuk-table__row govuk-panel-grey-background">
