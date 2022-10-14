@@ -46,16 +46,7 @@
                                                                  "Evidence notes report - net of transfers (CSV)"))
                 </p>
 
-                @if (Model.DisplayNoDataMessage)
-                {
-                    <p class="govuk-details__text govuk-!-margin-bottom-4 govuk-!-margin-bottom-4">
-                        Evidence column includes approved evidence and net transfer
-                    </p>
-                }
-                else
-                {
-                    @Html.Partial("_EvidenceReportHintText")
-                }
+                @Html.Partial("_EvidenceReportHintText")
 
                 <table id="evidence-summary-table" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
