@@ -207,7 +207,7 @@
                     $"T5,Submitted,,ApprovedTransferSchemeName,{transferNote3.Organisation.Scheme.ApprovalNumber},ApprovedRecipientSchemeName,{transferNote3.Recipient.Scheme.ApprovalNumber},E{evidenceNote2.Reference},{evidenceNote2ApprovalDate},{evidenceNote2.Aatf.Name},{evidenceNote2.Aatf.ApprovalNumber},Reuse network PWP,0.000,10.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,10.000,0.000,1.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,1.000\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_Transfer notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_Evidence note transfers report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
