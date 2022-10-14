@@ -38,10 +38,10 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_InternalAccessShouldBeChecked()
+        public async Task HandleAsync_GivenRequestThatIsNotAnOrganisationRequest_InternalAccessShouldBeChecked()
         {
             //arrange
-            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), TestFixture.Create<int>());
+            var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(TestFixture.Create<Guid?>(), TestFixture.Create<Guid?>(), null, TestFixture.Create<int>());
 
             //act
             await handler.HandleAsync(request);
