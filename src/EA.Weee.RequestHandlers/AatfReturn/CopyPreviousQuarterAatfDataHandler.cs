@@ -53,8 +53,8 @@
                 else
                 {
                     copyAatfQuarter = currentAatfQuater - 1;
-                }                
-                
+                }
+
                 var returnData = await returnDataAccess.GetByYearAndQuarter(copyPreviousQuarterAatf.OrganisationId, copyAatfYear, copyAatfQuarter);
                 if (returnData != null)
                 {
@@ -71,7 +71,8 @@
                     {
                         foreach (var weeeSentOnItem in previousQuarterWeeeSentOnList)
                         {
-                            if (weeeSentOnItem != null && weeeSentOnItem.OperatorAddress != null) //The Operator Address is null then it is an AATF record
+                            //The Operator Address is null then it is an AATF record
+                            if (weeeSentOnItem != null && weeeSentOnItem.OperatorAddress != null)
                             {
                                 var siteCountry = await organisationDetailsDataAccess.FetchCountryAsync(weeeSentOnItem.SiteAddress.CountryId);
                                 var operatorCountry = await organisationDetailsDataAccess.FetchCountryAsync(weeeSentOnItem.OperatorAddress.CountryId);
@@ -105,9 +106,8 @@
                             {
                                 var copyWeeeSentOn = new WeeeSentOn(copyPreviousQuarterAatf.ReturnId, copyPreviousQuarterAatf.AatfId, weeeSentOnItem.OperatorAddressId, weeeSentOnItem.SiteAddressId);
                                 weeeSentOnList.Add(copyWeeeSentOn);
-                            }                            
+                            }
                         }
-
                         await getSentOnAatfSiteDataAccess.Submit(weeeSentOnList);
                     }
                 }
@@ -116,7 +116,6 @@
                     return false;
                 }
             }
-
             return true;
         }
     }
