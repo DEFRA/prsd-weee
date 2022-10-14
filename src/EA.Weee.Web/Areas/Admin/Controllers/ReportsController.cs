@@ -90,6 +90,9 @@
                 case Reports.EvidenceNoteData:
                     return RedirectToAction("EvidenceNoteReport", "EvidenceReports");
 
+                case Reports.EvidenceTransfersData:
+                    return RedirectToAction("EvidenceTransferNoteReport", "EvidenceTransferReport");
+
                 default:
                     throw new NotSupportedException();
             }
