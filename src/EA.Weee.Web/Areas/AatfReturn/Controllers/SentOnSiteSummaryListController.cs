@@ -109,7 +109,7 @@
             DateTime utcCurrentDate = DateTime.UtcNow;
             var isPreviousQuarterHasData = false;
             var isCurrentDateIsInSelectedQuater = false;
-            var currentDateQuarter = GetCurrentQuarter(utcCurrentDate);
+            var currentDateQuarter = GetFinancialQuarter(utcCurrentDate);
 
             if (utcCurrentDate.Year == selectedYear && currentDateQuarter == selectedQuater)
             {
@@ -138,11 +138,11 @@
             }
 
             return false;
-        }
+        }        
 
-        private static int GetCurrentQuarter(DateTime date)
+        public static int GetFinancialQuarter(DateTime date)
         {
-            return (date.Month + 2) / 3;
+            return (date.AddMonths(-3).Month + 2) / 3;
         }
     }
 }
