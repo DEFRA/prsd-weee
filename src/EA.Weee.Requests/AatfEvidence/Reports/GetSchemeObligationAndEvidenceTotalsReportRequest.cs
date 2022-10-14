@@ -10,13 +10,16 @@
 
         public Guid? AppropriateAuthorityId { get; private set; }
 
+        public Guid? OrganisationId { get; private set; }
+
         public int ComplianceYear { get; private set; }
 
-        public GetSchemeObligationAndEvidenceTotalsReportRequest(Guid? schemeId, Guid? appropriateAuthorityId, int complianceYear) 
+        public GetSchemeObligationAndEvidenceTotalsReportRequest(Guid? schemeId, Guid? appropriateAuthorityId, Guid? organisationId, int complianceYear) 
         {
             SchemeId = schemeId;
             AppropriateAuthorityId = appropriateAuthorityId;
             ComplianceYear = complianceYear;
+            OrganisationId = organisationId;
         }
     }
 }

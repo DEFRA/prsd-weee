@@ -146,7 +146,7 @@
             using (var client = apiClient())
             {
                 var request =
-                    new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, null, complianceYear);
+                    new GetSchemeObligationAndEvidenceTotalsReportRequest(schemeId, null, null, complianceYear);
 
                 var csvReport = await client.SendAsync(User.GetAccessToken(), request);
 
