@@ -42,6 +42,7 @@
                 {
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
                     new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1),
+                    new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 4, 1),
                 };
 
                 var note1 = EvidenceNoteDbSetup.Init()
@@ -52,6 +53,7 @@
                 {
                     new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 5, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 10, 1),
+                    new NoteTonnage(WeeeCategory.AutomaticDispensers, 11, 1),
                 };
 
                 var note2 = EvidenceNoteDbSetup.Init()
@@ -66,12 +68,17 @@
                     note2.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments));
                 var transferTonnage4 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+                var transferTonnage5 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.LargeHouseholdAppliances));
+                var transferTonnage6 =
+                    note2.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.AutomaticDispensers));
 
                 var existingTransferTonnages = new List<NoteTransferTonnage>()
                 {
                     new NoteTransferTonnage(transferTonnage1.Id, 3, 1),
                     new NoteTransferTonnage(transferTonnage2.Id, 4, null),
                     new NoteTransferTonnage(transferTonnage3.Id, 5, 1),
+                    new NoteTransferTonnage(transferTonnage5.Id, null, null),
                 };
 
                 var transferNote = TransferEvidenceNoteDbSetup.Init()
@@ -86,6 +93,8 @@
                 {
                     new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 1, null, Guid.Empty),
                     new TransferTonnageValue(transferTonnage4.Id, WeeeCategory.ConsumerEquipment.ToInt(), 2, 2, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage6.Id, WeeeCategory.AutomaticDispensers.ToInt(), 0, 0, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage5.Id, WeeeCategory.LargeHouseholdAppliances.ToInt(), null, null, Guid.Empty),
                 };
 
                 request = new EditTransferEvidenceNoteRequest(transferNote.Id, transferNote.OrganisationId, updatedRecipientOrganisation.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Draft);
@@ -102,11 +111,21 @@
             {
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Draft);
+                note.NoteTransferTonnage.Count.Should().Be(4);
+                foreach (var transferTonnageValue in transferTonnageValues)
+                {
+                    var tonnage = note.NoteTransferTonnage.FirstOrDefault(ntt =>
+                        ntt.NoteTonnageId.Equals(transferTonnageValue.Id));
+
+                    tonnage.Should().NotBeNull();
+                    tonnage.Received.Should().Be(transferTonnageValue.FirstTonnage);
+                    tonnage.Reused.Should().Be(transferTonnageValue.SecondTonnage);
+                }
             };
 
             private readonly It shouldHaveUpdatedTransferTonnagesWithExpectedValues = () =>
             {
-                note.NoteTransferTonnage.Count.Should().Be(2);
+                note.NoteTransferTonnage.Count.Should().Be(4);
                 var transferNoteTonnage = note.NoteTransferTonnage.First(nt =>
                     nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.DisplayEquipment.ToInt());
                 transferNoteTonnage.Received.Should().Be(1);
@@ -115,6 +134,14 @@
                     nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.ConsumerEquipment.ToInt());
                 transferNoteTonnage.Received.Should().Be(2);
                 transferNoteTonnage.Reused.Should().Be(2);
+                transferNoteTonnage = note.NoteTransferTonnage.First(nt =>
+                    nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt());
+                transferNoteTonnage.Received.Should().Be(0);
+                transferNoteTonnage.Reused.Should().Be(0);
+                transferNoteTonnage = note.NoteTransferTonnage.First(nt =>
+                    nt.NoteTonnage.CategoryId.ToInt() == WeeeCategory.LargeHouseholdAppliances.ToInt());
+                transferNoteTonnage.Received.Should().Be(null);
+                transferNoteTonnage.Reused.Should().Be(null);
             };
 
             private readonly It shouldHaveNotSetApprovedDetails = () =>
@@ -144,6 +171,8 @@
                 {
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
                     new NoteTonnage(WeeeCategory.DisplayEquipment, 3, 1),
+                    new NoteTonnage(WeeeCategory.PhotovoltaicPanels, 4, 1),
+                    new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 5, 1),
                 };
 
                 var note1 = EvidenceNoteDbSetup.Init()
@@ -154,6 +183,8 @@
                 {
                     new NoteTonnage(WeeeCategory.LargeHouseholdAppliances, 5, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 10, 1),
+                    new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 11, 1),
+                    new NoteTonnage(WeeeCategory.ToysLeisureAndSports, 12, 1),
                 };
 
                 var note2 = EvidenceNoteDbSetup.Init()
@@ -168,6 +199,14 @@
                     note2.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments));
                 var transferTonnage4 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
+                var transferTonnage5 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.PhotovoltaicPanels));
+                var transferTonnage6 =
+                    note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.GasDischargeLampsAndLedLightSources));
+                var transferTonnage7 =
+                    note2.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ITAndTelecommsEquipment));
+                var transferTonnage8 =
+                    note2.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ToysLeisureAndSports));
 
                 var existingTransferTonnages = new List<NoteTransferTonnage>()
                 {
@@ -175,6 +214,8 @@
                     new NoteTransferTonnage(transferTonnage2.Id, 4, null),
                     new NoteTransferTonnage(transferTonnage3.Id, 5, 1),
                     new NoteTransferTonnage(transferTonnage4.Id, 3, 1),
+                    new NoteTransferTonnage(transferTonnage5.Id, null, null),
+                    new NoteTransferTonnage(transferTonnage6.Id, 0, 0),
                 };
 
                 var transferNote = TransferEvidenceNoteDbSetup.Init()
@@ -189,6 +230,8 @@
                 {
                     new TransferTonnageValue(transferTonnage3.Id, WeeeCategory.MonitoringAndControlInstruments.ToInt(), 10, 5, Guid.Empty),
                     new TransferTonnageValue(transferTonnage1.Id, WeeeCategory.DisplayEquipment.ToInt(), 2, 2, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage7.Id, WeeeCategory.ITAndTelecommsEquipment.ToInt(), null, null, Guid.Empty),
+                    new TransferTonnageValue(transferTonnage8.Id, WeeeCategory.ToysLeisureAndSports.ToInt(), 0, 0, Guid.Empty),
                 };
 
                 request = new EditTransferEvidenceNoteRequest(transferNote.Id, transferNote.OrganisationId, updatedRecipientOrganisation.Id, transferTonnageValues, EA.Weee.Core.AatfEvidence.NoteStatus.Submitted);
@@ -205,6 +248,16 @@
             {
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Submitted);
+                note.NoteTransferTonnage.Count.Should().Be(2);
+                foreach (var transferTonnageValue in transferTonnageValues.Where(t => t.FirstTonnage != null && t.FirstTonnage != 0.000M))
+                {
+                    var tonnage = note.NoteTransferTonnage.FirstOrDefault(ntt =>
+                        ntt.NoteTonnageId.Equals(transferTonnageValue.Id));
+
+                    tonnage.Should().NotBeNull();
+                    tonnage.Received.Should().Be(transferTonnageValue.FirstTonnage);
+                    tonnage.Reused.Should().Be(transferTonnageValue.SecondTonnage);
+                }
             };
 
             private readonly It shouldHaveUpdatedTransferTonnagesWithExpectedValues = () =>
@@ -236,6 +289,12 @@
                 note.ApprovedRecipientSchemeName.Should().BeNull();
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
+            };
+
+            private readonly It shouldHaveRemovedNullAndZeroTonnages = () =>
+            {
+                note.NoteTransferTonnage.Count(ntt => ntt.Received == null).Should().Be(0);
+                note.NoteTransferTonnage.Count(ntt => ntt.Received == 0.000M).Should().Be(0);
             };
         }
 
@@ -339,6 +398,17 @@
             {
                 ShouldMapToNote();
                 note.Status.Should().Be(NoteStatus.Draft);
+                note.NoteTransferTonnage.Count.Should().Be(1);
+                foreach (var transferTonnageValue in transferTonnageValues)
+                {
+                    var tonnage = note.NoteTransferTonnage.FirstOrDefault(ntt =>
+                        ntt.NoteTonnageId.Equals(transferTonnageValue.Id));
+
+                    tonnage.Should().NotBeNull();
+                    tonnage.Received.Should().Be(transferTonnageValue.FirstTonnage);
+                    tonnage.Reused.Should().Be(transferTonnageValue.SecondTonnage);
+                }
+                note.Status.Should().Be(NoteStatus.Draft);
             };
 
             private readonly It shouldHaveNotSetApprovedDetails = () =>
@@ -441,7 +511,7 @@
 
             private readonly Because of = () =>
             {
-                        CatchExceptionAsync(() => handler.HandleAsync(request));
+                CatchExceptionAsync(() => handler.HandleAsync(request));
             };
 
             private readonly It shouldHaveCaughtInvalidOperationException = ShouldThrowException<InvalidOperationException>;
@@ -471,6 +541,7 @@
 
                 return setup;
             }
+
             protected static void ShouldMapToNote()
             {
                 note.CreatedById.Should().Be(UserId.ToString());
@@ -485,16 +556,6 @@
                 note.Organisation.Should().Be(transferOrganisation);
                 note.NoteType.Should().Be(NoteType.TransferNote);
                 note.NoteTonnage.Count.Should().Be(0);
-                note.NoteTransferTonnage.Count.Should().Be(transferTonnageValues.Count);
-                foreach (var transferTonnageValue in transferTonnageValues)
-                {
-                    var tonnage = note.NoteTransferTonnage.FirstOrDefault(ntt =>
-                        ntt.NoteTonnageId.Equals(transferTonnageValue.Id));
-
-                    tonnage.Should().NotBeNull();
-                    tonnage.Received.Should().Be(transferTonnageValue.FirstTonnage);
-                    tonnage.Reused.Should().Be(transferTonnageValue.SecondTonnage);
-                }
             }
         }
     }
