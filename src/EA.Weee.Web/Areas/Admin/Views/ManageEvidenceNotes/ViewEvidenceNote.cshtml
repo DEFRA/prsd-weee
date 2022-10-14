@@ -15,9 +15,17 @@
     }
     else
     {
-        @(this.WeeeGds().BackLink(
+        if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
+        {
+            @(this.WeeeGds().BackLink(
+                string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
+        }
+        else
+        {
+            @(this.WeeeGds().BackLink(
                 Url.Action("Index", "ManageEvidenceNotes",
                     new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
+        }
     }
 
     @Html.Partial("_ViewEvidenceNotePartial", Model)
