@@ -424,7 +424,7 @@
 
             //assert
             result.FileContent.Should().Be(content);
-            result.FileName.Should().Be($"{request.ComplianceYear}_Transfer notes report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
+            result.FileName.Should().Be($"{request.ComplianceYear}_Evidence note transfers report{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv");
             SystemTime.Unfreeze();
         }
     }
