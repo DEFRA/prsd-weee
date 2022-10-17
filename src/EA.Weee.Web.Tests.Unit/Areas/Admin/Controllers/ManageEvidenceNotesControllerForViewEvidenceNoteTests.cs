@@ -28,7 +28,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[]
                 {
                     typeof(Guid),
-                    typeof(int)
+                    typeof(int),
+                    typeof(string),
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -40,7 +41,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[]
                 {
                     typeof(Guid),
-                    typeof(int)
+                    typeof(int),
+                    typeof(string),
                 }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
