@@ -122,9 +122,7 @@
                 isPreviousQuarterHasData = client.SendAsync(User.GetAccessToken(), copyPreviousQuarterAatfDataViewModel).Result;
             }
 
-            if (utcCurrentDate > copyPreviousQuarterDataDisabledDate &&
-                weeeSentOnListCount == 0 &&
-                isPreviousQuarterHasData == true)
+            if (utcCurrentDate > copyPreviousQuarterDataDisabledDate && weeeSentOnListCount == 0 && isPreviousQuarterHasData == true)
             {
                 return true;
             }
