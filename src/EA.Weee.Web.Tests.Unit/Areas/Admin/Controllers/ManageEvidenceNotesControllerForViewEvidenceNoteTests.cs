@@ -124,10 +124,9 @@
         [Fact]
         public async Task ViewEvidenceNoteGet_WhenNoteTypeIsEvidence_ModelWithRedirectTabIsCreated()
         {
-            // arrange
+            // act
             var result = await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId) as ViewResult;
 
-            // act
             var model = result.Model as ViewEvidenceNoteViewModel;
             model.Type = NoteType.Evidence;
 
@@ -138,10 +137,9 @@
         [Fact]
         public async Task ViewEvidenceNoteGet_WhenNoteTypeIsTransfer_ModelWithRedirectTabIsCreated()
         {
-            // arrange
+            // act
             var result = await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId) as ViewResult;
 
-            // act
             var model = result.Model as ViewEvidenceNoteViewModel;
             model.Type = NoteType.Transfer;
 
