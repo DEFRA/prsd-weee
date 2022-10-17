@@ -108,13 +108,6 @@
             DateTime copyPreviousQuarterDataDisabledDate = Convert.ToDateTime(ConfigurationManager.AppSettings["Weee.CopyPreviousQuarterDataDisabledDate"]);
             DateTime utcCurrentDate = DateTime.UtcNow;
             var isPreviousQuarterHasData = false;
-            var isCurrentDateIsInSelectedQuater = false;
-            var currentDateQuarter = GetFinancialQuarter(utcCurrentDate);
-
-            if (utcCurrentDate.Year == selectedYear && currentDateQuarter == selectedQuater)
-            {
-                isCurrentDateIsInSelectedQuater = true;
-            }
 
             using (var client = apiClient())
             {
@@ -131,18 +124,12 @@
 
             if (utcCurrentDate > copyPreviousQuarterDataDisabledDate &&
                 weeeSentOnListCount == 0 &&
-                isPreviousQuarterHasData == true &&
-                isCurrentDateIsInSelectedQuater == true)
+                isPreviousQuarterHasData == true)
             {
                 return true;
             }
 
             return false;
-        }        
-
-        public static int GetFinancialQuarter(DateTime date)
-        {
-            return (date.AddMonths(-3).Month + 2) / 3;
         }
     }
 }
