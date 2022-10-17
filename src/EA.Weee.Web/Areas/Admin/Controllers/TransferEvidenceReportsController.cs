@@ -7,11 +7,8 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.AatfEvidence;
     using Infrastructure;
-    using Prsd.Core.Helpers;
     using ViewModels.EvidenceReports;
-    using ViewModels.Reports;
     using Weee.Requests.AatfEvidence.Reports;
     using Weee.Requests.Shared;
 
@@ -26,46 +23,6 @@
         {
             this.configurationService = configurationService;
         }
-
-        //[HttpGet]
-        //public async Task<ActionResult> ChooseReport()
-        //{
-        //    SetBreadcrumb();
-
-        //    async Task<ActionResult> ViewAction()
-        //    {
-        //        return await Task.Run(() =>
-        //        {
-        //            var model = new ChooseEvidenceReportViewModel();
-
-        //            return View(model);
-        //        });
-        //    }
-
-        //    return await CheckUserStatus("EvidenceReports", "ChooseReport", ViewAction);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ChooseReport(ChooseEvidenceReportViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-
-        //    switch (model.SelectedValue)
-        //    {
-        //        case Reports.EvidenceNoteData:
-        //            return RedirectToAction(nameof(EvidenceNoteReport), "EvidenceReports");
-
-        //        case Reports.EvidenceTransfersData:
-        //            return RedirectToAction("Index", "AdminHolding");
-
-        //        default:
-        //            throw new NotSupportedException();
-        //    }
-        //}
 
         [HttpGet]
         public async Task<ActionResult> EvidenceTransferNoteReport()
