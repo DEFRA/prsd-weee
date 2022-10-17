@@ -23,7 +23,7 @@
 
         public string EvidenceNoteReference { get; set; }
 
-        public DateTime? EvidenceNoteApprovalDate { get; set; }  // sql query moanied about this not being nullable
+        public DateTime EvidenceNoteApprovalDate { get; set; }
 
         public string AatfIssuedByName { get; set; }
 
