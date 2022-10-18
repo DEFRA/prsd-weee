@@ -105,8 +105,7 @@
             var noteStatus = fixture.Create<NoteStatus?>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>()
-            { NoteType.Evidence }, transferredOut, 1, 25, noteStatus);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, noteStatus);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
