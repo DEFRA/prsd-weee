@@ -127,5 +127,49 @@
             result.ContentType.Should().Be("application/pdf");
             SystemTime.Unfreeze();
         }
+
+        [Fact]
+        public void DownloadEvidenceTransfersReportGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceTransfersReport", new[] { typeof(Guid), typeof(int) })
+                .Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceTransfersReportGet_GivenRouteValues_ReportRequestShouldBeCalled()
+        {
+            //arrange
+            Guid pcsId = Fixture.Create<Guid>();
+            var complianceYear = Fixture.Create<int>();
+            var csvFile = Fixture.Create<CSVFileData>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetTransferNoteReportRequest>._)).Returns(csvFile);
+
+            //act
+            await Controller.DownloadEvidenceTransfersReport(pcsId, complianceYear);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetTransferNoteReportRequest>.That.Matches(g =>
+                g.ComplianceYear == complianceYear &&
+                g.OrganisationId == pcsId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceTransfersReportGet_GivenCsvData_FileContentResultShouldBeReturned()
+        {
+            //arrange
+            Guid pcsId = Fixture.Create<Guid>();
+            var complianceYear = Fixture.Create<int>();
+            var csvFile = Fixture.Create<CSVFileData>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetTransferNoteReportRequest>._)).Returns(csvFile);
+
+            //act
+            var result = await Controller.DownloadEvidenceTransfersReport(pcsId, complianceYear) as FileContentResult;
+
+            //assert
+            result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(csvFile.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvFile.FileName));
+            result.FileDownloadName.Should().Be(csvFile.FileName);
+        }
     }
 }
