@@ -1304,9 +1304,9 @@
             result.EvidenceNoteHistoryData.First().TransferEvidenceTonnageData.Should().BeEmpty();
         }
 
-        private EvidenceNoteWithCriteriaMap EvidenceNoteWithCriteriaMap(Note note)
+        private EvidenceNoteWithCriteriaMapper EvidenceNoteWithCriteriaMap(Note note)
         {
-            return new EvidenceNoteWithCriteriaMap(note);
+            return new EvidenceNoteWithCriteriaMapper(note);
         }
     }
 }
