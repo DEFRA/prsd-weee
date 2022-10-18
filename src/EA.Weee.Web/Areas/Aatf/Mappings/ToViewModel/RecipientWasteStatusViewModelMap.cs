@@ -28,8 +28,7 @@
             {
                 sortedListOfNoteStatus.Insert(3, new KeyValuePair<int, string>((int)NoteStatus.Returned, NoteStatus.Returned.ToString()));
             }
-
-            if (source.AllStatuses)
+            else if (source.AllStatuses)
             {
                 sortedListOfNoteStatus.Insert(0, new KeyValuePair<int, string>((int)NoteStatus.Draft, NoteStatus.Draft.ToString()));
                 sortedListOfNoteStatus.Insert(4, new KeyValuePair<int, string>((int)NoteStatus.Returned, NoteStatus.Returned.ToString()));
