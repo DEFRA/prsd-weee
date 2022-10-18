@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.AatfReturn;
     using Filters;
     using Helpers;
     using Prsd.Core;
@@ -85,6 +86,7 @@
             var groupedAatfs = aatfs.Any(a => a.AatfId == 
                 aatfById.AatfId && 
                 a.ComplianceYear == date.Year &&
+                a.AatfStatus == AatfStatus.Approved &&
                 a.ApprovalDate.GetValueOrDefault() <= date);
 
             if (!groupedAatfs)
