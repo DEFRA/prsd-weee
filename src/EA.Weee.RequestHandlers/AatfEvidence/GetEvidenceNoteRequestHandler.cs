@@ -39,11 +39,12 @@
 
             var currentDateTime = await systemDataDataAccess.GetSystemDateTime();
 
-            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
+            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>(new EvidenceNoteWithCriteriaMapper(evidenceNote)
             {
                 IncludeTonnage = true,
                 SystemDateTime = currentDateTime,
-                IncludeHistory = false
+                IncludeHistory = false,
+                IncludeTotal = false
             });
 
             return evidenceNoteData;

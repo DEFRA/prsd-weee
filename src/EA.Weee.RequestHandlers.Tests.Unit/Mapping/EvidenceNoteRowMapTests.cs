@@ -457,7 +457,7 @@
             var result = map.Map(mapObject);
 
             //assert
-            result.TotalReceived.Should().Be(3.2M);
+            result.TotalReceivedAvailable.Should().Be(3.2M);
         }
 
         [Fact]
@@ -481,7 +481,7 @@
             var result = map.Map(mapObject);
 
             //assert
-            result.TotalReceived.Should().BeNull();
+            result.TotalReceivedAvailable.Should().BeNull();
         }
 
         [Fact]
@@ -511,12 +511,12 @@
             var result = map.Map(mapObject);
 
             //assert
-            result.TotalReceived.Should().Be(50.4M);
+            result.TotalReceivedAvailable.Should().Be(50.4M);
         }
 
-        private EvidenceNoteRowMapperObject EvidenceNoteWithCriteriaMap(Note note)
+        private EvidenceNoteRowCriteriaMapper EvidenceNoteWithCriteriaMap(Note note)
         {
-            return new EvidenceNoteRowMapperObject(note);
+            return new EvidenceNoteRowCriteriaMapper(note);
         }
     }
 }
