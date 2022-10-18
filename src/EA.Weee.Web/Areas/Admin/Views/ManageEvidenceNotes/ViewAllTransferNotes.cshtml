@@ -13,15 +13,22 @@
 
                 <section class="govuk-tabs__panel" id="allTransferNotes">
 
+                    <h2 class="govuk-heading-m govuk-!-padding-bottom-4">
+                        View all evidence transfers
+                    </h2>
+
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
                         @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-all-transfers" })
-                    }
 
-                    <h2 class="govuk-heading-m govuk-!-padding-bottom-8">
-                        View all evidence transfers
-                    </h2>
+                        <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                            <div class="govuk-form-group govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0 " style="width:370px">
+                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                            </div>
+                        </div>
+
+                    }
 
                     <table id="all-transfer-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">All evidence notes</caption>
@@ -73,7 +80,7 @@
                             }
                             else
                             {
-                                   Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are currently no evidence transfers to view</p>") });
+                                Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are currently no evidence transfers to view</p>") });
                             }
 
                         </tbody>
