@@ -6,7 +6,6 @@
     using AutoFixture;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Helpers;
-    using EA.Weee.Core.Tests.Unit.Helpers;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Shared;
@@ -28,7 +27,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[]
                 {
                     typeof(Guid),
-                    typeof(int)
+                    typeof(int),
+                    typeof(string),
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -40,7 +40,8 @@
             typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[]
                 {
                     typeof(Guid),
-                    typeof(int)
+                    typeof(int),
+                    typeof(string),
                 }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
@@ -61,7 +62,7 @@
             //act
             await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId);
 
-            //asset
+            //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForInternalUserRequest>.That.Matches(
                 g => g.EvidenceNoteId.Equals(EvidenceNoteId)))).MustHaveHappenedOnceExactly();
         }
@@ -77,7 +78,7 @@
             //act
             await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
                 v => v.EvidenceNoteData.Equals(EvidenceNoteData) &&
                      v.NoteStatus == null &&
@@ -97,7 +98,7 @@
             //act
             await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId);
 
-            //asset
+            //assert
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
                 v => v.EvidenceNoteData.Equals(EvidenceNoteData) &&
                      v.NoteStatus.Equals(status) &&
@@ -116,7 +117,7 @@
             //act
             var result = await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId) as ViewResult;
 
-            //asset
+            //assert
             result.Model.Should().Be(model);
         }
 
@@ -126,7 +127,6 @@
             // act
             var result = await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId) as ViewResult;
 
-            // act
             var model = result.Model as ViewEvidenceNoteViewModel;
             model.Type = NoteType.Evidence;
 
@@ -140,12 +140,57 @@
             // act
             var result = await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId) as ViewResult;
 
-            // act
             var model = result.Model as ViewEvidenceNoteViewModel;
             model.Type = NoteType.Transfer;
 
             //assert
             model.InternalUserRedirectTab.Should().Be(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString());
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_WhenPageNumberIsSetToTheViewBag_ViewBagShouldHaveThePageNumber()
+        {
+            // arrange 
+            var page = TestFixture.Create<int>();
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId, page);
+
+            //assert
+            ((int)ManageEvidenceController.ViewBag.Page).Should().Be(page);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_WhenPageNumberIsNotSetInViewBag_ViewBagShouldHaveDefaultPageNumber()
+        {
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId);
+
+            //assert
+            ((int)ManageEvidenceController.ViewBag.Page).Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        {
+            // arrange 
+            var queryString = TestFixture.Create<string>();
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId, queryString: queryString);
+
+            //assert
+            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        {
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId);
+
+            //assert
+            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(null);
         }
     }
 }
