@@ -56,20 +56,6 @@
             return View(model);
         }
 
-        public async Task<EvidenceTransfersReportViewModel> SetupEvidenceTransfersReportViewModelFilters(EvidenceTransfersReportViewModel model)
-        {
-            using (var client = ApiClient())
-            {
-                var returnsDate = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
-                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-                var complianceYears = Enumerable.Range(returnsDate.Year, (currentDate.Year - returnsDate.Year) + 1).OrderByDescending(x => x).ToList();
-
-                model.ComplianceYears = new SelectList(complianceYears);
-
-                return model;
-            }
-        }
-
         [HttpGet]
         public async Task<ActionResult> DownloadEvidenceTransferNoteReport(int complianceYear)
         {
@@ -89,6 +75,20 @@
             }
 
             return await CheckUserStatus("Reports", "ChooseReport", FileResult);
+        }
+
+        public async Task<EvidenceTransfersReportViewModel> SetupEvidenceTransfersReportViewModelFilters(EvidenceTransfersReportViewModel model)
+        {
+            using (var client = ApiClient())
+            {
+                var returnsDate = configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+                var complianceYears = Enumerable.Range(returnsDate.Year, (currentDate.Year - returnsDate.Year) + 1).OrderByDescending(x => x).ToList();
+
+                model.ComplianceYears = new SelectList(complianceYears);
+
+                return model;
+            }
         }
     }
 }
