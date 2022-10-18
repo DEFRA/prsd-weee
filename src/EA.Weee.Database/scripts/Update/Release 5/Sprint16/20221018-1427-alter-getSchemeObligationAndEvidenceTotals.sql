@@ -238,7 +238,7 @@ SELECT
 FROM 
 	#EvidenceSummaryWithTotals
 WHERE 
-	@SchemeId IS NULL
+	@SchemeId IS NULL AND @OrganisationId IS NULL
 GROUP BY
 	CategoryId,
 	CategoryName
