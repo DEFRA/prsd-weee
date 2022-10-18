@@ -32,6 +32,14 @@
 
                 @Html.Partial("_EvidenceNotesReportsLinks", Model)
 
+                <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-7">
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence transfers report (CSV)",
+                                                                 null,
+                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceTransfersReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
+                                                                 "Downloads",
+                                                                 "Evidence evidence transfers report (CSV)"))
+                </p>
+
                 <table id="evidence-summary-table" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
                     <thead class="govuk-table__head">

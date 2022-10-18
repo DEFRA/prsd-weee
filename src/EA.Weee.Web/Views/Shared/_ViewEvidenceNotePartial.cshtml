@@ -71,6 +71,7 @@ else
     {
         padding-right: 40px;
     }
+
 </style>
 
 @{
@@ -298,6 +299,6 @@ else
 
 @if (Model.IsPrintable && Model.DisplayEvidenceNoteHistoryData)
 {
-    <h2 class="govuk-heading-m">Transfer History</h2>
+    <h2 class="govuk-heading-m">Transfer history</h2>
     @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml", Model)
 }
