@@ -159,6 +159,7 @@
     <Compile Include="AddressHelper.cs" />
     <Compile Include="AttributeHelper.cs" />
     <Compile Include="AuthorizationBuilder.cs" />
+    <Compile Include="DataHelpers\AatfStatusCoreData.cs" />
     <Compile Include="DataHelpers\NoteStatusCoreData.cs" />
     <Compile Include="DataHelpers\OutOfComplianceYearDataWithBalancingScheme.cs" />
     <Compile Include="DataHelpers\OutOfComplianceYearData.cs" />
