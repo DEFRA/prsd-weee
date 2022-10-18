@@ -177,7 +177,7 @@
                     true, 
                     pageNumber, 
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
-                    manageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
 
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                             new RecipientWasteStatusFilterBase(null,

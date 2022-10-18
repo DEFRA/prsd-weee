@@ -8,6 +8,7 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Controllers;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels;
@@ -208,6 +209,29 @@
                 m.OrganisationId == OrganisationId &&
                 m.CurrentDate == currentDate &&
                 m.ComplianceYear == complianceYear)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenManageEvidenceNotesViewModelForOutgoingTransferTab_ModelMapperShouldBeCalledWithCorrectValues()
+        {
+            //arrange
+            var complianceYear = TestFixture.Create<short>();
+            var currentDate = TestFixture.Create<DateTime>();
+            var recipientWasteStatusViewModel = TestFixture.Create<RecipientWasteStatusFilterViewModel>();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+            A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(A<RecipientWasteStatusFilterBase>._)).Returns(recipientWasteStatusViewModel);
+
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                   .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
+                m.RecipientWasteStatusFilterViewModel == recipientWasteStatusViewModel)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -714,6 +738,34 @@
                      noteTypes.SequenceEqual(g.NoteTypeFilterList) &&
                      g.PageSize == pageSize &&
                      g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTabWithRecipientStatusFilterModel_EvidenceNoteDataShouldBeRetrieved()
+        {
+            // Arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.NoteStatusFilter == model.RecipientWasteStatusFilterViewModel.NoteStatusValue))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTabWithNullModel_RecipientWasteStatusFilterViewModelShouldBeNull()
+        {
+            // Arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers");
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
+                g => g.NoteStatusFilter == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
