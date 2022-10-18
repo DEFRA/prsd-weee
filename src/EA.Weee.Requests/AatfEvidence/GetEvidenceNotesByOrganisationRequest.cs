@@ -8,13 +8,16 @@
 
     public class GetEvidenceNotesByOrganisationRequest : EvidenceNoteFilterBaseRequest
     {
+        public NoteStatus? NoteStatusFilter { get; set; }
+
         public GetEvidenceNotesByOrganisationRequest(Guid organisationId, 
             List<NoteStatus> allowedStatuses,
             int complianceYear,
             List<NoteType> noteTypeFilterList,
             bool transferredOut,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            NoteStatus? noteStatus)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
@@ -31,6 +34,7 @@
             TransferredOut = transferredOut;
             PageNumber = pageNumber;
             PageSize = pageSize;
+            NoteStatusFilter = noteStatus;
         }
     }
 }
