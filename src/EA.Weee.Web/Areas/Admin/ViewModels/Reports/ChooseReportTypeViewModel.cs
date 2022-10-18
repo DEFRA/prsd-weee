@@ -12,7 +12,8 @@
                 Reports.AatfReports,
                 Reports.PcsAatfDataDifference,
                 Reports.AatfAeDetails,
-                Reports.EvidenceNoteData
+                Reports.EvidenceNoteData,
+                Reports.EvidenceTransfersData
             })
         {
         }
