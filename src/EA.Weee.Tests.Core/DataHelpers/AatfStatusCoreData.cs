@@ -3,15 +3,14 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using Prsd.Core.Domain;
 
-    public class AatfStatusCoreData : IEnumerable<object[]>
+    public class NoteStatusCoreData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            foreach (var status in Enumeration.GetAll<EA.Weee.Core.AatfReturn.AatfStatus>())
+            foreach (var status in Enum.GetValues(typeof(EA.Weee.Core.AatfEvidence.NoteStatus)))
             {
-                yield return new object[] { status };
+                yield return new[] { status };
             }
         }
 
