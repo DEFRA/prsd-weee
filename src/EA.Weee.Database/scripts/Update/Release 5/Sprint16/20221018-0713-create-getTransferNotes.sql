@@ -58,7 +58,7 @@ SET NOCOUNT ON;
 	FROM 
 		Evidence.vwTransferTonnageSummary tts 
 		INNER JOIN Evidence.vwTransferSummary ts ON ts.Id = tts.TransferNoteId
-		INNER JOIN Evidence.vwEvidenceSummary es ON es.Id = tts.OriginalNoteId
+		INNER JOIN Evidence.vwEvidenceSummary es ON es.Id = tts.OriginalNoteId AND es.StatusId = 3
 	WHERE
 		ts.ComplianceYear = @ComplianceYear
 		AND (ts.RecipientOrganisationId = @OrganisationId OR ts.OriginatingOrganisationId = @OrganisationId OR @OrganisationId IS NULL)
