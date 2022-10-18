@@ -218,8 +218,8 @@ else
         <tr class="govuk-table__row">
             @if (Model.DisplayTransferEvidenceColumns)
             {
-                var transferCategoryColumn = Model.IsPrintable ? "transfer-category-column-printable" : "transfer-category-column";
-                var transferColumn = Model.IsPrintable ? "transfer-column-printable" : "transfer-column";
+                var transferCategoryColumn = Model.IsPrintable ? "" : "transfer-category-column";
+                var transferColumn = Model.IsPrintable ? "" : "transfer-column";
 
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left @transferCategoryColumn">Category</th>
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left @transferColumn">Total received (tonnes)</th>
