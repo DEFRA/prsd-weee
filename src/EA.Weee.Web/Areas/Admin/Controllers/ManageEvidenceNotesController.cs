@@ -82,7 +82,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId, int page = 1)
+        public async Task<ActionResult> ViewEvidenceNote(Guid evidenceNoteId, int page = 1, string queryString = null)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -95,6 +95,7 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false, this.User));
 
                 ViewBag.Page = page;
+                ViewBag.QueryString = queryString;
 
                 return View(model);
             }
