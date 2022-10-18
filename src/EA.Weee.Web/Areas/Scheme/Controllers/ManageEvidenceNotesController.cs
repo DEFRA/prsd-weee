@@ -342,6 +342,21 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceTransfersReport(Guid pcsId, int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetTransferNoteReportRequest(complianceYear, pcsId);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+            }
+        }
+
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
