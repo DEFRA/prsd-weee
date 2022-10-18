@@ -299,6 +299,7 @@ else
 
 @if (Model.IsPrintable && Model.DisplayEvidenceNoteHistoryData)
 {
+    <div style="padding-top: 50px"></div>
     <h2 class="govuk-heading-m">Transfer history</h2>
     @Html.Partial("~/Views/Shared/_EvidenceTransferProgressiveDisclosurePartial.cshtml", Model)
 }
