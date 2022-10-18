@@ -1,6 +1,4 @@
-﻿
-@using EA.Weee.Core.AatfEvidence
-@using EA.Weee.Core.Helpers
+﻿@using EA.Weee.Core.Helpers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllTransferNotesViewModel
 
@@ -20,7 +18,7 @@
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
-                        @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-all-transfers" })
+                        @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-view-add-transfers" })
 
                         <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
                             <div class="govuk-form-group govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0 " style="width:370px">
