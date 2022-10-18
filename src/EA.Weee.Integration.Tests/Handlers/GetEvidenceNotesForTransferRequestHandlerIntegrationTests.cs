@@ -154,7 +154,7 @@
 
                     evidenceNoteData.ShouldMapToCutDownEvidenceNote(refreshedNote);
 
-                    evidenceNoteData.TotalReceived.Should().Be(refreshedNote.NoteTonnage
+                    evidenceNoteData.TotalReceivedAvailable.Should().Be(refreshedNote.NoteTonnage
                         .Where(nt => categories.Contains(nt.CategoryId.ToInt())).Sum(nt => nt.Received));
 
                     notesSetToNotBeIncluded.FirstOrDefault(n => n.Id == evidenceNoteData.Id).Should().BeNull();
@@ -234,7 +234,7 @@
 
                     evidenceNoteData.ShouldMapToCutDownEvidenceNote(refreshedNote);
 
-                    evidenceNoteData.TotalReceived.Should().Be(refreshedNote.NoteTonnage
+                    evidenceNoteData.TotalReceivedAvailable.Should().Be(refreshedNote.NoteTonnage
                         .Where(nt => categories.Contains(nt.CategoryId.ToInt())).Sum(nt => nt.Received));
 
                     notesSetToNotBeIncluded.FirstOrDefault(n => n.Id == evidenceNoteData.Id).Should().BeNull();

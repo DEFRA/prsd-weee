@@ -192,15 +192,15 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
+            A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>
                 .That.Matches(e => e.Note.Equals(note1) &&
                                    e.CategoryFilter.Equals(request.Categories) &&
                                    e.IncludeTotal == true))).MustHaveHappenedOnceExactly();
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
+            A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>
                 .That.Matches(e => e.Note.Equals(note2) &&
                                    e.CategoryFilter.Equals(request.Categories) &&
                                    e.IncludeTotal == true))).MustHaveHappenedOnceExactly();
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
+            A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>
                 .That.Matches(e => e.Note.Equals(note3) &&
                                    e.CategoryFilter.SequenceEqual(request.Categories) &&
                                    e.IncludeTotal == true))).MustHaveHappenedOnceExactly();
@@ -228,7 +228,7 @@
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>._))
+            A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>._))
                 .ReturnsNextFromSequence(noteData.ElementAt(0), noteData.ElementAt(1));
 
             // act
