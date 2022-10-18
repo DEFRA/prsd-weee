@@ -15,6 +15,7 @@
     using Web.ViewModels.Shared;
     using Weee.Requests.Shared;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class EvidenceNoteStartDateAttributeTests : SimpleUnitTestBase
@@ -54,7 +55,8 @@
                     ApprovalDate = new DateTime(2020, 1, 1),
                     ComplianceYear = (short)currentDate.Year,
                     Id = aatfId,
-                    AatfId = aatfId
+                    AatfId = aatfId,
+                    AatfStatus = AatfStatus.Approved
                 }
             });
         }
@@ -129,7 +131,8 @@
                     ApprovalDate = startDate,
                     ComplianceYear = (short)startDate.Year,
                     Id = aatfId,
-                    AatfId = aatfId
+                    AatfId = aatfId,
+                    AatfStatus = AatfStatus.Approved
                 }
             });
 
@@ -335,28 +338,32 @@
                     Id = aatfId,
                     AatfId = groupedAatfId,
                     ComplianceYear = (short)currentDate.Year,
-                    ApprovalDate = currentDate.AddDays(1)
+                    ApprovalDate = currentDate.AddDays(1),
+                    AatfStatus = AatfStatus.Approved
                 },
                 new AatfData()
                 {
                     Id = aatfId,
                     AatfId = TestFixture.Create<Guid>(),
                     ComplianceYear = (short)currentDate.Year,
-                    ApprovalDate = currentDate.AddDays(1)
+                    ApprovalDate = currentDate.AddDays(1),
+                    AatfStatus = AatfStatus.Approved
                 },
                 new AatfData()
                 {
                     Id = aatfId,
                     AatfId = groupedAatfId,
                     ComplianceYear = (short)(currentDate.Year + 1),
-                    ApprovalDate = currentDate
+                    ApprovalDate = currentDate,
+                    AatfStatus = AatfStatus.Approved
                 },
                 new AatfData()
                 {
                     Id = aatfId,
                     AatfId = groupedAatfId,
                     ComplianceYear = (short)(currentDate.Year - 1),
-                    ApprovalDate = currentDate
+                    ApprovalDate = currentDate,
+                    AatfStatus = AatfStatus.Approved
                 }
             });
 
@@ -396,7 +403,8 @@
                     Id = aatfId,
                     AatfId = groupedAatfId,
                     ComplianceYear = (short)startDate.Year,
-                    ApprovalDate = approvalDate
+                    ApprovalDate = approvalDate,
+                    AatfStatus = AatfStatus.Approved
                 }
             });
 
@@ -405,6 +413,44 @@
 
             //assert
             result.Should().BeNull();
+        }
+
+        [Theory]
+        [ClassData(typeof(AatfStatusCoreData))]
+        public void EvidenceNoteStartDateAttribute_GivenAatfIsNotApproved_ValidationExceptionShouldBeThrown(AatfStatus status)
+        {
+            if (status == AatfStatus.Approved)
+            {
+                return;
+            }
+                //arrange
+            var organisationId = TestFixture.Create<Guid>();
+            var aatfId = TestFixture.Create<Guid>();
+            var groupedAatfId = TestFixture.Create<Guid>();
+            var target = GetValidationDefaultTarget(currentDate, currentDate);
+            target.OrganisationId = organisationId;
+            target.AatfId = aatfId;
+
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+            A.CallTo(() => cache.FetchAatfDataForOrganisationData(A<Guid>._)).Returns(new List<AatfData>()
+            {
+                new AatfData()
+                {
+                    Id = aatfId,
+                    AatfId = groupedAatfId,
+                    ComplianceYear = (short)currentDate.Year,
+                    ApprovalDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day),
+                    AatfStatus = status
+                }
+            });
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be(AatfApprovalError);
         }
 
         [Fact]
