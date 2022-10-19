@@ -149,6 +149,7 @@
         [InlineData(Reports.PcsReports, "Index", "SchemeReports")]
         [InlineData(Reports.AatfReports, "Index", "AatfReports")]
         [InlineData(Reports.EvidenceNoteData, "EvidenceNoteReport", "EvidenceReports")]
+        [InlineData(Reports.EvidenceTransfersData, "EvidenceTransferNoteReport", "EvidenceTransferReport")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction, string expectedController)
         {
             // Arrange
