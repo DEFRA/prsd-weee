@@ -21,8 +21,10 @@
 
         public List<EntityIdDisplayNameData> SubmittedByList { get; set; }
 
+        public bool AllStatuses { get; set; }
+
         public RecipientWasteStatusFilterBase(List<EntityIdDisplayNameData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus, 
-            Guid? submittedBy, List<EntityIdDisplayNameData> submittedByList, bool internalUser)
+            Guid? submittedBy, List<EntityIdDisplayNameData> submittedByList, bool internalUser, bool allStatuses)
         {
             RecipientList = recipientList;
             ReceivedId = receivedId;
@@ -31,6 +33,7 @@
             SubmittedBy = submittedBy;
             SubmittedByList = submittedByList;
             Internal = internalUser;
+            AllStatuses = allStatuses;
         }
     }
 }

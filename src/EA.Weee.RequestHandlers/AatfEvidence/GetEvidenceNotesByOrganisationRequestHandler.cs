@@ -8,8 +8,6 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
-    using Mappings;
-    using Prsd.Core;
     using Security;
     using System.Collections.Generic;
     using System.Linq;
@@ -62,7 +60,8 @@
                 NoteTypeFilter = request.NoteTypeFilterList.Select(x => x.ToDomainEnumeration<NoteType>()).ToList(),
                 RecipientId = recipientId,
                 OrganisationId = organisationId,
-                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()
+                AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
+                NoteStatusId = (int?)request.NoteStatusFilter
             };
 
             var noteData = await noteDataAccess.GetAllNotes(filter);
