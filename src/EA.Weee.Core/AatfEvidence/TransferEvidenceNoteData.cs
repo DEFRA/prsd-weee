@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Helpers;
     using Organisations;
 
     public class TransferEvidenceNoteData : EvidenceNoteDataBase
@@ -35,6 +36,17 @@
 
                 return new List<Guid>();
             }
+        }
+
+        public List<Guid> CurrentEvidenceNoteIdsByCategory(List<int> categoryIds)
+        {
+            if (TransferEvidenceNoteTonnageData != null)
+            {
+                return TransferEvidenceNoteTonnageData.Where(n =>
+                    categoryIds.Contains(n.EvidenceTonnageData.CategoryId.ToInt())).Select(t => t.OriginalNoteId).ToList();
+            }
+
+            return new List<Guid>();
         }
 
         public SchemeData RecipientSchemeData { get; set; }

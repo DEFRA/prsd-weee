@@ -76,7 +76,7 @@
             result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
             result.ComplianceYear.Should().Be(source.EvidenceNoteData.ComplianceYear);
             result.IsPrintable.Should().Be(printable);
-            result.TotalAvailable.Should().Be(source.EvidenceNoteData.TotalReceivedAvailable.ToDisplayString());
+            result.TotalAvailable.Should().Be(source.EvidenceNoteData.TotalReceivedAvailable.ToTonnageDisplay());
         }
 
         [Fact]

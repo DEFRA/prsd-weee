@@ -270,17 +270,35 @@
                     return RedirectToManageEvidence(pcsId);
                 }
 
-                var model = await TransferEvidenceNotesViewModel(pcsId, evidenceNoteId, page, client, transferRequest, searchRef);
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+
+                RemoveEvidenceNotesThatNowDontMatchSelectedCategories(transferRequest, noteData);
+
+                var model = await TransferEvidenceNotesViewModel(pcsId, page, client, transferRequest, searchRef, noteData);
 
                 return this.View("EditTransferFrom", model);
             }
         }
 
-        private async Task<TransferEvidenceNotesViewModel> TransferEvidenceNotesViewModel(Guid pcsId, Guid evidenceNoteId, int page, IWeeeClient client, TransferEvidenceNoteRequest transferRequest, string searchRef)
+        private void RemoveEvidenceNotesThatNowDontMatchSelectedCategories(TransferEvidenceNoteRequest transferRequest,
+            TransferEvidenceNoteData noteData)
         {
-            var noteData =
-                await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
+            var removedEvidenceNotes = transferRequest.EvidenceNoteIds
+                .Except(noteData.CurrentEvidenceNoteIdsByCategory(transferRequest.CategoryIds)).ToList();
 
+            foreach (var removedEvidenceNote in removedEvidenceNotes)
+            {
+                DeselectEvidenceNote(removedEvidenceNote, SessionKeyConstant.OutgoingTransferKey);
+            }
+        }
+
+        private async Task<TransferEvidenceNotesViewModel> TransferEvidenceNotesViewModel(Guid pcsId, 
+            int page, 
+            IWeeeClient client, 
+            TransferEvidenceNoteRequest transferRequest, 
+            string searchRef,
+            TransferEvidenceNoteData noteData)
+        {
             transferRequest.UpdateSelectedNotes(noteData.CurrentEvidenceNoteIds);
 
             var currentSelectedNotes = new EvidenceNoteSearchDataResult();
@@ -321,7 +339,9 @@
             {
                 using (var client = this.apiClient())
                 {
-                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.ViewTransferNoteViewModel.EvidenceNoteId, model.PageNumber, client, outgoingTransfer, null);
+                    var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
+
+                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.PageNumber, client, outgoingTransfer, null, noteData);
                 }
 
                 return View("EditTransferFrom", model);
@@ -346,7 +366,9 @@
 
             using (var client = apiClient())
             {
-                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.EditEvidenceNoteId, model.Page, client, transferRequest, searchRef);
+                var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EditEvidenceNoteId));
+
+                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.Page, client, transferRequest, searchRef, noteData);
 
                 return View("EditTransferFrom", newModel);
             }

@@ -38,7 +38,7 @@
 
             authorization.EnsureOrganisationAccess(organisation.Id);
 
-            var noteData = await noteDataAccess.GetTransferSelectedNotes(request.OrganisationId, request.EvidenceNotes);
+            var noteData = await noteDataAccess.GetTransferSelectedNotes(request.OrganisationId, request.EvidenceNotes, request.Categories);
 
             var mappedNotes = new List<EvidenceNoteData>();
 

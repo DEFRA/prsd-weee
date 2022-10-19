@@ -113,7 +113,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithEvidenceNotes_DataAccessGetTransferSelectedNotesShouldBeCalled()
+        public async void HandleAsync_GivenRequestWithEvidenceNotesAndCategories_DataAccessGetTransferSelectedNotesShouldBeCalled()
         {
             //act
             await handler.HandleAsync(request);
@@ -121,7 +121,8 @@
             //assert
             A.CallTo(() =>
                     evidenceDataAccess.GetTransferSelectedNotes(organisationId, 
-                        A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes.Select(w => (Guid)w).ToList()))).MustHaveHappenedOnceExactly();
+                        A<List<Guid>>.That.IsSameSequenceAs(request.EvidenceNotes.Select(w => (Guid)w).ToList()),
+                        A<List<int>>.That.IsSameSequenceAs(request.Categories))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -148,7 +149,7 @@
 
             var evidenceNoteResults = new EvidenceNoteResults(noteList, 3);
 
-            A.CallTo(() => evidenceDataAccess.GetTransferSelectedNotes(A<Guid>._, A<List<Guid>>._)).Returns(evidenceNoteResults);
+            A.CallTo(() => evidenceDataAccess.GetTransferSelectedNotes(A<Guid>._, A<List<Guid>>._, A<List<int>>._)).Returns(evidenceNoteResults);
 
             // act
             await handler.HandleAsync(request);
@@ -188,7 +189,7 @@
 
             var evidenceNoteResults = new EvidenceNoteResults(noteList, 2);
 
-            A.CallTo(() => evidenceDataAccess.GetTransferSelectedNotes(A<Guid>._, A<List<Guid>>._)).Returns(evidenceNoteResults);
+            A.CallTo(() => evidenceDataAccess.GetTransferSelectedNotes(A<Guid>._, A<List<Guid>>._, A<List<int>>._)).Returns(evidenceNoteResults);
 
             A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMapper>._))
                 .ReturnsNextFromSequence(noteData.ElementAt(0), noteData.ElementAt(1));

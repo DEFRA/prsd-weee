@@ -99,7 +99,7 @@
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Theory]
@@ -1025,8 +1025,7 @@
 
             //assert
             A.CallTo(() =>
-                    Mapper.Map<ViewTransferNoteViewModel>(
-                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.OpenedInNewTab == false)))
+                    Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.OpenedInNewTab == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -1041,8 +1040,7 @@
 
             //assert
             A.CallTo(() =>
-                    Mapper.Map<ViewTransferNoteViewModel>(
-                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.OpenedInNewTab == openedInNewTab)))
+                    Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.OpenedInNewTab == openedInNewTab)))
                 .MustHaveHappenedOnceExactly();
         }
 
