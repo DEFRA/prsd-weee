@@ -1,10 +1,18 @@
-﻿<tr>
-    <td colspan="6">
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ManageEvidenceNotesViewModel
+
+<br />
+@if (!Model.EvidenceNotesDataList.Any())
+{
+    if (Model.ManageEvidenceNoteViewModel.FilterViewModel != null && Model.ManageEvidenceNoteViewModel.FilterViewModel.SearchPerformed)
+    {
+        <p>There are no search results with those search terms. Please try again with another search term.</p>
+    }
+    else
+    {
         @Html.Raw(@ViewData["no-evidence-results-message"])
-    </td>
-</tr>
-<tr>
-    <td>
-        <p class="govuk-body"> Showing 0 - 0 of 0 </p>
-    </td>
-</tr>
+    }
+}
+
+
+
+
