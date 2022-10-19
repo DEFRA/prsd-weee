@@ -160,10 +160,27 @@
                     m.AatfData == null &&
                     m.RecipientWasteStatusFilterViewModel == null &&
                     m.SubmittedDatesFilterViewModel == null &&
-                    m.FilterViewModel == null &&
                     m.CurrentDate == currentDate &&
                     m.ComplianceYear == complianceYear &&
                     m.ComplianceYearList.SequenceEqual(complianceYearList))))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenManageEvidenceNotesViewModelAndViewAllEvidenceTransfersWithFilterModel_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues()
+        {
+            //arrange
+            var complianceYear = TestFixture.Create<short>();
+     
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, complianceYear).Create();
+
+            //act
+            await ManageEvidenceController.Index("view-all-evidence-transfers", model);
+
+            A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
+                    m.AatfData == null &&
+                    m.FilterViewModel == model.FilterViewModel)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -488,6 +505,20 @@
 
             //act
             await ManageEvidenceController.Index(tab, model);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
+                g => g.SearchRef == model.FilterViewModel.SearchRef))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenViewAllTransferEvidenceTab_GivenSearchFilterParameters_NoteShouldBeRetrieved()
+        {
+            // arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index("view-all-evidence-transfers", model);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
