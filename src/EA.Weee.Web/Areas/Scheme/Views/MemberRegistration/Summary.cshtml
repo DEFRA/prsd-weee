@@ -23,14 +23,14 @@
                 @foreach (int complianceYear in Model.Years)
                 {
                     var csvFileName = "Overview of current members for " + complianceYear + " (CSV, less than 500KB)";
-                    <li>
-                        @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
+                <li>
+                    @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
                             null,
                             Url.UrlFor<MemberRegistrationController>(c => c.GetProducerCSV(Model.PcsId, complianceYear)),
                                 "Downloads",
                                 "Overview of current members",
-                                "Compliance year: " + complianceYear))
-                    </li>
+                                "Compliance year: " + complianceYear, new Dictionary<string, object> { { "class", "govuk-link" } }))
+                </li>
                 }
             </ul>
         }
