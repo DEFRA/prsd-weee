@@ -357,6 +357,21 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceSummaryReport(Guid pcsId, int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, pcsId, complianceYear);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+            }
+        }
+
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
