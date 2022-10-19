@@ -1,0 +1,14 @@
+﻿@model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.TransferredOutEvidenceNotesSchemeViewModel
+
+<br />
+@if (!Model.EvidenceNotesDataList.Any())
+{
+    if (Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel != null && Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue != null)
+    {
+        <p>There are no search results with those search terms. Please try again with another search term.</p>
+    }
+    else
+    {
+        @Html.Raw(@ViewData["no-results-message"])
+    }
+}
