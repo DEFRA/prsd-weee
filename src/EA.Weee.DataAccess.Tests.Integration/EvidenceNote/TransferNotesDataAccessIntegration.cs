@@ -677,20 +677,33 @@
 
                 context.Notes.Add(note3NotToBeFound);
 
-                // to be found matching category, scheme and status and id is requested
-                var note1ToBeExcludedFound = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
-                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
-                note1ToBeExcludedFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
-                note1ToBeExcludedFound.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
+                // to not be found matching category, scheme and status and id is not requested
+                var note1ToBeExcluded = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                note1ToBeExcluded.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcluded.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note1ToBeExcluded.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ConsumerEquipment, 1, null));
 
-                context.Notes.Add(note1ToBeExcludedFound);
+                context.Notes.Add(note1ToBeExcluded);
+
+                // to not be found not matching category, scheme and status and id is requested
+                var note2ToBeExcluded = await SetupSingleNote(context, database, NoteType.EvidenceNote, organisation1);
+                note2ToBeExcluded.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.Now);
+                note2ToBeExcluded.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.Now);
+                note2ToBeExcluded.NoteTonnage.Add(new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, null));
+
+                context.Notes.Add(note2ToBeExcluded);
 
                 await context.SaveChangesAsync();
 
                 var notes = await dataAccess.GetTransferSelectedNotes(organisation1.Id, new List<Guid>()
                 {
                     note1ToBeFound.Id,
-                    note2ToBeFound.Id
+                    note2ToBeFound.Id,
+                    note2ToBeExcluded.Id
+                },
+                    new List<int>()
+                {
+                    WeeeCategory.ConsumerEquipment.ToInt()
                 });
 
                 notes.NumberOfResults.Should().Be(2);
@@ -700,7 +713,8 @@
                 notes.Notes.Should().NotContain(n => n.Id.Equals(note3NotToBeFound.Id));
                 notes.Notes.ElementAtOrDefault(0).WasteType.Should().Be(WasteType.HouseHold);
                 notes.Notes.ElementAtOrDefault(1).WasteType.Should().Be(WasteType.HouseHold);
-                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcludedFound.Id));
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note1ToBeExcluded.Id));
+                notes.Notes.Should().NotContain(n => n.Id.Equals(note2ToBeExcluded.Id));
             }
         }
 

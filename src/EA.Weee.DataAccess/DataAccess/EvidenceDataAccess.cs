@@ -7,6 +7,7 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
+    using Domain.Lookup;
     using Domain.Organisation;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Evidence;
@@ -216,9 +217,12 @@
         }
 
         public async Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId,
-            List<Guid> evidenceNotes)
+            List<Guid> evidenceNotes, List<int> categories)
         {
-            var pagedNotes = await context.Notes.Where(n => n.RecipientId == recipientOrganisationId && evidenceNotes.Contains(n.Id))
+            var pagedNotes = await context.Notes.Where(n => n.RecipientId == recipientOrganisationId && 
+                                                            evidenceNotes.Contains(n.Id) &&
+                                                            n.NoteTonnage.Where(nt => nt.Received != null)
+                                                                .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)))
                 .Include(n => n.NoteTonnage.Select(nt => nt.NoteTransferTonnage.Select(ntt => ntt.TransferNote)))
                 .ToListAsync();
 

@@ -78,6 +78,14 @@
 
         public List<Guid> EvidenceNoteIds { get; set; }
 
+        public List<Guid> SelectedEvidenceNoteIds
+        {
+            get
+            {
+                return EvidenceNoteIds.Except(DeselectedEvidenceNoteIds.ToList()).ToList();
+            }
+        }
+
         public List<Guid> DeselectedEvidenceNoteIds { get; set; }
 
         public Guid OrganisationId { get; set; }
