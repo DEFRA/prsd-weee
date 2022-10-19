@@ -41,7 +41,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue, null);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -124,7 +124,8 @@
                                                               e.NoteTypeFilter.Count == 1 && 
                                                               e.OrganisationId == null &&
                                                               e.PageNumber == 1 &&
-                                                              e.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                                                              e.PageSize == int.MaxValue &&
+                                                              e.NoteStatusId == (int?)request.NoteStatusFilter))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -132,10 +133,11 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true, 1, 25);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, NoteStatus.Approved);
 
             var status = request.AllowedStatuses
-                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -150,7 +152,8 @@
                 e.ComplianceYear == request.ComplianceYear &&
                 e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.TransferNote) &&
                 e.NoteTypeFilter.Count == 1 &&
-                e.OrganisationId == request.OrganisationId))).MustHaveHappenedOnceExactly();
+                e.OrganisationId == request.OrganisationId &&
+                e.NoteStatusId == (int?)request.NoteStatusFilter))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -158,7 +161,8 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, true, 1, 25);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -175,7 +179,8 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, false, 1, 25);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -196,7 +201,8 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Transfer }, false, 1, 25);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(A<Guid>._, A<int>._))
@@ -280,7 +286,8 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25);
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), 
+                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, TestFixture.Create<NoteStatus?>());
         }
     }
 }

@@ -16,6 +16,7 @@
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence.Reports;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
@@ -116,7 +117,7 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue));
+                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue, null));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, int.MaxValue));
@@ -143,7 +144,8 @@
                         NoteStatus.Rejected,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, 
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
@@ -171,12 +173,25 @@
                         NoteStatus.Submitted,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Transfer }, true, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Transfer },
+                    true, 
+                    pageNumber, 
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
+                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+
+                var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
+                            new RecipientWasteStatusFilterBase(null,
+                            null,
+                            null,
+                            manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                            null, 
+                            null, 
+                            false, true));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, recipientWasteStatusViewModel, null, selectedComplianceYear, currentDate));
 
                 return View("OutgoingTransfers", model);
             }
