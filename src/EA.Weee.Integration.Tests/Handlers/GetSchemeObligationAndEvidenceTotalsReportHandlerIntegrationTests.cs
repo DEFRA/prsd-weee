@@ -228,10 +228,10 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
-                    }).WithTonnages(newTransferNoteTonnage2)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
+                }).WithTonnages(newTransferNoteTonnage2)
                     .WithRecipient(recipientOrganisation.Id)
                     .Create();
 
@@ -242,9 +242,9 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                    }).WithTonnages(newTransferNoteTonnage3)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage3)
                     .WithRecipient(recipientOrganisation.Id)
                     .Create();
 
@@ -265,10 +265,10 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
-                    }).WithTonnages(newTransferNoteTonnage5)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage5)
                     .WithRecipient(recipientOrganisation.Id)
                     .Create();
 
@@ -279,10 +279,10 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
-                    }).WithTonnages(newTransferNoteTonnage6)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage6)
                     .WithRecipient(recipientOrganisation.Id)
                     .Create();
 
@@ -293,11 +293,11 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
-                    }).WithTonnages(newTransferNoteTonnage7)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage7)
                     .WithRecipient(recipientOrganisation.Id)
                     .Create();
 
@@ -308,10 +308,10 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                    }).WithTonnages(newTransferNoteTonnage8)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage8)
                     .WithRecipient(recipientOrganisation2.Id)
                     .Create();
 
@@ -322,10 +322,10 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                    }).WithTonnages(newTransferNoteTonnage9)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteTonnage9)
                     .WithComplianceYear(2023)
                     .WithRecipient(recipientOrganisation.Id)
                     .Create();
@@ -338,10 +338,10 @@
                 };
 
                 TransferEvidenceNoteDbSetup.Init().With(t =>
-                    {
-                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
-                    }).WithTonnages(newTransferNoteOutTonnage)
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                }).WithTonnages(newTransferNoteOutTonnage)
                     .WithOrganisation(recipientOrganisation.Id)
                     .WithRecipient(recipientOrganisation2.Id)
                     .Create();
@@ -768,26 +768,25 @@
 
             private readonly It shouldHaveTheExpectedData = () =>
             {
-                result.FileContent.Should().Be($@"PCS name,PCS approval number,Category,Household obligation (tonnes),Household evidence (tonnes),Household reuse (tonnes),Transferred out (tonnes),Transferred In (tonnes),Difference (tonnes),Non household evidence (tonnes),Non household reuse (tonnes)
-{scheme.SchemeName},{scheme.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},4. Consumer equipment,100.000,155.000,2.000,1.000,5.000,55.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},5. Lighting equipment,0.000,68.280,1.000,0.000,57.280,68.280,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},6. Electrical and electronic tools,0.000,251.000,1.000,0.000,0.000,251.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},""7. Toys, leisure and sports equipment"",1000.235,76.000,21.000,0.000,0.000,-924.235,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},8. Medical devices,800.000,51.000,0.000,0.000,0.000,-749.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},9. Monitoring and control instruments,1.000,21.000,0.000,0.000,0.000,20.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},10. Automatic dispensers,600.000,21.000,6.000,0.000,10.000,-579.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},11. Display equipment,200.000,31.000,1.000,0.000,0.000,-169.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
-{scheme.SchemeName},{scheme.ApprovalNumber},Category 2-10 summary,2671.735,750.280,97.000,101.000,72.280,-1921.455,0.000,0.000
-{scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4438.735,1386.069,262.000,101.000,72.280,-3052.666,100.000,50.000
+                result.FileContent.Should().Be($@"Category,Household obligation (tonnes),Household evidence (tonnes),Household reuse (tonnes),Transferred out (tonnes),Transferred In (tonnes),Difference (tonnes),Non household evidence (tonnes),Non household reuse (tonnes)
+1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
+2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
+3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
+4. Consumer equipment,100.000,155.000,2.000,1.000,5.000,55.000,0.000,0.000
+5. Lighting equipment,0.000,68.280,1.000,0.000,57.280,68.280,0.000,0.000
+6. Electrical and electronic tools,0.000,251.000,1.000,0.000,0.000,251.000,0.000,0.000
+""7. Toys, leisure and sports equipment"",1000.235,76.000,21.000,0.000,0.000,-924.235,0.000,0.000
+8. Medical devices,800.000,51.000,0.000,0.000,0.000,-749.000,0.000,0.000
+9. Monitoring and control instruments,1.000,21.000,0.000,0.000,0.000,20.000,0.000,0.000
+10. Automatic dispensers,600.000,21.000,6.000,0.000,10.000,-579.000,0.000,0.000
+11. Display equipment,200.000,31.000,1.000,0.000,0.000,-169.000,0.000,0.000
+12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
+13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
+14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
+Category 2-10 summary,2671.735,750.280,97.000,101.000,72.280,-1921.455,0.000,0.000
+Total (tonnes),4438.735,1386.069,262.000,101.000,72.280,-3052.666,100.000,50.000
 ");
-
-                //result.FileName.Should().Contain($"{SystemTime.Now.Year}_{scheme.ApprovalNumber}_PCS evidence and obligation progress{SystemTime.Now.ToString//(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS Summary{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
