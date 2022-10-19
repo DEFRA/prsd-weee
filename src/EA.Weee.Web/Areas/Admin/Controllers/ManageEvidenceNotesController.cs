@@ -10,7 +10,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Shared;
@@ -279,7 +278,7 @@
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true));
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true, false));
 
             var model = mapper.Map<ViewAllEvidenceNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
@@ -317,7 +316,7 @@
             var model = mapper.Map<ViewAllTransferNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
 
-            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(null, null, null, selectedComplianceYear, currentDate, complianceYearsList));
+            model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(manageEvidenceNoteViewModel?.FilterViewModel, null, null, selectedComplianceYear, currentDate, complianceYearsList));
 
             return View("ViewAllTransferNotes", model);
         }
