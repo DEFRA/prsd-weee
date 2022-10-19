@@ -19,6 +19,7 @@
                     {
                         @Html.Gds().ValidationSummary()
                         @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-view-add-transfers" })
+                        @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
                         <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
                             <div class="govuk-form-group govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0 " style="width:370px">
@@ -78,7 +79,7 @@
                             }
                             else
                             {
-                              Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are no search results with those search terms. Please try again with another search term.</p>") });
+                                Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are no search results with those search terms. Please try again with another search term.</p>") });
                             }
 
                         </tbody>
@@ -86,7 +87,7 @@
                     <br />
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                        { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+                                    { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
                             manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear} } });
                     }
                 </section>
