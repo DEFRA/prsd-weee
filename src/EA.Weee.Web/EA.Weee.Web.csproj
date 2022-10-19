@@ -900,6 +900,7 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNotePdf.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotesReportsLinks.cshtml" />
     <Content Include="Areas\Admin\Views\EvidenceTransferReport\EvidenceTransferNoteReport.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />

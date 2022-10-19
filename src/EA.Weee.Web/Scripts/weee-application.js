@@ -146,7 +146,7 @@
 
 function setupAutoCompletes() {
 
-    var myEvent = new CustomEvent("gds-auto-complete-event", {
+    var autoCompleteEvent = new CustomEvent("gds-auto-complete-event", {
         detail: {},
         bubbles: true,
         cancelable: true,
@@ -201,12 +201,15 @@ function setupAutoCompletes() {
                         if (text === selected) {
                             if (postBackElement.value !== findSelectedOption.value) {
                                 postBackElement.value = findSelectedOption.value;
-                                postBackElement.dispatchEvent(myEvent);
+                                postBackElement.dispatchEvent(autoCompleteEvent);
                             }
                         }
                     }
                 } else {
                     postBackElement.value = null;
+                    if (isNullOrWhitespace(selectedValue)) {
+                        postBackElement.dispatchEvent(autoCompleteEvent);
+                    }
                 }
             },
             dropdownArrow: function (config) {
