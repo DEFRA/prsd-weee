@@ -30,7 +30,7 @@
                                 Url.UrlFor<DataReturnsController>(c => c.DownloadEeeWeeeData(Model.OrganisationId, complianceYear)),
                                  "Data return downloads",
                                  "Overview of EEE and WEEE data",
-                                 "Compliance year: " + complianceYear))
+                                 "Compliance year: " + complianceYear, new Dictionary<string, object> { { "class", "govuk-link" } }))
                         </li>
                     }
                 </ul>
