@@ -6,7 +6,6 @@
     using AutoFixture;
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.Mappings;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -34,13 +33,17 @@
         }
 
         [Fact]
-        public void Map_GivenSchemeDataIsNull_PropertiesShouldBeSet()
+        public void Map_GivenSchemeDataIsNullAndIsInternalIsSetToFalseAndAllStatusesIsSetToFalse_PropertiesShouldBeSet()
         {
             //arrange
             var source = TestFixture.Build<RecipientWasteStatusFilterBase>()
-                .With(r => r.RecipientList, (List<EntityIdDisplayNameData>)null).Create();
+                .With(r => r.RecipientList, (List<EntityIdDisplayNameData>)null)
+                .With(r => r.Internal, false)
+                .With(r => r.AllStatuses, false)
+                .Create();
 
             var emptyList = new List<EntityIdDisplayNameData>();
+
             //act
             var model = mapper.Map(source);
 
@@ -54,22 +57,53 @@
         }
 
         [Fact]
-        public void Map_GivenSource_PropertiesShouldBeSet()
+        public void Map_GivenSchemeDataIsNullAndIsInternalIsSetToTrueAndAllStatusesIsSetToFalse_PropertiesShouldBeSet()
         {
             //arrange
-            var source = TestFixture.Create<RecipientWasteStatusFilterBase>();
+            var source = TestFixture.Build<RecipientWasteStatusFilterBase>()
+                .With(r => r.RecipientList, (List<EntityIdDisplayNameData>)null)
+                .With(r => r.Internal, true)
+                .With(r => r.AllStatuses, false)
+                .Create();
+
+            var emptyList = new List<EntityIdDisplayNameData>();
 
             //act
             var model = mapper.Map(source);
 
             //assert
-            model.NoteStatusList.Should().BeEquivalentTo(GetNoteStatusList());
+            model.NoteStatusList.Should().BeEquivalentTo(GetNoteStatusList_WithInternalTrue());
             model.NoteStatusValue.Should().Be(source.NoteStatus);
             model.WasteTypeList.Should().BeEquivalentTo(GetWasteTypeValuesList());
             model.WasteTypeValue.Should().Be(source.WasteType);
-            model.RecipientList.Should().BeEquivalentTo(GetSchemeListDropDownForm(source.RecipientList));
+            model.RecipientList.Should().BeEquivalentTo(GetSchemeListDropDownForm(emptyList));
             model.ReceivedId.Should().Be(source.ReceivedId);
         }
+
+        [Fact]
+        public void Map_GivenSchemeDataIsNullAndIsInternalIsSetToFalseAndAllStatusesIsSetToTrue_PropertiesShouldBeSet()
+        {
+            //arrange
+            var source = TestFixture.Build<RecipientWasteStatusFilterBase>()
+                .With(r => r.RecipientList, (List<EntityIdDisplayNameData>)null)
+                .With(r => r.Internal, false)
+                .With(r => r.AllStatuses, true)
+                .Create();
+
+            var emptyList = new List<EntityIdDisplayNameData>();
+
+            //act
+            var model = mapper.Map(source);
+
+            //assert
+            model.NoteStatusList.Should().BeEquivalentTo(GetNoteStatusList_WithAllStatusesTrue());
+            model.NoteStatusValue.Should().Be(source.NoteStatus);
+            model.WasteTypeList.Should().BeEquivalentTo(GetWasteTypeValuesList());
+            model.WasteTypeValue.Should().Be(source.WasteType);
+            model.RecipientList.Should().BeEquivalentTo(GetSchemeListDropDownForm(emptyList));
+            model.ReceivedId.Should().Be(source.ReceivedId);
+        }
+
         private IEnumerable<SelectListItem> GetNoteStatusList()
         {
             var statuses = new Dictionary<int, string>
@@ -77,6 +111,35 @@
                 { (int)NoteStatus.Submitted, NoteStatus.Submitted.ToString() },
                 { (int)NoteStatus.Approved, NoteStatus.Approved.ToString() },
                 { (int)NoteStatus.Rejected, NoteStatus.Rejected.ToString() },
+                { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
+            };
+
+            return new SelectList(statuses, "Key", "Value");
+        }
+
+        private IEnumerable<SelectListItem> GetNoteStatusList_WithInternalTrue()
+        {
+            var statuses = new Dictionary<int, string>
+            {
+                { (int)NoteStatus.Submitted, NoteStatus.Submitted.ToString() },
+                { (int)NoteStatus.Approved, NoteStatus.Approved.ToString() },
+                { (int)NoteStatus.Rejected, NoteStatus.Rejected.ToString() },
+                { (int)NoteStatus.Returned, NoteStatus.Returned.ToString() },
+                { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
+            };
+
+            return new SelectList(statuses, "Key", "Value");
+        }
+
+        private IEnumerable<SelectListItem> GetNoteStatusList_WithAllStatusesTrue()
+        {
+            var statuses = new Dictionary<int, string>
+            {
+                { (int)NoteStatus.Draft, NoteStatus.Draft.ToString() },
+                { (int)NoteStatus.Submitted, NoteStatus.Submitted.ToString() },
+                { (int)NoteStatus.Approved, NoteStatus.Approved.ToString() },
+                { (int)NoteStatus.Rejected, NoteStatus.Rejected.ToString() },
+                { (int)NoteStatus.Returned, NoteStatus.Returned.ToString() },
                 { (int)NoteStatus.Void, NoteStatus.Void.ToString() },
             };
 
