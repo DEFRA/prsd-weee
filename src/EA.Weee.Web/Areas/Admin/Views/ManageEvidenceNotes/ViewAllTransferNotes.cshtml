@@ -79,7 +79,17 @@
                             }
                             else
                             {
-                                Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are no search results with those search terms. Please try again with another search term.</p>") });
+                                <tr>
+                                    <td colspan="6">
+                                        @Html.Partial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary()
+                                                       { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are currently no evidence transfers to view </p>") })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p> Showing 0 - 0 of 0 </p>
+                                    </td>
+                                </tr>
                             }
 
                         </tbody>
