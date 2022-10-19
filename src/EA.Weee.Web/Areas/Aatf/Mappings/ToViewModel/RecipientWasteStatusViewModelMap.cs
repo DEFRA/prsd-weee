@@ -28,6 +28,11 @@
             {
                 sortedListOfNoteStatus.Insert(3, new KeyValuePair<int, string>((int)NoteStatus.Returned, NoteStatus.Returned.ToString()));
             }
+            else if (source.AllStatuses)
+            {
+                sortedListOfNoteStatus.Insert(0, new KeyValuePair<int, string>((int)NoteStatus.Draft, NoteStatus.Draft.ToString()));
+                sortedListOfNoteStatus.Insert(4, new KeyValuePair<int, string>((int)NoteStatus.Returned, NoteStatus.Returned.ToString()));
+            }
 
             viewModel.RecipientList = source.RecipientList != null ? new SelectList(source.RecipientList, "Id", "DisplayName") : 
                 new SelectList(new List<EntityIdDisplayNameData>(), "Id", "DisplayName");
