@@ -82,8 +82,9 @@
                         else
                         {
                             <tr>
-                                <td colspan="5">
-                                    <p>There have not been any evidence note transfers </p>
+                                <td colspan="6">
+                                    @Html.Partial("~/Areas/Scheme/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary()
+                               { new KeyValuePair<string, object>("no-results-message", "<p>There have not been any evidence note transfers </p>") })
                                 </td>
                             </tr>
                             <tr>
