@@ -171,5 +171,51 @@
             result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvFile.FileName));
             result.FileDownloadName.Should().Be(csvFile.FileName);
         }
+
+        [Fact]
+        public void DownloadEvidenceSummaryReportGet_ShouldHaveHttpGetAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("DownloadEvidenceSummaryReport", new[] { typeof(Guid), typeof(int) })
+                .Should()
+                .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceSummaryReportGet_GivenRouteValues_ReportRequestShouldBeCalled()
+        {
+            //arrange
+            Guid pcsId = Fixture.Create<Guid>();
+            var complianceYear = Fixture.Create<int>();
+            var csvFile = Fixture.Create<CSVFileData>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeObligationAndEvidenceTotalsReportRequest>._)).Returns(csvFile);
+
+            //act
+            await Controller.DownloadEvidenceSummaryReport(pcsId, complianceYear);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeObligationAndEvidenceTotalsReportRequest>.That.Matches(g =>
+                                                g.SchemeId == null && 
+                                                g.AppropriateAuthorityId == null && 
+                                                g.OrganisationId == pcsId &&
+                                                g.ComplianceYear == complianceYear))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DownloadEvidenceSummaryReportGet_GivenCsvData_FileContentResultShouldBeReturned()
+        {
+            //arrange
+            Guid pcsId = Fixture.Create<Guid>();
+            var complianceYear = Fixture.Create<int>();
+            var csvFile = Fixture.Create<CSVFileData>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeObligationAndEvidenceTotalsReportRequest>._)).Returns(csvFile);
+
+            //act
+            var result = await Controller.DownloadEvidenceSummaryReport(pcsId, complianceYear) as FileContentResult;
+
+            //assert
+            result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(csvFile.FileContent));
+            result.FileDownloadName.Should().Be(CsvFilenameFormat.FormatFileName(csvFile.FileName));
+            result.FileDownloadName.Should().Be(csvFile.FileName);
+        }
     }
 }
