@@ -17,7 +17,7 @@
     using Protocol = Core.AatfEvidence.Protocol;
     using Scheme = Domain.Scheme.Scheme;
 
-    public class EvidenceNoteMap : EvidenceNoteDataMapBase<EvidenceNoteData>, IMap<EvidenceNoteWithCriteriaMap, EvidenceNoteData>
+    public class EvidenceNoteMap : EvidenceNoteDataMapBase<EvidenceNoteData>, IMap<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>
     {
         private readonly IMapper mapper;
 
@@ -26,27 +26,26 @@
             this.mapper = mapper;
         }
 
-        public EvidenceNoteData Map(EvidenceNoteWithCriteriaMap source)
+        public EvidenceNoteData Map(EvidenceNoteWithCriteriaMapper source)
         {
-            var excludedStatuses = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Rejected, Domain.Evidence.NoteStatus.Void };
-
             var data = MapCommonProperties(source.Note);
 
             var noteTonnage = new List<NoteTonnage>();
             if (source.IncludeTonnage)
             {
-                noteTonnage = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter).ToList() : 
-                    source.Note.NoteTonnage.ToList();
+                noteTonnage = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter).ToList() : source.Note.NoteTonnage.ToList();
             }
+
+            MapTonnageAvailable(source, data);
 
             data.StartDate = source.Note.StartDate;
             data.EndDate = source.Note.EndDate;
             data.Protocol = source.Note.Protocol.HasValue ? (Protocol?)source.Note.Protocol.Value : null;
             data.EvidenceTonnageData = noteTonnage.Select(t =>
                 new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused,
-                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status))
+                    t.NoteTransferTonnage?.Where(ntt => !excludedStatus.Contains(ntt.TransferNote.Status))
                         .Select(ntt => ntt.Received).Sum(),
-                    t.NoteTransferTonnage?.Where(ntt => !excludedStatuses.Contains(ntt.TransferNote.Status))
+                    t.NoteTransferTonnage?.Where(ntt => !excludedStatus.Contains(ntt.TransferNote.Status))
                         .Select(ntt => ntt.Reused).Sum())).ToList();
             data.RecipientSchemeData = mapper.Map<Scheme, SchemeData>(source.Note.Recipient.Scheme);
             data.OrganisationData = mapper.Map<Organisation, OrganisationData>(source.Note.Organisation);

@@ -21,7 +21,7 @@
             Guard.ArgumentNotNull(() => source, source);
 
             return source.Select(s =>
-                mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(new EvidenceNoteRowMapperObject(s)
+                mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(new EvidenceNoteRowCriteriaMapper(s)
                 {
                     IncludeTotal = false
                 })).ToList();
