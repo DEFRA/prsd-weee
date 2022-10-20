@@ -221,10 +221,12 @@
                                 @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "select-evidence-id" + i })
                             }
 
+                            @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNotesDataListPaged[i].SchemeViewRouteName, new { pcsId = Model.PcsId, evidenceNoteId = @Model.EvidenceNotesDataListPaged[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference ID {0}", @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay)))
+                            <br />
                             <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
-                            <br/>
 
-                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay, @Model.EvidenceNotesDataListPaged[i].SchemeViewRouteName, new { pcsId = Model.PcsId, evidenceNoteId = @Model.EvidenceNotesDataListPaged[i].Id,  }, null)
+
+
                         }
                     </td>
                 </tr>
