@@ -387,6 +387,7 @@
     <Content Include="scripts\Update\Release 5\Sprint15\20221011-1412-alter-getEvidenceNotesOriginalTonnage.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20221011-1412-alter-getEvidenceNotesNetTonnage.sql" />
     <Content Include="scripts\Update\Release 5\Sprint15\20220929-1022-report-view-updates.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint16\20221020-1057-alter-getObligationEvidenceSummaryTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint16\20221020-1100-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint16\20221014-0652-update-evidence-summary-view.sql" />
     <Content Include="scripts\Update\Release 5\Sprint16\20221018-1040-create-transfer-tonnage-summary.sql" />
