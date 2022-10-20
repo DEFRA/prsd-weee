@@ -83,7 +83,11 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>.That.Matches(e => e.Note.Equals(note) && e.CategoryFilter.Count == 0 && e.IncludeTonnage == true && e.IncludeHistory == true))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMapper>.That.Matches(e => e.Note.Equals(note) && 
+                e.CategoryFilter.Count == 0 && 
+                e.IncludeTonnage == true && 
+                e.IncludeHistory == true &&
+                e.IncludeTotal == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -92,7 +96,7 @@
             //arrange
             var evidenceNote = TestFixture.Create<EvidenceNoteData>();
 
-            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMap>._)).Returns(evidenceNote);
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMapper>._)).Returns(evidenceNote);
 
             //act
             var result = await handler.HandleAsync(request);

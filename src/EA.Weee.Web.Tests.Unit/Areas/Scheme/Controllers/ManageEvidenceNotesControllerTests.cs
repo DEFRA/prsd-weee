@@ -99,7 +99,7 @@
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Theory]
@@ -1015,6 +1015,33 @@
 
             //assert
             Assert.Equal(pageNumber, result.ViewBag.Page);
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_GivenDefaultOpenedInNewTab_MapperShouldBeCalledWithDefaultOpenInNewTab()
+        {
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() =>
+                    Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.OpenedInNewTab == false)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ViewEvidenceNoteGet_GivenOpenedInNewTab_MapperShouldBeCalledWithOpenInNewTab(bool openedInNewTab)
+        {
+            //arrange
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, TestFixture.Create<Guid>(), openedInNewTab: openedInNewTab);
+
+            //assert
+            A.CallTo(() =>
+                    Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.OpenedInNewTab == openedInNewTab)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Theory]

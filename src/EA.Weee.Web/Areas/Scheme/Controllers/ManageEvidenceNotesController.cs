@@ -247,7 +247,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1)
+        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1, bool openedInNewTab = false)
         {
             using (var client = this.apiClient())
             {
@@ -260,7 +260,8 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false)
                 {
                     SchemeId = pcsId,
-                    RedirectTab = redirectTab
+                    RedirectTab = redirectTab,
+                    OpenedInNewTab = openedInNewTab
                 });
 
                 ViewBag.Page = page;

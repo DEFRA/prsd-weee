@@ -46,7 +46,7 @@
             //assert
             foreach (var note in notes)
             {
-                A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>
+                A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>
                     .That.Matches(e => e.Note.Equals(note) && e.IncludeTotal == false))).MustHaveHappenedOnceExactly();
             }
         }
@@ -57,7 +57,7 @@
             //arrange
             var evidenceNoteData = TestFixture.CreateMany<EvidenceNoteData>().ToList();
 
-            A.CallTo(() => mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(A<EvidenceNoteRowMapperObject>._)).ReturnsNextFromSequence(evidenceNoteData.ToArray());
+            A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>._)).ReturnsNextFromSequence(evidenceNoteData.ToArray());
 
             //act
             var result = listOfEvidenceNoteDataMap.Map(TestFixture.CreateMany<Note>().ToList());
