@@ -4,7 +4,9 @@
     using Core.Scheme;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Scheme.Controllers;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
@@ -575,6 +577,48 @@
 
             // assert
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task ReviewEvidenceNoteGet_ViewAndTransferEvidenceTab_MapperShouldCorrectlySetPageNumber()
+        {
+            // Arrange
+            var scheme = testFixture.Create<SchemePublicInfo>();
+            var noteData = testFixture.Build<EvidenceNoteSearchDataResult>().Create();
+            var currentDate = testFixture.Create<DateTime>();
+            var model = testFixture.Create<ManageEvidenceNoteViewModel>();
+            var pageNumber = 3;
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(RecipientId, "review-submitted-evidence", model, pageNumber);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
+                    a => a.OrganisationId.Equals(RecipientId) &&
+                         a.NoteData == noteData &&
+                         a.Scheme.Equals(scheme) &&
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.PageNumber == pageNumber &&
+                         a.PageSize == 10))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ReviewEvidenceNoteGet_GivenPageNumber_ViewBagShouldBePopulatedWithPageNumber()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await ManageEvidenceController.ViewEvidenceNote(RecipientId, testFixture.Create<Guid>(), "review-submitted-evidence", pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
         }
 
         private new void AddModelError()
