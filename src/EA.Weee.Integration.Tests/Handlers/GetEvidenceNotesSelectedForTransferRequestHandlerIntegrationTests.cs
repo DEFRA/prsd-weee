@@ -66,20 +66,98 @@
                 var transferNoteRecipient = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(transferNoteRecipient.Id).Create();
 
+                // this transfer should not affect the available amount as the note is rejected
                 var transferTonnages1 = new List<NoteTransferTonnage>()
                 {
                     new NoteTransferTonnage(
                         evidenceNoteWithTransfers.NoteTonnage.First(c =>
                             c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 20, 10)
                 };
-
-                // this transfer should not affect the available amount as the note is rejected
+                
                 TransferEvidenceNoteDbSetup.Init()
                     .WithOrganisation(recipientOrganisation.Id)
                     .WithRecipient(transferNoteRecipient.Id)
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Rejected, UserId.ToString())
                     .WithTonnages(transferTonnages1)
+                    .Create();
+
+                // this transfer should not affect the available amount as the note is void
+                var transferTonnages2 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(
+                        evidenceNoteWithTransfers.NoteTonnage.First(c =>
+                            c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 20, 10)
+                };
+
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(transferNoteRecipient.Id)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithStatus(NoteStatus.Void, UserId.ToString())
+                    .WithTonnages(transferTonnages2)
+                    .Create();
+
+                // this transfer should  affect the available amount as the note is draft
+                var transferTonnages3 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(
+                        evidenceNoteWithTransfers.NoteTonnage.First(c =>
+                            c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 1, null)
+                };
+
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(transferNoteRecipient.Id)
+                    .WithTonnages(transferTonnages3)
+                    .Create();
+
+                // this transfer should  affect the available amount as the note is submitted
+                var transferTonnages4 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(
+                        evidenceNoteWithTransfers.NoteTonnage.First(c =>
+                            c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 2, null)
+                };
+
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(transferNoteRecipient.Id)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithTonnages(transferTonnages4)
+                    .Create();
+
+                // this transfer should  affect the available amount as the note is approved
+                var transferTonnages5 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(
+                        evidenceNoteWithTransfers.NoteTonnage.First(c =>
+                            c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 3, null)
+                };
+
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(transferNoteRecipient.Id)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Approved, UserId.ToString())
+                    .WithTonnages(transferTonnages5)
+                    .Create();
+
+                // this transfer should  affect the available amount as the note is approved
+                var transferTonnages6 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(
+                        evidenceNoteWithTransfers.NoteTonnage.First(c =>
+                            c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 4, null)
+                };
+
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(transferNoteRecipient.Id)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Returned, UserId.ToString())
+                    .WithTonnages(transferTonnages6)
                     .Create();
 
                 // note to not be included not in note list
@@ -134,7 +212,7 @@
                 // second note has category DisplayEquipment that is not in the category list so also shouldnt be in the tonnage data
                 var note2 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(1).Id));
                 note2.EvidenceTonnageData.Count.Should().Be(2);
-                note2.TotalReceivedAvailable.Should().Be(15);
+                note2.TotalReceivedAvailable.Should().Be(5);
 
                 var categoryTonnage = note2.EvidenceTonnageData.First(e =>
                     e.CategoryId.Equals(Core.DataReturns.WeeeCategory.GasDischargeLampsAndLedLightSources));
