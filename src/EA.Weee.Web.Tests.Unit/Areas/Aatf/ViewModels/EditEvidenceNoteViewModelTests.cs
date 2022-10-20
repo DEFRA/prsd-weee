@@ -121,14 +121,18 @@
         public void EvidenceNoteViewModel_StartDate_ShouldHaveStartDateAttribute()
         {
             typeof(EditEvidenceNoteViewModel).GetProperty("StartDate").Should()
-                .BeDecoratedWith<EvidenceNoteStartDateAttribute>().Which.ApprovalDateValidationMessage.Should().Be("Enter a start date on or after the date of your AATF approval");
+                .BeDecoratedWith<EvidenceNoteStartDateAttribute>(e => 
+                    e.ApprovalDateValidationMessage.Equals("Enter a start date on or after the date of your AATF approval") &&
+                    e.AatfStatusValidationMessage.Equals("You cannot create evidence because your site approval has been cancelled or suspended, or your site is not approved for the start date entered"));
         }
 
         [Fact]
         public void EvidenceNoteViewModel_EndDate_ShouldHaveStartDateAttribute()
         {
             typeof(EditEvidenceNoteViewModel).GetProperty("EndDate").Should()
-                .BeDecoratedWith<EvidenceNoteEndDateAttribute>().Which.ApprovalDateValidationMessage.Should().Be("Enter an end date on or after the date of your AATF approval");
+                .BeDecoratedWith<EvidenceNoteEndDateAttribute>(e => 
+                    e.ApprovalDateValidationMessage.Equals("Enter an end date on or after the date of your AATF approval") &&
+                    e.AatfStatusValidationMessage.Equals("You cannot create evidence because your site approval has been cancelled or suspended, or your site is not approved for the end date entered"));
         }
 
         [Fact]

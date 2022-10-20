@@ -38,16 +38,17 @@
 
             authorization.EnsureOrganisationAccess(organisation.Id);
 
-            var noteData = await noteDataAccess.GetTransferSelectedNotes(request.OrganisationId, request.EvidenceNotes);
+            var noteData = await noteDataAccess.GetTransferSelectedNotes(request.OrganisationId, request.EvidenceNotes, request.Categories);
 
             var mappedNotes = new List<EvidenceNoteData>();
 
             foreach (var note in noteData.Notes.OrderByDescending(n => n.CreatedDate))
             {
-                var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(note)
+                var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>(new EvidenceNoteWithCriteriaMapper(note)
                 {
                     CategoryFilter = request.Categories,
-                    IncludeTonnage = true
+                    IncludeTonnage = true,
+                    IncludeTotal = true
                 });
 
                 mappedNotes.Add(evidenceNoteData);

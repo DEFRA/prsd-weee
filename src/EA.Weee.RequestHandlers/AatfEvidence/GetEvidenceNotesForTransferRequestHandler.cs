@@ -50,7 +50,7 @@
 
             foreach (var note in noteData.Notes.OrderByDescending(n => n.CreatedDate))
             {
-                var evidenceNoteData = mapper.Map<EvidenceNoteRowMapperObject, EvidenceNoteData>(new EvidenceNoteRowMapperObject(note)
+                var evidenceNoteData = mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(new EvidenceNoteRowCriteriaMapper(note)
                 {
                     CategoryFilter = request.Categories,
                     IncludeTotal = true

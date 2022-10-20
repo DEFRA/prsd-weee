@@ -29,6 +29,8 @@
         private readonly Guid organisationId;
         private readonly Guid aatfId;
         private const string AatfApprovalError = "Aatf Approval Error";
+        private const string AatfStatusError = "Aatf Status Error";
+
         public EvidenceNoteStartDateAttributeTests()
         {
             client = A.Fake<IWeeeClient>();
@@ -38,7 +40,7 @@
 
             organisationId = TestFixture.Create<Guid>();
             aatfId = TestFixture.Create<Guid>();
-            attribute = new EvidenceNoteStartDateAttribute("EndDate", AatfApprovalError)
+            attribute = new EvidenceNoteStartDateAttribute("EndDate", AatfApprovalError, AatfStatusError)
             {
                 Client = () => client,
                 HttpContextService = httpContextService,
@@ -450,7 +452,7 @@
             var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
 
             //assert
-            result.ValidationResult.ErrorMessage.Should().Be(AatfApprovalError);
+            result.ValidationResult.ErrorMessage.Should().Be(AatfStatusError);
         }
 
         [Fact]
@@ -501,7 +503,7 @@
 
         private class ValidationTarget : EvidenceNoteViewModel
         {
-            [EvidenceNoteStartDate(nameof(EndDate), AatfApprovalError)]
+            [EvidenceNoteStartDate(nameof(EndDate), AatfApprovalError, AatfStatusError)]
             public override DateTime? StartDate { get; set; }
 
             public override DateTime? EndDate { get; set; }
@@ -509,7 +511,7 @@
 
         private class InvalidValidationTarget
         {
-            [EvidenceNoteStartDate(nameof(EndDate), AatfApprovalError)]
+            [EvidenceNoteStartDate(nameof(EndDate), AatfApprovalError, AatfStatusError)]
             public DateTime? StartDate { get; set; }
 
             public DateTime? EndDate { get; set; }

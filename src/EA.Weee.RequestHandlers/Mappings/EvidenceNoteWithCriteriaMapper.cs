@@ -4,21 +4,16 @@
     using System.Collections.Generic;
     using Domain.Evidence;
 
-    public class EvidenceNoteWithCriteriaMap
+    public class EvidenceNoteWithCriteriaMapper : EvidenceNoteWitheCriteriaMapperBase
     {
-        public Note Note { get; }
-
-        public List<int> CategoryFilter { get; set; }
-
         public bool IncludeTonnage { get; set; }
 
         public bool IncludeHistory { get; set; }
 
         public DateTime? SystemDateTime { get; set; }
 
-        public EvidenceNoteWithCriteriaMap(Note note)
+        public EvidenceNoteWithCriteriaMapper(Note note) : base(note)
         {
-            Note = note;
             CategoryFilter = new List<int>();
         }
     }
