@@ -8,7 +8,8 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteStartDateAttribute : EvidenceDateValidationBase
     {
-        public EvidenceNoteStartDateAttribute(string compareDatePropertyName, string approvalDateValidationMessage) : base(compareDatePropertyName, approvalDateValidationMessage)
+        public EvidenceNoteStartDateAttribute(string compareDatePropertyName, 
+            string approvalDateValidationMessage, string aatfStatusValidationMessage) : base(compareDatePropertyName, approvalDateValidationMessage, aatfStatusValidationMessage)
         {
         }
 
@@ -30,7 +31,7 @@
                 return new ValidationResult("Unable to validate the evidence note details");
             }
 
-            var validateStartDateAgainstConfigDate = ValidateStartDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate);
+            var validateStartDateAgainstConfigDate = ValidateDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate, "start");
 
             if (validateStartDateAgainstConfigDate != ValidationResult.Success)
             {

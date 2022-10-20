@@ -15,14 +15,14 @@
     {
         [Required(ErrorMessage = "Enter a start date")]
         [Display(Name = "Start date")]
-        [EvidenceNoteStartDate(nameof(EndDate), "Enter a start date on or after the date of your AATF approval")]
+        [EvidenceNoteStartDate(nameof(EndDate), "Enter a start date on or after the date of your AATF approval", "You cannot create evidence because your site approval has been cancelled or suspended, or your site is not approved for the start date entered")]
         [DataType(DataType.Date)]
         public override DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Enter an end date")]
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
-        [EvidenceNoteEndDate(nameof(StartDate), "Enter an end date on or after the date of your AATF approval")]
+        [EvidenceNoteEndDate(nameof(StartDate), "Enter an end date on or after the date of your AATF approval", "You cannot create evidence because your site approval has been cancelled or suspended, or your site is not approved for the end date entered")]
         public override DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "Select a recipient")]
