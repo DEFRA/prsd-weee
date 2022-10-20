@@ -32,10 +32,11 @@
 
             authorization.EnsureOrganisationAccess(evidenceNote.Recipient.Id);
             
-            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMap, EvidenceNoteData>(new EvidenceNoteWithCriteriaMap(evidenceNote)
+            var evidenceNoteData = mapper.Map<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>(new EvidenceNoteWithCriteriaMapper(evidenceNote)
             {
                 IncludeTonnage = true,
-                IncludeHistory = true
+                IncludeHistory = true,
+                IncludeTotal = false
             });
 
             return evidenceNoteData;

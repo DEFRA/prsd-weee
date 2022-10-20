@@ -20,6 +20,7 @@
             CategoryId = categoryId;
             Reused = reused;
             Received = received;
+            NoteTransferTonnage = new List<NoteTransferTonnage>();
         }
 
         [ForeignKey("NoteId")]

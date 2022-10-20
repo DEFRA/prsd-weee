@@ -78,8 +78,7 @@
                 };
 
                 request = new GetEvidenceNotesSelectedForTransferRequest(recipientOrganisation.Id,
-                    new List<Guid>(notesSetToBeIncluded.Select(n => n.Id)),
-                    categories);
+                    new List<Guid>(notesSetToBeIncluded.Select(n => n.Id)), categories);
             };
 
             private readonly Because of = () =>
@@ -137,8 +136,7 @@
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .Create();
 
-                request = new GetEvidenceNotesSelectedForTransferRequest(note.OrganisationId,
-                    new List<Guid>() { Guid.NewGuid() }, new List<int>() { 1 });
+                request = new GetEvidenceNotesSelectedForTransferRequest(note.OrganisationId, new List<Guid>() { Guid.NewGuid() }, new List<int>() { 1 });
             };
 
             private readonly Because of = () =>
