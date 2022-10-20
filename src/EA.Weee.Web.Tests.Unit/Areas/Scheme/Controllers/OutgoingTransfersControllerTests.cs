@@ -484,8 +484,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_GivenExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var evidenceNoteId1 = TestFixture.Create<Guid>();
@@ -1455,16 +1454,33 @@
             EditTransferFromGet_GivenTransferRequestWithSelectedNotes_SelectedTransferNotesShouldBeRetrieved(int page)
         {
             //arrange
-            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
-            var categories = TestFixture.CreateMany<int>().ToList();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>(2).ToList();
+            var sessionCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.MedicalDevices.ToInt(),
+                Core.DataReturns.WeeeCategory.ToysLeisureAndSports.ToInt()
+            };
+
+            var transferEvidence = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, new List<TransferEvidenceNoteTonnageData>()
+                {
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteIds.ElementAt(0))
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.MedicalDevices, null, null, null, null))
+                        .Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteIds.ElementAt(1))
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ConsumerEquipment, null, null, null, null))
+                        .Create(),
+                }).Create();
 
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(t => t.EvidenceNoteIds, evidenceNoteIds)
-                .With(t => t.CategoryIds, categories)
+                .With(t => t.CategoryIds, sessionCategories)
                 .Create();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
-                .Returns(transferEvidenceNoteData);
+                .Returns(transferEvidence);
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(request);
 
@@ -1476,9 +1492,119 @@
                     g =>
                         g.Categories.SequenceEqual(request.CategoryIds) &&
                         g.OrganisationId == organisationId &&
-                        g.EvidenceNotes.SequenceEqual(
-                            evidenceNoteIds.Union(transferEvidenceNoteData.CurrentEvidenceNoteIds)))))
+                        g.EvidenceNotes.SequenceEqual(evidenceNoteIds))))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task
+            EditTransferFromGet_GivenTransferRequestWithChangeOfCategoriesThatDoNotMatchExistingSelectedEvidenceNotes_SelectedTransferNotesShouldBeRetrieved(int page)
+        {
+            //arrange
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>(3).ToList();
+            var evidenceNoteId1 = evidenceNoteIds.ElementAt(0);
+            var evidenceNoteId2 = evidenceNoteIds.ElementAt(1);
+            var evidenceNoteId3 = evidenceNoteIds.ElementAt(2);
+
+            var sessionCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.CoolingApplicancesContainingRefrigerants.ToInt()
+            };
+
+            var transferEvidence = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, new List<TransferEvidenceNoteTonnageData>()
+                {
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteId1)
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.MedicalDevices, null, null, null, null))
+                        .Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteId2)
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ConsumerEquipment, null, null, null, null))
+                        .Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteId3)
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null, null, null))
+                        .Create(),
+                }).Create();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, sessionCategories)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidence);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>(), page);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(
+                    g =>
+                        g.Categories.SequenceEqual(request.CategoryIds) &&
+                        g.OrganisationId == organisationId &&
+                        g.EvidenceNotes.Count() == 1 &&
+                        g.EvidenceNotes.ElementAt(0) == evidenceNoteId3)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task
+            EditTransferFromGet_GivenTransferRequestWithChangeOfCategoriesThatDoNotMatchExistingSelectedEvidenceNotes_EvidenceIdsShouldBeRemovedFromRequest()
+        {
+            //arrange
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>(3).ToList();
+            var evidenceNoteId1 = evidenceNoteIds.ElementAt(0);
+            var evidenceNoteId2 = evidenceNoteIds.ElementAt(1);
+            var evidenceNoteId3 = evidenceNoteIds.ElementAt(2);
+
+            var sessionCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.CoolingApplicancesContainingRefrigerants.ToInt()
+            };
+
+            var transferEvidence = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, new List<TransferEvidenceNoteTonnageData>()
+                {
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteId1)
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.MedicalDevices, null, null, null, null))
+                        .Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteId2)
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ConsumerEquipment, null, null, null, null))
+                        .Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteId3)
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.CoolingApplicancesContainingRefrigerants, null, null, null, null))
+                        .Create(),
+                }).Create();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .With(t => t.CategoryIds, sessionCategories)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidence);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<int>());
+
+            //assert
+            request.DeselectedEvidenceNoteIds.Should().Contain(evidenceNoteId1);
+            request.DeselectedEvidenceNoteIds.Should().Contain(evidenceNoteId2);
+            request.DeselectedEvidenceNoteIds.Should().NotContain(evidenceNoteId3);
+            request.EvidenceNoteIds.Should().Contain(evidenceNoteId3);
+            request.EvidenceNoteIds.Should().NotContain(evidenceNoteId2);
+            request.EvidenceNoteIds.Should().NotContain(evidenceNoteId1);
         }
 
         [Theory]

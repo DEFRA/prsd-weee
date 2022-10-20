@@ -25,7 +25,7 @@
         public virtual NoteTonnage NoteTonnage { get; private set; }
 
         [ForeignKey("TransferNoteId")]
-        public virtual Note TransferNote { get; set; }
+        public virtual Note TransferNote { get; private set; }
 
         public virtual Guid TransferNoteId { get; private set; }
 

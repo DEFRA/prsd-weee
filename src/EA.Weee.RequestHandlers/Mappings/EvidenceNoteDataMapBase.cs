@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core.AatfEvidence;
     using Domain.Evidence;
 
     public abstract class EvidenceNoteDataMapBase<T> where T : EvidenceNoteDataBase, new()
     {
+        protected List<Domain.Evidence.NoteStatus> excludedStatus = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Rejected, Domain.Evidence.NoteStatus.Void };
+
         public T MapCommonProperties(Note note)
         {
             var data = new T
@@ -59,6 +62,19 @@
             };
 
             return data;
+        }
+
+        protected void MapTonnageAvailable(EvidenceNoteWitheCriteriaMapperBase source, EvidenceNoteData noteData)
+        {
+            if (source.IncludeTotal)
+            {
+                noteData.TotalReceivedAvailable = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter)
+                    .Select(nt => nt.Received != null
+                        ? nt.Received - (nt.NoteTransferTonnage.Where(tn =>
+                                !excludedStatus.Contains(tn.TransferNote.Status))
+                            .Sum(tn => tn.Received))
+                        : 0).Sum() : source.Note.NoteTonnage.Sum(n => n.Received);
+            }
         }
     }
 }

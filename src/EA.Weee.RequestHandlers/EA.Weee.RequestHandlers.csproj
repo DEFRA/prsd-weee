@@ -146,6 +146,7 @@
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />
     <Compile Include="Mappings\AatfSimpleMap.cs" />
+    <Compile Include="Mappings\EvidenceNoteWitheCriteriaMapperBase.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
@@ -163,8 +164,8 @@
     <Compile Include="Mappings\AatfWithSystemDateMapperObject.cs" />
     <Compile Include="Mappings\EvidenceNoteDataMapBase.cs" />
     <Compile Include="Mappings\EvidenceNoteRowMap.cs" />
-    <Compile Include="Mappings\EvidenceNoteRowMapperObject.cs" />
-    <Compile Include="Mappings\EvidenceNoteWithCriteriaMap.cs" />
+    <Compile Include="Mappings\EvidenceNoteRowCriteriaMapper.cs" />
+    <Compile Include="Mappings\EvidenceNoteWithCriteriaMapper.cs" />
     <Compile Include="Mappings\ObligationSummaryTotalsMap.cs" />
     <Compile Include="Mappings\AatfNameMapping.cs" />
     <Compile Include="Mappings\SchemeObligationDataMap.cs" />
