@@ -59,6 +59,8 @@
 
         public string ApprovalDateValidationMessage { get; private set; }
 
+        public string AatfStatusValidationMessage { get; private set; }
+
         public string CompareDatePropertyName { get; private set; }
 
         public EvidenceDateValidationBase(string compareDatePropertyName)
@@ -66,10 +68,11 @@
             CompareDatePropertyName = compareDatePropertyName;
         }
 
-        public EvidenceDateValidationBase(string compareDatePropertyName, string approvalDateValidationMessage)
+        public EvidenceDateValidationBase(string compareDatePropertyName, string approvalDateValidationMessage, string aatfStatusValidationMessage)
         {
             CompareDatePropertyName = compareDatePropertyName;
             ApprovalDateValidationMessage = approvalDateValidationMessage;
+            AatfStatusValidationMessage = aatfStatusValidationMessage;
         }
 
         public ValidationResult ValidateDateAgainstAatfApprovalDate(DateTime date, Guid organisationId, Guid aatfId)
@@ -83,13 +86,19 @@
                 return new ValidationResult("Aatf is invalid to save evidence notes.");
             }
 
-            var groupedAatfs = aatfs.Any(a => a.AatfId == 
-                aatfById.AatfId && 
-                a.ComplianceYear == date.Year &&
-                a.AatfStatus == AatfStatus.Approved &&
-                a.ApprovalDate.GetValueOrDefault() <= date);
+            var approvedAatfs = aatfs.Where(a => a.AatfId ==
+                                               aatfById.AatfId &&
+                                               a.ComplianceYear == date.Year &&
+                                               a.AatfStatus == AatfStatus.Approved).ToList();
 
-            if (!groupedAatfs)
+            if (!approvedAatfs.Any())
+            {
+                return new ValidationResult(AatfStatusValidationMessage);
+            }
+
+            var validateApprovalDate = approvedAatfs.Any(a => a.ApprovalDate.GetValueOrDefault() <= date);
+
+            if (!validateApprovalDate)
             {
                 return new ValidationResult(ApprovalDateValidationMessage);
             }
@@ -128,27 +137,15 @@
             return ValidationResult.Success;
         }
 
-        protected ValidationResult ValidateStartDateAgainstEvidenceNoteSiteSelectionDateFrom(DateTime startDate)
+        protected ValidationResult ValidateDateAgainstEvidenceNoteSiteSelectionDateFrom(DateTime startDate, string date)
         {
             var configDate = ConfigService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
 
             if (startDate < configDate.Date)
             {
-                return new ValidationResult("The start date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
+                return new ValidationResult($"The {date} date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
             }
            
-            return ValidationResult.Success;
-        }
-
-        protected ValidationResult ValidateEndDateAgainstEvidenceNoteSiteSelectionDateFrom(DateTime endDate)
-        {
-            var configDate = ConfigService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom;
-
-            if (endDate < configDate.Date)
-            {
-                return new ValidationResult("The end date cannot be before 2023. Evidence notes for compliance years prior to 2023 are not stored in this service.");
-            }
-
             return ValidationResult.Success;
         }
     }

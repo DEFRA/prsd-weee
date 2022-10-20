@@ -24,6 +24,8 @@ CREATE TABLE #EvidenceSummaryWithTotals(
 	CategoryId INT NULL,
 	CategoryName NVARCHAR(60),
 	SchemeId UNIQUEIDENTIFIER NOT NULL,
+	SchemeName NVARCHAR(MAX) NOT NULL,
+	ApprovalNumber NVARCHAR(MAX) NOT NULL,
 	OrganisationId UNIQUEIDENTIFIER NOT NULL,
 	Obligation DECIMAL(28, 3),
 	EvidenceReceivedInTotal DECIMAL(28, 3),
@@ -36,20 +38,24 @@ CREATE TABLE #EvidenceSummaryWithTotals(
 	TransferEvidenceReuseOut DECIMAL(28, 3)
 )
 
-INSERT INTO #EvidenceSummaryWithTotals (CategoryId, CategoryName, SchemeId, OrganisationId, Obligation, EvidenceReceivedInTotal, EvidenceReuseInTotal, 
-TransferEvidenceReceivedIn, TransferEvidenceReuseIn, TransferEvidenceReceivedOut, TransferEvidenceReuseOut)
+INSERT INTO #EvidenceSummaryWithTotals (CategoryId, CategoryName, SchemeId, SchemeName, ApprovalNumber, OrganisationId, Obligation, EvidenceReceivedInTotal, EvidenceReuseInTotal, 
+TransferEvidenceReceivedIn, TransferEvidenceReuseIn, TransferEvidenceReceivedOut, TransferEvidenceReuseOut, NonHouseholdEvidenceReceivedInTotal, NonHouseHoldEvidenceReuseInTotal)
 
 SELECT c.Id,
 	CASE WHEN c.Id < 1000 THEN CAST(c.Id AS NVARCHAR) + '. ' + c.[Name] ELSE c.[Name] END,
 	s.Id,
+	CASE WHEN s.SchemeName IS NULL THEN ' ' + CAST(s.Id AS NVARCHAR(MAX)) ELSE s.SchemeName END,
+	CASE WHEN s.ApprovalNumber IS NULL THEN ' ' + CAST(s.Id AS NVARCHAR(MAX)) ELSE s.ApprovalNumber END,
 	s.OrganisationId,
-	NULL, 
-	NULL, 
-	NULL,
-	NULL, 
-	NULL, 
-	NULL,
-	NULL 
+	0, 
+	0, 
+	0,
+	0, 
+	0, 
+	0,
+	0, 
+	0,
+	0
 FROM
 (
 	SELECT 
@@ -70,14 +76,16 @@ WHERE
 	s.Id = @SchemeId OR @SchemeId IS NULL
 	AND (s.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 	AND (s.OrganisationId = @OrganisationId OR @OrganisationId IS NULL)
+ORDER BY
+	s.Id
 
 UPDATE s
 SET 
 	s.Obligation = osa.Obligation
 FROM
 	#EvidenceSummaryWithTotals s
-	LEFT JOIN [PCS].ObligationSchemeAmount osa ON s.CategoryId = osa.CategoryId
-	LEFT JOIN [PCS].ObligationScheme os ON os.Id = osa.ObligationSchemeId AND os.SchemeId = s.SchemeId
+	LEFT JOIN [PCS].ObligationSchemeAmount osa WITH (NOLOCK) ON s.CategoryId = osa.CategoryId
+	LEFT JOIN [PCS].ObligationScheme os WITH (NOLOCK) ON os.Id = osa.ObligationSchemeId AND os.SchemeId = s.SchemeId
 	LEFT JOIN [PCS].Scheme sch ON sch.Id = os.SchemeId 
 WHERE
 	os.ComplianceYear = @ComplianceYear
@@ -88,26 +96,28 @@ WHERE
 UPDATE 
 	s
 SET
-	s.EvidenceReceivedInTotal = evc.Received,
-	s.EvidenceReuseInTotal = evc.Reused
+	s.EvidenceReceivedInTotal = COALESCE(evc.Received, 0),
+	s.EvidenceReuseInTotal = COALESCE(evc.Reused, 0)
 FROM
 	#EvidenceSummaryWithTotals s
 	INNER JOIN Evidence.vwHouseholdEvidenceSumByCategoryAndRecipient evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear AND evc.ReceiverOrganisation = s.OrganisationId
-	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation
+	LEFT JOIN [PCS].Scheme sc WITH (NOLOCK) ON sc.OrganisationId = evc.ReceiverOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL) 
 	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 	AND (sc.OrganisationId = @OrganisationId OR @OrganisationId IS NULL)
 
+
+
 UPDATE 
 	s
 SET
-	s.NonHouseholdEvidenceReceivedInTotal = evc.Received,
-	s.NonHouseholdEvidenceReuseInTotal = evc.Reused
+	s.NonHouseholdEvidenceReceivedInTotal = COALESCE(evc.Received, 0),
+	s.NonHouseholdEvidenceReuseInTotal = COALESCE(evc.Reused, 0)
 FROM
 	#EvidenceSummaryWithTotals s
 	INNER JOIN Evidence.vwNonHouseholdEvidenceSumByCategoryAndRecipient evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear AND evc.ReceiverOrganisation = s.OrganisationId
-	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation
+	LEFT JOIN [PCS].Scheme sc WITH (NOLOCK) ON sc.OrganisationId = evc.ReceiverOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL) 
 	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
@@ -116,12 +126,12 @@ WHERE
 UPDATE 
 	s
 SET
-	s.TransferEvidenceReceivedIn = evc.TransferredReceived,
-	s.TransferEvidenceReuseIn =  evc.TransferredReused
+	s.TransferEvidenceReceivedIn = COALESCE(evc.TransferredReceived, 0),
+	s.TransferEvidenceReuseIn = COALESCE(evc.TransferredReused, 0)
 FROM
 	#EvidenceSummaryWithTotals s
 	INNER JOIN Evidence.vwTransferSumByCategoryByRecipient evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear AND evc.ReceiverOrganisation = s.OrganisationId
-	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.ReceiverOrganisation
+	LEFT JOIN [PCS].Scheme sc WITH (NOLOCK) ON sc.OrganisationId = evc.ReceiverOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL)
 	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
@@ -130,12 +140,12 @@ WHERE
 UPDATE 
 	s
 SET
-	s.TransferEvidenceReceivedOut = evc.TransferredReceived,
-	s.TransferEvidenceReuseOut =  evc.TransferredReused
+	s.TransferEvidenceReceivedOut = COALESCE(evc.TransferredReceived, 0),
+	s.TransferEvidenceReuseOut =  COALESCE(evc.TransferredReused, 0)
 FROM
 	#EvidenceSummaryWithTotals s
 	INNER JOIN Evidence.vwTransferSumByCategoryByOriginator evc WITH (NOLOCK) ON evc.CategoryId = s.CategoryId AND evc.ComplianceYear = @ComplianceYear AND evc.TransferOrganisation = s.OrganisationId
-	LEFT JOIN [PCS].Scheme sc ON sc.OrganisationId = evc.TransferOrganisation
+	LEFT JOIN [PCS].Scheme sc WITH (NOLOCK) ON sc.OrganisationId = evc.TransferOrganisation
 WHERE
 	(sc.Id = @SchemeId OR @SchemeId IS NULL)
 	AND (sc.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
@@ -151,7 +161,9 @@ SET
 	s.NonHouseHoldEvidenceReuseInTotal = cs.NonHouseHoldReuseTotal,
 	s.TransferEvidenceReceivedOut = cs.TransferredOutTotal,
 	s.TransferEvidenceReceivedIn = cs.TransferredInTotal,
-	s.Obligation = cs.ObligationTotal
+	s.Obligation = cs.ObligationTotal,
+	s.TransferEvidenceReuseIn = cs.TransferEvidenceReuseIn,
+	s.TransferEvidenceReuseOut = cs.TransferEvidenceReuseOut
 FROM
 	#EvidenceSummaryWithTotals s
 	INNER JOIN
@@ -163,6 +175,8 @@ FROM
 			SUM(s.NonHouseHoldEvidenceReuseInTotal) AS NonHouseHoldReuseTotal,
 			SUM(s.TransferEvidenceReceivedIn) As TransferredInTotal,
 			SUM(s.TransferEvidenceReceivedOut) As TransferredOutTotal,
+			SUM(s.TransferEvidenceReuseIn) AS TransferEvidenceReuseIn,
+			SUM(s.TransferEvidenceReuseOut) AS TransferEvidenceReuseOut,
 			s.SchemeId
 		FROM
 			#EvidenceSummaryWithTotals s
@@ -170,7 +184,7 @@ FROM
 			s.CategoryId >= 2 AND s.CategoryId <= 10
 		GROUP BY
 			s.SchemeId) cs ON cs.SchemeId = s.SchemeId AND s.CategoryId = 1000
-
+		
 -- this is the total calculation
 UPDATE
 	s
@@ -181,7 +195,9 @@ SET
 	s.NonHouseHoldEvidenceReuseInTotal = cs.NonHouseHoldReuseTotal,
 	s.TransferEvidenceReceivedOut = cs.TransferredOutTotal,
 	s.TransferEvidenceReceivedIn = cs.TransferredInTotal,
-	s.Obligation = cs.ObligationTotal
+	s.Obligation = cs.ObligationTotal,
+	s.TransferEvidenceReuseIn = cs.TransferEvidenceReuseIn,
+	s.TransferEvidenceReuseOut = cs.TransferEvidenceReuseOut
 FROM
 	#EvidenceSummaryWithTotals s
 	INNER JOIN
@@ -193,6 +209,8 @@ FROM
 			SUM(s.NonHouseHoldEvidenceReuseInTotal) AS NonHouseHoldReuseTotal,
 			SUM(s.TransferEvidenceReceivedIn) As TransferredInTotal,
 			SUM(s.TransferEvidenceReceivedOut) As TransferredOutTotal,
+			SUM(s.TransferEvidenceReuseIn) AS TransferEvidenceReuseIn,
+			SUM(s.TransferEvidenceReuseOut) AS TransferEvidenceReuseOut,
 			s.SchemeId
 		FROM
 			#EvidenceSummaryWithTotals s
@@ -200,34 +218,15 @@ FROM
 			s.CategoryId >= 1 AND s.CategoryId <= 14
 		GROUP BY
 			s.SchemeId) cs ON cs.SchemeId = s.SchemeId AND s.CategoryId = 1001
-
+	
+SELECT * FROM (
 SELECT 
 	CategoryId,
 	CategoryName,
-	SchemeId,
-	s.SchemeName,
-	s.ApprovalNumber,
-	COALESCE(Obligation, 0) AS Obligation,
-	COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0)) AS Evidence,
-	COALESCE(EvidenceReuseInTotal, 0) + (COALESCE(TransferEvidenceReuseIn, 0) - COALESCE(TransferEvidenceReuseOut, 0)) AS Reuse,
-	COALESCE(NonHouseholdEvidenceReceivedInTotal, 0) As NonHouseHoldEvidence,
-	COALESCE(NonHouseHoldEvidenceReuseInTotal, 0) AS NonHouseHoldEvidenceReuse,
-	COALESCE(TransferEvidenceReceivedOut, 0) AS TransferredOut,
-	COALESCE(TransferEvidenceReceivedIn, 0) AS TransferredIn,
-	(COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0))) - COALESCE(Obligation, 0) AS ObligationDifference
-FROM 
-	#EvidenceSummaryWithTotals st
-	INNER JOIN [PCS].Scheme s ON s.Id = st.SchemeId
-
-UNION ALL
-
-SELECT 
-	CategoryId,
-	CategoryName,
-	NULL,
+	NULL AS SchemeId,
 	'-' AS SchemeName,
 	'-' AS ApprovalNumber,
-	SUM(COALESCE(Obligation, 0)),
+	SUM(COALESCE(Obligation, 0)) AS Obligation,
 	SUM(COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0))) AS Evidence,
 	SUM(COALESCE(EvidenceReuseInTotal, 0) + (COALESCE(TransferEvidenceReuseIn, 0) - COALESCE(TransferEvidenceReuseOut, 0))) AS Reuse,
 	SUM(COALESCE(NonHouseholdEvidenceReceivedInTotal, 0)) As NonHouseHoldEvidence,
@@ -242,6 +241,27 @@ WHERE
 GROUP BY
 	CategoryId,
 	CategoryName
+
+UNION ALL
+
+SELECT 
+	CategoryId,
+	CategoryName,
+	SchemeId,
+	SchemeName,
+	ApprovalNumber,
+	COALESCE(Obligation, 0) AS Obligation,
+	COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0)) AS Evidence,
+	COALESCE(EvidenceReuseInTotal, 0) + (COALESCE(TransferEvidenceReuseIn, 0) - COALESCE(TransferEvidenceReuseOut, 0)) AS Reuse,
+	COALESCE(NonHouseholdEvidenceReceivedInTotal, 0) As NonHouseHoldEvidence,
+	COALESCE(NonHouseHoldEvidenceReuseInTotal, 0) AS NonHouseHoldEvidenceReuse,
+	COALESCE(TransferEvidenceReceivedOut, 0) AS TransferredOut,
+	COALESCE(TransferEvidenceReceivedIn, 0) AS TransferredIn,
+	(COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0))) - COALESCE(Obligation, 0) AS ObligationDifference
+FROM 
+	#EvidenceSummaryWithTotals st
+
+) x
 ORDER BY
 	SchemeName,
 	CategoryId
