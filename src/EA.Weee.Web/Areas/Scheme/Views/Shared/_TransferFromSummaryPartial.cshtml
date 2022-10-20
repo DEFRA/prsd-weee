@@ -53,7 +53,7 @@
                 Submitted by
             </th>
             <th class="govuk-table__header tonnage-column govuk-!-text-align-left">
-                Total (tonnes)
+                Available total (tonnes)
             </th>
             <th class="govuk-table__header add-remove-column">
                 <span class="govuk-visually-hidden">remove note</span>
@@ -73,7 +73,7 @@
                     <td class="govuk-table__cell govuk-!-text-align-left">
                         @Model.EvidenceNotesDataList[i].SubmittedBy
                     </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataList[i].TotalReceivedDisplay</td>
+                    <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataList[i].TotalAvailable</td>
                     <td class="govuk-table__cell govuk-!-padding-left-5">
                         @using (Html.BeginForm(actionName: "DeselectEvidenceNote", controllerName: controller, method: FormMethod.Post))
                         {
@@ -183,7 +183,7 @@
                 Submitted by
             </th>
             <th class="govuk-table__header tonnage-column govuk-!-text-align-left">
-                Total (tonnes)
+                Available total (tonnes)
             </th>
             <th class="govuk-table__header add-remove-column">
                 <span class="govuk-visually-hidden">add note</span>
@@ -222,6 +222,9 @@
                             }
 
                             <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
+                            <br/>
+
+                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay, @Model.EvidenceNotesDataListPaged[i].SchemeViewRouteName, new { pcsId = Model.PcsId, evidenceNoteId = @Model.EvidenceNotesDataListPaged[i].Id,  }, null)
                         }
                     </td>
                 </tr>

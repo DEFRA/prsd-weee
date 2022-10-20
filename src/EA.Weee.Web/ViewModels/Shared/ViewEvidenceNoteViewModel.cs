@@ -48,7 +48,7 @@
 
         public string SubmittedBy { get; set; }
 
-        public string TotalReceivedDisplay { get; set; }
+        public string TotalAvailable { get; set; }
 
         public string AatfApprovalNumber { get; set; }
 
