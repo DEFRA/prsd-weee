@@ -49,7 +49,7 @@
                                          .Where(x => (x.Name.Contains(searchAatfAddress.SearchTerm) ||
                                                       x.ApprovalNumber.Contains(searchAatfAddress.SearchTerm) ||
                                                       x.Organisation.Name.Contains(searchAatfAddress.SearchTerm)) &&
-                                                     (!(aatfIdList.Contains(x.Id)) && x.ComplianceYear == selectedAatf.ComplianceYear && x.AatfStatus.Value == AatfStatus.Approved.Value))
+                                                     (!(aatfIdList.Contains(x.Id)) && x.ComplianceYear == selectedAatf.ComplianceYear))
                                          .Select(x => new ReturnAatfAddressResult { SearchTermId = x.Id, SearchTermName = x.Name, OrganisationId = x.Organisation.Id })
                                          .OrderBy(x => x.SearchTermName)
                                          .ToListAsync();
@@ -61,7 +61,7 @@
                 var resultlist = await context.Aatfs.Where(x => (x.Name.Contains(searchAatfAddress.SearchTerm) ||
                                                        x.ApprovalNumber.Contains(searchAatfAddress.SearchTerm) ||
                                                        x.Organisation.Name.Contains(searchAatfAddress.SearchTerm)) &&
-                                                      (!(aatfIdList.Contains(x.Id)) && x.ComplianceYear == selectedAatf.ComplianceYear && x.AatfStatus.Value == AatfStatus.Approved.Value))
+                                                      (!(aatfIdList.Contains(x.Id)) && x.ComplianceYear == selectedAatf.ComplianceYear))
 
                                          .Select(x => new ReturnAatfAddressResult { SearchTermId = x.Id, SearchTermName = (x.Name + " - " + x.ApprovalNumber), OrganisationId = x.Organisation.Id })
                                          .Take(25)
