@@ -24,38 +24,9 @@
 
             var model = MapBaseProperties(source);
 
-            //if (source.SelectedNotes != null)
-            //{
-            //    model.EvidenceNotesDataList = new List<ViewEvidenceNoteViewModel>();
-            //    foreach (var evidenceNoteData in source.SelectedNotes.Results.OrderByDescending(n => n.Reference))
-            //    {
-            //        if (evidenceNoteData.EvidenceTonnageData.Any(e => source.Request.CategoryIds.Contains(e.CategoryId.ToInt())))
-            //        {
-            //            model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
-            //                new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
-            //                {
-            //                    IncludeAllCategories = false
-            //                }));
-            //        }
-            //        else
-            //        {
-            //            source.Request.EvidenceNoteIds.Remove(evidenceNoteData.Id);
-            //            source.Request.DeselectedEvidenceNoteIds.Add(evidenceNoteData.Id);
-            //        }
-            //    }
-            //}
-
             foreach (var evidenceNoteData in source.AvailableNotes.Results)
             {
-                //if (evidenceNoteData.EvidenceTonnageData.Any(e => source.Categories.Contains(e.CategoryId.ToInt())))
-                //{
-                    model.EvidenceNotesDataListPaged.Add(Mapper.Map<EvidenceNoteRowViewModel>(evidenceNoteData));
-                //}
-                //else
-                //{
-                    //source.Request.EvidenceNoteIds.Remove(evidenceNoteData.Id);
-                    //source.Request.DeselectedEvidenceNoteIds.Add(evidenceNoteData.Id);
-                //}   
+                model.EvidenceNotesDataListPaged.Add(Mapper.Map<EvidenceNoteRowViewModel>(evidenceNoteData));
             }
 
             model.EvidenceNotesDataListPaged = 
