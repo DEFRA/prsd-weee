@@ -56,10 +56,31 @@
                     new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 5, 1),
                     new NoteTonnage(WeeeCategory.DisplayEquipment, 2, null)
                 };
-                notesSetToBeIncluded.Add(EvidenceNoteDbSetup.Init()
+                var evidenceNoteWithTransfers = EvidenceNoteDbSetup.Init()
                     .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .WithStatus(NoteStatus.Approved, UserId.ToString())
-                    .WithTonnages(categories2).WithRecipient(recipientOrganisation.Id).Create());
+                    .WithTonnages(categories2).WithRecipient(recipientOrganisation.Id).Create();
+
+                notesSetToBeIncluded.Add(evidenceNoteWithTransfers);
+
+                var transferNoteRecipient = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(transferNoteRecipient.Id).Create();
+
+                var transferTonnages1 = new List<NoteTransferTonnage>()
+                {
+                    new NoteTransferTonnage(
+                        evidenceNoteWithTransfers.NoteTonnage.First(c =>
+                            c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 20, 10)
+                };
+
+                // this transfer should not affect the available amount as the note is rejected
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(transferNoteRecipient.Id)
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatus.Rejected, UserId.ToString())
+                    .WithTonnages(transferTonnages1)
+                    .Create();
 
                 // note to not be included not in note list
                 var categories3 = new List<NoteTonnage>()
@@ -108,10 +129,13 @@
                 note1.EvidenceTonnageData.ElementAt(0).Reused.Should().BeNull();
                 note1.EvidenceTonnageData.ElementAt(0).Id.Should().NotBe(Guid.Empty);
                 note1.EvidenceTonnageData.ElementAt(0).CategoryId.Should().Be(Core.DataReturns.WeeeCategory.AutomaticDispensers);
+                note1.TotalReceivedAvailable.Should().Be(1);
 
                 // second note has category DisplayEquipment that is not in the category list so also shouldnt be in the tonnage data
                 var note2 = result.Results.First(r => r.Id.Equals(notesSetToBeIncluded.ElementAt(1).Id));
                 note2.EvidenceTonnageData.Count.Should().Be(2);
+                note2.TotalReceivedAvailable.Should().Be(15);
+
                 var categoryTonnage = note2.EvidenceTonnageData.First(e =>
                     e.CategoryId.Equals(Core.DataReturns.WeeeCategory.GasDischargeLampsAndLedLightSources));
                 categoryTonnage.Received.Should().Be(5);
