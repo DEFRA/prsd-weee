@@ -38,17 +38,6 @@
             }
         }
 
-        public List<Guid> CurrentEvidenceNoteIdsByCategory(List<int> categoryIds)
-        {
-            if (TransferEvidenceNoteTonnageData != null)
-            {
-                return TransferEvidenceNoteTonnageData.Where(n =>
-                    categoryIds.Contains(n.EvidenceTonnageData.CategoryId.ToInt())).Select(t => t.OriginalNoteId).ToList();
-            }
-
-            return new List<Guid>();
-        }
-
         public SchemeData RecipientSchemeData { get; set; }
 
         public OrganisationData TransferredOrganisationData { get; set; }
