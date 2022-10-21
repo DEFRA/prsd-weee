@@ -272,23 +272,9 @@
 
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
-                RemoveEvidenceNotesThatNowDontMatchSelectedCategories(transferRequest, noteData);
-
                 var model = await TransferEvidenceNotesViewModel(pcsId, page, client, transferRequest, searchRef, noteData);
 
                 return this.View("EditTransferFrom", model);
-            }
-        }
-
-        private void RemoveEvidenceNotesThatNowDontMatchSelectedCategories(TransferEvidenceNoteRequest transferRequest,
-            TransferEvidenceNoteData noteData)
-        {
-            var removedEvidenceNotes = transferRequest.EvidenceNoteIds
-                .Except(noteData.CurrentEvidenceNoteIdsByCategory(transferRequest.CategoryIds)).ToList();
-
-            foreach (var removedEvidenceNote in removedEvidenceNotes)
-            {
-                DeselectEvidenceNote(removedEvidenceNote, SessionKeyConstant.OutgoingTransferKey);
             }
         }
 
