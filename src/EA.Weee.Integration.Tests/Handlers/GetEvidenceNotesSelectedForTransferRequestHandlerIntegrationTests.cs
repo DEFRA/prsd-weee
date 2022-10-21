@@ -73,7 +73,7 @@
                         evidenceNoteWithTransfers.NoteTonnage.First(c =>
                             c.CategoryId.ToInt() == WeeeCategory.AutomaticDispensers.ToInt()).Id, 20, 10)
                 };
-                
+
                 TransferEvidenceNoteDbSetup.Init()
                     .WithOrganisation(recipientOrganisation.Id)
                     .WithRecipient(transferNoteRecipient.Id)
