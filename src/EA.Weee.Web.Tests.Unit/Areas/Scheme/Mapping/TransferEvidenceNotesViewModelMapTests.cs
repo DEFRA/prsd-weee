@@ -181,6 +181,193 @@
         }
 
         [Fact]
+        public void Map_GivenSourceWithExistingSelectedNotesThatAreNoLongerAvailable_RequestShouldBeUpdatedToRemoveNotes()
+        {
+            //arrange
+            var evidenceNoteId1 = TestFixture.Create<Guid>();
+            var evidenceNoteId2 = TestFixture.Create<Guid>();
+            var evidenceNoteId3 = TestFixture.Create<Guid>();
+
+            var notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 1)
+                    .With(e => e.Id, evidenceNoteId1)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 1, null, null, null)
+                    })
+                    .Create()
+            };
+
+            var selectedEvidenceNoteData = new EvidenceNoteSearchDataResult(notes, 3);
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(e => e.CategoryIds,
+                    new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() })
+                .With(e => e.EvidenceNoteIds, new List<Guid>() { evidenceNoteId1, evidenceNoteId2 })
+                .With(e => e.DeselectedEvidenceNoteIds, new List<Guid>()
+                {
+                    evidenceNoteId3
+                })
+                .Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(selectedEvidenceNoteData,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(), request,
+                TestFixture.Create<TransferEvidenceNoteData>(), organisationId, TestFixture.Create<string>());
+
+            //act
+            map.Map(source);
+
+            //assert
+            request.EvidenceNoteIds.Count.Should().Be(1);
+            request.EvidenceNoteIds.ElementAt(0).Should().Be(evidenceNoteId1);
+            request.DeselectedEvidenceNoteIds.Count.Should().Be(2);
+            request.DeselectedEvidenceNoteIds.Should().Contain(evidenceNoteId2);
+            request.DeselectedEvidenceNoteIds.Should().Contain(evidenceNoteId3);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithCategoriesThatDoNotMatchTheSelectedNotes_RequestShouldBeUpdatedToRemoveNotes()
+        {
+            //arrange
+            var evidenceNoteId1 = TestFixture.Create<Guid>();
+            var evidenceNoteId2 = TestFixture.Create<Guid>();
+            var evidenceNoteId3 = TestFixture.Create<Guid>();
+            var evidenceNoteId4 = TestFixture.Create<Guid>();
+
+            var notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 1)
+                    .With(e => e.Id, evidenceNoteId1)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 1, null, null, null)
+                    })
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 2)
+                    .With(e => e.Id, evidenceNoteId2)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ConsumerEquipment, 1, null, null, null)
+                    })
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 2)
+                    .With(e => e.Id, evidenceNoteId3)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, null, null, null, null)
+                    })
+                    .Create(), 
+            };
+
+            var selectedEvidenceNoteData = new EvidenceNoteSearchDataResult(notes, 3);
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(e => e.CategoryIds,
+                    new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() })
+                .With(e => e.EvidenceNoteIds, new List<Guid>() { evidenceNoteId1, evidenceNoteId2, evidenceNoteId3})
+                .With(e => e.DeselectedEvidenceNoteIds, new List<Guid>()
+                {
+                    evidenceNoteId4
+                })
+                .Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(selectedEvidenceNoteData,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(), request,
+                TestFixture.Create<TransferEvidenceNoteData>(), organisationId, TestFixture.Create<string>());
+
+            //act
+            map.Map(source);
+
+            //assert
+            request.EvidenceNoteIds.Count.Should().Be(1);
+            request.EvidenceNoteIds.ElementAt(0).Should().Be(evidenceNoteId1);
+            request.DeselectedEvidenceNoteIds.Count.Should().Be(3);
+            request.DeselectedEvidenceNoteIds.Should().Contain(evidenceNoteId2);
+            request.DeselectedEvidenceNoteIds.Should().Contain(evidenceNoteId3);
+            request.DeselectedEvidenceNoteIds.Should().Contain(evidenceNoteId4);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithCategoriesThatDoNotMatchTheSelectedNotes_SelectedEvidenceNoteDataShouldBeMappedAndReturned()
+        {
+            //arrange
+            var notes = new List<EvidenceNoteData>()
+            {
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 1)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 1, null, null, null)
+                    })
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 2)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ConsumerEquipment, 1, null, null, null)
+                    })
+                    .Create(), // should not be mapped as the category is not in the currently selected list of categories
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 2)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, null, null, null, null)
+                    })
+                    .Create(), // should not be mapped as the tonnage is null although the category is correct
+            };
+
+            var selectedEvidenceNoteData = new EvidenceNoteSearchDataResult(notes, 3);
+
+            var viewEvidenceNoteViewModel = TestFixture.CreateMany<ViewEvidenceNoteViewModel>(3).ToList();
+
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>().With(e => e.CategoryIds, 
+                    new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            var source = new TransferEvidenceNotesViewModelMapTransfer(selectedEvidenceNoteData,
+                TestFixture.Create<EvidenceNoteSearchDataResult>(), request,
+                TestFixture.Create<TransferEvidenceNoteData>(), organisationId, TestFixture.Create<string>());
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                            v => v.IncludeAllCategories.Equals(false) && 
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(0)) && 
+                                 v.NoteStatus == null &&
+                                 v.User == null &&
+                                 v.PrintableVersion == false))).Returns(viewEvidenceNoteViewModel.ElementAt(0));
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                            v => v.IncludeAllCategories.Equals(false) && 
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(1)) && 
+                                 v.NoteStatus == null &&
+                                 v.User == null &&
+                                 v.PrintableVersion == false))).Returns(viewEvidenceNoteViewModel.ElementAt(1));
+
+            A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                v => v.IncludeAllCategories.Equals(false) &&
+                     v.EvidenceNoteData.Equals(notes.ElementAt(2)) &&
+                     v.NoteStatus == null &&
+                     v.User == null &&
+                     v.PrintableVersion == false))).Returns(viewEvidenceNoteViewModel.ElementAt(2));
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.EvidenceNotesDataList.ElementAt(0).Should().BeEquivalentTo(viewEvidenceNoteViewModel.ElementAt(0)); // ordered by ref
+            result.EvidenceNotesDataList.Count.Should().Be(1);
+        }
+
+        [Fact]
         public void Map_GivenSource_SelectedEvidenceNoteDataShouldBeMappedAndReturned()
         {
             //arrange
@@ -206,7 +393,7 @@
 
             var viewEvidenceNoteViewModel = TestFixture.CreateMany<ViewEvidenceNoteViewModel>(2).ToList();
 
-            var request = TestFixture.Build<TransferEvidenceNoteRequest>().With(e => e.CategoryIds, 
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>().With(e => e.CategoryIds,
                     new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() }).Create();
 
             var organisationId = TestFixture.Create<Guid>();
@@ -216,15 +403,15 @@
                 TestFixture.Create<TransferEvidenceNoteData>(), organisationId, TestFixture.Create<string>());
 
             A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && 
-                                 v.EvidenceNoteData.Equals(notes.ElementAt(0)) && 
+                            v => v.IncludeAllCategories.Equals(false) &&
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(0)) &&
                                  v.NoteStatus == null &&
                                  v.User == null &&
                                  v.PrintableVersion == false))).Returns(viewEvidenceNoteViewModel.ElementAt(0));
 
             A.CallTo(() => mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
-                            v => v.IncludeAllCategories.Equals(false) && 
-                                 v.EvidenceNoteData.Equals(notes.ElementAt(1)) && 
+                            v => v.IncludeAllCategories.Equals(false) &&
+                                 v.EvidenceNoteData.Equals(notes.ElementAt(1)) &&
                                  v.NoteStatus == null &&
                                  v.User == null &&
                                  v.PrintableVersion == false))).Returns(viewEvidenceNoteViewModel.ElementAt(1));
@@ -235,6 +422,7 @@
             //assert
             result.EvidenceNotesDataList.ElementAt(0).Should().BeEquivalentTo(viewEvidenceNoteViewModel.ElementAt(1)); // ordered by ref
             result.EvidenceNotesDataList.ElementAt(1).Should().BeEquivalentTo(viewEvidenceNoteViewModel.ElementAt(0)); // ordered by ref
+            result.EvidenceNotesDataList.Count.Should().Be(2);
         }
 
         [Fact]
