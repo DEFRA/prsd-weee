@@ -24,7 +24,9 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-quarter" })
+            <div class="govuk-!-width-one-quarter">
+                @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+            </div>
         </div>
 
             <p class="govuk-!--margin-top-3 govuk-!-padding-bottom-2">
