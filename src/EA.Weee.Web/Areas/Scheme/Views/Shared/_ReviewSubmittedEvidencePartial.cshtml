@@ -50,32 +50,32 @@
                             <td class="govuk-table__cell"> </td>
                         }
                         <td class="govuk-table__cell">
-                        @if (note.Type == NoteType.Evidence)
-                        {
-                            if (Model.CanSchemeManageEvidence)
+                            @if (note.Type == NoteType.Evidence)
                             {
-                                if (Model.SchemeInfo != null)
+                                if (Model.CanSchemeManageEvidence)
                                 {
-                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                    if (Model.SchemeInfo != null)
+                                    {
+                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
                                 }
                             }
                             else
                             {
-                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
+                                if (Model.CanSchemeManageEvidence)
+                                {
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
+                                }
+                                else
+                                {
+                                    @Html.NavigationRouteLink("View", "View transfer note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
+                                }
                             }
-                        }
-                        else
-                        {
-                            if (Model.CanSchemeManageEvidence)
-                            {
-                                @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
-                            }
-                            else
-                            {
-                                @Html.NavigationRouteLink("View", "View transfer note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString() }, null)
-                            }
-                        }
-                    </td>
+                        </td>
                     </tr>
                 }
             }
@@ -94,4 +94,12 @@
             }
         </tbody>
     </table>
+    <br />
+    @{
+        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
+                    { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+                         manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                         manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
+                         Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null} } });
+    }
 </section>

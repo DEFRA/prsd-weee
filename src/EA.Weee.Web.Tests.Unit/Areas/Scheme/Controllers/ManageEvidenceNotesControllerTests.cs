@@ -297,6 +297,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -311,7 +312,7 @@
                      g.ComplianceYear.Equals(currentDate.Year) &&
                      g.TransferredOut == false &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes) &&
-                     g.PageSize == int.MaxValue &&
+                     g.PageSize == 10 &&
                      g.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
@@ -326,7 +327,8 @@
                 .With(e => e.Results, returnList).Create();
 
             var currentDate = TestFixture.Create<DateTime>();
-            
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -338,7 +340,7 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.PageNumber == pageNumber && g.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                g => g.PageNumber == pageNumber && g.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -357,6 +359,7 @@
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { Name = schemeName });
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -371,7 +374,7 @@
                      g.ComplianceYear.Equals(complianceYear) &&
                      g.TransferredOut == false &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes) &&
-                     g.PageSize == int.MaxValue &&
+                     g.PageSize == 10 &&
                      g.PageNumber == 1))).MustHaveHappenedOnceExactly();
         }
 
@@ -399,6 +402,7 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
             var currentDate = TestFixture.Create<DateTime>();
 
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -414,7 +418,7 @@
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
                          a.PageNumber == 1 &&
-                         a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                         a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -425,6 +429,7 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
             var currentDate = TestFixture.Create<DateTime>();
 
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -438,7 +443,7 @@
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<SchemeTabViewModelMapTransfer>.That.Matches(
                     a => a.PageNumber == pageNumber &&
-                         a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                         a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -450,6 +455,7 @@
             var currentDate = TestFixture.Create<DateTime>();
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -466,7 +472,7 @@
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
                          a.PageNumber == 1 &&
-                         a.PageSize == int.MaxValue))).MustHaveHappenedOnceExactly();
+                         a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
