@@ -39,17 +39,17 @@
                 ComplianceYear = source.ComplianceYear
             };
 
-            if (source.SelectedNotes != null)
-            {
-                foreach (var evidenceNoteData in source.SelectedNotes.Results.OrderByDescending(n => n.Reference))
-                {
-                    model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
-                        new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
-                        {
-                            IncludeAllCategories = false
-                        }));
-                }
-            }
+            //if (source.SelectedNotes != null)
+            //{
+            //    foreach (var evidenceNoteData in source.SelectedNotes.Results.OrderByDescending(n => n.Reference))
+            //    {
+            //        model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
+            //            new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
+            //            {
+            //                IncludeAllCategories = false
+            //            }));
+            //    }
+            //}
 
             if (source.TransferEvidenceNoteData != null)
             {

@@ -126,9 +126,35 @@
             var source = new TransferEvidenceNotesViewModelMapTransfer(
                 new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
                 new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
-                null, noteData, TestFixture.Create<Guid>(), TestFixture.Create<string>());
+                null,
+                noteData, TestFixture.Create<Guid>(), TestFixture.Create<string>());
 
             A.CallTo(() => cache.FetchSchemePublicInfo(source.TransferEvidenceNoteData.RecipientOrganisationData.Id)).Returns(new SchemePublicInfo()
+            {
+                Name = schemeName
+            });
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.RecipientName.Should().Be(schemeName);
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRequest_SchemeNameShouldBeRetrievedFromCacheAndSet()
+        {
+            //arrange
+            var schemeName = TestFixture.Create<string>();
+            var noteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var source = new TransferEvidenceNotesViewModelMapTransfer(
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
+                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3),
+                TestFixture.Build<TransferEvidenceNoteRequest>()
+                    .With(r => r.CategoryIds, new List<int>()).Create(),
+                noteData, TestFixture.Create<Guid>(), TestFixture.Create<string>());
+
+            A.CallTo(() => cache.FetchSchemePublicInfo(source.Request.RecipientId)).Returns(new SchemePublicInfo()
             {
                 Name = schemeName
             });
@@ -160,8 +186,20 @@
             //arrange
             var notes = new List<EvidenceNoteData>()
             {
-                TestFixture.Build<EvidenceNoteData>().With(e => e.Reference, 1).Create(),
-                TestFixture.Build<EvidenceNoteData>().With(e => e.Reference, 2).Create(),
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 1)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 1, null, null, null)
+                    })
+                    .Create(),
+                TestFixture.Build<EvidenceNoteData>()
+                    .With(e => e.Reference, 2)
+                    .With(e => e.EvidenceTonnageData, new List<EvidenceTonnageData>()
+                    {
+                        new EvidenceTonnageData(TestFixture.Create<Guid>(), Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment, 1, null, null, null)
+                    })
+                    .Create(),
             };
 
             var selectedEvidenceNoteData = new EvidenceNoteSearchDataResult(notes, 2);
