@@ -24,30 +24,32 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false", @class = "govuk-!-width-one-quarter" })
+            <div class="govuk-!-width-one-quarter">
+                @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+            </div>
         </div>
 
-        <p>
-            If there is a large amount of data, it may take a while to download the report.
-        </p>
+            <p class="govuk-!--margin-top-3 govuk-!-padding-bottom-2">
+                If there is a large amount of data, it may take a while to download the report.
+            </p>
 
-        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
+            @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
             "Report download", "Evidence transfers report", new Dictionary<string, object> { { "class", "button" } }))
-    }
+            }
 
-    <p>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-    </p>
+            <p class="govuk-!--margin-top-3">
+                @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+            </p>
 
-}
-@section scripts {
-    @if (ViewBag.TriggerDownload)
-    {
-        <script type="text/javascript">
+            }
+            @section scripts {
+                @if (ViewBag.TriggerDownload)
+                {
+                    <script type="text/javascript">
             window.location = "@Html.Raw(@Url.Action("DownloadEvidenceTransferNoteReport", new
                           {
                               complianceYear = Model.SelectedYear,
                           }))";
-        </script>
-    }
-}
+                    </script>
+                }
+            }
