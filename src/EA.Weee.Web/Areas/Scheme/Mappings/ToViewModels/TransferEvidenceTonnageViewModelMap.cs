@@ -10,6 +10,7 @@
     using Services.Caching;
     using ViewModels;
     using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Mapping;
 
     public class TransferEvidenceTonnageViewModelMap : TransferEvidenceMapBase<TransferEvidenceTonnageViewModel>, IMap<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceTonnageViewModel>
     {
@@ -24,6 +25,18 @@
             var model = MapBaseProperties(source);
 
             model.TransferAllTonnage = source.TransferAllTonnage;
+
+            if (source.SelectedNotes != null)
+            {
+                foreach (var evidenceNoteData in source.SelectedNotes.Results.OrderByDescending(n => n.Reference))
+                {
+                    model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
+                        new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
+                        {
+                            IncludeAllCategories = false
+                        }));
+                }
+            }
 
             model.EvidenceNotesDataList =
                 model.EvidenceNotesDataList.OrderBy(a => a.SubmittedBy).ThenByDescending(ab => ab.Reference).ToList();
