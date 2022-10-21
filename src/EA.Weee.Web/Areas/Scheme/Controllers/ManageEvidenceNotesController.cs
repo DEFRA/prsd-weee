@@ -1,15 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Aatf.Mappings.ToViewModel;
     using Attributes;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Email;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Constants;
@@ -27,6 +20,11 @@
     using Extensions;
     using Filters;
     using Prsd.Core.Extensions;
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -117,10 +115,10 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue, null));
+                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, int.MaxValue));
+                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                     (new ManageEvidenceNoteTransfer(organisationId, null, null, null, selectedComplianceYear, currentDate));
