@@ -21,14 +21,14 @@
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveNoCacheAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
