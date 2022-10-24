@@ -156,7 +156,7 @@
         [HttpGet]
         [CheckCanEditTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null, int page = 1)
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null, int page = 1, string queryString = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -181,6 +181,7 @@
                 });
 
                 ViewBag.Page = page;
+                ViewBag.QueryString = queryString;
 
                 return this.View("EditDraftTransfer", model);
             }
