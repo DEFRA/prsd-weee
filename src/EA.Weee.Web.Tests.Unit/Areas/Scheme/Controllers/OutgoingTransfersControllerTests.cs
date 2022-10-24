@@ -232,7 +232,7 @@
         public void EditDraftTransferGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -240,7 +240,7 @@
         public void EditDraftTransferGet_ShouldHaveNoCacheFilterAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
@@ -248,7 +248,7 @@
         public void EditDraftTransfer_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
