@@ -20,7 +20,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
     using AutoFixture.Kernel;
     using Web.Areas.Scheme.Attributes;
@@ -986,6 +985,31 @@
 
             //assert
             A.CallTo(() => sessionService.ClearTransferSessionObject(SessionKeyConstant.EditTransferEvidenceTonnageViewModel)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditDraftTransferGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        {
+            // arrange 
+            var queryString = TestFixture.Create<string>();
+
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
+                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>(), queryString);
+
+            //assert
+            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+        }
+
+        [Fact]
+        public async Task EditDraftTransferGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        {
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>());
+
+            //assert
+            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(null);
         }
 
         [Fact]
