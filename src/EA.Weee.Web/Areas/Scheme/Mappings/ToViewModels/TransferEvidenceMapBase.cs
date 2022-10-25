@@ -1,16 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Helpers;
-    using Core.Shared.Paging;
     using CuttingEdge.Conditions;
     using Filters;
     using Prsd.Core.Mapper;
     using Services.Caching;
+    using System.Collections.Generic;
+    using System.Linq;
     using ViewModels;
     using Web.ViewModels.Shared;
-    using Web.ViewModels.Shared.Mapping;
 
     public abstract class TransferEvidenceMapBase<T> where T : TransferEvidenceViewModelBase, new()
     {
@@ -38,18 +36,6 @@
                 RecipientId = recipientId,
                 ComplianceYear = source.ComplianceYear
             };
-
-            //if (source.SelectedNotes != null)
-            //{
-            //    foreach (var evidenceNoteData in source.SelectedNotes.Results.OrderByDescending(n => n.Reference))
-            //    {
-            //        model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
-            //            new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
-            //            {
-            //                IncludeAllCategories = false
-            //            }));
-            //    }
-            //}
 
             if (source.TransferEvidenceNoteData != null)
             {
