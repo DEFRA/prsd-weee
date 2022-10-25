@@ -993,22 +993,22 @@
             // arrange 
             var queryString = TestFixture.Create<string>();
 
-            //act
+            // act
             await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
                 TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>(), queryString);
 
-            //assert
+            // assert
             ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
         }
 
         [Fact]
         public async Task EditDraftTransferGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
         {
-            //act
+            // act
             await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
                 TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>());
 
-            //assert
+            // assert
             ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(null);
         }
 
