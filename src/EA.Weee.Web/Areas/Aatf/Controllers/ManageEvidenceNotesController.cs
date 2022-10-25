@@ -428,10 +428,10 @@
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
-                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, int.MaxValue));
+                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(
-                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, int.MaxValue));
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));
