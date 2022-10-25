@@ -353,7 +353,7 @@
                 g.ComplianceYear.Equals(complianceYear) && 
                 g.AllowedStatuses.Contains(NoteStatus.Draft) &&
                 g.SearchRef == null &&
-                g.PageSize == int.MaxValue &&
+                g.PageSize == 10 &&
                 g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -371,7 +371,7 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
-                g.PageSize == int.MaxValue &&
+                g.PageSize == 10 &&
                 g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -527,7 +527,7 @@
                 g.OrganisationId.Equals(OrganisationId) &&
                 g.AllowedStatuses.Contains(NoteStatus.Draft) &&
                 g.SearchRef.Equals(filter.FilterViewModel.SearchRef) &&
-                g.PageSize == int.MaxValue &&
+                g.PageSize == 10 &&
                 g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -599,7 +599,7 @@
                 A<EvidenceNotesViewModelTransfer>.That.Matches(
                     e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
                          e.NoteData.Equals(noteData) &&
-                         e.PageSize == int.MaxValue &&
+                         e.PageSize == 10 &&
                          e.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -624,7 +624,7 @@
                          e.OrganisationId.Equals(OrganisationId) &&
                          e.NoteData.Equals(noteData) &&
                          e.ManageEvidenceNoteViewModel == existingModel &&
-                         e.PageSize == int.MaxValue &&
+                         e.PageSize == 10 &&
                          e.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 

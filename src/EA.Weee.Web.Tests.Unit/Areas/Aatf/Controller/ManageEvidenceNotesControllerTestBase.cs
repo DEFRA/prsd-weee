@@ -3,6 +3,7 @@
     using Api.Client;
     using AutoFixture;
     using Core.AatfEvidence;
+    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using Services;
@@ -18,7 +19,7 @@
     using Weee.Requests.Aatf;
     using Weee.Requests.AatfEvidence;
 
-    public class ManageEvidenceNotesControllerTestsBase
+    public class ManageEvidenceNotesControllerTestsBase : SimpleUnitTestBase
     {
         protected readonly IWeeeClient WeeeClient;
         protected readonly IMapper Mapper;
