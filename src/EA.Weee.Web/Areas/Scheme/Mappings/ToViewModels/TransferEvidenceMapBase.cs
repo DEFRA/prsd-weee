@@ -1,16 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Helpers;
-    using Core.Shared.Paging;
     using CuttingEdge.Conditions;
     using Filters;
     using Prsd.Core.Mapper;
     using Services.Caching;
+    using System.Collections.Generic;
+    using System.Linq;
     using ViewModels;
     using Web.ViewModels.Shared;
-    using Web.ViewModels.Shared.Mapping;
 
     public abstract class TransferEvidenceMapBase<T> where T : TransferEvidenceViewModelBase, new()
     {
