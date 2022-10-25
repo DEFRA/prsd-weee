@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using AutoFixture;
+    using Core.AatfEvidence;
     using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Evidence;
@@ -26,6 +27,12 @@
         public EvidenceNoteRowMapTests()
         {
             map = new EvidenceNoteRowMap();
+        }
+
+        [Fact]
+        public void EvidenceNoteRowMap_ShouldDeriveFromEvidenceNoteDataMapBase()
+        {
+            typeof(EvidenceNoteRowMap).Should().BeDerivedFrom<EvidenceNoteDataMapBase<EvidenceNoteData>>();
         }
 
         [Fact]
