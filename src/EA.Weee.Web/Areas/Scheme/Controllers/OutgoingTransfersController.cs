@@ -11,7 +11,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
@@ -156,7 +155,7 @@
         [HttpGet]
         [CheckCanEditTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null, int page = 1)
+        public async Task<ActionResult> EditDraftTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null, int page = 1, string queryString = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -181,6 +180,7 @@
                 });
 
                 ViewBag.Page = page;
+                ViewBag.QueryString = queryString;
 
                 return this.View("EditDraftTransfer", model);
             }
