@@ -26,8 +26,7 @@
         {
             if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
             {
-                @(this.WeeeGds().BackLink(
-                    string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
+                @(this.WeeeGds().BackLink(string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
             }
             else
             {
