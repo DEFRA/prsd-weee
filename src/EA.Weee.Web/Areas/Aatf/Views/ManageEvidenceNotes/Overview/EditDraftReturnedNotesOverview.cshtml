@@ -96,11 +96,14 @@
                                     </td>
                                 </tr>
                             }
-
                         </tbody>
                     </table>
-
                     <br />
+                    @{
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
+                         { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
+                         manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
+                    }
                 </section>
             </div>
         </div>

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -201,7 +200,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId, int page = 1)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId, int page = 1, string queryString = null)
         {
             using (var client = apiClient())
             {
@@ -214,6 +213,7 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false));
 
                 ViewBag.Page = page;
+                ViewBag.QueryString = queryString;
 
                 return View(model);
             }
@@ -428,10 +428,10 @@
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
-                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, int.MaxValue));
+                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(
-                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, int.MaxValue));
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));
