@@ -246,7 +246,8 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1, bool openedInNewTab = false)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1,
+            bool openedInNewTab = false, string queryString = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -265,6 +266,8 @@
                     Page = page,
                     OpenedInNewTab = openedInNewTab
                 });
+
+                ViewBag.QueryString = queryString;
 
                 return View("TransferredEvidence", model);
             }
