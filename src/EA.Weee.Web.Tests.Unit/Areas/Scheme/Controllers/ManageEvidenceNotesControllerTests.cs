@@ -35,11 +35,9 @@
         protected new readonly ManageEvidenceNotesController ManageEvidenceController;
         protected readonly IRequestCreator<TransferEvidenceNoteCategoriesViewModel, TransferEvidenceNoteRequest> TransferNoteRequestCreator;
         private readonly ConfigurationService configurationService;
-        protected readonly Fixture TestFixture;
 
         public ManageEvidenceNotesControllerTests()
         {
-            TestFixture = new Fixture();
             configurationService = A.Fake<ConfigurationService>();
             A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
 

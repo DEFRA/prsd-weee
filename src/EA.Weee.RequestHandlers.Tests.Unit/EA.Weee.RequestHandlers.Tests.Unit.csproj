@@ -363,6 +363,8 @@
     <Compile Include="Mapping\AatfSimpleMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
+    <Compile Include="Mapping\EvidenceNoteWithCriteriaMapperTests.cs" />
+    <Compile Include="Mapping\EvidenceNoteRowCriteriaMapperTests.cs" />
     <Compile Include="Mapping\EvidenceNoteRowMapTests.cs" />
     <Compile Include="Mapping\ListOfEvidenceNoteDataMapUnitTests.cs" />
     <Compile Include="Mapping\ObligationSummaryTotalsMapTests.cs" />
