@@ -97,9 +97,7 @@
     <br />
     @{
         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                    { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
-                         manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                         manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
-                         Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null} } });
+                { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+                         manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
     }
 </section>
