@@ -32,7 +32,8 @@
                 {
                     foreach (var evidenceNoteData in source.SelectedNotes.Results.OrderByDescending(n => n.Reference))
                     {
-                        if (evidenceNoteData.EvidenceTonnageData.Where(e => e.Received.HasValue).Select(e => e.CategoryId.ToInt()).Intersect(source.Request.CategoryIds).Any())
+                        if (evidenceNoteData.EvidenceTonnageData.Where(e => e.Received.HasValue)
+                            .Select(e => e.CategoryId.ToInt()).Intersect(source.Request.CategoryIds).Any())
                         {
                             model.EvidenceNotesDataList.Add(Mapper.Map<ViewEvidenceNoteViewModel>(
                                 new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
