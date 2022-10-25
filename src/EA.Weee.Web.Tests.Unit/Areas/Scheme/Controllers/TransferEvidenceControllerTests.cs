@@ -89,13 +89,13 @@
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -1983,6 +1983,31 @@
                          t.OpenedInNewTab == openedInNewTab &&
                          t.Page == page)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferredEvidenceGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        {
+            // arrange 
+            var queryString = TestFixture.Create<string>();
+
+            //act
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
+                TestFixture.Create<string>(), queryString: queryString);
+
+            //assert
+            ((string)transferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+        }
+
+        [Fact]
+        public async Task TransferredEvidenceGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        {
+            //act
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
+                TestFixture.Create<string>());
+
+            //assert
+            ((string)transferEvidenceController.ViewBag.QueryString).Should().Be(null);
         }
 
         [Fact]
