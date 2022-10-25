@@ -24,10 +24,16 @@
         }
         else
         {
-            @(this.WeeeGds().BackLink(
+            if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
+            {
+                @(this.WeeeGds().BackLink(string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
+            }
+            else
+            {
+                @(this.WeeeGds().BackLink(
                 Url.Action("Index", "ManageEvidenceNotes",
                     new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = Model.Page })))
-
+            }
         }
     }
 
@@ -43,5 +49,5 @@
     <p class="govuk-body">
         @Html.ActionLink("Download as PDF", "DownloadTransferEvidenceNote", "TransferEvidence", new { area = "Scheme", pcsId = Model.SchemeId, transferEvidenceNoteId = Model.EvidenceNoteId }, new { @class = "govuk-link" })
     </p>
-    
+
 }

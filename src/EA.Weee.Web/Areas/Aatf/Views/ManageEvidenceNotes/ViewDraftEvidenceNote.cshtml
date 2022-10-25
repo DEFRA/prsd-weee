@@ -1,7 +1,5 @@
-﻿@using EA.Weee.Web.Areas.Aatf.Controllers
-@using EA.Weee.Web.Infrastructure
+﻿@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Shared.ViewEvidenceNoteViewModel
 @{
     ViewBag.Title = Model.TabName + " - GOV.UK";
@@ -14,16 +12,23 @@
         @(this.WeeeGds().BackLink(
             Url.Action("Index", "ManageEvidenceNotes",
                 new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }), "Manage evidence notes"))
-			
+
         @(this.WeeeGds().Panel(Model.SuccessMessage))
     }
     else
     {
-        @(this.WeeeGds().BackLink(
+        if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
+        {
+            @(this.WeeeGds().BackLink(
+                        string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
+        }
+        else
+        {
+            @(this.WeeeGds().BackLink(
             Url.Action("Index", "ManageEvidenceNotes",
                 new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
+        }
     }
-
 
     @Html.Partial("_ViewEvidenceNotePartial", Model)
 
@@ -33,7 +38,7 @@
             @Html.RouteLink("Edit and submit", AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id }, new { @class = "govuk-button govuk-button--primary" })
         </div>
     }
-    
+
     <p class="govuk-body">
         @Html.ActionLink("Download as PDF", "DownloadEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", evidenceNoteId = @Model.Id }, new { @class = "govuk-link" })
     </p>
