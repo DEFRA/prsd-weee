@@ -33,48 +33,48 @@ else
             Which categories would you like to transfer?
         </legend>
 
-        <div class="govuk-!-padding-bottom-5">
-            <div class='govuk-checkboxes'>
-                <div class='govuk-checkboxes__item'>
-                    @{
-                        var selectAllCheckboxes = Model.SelectAllCheckboxes ? "checked" : "";
-                    }
-                    <input class="govuk-checkboxes__input" type="checkbox" value="true" id="all_checkbox_select_id"
-                           name="SelectAllCheckboxes" @selectAllCheckboxes/>
-                    <label class="govuk-label&#32;govuk-checkboxes__label" for="all_checkbox_select_id">
-                        All categories (1-14)
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <div class="govuk-!-padding-top-5"></div>
-        @for (var i = 0; i < Model.CategoryBooleanViewModels.Count; i++)
-        {
-            @Html.HiddenFor(m => m.HasSelectedAtLeastOneCategory, new { id = i + "_HasSelectedAtLeastOneCategory" })
-
-            <div>
+            <div class="govuk-!-padding-bottom-5" style="display:none" id="SelectAllCheckboxesSection">
                 <div class='govuk-checkboxes'>
                     <div class='govuk-checkboxes__item'>
                         @{
-                            var category = Model.CategoryBooleanViewModels[i];
-                            var selectedOption = Model.CategoryBooleanViewModels[i].Selected ? "checked" : "";
-                            var id = "CategoryBooleanViewModels_" + i + "__Selected";
-                            var name = "CategoryBooleanViewModels[" + i + "].Selected";
+                            var selectAllCheckboxes = Model.SelectAllCheckboxes ? "checked" : "";
                         }
-
-                        <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
-                        <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
-                            @category.CategoryId. @category.CategoryDisplay
+                        <input class="govuk-checkboxes__input" type="checkbox" value="true" id="all_checkbox_select_id"
+                               name="SelectAllCheckboxes" @selectAllCheckboxes />
+                        <label class="govuk-label&#32;govuk-checkboxes__label" for="all_checkbox_select_id">
+                            All categories (1-14)
                         </label>
-                        <input name="@name" type="hidden" value="false">
                     </div>
                 </div>
-                <br />
             </div>
-            @Html.HiddenFor(m => m.CategoryBooleanViewModels[i].CategoryId)
-        }
-    </fieldset>
+
+                <div class="govuk-!-padding-top-5"></div>
+                @for (var i = 0; i < Model.CategoryBooleanViewModels.Count; i++)
+                {
+                    @Html.HiddenFor(m => m.HasSelectedAtLeastOneCategory, new { id = i + "_HasSelectedAtLeastOneCategory" })
+
+                    <div>
+                        <div class='govuk-checkboxes'>
+                            <div class='govuk-checkboxes__item'>
+                                @{
+                                    var category = Model.CategoryBooleanViewModels[i];
+                                    var selectedOption = Model.CategoryBooleanViewModels[i].Selected ? "checked" : "";
+                                    var id = "CategoryBooleanViewModels_" + i + "__Selected";
+                                    var name = "CategoryBooleanViewModels[" + i + "].Selected";
+                                }
+
+                                <input class="govuk-checkboxes__input" id=@id name=@name type="checkbox" value="true" @selectedOption />
+                                <label class="govuk-label&#32;govuk-checkboxes__label" for="@id">
+                                    @category.CategoryId. @category.CategoryDisplay
+                                </label>
+                                <input name="@name" type="hidden" value="false">
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    @Html.HiddenFor(m => m.CategoryBooleanViewModels[i].CategoryId)
+                }
+</fieldset>
 </div>
 
 <div class="govuk-!-margin-top-3">
