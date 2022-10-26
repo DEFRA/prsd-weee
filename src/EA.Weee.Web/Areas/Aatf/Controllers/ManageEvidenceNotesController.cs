@@ -324,6 +324,21 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceSummaryReport(Guid aatfId, int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetEvidenceNoteReportRequest(null, aatfId, TonnageToDisplayReportEnum.Net, complianceYear);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> DownloadEvidenceNotesReport(Guid? aatfId, int complianceYear, TonnageToDisplayReportEnum tonnageToDisplay)
         {
             using (var client = apiClient())
