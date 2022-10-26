@@ -81,9 +81,10 @@
             var organisationId = fixture.Create<Guid>();
             var statusList = fixture.CreateMany<NoteStatus>().ToList();
             var noteStatus = fixture.Create<NoteStatus?>();
+            var searchRef = fixture.Create<string>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, noteStatus, null);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, noteStatus, searchRef);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
@@ -91,6 +92,7 @@
             result.ComplianceYear.Should().Be(complianceYear);
             result.TransferredOut.Should().Be(transferredOut);
             result.NoteStatusFilter.Should().Be(noteStatus);
+            result.SearchRef.Should().Be(searchRef);
         }
     }
 }
