@@ -28,7 +28,7 @@ CREATE TABLE #AatfSummaryTotals(
 INSERT INTO #AatfSummaryTotals (CategoryId, CategoryName)
 SELECT
 	c.Id,
-	c.[Name]
+	CAST(c.Id AS NVARCHAR) + '. ' + c.[Name]
 FROM
 	Lookup.WeeeCategory c
 UNION ALL
