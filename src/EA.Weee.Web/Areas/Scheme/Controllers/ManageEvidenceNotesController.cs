@@ -115,7 +115,7 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null));
+                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, null));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
@@ -143,7 +143,7 @@
                         NoteStatus.Void,
                         NoteStatus.Returned
                     }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, 
-                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null));
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
@@ -175,7 +175,8 @@
                     true, 
                     pageNumber, 
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
-                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                    manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                             new RecipientWasteStatusFilterBase(null,
