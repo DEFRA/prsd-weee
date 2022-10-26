@@ -10,7 +10,6 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Web.Areas.Scheme.ViewModels;
-    using Web.ViewModels.Shared;
     using Weee.Requests.Scheme;
     using Weee.Tests.Core;
     using Xunit;

@@ -67,8 +67,9 @@
             //arrange
             var organisationId = Guid.NewGuid();
             var selectedScheme = Guid.NewGuid();
+            var selectAll = TestFixture.Create<bool>();
 
-            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId, selectAll);
             var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
 
            //act
@@ -80,6 +81,7 @@
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeNullOrEmpty();
             request.DeselectedEvidenceNoteIds.Should().BeEmpty();
+            request.SelectAllCheckBoxes.Should().Be(selectAll);
         }
 
         [Fact]
@@ -88,8 +90,9 @@
             //arrange
             var organisationId = Guid.NewGuid();
             var selectedScheme = Guid.NewGuid();
+            var selectAll = TestFixture.Create<bool>();
 
-            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId, selectAll);
             var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
 
             //act
@@ -100,6 +103,7 @@
             request.RecipientId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeEmpty();
+            request.SelectAllCheckBoxes.Should().Be(selectAll);
         }
 
         [Fact]
@@ -108,8 +112,9 @@
             //arrange
             var organisationId = Guid.NewGuid();
             var selectedScheme = Guid.NewGuid();
+            var selectAll = TestFixture.Create<bool>();
 
-            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId, selectAll);
             var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
 
             //act
@@ -121,6 +126,7 @@
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeEmpty();
             request.DeselectedEvidenceNoteIds.Should().BeEmpty();
+            request.SelectAllCheckBoxes.Should().Be(selectAll);
         }
 
         [Fact]
@@ -129,8 +135,9 @@
             //arrange
             var organisationId = Guid.NewGuid();
             var selectedScheme = Guid.NewGuid();
+            var selectAll = TestFixture.Create<bool>();
 
-            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId, selectAll);
             var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
 
             //act
@@ -141,6 +148,7 @@
             request.RecipientId.Should().Be(selectedScheme);
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeEmpty();
+            request.SelectAllCheckBoxes.Should().Be(selectAll);
         }
 
         [Fact]
@@ -149,13 +157,13 @@
             //arrange
             var organisationId = Guid.NewGuid();
             var selectedScheme = Guid.NewGuid();
+            var selectAll = TestFixture.Create<bool>();
 
-            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId);
+            var model = GetValidModelWithSelectedCategories(selectedScheme, organisationId, selectAll);
             var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
             var evidenceIds = TestFixture.CreateMany<Guid>().ToList();
             var deselectedEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
-            var selectAll = TestFixture.Create<bool>();
-
+           
             var existingRequest =
                 new TransferEvidenceNoteRequest(organisationId, selectedScheme, selectedIds, evidenceIds, deselectedEvidenceNoteIds, selectAll);
 
@@ -168,6 +176,7 @@
             request.OrganisationId.Should().Be(organisationId);
             request.EvidenceNoteIds.Should().BeEquivalentTo(evidenceIds);
             request.DeselectedEvidenceNoteIds.Should().BeEquivalentTo(deselectedEvidenceNoteIds);
+            request.SelectAllCheckBoxes.Should().Be(selectAll);
         }
 
         [Theory]
@@ -182,6 +191,7 @@
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
             var deselectedEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
             var complianceYear = TestFixture.Create<int>();
+            var selectAll = TestFixture.Create<bool>();
 
             var transferCategoryTonnage = new List<TransferEvidenceCategoryValue>()
             {
@@ -194,7 +204,7 @@
                 categories,
                 evidenceNoteIds,
                 deselectedEvidenceNoteIds,
-                TestFixture.Create<bool>());
+                selectAll);
 
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(v => v.Action, action)
@@ -350,7 +360,7 @@
             return new TransferEvidenceNoteCategoriesViewModel();
         }
 
-        private TransferEvidenceNoteCategoriesViewModel GetValidModelWithSelectedCategories(Guid selectedScheme, Guid organisationId)
+        private TransferEvidenceNoteCategoriesViewModel GetValidModelWithSelectedCategories(Guid selectedScheme, Guid organisationId, bool selectAll)
         {
             var model = GetModel();
             model.CategoryBooleanViewModels.ElementAt(0).Selected = true;
@@ -358,6 +368,7 @@
             model.CategoryBooleanViewModels.ElementAt(2).Selected = true;
             model.SelectedSchema = selectedScheme;
             model.OrganisationId = organisationId;
+            model.SelectAllCheckboxes = selectAll;
 
             return model;
         }
