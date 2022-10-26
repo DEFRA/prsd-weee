@@ -18,6 +18,16 @@
                     View evidence that has been transferred
                 </h2>
 
+                @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Get))
+                {
+                    @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
+                    <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                        <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                        </div>
+                    </div>
+                }
+
                 @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                 {
                     @Html.Gds().ValidationSummary()
@@ -31,7 +41,7 @@
                             </div>
                             <div class="govuk-grid-column-one-quarter govuk-!-padding-top-9 govuk-!-padding-bottom-1">
                                 @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                                     new ViewDataDictionary() { new KeyValuePair<string, object>("tab",
+                                                                         new ViewDataDictionary() { new KeyValuePair<string, object>("tab",
                                                         ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString()) })
                             </div>
                         </div>
@@ -84,7 +94,7 @@
                             <tr>
                                 <td colspan="6">
                                     @Html.Partial("~/Areas/Scheme/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary()
-                               { new KeyValuePair<string, object>("no-results-message", "<p>There have not been any evidence note transfers </p>") })
+                                                                                               { new KeyValuePair<string, object>("no-results-message", "<p>There have not been any evidence note transfers </p>") })
                                 </td>
                             </tr>
                             <tr>
@@ -98,12 +108,12 @@
                 <br />
                 @{
                     Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                        { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+                                        { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
                          manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
                          manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
                          Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null} } });
                 }
-            
+
             </section>
         </div>
     </div>

@@ -31,7 +31,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -42,7 +42,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -53,7 +53,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -66,7 +66,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -83,7 +83,7 @@
             var noteStatus = fixture.Create<NoteStatus?>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, noteStatus);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, noteStatus, null);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);

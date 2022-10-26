@@ -17,7 +17,8 @@
             bool transferredOut,
             int pageNumber,
             int pageSize,
-            NoteStatus? noteStatus)
+            NoteStatus? noteStatus,
+            string searchRef)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
@@ -35,6 +36,7 @@
             PageNumber = pageNumber;
             PageSize = pageSize;
             NoteStatusFilter = noteStatus;
+            SearchRef = searchRef;
         }
     }
 }

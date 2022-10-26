@@ -61,7 +61,8 @@
                 RecipientId = recipientId,
                 OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                NoteStatusId = (int?)request.NoteStatusFilter
+                NoteStatusId = (int?)request.NoteStatusFilter,
+                SearchRef = request.SearchRef
             };
 
             var noteData = await noteDataAccess.GetAllNotes(filter);
