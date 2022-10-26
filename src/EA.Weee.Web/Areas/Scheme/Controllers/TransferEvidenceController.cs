@@ -77,6 +77,7 @@
                 model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
                     .ForEach(c => c.Selected = true);
                 model.SelectedSchema = transferRequest.RecipientId;
+                model.SelectAllCheckboxes = transferRequest.SelectAllCheckBoxes;
             }
 
             return View("TransferEvidenceNote", model);
