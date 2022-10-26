@@ -32,7 +32,7 @@
         public void TransferEvidenceNoteDataViewModel_HasSelectedAtLeastOneCategory_ShouldHaveRequiredAttribute()
         {
             var property = "HasSelectedAtLeastOneCategory";
-            var errorMessage = "Select a category you would like to transfer evidence from";
+            var errorMessage = "Select which categories you would like to transfer from";
 
             typeof(TransferEvidenceNoteCategoriesViewModel)
                 .GetProperty(property)
