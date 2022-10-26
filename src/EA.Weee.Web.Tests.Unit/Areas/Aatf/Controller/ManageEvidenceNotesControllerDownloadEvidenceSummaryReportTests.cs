@@ -28,6 +28,7 @@
             //arrange
             var aatfId = TestFixture.Create<Guid>();
             var complianceYear = TestFixture.Create<int>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfSummaryReportRequest>._)).Returns(Fixture.Create<CSVFileData>());
 
             //act
             await ManageEvidenceController.DownloadEvidenceSummaryReport(aatfId, complianceYear);
