@@ -328,7 +328,7 @@
         {
             using (var client = apiClient())
             {
-                var request = new GetEvidenceNoteReportRequest(null, aatfId, TonnageToDisplayReportEnum.Net, complianceYear);
+                var request = new GetAatfSummaryReportRequest(aatfId,  complianceYear);
 
                 var file = await client.SendAsync(User.GetAccessToken(), request);
 

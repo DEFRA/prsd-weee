@@ -29,7 +29,7 @@
                     <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-1">
                         @(this.WeeeGds().ActionLinkWithEventTracking("Download summary report (CSV)",
                                                                  null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceSummaryReport(Model.ManageEvidenceNoteViewModel.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
+                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceSummaryReport(Model.ManageEvidenceNoteViewModel.AatfId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
                                                                  "Downloads",
                                                                  "Evidence summary report (CSV)"))
                     </p>
