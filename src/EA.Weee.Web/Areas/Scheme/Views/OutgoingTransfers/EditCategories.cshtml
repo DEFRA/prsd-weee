@@ -33,6 +33,8 @@
 @section scripts {
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#SelectAllCheckboxesSection').css("display", "block");
+
             $('#all_checkbox_select_id').click(function () {
                 $(".govuk-checkboxes__input").prop('checked', $(this).prop('checked'));
             });
