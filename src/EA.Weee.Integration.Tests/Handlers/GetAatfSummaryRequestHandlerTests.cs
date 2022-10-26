@@ -136,7 +136,20 @@
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                        n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Void, UserId.ToString(), SystemTime.UtcNow);
+                    }).Create();
+
+                //returned note
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithAatf(aatf.Id)
+                    .WithTonnages(NoteTonnages())
+                    .WithOrganisation(organisation.Id)
+                    .WithComplianceYear(complianceYear)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), SystemTime.UtcNow);
                     }).Create();
 
                 request = new GetAatfSummaryRequest(aatf.Id, complianceYear);

@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Constants;
+    using Core.Helpers;
     using Core.Shared;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
@@ -35,11 +36,11 @@
             var summaryData = await evidenceStoredProcedures.GetAatfEvidenceSummaryTotals(request.AatfId, request.ComplianceYear);
 
             csvWriter.DefineColumn(EvidenceReportConstants.Category, x => x.CategoryName);
-            csvWriter.DefineColumn(EvidenceReportConstants.ApprovedEvidence, x => x.ApprovedReceived);
-            csvWriter.DefineColumn(EvidenceReportConstants.ApprovedReuse, x => x.ApprovedReused);
-            csvWriter.DefineColumn(EvidenceReportConstants.SubmittedEvidence, x => x.SubmittedReceived);
-            csvWriter.DefineColumn(EvidenceReportConstants.SubmittedReuse, x => x.SubmittedReused);
-            csvWriter.DefineColumn(EvidenceReportConstants.DraftEvidence, x => x.DraftReceived);
+            csvWriter.DefineColumn(EvidenceReportConstants.ApprovedEvidence, x => x.ApprovedReceived.ToTonnageDisplay());
+            csvWriter.DefineColumn(EvidenceReportConstants.ApprovedReuse, x => x.ApprovedReused.ToTonnageDisplay());
+            csvWriter.DefineColumn(EvidenceReportConstants.SubmittedEvidence, x => x.SubmittedReceived.ToTonnageDisplay());
+            csvWriter.DefineColumn(EvidenceReportConstants.SubmittedReuse, x => x.SubmittedReused.ToTonnageDisplay());
+            csvWriter.DefineColumn(EvidenceReportConstants.DraftEvidence, x => x.DraftReceived.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.DraftReuse, x => x.DraftReused);
 
             var fileContent = csvWriter.Write(summaryData);
