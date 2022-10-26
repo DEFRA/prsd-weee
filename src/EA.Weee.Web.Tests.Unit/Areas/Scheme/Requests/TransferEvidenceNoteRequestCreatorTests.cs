@@ -154,9 +154,10 @@
             var selectedIds = model.CategoryBooleanViewModels.Where(x => x.Selected).Select(x => x.CategoryId).ToList();
             var evidenceIds = TestFixture.CreateMany<Guid>().ToList();
             var deselectedEvidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+            var selectAll = TestFixture.Create<bool>();
 
             var existingRequest =
-                new TransferEvidenceNoteRequest(organisationId, selectedScheme, selectedIds, evidenceIds, deselectedEvidenceNoteIds);
+                new TransferEvidenceNoteRequest(organisationId, selectedScheme, selectedIds, evidenceIds, deselectedEvidenceNoteIds, selectAll);
 
             //act
             var request = requestCreator.SelectCategoriesToRequest(model, existingRequest);
@@ -192,7 +193,8 @@
                 schemeId,
                 categories,
                 evidenceNoteIds,
-                deselectedEvidenceNoteIds);
+                deselectedEvidenceNoteIds,
+                TestFixture.Create<bool>());
 
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(v => v.Action, action)
@@ -310,7 +312,8 @@
                 schemeId,
                 TestFixture.CreateMany<int>().ToList(),
                 TestFixture.CreateMany<Guid>().ToList(),
-                TestFixture.CreateMany<Guid>().ToList());
+                TestFixture.CreateMany<Guid>().ToList(),
+                TestFixture.Create<bool>());
 
             //act
             var result = requestCreator.EditSelectTonnageToRequest(request, model);
