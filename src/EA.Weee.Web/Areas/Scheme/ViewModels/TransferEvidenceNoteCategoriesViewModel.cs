@@ -22,7 +22,7 @@
         [Range(typeof(bool), "true", "true", ErrorMessage = "Select a category you would like to transfer evidence from")]
         public bool HasSelectedAtLeastOneCategory => CategoryBooleanViewModels != null && CategoryBooleanViewModels.Any(c => c.Selected);
 
-        public bool SelectAllCheckboxes { get; set; }
+        public bool SelectAllCheckboxes { get; set; } = false;
 
         public TransferEvidenceNoteCategoriesViewModel()
         {
