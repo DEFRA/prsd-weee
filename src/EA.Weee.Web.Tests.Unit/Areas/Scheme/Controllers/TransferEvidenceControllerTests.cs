@@ -304,6 +304,7 @@
             model.SelectedSchema.Should().BeNull();
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
             model.ComplianceYear.Should().Be(complianceYear);
+            model.SelectAllCheckboxes.Should().BeFalse();
         }
 
         [Fact]
@@ -392,6 +393,7 @@
             model.SelectedSchema.Should().BeNull();
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
             model.ComplianceYear.Should().Be(complianceYear);
+            model.SelectAllCheckboxes.Should().BeFalse();
         }
 
         [Fact]
@@ -421,6 +423,28 @@
             model.SelectedSchema.Should().Be(schemeId);
             model.HasSelectedAtLeastOneCategory.Should().BeTrue();
             model.ComplianceYear.Should().Be(complianceYear);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task TransferEvidenceNoteGet_GivenTransferNoteSessionObjectIsRetrieved_ShouldHaveCorrectSelectAllBooleanValue(bool value)
+        {
+            // arrange
+            var complianceYear = TestFixture.Create<int>();
+            var request = GetRequestWithCategoryIds();
+
+            request.SelectAllCheckBoxes = value;
+
+            A.CallTo(() =>
+             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey)).Returns(request);
+           
+            // act
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId, complianceYear) as ViewResult;
+            var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
+
+            // assert
+            model.SelectAllCheckboxes.Should().Be(value);
         }
 
         [Fact]
