@@ -53,7 +53,7 @@
             //arrange
             model.IsEdit = isEdit;
             var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), new List<Guid>(), new List<Guid>());
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), new List<Guid>(), new List<Guid>(), TestFixture.Create<bool>());
 
             A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
                 .Returns(transferEvidenceNoteRequest);
@@ -74,7 +74,7 @@
         {
             model.IsEdit = isEdit;
             var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(6).ToList(), new List<Guid>());
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(6).ToList(), new List<Guid>(), TestFixture.Create<bool>());
 
             A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
                 .Returns(transferEvidenceNoteRequest);
@@ -95,7 +95,7 @@
         {
             model.IsEdit = isEdit;
             var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(5).ToList(), new List<Guid>());
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(5).ToList(), new List<Guid>(), TestFixture.Create<bool>());
 
             A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
                 .Returns(transferEvidenceNoteRequest);
@@ -114,7 +114,7 @@
         {
             model.IsEdit = isEdit;
             var transferEvidenceNoteRequest = new TransferEvidenceNoteRequest(TestFixture.Create<Guid>(),
-                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(1).ToList(), new List<Guid>());
+                TestFixture.Create<Guid>(), TestFixture.CreateMany<int>().ToList(), TestFixture.CreateMany<Guid>(1).ToList(), new List<Guid>(), TestFixture.Create<bool>());
 
             A.CallTo(() => service.GetTransferSessionObject<TransferEvidenceNoteRequest>(sessionKey))
                 .Returns(transferEvidenceNoteRequest);
