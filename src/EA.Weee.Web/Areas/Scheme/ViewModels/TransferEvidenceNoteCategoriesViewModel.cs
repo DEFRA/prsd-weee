@@ -19,7 +19,7 @@
 
         public CategoryValues<CategoryBooleanViewModel> CategoryBooleanViewModels { get; set; }
 
-        [Range(typeof(bool), "true", "true", ErrorMessage = "Select a category you would like to transfer evidence from")]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Select which categories you would like to transfer from")]
         public bool HasSelectedAtLeastOneCategory => CategoryBooleanViewModels != null && CategoryBooleanViewModels.Any(c => c.Selected);
 
         public TransferEvidenceNoteCategoriesViewModel()
