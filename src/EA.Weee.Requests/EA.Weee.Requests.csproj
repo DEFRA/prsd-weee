@@ -50,6 +50,7 @@
     <Compile Include="AatfEvidence\GetEvidenceNotesSelectedForTransferRequest.cs" />
     <Compile Include="AatfEvidence\GetOrganisationSchemeDataForFilterRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteBaseRequest.cs" />
+    <Compile Include="AatfEvidence\Reports\GetAatfSummaryReportRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetTransferNoteReportRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetSchemeObligationAndEvidenceTotalsReportRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceReportBaseRequest.cs" />
