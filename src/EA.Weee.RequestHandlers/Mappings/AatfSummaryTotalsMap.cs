@@ -4,6 +4,7 @@
     using System.Linq;
     using Core.AatfEvidence;
     using Core.DataReturns;
+    using Core.Helpers;
     using CuttingEdge.Conditions;
     using DataAccess.StoredProcedure;
     using Prsd.Core.Mapper;
@@ -14,7 +15,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            return source.Select(e => new EvidenceSummaryTonnageData((WeeeCategory)e.CategoryId, e.Received, e.Reused)).ToList();
+            return source.Where(s => s.CategoryId.ToInt() <= 14).Select(e => new EvidenceSummaryTonnageData((WeeeCategory)e.CategoryId, e.ApprovedReceived, e.ApprovedReused)).ToList();
         }
     }
 }
