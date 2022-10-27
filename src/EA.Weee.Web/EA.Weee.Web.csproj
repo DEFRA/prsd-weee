@@ -899,7 +899,6 @@
     <Content Include="Views\Shared\_EvidenceNotesReportsLinks.cshtml" />
     <Content Include="Areas\Admin\Views\EvidenceTransferReport\EvidenceTransferNoteReport.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
-    <Content Include="Areas\Scheme\Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
