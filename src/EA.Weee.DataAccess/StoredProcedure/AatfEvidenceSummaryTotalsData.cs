@@ -4,10 +4,20 @@
 
     public class AatfEvidenceSummaryTotalsData
     {
-        public decimal? Received { get; set; }
+        public decimal? ApprovedReceived { get; set; }
 
-        public decimal? Reused { get; set; }
+        public decimal? ApprovedReused { get; set; }
+
+        public decimal? SubmittedReceived { get; set; }
+
+        public decimal? SubmittedReused { get; set; }
+
+        public decimal? DraftReceived { get; set; }
+
+        public decimal? DraftReused { get; set; }
 
         public WeeeCategory CategoryId { get; set; }
+
+        public string CategoryName { get; set; }
     }
 }
