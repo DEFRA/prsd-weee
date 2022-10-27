@@ -136,6 +136,7 @@
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Approved, UserId.ToString(), SystemTime.UtcNow);
                         n.UpdateStatus(NoteStatus.Void, UserId.ToString(), SystemTime.UtcNow);
                     }).Create();
 
