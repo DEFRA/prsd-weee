@@ -4,7 +4,7 @@
     using Core.AatfEvidence;
     using Web.ViewModels.Shared;
 
-    public class ManageEvidenceSummaryViewModel : ManageManageEvidenceNoteOverviewViewModel
+    public class ManageEvidenceSummaryViewModel : ManageEvidenceNoteOverviewViewModel
     {
         public IList<EvidenceCategoryValue> CategoryValues { get; set; }
 
