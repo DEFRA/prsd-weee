@@ -115,7 +115,7 @@
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
-            var convertedModel = result.Model as ManageManageEvidenceNoteOverviewViewModel;
+            var convertedModel = result.Model as ManageEvidenceNoteOverviewViewModel;
 
             convertedModel.ManageEvidenceNoteViewModel.Should().Be(model);
         }
