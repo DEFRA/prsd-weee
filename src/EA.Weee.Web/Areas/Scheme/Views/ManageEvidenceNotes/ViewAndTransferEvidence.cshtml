@@ -15,19 +15,10 @@
             @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
 
             <section class="govuk-tabs__panel" id="pcsDetails">
-                <h2 class="govuk-heading-m">
+                <h2 class="govuk-heading-m govuk-!-padding-bottom-2">
                     View all reviewed evidence or transfer evidence
                 </h2>
 
-                @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Get))
-                {
-                    @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
-                    <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                        <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
-                        </div>
-                    </div>
-                }
                 @if (Model.DisplayTransferButton)
                 {
                     using (Html.BeginForm(actionName: "Transfer", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
@@ -43,6 +34,17 @@
                     <p>
                         You are unable to transfer evidence at the moment as you do not have any approved household evidence notes with available tonnages to transfer
                     </p>
+                }
+
+                @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Get))
+                {
+                    @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
+                    @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
+                    <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                        <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                        </div>
+                    </div>
                 }
 
                 <table id="reviewed-evidence-notes-table" class="govuk-table">
