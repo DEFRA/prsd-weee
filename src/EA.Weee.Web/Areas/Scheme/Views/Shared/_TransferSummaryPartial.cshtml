@@ -14,7 +14,7 @@
 @if (Model.HasBeenReturned)
 {
     <div class="govuk-grid-row govuk-!-margin-bottom-1">
-        @Html.Gds().DisplayFor(m => m.ReturnedReason, Model.ReturnedReason, "govuk-grid-column-one-quarter")
+        @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 }
 
