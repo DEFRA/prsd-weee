@@ -146,11 +146,13 @@ else
 
         @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
         {
-            var item = categoryCount;
+            var item = @Model.TotalCategoryValues[categoryCount];
 
             <tr class="govuk-table__row govuk-panel-grey-background">
                 <td class="govuk-table__cell govuk-!-padding-left-2">
-                    @Model.TotalCategoryValues[categoryCount].CategoryId. @Model.TotalCategoryValues[categoryCount].CategoryDisplay
+                    <div class="category">
+                        <span class="category-id" id="summary-@item.CategoryId-label">@(item.CategoryId).&nbsp;</span><span class="category-description">@item.CategoryDisplay</span>
+                    </div>
                 </td>
                 <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
                 <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2 printable-text-align-right">@Model.TotalCategoryValues[categoryCount].TotalReused</td>
@@ -230,7 +232,9 @@ else
                     }
 
                     <td class="govuk-table__cell govuk-!-text-align-left">
-                        @string.Format("{0}. {1}", category.CategoryId, category.CategoryDisplay)
+                        <div class="category">
+                            <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                        </div>
                     </td>
                     <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-3">
                         @category.Received
@@ -244,3 +248,16 @@ else
         </tbody>
     </table>
 }
+
+<style type="text/css">
+    .category
+    {
+        display: table;
+    }
+
+    .category span
+    {
+        display: table-cell;
+    }
+
+</style>
