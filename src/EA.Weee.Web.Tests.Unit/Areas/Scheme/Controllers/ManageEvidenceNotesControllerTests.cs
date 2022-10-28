@@ -183,10 +183,8 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("view-and-transfer-evidence")]
         [InlineData("review-submitted-evidence")]
-        [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
         public async void IndexGet_GivenManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
         {
