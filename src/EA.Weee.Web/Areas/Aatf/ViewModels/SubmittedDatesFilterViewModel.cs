@@ -16,5 +16,7 @@
         [DataType(DataType.Date)]
         [EvidenceNoteFilterEndDate(nameof(StartDate))]
         public DateTime? EndDate { get; set; }
+
+        public bool SearchPerformed => EndDate.HasValue || StartDate.HasValue;
     }
 }
