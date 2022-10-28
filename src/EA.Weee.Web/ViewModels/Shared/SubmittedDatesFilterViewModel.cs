@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Attributes;
+    using EA.Weee.Web.Areas.Aatf.Attributes;
 
     [Serializable]
     public class SubmittedDatesFilterViewModel
@@ -16,5 +16,7 @@
         [DataType(DataType.Date)]
         [EvidenceNoteFilterEndDate(nameof(StartDate))]
         public DateTime? EndDate { get; set; }
+
+        public bool SearchPerformed => EndDate.HasValue || StartDate.HasValue;
     }
 }
