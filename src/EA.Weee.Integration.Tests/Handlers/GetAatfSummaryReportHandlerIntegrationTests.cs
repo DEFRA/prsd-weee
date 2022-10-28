@@ -330,6 +330,53 @@
         }
 
         [Component]
+        public class WhenIGetAnAatfsSummaryCsvDataThatHasNoTonnage : GetAatfSummaryReportRequestHandlerTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var organisation = OrganisationDbSetup.Init().Create();
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
+                var aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                var complianceYear = fixture.Create<int>();
+
+                request = new GetAatfSummaryReportRequest(aatf.Id, complianceYear);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldHaveReturnedExpectedCsv = () =>
+            {
+                var expectedCsvData =
+                    "Category,Approved evidence (tonnes),Approved reuse (tonnes),Submitted evidence (tonnes),Submitted reuse (tonnes),Draft evidence (tonnes),Draft reuse (tonnes)\r\n" +
+
+                    "1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "2. Small household appliances,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "3. IT and telecommunications equipment,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "4. Consumer equipment,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "5. Lighting equipment,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "6. Electrical and electronic tools,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "\"7. Toys, leisure and sports equipment\",0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "8. Medical devices,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "9. Monitoring and control instruments,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "10. Automatic dispensers,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "11. Display equipment,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "12. Appliances containing refrigerants,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "13. Gas discharge lamps and LED light sources,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "14. Photovoltaic panels,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "Total (tonnes),0.000,0.000,0.000,0.000,0.000,0.000\r\n";
+
+                result.FileContent.Should().Be(expectedCsvData);
+                result.FileName.Should().Contain($"{request.ComplianceYear}_Summary report");
+                result.FileName.Should().EndWith(".csv");
+            };
+        }
+
+        [Component]
         public class WhenIGetAnAatfsSummaryCsvDataWhereTheCurrentUserIsNotAuthorised : GetAatfSummaryReportRequestHandlerTestBase
         {
             private readonly Establish context = () =>
