@@ -12,6 +12,7 @@
     using System.Linq;
     using Core.Scheme;
     using Web.Areas.Aatf.Helpers;
+    using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Tests.Core;
     using Xunit;
