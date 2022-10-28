@@ -11,6 +11,17 @@
         Review submitted evidence
     </h2>
 
+    @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Get))
+    {
+        @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
+        @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
+        <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+            <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+            </div>
+        </div>
+    }
+
     <table id="submitted-evidence-notes-table" class="govuk-table">
         <caption class="govuk-table__caption govuk-visually-hidden">Review submitted evidence</caption>
         <thead class="govuk-table__head">
@@ -83,7 +94,7 @@
             {
                 <tr>
                     <td colspan="4">
-                        <p>There are currently no evidence notes to review </p>
+                        @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes to review</p>") })
                     </td>
                 </tr>
                 <tr>
@@ -97,7 +108,7 @@
     <br />
     @{
         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+            { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
                          manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
     }
 </section>
