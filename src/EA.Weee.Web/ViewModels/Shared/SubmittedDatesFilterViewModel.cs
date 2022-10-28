@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Attributes;
+    using EA.Weee.Web.Areas.Aatf.Attributes;
 
     [Serializable]
     public class SubmittedDatesFilterViewModel
