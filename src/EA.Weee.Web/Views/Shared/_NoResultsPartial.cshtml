@@ -3,7 +3,7 @@
 <br/>
 @if (!Model.EvidenceNotesDataList.Any())
 {
-    if (Model.ManageEvidenceNoteViewModel.FilterViewModel != null && Model.ManageEvidenceNoteViewModel.FilterViewModel.SearchPerformed)
+    if (Model.ManageEvidenceNoteViewModel.SearchPerformed)
     {
         <p>There are no search results with those search terms. Please try again with another search term.</p>
     }

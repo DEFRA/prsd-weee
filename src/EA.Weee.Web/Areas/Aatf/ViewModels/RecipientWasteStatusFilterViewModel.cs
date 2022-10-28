@@ -27,5 +27,7 @@
         public IEnumerable<SelectListItem> SubmittedByList { get; set; }
 
         public IEnumerable<SelectListItem> NoteStatusList { get; set; }
+
+        public bool SearchPerformed => NoteStatusValue.HasValue || WasteTypeValue.HasValue || ReceivedId.HasValue;
     }
 }
