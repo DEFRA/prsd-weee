@@ -847,7 +847,6 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EvidenceSummaryOverview.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferEvidenceNote.cshtml" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_NoResultsPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\Holding\Index.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferFrom.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
@@ -900,7 +899,6 @@
     <Content Include="Views\Shared\_EvidenceNotesReportsLinks.cshtml" />
     <Content Include="Areas\Admin\Views\EvidenceTransferReport\EvidenceTransferNoteReport.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
-    <Content Include="Areas\Scheme\Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
@@ -1638,6 +1636,7 @@
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotePdfLayout.cshtml" />
+    <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

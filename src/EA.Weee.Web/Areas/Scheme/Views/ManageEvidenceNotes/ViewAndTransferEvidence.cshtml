@@ -110,11 +110,11 @@
                         }
                         else
                         {
-                            <tr>
-                                <td colspan="5">
-                                    <p>There are currently no evidence notes to view or transfer </p>
-                                </td>
-                            </tr>
+                    <tr>
+                        <td colspan="5">
+                            @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes to view or transfer </p>") })
+                        </td>
+                    </tr>
                             <tr>
                                 <td>
                                     <p> Showing 0 - 0 of 0 </p>
