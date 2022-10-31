@@ -176,11 +176,11 @@
                     Edit = true,
                     ReturnToView = returnToView,
                     RedirectTab = redirectTab,
-                    SystemDateTime = currentDate
+                    SystemDateTime = currentDate,
+                    QueryString = queryString
                 });
 
                 ViewBag.Page = page;
-                ViewBag.QueryString = queryString;
 
                 return this.View("EditDraftTransfer", model);
             }
