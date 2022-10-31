@@ -43,5 +43,7 @@
         }
 
         public bool ReturnToView { get; set; }
+
+        public string QueryString { get; set; }
     }
 }
