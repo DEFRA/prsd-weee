@@ -3,20 +3,18 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Aatf.Mappings.ToViewModel;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using FakeItEasy;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
+    using Weee.Tests.Core;
     using Xunit;
 
-    public class ReviewEvidenceNotesViewModelMapTests
+    public class ReviewEvidenceNotesViewModelMapTests : SimpleUnitTestBase
     {
         private readonly Fixture fixture;
         private readonly EvidenceNoteData note;
@@ -54,6 +52,7 @@
             modelCreated.Should().NotBeNull();
             modelCreated.ViewEvidenceNoteViewModel.Should().NotBeNull();
             modelCreated.OrganisationId.Should().Be(schemeId);
+            modelCreated.QueryString.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -151,6 +150,22 @@
             // asset
             modelCreated.Should().NotBeNull();
             modelCreated.ViewEvidenceNoteViewModel.DisplayH2Title.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ReviewEvidenceNotesViewModelMap_GivenQueryString_ViewModelPropertyShouldBeSet()
+        {
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(note, note.Status, false)
+            {
+                QueryString = TestFixture.Create<string>()
+            };
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.QueryString.Should().Be(source.QueryString);
         }
     }
 }
