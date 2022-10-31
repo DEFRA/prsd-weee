@@ -222,8 +222,8 @@ SELECT
 	CategoryId,
 	CategoryName,
 	NULL AS SchemeId,
-	'-' AS SchemeName,
-	'-' AS ApprovalNumber,
+	'All PCS''s' AS SchemeName,
+	'' AS ApprovalNumber,
 	SUM(COALESCE(Obligation, 0)) AS Obligation,
 	SUM(COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0))) AS Evidence,
 	SUM(COALESCE(EvidenceReuseInTotal, 0) + (COALESCE(TransferEvidenceReuseIn, 0) - COALESCE(TransferEvidenceReuseOut, 0))) AS Reuse,
@@ -261,6 +261,7 @@ FROM
 
 ) x
 ORDER BY
+	CASE SchemeName WHEN 'All PCS''s' THEN 0 ELSE 1 END,
 	SchemeName,
 	CategoryId
 
