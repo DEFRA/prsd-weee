@@ -107,7 +107,8 @@
                                     && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime),
                 CanVoid = HasClaim(source.User, Claims.InternalAdmin),
                 Page = source.Page,
-                OpenedInNewTab = source.OpenedInNewTab
+                OpenedInNewTab = source.OpenedInNewTab,
+                IsPrintable = source.IsPrintable
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
