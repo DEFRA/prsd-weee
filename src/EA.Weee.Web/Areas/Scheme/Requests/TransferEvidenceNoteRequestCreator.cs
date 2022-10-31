@@ -43,7 +43,7 @@
                 viewModel.SelectedSchema.Value,
                 selectedIds,
                 evidenceNoteIds,
-                existingEvidenceNoteRequest == null ? new List<Guid>() : existingEvidenceNoteRequest.DeselectedEvidenceNoteIds);
+                existingEvidenceNoteRequest == null ? new List<Guid>() : existingEvidenceNoteRequest.DeselectedEvidenceNoteIds, viewModel.SelectAllCheckboxes);
 
             return newRequest;
         }

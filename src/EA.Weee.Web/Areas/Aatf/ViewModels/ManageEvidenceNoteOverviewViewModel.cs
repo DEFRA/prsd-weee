@@ -3,13 +3,13 @@
     using Core.Shared.Paging;
     using Web.ViewModels.Shared;
 
-    public abstract class ManageManageEvidenceNoteOverviewViewModel : IManageEvidenceViewModel
+    public abstract class ManageEvidenceNoteOverviewViewModel : IManageEvidenceViewModel
     {
         public ManageEvidenceNoteViewModel ManageEvidenceNoteViewModel { get; set; }
 
         public PagedList<EvidenceNoteRowViewModel> EvidenceNotesDataList { get; set; }
 
-        protected ManageManageEvidenceNoteOverviewViewModel(ManageEvidenceOverviewDisplayOption activeOverviewDisplayOption)
+        protected ManageEvidenceNoteOverviewViewModel(ManageEvidenceOverviewDisplayOption activeOverviewDisplayOption)
         {
             ActiveOverviewDisplayOption = activeOverviewDisplayOption;
             EvidenceNotesDataList = new PagedList<EvidenceNoteRowViewModel>();

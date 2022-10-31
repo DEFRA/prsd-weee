@@ -8,6 +8,7 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
 
     public class RecipientWasteStatusViewModelMap : IMap<RecipientWasteStatusFilterBase, RecipientWasteStatusFilterViewModel>
     {

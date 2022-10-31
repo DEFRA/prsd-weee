@@ -41,7 +41,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue, null);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue, null, null);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -134,7 +134,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
-                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, NoteStatus.Approved);
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, NoteStatus.Approved, null);
 
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
@@ -162,7 +162,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
-                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null);
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -180,7 +180,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
-                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null);
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -202,7 +202,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
-                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null);
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(A<Guid>._, A<int>._))
@@ -284,10 +284,26 @@
             result.Results.Should().BeEquivalentTo(mappedNoteData);
         }
 
+        [Fact]
+        public async void HandlerAsync_GivenSearchRef_AddsSearchRefToFilter()
+        {
+            // arrange
+            var searchRef = TestFixture.Create<string>();
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(),
+                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, TestFixture.Create<NoteStatus?>(), searchRef);
+
+            // act
+            var result = await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
+                e.SearchRef == searchRef))).MustHaveHappenedOnceExactly();
+        }
+
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
             return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), 
-                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, TestFixture.Create<NoteStatus?>());
+                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, TestFixture.Create<NoteStatus?>(), null);
         }
     }
 }

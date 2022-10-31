@@ -175,47 +175,55 @@ function setupAutoCompletes() {
 
         var existingId = element.id;
 
-        accessibleAutocomplete({
-            showAllValues: true,
-            id: element.id,
-            source: items,
-            defaultValue: selected,
-            element: newElement,
-            displayMenu: useOverLay ? 'overlay' : 'inline',
-            name: element.id + "-auto",
-            onConfirm: function (confirmed) {
+        // before creating the new element ensure that an auto complete with the id being created isnt already
+        var autocompleteCreated = $(element.parentNode).find(".autocomplete__dropdown-arrow-down-wrapper");
 
-                function isNullOrWhitespace(input) {
-                    if (typeof input === "undefined" || input == null) return true;
-                    return input.replace(/\s/g, "").length < 1;
-                }
+        if (!autocompleteCreated || autocompleteCreated.length === 0) {
 
-                var postBackElement = document.getElementById(existingId + "-select");
-                var selectedValue = document.getElementById(existingId).value;
+            accessibleAutocomplete({
+                showAllValues: true,
+                id: element.id,
+                source: items,
+                defaultValue: selected,
+                element: newElement,
+                displayMenu: useOverLay ? 'overlay' : 'inline',
+                name: element.id + "-auto",
+                onConfirm: function(confirmed) {
 
-                if (!isNullOrWhitespace(confirmed) || !isNullOrWhitespace(selectedValue)) {
-                    var selected = confirmed || selectedValue;
-                    for (var postBackOptions = 0; postBackOptions < postBackElement.options.length; postBackOptions++) {
-                        var findSelectedOption = postBackElement.options[postBackOptions];
-                        var text = findSelectedOption.textContent || findSelectedOption.innerText;
-                        if (text === selected) {
-                            if (postBackElement.value !== findSelectedOption.value) {
-                                postBackElement.value = findSelectedOption.value;
-                                postBackElement.dispatchEvent(autoCompleteEvent);
+                    function isNullOrWhitespace(input) {
+                        if (typeof input === "undefined" || input == null) return true;
+                        return input.replace(/\s/g, "").length < 1;
+                    }
+
+                    var postBackElement = document.getElementById(existingId + "-select");
+                    var selectedValue = document.getElementById(existingId).value;
+
+                    if (!isNullOrWhitespace(confirmed) || !isNullOrWhitespace(selectedValue)) {
+                        var selected = confirmed || selectedValue;
+                        for (var postBackOptions = 0;
+                            postBackOptions < postBackElement.options.length;
+                            postBackOptions++) {
+                            var findSelectedOption = postBackElement.options[postBackOptions];
+                            var text = findSelectedOption.textContent || findSelectedOption.innerText;
+                            if (text === selected) {
+                                if (postBackElement.value !== findSelectedOption.value) {
+                                    postBackElement.value = findSelectedOption.value;
+                                    postBackElement.dispatchEvent(autoCompleteEvent);
+                                }
                             }
                         }
+                    } else {
+                        postBackElement.value = null;
+                        if (isNullOrWhitespace(selectedValue)) {
+                            postBackElement.dispatchEvent(autoCompleteEvent);
+                        }
                     }
-                } else {
-                    postBackElement.value = null;
-                    if (isNullOrWhitespace(selectedValue)) {
-                        postBackElement.dispatchEvent(autoCompleteEvent);
-                    }
+                },
+                dropdownArrow: function(config) {
+                    return '<svg class="autocomplete__dropdown-arrow-down" viewBox="0 0 512 512" ><path d="M256,298.3L256,298.3L256,298.3l174.2-167.2c4.3-4.2,11.4-4.1,15.8,0.2l30.6,29.9c4.4,4.3,4.5,11.3,0.2,15.5L264.1,380.9  c-2.2,2.2-5.2,3.2-8.1,3c-3,0.1-5.9-0.9-8.1-3L35.2,176.7c-4.3-4.2-4.2-11.2,0.2-15.5L66,131.3c4.4-4.3,11.5-4.4,15.8-0.2L256,298.3  z"/></svg>'
                 }
-            },
-            dropdownArrow: function (config) {
-                return '<svg class="autocomplete__dropdown-arrow-down" viewBox="0 0 512 512" ><path d="M256,298.3L256,298.3L256,298.3l174.2-167.2c4.3-4.2,11.4-4.1,15.8,0.2l30.6,29.9c4.4,4.3,4.5,11.3,0.2,15.5L264.1,380.9  c-2.2,2.2-5.2,3.2-8.1,3c-3,0.1-5.9-0.9-8.1-3L35.2,176.7c-4.3-4.2-4.2-11.2,0.2-15.5L66,131.3c4.4-4.3,11.5-4.4,15.8-0.2L256,298.3  z"/></svg>'
-            }
-        });
+            });
+        }
 
         if (element.classList.contains("input-validation-error")) {
             var autoCompletes = $(element.parentNode).find(".autocomplete__input");
