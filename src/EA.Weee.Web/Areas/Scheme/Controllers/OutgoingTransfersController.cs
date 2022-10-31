@@ -189,7 +189,7 @@
         [HttpGet]
         [CheckCanEditTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab)
+        public async Task<ActionResult> SubmittedTransfer(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab, string queryString = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -206,7 +206,8 @@
                 {
                     OrganisationId = pcsId,
                     ReturnToView = returnToView,
-                    RedirectTab = redirectTab
+                    RedirectTab = redirectTab,
+                    QueryString = queryString
                 });
 
                 return this.View("SubmittedTransfer", model);
