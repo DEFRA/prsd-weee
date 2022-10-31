@@ -394,7 +394,7 @@
     <Content Include="scripts\Update\Release 5\Sprint16\20221026-1113-alter-getAatfEvidenceSummaryTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint16\20221020-1100-create-getTransferNotes.sql" />
     <Content Include="scripts\Update\Release 5\Sprint16\20221014-0712-create-transfer-evidence-summary.sql" />
-    <Content Include="scripts\Update\Release 5\Sprint17\20221031-1104-alter-getSchemeObligationAndEvidenceTotals.sql" />
+    <Content Include="scripts\Update\Release 5\Sprint17\20221031-1108-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint17\20221027-1100-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <None Include="rebuild-development.bat" />
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
