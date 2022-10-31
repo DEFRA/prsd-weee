@@ -73,9 +73,28 @@ FROM
 ) c
 CROSS JOIN [PCS].Scheme s
 WHERE
-	s.Id = @SchemeId OR @SchemeId IS NULL
+	s.Id = @SchemeId OR (@SchemeId IS NULL AND 
+							(s.Id IN (SELECT SchemeId FROM [PCS].ObligationScheme WHERE ComplianceYear = @ComplianceYear) 
+							OR s.Id IN (SELECT 
+											p.Id
+										FROM [Evidence].Note n
+											INNER JOIN [Organisation].Organisation o ON o.Id = n.RecipientId
+											INNER JOIN [PCS].Scheme p ON p.OrganisationId = o.Id
+										WHERE 
+											n.ComplianceYear = @ComplianceYear
+										)
+							OR s.Id IN (SELECT 
+											p.Id
+										FROM [Evidence].Note n
+											INNER JOIN [Organisation].Organisation o ON o.Id = n.OrganisationId
+											INNER JOIN [PCS].Scheme p ON p.OrganisationId = o.Id
+										WHERE 
+											n.ComplianceYear = @ComplianceYear
+											)
+						))
 	AND (s.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
 	AND (s.OrganisationId = @OrganisationId OR @OrganisationId IS NULL)
+			
 ORDER BY
 	s.Id
 
