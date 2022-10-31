@@ -2,8 +2,43 @@
 @using EA.Weee.Core.AatfEvidence
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
+
+
+<style>
+
+    .category
+    {
+        display: table;
+    }
+
+    .category span
+    {
+        display: table-cell;
+    }
+
+    .summary-category-column {
+        width: 40%;
+    }
+
+    .summary-tonnage-column {
+        width: 30%;
+    }
+
+    .breakdown-reference-column {
+        width: 15%;
+    }
+
+    .breakdown-category-column {
+        width: 40%;
+    }
+
+    .breakdown-tonnage-column {
+        width: 22.5%;
+    }
+
+</style>
+
 
 <h1 class="govuk-heading-l">Evidence note transfer</h1>
 
@@ -128,36 +163,56 @@ else
 }
 
 <table id="transfer-note-tonnage-summary" class="govuk-table">
+    @{
+        var summaryCategoryWidthCss = string.Empty;
+        var summaryTonnageWidthCss = string.Empty;
+
+        if (Model.IsPrintable)
+        {
+            <colgroup>
+                <col style="width: 45%; max-width: 45%;"/>
+                <col style="width: 27.5%; max-width: 27.5%;"/>
+                <col style="width: 27.5%; max-width: 27.5%; "/>
+            </colgroup>
+        }
+        else
+        {
+            summaryCategoryWidthCss = "summary-category-column";
+            summaryTonnageWidthCss = "summary-tonnage-column";
+        }
+    }
+    
+
     <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence transferred</caption>
     <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header govuk-!-text-align-left" style="width: 35%">
-                Category
-            </th>
-            <th class="govuk-table__header govuk-!-text-align-left printable-text-align-right" style="width: 32.5%">
-                Total transferred (tonnes)
-            </th>
-            <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-2 printable-text-align-right" style="width: 32.5%">
-                Total reuse transferred (tonnes)
-            </th>
-        </tr>
+    <tr class="govuk-table__row">
+        <th class="govuk-table__header govuk-!-text-align-left @summaryCategoryWidthCss">
+            Category
+        </th>
+        <th class="govuk-table__header govuk-table__header--numeric @summaryTonnageWidthCss">
+            Total transferred (tonnes)
+        </th>
+        <th class="govuk-table__header govuk-table__header--numeric @summaryTonnageWidthCss">
+            Total reuse transferred (tonnes)
+        </th>
+    </tr>
     </thead>
     <tbody class="govuk-table__body">
 
-        @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
-        {
-            var item = @Model.TotalCategoryValues[categoryCount];
+    @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
+    {
+        var item = @Model.TotalCategoryValues[categoryCount];
 
-            <tr class="govuk-table__row govuk-panel-grey-background">
-                <td class="govuk-table__cell govuk-!-padding-left-2">
-                    <div class="category">
-                        <span class="category-id" id="summary-@item.CategoryId-label">@(item.CategoryId).&nbsp;</span><span class="category-description">@item.CategoryDisplay</span>
-                    </div>
-                </td>
-                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
-                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-2 printable-text-align-right">@Model.TotalCategoryValues[categoryCount].TotalReused</td>
-            </tr>
-        }
+        <tr class="govuk-table__row govuk-panel-grey-background">
+            <td class="govuk-table__cell govuk-!-padding-left-2">
+                <div class="category">
+                    <span class="category-id" id="summary-@item.CategoryId-label">@(item.CategoryId).&nbsp;</span><span class="category-description">@item.CategoryDisplay</span>
+                </div>
+            </td>
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">@Model.TotalCategoryValues[categoryCount].TotalReused</td>
+        </tr>
+    }
     </tbody>
 </table>
 
@@ -168,7 +223,6 @@ else
 
 <div class="govuk-table govuk-!-margin-bottom-0 govuk-!-padding-top-5">
     <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-0 govuk-!-margin-bottom-0">
-
         <h2 class="govuk-heading-m govuk-!-padding-left-0 govuk-!-margin-left-0" style="text-align: left;">Breakdown of evidence transferred</h2>
     </div>
 
@@ -197,28 +251,51 @@ else
     </div>
 
     <table id="transfer-notes-tonnage-@aatfCount.ToString()" class="govuk-table">
+        
+        @{
+            var breakdownReferenceWidthCss = string.Empty;
+            var breakdownCategoryWidthCss = string.Empty;
+            var breakdownTonnageWidthCss = string.Empty;
+
+            if (Model.IsPrintable)
+            {
+                <colgroup>
+                    <col style="width: 16%; max-width: 16%;" />
+                    <col style="width: 32%; max-width: 32%;" />
+                    <col style="width: 27%; max-width: 27%;" />
+                    <col style="width: 27%; max-width: 27%;" />
+                </colgroup>
+            }
+            else
+            {
+                breakdownReferenceWidthCss = "breakdown-reference-column";
+                breakdownCategoryWidthCss = "breakdown-category-column";
+                breakdownTonnageWidthCss = "breakdown-tonnage-column";
+            }
+        }
+
         <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnages for @aatf.AatfName</caption>
         <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 15%;">
-                    Reference ID
-                </th>
-                <th class="govuk-table__header govuk-!-text-align-left" style="width: 40%;">
-                    Category
-                </th>
-                <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-0 govuk-!-padding-left-7 govuk-printable-aatf-transferred" style="width: 22.5%;">
-                    Total transferred (tonnes)
-                </th>
-                <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-right-0" style="width: 22.5%;">
-                    Total reuse transferred (tonnes)
-                </th>
-            </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header govuk-!-text-align-left @breakdownReferenceWidthCss">
+                Reference ID
+            </th>
+            <th class="govuk-table__header govuk-!-text-align-left @breakdownCategoryWidthCss">
+                Category
+            </th>
+            <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss">
+                Total transferred (tonnes)
+            </th>
+            <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss">
+                Total reuse transferred (tonnes)
+            </th>
+        </tr>
         </thead>
         <tbody class="govuk-table__body">
         @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
         {
             var note = aatf.Notes.ElementAt(noteCount);
-               
+
             for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
             {
                 var category = note.CategoryValues.ElementAt(categoryCount);
@@ -236,10 +313,10 @@ else
                             <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
                         </div>
                     </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-3">
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
                         @category.Received
                     </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right govuk-!-padding-right-1">
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
                         @category.Reused
                     </td>
                 </tr>
@@ -248,16 +325,3 @@ else
         </tbody>
     </table>
 }
-
-<style type="text/css">
-    .category
-    {
-        display: table;
-    }
-
-    .category span
-    {
-        display: table-cell;
-    }
-
-</style>
