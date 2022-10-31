@@ -95,5 +95,12 @@
         public const string Cat13ReusedTransferred = "Cat 13 reuse transferred (t)";
         public const string Cat14ReusedTransferred = "Cat 14 reuse transferred (t)";
         public const string TotalReusedTransferred = "Total reuse transferred (t)";
+
+        public const string ApprovedEvidence = "Approved evidence (tonnes)";
+        public const string ApprovedReuse = "Approved reuse (tonnes)";
+        public const string SubmittedEvidence = "Submitted evidence (tonnes)";
+        public const string SubmittedReuse = "Submitted reuse (tonnes)";
+        public const string DraftEvidence = "Draft evidence (tonnes)";
+        public const string DraftReuse = "Draft reuse (tonnes)";
     }
 }
