@@ -24,16 +24,10 @@
         }
         else
         {
-            if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
-            {
-                @(this.WeeeGds().BackLink(string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
-            }
-            else
-            {
-                @(this.WeeeGds().BackLink(
-                Url.Action("Index", "ManageEvidenceNotes",
-                    new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = Model.Page })))
-            }
+            @(this.WeeeGds().BackLink(
+            Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = Model.Page, queryString = string.IsNullOrWhiteSpace(ViewBag.QueryString) ? null: ViewBag.QueryString })))
+            
         }
     }
 
@@ -42,7 +36,7 @@
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
-            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString =  }, new { @class = "govuk-button" })
+            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString = @Context.Request.QueryString }, new { @class = "govuk-button" })
         </div>
     }
 

@@ -11,7 +11,9 @@
     {
         @(this.WeeeGds().BackLink(
         Url.RouteUrl(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName,
-                     new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, page = ViewBag.Page })))
+                     new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, page = ViewBag.Page,
+                         queryString = string.IsNullOrWhiteSpace(ViewBag.QueryString) ? null : ViewBag.QueryString
+                     })))
     }
     else
     {
