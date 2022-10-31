@@ -1814,7 +1814,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 -,-,12. Appliances containing refrigerants,1.000,202.789,102.000,0.000,0.000,201.789,1.000,1.000
 -,-,13. Gas discharge lamps and LED light sources,1.000,202.000,12.000,0.000,0.000,201.000,1.000,1.000
 -,-,14. Photovoltaic panels,1001.000,102.000,52.000,0.000,0.000,-899.000,101.000,51.000
--,-,Category 2-10 summary,2680.735,865.280,113.000,101.000,178.280,-1815.455,9.000,9.000
+-,-,Category 2-10 summary,2680.735,865.280,113.000,101.000,178.280,-1815.455,,
 -,-,Total (tonnes),4452.735,1506.069,283.000,101.000,178.280,-2946.666,114.000,64.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
@@ -1830,7 +1830,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
-{scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,0.000,0.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
 {scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},1. Large household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},2. Small household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
@@ -1846,7 +1846,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},12. Appliances containing refrigerants,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},13. Gas discharge lamps and LED light sources,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},14. Photovoltaic panels,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
-{scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,9.000,9.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,,
 {scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),14.000,14.000,14.000,0.000,0.000,0.000,14.000,14.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},2. Small household appliances,0.000,100.000,0.000,0.000,100.000,100.000,0.000,0.000
@@ -1862,7 +1862,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},12. Appliances containing refrigerants,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},14. Photovoltaic panels,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
-{scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
+{scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,,
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
 ");
 
