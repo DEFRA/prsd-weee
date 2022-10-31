@@ -115,7 +115,7 @@
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
-            var convertedModel = result.Model as ManageManageEvidenceNoteOverviewViewModel;
+            var convertedModel = result.Model as ManageEvidenceNoteOverviewViewModel;
 
             convertedModel.ManageEvidenceNoteViewModel.Should().Be(model);
         }
@@ -863,6 +863,25 @@
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(ManageEvidenceNoteViewModel), typeof(int) })
                 .Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Theory]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        public async void IndexGet_ModelPopulatedWith_SearchRef_ShouldCallRequest_WithSearchRef(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            // arrange
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var evidenceNoteViewModel = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var searchRef = Fixture.Create<string>();
+            evidenceNoteViewModel.FilterViewModel.SearchRef = searchRef;
+
+            // act
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), evidenceNoteViewModel);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(x => x.SearchRef == searchRef))).MustHaveHappenedOnceExactly();
         }
     }
 }

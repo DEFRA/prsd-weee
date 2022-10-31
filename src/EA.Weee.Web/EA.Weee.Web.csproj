@@ -453,11 +453,11 @@
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterBase.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModel.cs" />
+    <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterBase.cs" />
+    <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SchemeIdNameModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBase.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\SubmittedDatesFilterViewModel.cs" />
+    <Compile Include="ViewModels\Shared\SubmittedDateFilterBase.cs" />
+    <Compile Include="ViewModels\Shared\SubmittedDatesFilterViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\ObligationsBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\SelectAuthorityViewModel.cs" />
@@ -495,7 +495,7 @@
     <Compile Include="ViewModels\Shared\EvidenceNoteRowViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ReviewEvidenceNoteViewModelMap.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\ReviewEvidenceNoteViewModel.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\FilterViewModel.cs" />
+    <Compile Include="ViewModels\Shared\FilterViewModel.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\ViewAndTransferEvidenceViewModelMap.cs" />
     <Compile Include="Areas\Scheme\Mappings\ToViewModels\SchemeTabViewModelMapTransfer.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ManageEvidenceNotes\SchemeViewAndTransferEvidenceSchemeViewModel.cs" />
@@ -847,7 +847,6 @@
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EvidenceSummaryOverview.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferEvidenceNote.cshtml" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_NoResultsPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\Holding\Index.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferFrom.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferTonnage.cshtml" />
@@ -858,7 +857,6 @@
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\SubmittedDatesFilterViewModel.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\RecipientWasteStatusFilterViewModel.cshtml" />
-    <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\UploadObligations.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_HeaderEvidenceNotePartial.cshtml" />
@@ -901,7 +899,7 @@
     <Content Include="Views\Shared\_EvidenceNotesReportsLinks.cshtml" />
     <Content Include="Areas\Admin\Views\EvidenceTransferReport\EvidenceTransferNoteReport.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
-    <Content Include="Areas\Scheme\Views\Shared\_NoResultsPartial.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1638,6 +1636,7 @@
     <Content Include="Views\Shared\_DisplayVoidedReasonPartial.cshtml" />
     <Content Include="Views\Shared\_EvidenceReportHintText.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotePdfLayout.cshtml" />
+    <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

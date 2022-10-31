@@ -115,13 +115,13 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null));
+                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
-                    (new ManageEvidenceNoteTransfer(organisationId, null, null, null, selectedComplianceYear, currentDate));
+                    (new ManageEvidenceNoteTransfer(organisationId, manageEvidenceNoteViewModel?.FilterViewModel, null, null, selectedComplianceYear, currentDate));
 
                 return View("ReviewSubmittedEvidence", model);
             }
@@ -143,12 +143,12 @@
                         NoteStatus.Void,
                         NoteStatus.Returned
                     }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, 
-                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null));
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, manageEvidenceNoteViewModel?.FilterViewModel, null, null, selectedComplianceYear, currentDate));
 
                 return View("ViewAndTransferEvidence", model);
             }
@@ -175,7 +175,8 @@
                     true, 
                     pageNumber, 
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
-                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                    manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                             new RecipientWasteStatusFilterBase(null,
@@ -189,7 +190,7 @@
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, recipientWasteStatusViewModel, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, manageEvidenceNoteViewModel?.FilterViewModel, recipientWasteStatusViewModel, null, selectedComplianceYear, currentDate));
 
                 return View("OutgoingTransfers", model);
             }

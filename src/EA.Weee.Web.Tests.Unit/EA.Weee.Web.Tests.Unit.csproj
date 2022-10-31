@@ -348,6 +348,7 @@
     <Compile Include="Areas\Aatf\Controller\HomeControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceNotesReportTests.cs" />
+    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceSummaryReportTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerIndexTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerEditEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceNoteTests.cs" />
@@ -401,9 +402,9 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOptionTests.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
+    <Compile Include="ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBaseTests.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\SubmittedDatesFilterViewModelTests.cs" />
+    <Compile Include="ViewModels\SubmittedDatesFilterViewModelTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesControllerForViewEvidenceNoteTransferTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesControllerForViewEvidenceNoteTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesControllerTests.cs" />
@@ -465,10 +466,10 @@
     <Compile Include="Areas\Aatf\Requests\EditEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Aatf\Requests\CreateEvidenceNoteRequestCreatorTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModelTests.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\FilterViewModelTests.cs" />
+    <Compile Include="ViewModels\FilterViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\HomeViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteOverviewViewModelTests.cs" />
-    <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceNoteViewModelTests.cs" />
+    <Compile Include="ViewModels\ManageEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SelectYourAatfViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ViewEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Admin\Attributes\ValidateOrganisationHasNoSchemeFilterAttributeTests.cs" />
