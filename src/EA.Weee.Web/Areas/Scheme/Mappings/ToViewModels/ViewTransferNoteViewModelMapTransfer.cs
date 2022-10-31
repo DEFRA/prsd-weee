@@ -27,6 +27,8 @@
 
         public IPrincipal User { get; private set; }
 
+        public bool IsPrintable { get; set; }
+
         public ViewTransferNoteViewModelMapTransfer(Guid organisationId, TransferEvidenceNoteData transferEvidenceNoteData,
             object displayNotification, IPrincipal user = null)
         {

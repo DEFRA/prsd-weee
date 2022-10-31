@@ -73,8 +73,8 @@ else
 
 @{
 
-    var tonnageReusedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "reused-column-printable" : "govuk-!-padding-right-1");
-    var tonnageReceivedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "reused-column-printable" : "govuk-!-padding-right-1");
+    var tonnageReusedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "reused-column-printable" : "");
+    var tonnageReceivedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "reused-column-printable" : "");
 }
 
 <div class="govuk-width-container govuk-!-margin-top-3">
@@ -237,10 +237,10 @@ else
             @if (Model.DisplayTransferEvidenceColumns)
             {
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left">Total reused as whole appliances (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left">Total after transfer (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left">Total reused after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total reused after transfer (tonnes)</th>
             }
             else
             {
@@ -249,8 +249,8 @@ else
                 var receivedColumnWithCss = Model.IsPrintable ? "" : "received-column";
 
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left @categoryColumnWidthCss">Category</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss govuk-!-padding-left-2">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left @receivedColumnWithCss govuk-!-padding-left-2">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric @receivedColumnWithCss">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric @receivedColumnWithCss">Total reused as whole appliances (tonnes)</th>
             }
         </tr>
     </thead>
@@ -267,20 +267,20 @@ else
                         <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
                     </div>
                 </td>
-                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right @tonnageReceivedPadding printable-word-break">
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                     @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
                 </td>
-                <td class="govuk-table__cell govuk-!-text-align-right printable-text-align-right @tonnageReusedPadding printable-word-break">
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                     @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
                 </td>
                 @if (Model.DisplayTransferEvidenceColumns)
                 {
                     var transferCategory = Model.RemainingTransferCategoryValues[i];
 
-                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-3 printable-text-align-right printable-word-break">
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-3 printable-word-break">
                         @Html.Gds().VisuallyHidden("Received after for  " + @transferCategory.CategoryDisplay) @transferCategory.Received
                     </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-3 printable-text-align-right printable-word-break">
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-3 printable-word-break">
                         @Html.Gds().VisuallyHidden("Reused after for " + @transferCategory.CategoryDisplay) @transferCategory.Reused
                     </td>
                 }
@@ -292,18 +292,18 @@ else
             <td class="govuk-table__cell govuk-!-text-align-left">
                 <p class="govuk-body"><strong>Total</strong></p>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right @tonnageReceivedPadding printable-word-break">
+            <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                 <p class="govuk-body" id="ReceivedTotal">@Model.ReceivedTotal</p>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right @tonnageReusedPadding printable-word-break">
+            <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                 <p class="govuk-body" id="ReusedTotal">@Model.ReusedTotal</p>
             </td>
             @if (Model.DisplayTransferEvidenceColumns)
             {
-                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right printable-word-break">
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                     <p class="govuk-body" id="TransferReceivedTotal">@Model.TransferReceivedRemainingTotalDisplay</p>
                 </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-text-align-right printable-word-break">
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                     <p class="govuk-body" id="TransferReusedTotal">@Model.TransferReusedRemainingTotalDisplay</p>
                 </td>
             }
