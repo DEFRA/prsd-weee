@@ -13,20 +13,6 @@ else
 }
 
 <style type="text/css">
-    .category
-    {
-        display: table;
-    }
-
-        .category span
-        {
-            display: table-cell;
-        }
-
-    .category-id
-    {
-        width: 20px;
-    }
 
     .category-column
     {
@@ -70,12 +56,6 @@ else
     }
 
 </style>
-
-@{
-
-    var tonnageReusedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "reused-column-printable" : "");
-    var tonnageReceivedPadding = Model.DisplayTransferEvidenceColumns ? "" : (Model.IsPrintable ? "reused-column-printable" : "");
-}
 
 <div class="govuk-width-container govuk-!-margin-top-3">
 
@@ -236,11 +216,11 @@ else
         <tr class="govuk-table__row">
             @if (Model.DisplayTransferEvidenceColumns)
             {
-                <th scope="col" class="govuk-table__header govuk-!-text-align-left">Category</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total received (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total reused as whole appliances (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total after transfer (tonnes)</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Total reused after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Category</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 17%;">Total received (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 18%; ">Total reused as whole appliances (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 19%; ">Total after transfer (tonnes)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 18%; ">Total reused after transfer (tonnes)</th>
             }
             else
             {
@@ -277,10 +257,10 @@ else
                 {
                     var transferCategory = Model.RemainingTransferCategoryValues[i];
 
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-3 printable-word-break">
+                    <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                         @Html.Gds().VisuallyHidden("Received after for  " + @transferCategory.CategoryDisplay) @transferCategory.Received
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-3 printable-word-break">
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1 printable-word-break">
                         @Html.Gds().VisuallyHidden("Reused after for " + @transferCategory.CategoryDisplay) @transferCategory.Reused
                     </td>
                 }
@@ -303,7 +283,7 @@ else
                 <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
                     <p class="govuk-body" id="TransferReceivedTotal">@Model.TransferReceivedRemainingTotalDisplay</p>
                 </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break govuk-!-padding-right-1">
                     <p class="govuk-body" id="TransferReusedTotal">@Model.TransferReusedRemainingTotalDisplay</p>
                 </td>
             }
