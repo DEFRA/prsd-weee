@@ -1,16 +1,26 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 
-@model EA.Weee.Web.ViewModels.Shared.EvidenceNoteViewModel
+@model EA.Weee.Web.Areas.Aatf.ViewModels.EditEvidenceNoteViewModel
 @{
     ViewBag.Title = "Edit evidence note details - GOV.UK";
 }
 
 @section full_main_content{
-    @(this.WeeeGds().BackLink(
-        Url.Action("Index", "ManageEvidenceNotes",
-            new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear })))
+    @if (Model.ReturnToView)
+    {
+        @(this.WeeeGds().BackLink(
+            Url.RouteUrl(AatfEvidenceRedirect.AatfViewRouteName(Model.Status), new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id })));
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(
+            Url.Action("Index", "ManageEvidenceNotes",
+                new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear })))
+    }
+
 
     @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {

@@ -23,6 +23,8 @@
 
         public string QueryString { get; set; }
 
+        public bool ReturnToView { get; set; }
+
         public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus, bool printableVersion, IPrincipal user = null)
         {
             Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);

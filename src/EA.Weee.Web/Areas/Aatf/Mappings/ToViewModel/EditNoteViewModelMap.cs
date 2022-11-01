@@ -40,7 +40,8 @@
                 RejectedReason = rejectedReason,
                 ReturnedReason = returnedReason,
                 SelectedSchemeName = recipientName == null ? string.Empty : recipientName.DisplayName,
-                ComplianceYear = source.ExistingModel?.ComplianceYear ?? source.NoteData.ComplianceYear
+                ComplianceYear = source.ExistingModel?.ComplianceYear ?? source.NoteData.ComplianceYear,
+                ReturnToView = source.ExistingModel?.ReturnToView ?? source.ReturnToView
             };
 
             if (source.ExistingModel != null)

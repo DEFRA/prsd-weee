@@ -35,7 +35,7 @@
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
-            @Html.RouteLink("Edit and submit", AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id }, new { @class = "govuk-button govuk-button--primary" })
+            @Html.RouteLink("Edit and submit", AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id, returnToView = true }, new { @class = "govuk-button govuk-button--primary" })
         </div>
     }
 

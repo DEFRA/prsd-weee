@@ -244,7 +244,7 @@
         [HttpGet]
         [CheckCanEditEvidenceNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false)
+        public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false, bool returnToView = false)
         {
             using (var client = apiClient())
             {
@@ -256,8 +256,9 @@
                 var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, null, organisationId, result.AatfData.Id, result, result.ComplianceYear))
-                    : mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, existingModel, organisationId, result.AatfData.Id, result, result.ComplianceYear));
+                var model = !returnFromCopyPaste ? 
+                    mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, null, organisationId, result.AatfData.Id, result, result.ComplianceYear, returnToView))
+                    : mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, existingModel, organisationId, result.AatfData.Id, result, result.ComplianceYear, existingModel.ReturnToView));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
@@ -315,7 +316,7 @@
 
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
 
-                var model = mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, viewModel, organisationId, aatfId, null, viewModel.ComplianceYear));
+                var model = mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, viewModel, organisationId, aatfId, null, viewModel.ComplianceYear, viewModel.ReturnToView));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
