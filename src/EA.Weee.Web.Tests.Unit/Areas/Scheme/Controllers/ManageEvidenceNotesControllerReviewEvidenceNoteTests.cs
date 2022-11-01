@@ -74,13 +74,13 @@
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -173,7 +173,10 @@
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.PrintableVersion == false &&
-                                                                 v.User == null))).MustHaveHappenedOnceExactly();
+                                                                 v.User == null &&
+                                                                 v.QueryString == null &&
+                                                                 v.RedirectTab == null &&
+                                                                 v.OpenedInNewTab == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -199,28 +202,32 @@
                                                                  v.User == null))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task ViewEvidenceNoteGet_GivenEvidenceNoteDataAndRedirectTab_ModelMapperShouldBeCalled()
+        [Theory]
+        [InlineData("redirectTab", "queryString")]
+        [InlineData("redirectTab", null)]
+        [InlineData(null, "queryString")]
+        [InlineData(null, null)]
+        public async Task ViewEvidenceNoteGet_GivenEvidenceNoteDataWithRedirectTabAndQueryString_ModelMapperShouldBeCalled(string redirectTab, string queryString)
         {
             //arrange
             var noteData = testFixture.Create<EvidenceNoteData>();
-            var redirectTab = testFixture.Create<string>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Approved;
 
             // act
-            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, EvidenceNoteId, redirectTab);
+            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, EvidenceNoteId, redirectTab: redirectTab, queryString: queryString);
 
             // assert
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.NoteStatus.Equals(NoteStatus.Approved) &&
-                                                                 v.RedirectTab.Equals(redirectTab) &&
+                                                                 v.RedirectTab == redirectTab &&
                                                                  v.PrintableVersion == false &&
-                                                                 v.User == null))).MustHaveHappenedOnceExactly();
+                                                                 v.User == null &&
+                                                                 v.QueryString == queryString))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
