@@ -988,28 +988,27 @@
         }
 
         [Fact]
-        public async Task EditDraftTransferGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        public async Task EditDraftTransferGet_GivenRedirectTabAndQueryString_ModelMapperShouldBeCalled()
         {
-            // arrange 
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+
             var queryString = TestFixture.Create<string>();
 
-            // act
-            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
-                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>(), queryString);
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(),
+                TestFixture.Create<string>(),
+                TestFixture.Create<int>(),
+                queryString);
 
-            // assert
-            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
-        }
-
-        [Fact]
-        public async Task EditDraftTransferGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
-        {
-            // act
-            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>());
-
-            // assert
-            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(null);
+            //assert
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(
+                A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
+                    t.QueryString.Equals(queryString)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
