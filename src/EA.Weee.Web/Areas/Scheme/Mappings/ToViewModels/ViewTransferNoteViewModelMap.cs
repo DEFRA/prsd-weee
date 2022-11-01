@@ -108,7 +108,7 @@
                 CanVoid = HasClaim(source.User, Claims.InternalAdmin),
                 Page = source.Page,
                 OpenedInNewTab = source.OpenedInNewTab,
-                IsPrintable = source.IsPrintable
+                IsPrintable = source.IsPrintable,
                 QueryString = source.QueryString
             };
 
