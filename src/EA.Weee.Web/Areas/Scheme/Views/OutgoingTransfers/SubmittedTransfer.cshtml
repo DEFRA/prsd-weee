@@ -6,21 +6,31 @@
 
 }
 @{
-    ViewBag.Title = "Evidence note (transfer) - GOV.UK";
+    ViewBag.Title = "Evidence note transfer - GOV.UK";
 }
 
 @section full_main_content
 {
     @using (Html.BeginRouteForm(SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, FormMethod.Post))
     {
-
-        @(this.WeeeGds().BackLink(
-        Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.OrganisationId, @tab = Model.RedirectTabName, @selectedComplianceYear = Model.ViewTransferNoteViewModel.ComplianceYear, page = ViewBag.Page })))
+        if (!string.IsNullOrWhiteSpace(Model.QueryString))
+        {
+            @(this.WeeeGds().BackLink(
+                string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
+        }
+        else
+        {
+            @(this.WeeeGds().BackLink(
+                Url.Action("Index", "ManageEvidenceNotes",
+                    new { @pcsId = Model.OrganisationId, @tab = Model.RedirectTabName, @selectedComplianceYear = Model.ViewTransferNoteViewModel.ComplianceYear, page = ViewBag.Page })))
+        }
+        
 
         @Html.AntiForgeryToken()
 
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.QueryString)
+        @Html.HiddenFor(m => m.RedirectTabName)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.ComplianceYear)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.SchemeId)
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)

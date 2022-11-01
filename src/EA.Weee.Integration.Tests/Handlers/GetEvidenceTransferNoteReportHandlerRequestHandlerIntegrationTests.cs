@@ -240,7 +240,7 @@
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should()
                     .Contain(
-                        $"{SystemTime.Now.Year}_Evidence note transfers{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                        $"{SystemTime.Now.Year}_Evidence note transfers");
                 result.FileName.Should().EndWith(".csv");
             };
         }
@@ -459,7 +459,7 @@
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should()
                     .Contain(
-                        $"{SystemTime.Now.Year}_Evidence note transfers{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                        $"{SystemTime.Now.Year}_Evidence note transfers");
                 result.FileName.Should().EndWith(".csv");
             };
         }

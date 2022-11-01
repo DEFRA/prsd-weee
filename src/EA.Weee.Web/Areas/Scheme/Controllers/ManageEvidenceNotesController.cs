@@ -1,15 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Aatf.Mappings.ToViewModel;
     using Attributes;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Email;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Constants;
@@ -27,6 +20,11 @@
     using Extensions;
     using Filters;
     using Prsd.Core.Extensions;
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -117,13 +115,13 @@
                 var result = await client.SendAsync(User.GetAccessToken(),
                 new GetEvidenceNotesByOrganisationRequest(organisationId, 
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, int.MaxValue, null));
+                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, int.MaxValue));
+                    new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
-                    (new ManageEvidenceNoteTransfer(organisationId, null, null, null, selectedComplianceYear, currentDate));
+                    (new ManageEvidenceNoteTransfer(organisationId, manageEvidenceNoteViewModel?.FilterViewModel, null, null, selectedComplianceYear, currentDate));
 
                 return View("ReviewSubmittedEvidence", model);
             }
@@ -145,12 +143,12 @@
                         NoteStatus.Void,
                         NoteStatus.Returned
                     }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, 
-                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null));
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, null, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, manageEvidenceNoteViewModel?.FilterViewModel, null, null, selectedComplianceYear, currentDate));
 
                 return View("ViewAndTransferEvidence", model);
             }
@@ -177,7 +175,8 @@
                     true, 
                     pageNumber, 
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
-                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue));
+                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                    manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                             new RecipientWasteStatusFilterBase(null,
@@ -191,7 +190,7 @@
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                       new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, null, recipientWasteStatusViewModel, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, manageEvidenceNoteViewModel?.FilterViewModel, recipientWasteStatusViewModel, null, selectedComplianceYear, currentDate));
 
                 return View("OutgoingTransfers", model);
             }
@@ -200,13 +199,13 @@
         [HttpGet]
         [CheckCanApproveNote]
         [NoCacheFilter]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string queryString = null)
         {
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId);
 
-                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, queryString, client);
 
                 if (model.ViewEvidenceNoteViewModel.Status != NoteStatus.Submitted)
                 {
@@ -239,7 +238,7 @@
 
                 await SetBreadcrumb(model.OrganisationId);
 
-                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
+                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, model.QueryString, client);
 
                 return View("ReviewEvidenceNote", model);
             }
@@ -247,7 +246,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1)
+        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1, bool openedInNewTab = false)
         {
             using (var client = this.apiClient())
             {
@@ -260,7 +259,8 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false)
                 {
                     SchemeId = pcsId,
-                    RedirectTab = redirectTab
+                    RedirectTab = redirectTab,
+                    OpenedInNewTab = openedInNewTab
                 });
 
                 ViewBag.Page = page;
@@ -357,18 +357,34 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceSummaryReport(Guid pcsId, int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, pcsId, complianceYear);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+            }
+        }
+
         private int SelectedComplianceYear(DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
         }
 
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, string queryString, IWeeeClient client)
         {
             var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null, false)
             {
-                SchemeId = pcsId
+                SchemeId = pcsId,
+                QueryString = queryString
             });
 
             return model;

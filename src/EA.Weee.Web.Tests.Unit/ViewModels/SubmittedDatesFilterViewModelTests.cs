@@ -1,12 +1,15 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.Tests.Unit.ViewModels
 {
-    using System.ComponentModel.DataAnnotations;
+    using AutoFixture;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Aatf.Attributes;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using EA.Weee.Web.ViewModels.Shared;
     using FluentAssertions;
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using Xunit;
 
-    public class SubmittedDatesFilterViewModelTests
+    public class SubmittedDatesFilterViewModelTests : SimpleUnitTestBase
     {
         [Theory]
         [InlineData("StartDate", "Submitted start date")]
@@ -39,6 +42,51 @@
         {
             typeof(SubmittedDatesFilterViewModel)
                 .GetProperty("EndDate").Should().BeDecoratedWith<EvidenceNoteFilterEndDateAttribute>(e => e.CompareDatePropertyName.Equals("StartDate"));
+        }
+
+        [Fact]
+        public void SearchPerformed_GivenNoSearchPerformed_FalseShouldBeReturned()
+        {
+            //arrange
+            var model = new SubmittedDatesFilterViewModel();
+
+            //act
+            var searchPerformed = model.SearchPerformed;
+
+            //assert
+            searchPerformed.Should().BeFalse();
+        }
+
+        [Fact]
+        public void SearchPerformed_GivenStartDateSelected_TrueShouldBeReturned()
+        {
+            //arrange
+            var model = new SubmittedDatesFilterViewModel()
+            {
+                StartDate = TestFixture.Create<DateTime>()
+            };
+
+            //act
+            var searchPerformed = model.SearchPerformed;
+
+            //assert
+            searchPerformed.Should().BeTrue();
+        }
+
+        [Fact]
+        public void SearchPerformed_GivenEndDateSelected_TrueShouldBeReturned()
+        {
+            //arrange
+            var model = new SubmittedDatesFilterViewModel()
+            {
+                EndDate = TestFixture.Create<DateTime>()
+            };
+
+            //act
+            var searchPerformed = model.SearchPerformed;
+
+            //assert
+            searchPerformed.Should().BeTrue();
         }
     }
 }

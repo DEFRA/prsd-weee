@@ -34,7 +34,8 @@
             Guid recipientId,
             List<int> categoryIds,
             List<Guid> evidenceNoteIds,
-            List<Guid> deselectedEvidenceNoteIds)
+            List<Guid> deselectedEvidenceNoteIds, 
+            bool selectAll)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(recipientId).IsNotEqualTo(Guid.Empty);
@@ -46,6 +47,7 @@
             CategoryIds = categoryIds;
             EvidenceNoteIds = evidenceNoteIds;
             DeselectedEvidenceNoteIds = deselectedEvidenceNoteIds;
+            SelectAllCheckBoxes = selectAll;
         }
 
         public TransferEvidenceNoteRequest(Guid organisationId,
@@ -94,5 +96,7 @@
 
             EvidenceNoteIds = EvidenceNoteIds.Union(selectedNotes.Distinct()).ToList();
         }
+
+        public bool SelectAllCheckBoxes { get; set; }
     }
 }

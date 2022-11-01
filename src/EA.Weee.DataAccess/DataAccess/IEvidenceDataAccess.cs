@@ -35,7 +35,9 @@
             int pageNumber,
             int pageSize);
 
-        Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId, List<Guid> evidenceNotes);
+        Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId, 
+            List<Guid> evidenceNotes,
+            List<int> categories);
 
         Task<Note> AddTransferNote(Organisation organisation,
             Organisation scheme,

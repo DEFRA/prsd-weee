@@ -47,8 +47,8 @@
         </p>
     }
 
-    <div>
-        @Html.ActionLink("Leave unchanged and perform another activity", "ChooseActivity", new { pcsId = Model.OrganisationId })
+    <div class="govuk-body">
+        @Html.ActionLink("Leave unchanged and perform another activity", "ChooseActivity", new { pcsId = Model.OrganisationId }, new { @class = "govuk-link" })
     </div>
 }
 

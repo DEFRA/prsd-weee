@@ -20,7 +20,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
     using AutoFixture.Kernel;
     using Web.Areas.Scheme.Attributes;
@@ -184,7 +183,7 @@
         public void SubmittedTransferGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -192,7 +191,7 @@
         public void SubmittedTransferGet_ShouldHaveNoCacheAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
@@ -200,7 +199,7 @@
         public void SubmittedTransferGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
@@ -232,7 +231,7 @@
         public void EditDraftTransferGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -240,7 +239,7 @@
         public void EditDraftTransferGet_ShouldHaveNoCacheFilterAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
@@ -248,7 +247,7 @@
         public void EditDraftTransfer_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("EditDraftTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
@@ -484,8 +483,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_GivenExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesAlongWithTransferNoteData_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var evidenceNoteId1 = TestFixture.Create<Guid>();
@@ -990,6 +988,31 @@
         }
 
         [Fact]
+        public async Task EditDraftTransferGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        {
+            // arrange 
+            var queryString = TestFixture.Create<string>();
+
+            // act
+            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
+                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>(), queryString);
+
+            // assert
+            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+        }
+
+        [Fact]
+        public async Task EditDraftTransferGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        {
+            // act
+            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>());
+
+            // assert
+            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(null);
+        }
+
+        [Fact]
         public async Task SubmittedTransferGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache()
         {
             //act
@@ -1112,6 +1135,30 @@
                 A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
                     t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                     t.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SubmittedTransferGet_GivenRedirectTabAndQueryString_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+
+            var queryString = TestFixture.Create<string>();
+            var redirectTab = TestFixture.Create<string>();
+
+            //act
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(),
+                redirectTab,
+                queryString);
+
+            //assert
+            A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
+                A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
+                    t.QueryString.Equals(queryString) &&
+                    t.RedirectTab.Equals(redirectTab)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1455,16 +1502,33 @@
             EditTransferFromGet_GivenTransferRequestWithSelectedNotes_SelectedTransferNotesShouldBeRetrieved(int page)
         {
             //arrange
-            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
-            var categories = TestFixture.CreateMany<int>().ToList();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>(2).ToList();
+            var sessionCategories = new List<int>()
+            {
+                Core.DataReturns.WeeeCategory.MedicalDevices.ToInt(),
+                Core.DataReturns.WeeeCategory.ToysLeisureAndSports.ToInt()
+            };
+
+            var transferEvidence = TestFixture.Build<TransferEvidenceNoteData>()
+                .With(t => t.TransferEvidenceNoteTonnageData, new List<TransferEvidenceNoteTonnageData>()
+                {
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteIds.ElementAt(0))
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.MedicalDevices, null, null, null, null))
+                        .Create(),
+                    TestFixture.Build<TransferEvidenceNoteTonnageData>()
+                        .With(e => e.OriginalNoteId, evidenceNoteIds.ElementAt(1))
+                        .With(e => e.EvidenceTonnageData, new EvidenceTonnageData(Guid.NewGuid(), Core.DataReturns.WeeeCategory.ConsumerEquipment, null, null, null, null))
+                        .Create(),
+                }).Create();
 
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(t => t.EvidenceNoteIds, evidenceNoteIds)
-                .With(t => t.CategoryIds, categories)
+                .With(t => t.CategoryIds, sessionCategories)
                 .Create();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
-                .Returns(transferEvidenceNoteData);
+                .Returns(transferEvidence);
 
             A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(request);
 
@@ -1476,8 +1540,7 @@
                     g =>
                         g.Categories.SequenceEqual(request.CategoryIds) &&
                         g.OrganisationId == organisationId &&
-                        g.EvidenceNotes.SequenceEqual(
-                            evidenceNoteIds.Union(transferEvidenceNoteData.CurrentEvidenceNoteIds)))))
+                        g.EvidenceNotes.SequenceEqual(evidenceNoteIds))))
                 .MustHaveHappenedOnceExactly();
         }
 

@@ -87,7 +87,7 @@
                             {
                                 <tr>
                                     <td colspan="5">
-                                        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no draft or returned evidence notes </p>") })
+                                        @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no draft or returned evidence notes </p>") })
                                     </td>
                                 </tr>
                                 <tr>
@@ -96,11 +96,14 @@
                                     </td>
                                 </tr>
                             }
-
                         </tbody>
                     </table>
-
                     <br />
+                    @{
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
+                         { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
+                         manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
+                    }
                 </section>
             </div>
         </div>

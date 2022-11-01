@@ -1,9 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
-@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewEvidenceNoteViewModel
 @{
     ViewBag.Title = "Review evidence - GOV.UK";
@@ -11,15 +9,25 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(
-        Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.ViewEvidenceNoteViewModel.SchemeId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ViewEvidenceNoteViewModel.ComplianceYear })))
+    @if (!string.IsNullOrWhiteSpace(Model.QueryString))
+    {
+        @(this.WeeeGds().BackLink(
+            string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(
+            Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.ViewEvidenceNoteViewModel.SchemeId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ViewEvidenceNoteViewModel.ComplianceYear })))
+    }
+    
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.QueryString)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.SchemeId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.OrganisationId)
         @Html.HiddenFor(m => m.ViewEvidenceNoteViewModel.Id)

@@ -35,20 +35,23 @@
 }
 
 @section full_main_content{
-
-    @if (Model.DisplayMessage)
+    
+    @if (!Model.OpenedInNewTab)
     {
-        @(this.WeeeGds().BackLink(
-            Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }),
-            "Manage evidence notes")
-            )
-        @(this.WeeeGds().Panel(Model.SuccessMessage))
-    }
-    else
-    {
-        @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+        if (Model.DisplayMessage)
+        {
+            @(this.WeeeGds().BackLink(
+                Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }),
+                "Manage evidence notes")
+                )
+            @(this.WeeeGds().Panel(Model.SuccessMessage))
+        }
+        else
+        {
+            @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
                 new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }))
                 )
+        }
     }
 
     <div class="govuk-!-margin-top-3"></div>

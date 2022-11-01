@@ -12,9 +12,9 @@
     using Protocol = Core.AatfEvidence.Protocol;
     using WasteType = Core.AatfEvidence.WasteType;
 
-    public class EvidenceNoteRowMap : IMap<EvidenceNoteRowMapperObject, EvidenceNoteData>
+    public class EvidenceNoteRowMap : EvidenceNoteDataMapBase<EvidenceNoteData>, IMap<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>
     {
-        public EvidenceNoteData Map(EvidenceNoteRowMapperObject source)
+        public EvidenceNoteData Map(EvidenceNoteRowCriteriaMapper source)
         {
             var data = new EvidenceNoteData
             {
@@ -48,11 +48,7 @@
                 }
             };
 
-            if (source.IncludeTotal)
-            {
-                data.TotalReceived = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter)
-                        .Sum(n => n.Received) : source.Note.NoteTonnage.Sum(n => n.Received);
-            }
+            MapTonnageAvailable(source, data);
 
             if (source.Note.Aatf != null)
             {
