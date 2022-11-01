@@ -23,6 +23,8 @@
         [DisplayName("What is the reason you are rejecting or returning the evidence note?")]
         public string Reason { get; set; }
 
+        public string QueryString { get; set; }
+
         public NoteStatus SelectedEnumValue
         {
             get

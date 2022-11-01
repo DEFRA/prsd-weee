@@ -183,7 +183,7 @@
         public void SubmittedTransferGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
@@ -191,7 +191,7 @@
         public void SubmittedTransferGet_ShouldHaveNoCacheAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
@@ -199,7 +199,7 @@
         public void SubmittedTransferGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController).GetMethod("SubmittedTransfer",
-                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string) }).Should()
+                    new[] { typeof(Guid), typeof(Guid), typeof(bool?), typeof(string), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
 
@@ -1135,6 +1135,30 @@
                 A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
                     t.TransferEvidenceNoteData == transferEvidenceNoteData &&
                     t.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SubmittedTransferGet_GivenRedirectTabAndQueryString_ModelMapperShouldBeCalled()
+        {
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+
+            var queryString = TestFixture.Create<string>();
+            var redirectTab = TestFixture.Create<string>();
+
+            //act
+            await outgoingTransferEvidenceController.SubmittedTransfer(organisationId,
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(),
+                redirectTab,
+                queryString);
+
+            //assert
+            A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
+                A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
+                    t.QueryString.Equals(queryString) &&
+                    t.RedirectTab.Equals(redirectTab)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
