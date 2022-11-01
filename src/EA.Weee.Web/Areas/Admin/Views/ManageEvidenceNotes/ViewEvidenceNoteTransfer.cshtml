@@ -5,7 +5,7 @@
 }
 
 @section full_main_content{
-    
+
     @if (!Model.OpenedInNewTab)
     {
         if (Model.DisplayMessage)
@@ -14,6 +14,11 @@
                 Url.Action("Index", "ManageEvidenceNotes",
                     new { @tab = Model.InternalUserRedirectTab, @selectedComplianceYear = Model.ComplianceYear }), "Manage evidence notes"))
             @(this.WeeeGds().Panel(Model.SuccessMessage))
+        }
+        else if (!string.IsNullOrWhiteSpace(Model.QueryString))
+        {
+            @(this.WeeeGds().BackLink(
+                string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
         }
         else
         {
