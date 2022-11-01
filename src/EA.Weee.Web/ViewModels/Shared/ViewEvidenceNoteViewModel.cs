@@ -107,8 +107,6 @@
 
         public bool CanDisplayPdfLink => (Status == NoteStatus.Approved || Status == NoteStatus.Submitted || Status == NoteStatus.Rejected || Status == NoteStatus.Returned);
 
-        public string QueryString { get; set; }
-
         public ViewEvidenceNoteViewModel()
         {
             AddTransferCategoryValues(new EvidenceCategoryValues());
