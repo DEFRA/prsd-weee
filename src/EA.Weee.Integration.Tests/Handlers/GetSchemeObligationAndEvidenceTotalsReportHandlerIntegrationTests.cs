@@ -398,7 +398,7 @@
 {scheme.SchemeName},{scheme.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 {scheme.SchemeName},{scheme.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 {scheme.SchemeName},{scheme.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
-{scheme.SchemeName},{scheme.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,0.000,0.000
+{scheme.SchemeName},{scheme.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
 {scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 ");
 
@@ -783,7 +783,7 @@
 12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
-Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,0.000,0.000
+Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
 Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 ");
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS Summary{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -1171,6 +1171,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                 };
 
                 var anotherRecipientOrganisation = OrganisationDbSetup.Init().Create();
+                //scheme 3 has no obligations but has evidence notes so will be in the csv
                 scheme3 = SchemeDbSetup.Init().WithOrganisation(anotherRecipientOrganisation.Id).WithSchemeName("Z scheme name").Create();
                 EvidenceNoteDbSetup.Init()
                     .WithOrganisation(recipient1Organisation.Id)
@@ -1236,6 +1237,18 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     .WithComplianceYear(2022)
                     .WithTonnages(nonHouseHoldTonnages).Create();
 
+                // create schemes that does not have any obligation or evidence notes in the year, should not affect the result of the csv
+                EvidenceNoteDbSetup.Init()
+                    .WithComplianceYear(2023)
+                    .WithOrganisation(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithComplianceYear(2023)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
+
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, null, 2022);
             };
 
@@ -1247,22 +1260,22 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
             private readonly It shouldHaveTheExpectedData = () =>
             {
                 result.FileContent.Should().Be($@"PCS name,PCS approval number,Category,Household obligation (tonnes),Household evidence (tonnes),Household reuse (tonnes),Transferred out (tonnes),Transferred In (tonnes),Difference (tonnes),Non household evidence (tonnes),Non household reuse (tonnes)
--,-,1. Large household appliances,568.000,103.000,3.000,0.000,0.000,-465.000,1.000,1.000
--,-,2. Small household appliances,21.000,128.000,3.000,100.000,100.000,107.000,1.000,1.000
--,-,3. IT and telecommunications equipment,151.500,83.000,73.000,0.000,0.000,-68.500,1.000,1.000
--,-,4. Consumer equipment,101.000,163.000,5.000,1.000,11.000,62.000,1.000,1.000
--,-,5. Lighting equipment,1.000,70.280,3.000,0.000,57.280,69.280,1.000,1.000
--,-,6. Electrical and electronic tools,1.000,253.000,3.000,0.000,0.000,252.000,1.000,1.000
--,-,""7. Toys, leisure and sports equipment"",1001.235,78.000,23.000,0.000,0.000,-923.235,1.000,1.000
--,-,8. Medical devices,801.000,53.000,2.000,0.000,0.000,-748.000,1.000,1.000
--,-,9. Monitoring and control instruments,2.000,23.000,2.000,0.000,0.000,21.000,1.000,1.000
--,-,10. Automatic dispensers,601.000,23.000,8.000,0.000,10.000,-578.000,1.000,1.000
--,-,11. Display equipment,201.000,33.000,3.000,0.000,0.000,-168.000,1.000,1.000
--,-,12. Appliances containing refrigerants,1.000,203.789,103.000,0.000,0.000,202.789,1.000,1.000
--,-,13. Gas discharge lamps and LED light sources,1.000,203.000,13.000,0.000,0.000,202.000,1.000,1.000
--,-,14. Photovoltaic panels,1001.000,103.000,53.000,0.000,0.000,-898.000,101.000,51.000
--,-,Category 2-10 summary,2680.735,874.280,122.000,101.000,178.280,-1806.455,9.000,9.000
--,-,Total (tonnes),4452.735,1520.069,297.000,101.000,178.280,-2932.666,114.000,64.000
+All PCS's,,1. Large household appliances,568.000,103.000,3.000,0.000,0.000,-465.000,1.000,1.000
+All PCS's,,2. Small household appliances,21.000,128.000,3.000,100.000,100.000,107.000,1.000,1.000
+All PCS's,,3. IT and telecommunications equipment,151.500,83.000,73.000,0.000,0.000,-68.500,1.000,1.000
+All PCS's,,4. Consumer equipment,101.000,163.000,5.000,1.000,11.000,62.000,1.000,1.000
+All PCS's,,5. Lighting equipment,1.000,70.280,3.000,0.000,57.280,69.280,1.000,1.000
+All PCS's,,6. Electrical and electronic tools,1.000,253.000,3.000,0.000,0.000,252.000,1.000,1.000
+All PCS's,,""7. Toys, leisure and sports equipment"",1001.235,78.000,23.000,0.000,0.000,-923.235,1.000,1.000
+All PCS's,,8. Medical devices,801.000,53.000,2.000,0.000,0.000,-748.000,1.000,1.000
+All PCS's,,9. Monitoring and control instruments,2.000,23.000,2.000,0.000,0.000,21.000,1.000,1.000
+All PCS's,,10. Automatic dispensers,601.000,23.000,8.000,0.000,10.000,-578.000,1.000,1.000
+All PCS's,,11. Display equipment,201.000,33.000,3.000,0.000,0.000,-168.000,1.000,1.000
+All PCS's,,12. Appliances containing refrigerants,1.000,203.789,103.000,0.000,0.000,202.789,1.000,1.000
+All PCS's,,13. Gas discharge lamps and LED light sources,1.000,203.000,13.000,0.000,0.000,202.000,1.000,1.000
+All PCS's,,14. Photovoltaic panels,1001.000,103.000,53.000,0.000,0.000,-898.000,101.000,51.000
+All PCS's,,Category 2-10 summary,2680.735,874.280,122.000,101.000,178.280,-1806.455,,
+All PCS's,,Total (tonnes),4452.735,1520.069,297.000,101.000,178.280,-2932.666,114.000,64.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
@@ -1277,7 +1290,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
-{scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,0.000,0.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
 {scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},1. Large household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},2. Small household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
@@ -1293,7 +1306,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},12. Appliances containing refrigerants,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},13. Gas discharge lamps and LED light sources,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},14. Photovoltaic panels,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
-{scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,9.000,9.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,,
 {scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),14.000,14.000,14.000,0.000,0.000,0.000,14.000,14.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},2. Small household appliances,0.000,100.000,0.000,0.000,100.000,100.000,0.000,0.000
@@ -1309,7 +1322,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},12. Appliances containing refrigerants,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},14. Photovoltaic panels,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
-{scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
+{scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,,
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},1. Large household appliances,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},2. Small household appliances,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
@@ -1325,7 +1338,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},12. Appliances containing refrigerants,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},14. Photovoltaic panels,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
-{scheme3.SchemeName},{scheme3.ApprovalNumber},Category 2-10 summary,0.000,9.000,9.000,0.000,0.000,9.000,0.000,0.000
+{scheme3.SchemeName},{scheme3.ApprovalNumber},Category 2-10 summary,0.000,9.000,9.000,0.000,0.000,9.000,,
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Total (tonnes),0.000,14.000,14.000,0.000,0.000,14.000,0.000,0.000
 ");
 
@@ -1789,6 +1802,18 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     .WithComplianceYear(2022)
                     .WithTonnages(nonHouseHoldTonnages).Create();
 
+                // create schemes that does not have any obligation or evidence notes in the year, should not affect the result of the csv
+                EvidenceNoteDbSetup.Init()
+                    .WithComplianceYear(2023)
+                    .WithOrganisation(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithComplianceYear(2023)
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .Create();
+
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, eaAuthority.Id, null, 2022);
             };
 
@@ -1800,22 +1825,22 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
             private readonly It shouldHaveTheExpectedData = () =>
             {
                 result.FileContent.Should().Be($@"PCS name,PCS approval number,Category,Household obligation (tonnes),Household evidence (tonnes),Household reuse (tonnes),Transferred out (tonnes),Transferred In (tonnes),Difference (tonnes),Non household evidence (tonnes),Non household reuse (tonnes)
--,-,1. Large household appliances,568.000,102.000,2.000,0.000,0.000,-466.000,1.000,1.000
--,-,2. Small household appliances,21.000,127.000,2.000,100.000,100.000,106.000,1.000,1.000
--,-,3. IT and telecommunications equipment,151.500,82.000,72.000,0.000,0.000,-69.500,1.000,1.000
--,-,4. Consumer equipment,101.000,162.000,4.000,1.000,11.000,61.000,1.000,1.000
--,-,5. Lighting equipment,1.000,69.280,2.000,0.000,57.280,68.280,1.000,1.000
--,-,6. Electrical and electronic tools,1.000,252.000,2.000,0.000,0.000,251.000,1.000,1.000
--,-,""7. Toys, leisure and sports equipment"",1001.235,77.000,22.000,0.000,0.000,-924.235,1.000,1.000
--,-,8. Medical devices,801.000,52.000,1.000,0.000,0.000,-749.000,1.000,1.000
--,-,9. Monitoring and control instruments,2.000,22.000,1.000,0.000,0.000,20.000,1.000,1.000
--,-,10. Automatic dispensers,601.000,22.000,7.000,0.000,10.000,-579.000,1.000,1.000
--,-,11. Display equipment,201.000,32.000,2.000,0.000,0.000,-169.000,1.000,1.000
--,-,12. Appliances containing refrigerants,1.000,202.789,102.000,0.000,0.000,201.789,1.000,1.000
--,-,13. Gas discharge lamps and LED light sources,1.000,202.000,12.000,0.000,0.000,201.000,1.000,1.000
--,-,14. Photovoltaic panels,1001.000,102.000,52.000,0.000,0.000,-899.000,101.000,51.000
--,-,Category 2-10 summary,2680.735,865.280,113.000,101.000,178.280,-1815.455,9.000,9.000
--,-,Total (tonnes),4452.735,1506.069,283.000,101.000,178.280,-2946.666,114.000,64.000
+All PCS's,,1. Large household appliances,568.000,102.000,2.000,0.000,0.000,-466.000,1.000,1.000
+All PCS's,,2. Small household appliances,21.000,127.000,2.000,100.000,100.000,106.000,1.000,1.000
+All PCS's,,3. IT and telecommunications equipment,151.500,82.000,72.000,0.000,0.000,-69.500,1.000,1.000
+All PCS's,,4. Consumer equipment,101.000,162.000,4.000,1.000,11.000,61.000,1.000,1.000
+All PCS's,,5. Lighting equipment,1.000,69.280,2.000,0.000,57.280,68.280,1.000,1.000
+All PCS's,,6. Electrical and electronic tools,1.000,252.000,2.000,0.000,0.000,251.000,1.000,1.000
+All PCS's,,""7. Toys, leisure and sports equipment"",1001.235,77.000,22.000,0.000,0.000,-924.235,1.000,1.000
+All PCS's,,8. Medical devices,801.000,52.000,1.000,0.000,0.000,-749.000,1.000,1.000
+All PCS's,,9. Monitoring and control instruments,2.000,22.000,1.000,0.000,0.000,20.000,1.000,1.000
+All PCS's,,10. Automatic dispensers,601.000,22.000,7.000,0.000,10.000,-579.000,1.000,1.000
+All PCS's,,11. Display equipment,201.000,32.000,2.000,0.000,0.000,-169.000,1.000,1.000
+All PCS's,,12. Appliances containing refrigerants,1.000,202.789,102.000,0.000,0.000,201.789,1.000,1.000
+All PCS's,,13. Gas discharge lamps and LED light sources,1.000,202.000,12.000,0.000,0.000,201.000,1.000,1.000
+All PCS's,,14. Photovoltaic panels,1001.000,102.000,52.000,0.000,0.000,-899.000,101.000,51.000
+All PCS's,,Category 2-10 summary,2680.735,865.280,113.000,101.000,178.280,-1815.455,,
+All PCS's,,Total (tonnes),4452.735,1506.069,283.000,101.000,178.280,-2946.666,114.000,64.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
@@ -1830,7 +1855,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
-{scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,0.000,0.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
 {scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},1. Large household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},2. Small household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
@@ -1846,7 +1871,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},12. Appliances containing refrigerants,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},13. Gas discharge lamps and LED light sources,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},14. Photovoltaic panels,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
-{scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,9.000,9.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,,
 {scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),14.000,14.000,14.000,0.000,0.000,0.000,14.000,14.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},2. Small household appliances,0.000,100.000,0.000,0.000,100.000,100.000,0.000,0.000
@@ -1862,7 +1887,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},12. Appliances containing refrigerants,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},14. Photovoltaic panels,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
-{scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
+{scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,,
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
 ");
 

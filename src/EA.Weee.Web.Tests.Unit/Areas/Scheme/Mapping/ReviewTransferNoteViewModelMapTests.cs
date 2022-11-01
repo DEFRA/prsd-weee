@@ -50,6 +50,7 @@
             result.Should().NotBeNull();
             result.ViewTransferNoteViewModel.Should().NotBeNull();
             result.OrganisationId.Should().Be(schemeId);
+            result.QueryString.Should().BeNullOrEmpty();
         }
 
         [Fact]
