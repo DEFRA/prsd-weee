@@ -16,7 +16,6 @@
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Shared;
@@ -131,6 +130,23 @@
 
             //assert
             model.Page.Should().Be(page);
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenSourceWithQueryString_ModelPropertiesShouldBeSet()
+        {
+            //arrange
+            var transfer = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Create<TransferEvidenceNoteData>(), null)
+            {
+                QueryString = TestFixture.Create<string>()
+            };
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert 
+            result.QueryString.Should().Be(transfer.QueryString);
         }
 
         [Fact]
