@@ -53,21 +53,21 @@
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
              .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveCheckCanApproveNoteAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanApproveNoteAttribute>();
         }
 
@@ -312,25 +312,27 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task ReviewEvidenceNoteGet_GivenNote_ModelMapperShouldBeCalled()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("queryString")]
+        public async Task ReviewEvidenceNoteGet_GivenNote_ModelMapperShouldBeCalled(string queryString)
         {
             //arrange
             var noteData = testFixture.Create<EvidenceNoteData>();
-            var complianceYear = testFixture.Create<int>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
 
             // act
-            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId);
+            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, queryString);
 
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.PrintableVersion == false &&
-                                                                 v.User == null))).MustHaveHappenedOnceExactly();
+                                                                 v.User == null &&
+                                                                 v.QueryString == queryString))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
