@@ -115,7 +115,7 @@
             //act
             var result = await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(selectedTab)) as ViewResult;
 
-            var convertedModel = result.Model as ManageManageEvidenceNoteOverviewViewModel;
+            var convertedModel = result.Model as ManageEvidenceNoteOverviewViewModel;
 
             convertedModel.ManageEvidenceNoteViewModel.Should().Be(model);
         }
@@ -353,7 +353,7 @@
                 g.ComplianceYear.Equals(complianceYear) && 
                 g.AllowedStatuses.Contains(NoteStatus.Draft) &&
                 g.SearchRef == null &&
-                g.PageSize == int.MaxValue &&
+                g.PageSize == 10 &&
                 g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -371,7 +371,7 @@
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(g =>
-                g.PageSize == int.MaxValue &&
+                g.PageSize == 10 &&
                 g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -527,7 +527,7 @@
                 g.OrganisationId.Equals(OrganisationId) &&
                 g.AllowedStatuses.Contains(NoteStatus.Draft) &&
                 g.SearchRef.Equals(filter.FilterViewModel.SearchRef) &&
-                g.PageSize == int.MaxValue &&
+                g.PageSize == 10 &&
                 g.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -599,7 +599,7 @@
                 A<EvidenceNotesViewModelTransfer>.That.Matches(
                     e => e.AatfId.Equals(AatfId) && e.OrganisationId.Equals(OrganisationId) &&
                          e.NoteData.Equals(noteData) &&
-                         e.PageSize == int.MaxValue &&
+                         e.PageSize == 10 &&
                          e.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -624,7 +624,7 @@
                          e.OrganisationId.Equals(OrganisationId) &&
                          e.NoteData.Equals(noteData) &&
                          e.ManageEvidenceNoteViewModel == existingModel &&
-                         e.PageSize == int.MaxValue &&
+                         e.PageSize == 10 &&
                          e.PageNumber == pageNumber))).MustHaveHappenedOnceExactly();
         }
 
@@ -863,6 +863,25 @@
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(ManageEvidenceNoteViewModel), typeof(int) })
                 .Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Theory]
+        [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
+        [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
+        public async void IndexGet_ModelPopulatedWith_SearchRef_ShouldCallRequest_WithSearchRef(ManageEvidenceOverviewDisplayOption selectedTab)
+        {
+            // arrange
+            var organisationId = Guid.NewGuid();
+            var aatfId = Guid.NewGuid();
+            var evidenceNoteViewModel = Fixture.Create<ManageEvidenceNoteViewModel>();
+            var searchRef = Fixture.Create<string>();
+            evidenceNoteViewModel.FilterViewModel.SearchRef = searchRef;
+
+            // act
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, Extensions.ToDisplayString(selectedTab), evidenceNoteViewModel);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAatfNotesRequest>.That.Matches(x => x.SearchRef == searchRef))).MustHaveHappenedOnceExactly();
         }
     }
 }

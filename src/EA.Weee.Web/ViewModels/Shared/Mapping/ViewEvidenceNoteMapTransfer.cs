@@ -19,6 +19,10 @@
 
         public IPrincipal User { get; private set; }
 
+        public bool OpenedInNewTab { get; set; }
+
+        public string QueryString { get; set; }
+
         public ViewEvidenceNoteMapTransfer(EvidenceNoteData evidenceNoteData, object noteStatus, bool printableVersion, IPrincipal user = null)
         {
             Guard.ArgumentNotNull(() => evidenceNoteData, evidenceNoteData);

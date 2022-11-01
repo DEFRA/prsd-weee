@@ -4,7 +4,9 @@
     using Core.Scheme;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Scheme.Controllers;
+    using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
@@ -51,34 +53,34 @@
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
              .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveCheckCanApproveNoteAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanApproveNoteAttribute>();
         }
 
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -310,25 +312,27 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task ReviewEvidenceNoteGet_GivenNote_ModelMapperShouldBeCalled()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("queryString")]
+        public async Task ReviewEvidenceNoteGet_GivenNote_ModelMapperShouldBeCalled(string queryString)
         {
             //arrange
             var noteData = testFixture.Create<EvidenceNoteData>();
-            var complianceYear = testFixture.Create<int>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
 
             // act
-            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId);
+            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, queryString);
 
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.PrintableVersion == false &&
-                                                                 v.User == null))).MustHaveHappenedOnceExactly();
+                                                                 v.User == null &&
+                                                                 v.QueryString == queryString))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -575,6 +579,48 @@
 
             // assert
             result.Model.Should().Be(model);
+        }
+
+        [Fact]
+        public async Task ReviewEvidenceNoteGet_ViewAndTransferEvidenceTab_MapperShouldCorrectlySetPageNumber()
+        {
+            // Arrange
+            var scheme = testFixture.Create<SchemePublicInfo>();
+            var noteData = testFixture.Build<EvidenceNoteSearchDataResult>().Create();
+            var currentDate = testFixture.Create<DateTime>();
+            var model = testFixture.Create<ManageEvidenceNoteViewModel>();
+            var pageNumber = 3;
+
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
+            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+
+            //act
+            await ManageEvidenceController.Index(RecipientId, "review-submitted-evidence", model, pageNumber);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
+                A<SchemeTabViewModelMapTransfer>.That.Matches(
+                    a => a.OrganisationId.Equals(RecipientId) &&
+                         a.NoteData == noteData &&
+                         a.Scheme.Equals(scheme) &&
+                         a.CurrentDate.Equals(currentDate) &&
+                         a.PageNumber == pageNumber &&
+                         a.PageSize == 10))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ReviewEvidenceNoteGet_GivenPageNumber_ViewBagShouldBePopulatedWithPageNumber()
+        {
+            // Arrange
+            var pageNumber = 3;
+
+            //act
+            var result = await ManageEvidenceController.ViewEvidenceNote(RecipientId, testFixture.Create<Guid>(), "review-submitted-evidence", pageNumber) as ViewResult;
+
+            //assert
+            Assert.Equal(pageNumber, result.ViewBag.Page);
         }
 
         private new void AddModelError()

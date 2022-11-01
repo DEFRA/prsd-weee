@@ -31,7 +31,7 @@
 
         public List<EvidenceNoteHistoryData> EvidenceNoteHistoryData { get; set; }
 
-        public decimal? TotalReceived { get; set; }
+        public decimal? TotalReceivedAvailable { get; set; }
 
         public EvidenceNoteData()
         {

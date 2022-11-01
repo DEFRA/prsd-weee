@@ -15,7 +15,7 @@
 {
     @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
         new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear = Model.ComplianceYear })))
-    
+
     <h1 class="govuk-heading-l">
         Transfer evidence to another scheme
     </h1>
@@ -26,4 +26,16 @@
     {
         { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model); }
     }
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#SelectAllCheckboxesSection').css("display", "block");
+
+            $('#all_checkbox_select_id').click(function () {
+                $(".govuk-checkboxes__input").prop('checked', $(this).prop('checked'));
+            });
+        });
+    </script>
 }

@@ -817,7 +817,7 @@
             result.EvidenceTonnageData.Count.Should().BeGreaterThan(0);
             result.EvidenceTonnageData.Should().BeEquivalentTo(
                 tonnages.Select(t =>
-                    new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused, null, null)).ToList());
+                    new EvidenceTonnageData(t.Id, (WeeeCategory)t.CategoryId, t.Received, t.Reused, 0M, 0M)).ToList());
         }
 
         [Fact]
@@ -896,10 +896,16 @@
             var rejectTransferNote = A.Fake<Note>();
             var approvedTransferNote = A.Fake<Note>();
 
+            var noteTransferTonnage1 = new NoteTransferTonnage(TestFixture.Create<Guid>(), transferReceive, transferReused);
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, rejectTransferNote, noteTransferTonnage1);
+
+            var noteTransferTonnage2 = new NoteTransferTonnage(TestFixture.Create<Guid>(), transferReceive, transferReused);
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, approvedTransferNote, noteTransferTonnage2);
+
             var transferTonnages = new List<NoteTransferTonnage>()
             {
-                new NoteTransferTonnage(TestFixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = rejectTransferNote}, // Should not be included
-                new NoteTransferTonnage(TestFixture.Create<Guid>(), transferReceive, transferReused) {TransferNote = approvedTransferNote} // Sums should only be counted from this
+                noteTransferTonnage1, // Should not be included
+                noteTransferTonnage2 // Sums should only be counted from this
             };
 
             var tonnages = new List<NoteTonnage>()
@@ -1304,9 +1310,80 @@
             result.EvidenceNoteHistoryData.First().TransferEvidenceTonnageData.Should().BeEmpty();
         }
 
-        private EvidenceNoteWithCriteriaMap EvidenceNoteWithCriteriaMap(Note note)
+        [Fact]
+        public void Map_GivenNoteToIncludeTotalAvailableReceivedAndCategoryFilterIsSpecified_TotalReceivedShouldBeMappedWithOnlyRequestedCategories()
         {
-            return new EvidenceNoteWithCriteriaMap(note);
+            //arrange
+            var note = A.Fake<Note>();
+            var transferNoteDraft = A.Fake<Note>();
+            A.CallTo(() => transferNoteDraft.Status).Returns(NoteStatus.Draft);
+            var transferNoteSubmitted = A.Fake<Note>();
+            A.CallTo(() => transferNoteSubmitted.Status).Returns(NoteStatus.Submitted);
+            var transferNoteReturned = A.Fake<Note>();
+            A.CallTo(() => transferNoteReturned.Status).Returns(NoteStatus.Returned);
+            var transferNoteRejected = A.Fake<Note>();
+            A.CallTo(() => transferNoteRejected.Status).Returns(NoteStatus.Rejected);
+            var transferNoteApproved = A.Fake<Note>();
+            A.CallTo(() => transferNoteApproved.Status).Returns(NoteStatus.Approved);
+            var transferNoteVoid = A.Fake<Note>();
+            A.CallTo(() => transferNoteVoid.Status).Returns(NoteStatus.Void);
+
+            var noteTonnage1 = new NoteTonnage(Domain.Lookup.WeeeCategory.ConsumerEquipment, 10.1M, 2);
+            var noteTransferTonnageDraft = new NoteTransferTonnage(TestFixture.Create<Guid>(), 1, 0); // tonnage should be taken away as draft
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, transferNoteDraft, noteTransferTonnageDraft);
+
+            var noteTransferTonnageSubmitted = new NoteTransferTonnage(TestFixture.Create<Guid>(), 1, 0); // tonnage should be taken away as submitted
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, transferNoteSubmitted, noteTransferTonnageSubmitted);
+
+            var noteTransferTonnageReturned = new NoteTransferTonnage(TestFixture.Create<Guid>(), 1, 0); // tonnage should be taken away as returned
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, transferNoteReturned, noteTransferTonnageReturned);
+
+            var noteTransferTonnageRejected = new NoteTransferTonnage(TestFixture.Create<Guid>(), 1, 0); // tonnage should not be taken away as rejected
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, transferNoteRejected, noteTransferTonnageRejected);
+
+            var noteTransferTonnageVoid = new NoteTransferTonnage(TestFixture.Create<Guid>(), 1, 0); // tonnage should not be taken away as void
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, transferNoteVoid, noteTransferTonnageVoid);
+
+            var noteTransferTonnageApproved = new NoteTransferTonnage(TestFixture.Create<Guid>(), 1, 0); // tonnage should be taken away as approved
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, transferNoteApproved, noteTransferTonnageApproved);
+
+            noteTonnage1.NoteTransferTonnage.Add(noteTransferTonnageDraft);
+            noteTonnage1.NoteTransferTonnage.Add(noteTransferTonnageSubmitted);
+            noteTonnage1.NoteTransferTonnage.Add(noteTransferTonnageReturned);
+            noteTonnage1.NoteTransferTonnage.Add(noteTransferTonnageRejected);
+            noteTonnage1.NoteTransferTonnage.Add(noteTransferTonnageVoid);
+            noteTonnage1.NoteTransferTonnage.Add(noteTransferTonnageApproved);
+
+            var noteTonnage2 = new NoteTonnage(Domain.Lookup.WeeeCategory.DisplayEquipment, 5.3M, 2);
+            var noteTransferTonnageNotMatchingCategory = new NoteTransferTonnage(TestFixture.Create<Guid>(), 1, 0); // not included in any total as will not match tonnage category
+            ObjectInstantiator<NoteTransferTonnage>.SetProperty(ntt => ntt.TransferNote, transferNoteDraft, noteTransferTonnageNotMatchingCategory);
+            noteTonnage2.NoteTransferTonnage.Add(noteTransferTonnageNotMatchingCategory);
+
+            var tonnages = new List<NoteTonnage>()
+            {
+                noteTonnage1,
+                noteTonnage2
+            };
+
+            A.CallTo(() => note.NoteTonnage).Returns(tonnages);
+
+            var mapObject = EvidenceNoteWithCriteriaMap(note);
+            mapObject.IncludeTotal = true;
+            mapObject.CategoryFilter = new List<int>()
+            {
+                Domain.Lookup.WeeeCategory.ConsumerEquipment.ToInt()
+            };
+
+            //act
+            var result = map.Map(mapObject);
+
+            //assert
+            result.TotalReceivedAvailable.Should().Be(6.1M);
+        }
+
+        private EvidenceNoteWithCriteriaMapper EvidenceNoteWithCriteriaMap(Note note)
+        {
+            return new EvidenceNoteWithCriteriaMapper(note);
         }
     }
 }

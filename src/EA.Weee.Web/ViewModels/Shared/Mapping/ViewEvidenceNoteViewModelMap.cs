@@ -99,7 +99,9 @@
                           source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => allowVoidStatus.Contains(e.Status)),
                 CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status)),
                 IsPrintable = source.PrintableVersion,
-                IsInternalUser = HasClaim(source.User, Claims.CanAccessInternalArea)
+                IsInternalUser = HasClaim(source.User, Claims.CanAccessInternalArea),
+                TotalAvailable = source.EvidenceNoteData.TotalReceivedAvailable.ToTonnageDisplay(),
+                OpenedInNewTab = source.OpenedInNewTab
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
@@ -168,8 +170,6 @@
                     }
                 }
             }
-
-            model.TotalReceivedDisplay = model.ReceivedTotal;
 
             SetSuccessMessage(source.EvidenceNoteData, source.NoteStatus, model);
 

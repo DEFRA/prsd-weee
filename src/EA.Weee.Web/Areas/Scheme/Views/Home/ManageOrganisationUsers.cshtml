@@ -27,7 +27,7 @@
 
         @(this.WeeeGds().Submit("Continue"))
     }
-    <div>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    <div class="govuk-body">
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @class = "govuk-link" })
     </div>
 }
