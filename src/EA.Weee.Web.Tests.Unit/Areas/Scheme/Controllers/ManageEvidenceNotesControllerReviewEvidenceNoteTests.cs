@@ -53,34 +53,34 @@
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
              .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void ReviewEvidenceNoteGet_ShouldHaveCheckCanApproveNoteAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ReviewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string) }).Should()
                 .BeDecoratedWith<CheckCanApproveNoteAttribute>();
         }
 
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -173,7 +173,10 @@
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) && 
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.PrintableVersion == false &&
-                                                                 v.User == null))).MustHaveHappenedOnceExactly();
+                                                                 v.User == null &&
+                                                                 v.QueryString == null &&
+                                                                 v.RedirectTab == null &&
+                                                                 v.OpenedInNewTab == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -199,28 +202,32 @@
                                                                  v.User == null))).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task ViewEvidenceNoteGet_GivenEvidenceNoteDataAndRedirectTab_ModelMapperShouldBeCalled()
+        [Theory]
+        [InlineData("redirectTab", "queryString")]
+        [InlineData("redirectTab", null)]
+        [InlineData(null, "queryString")]
+        [InlineData(null, null)]
+        public async Task ViewEvidenceNoteGet_GivenEvidenceNoteDataWithRedirectTabAndQueryString_ModelMapperShouldBeCalled(string redirectTab, string queryString)
         {
             //arrange
             var noteData = testFixture.Create<EvidenceNoteData>();
-            var redirectTab = testFixture.Create<string>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = NoteStatus.Approved;
 
             // act
-            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, EvidenceNoteId, redirectTab);
+            await ManageEvidenceController.ViewEvidenceNote(OrganisationId, EvidenceNoteId, redirectTab: redirectTab, queryString: queryString);
 
             // assert
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.NoteStatus.Equals(NoteStatus.Approved) &&
-                                                                 v.RedirectTab.Equals(redirectTab) &&
+                                                                 v.RedirectTab == redirectTab &&
                                                                  v.PrintableVersion == false &&
-                                                                 v.User == null))).MustHaveHappenedOnceExactly();
+                                                                 v.User == null &&
+                                                                 v.QueryString == queryString))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -312,25 +319,27 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task ReviewEvidenceNoteGet_GivenNote_ModelMapperShouldBeCalled()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("queryString")]
+        public async Task ReviewEvidenceNoteGet_GivenNote_ModelMapperShouldBeCalled(string queryString)
         {
             //arrange
             var noteData = testFixture.Create<EvidenceNoteData>();
-            var complianceYear = testFixture.Create<int>();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetEvidenceNoteForSchemeRequest>._)).Returns(noteData);
 
             // act
-            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId);
+            await ManageEvidenceController.ReviewEvidenceNote(OrganisationId, EvidenceNoteId, queryString);
 
             // assert
             A.CallTo(() => Mapper.Map<ReviewEvidenceNoteViewModel>(
                 A<ViewEvidenceNoteMapTransfer>.That.Matches(v => v.EvidenceNoteData.Equals(noteData) &&
                                                                  v.SchemeId.Equals(OrganisationId) &&
                                                                  v.PrintableVersion == false &&
-                                                                 v.User == null))).MustHaveHappenedOnceExactly();
+                                                                 v.User == null &&
+                                                                 v.QueryString == queryString))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]

@@ -2010,17 +2010,26 @@
         }
 
         [Fact]
-        public async Task TransferredEvidenceGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        public async Task TransferredEvidenceGet_GivenQueryString_ModelMapperShouldBeCalled()
         {
-            // arrange 
+            // arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(TestFixture.Create<TransferEvidenceNoteData>());
+
             var queryString = TestFixture.Create<string>();
 
-            //act
-            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
-                TestFixture.Create<string>(), queryString: queryString);
+            // act
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<string>(),
+                TestFixture.Create<int>(),
+                TestFixture.Create<bool>(),
+                queryString);
 
-            //assert
-            ((string)transferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+            // assert
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(
+                A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
+                    t.QueryString.Equals(queryString)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

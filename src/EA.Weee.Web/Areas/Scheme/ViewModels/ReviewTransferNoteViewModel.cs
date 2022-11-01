@@ -26,6 +26,8 @@
 
         public string RedirectTabName { get; set; }
 
+        public string QueryString { get; set; }
+
         public NoteStatus SelectedEnumValue
         {
             get
