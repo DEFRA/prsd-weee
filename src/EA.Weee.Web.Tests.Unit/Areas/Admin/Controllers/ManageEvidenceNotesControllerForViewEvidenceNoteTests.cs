@@ -171,26 +171,28 @@
         }
 
         [Fact]
-        public async Task ViewEvidenceNoteGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
-        {
-            // arrange 
-            var queryString = TestFixture.Create<string>();
-
-            //act
-            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId, queryString: queryString);
-
-            //assert
-            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(queryString);
-        }
-
-        [Fact]
-        public async Task ViewEvidenceNoteGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        public async Task ViewEvidenceNoteGet_WhenQueryStringIsNotSet_QueryStringShouldNotBeMapped()
         {
             //act
             await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId);
 
             //assert
-            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(null);
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                v => v.QueryString == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ViewEvidenceNoteGet_WhenQueryStringIsSet_QueryStringShouldBeMapped()
+        {
+            //arrange
+            var queryString = TestFixture.Create<string>();
+
+            //act
+            await ManageEvidenceController.ViewEvidenceNote(EvidenceNoteId, 1, queryString);
+
+            //assert
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                v => v.QueryString == queryString))).MustHaveHappenedOnceExactly();
         }
     }
 }
