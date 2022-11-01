@@ -23,6 +23,8 @@
 
         public int Page { get; set; }
 
+        public string QueryString { get; set; }
+
         public DateTime SystemDateTime { get; set; }
 
         public IPrincipal User { get; private set; }

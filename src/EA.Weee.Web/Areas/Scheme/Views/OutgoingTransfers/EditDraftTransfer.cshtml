@@ -10,22 +10,21 @@
     @if (Model.ReturnToView)
     {
         @(this.WeeeGds().BackLink(
-        Url.RouteUrl(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName,
-                     new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, page = ViewBag.Page })))
+            Url.RouteUrl(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName,
+                         new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, page = ViewBag.Page, queryString = Model.QueryString
+                         })))
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.QueryString))
+    {
+        @(this.WeeeGds().BackLink(
+                string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
     }
     else
     {
-        if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
-        {
-            @(this.WeeeGds().BackLink(
-                        string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
-        }
-        else
-        {
-            @(this.WeeeGds().BackLink(
-            Url.Action("Index", "ManageEvidenceNotes",
-            new { @pcsId = Model.SchemeId, @selectedComplianceYear = Model.ComplianceYear, @tab = Model.RedirectTab, @page = ViewBag.Page })))
-        }
+        @(this.WeeeGds().BackLink(
+    Url.Action("Index", "ManageEvidenceNotes",
+    new { @pcsId = Model.SchemeId, @selectedComplianceYear = Model.ComplianceYear, @tab = Model.RedirectTab, @page = ViewBag.Page })))
+
     }
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)

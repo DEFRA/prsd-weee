@@ -265,10 +265,9 @@
                     RedirectTab = redirectTab,
                     SystemDateTime = currentDateTime,
                     Page = page,
-                    OpenedInNewTab = openedInNewTab
+                    OpenedInNewTab = openedInNewTab,
+                    QueryString = queryString
                 });
-
-                ViewBag.QueryString = queryString;
 
                 return View("TransferredEvidence", model);
             }
