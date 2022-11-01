@@ -199,13 +199,13 @@
         [HttpGet]
         [CheckCanApproveNote]
         [NoCacheFilter]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string queryString = null)
         {
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId);
 
-                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, client);
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, queryString, client);
 
                 if (model.ViewEvidenceNoteViewModel.Status != NoteStatus.Submitted)
                 {
@@ -238,7 +238,7 @@
 
                 await SetBreadcrumb(model.OrganisationId);
 
-                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, client);
+                model = await GetNote(model.ViewEvidenceNoteViewModel.SchemeId, model.ViewEvidenceNoteViewModel.Id, model.QueryString, client);
 
                 return View("ReviewEvidenceNote", model);
             }
@@ -246,7 +246,11 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1, bool openedInNewTab = false)
+        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, 
+            string redirectTab = null, 
+            int page = 1, 
+            bool openedInNewTab = false,
+            string queryString = null)
         {
             using (var client = this.apiClient())
             {
@@ -260,7 +264,8 @@
                 {
                     SchemeId = pcsId,
                     RedirectTab = redirectTab,
-                    OpenedInNewTab = openedInNewTab
+                    OpenedInNewTab = openedInNewTab,
+                    QueryString = queryString
                 });
 
                 ViewBag.Page = page;
@@ -377,13 +382,14 @@
             return ComplianceYearHelper.GetSelectedComplianceYear(manageEvidenceNoteViewModel, currentDate);
         }
 
-        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, IWeeeClient client)
+        private async Task<ReviewEvidenceNoteViewModel> GetNote(Guid pcsId, Guid evidenceNoteId, string queryString, IWeeeClient client)
         {
             var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNoteForSchemeRequest(evidenceNoteId));
 
             var model = mapper.Map<ReviewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, null, false)
             {
-                SchemeId = pcsId
+                SchemeId = pcsId,
+                QueryString = queryString
             });
 
             return model;

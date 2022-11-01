@@ -2,7 +2,6 @@
 @using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.Extensions
-@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.SchemeViewAndTransferManageEvidenceSchemeViewModel
@@ -92,17 +91,17 @@
                                     <td class="govuk-table__cell">
                                         @if (@note.Type == NoteType.Transfer)
                                         {
-                                            @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, null)
+                                            @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
 
                                             if (note.DisplayEditLink)
                                             {
                                                 <br />
-                                                @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceDisplay, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, null)
+                                                @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceDisplay, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = @Context.Request.QueryString }, null)
                                             }
                                         }
                                         else
                                         {
-                                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, null)
+                                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
                                         }
                                     </td>
                                 </tr>
@@ -116,7 +115,7 @@
                         </td>
                     </tr>
                             <tr>
-                                <td>
+                                <td colspan="5">
                                     <p> Showing 0 - 0 of 0 </p>
                                 </td>
                             </tr>

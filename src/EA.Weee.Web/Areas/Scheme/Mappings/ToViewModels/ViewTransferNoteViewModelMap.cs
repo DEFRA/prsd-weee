@@ -109,6 +109,7 @@
                 Page = source.Page,
                 OpenedInNewTab = source.OpenedInNewTab,
                 IsPrintable = source.IsPrintable
+                QueryString = source.QueryString
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);

@@ -41,7 +41,7 @@
             csvWriter.DefineColumn(EvidenceReportConstants.SubmittedEvidence, x => x.SubmittedReceived.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.SubmittedReuse, x => x.SubmittedReused.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.DraftEvidence, x => x.DraftReceived.ToTonnageDisplay());
-            csvWriter.DefineColumn(EvidenceReportConstants.DraftReuse, x => x.DraftReused);
+            csvWriter.DefineColumn(EvidenceReportConstants.DraftReuse, x => x.DraftReused.ToTonnageDisplay());
 
             var fileContent = csvWriter.Write(summaryData);
 

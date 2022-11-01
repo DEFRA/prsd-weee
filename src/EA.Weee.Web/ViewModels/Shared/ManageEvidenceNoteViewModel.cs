@@ -37,5 +37,9 @@
         public bool CanCreateEdit { get; set; }
 
         public bool ComplianceYearClosed { get; set; }
+
+        public bool SearchPerformed =>
+            FilterViewModel.SearchPerformed || SubmittedDatesFilterViewModel.SearchPerformed ||
+            RecipientWasteStatusFilterViewModel.SearchPerformed;
     }
 }
