@@ -17,10 +17,10 @@
     }
     else
     {
-        if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
+        if (!string.IsNullOrWhiteSpace(Model.QueryString))
         {
             @(this.WeeeGds().BackLink(
-                        string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
+                        string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
         }
         else
         {
@@ -31,6 +31,7 @@
     }
 
     @Html.Partial("_ViewEvidenceNotePartial", Model)
+    @Html.HiddenFor(m => m.QueryString);
 
     @if (Model.DisplayEditButton)
     {
