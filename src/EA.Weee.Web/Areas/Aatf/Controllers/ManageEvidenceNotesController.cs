@@ -210,11 +210,13 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false)
+                {
+                    QueryString = queryString
+                });
 
                 ViewBag.Page = page;
-                ViewBag.QueryString = queryString;
-
+               
                 return View(model);
             }
         }
