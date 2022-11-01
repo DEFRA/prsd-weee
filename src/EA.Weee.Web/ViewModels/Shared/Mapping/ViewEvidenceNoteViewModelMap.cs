@@ -101,7 +101,8 @@
                 IsPrintable = source.PrintableVersion,
                 IsInternalUser = HasClaim(source.User, Claims.CanAccessInternalArea),
                 TotalAvailable = source.EvidenceNoteData.TotalReceivedAvailable.ToTonnageDisplay(),
-                OpenedInNewTab = source.OpenedInNewTab
+                OpenedInNewTab = source.OpenedInNewTab,
+                QueryString = source.QueryString,
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)

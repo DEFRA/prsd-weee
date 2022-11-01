@@ -1436,5 +1436,23 @@
             //assert
             model.OpenedInNewTab.Should().Be(openedInNewTab);
         }
+
+        [Fact]
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithQueryString_ModelPropertiesShouldBeSet()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var transfer = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
+            {
+                QueryString = TestFixture.Create<string>()
+            };
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert 
+            result.QueryString.Should().Be(transfer.QueryString);
+        }
     }
 }
