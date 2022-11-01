@@ -91,10 +91,12 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false, this.User));
+                var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false, this.User)
+                {
+                    QueryString = queryString
+                });
 
                 ViewBag.Page = page;
-                ViewBag.QueryString = queryString;
 
                 return View(model);
             }
@@ -117,9 +119,8 @@
                 {
                     OpenedInNewTab = openedInNewTab,
                     Page = page,
+                    QueryString = queryString,
                 });
-
-                ViewBag.QueryString = queryString;
 
                 return View(model);
             }
