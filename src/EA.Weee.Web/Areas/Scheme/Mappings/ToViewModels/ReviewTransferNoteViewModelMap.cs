@@ -23,6 +23,7 @@
                 ViewTransferNoteViewModel = mapper.Map<ViewTransferNoteViewModel>(source),
                 OrganisationId = source.OrganisationId,
                 RedirectTabName = source.RedirectTab,
+                QueryString = source.QueryString
             };
 
             return model;
