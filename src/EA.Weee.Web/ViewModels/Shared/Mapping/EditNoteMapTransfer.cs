@@ -11,12 +11,15 @@
     {
         public EvidenceNoteData NoteData { get; protected set; }
 
+        public bool ReturnToView { get; protected set; }
+
         public EditNoteMapTransfer(List<EntityIdDisplayNameData> schemes,
             EditEvidenceNoteViewModel existingModel,
-            Guid organisationId, Guid aatfId, EvidenceNoteData noteData, int complianceYear) : base(schemes, existingModel, organisationId, aatfId)
+            Guid organisationId, Guid aatfId, EvidenceNoteData noteData, int complianceYear, bool returnToView) : base(schemes, existingModel, organisationId, aatfId)
         {
             ComplianceYear = complianceYear;
             NoteData = noteData;
+            ReturnToView = returnToView;
         }
     }
 }
