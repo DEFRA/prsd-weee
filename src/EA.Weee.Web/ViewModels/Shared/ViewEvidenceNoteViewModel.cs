@@ -5,7 +5,6 @@
     using System.ComponentModel;
     using System.Linq;
     using Core.AatfEvidence;
-    using EA.Weee.Web.Areas.Scheme.ViewModels;
     using Extensions;
 
     [Serializable]
@@ -103,6 +102,8 @@
         public int Page { get; set; }
 
         public bool IsInternalUser { get; set; }
+
+        public string QueryString { get; set; }
 
         public bool CanDisplayPdfLink => (Status == NoteStatus.Approved || Status == NoteStatus.Submitted || Status == NoteStatus.Rejected || Status == NoteStatus.Returned);
 
