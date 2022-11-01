@@ -246,7 +246,11 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string redirectTab = null, int page = 1, bool openedInNewTab = false)
+        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, 
+            string redirectTab = null, 
+            int page = 1, 
+            bool openedInNewTab = false,
+            string queryString = null)
         {
             using (var client = this.apiClient())
             {
@@ -260,7 +264,8 @@
                 {
                     SchemeId = pcsId,
                     RedirectTab = redirectTab,
-                    OpenedInNewTab = openedInNewTab
+                    OpenedInNewTab = openedInNewTab,
+                    QueryString = queryString
                 });
 
                 ViewBag.Page = page;
