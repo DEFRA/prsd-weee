@@ -988,7 +988,7 @@
         }
 
         [Fact]
-        public async Task EditDraftTransferGet_GivenRedirectTabAndQueryString_ModelMapperShouldBeCalled()
+        public async Task EditDraftTransferGet_GivenQueryString_ModelMapperShouldBeCalled()
         {
             //arrange
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
