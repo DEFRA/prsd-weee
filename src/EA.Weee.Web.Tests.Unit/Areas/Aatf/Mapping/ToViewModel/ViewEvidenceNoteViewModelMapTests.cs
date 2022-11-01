@@ -77,6 +77,8 @@
             result.ComplianceYear.Should().Be(source.EvidenceNoteData.ComplianceYear);
             result.IsPrintable.Should().Be(printable);
             result.TotalAvailable.Should().Be(source.EvidenceNoteData.TotalReceivedAvailable.ToTonnageDisplay());
+            result.QueryString.Should().BeNullOrEmpty();
+            result.OpenedInNewTab.Should().BeFalse();
         }
 
         [Fact]
@@ -1435,6 +1437,25 @@
 
             //assert
             model.OpenedInNewTab.Should().Be(openedInNewTab);
+        }
+
+        [Fact]
+
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithQueryString_PropertiesShouldBeSet()
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
+            {
+                QueryString = TestFixture.Create<string>()
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.QueryString.Should().Be(source.QueryString);
         }
     }
 }
