@@ -50,6 +50,7 @@
             result.Should().NotBeNull();
             result.ViewTransferNoteViewModel.Should().NotBeNull();
             result.OrganisationId.Should().Be(schemeId);
+            result.QueryString.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -139,6 +140,25 @@
             result.RejectedReason.Should().Be("rejected reason");
             result.ReturnedDate.Should().Be(((DateTime?)today).ToDisplayGMTDateTimeString());
             result.ReturnedReason.Should().Be("returned reason");
+        }
+
+        [Fact]
+        public void Map_GivenSourceWithRedirectTabAndQueryString_ModelPropertiesShouldBeSet()
+        {
+            //arrange
+            var transfer = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Create<TransferEvidenceNoteData>(), null)
+            {
+                QueryString = TestFixture.Create<string>(),
+                RedirectTab = TestFixture.Create<string>()
+            };
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert 
+            result.RedirectTabName.Should().Be(transfer.RedirectTab);
+            result.QueryString.Should().Be(transfer.QueryString);
         }
     }
 }

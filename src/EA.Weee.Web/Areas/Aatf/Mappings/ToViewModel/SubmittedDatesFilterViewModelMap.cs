@@ -3,6 +3,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using Web.ViewModels.Shared;
 
     public class SubmittedDatesFilterViewModelMap : IMap<SubmittedDateFilterBase, SubmittedDatesFilterViewModel>
     {
