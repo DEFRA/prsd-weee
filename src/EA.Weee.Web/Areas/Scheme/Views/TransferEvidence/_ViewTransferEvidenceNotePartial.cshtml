@@ -5,7 +5,7 @@
 @using EA.Weee.Web.ViewModels.Shared
 @model EA.Weee.Web.ViewModels.Shared.ViewTransferNoteViewModel
 
-<h1 class="govuk-heading-l">Evidence note (transfer)</h1>
+<h1 class="govuk-heading-l">Evidence note transfer</h1>
 
 <div class="govuk-width-container govuk-!-margin-top-3">
 
@@ -17,15 +17,15 @@
         @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break ">
         @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break ">
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width">
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break ">
         @Html.Partial("_DisplayVoidedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
@@ -224,7 +224,7 @@ else
                 <tr class="govuk-table__row">
                     @if (categoryCount == 0)
                     {
-                        <td class="govuk-table__cell" style="vertical-align: middle;" rowspan="@(note.CategoryValues.Count)">
+                        <td class="govuk-table__cell govuk-table__cell-top-align" rowspan="@(note.CategoryValues.Count)">
                             @note.ReferenceDisplay
                         </td>
                     }

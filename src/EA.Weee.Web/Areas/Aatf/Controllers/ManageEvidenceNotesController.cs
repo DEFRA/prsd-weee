@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -201,7 +200,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId, int page = 1)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId, int page = 1, string queryString = null)
         {
             using (var client = apiClient())
             {
@@ -214,6 +213,7 @@
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false));
 
                 ViewBag.Page = page;
+                ViewBag.QueryString = queryString;
 
                 return View(model);
             }
@@ -324,6 +324,21 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> DownloadEvidenceSummaryReport(Guid aatfId, int complianceYear)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetAatfSummaryReportRequest(aatfId,  complianceYear);
+
+                var file = await client.SendAsync(User.GetAccessToken(), request);
+
+                var data = new UTF8Encoding().GetBytes(file.FileContent);
+
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> DownloadEvidenceNotesReport(Guid? aatfId, int complianceYear, TonnageToDisplayReportEnum tonnageToDisplay)
         {
             using (var client = apiClient())
@@ -428,10 +443,10 @@
         {
             var result = await client.SendAsync(User.GetAccessToken(), 
                 new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
-                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, int.MaxValue));
+                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(
-                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, int.MaxValue));
+                new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                 (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));

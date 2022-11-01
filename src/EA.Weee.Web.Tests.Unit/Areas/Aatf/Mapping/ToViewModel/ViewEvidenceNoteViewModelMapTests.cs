@@ -76,6 +76,7 @@
             result.AatfApprovalNumber.Should().Be(source.EvidenceNoteData.AatfData.ApprovalNumber);
             result.ComplianceYear.Should().Be(source.EvidenceNoteData.ComplianceYear);
             result.IsPrintable.Should().Be(printable);
+            result.TotalAvailable.Should().Be(source.EvidenceNoteData.TotalReceivedAvailable.ToTonnageDisplay());
         }
 
         [Fact]
@@ -343,32 +344,6 @@
             electricalCategory.Received.Should().Be("2");
             electricalCategory.Reused.Should().Be(null);
             electricalCategory.Id.Should().Be(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Id);
-        }
-
-        [Fact]
-        public void Map_GivenTonnages_TotalReceivedShouldBeSet()
-        {
-            //arrange
-            var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>());
-
-            source.EvidenceNoteData.EvidenceTonnageData = new List<EvidenceTonnageData>()
-            {
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ConsumerEquipment, 1, 5, null, null),
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null),
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.GasDischargeLampsAndLedLightSources, 3, 20, null, null),
-                new EvidenceTonnageData(Guid.Empty, WeeeCategory.ITAndTelecommsEquipment, null, 50, null, null)
-            };
-
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received)).Returns("1");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(1).Received)).Returns("2");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(2).Received)).Returns("3");
-            A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(3).Received)).Returns("-");
-
-            //act
-            var result = map.Map(source);
-
-            //assert
-            result.TotalReceivedDisplay.Should().Be("6.000");
         }
 
         [Fact]
@@ -1439,6 +1414,27 @@
 
             //assert
             model.IsInternalUser.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithOpenedInNewTab_PropertiesShouldBeSet(bool openedInNewTab)
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
+            {
+                OpenedInNewTab = openedInNewTab
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.OpenedInNewTab.Should().Be(openedInNewTab);
         }
     }
 }

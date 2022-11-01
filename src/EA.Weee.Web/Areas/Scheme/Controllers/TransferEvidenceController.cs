@@ -77,6 +77,7 @@
                 model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
                     .ForEach(c => c.Selected = true);
                 model.SelectedSchema = transferRequest.RecipientId;
+                model.SelectAllCheckboxes = transferRequest.SelectAllCheckBoxes;
             }
 
             return View("TransferEvidenceNote", model);
@@ -246,7 +247,8 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1, bool openedInNewTab = false)
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1,
+            bool openedInNewTab = false, string queryString = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -265,6 +267,8 @@
                     Page = page,
                     OpenedInNewTab = openedInNewTab
                 });
+
+                ViewBag.QueryString = queryString;
 
                 return View("TransferredEvidence", model);
             }

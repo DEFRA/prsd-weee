@@ -28,7 +28,7 @@
             this.genericDataAccess = genericDataAccess;
             this.weeeAuthorization = weeeAuthorization;
         }
-
+         
         public async Task<CSVFileData> HandleAsync(GetSchemeObligationAndEvidenceTotalsReportRequest request)
         {
             if (request.OrganisationId.HasValue)
@@ -42,9 +42,13 @@
             }
             
             var reportData = await evidenceStoredProcedures.GetSchemeObligationAndEvidenceProgress(request.SchemeId, request.AppropriateAuthorityId,  request.OrganisationId, request.ComplianceYear);
-            
-            csvWriter.DefineColumn(EvidenceReportConstants.SchemeName, x => x.SchemeName);
-            csvWriter.DefineColumn(EvidenceReportConstants.SchemeApprovalNumber, x => x.ApprovalNumber);
+
+            if (!request.OrganisationId.HasValue)
+            {
+                csvWriter.DefineColumn(EvidenceReportConstants.SchemeName, x => x.SchemeName);
+                csvWriter.DefineColumn(EvidenceReportConstants.SchemeApprovalNumber, x => x.ApprovalNumber);
+            }
+
             csvWriter.DefineColumn(EvidenceReportConstants.Category, x => x.CategoryName);
             csvWriter.DefineColumn(EvidenceReportConstants.HouseholdObligation, x => x.Obligation);
             csvWriter.DefineColumn(EvidenceReportConstants.HouseholdEvidence, x => x.Evidence);
@@ -66,7 +70,11 @@
             }
             
             var fileName = $"{request.ComplianceYear}{approvalNumber}_PCS evidence and obligation progress{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
-            
+            if (request.OrganisationId.HasValue)
+            {
+                fileName = $"{request.ComplianceYear}_PCS Summary{timestamp.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}.csv";
+            }
+
             return new CSVFileData
             {
                 FileContent = fileContent,

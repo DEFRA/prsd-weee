@@ -89,13 +89,13 @@
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
@@ -304,6 +304,7 @@
             model.SelectedSchema.Should().BeNull();
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
             model.ComplianceYear.Should().Be(complianceYear);
+            model.SelectAllCheckboxes.Should().BeFalse();
         }
 
         [Fact]
@@ -392,6 +393,7 @@
             model.SelectedSchema.Should().BeNull();
             model.HasSelectedAtLeastOneCategory.Should().BeFalse();
             model.ComplianceYear.Should().Be(complianceYear);
+            model.SelectAllCheckboxes.Should().BeFalse();
         }
 
         [Fact]
@@ -421,6 +423,28 @@
             model.SelectedSchema.Should().Be(schemeId);
             model.HasSelectedAtLeastOneCategory.Should().BeTrue();
             model.ComplianceYear.Should().Be(complianceYear);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task TransferEvidenceNoteGet_GivenTransferNoteSessionObjectIsRetrieved_ShouldHaveCorrectSelectAllBooleanValue(bool value)
+        {
+            // arrange
+            var complianceYear = TestFixture.Create<int>();
+            var request = GetRequestWithCategoryIds();
+
+            request.SelectAllCheckBoxes = value;
+
+            A.CallTo(() =>
+             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey)).Returns(request);
+           
+            // act
+            var result = await transferEvidenceController.TransferEvidenceNote(organisationId, complianceYear) as ViewResult;
+            var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
+
+            // assert
+            model.SelectAllCheckboxes.Should().Be(value);
         }
 
         [Fact]
@@ -1983,6 +2007,31 @@
                          t.OpenedInNewTab == openedInNewTab &&
                          t.Page == page)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TransferredEvidenceGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        {
+            // arrange 
+            var queryString = TestFixture.Create<string>();
+
+            //act
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
+                TestFixture.Create<string>(), queryString: queryString);
+
+            //assert
+            ((string)transferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+        }
+
+        [Fact]
+        public async Task TransferredEvidenceGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        {
+            //act
+            await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
+                TestFixture.Create<string>());
+
+            //assert
+            ((string)transferEvidenceController.ViewBag.QueryString).Should().Be(null);
         }
 
         [Fact]

@@ -24,7 +24,7 @@
                 ReturnedDate = source.ReturnedDate,
                 RejectedReason = source.RejectedReason,
                 ReturnedReason = source.ReturnedReason,
-                TotalReceived = source.TotalReceived.ToTonnageDisplay()
+                TotalReceived = source.TotalReceivedAvailable.ToTonnageDisplay()
             };
         }
     }

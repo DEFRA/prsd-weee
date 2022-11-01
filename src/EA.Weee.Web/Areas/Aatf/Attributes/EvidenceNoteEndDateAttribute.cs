@@ -8,7 +8,9 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteEndDateAttribute : EvidenceDateValidationBase
     {
-        public EvidenceNoteEndDateAttribute(string compareDatePropertyName, string approvalDateValidationMessage) : base(compareDatePropertyName, approvalDateValidationMessage)
+        public EvidenceNoteEndDateAttribute(string compareDatePropertyName, 
+            string approvalDateValidationMessage, string aatfStatusValidationMessage) : 
+            base(compareDatePropertyName, approvalDateValidationMessage, aatfStatusValidationMessage)
         {
         }
 
@@ -25,7 +27,7 @@
             var thisDate = ((DateTime)value).Date;
             var otherDate = (DateTime?)validationContext.ObjectType.GetProperty(CompareDatePropertyName)?.GetValue(validationContext.ObjectInstance, null);
 
-            var validateEndDateAgainstConfigDate = ValidateEndDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate);
+            var validateEndDateAgainstConfigDate = ValidateDateAgainstEvidenceNoteSiteSelectionDateFrom(thisDate, "end");
 
             if (validateEndDateAgainstConfigDate != ValidationResult.Success)
             {

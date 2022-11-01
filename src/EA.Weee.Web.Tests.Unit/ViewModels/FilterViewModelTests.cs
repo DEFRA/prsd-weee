@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.Tests.Unit.ViewModels
 {
     using System.ComponentModel;
+    using EA.Weee.Web.ViewModels.Shared;
     using FluentAssertions;
-    using Web.Areas.Aatf.ViewModels;
     using Xunit;
 
     public class FilterViewModelTests

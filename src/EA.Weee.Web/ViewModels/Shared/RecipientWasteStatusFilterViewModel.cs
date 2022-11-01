@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Aatf.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
     using EA.Weee.Core.AatfEvidence;
-   
+
     public class RecipientWasteStatusFilterViewModel
     {
         [Display(Name = "Recipient")]
@@ -27,5 +27,7 @@
         public IEnumerable<SelectListItem> SubmittedByList { get; set; }
 
         public IEnumerable<SelectListItem> NoteStatusList { get; set; }
+
+        public bool SearchPerformed => NoteStatusValue.HasValue || WasteTypeValue.HasValue || ReceivedId.HasValue;
     }
 }

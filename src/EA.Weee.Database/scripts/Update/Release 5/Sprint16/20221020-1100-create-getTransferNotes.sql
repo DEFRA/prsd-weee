@@ -57,8 +57,8 @@ SET NOCOUNT ON;
 		tts.TotalReused
 	FROM 
 		Evidence.vwTransferTonnageSummary tts 
-		INNER JOIN Evidence.vwTransferSummary ts ON ts.Id = tts.TransferNoteId
-		INNER JOIN Evidence.vwEvidenceSummary es ON es.Id = tts.OriginalNoteId AND es.StatusId = 3
+		INNER JOIN Evidence.vwTransferSummary ts WITH (NOLOCK) ON ts.Id = tts.TransferNoteId
+		INNER JOIN Evidence.vwEvidenceSummary es WITH (NOLOCK) ON es.Id = tts.OriginalNoteId AND es.StatusId = 3
 	WHERE
 		ts.ComplianceYear = @ComplianceYear
 		AND (ts.RecipientOrganisationId = @OrganisationId OR ts.OriginatingOrganisationId = @OrganisationId OR @OrganisationId IS NULL)

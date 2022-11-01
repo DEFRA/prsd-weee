@@ -21,14 +21,14 @@
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void ViewDraftEvidenceNoteGet_ShouldHaveNoCacheAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("ViewDraftEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
@@ -77,7 +77,7 @@
         public async Task ViewDraftEvidenceNoteGet_GivenRequestData_EvidenceNoteModelShouldBeBuilt()
         {
             //arrange
-            var data = Fixture.Create<EvidenceNoteData>();
+            var data = TestFixture.Create<EvidenceNoteData>();
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = null;
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
@@ -98,7 +98,7 @@
         public async Task ViewDraftEvidenceNoteGet_GivenRequestDataAndSuccessTempData_EvidenceNoteModelShouldBeBuilt(NoteStatus status)
         {
             //arrange
-            var data = Fixture.Create<EvidenceNoteData>();
+            var data = TestFixture.Create<EvidenceNoteData>();
             ManageEvidenceController.TempData[ViewDataConstant.EvidenceNoteStatus] = status;
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
@@ -118,7 +118,7 @@
         public async Task ViewDraftEvidenceNoteGet_GivenViewModel_ModelShouldBeReturned()
         {
             //arrange
-            var model = Fixture.Create<ViewEvidenceNoteViewModel>();
+            var model = TestFixture.Create<ViewEvidenceNoteViewModel>();
 
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>._)).Returns(model);
 
@@ -142,6 +142,29 @@
 
             //assert
             Assert.Equal(pageNumber, result.ViewBag.Page);
+        }
+
+        [Fact]
+        public async Task ViewDraftEvidenceNoteGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        {
+            // arrange 
+            var queryString = TestFixture.Create<string>();
+
+            //act
+            await ManageEvidenceController.ViewDraftEvidenceNote(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<int>(), queryString);
+
+            //assert
+            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+        }
+
+        [Fact]
+        public async Task ViewDraftEvidenceNoteGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        {
+            //act
+            await ManageEvidenceController.ViewDraftEvidenceNote(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<int>());
+
+            //assert
+            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(null);
         }
     }
 }
