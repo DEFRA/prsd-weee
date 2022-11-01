@@ -48,9 +48,16 @@
         }
         else
         {
-            @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
-                new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page }))
-                )
+            if (!string.IsNullOrWhiteSpace(Model.QueryString))
+            {
+                @(this.WeeeGds().BackLink(
+                    string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
+            }
+            else
+            {
+                @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                    new { @pcsId = Model.SchemeId, @tab = navigateBackToSelectedTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
+            }
         }
     }
 
