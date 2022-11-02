@@ -3,6 +3,7 @@
 @using EA.Weee.Web.Areas.Admin.ViewModels.Submissions
 @model DataReturnSubmissionsResultsViewModel
 
+
 <div id="submissionsGrid">
     @if (Model.Results.Any())
     {
@@ -18,7 +19,7 @@
                     <a class="govuk-tabs__tab" href="#output-details" id="output-data-tab">EEE data</a>
                 </li>
             </ul>
-            <section class="govuk-tabs__panel" id="collected-details">
+            <section class="govuk-tabs__panel" id="collected-details" >
                 <table id="collectedDelivered-data-table" class="govuk-table">
                     <caption class="govuk-visually-hidden">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
                     <thead class="govuk-table__head">
