@@ -8,9 +8,17 @@
 }
 
 @section full_main_content{
-    @(this.WeeeGds().BackLink(
+    @if (!string.IsNullOrWhiteSpace(Model.QueryString))
+    {
+        @(this.WeeeGds().BackLink(
+                     string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(
         Url.Action("Index", "ManageEvidenceNotes",
-            new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear })))
+            new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, tab = Model.AatfRedirectTab, selectedComplianceYear = Model.ComplianceYear, queryString = Model.QueryString })))
+    }
 
     @using (Html.BeginForm("EditEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {

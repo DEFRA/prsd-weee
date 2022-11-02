@@ -129,5 +129,7 @@
         }
 
         public int ComplianceYear { get; set; }
+
+        public string QueryString { get; set; }
     }
 }
