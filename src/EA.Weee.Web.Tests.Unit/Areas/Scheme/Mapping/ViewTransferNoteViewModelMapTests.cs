@@ -16,7 +16,6 @@
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
     using Web.ViewModels.Shared;
@@ -110,6 +109,30 @@
             model.OpenedInNewTab.Should().Be(openedInNewTab);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithIsPrintable_PropertiesShouldBeSet(bool isPrintable)
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+            {
+                IsPrintable = isPrintable
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsPrintable.Should().Be(isPrintable);
+        }
+
         [Fact]
 
         public void ViewTransferNoteViewModelMap_GivenSourceWithPage_PagePropertyShouldBeSet()
@@ -131,6 +154,23 @@
 
             //assert
             model.Page.Should().Be(page);
+        }
+
+        [Fact]
+        public void ViewTransferNoteViewModelMap_GivenSourceWithQueryString_ModelPropertiesShouldBeSet()
+        {
+            //arrange
+            var transfer = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
+                TestFixture.Create<TransferEvidenceNoteData>(), null)
+            {
+                QueryString = TestFixture.Create<string>()
+            };
+
+            //act
+            var result = map.Map(transfer);
+
+            // assert 
+            result.QueryString.Should().Be(transfer.QueryString);
         }
 
         [Fact]

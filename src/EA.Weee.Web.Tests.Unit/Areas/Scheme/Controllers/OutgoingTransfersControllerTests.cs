@@ -839,8 +839,8 @@
                          v.DisplayNotification == null &&
                          v.TransferEvidenceNoteData == transferNoteData &&
                          v.OrganisationId == organisationId &&
-                         v.RedirectTab.Equals(
-                             DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)))))
+                         v.RedirectTab.Equals(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)) &&
+                                              v.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -864,7 +864,8 @@
                      v.DisplayNotification == null &&
                      v.TransferEvidenceNoteData == transferNoteData &&
                      v.OrganisationId == organisationId &&
-                     v.RedirectTab.Equals(tab)))).MustHaveHappenedOnceExactly();
+                     v.RedirectTab.Equals(tab) &&
+                     v.IsPrintable == false))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -891,8 +892,8 @@
                          v.TransferEvidenceNoteData == transferNoteData &&
                          v.OrganisationId == organisationId &&
                          v.ReturnToView == returnToView &&
-                         v.RedirectTab.Equals(
-                             DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)))))
+                         v.RedirectTab.Equals(DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)) &&
+                                              v.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -988,28 +989,28 @@
         }
 
         [Fact]
-        public async Task EditDraftTransferGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        public async Task EditDraftTransferGet_GivenQueryString_ModelMapperShouldBeCalled()
         {
-            // arrange 
+            //arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidenceNoteData);
+
             var queryString = TestFixture.Create<string>();
 
-            // act
-            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), 
-                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>(), queryString);
+            //act
+            await outgoingTransferEvidenceController.EditDraftTransfer(
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<Guid>(),
+                TestFixture.Create<bool?>(),
+                TestFixture.Create<string>(),
+                TestFixture.Create<int>(),
+                queryString);
 
-            // assert
-            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(queryString);
-        }
-
-        [Fact]
-        public async Task EditDraftTransferGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
-        {
-            // act
-            await outgoingTransferEvidenceController.EditDraftTransfer(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(),
-                TestFixture.Create<bool?>(), TestFixture.Create<string>(), TestFixture.Create<int>());
-
-            // assert
-            ((string)outgoingTransferEvidenceController.ViewBag.QueryString).Should().Be(null);
+            //assert
+            A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(
+                A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
+                    t.QueryString.Equals(queryString) &&
+                    t.IsPrintable == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1134,7 +1135,8 @@
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                 A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
                     t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                    t.OrganisationId == organisationId))).MustHaveHappenedOnceExactly();
+                    t.OrganisationId == organisationId &&
+                    t.IsPrintable == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1158,7 +1160,8 @@
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                 A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
                     t.QueryString.Equals(queryString) &&
-                    t.RedirectTab.Equals(redirectTab)))).MustHaveHappenedOnceExactly();
+                    t.RedirectTab.Equals(redirectTab) &&
+                    t.IsPrintable == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1284,7 +1287,8 @@
             A.CallTo(() => mapper.Map<ReviewTransferNoteViewModel>(
                 A<ViewTransferNoteViewModelMapTransfer>.That.Matches(t =>
                     t.TransferEvidenceNoteData == transferEvidenceNoteData &&
-                    t.OrganisationId == schemeId))).MustHaveHappenedOnceExactly();
+                    t.OrganisationId == schemeId &&
+                    t.IsPrintable == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

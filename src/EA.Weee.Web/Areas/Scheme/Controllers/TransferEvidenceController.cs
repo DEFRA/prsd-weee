@@ -265,10 +265,9 @@
                     RedirectTab = redirectTab,
                     SystemDateTime = currentDateTime,
                     Page = page,
-                    OpenedInNewTab = openedInNewTab
+                    OpenedInNewTab = openedInNewTab,
+                    QueryString = queryString
                 });
-
-                ViewBag.QueryString = queryString;
 
                 return View("TransferredEvidence", model);
             }
@@ -319,8 +318,12 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId, result, null));
-
+                var model = mapper.Map<ViewTransferNoteViewModel>(
+                    new ViewTransferNoteViewModelMapTransfer(pcsId, result, null)
+                    {
+                        IsPrintable = true
+                    });
+                
                 var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadTransferEvidenceNote", model);
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
