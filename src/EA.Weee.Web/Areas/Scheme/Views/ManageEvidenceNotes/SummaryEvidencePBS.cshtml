@@ -47,13 +47,13 @@
                             <th class="govuk-table__header">
                                 Category
                             </th>
-                            <th class="govuk-table__header govuk-!-text-align-left" style="width: 20%;">
+                            <th class="govuk-table__header govuk-table__header--numeric" style="width: 20%;">
                                 Evidence received (tonnes)
                             </th>
-                            <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-left-5" style="width: 20%;">
+                            <th class="govuk-table__header govuk-table__header--numeric" style="width: 20%;">
                                 Transferred out (tonnes)
                             </th>
-                            <th class="govuk-table__header govuk-!-text-align-left govuk-!-padding-left-9" style="width: 20%;">
+                            <th class="govuk-table__header govuk-table__header--numeric" style="width: 20%;">
                                 Difference (tonnes)
                             </th>
                         </tr>
@@ -67,13 +67,13 @@
                                 <td class="govuk-table__cell">
                                     <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
                                 </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-1">
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
                                     @category.EvidenceOriginal
                                 </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-1">
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
                                     @category.TransferredOut
                                 </td>
-                                <td class="govuk-table__cell govuk-!-text-align-right govuk-!-padding-right-1">
+                                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
                                     @category.EvidenceDifference
                                 </td>
                             </tr>
@@ -83,14 +83,14 @@
                             <td class="govuk-table__cell">
                                 <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
-                                <p class="govuk-body govuk-!-text-align-right" id="Evidence2To10Total">@Model.EvidenceOriginal210Total</p>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body" id="Evidence2To10Total">@Model.EvidenceOriginal210Total</p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
-                                <p class="govuk-body govuk-!-text-align-right" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
-                                <p class="govuk-body govuk-!-text-align-right" id="Difference2To10Total">@Model.Difference210Total</p>
+                                <p class="govuk-body" id="Difference2To10Total">@Model.Difference210Total</p>
                             </td>
                         </tr>
 
@@ -98,14 +98,14 @@
                             <td class="govuk-table__cell">
                                 <p class="govuk-body"><strong>Total (tonnes)</strong></p>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
-                                <p class="govuk-body govuk-!-text-align-right" id="EvidenceTotal">@Model.EvidenceOriginalTotal</p>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body" id="EvidenceTotal">@Model.EvidenceOriginalTotal</p>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <p class="govuk-body" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
-                                <p class="govuk-body govuk-!-text-align-right" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
-                                <p class="govuk-body govuk-!-text-align-right" id="DifferenceTotal">@Model.DifferenceTotal</p>
+                                <p class="govuk-body" id="DifferenceTotal">@Model.DifferenceTotal</p>
                             </td>
                         </tr>
                     </tbody>
