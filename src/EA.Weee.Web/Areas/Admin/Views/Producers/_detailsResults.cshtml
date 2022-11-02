@@ -10,43 +10,43 @@
 {
     <div class="govuk-tabs" data-module="govuk-tabs">
         <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" id="@(scheme.ObligationType)-registration-details-tab" href="#registration-details">
-            <a class="govuk-tabs__tab">Overview</a>
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" id="@(scheme.ObligationType)-registration-details-tab">
+            <a class="govuk-tabs__tab" href="#registration-details">Overview</a>
         </li>
 
-        <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-contact-details-tab" href="#contact-details">
-            <a class="govuk-tabs__tab">Contact details</a>
+        <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-contact-details-tab">
+            <a class="govuk-tabs__tab" href="#contact-details">Contact details</a>
         </li>
 
-        <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-total-eee-details-tab" href="#eee-details" >
-            <a class="govuk-tabs__tab">Total EEE</a>
+        <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-total-eee-details-tab" >
+            <a class="govuk-tabs__tab" href="#eee-details">Total EEE</a>
         </li>
 
         @if (scheme.ProducerEeeDetails.Q1EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q1-details-tab" href="#q1-details">
-                <a class="govuk-tabs__tab">Q1</a>
+            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q1-details-tab">
+                <a class="govuk-tabs__tab" href="#q1-details">Q1</a>
             </li>
         }
 
         @if (scheme.ProducerEeeDetails.Q2EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q2-details-tab" href="#q2-details">
-                <a class="govuk-tabs__tab">Q2</a>
+            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q2-details-tab">
+                <a class="govuk-tabs__tab" href="#q2-details">Q2</a>
             </li>
         }
 
         @if (scheme.ProducerEeeDetails.Q3EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q3-details-tab" href="#q3-details">
-                <a class="govuk-tabs__tab">Q3</a>
+            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q3-details-tab">
+                <a class="govuk-tabs__tab" href="#q3-details">Q3</a>
             </li>
         }
 
         @if (scheme.ProducerEeeDetails.Q4EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q4-details-tab" href="#q4-details">
-                <a class="govuk-tabs__tab">Q4</a>
+            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q4-details-tab">
+                <a class="govuk-tabs__tab" href="#q4-details">Q4</a>
             </li>
         }
     </ul>
@@ -583,7 +583,7 @@
     $("li[id$='details-tab']").click(function (event) {
         event.preventDefault();
 
-        var sectionId = $(this).attr('href').replace('#', '');
+        var sectionId = $(this).children('a').attr('href').replace('#', '');
 
         $("section[id$='details']").each(function () {
             if ($(this).attr('id') !== sectionId) {
