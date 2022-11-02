@@ -24,7 +24,7 @@
     {
         @Html.HiddenFor(m => m.ViewTransferNoteViewModel.EvidenceNoteId)
 
-        { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("displayWarning", true) }); }
+        { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model); }
     }
 }
 
