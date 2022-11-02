@@ -49,10 +49,10 @@
                                 <th class="govuk-table__header">
                                     Category
                                 </th>
-                                <th class="govuk-table__header govuk-!-text-align-right">
+                                <th class="govuk-table__header govuk-table__header--numeric">
                                     Evidence approved (tonnes)
                                 </th>
-                                <th class="govuk-table__header govuk-!-text-align-right">
+                                <th class="govuk-table__header govuk-table__header--numeric">
                                     Reuse (tonnes)
                                 </th>
                             </tr>
@@ -66,10 +66,10 @@
                                     <td class="govuk-table__cell">
                                         <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
                                     </td>
-                                    <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                    <td class="govuk-table__cell govuk-table__cell--numeric">
                                         @category.Received
                                     </td>
-                                    <td class="govuk-table__cell weee-tonnage-right-aligned-display">
+                                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
                                         @category.Reused
                                     </td>
                                 </tr>
@@ -80,10 +80,10 @@
                                     <p class="govuk-body"><strong>Total</strong></p>
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
-                                    <p class="govuk-body  weee-tonnage-right-aligned-display" id="ReceivedTotal">@Model.TotalReceivedEvidence</p>
+                                    <p class="govuk-body" id="ReceivedTotal">@Model.TotalReceivedEvidence</p>
                                 </td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric">
-                                    <p class="govuk-body weee-tonnage-right-aligned-display" id="ReusedTotal">@Model.TotalReuseEvidence</p>
+                                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">
+                                    <p class="govuk-body" id="ReusedTotal">@Model.TotalReuseEvidence</p>
                                 </td>
                             </tr>
 

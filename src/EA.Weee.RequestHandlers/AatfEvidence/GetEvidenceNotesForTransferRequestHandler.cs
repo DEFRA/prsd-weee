@@ -37,7 +37,7 @@
             var organisation = await organisationDataAccess.GetById(request.OrganisationId);
 
             authorization.EnsureOrganisationAccess(organisation.Id);
-
+             
             var noteData = await noteDataAccess.GetNotesToTransfer(request.OrganisationId,
                 request.Categories.Select(c => c.ToInt()).ToList(),
                 request.ExcludeEvidenceNotes, 
