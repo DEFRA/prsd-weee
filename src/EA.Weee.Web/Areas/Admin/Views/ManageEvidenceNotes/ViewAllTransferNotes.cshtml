@@ -2,7 +2,8 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllTransferNotesViewModel
 
-<section id="main-content">
+@section full_main_content
+{
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="govuk-tabs">
@@ -21,117 +22,94 @@
                         @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-view-add-transfers" })
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
-                <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                    <div class="govuk-form-group govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0 " style="width:370px">
-                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
-                    </div>
-
-                    <div class="govuk-grid-row">
-                        <div class="govuk-!-padding-right-1 govuk-!-padding-left-3">
-                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel", new { htmlAttributes = new { @class = "govuk-grid-column-half" } })
-                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByRecipientFiltersViewModel", new { htmlAttributes = new { @class = "govuk-grid-column-half" } })
-                        </div>
-                    </div>
-                    <div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-1 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                        <div class="govuk-grid-row">
-                            <div class="govuk-grid-column-full">
-                                <div class="govuk-grid-row">
-                                    <div class="govuk-grid-column-one-half govuk-!-padding-right-0">
-                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel")
-                                    </div>
-                                    <div class="govuk-grid-column-one-half govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0 govuk-!-padding-left-3">
-                                        @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                                                           new ViewDataDictionary() { new KeyValuePair<string, object>("tab", "view-all-evidence-transfers") })
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model);
                     }
 
                     <table id="all-transfer-notes-table" class="govuk-table">
                         <caption class="govuk-table__caption govuk-visually-hidden">All evidence notes</caption>
                         <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 5%;">
-                                    Reference ID
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 15%;">
-                                    Submitted date
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 30%;">
-                                    Submitted by
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 35%;">
-                                    Recipient
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 10%;">
-                                    Status
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="width: 5%;">
-                                    @Html.Gds().VisuallyHidden("actions")
-                                </th>
-                            </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 5%;">
+                                Reference ID
+                            </th>
+                            <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 15%;">
+                                Submitted date
+                            </th>
+                            <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 30%;">
+                                Submitted by
+                            </th>
+                            <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 35%;">
+                                Recipient
+                            </th>
+                            <th class="govuk-table__header" scope="col" style="vertical-align: bottom; width: 10%;">
+                                Status
+                            </th>
+                            <th class="govuk-table__header" scope="col" style="width: 5%;">
+                                @Html.Gds().VisuallyHidden("actions")
+                            </th>
+                        </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                            @if (Model.EvidenceNotesDataList.Any())
+                        @if (Model.EvidenceNotesDataList.Any())
+                        {
+                            foreach (var note in Model.EvidenceNotesDataList)
                             {
-                                foreach (var note in Model.EvidenceNotesDataList)
-                                {
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                        @if (note.SubmittedDate.HasValue)
-                                        {
-                                            <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="govuk-table__cell"></td>
-                                        }
-                                        <td class="govuk-table__cell">@note.SubmittedBy</td>
-                                        <td class="govuk-table__cell">@note.Recipient</td>
-                                        <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                        <td class="govuk-table__cell">
-                                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "admin_view_evidence_transfer_note_details", new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="6">
-                                        @Html.Partial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary()
-                                                       { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are currently no evidence transfers to view </p>") })
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6">
-                                        <p> Showing 0 - 0 of 0 </p>
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                    @if (note.SubmittedDate.HasValue)
+                                    {
+                                        <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="govuk-table__cell"></td>
+                                    }
+                                    <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                    <td class="govuk-table__cell">@note.Recipient</td>
+                                    <td class="govuk-table__cell">@note.Status.ToString() </td>
+                                    <td class="govuk-table__cell">
+                                        @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "admin_view_evidence_transfer_note_details", new { action = "ViewEvidenceNoteTransfer", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
                                     </td>
                                 </tr>
                             }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    @Html.Partial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary()
+                                    { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are currently no evidence transfers to view </p>") })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <p> Showing 0 - 0 of 0 </p>
+                                </td>
+                            </tr>
+                        }
 
                         </tbody>
                     </table>
-                    <br />
+                    <br/>
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                { { "pagerRouteValues", new {
+                        {
+                            {
+                                "pagerRouteValues", new
+                                {
                                     tab = Model.ActiveDisplayOption.ToDisplayString(),
-                                                    manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate =
-                            Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
-                                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate =
-                            Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
-                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_ReceivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
-                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue =
-                            Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
-                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
-                            Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
-                                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_SubmittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
-                        }
+                                    manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate =
+                                        Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
+                                    manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate =
+                                        Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
+                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_ReceivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
+                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue =
+                                        Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
+                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
+                                        Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
+                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_SubmittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                }
                             }
                         });
                     }
@@ -139,4 +117,4 @@
             </div>
         </div>
     </div>
-</section>
+}
