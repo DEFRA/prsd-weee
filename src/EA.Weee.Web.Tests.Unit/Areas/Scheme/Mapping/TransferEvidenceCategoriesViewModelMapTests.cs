@@ -160,8 +160,10 @@
 
             //assert
             A.CallTo(() => transferNoteMapper.Map(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v =>
-                v.TransferEvidenceNoteData == source.TransferEvidenceNoteData && v.DisplayNotification == null &&
-                v.OrganisationId == source.OrganisationId))).MustHaveHappenedOnceExactly();
+                v.TransferEvidenceNoteData == source.TransferEvidenceNoteData && 
+                v.DisplayNotification == null &&
+                v.OrganisationId == source.OrganisationId &&
+                v.IsPrintable == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
