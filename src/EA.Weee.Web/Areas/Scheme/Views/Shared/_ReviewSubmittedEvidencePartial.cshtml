@@ -17,7 +17,12 @@
         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
         <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
             <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
+                    new { addClearLink = true, clearRouteValues = new { 
+                        pcsId = Model.OrganisationId,
+                        tab = Model.ActiveDisplayOption.ToDisplayString(),
+                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
+                    } })
             </div>
         </div>
     }
