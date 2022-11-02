@@ -20,7 +20,7 @@
             </ul>
             <section class="govuk-tabs__panel" id="collected-details">
                 <table id="collectedDelivered-data-table" class="govuk-table">
-                    <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
+                    <caption class="govuk-visually-hidden">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             @switch (Model.OrderBy)
@@ -91,7 +91,7 @@
 
             <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="output-details">
                 <table id="output-data-table" class="govuk-table govuk-visually-hidden">
-                    <caption class="hidden-for-screen-reader">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
+                    <caption class="govuk-visually-hidden">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             @switch (Model.OrderBy)
@@ -181,12 +181,13 @@
                     });
 
                     // Inactivate tabs
-                    $("a[id$='data-tab']").each(function () {
-                        $(this).removeClass('govuk-tabs__tab--selected');
+                    $("a[id$='data-tab']").each(function (tab) {
+                        console.log(tab);
+                        $(this).parent().removeClass('govuk-tabs__list-item--selected');
                     });
 
                     // Except this tab
-                    $(this).addClass("govuk-tabs__tab--selected");
+                    $(this).parent().addClass('govuk-tabs__list-item--selected');
 
                     // Hide all data tables
                     $("table[id$='data-table']").each(function () {
