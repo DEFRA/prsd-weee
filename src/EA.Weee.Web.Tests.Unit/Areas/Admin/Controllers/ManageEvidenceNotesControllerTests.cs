@@ -509,7 +509,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
                 g => g.RecipientIdFilter == model.RecipientWasteStatusFilterViewModel.ReceivedId && 
                 g.NoteStatusFilter == model.RecipientWasteStatusFilterViewModel.NoteStatusValue &&
-                g.ObligationTypeFilter == model.RecipientWasteStatusFilterViewModel.WasteTypeValue &&
+                g.ObligationTypeFilter == null &&
                 g.SubmittedByAatfIdFilter == model.RecipientWasteStatusFilterViewModel.SubmittedBy)))
                 .MustHaveHappenedOnceExactly();
         }
