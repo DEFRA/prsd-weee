@@ -956,3 +956,9 @@ input[type="search"]:focus::-webkit-search-cancel-button {
 .category-id {
     width: 20px;
 }
+
+@media only screen and (max-width: 640px) {
+    .weee-evidence-padding-right {
+        padding-right: 0px;
+    }
+}
