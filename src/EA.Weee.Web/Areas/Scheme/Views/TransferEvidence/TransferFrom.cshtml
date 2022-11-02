@@ -1,12 +1,10 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Areas.Scheme.Controllers
-@using EA.Weee.Web.ViewModels.Shared
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.TransferEvidenceNotesViewModel
 @{
     ViewBag.Title = "Transfer from - GOV.UK";
-    var formName = "transfer-summary-partial-form";
 
     ViewData.Add("controller", "TransferEvidence");
     ViewData.Add("postAction", "TransferFrom");
@@ -22,6 +20,6 @@
 
     @Html.Gds().ValidationSummary()
 
-    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model);
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("displayRemovingWarning", false) });
     }
 }
