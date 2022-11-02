@@ -264,6 +264,36 @@ function initReviewEvidenceNote() {
     document.getElementById("SelectedValue-2").addEventListener("click", showReasonText);
 }
 
+function selectAllTransferNoteJourney() {
+    $('#SelectAllCheckboxesSection').css("display", "block");
+
+    // case when selectAll is ticked => all checkboxes get selected, if selectAll is unticked => the other 14 checboxes will be unticked
+    $('#all_checkbox_select_id').click(function () {
+        $(".govuk-checkboxes__input").prop('checked', $(this).prop('checked'));
+    });
+
+    // case when if any of the 14th checkboxes is unticked => untick the selectAll too
+    $('.allCategoryCheckBox').change(function () {
+        var $this = $(this);
+
+        if ($this.is(":checked")) {
+        }
+        else {
+            if ($('#all_checkbox_select_id').is(":checked")) {
+                $('#all_checkbox_select_id').prop("checked", false);
+            }
+        }
+    });
+
+    // case when if all 14th checkboxes are ticked => selectAll gets ticked too
+    $('.allCategoryCheckBox').change(function () {
+        var a = $("input[type='checkbox'].allCategoryCheckBox");
+        if (a.length == a.filter(":checked").length) {
+            $('#all_checkbox_select_id').prop("checked", true);
+        }
+    });
+};
+
 $(".transfer-choose-notes-submit").closest('form').on('submit', function (event) {
     event.preventDefault();
     $(".transfer-choose-notes-submit").prop("disabled", true);
