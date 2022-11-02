@@ -944,3 +944,15 @@ input[type="search"]:focus::-webkit-search-cancel-button {
 .weee-float-right{
     float: right;
 }
+
+.category {
+    display: table;
+}
+
+.category span {
+    display: table-cell;
+}
+
+.category-id {
+    width: 20px;
+}

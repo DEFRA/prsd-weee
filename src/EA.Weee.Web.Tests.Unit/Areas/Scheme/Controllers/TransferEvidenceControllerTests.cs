@@ -1940,7 +1940,8 @@
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification == null &&
                          t.RedirectTab == redirectTab &&
-                         t.SystemDateTime == currentDate)))
+                         t.SystemDateTime == currentDate &&
+                         t.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -2005,7 +2006,8 @@
                          t.RedirectTab == redirectTab &&
                          t.SystemDateTime == currentDate &&
                          t.OpenedInNewTab == openedInNewTab &&
-                         t.Page == page)))
+                         t.Page == page &&
+                         t.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -2079,7 +2081,8 @@
                 v => v.TransferEvidenceNoteData.Equals(data) &&
                      v.OrganisationId.Equals(pcsId) &&
                      v.DisplayNotification == null &&
-                     v.User == null))).MustHaveHappenedOnceExactly();
+                     v.User == null &&
+                     v.IsPrintable == true))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
