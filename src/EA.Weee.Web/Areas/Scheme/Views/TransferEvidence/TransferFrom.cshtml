@@ -20,6 +20,6 @@
 
     @Html.Gds().ValidationSummary()
 
-    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("displayRemovingWarning", false) });
+    @{ Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferFromSummaryPartial.cshtml", Model);
     }
 }
