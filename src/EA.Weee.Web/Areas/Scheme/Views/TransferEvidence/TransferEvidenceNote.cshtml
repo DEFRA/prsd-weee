@@ -24,7 +24,7 @@
 
     @using (Html.BeginForm(actionName: "TransferEvidenceNote", controllerName: "TransferEvidence", method: FormMethod.Post))
     {
-        { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model); }
+        { Html.RenderPartial("~/Areas/Scheme/Views/Shared/_TransferCategoriesPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("displayWarning", false) }); }
     }
 }
 
