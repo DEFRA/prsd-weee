@@ -34,7 +34,13 @@ else
         </legend>
 
         @{
-            var displayWarningCss = (bool)ViewData["displayWarning"] ? "block" : "none";
+            var displayWarning = false;
+            if (Model.ViewTransferNoteViewModel != null)
+            {
+                displayWarning = true;
+            }
+
+            var displayWarningCss = displayWarning ? "block" : "none";
         }
 
         <div style="display:@displayWarningCss">
