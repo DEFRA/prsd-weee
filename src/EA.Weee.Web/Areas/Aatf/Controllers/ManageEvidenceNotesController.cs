@@ -246,7 +246,7 @@
         [HttpGet]
         [CheckCanEditEvidenceNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false)
+        public async Task<ActionResult> EditEvidenceNote(Guid organisationId, Guid evidenceNoteId, bool returnFromCopyPaste = false, string queryString = null)
         {
             using (var client = apiClient())
             {
@@ -258,9 +258,9 @@
                 var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, null, organisationId, result.AatfData.Id, result, result.ComplianceYear))
-                    : mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, existingModel, organisationId, result.AatfData.Id, result, result.ComplianceYear));
-
+                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, null, organisationId, result.AatfData.Id, result, result.ComplianceYear, queryString))
+                    : mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, existingModel, organisationId, result.AatfData.Id, result, result.ComplianceYear, queryString));
+                
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
                 return View(model);
