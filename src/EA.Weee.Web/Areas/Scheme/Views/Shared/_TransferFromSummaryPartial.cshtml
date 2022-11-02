@@ -44,7 +44,13 @@
 <p class="govuk-body govuk-!-padding-bottom-5">Select evidence notes from the available evidence notes table. A maximum of 5 notes can be chosen.</p>
 
 @{
-    var displayRemovingWarningCss = (bool)ViewData["displayRemovingWarning"] ? "block" : "none";
+    var displayWarning = false;
+    if (Model.ViewTransferNoteViewModel != null)
+    {
+        displayWarning = true;
+    }
+
+    var displayRemovingWarningCss = displayWarning ? "block" : "none";
 }
 
 <div class="govuk-!-padding-bottom-3" style="display:@displayRemovingWarningCss">
