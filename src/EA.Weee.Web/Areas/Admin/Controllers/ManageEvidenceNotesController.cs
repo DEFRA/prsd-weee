@@ -264,7 +264,7 @@
                 manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+                null,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, 
                 manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
@@ -279,7 +279,7 @@
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
+                        null,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true, false));
 
@@ -312,7 +312,7 @@
                 manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+                null,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
                 manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
@@ -327,7 +327,7 @@
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+                        null,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true, false));
 
