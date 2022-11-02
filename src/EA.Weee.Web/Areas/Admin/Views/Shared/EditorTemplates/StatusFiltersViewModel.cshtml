@@ -1,20 +1,17 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
+﻿@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
 <style>
 </style>
-
-<div class="govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-2 govuk-!-padding-bottom-2 govuk-!-margin-bottom-1">
-    <span class="govuk-label--s">
-        Filter by
-    </span>
-</div>
-<div class="govuk-!-margin-left-2 govuk-!-padding-left3" style="width: 210px;">
+<div class="govuk-grid-column-one-quarter govuk-!-padding-left-2 govuk-!-padding-right-0" style="width:225px;">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
         string.Empty, new { @class = "full-width-important" })
+
     </div>
 </div>
- 
+
+
+
+

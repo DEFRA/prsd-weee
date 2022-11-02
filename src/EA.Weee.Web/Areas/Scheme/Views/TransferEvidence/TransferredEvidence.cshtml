@@ -22,27 +22,21 @@
                     new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = Model.Page }), "Manage evidence notes"))
             @(this.WeeeGds().Panel(Model.SuccessMessage))
         }
-        else
+        else if (!string.IsNullOrWhiteSpace(Model.QueryString))
         {
-            if (!string.IsNullOrWhiteSpace(ViewBag.QueryString))
-            {
-                @(this.WeeeGds().BackLink(string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), ViewBag.QueryString)))
-            }
-            else
-            {
-                @(this.WeeeGds().BackLink(
-                Url.Action("Index", "ManageEvidenceNotes",
-                    new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = Model.Page })))
-            }
+            @(this.WeeeGds().BackLink(
+                string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
         }
     }
+
+    @Html.HiddenFor(m => m.QueryString)
 
     @Html.Partial("~/Areas/Scheme/Views/TransferEvidence/_ViewTransferEvidenceNotePartial.cshtml", Model)
 
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
-            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab }, new { @class = "govuk-button" })
+            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString = Model.QueryString}, new { @class = "govuk-button" })
         </div>
     }
 
