@@ -44,7 +44,7 @@
                                                                  "Evidence evidence transfers report (CSV)"))
                 </p>
 
-                @Html.Partial("_EvidenceReportHintText", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("extraHintMessage", "<br /> Reuse and non-household evidence is available in the summary report.") })
+                @Html.Partial("_EvidenceReportHintText", new ViewDataDictionary() { new KeyValuePair<string, object>("extraHintMessage", "<br /> Reuse and non-household evidence is available in the summary report.") })
 
                 <table id="evidence-summary-table" class="govuk-table">
                     <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
