@@ -1,3 +1,8 @@
 ﻿<p class="govuk-details__text">The data shown in the table is for household evidence.
-    <br />Reuse and non-household evidence is available in the summary report.
+    @{ 
+        var displayWarningCss = (bool)ViewData["displayPcsHint"] ? "block" : "none";
+    }
+    <div >
+            <br />Reuse and non-household evidence is available in the summary report.
+    </div>
     <br />The evidence column includes approved evidence and net transfer.</p>

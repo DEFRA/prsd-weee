@@ -57,7 +57,7 @@
 
         if (Model.SchemeId.HasValue)
         {
-            Html.RenderPartial("_EvidenceReportHintText");
+            Html.RenderPartial("_EvidenceReportHintText", new ViewDataDictionary() { new KeyValuePair<string, object>("displayPcsHint", false) });
 
             <table id="evidence-summary-table" class="govuk-table">
                 <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
