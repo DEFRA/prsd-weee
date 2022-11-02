@@ -145,26 +145,36 @@
         }
 
         [Fact]
-        public async Task ViewDraftEvidenceNoteGet_WhenQueryStringIsSetInViewBag_ViewBagShouldHaveTheQueryString()
+        public async Task ViewDraftEvidenceNoteGet_GivenQueryString_EvidenceNoteModelShouldBeBuilt()
         {
-            // arrange 
+            // arrange
+            var data = TestFixture.Create<EvidenceNoteData>();
             var queryString = TestFixture.Create<string>();
+         
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
 
-            //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<int>(), queryString);
+            // act
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, 1, queryString);
 
-            //assert
-            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(queryString);
+            // asset
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                v => v.QueryString.Equals(queryString)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task ViewDraftEvidenceNoteGet_WhenQueryStringIsNotSetInViewBag_QueryStringInViewBagShouldBeNull()
+        public async Task ViewDraftEvidenceNoteGet_GivenQueryStringIsNull_EvidenceNoteModelShouldBeBuilt()
         {
-            //act
-            await ManageEvidenceController.ViewDraftEvidenceNote(TestFixture.Create<Guid>(), TestFixture.Create<Guid>(), TestFixture.Create<int>());
+            // arrange
+            var data = TestFixture.Create<EvidenceNoteData>();
+           
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
 
-            //assert
-            ((string)ManageEvidenceController.ViewBag.QueryString).Should().Be(null);
+            // act
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, 1, null);
+
+            // asset
+            A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
+                v => v.QueryString == null))).MustHaveHappenedOnceExactly();
         }
     }
 }

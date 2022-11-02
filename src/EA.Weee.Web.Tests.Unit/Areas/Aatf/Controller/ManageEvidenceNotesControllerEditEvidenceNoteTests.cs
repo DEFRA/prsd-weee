@@ -38,14 +38,14 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
@@ -389,7 +389,7 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool) })
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string) })
                 .Should()
                 .BeDecoratedWith<CheckCanEditEvidenceNoteAttribute>();
         }
@@ -540,6 +540,31 @@
                 && x.ExistingModel == null
                 && x.OrganisationId == OrganisationId
                 && x.Schemes == schemes))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditEvidenceNoteGet_GivenQueryString_MapperShouldBeCalled()
+        {
+            //Arrange
+            var queryString = Fixture.Create<string>();
+
+            //Act
+            await ManageEvidenceController.EditEvidenceNote(Fixture.Create<Guid>(), Fixture.Create<Guid>(), false, queryString);
+
+            //Assert
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<EditNoteMapTransfer>.That.Matches(x => x.QueryString == queryString)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditEvidenceNoteGet_GivenQueryStringIsNull_MapperShouldBeCalled()
+        {
+            //Act
+            await ManageEvidenceController.EditEvidenceNote(Fixture.Create<Guid>(), Fixture.Create<Guid>(), false, null);
+
+            //Assert
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<EditNoteMapTransfer>.That.Matches(x => x.QueryString == null)))
+                .MustHaveHappenedOnceExactly();
         }
     }
 }
