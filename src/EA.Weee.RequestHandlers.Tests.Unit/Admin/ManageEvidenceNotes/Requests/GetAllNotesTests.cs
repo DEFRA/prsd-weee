@@ -19,7 +19,7 @@
             // act
             var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), null, SystemTime.Now.Year, TestFixture.Create<int>(), TestFixture.Create<int>(),
                 TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>()));
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(), TestFixture.Create<Guid?>()));
 
             // assert
             result.Should().BeOfType<ArgumentNullException>();
@@ -31,7 +31,8 @@
             // act
             var result = Record.Exception(() => new GetAllNotesInternal(new List<NoteType>(), new List<NoteStatus>(), SystemTime.Now.Year, TestFixture.Create<int>(), 
                 TestFixture.Create<int>(), TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>()));
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(),
+                TestFixture.Create<Guid?>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -44,7 +45,8 @@
             var result = Record.Exception(() => new GetAllNotesInternal(null, new List<NoteStatus>(), 
                 SystemTime.Now.Year, TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<DateTime>(), 
                 TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>()));
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(),
+                TestFixture.Create<Guid?>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -58,7 +60,8 @@
             // act
             var result = Record.Exception(() => new GetAllNotesInternal(null, new List<NoteStatus>(),
                 SystemTime.Now.Year, 1, pageSize, TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>()));
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(),
+                TestFixture.Create<Guid?>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -72,7 +75,8 @@
             // act
             var result = Record.Exception(() => new GetAllNotesInternal(null, new List<NoteStatus>(),
                 SystemTime.Now.Year, pageNumber, 1, TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>()));
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(),
+                TestFixture.Create<Guid?>()));
 
             // assert
             result.Should().BeOfType<ArgumentException>();
@@ -89,11 +93,12 @@
             const int pageNumber = 2;
             var recipientId = TestFixture.Create<Guid?>();
             var searchRef = TestFixture.Create<string>();
+            var transferOrganisationId = TestFixture.Create<Guid?>();
 
             // act
             var result = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, selectedComplianceYear, pageNumber, pageSize, TestFixture.Create<DateTime>(),
                 TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, recipientId, searchRef);
+                Core.AatfEvidence.WasteType.Household, recipientId, searchRef, transferOrganisationId);
 
             // assert
             result.AllowedStatuses.Should().BeEquivalentTo(allowedStatuses);
@@ -103,8 +108,9 @@
             result.PageSize.Should().Be(pageSize);
             result.NoteStatusFilter.Should().Be(NoteStatus.Approved);
             result.ObligationTypeFilter.Should().Be(Core.AatfEvidence.WasteType.Household);
-            result.SubmittedByAatfIdFilter.Should().Be(recipientId);
+            result.AatfOrganisationId.Should().Be(recipientId);
             result.SearchRef.Should().Be(searchRef);
+            result.TransferOrganisationId.Should().Be(transferOrganisationId);
         }
     }
 }

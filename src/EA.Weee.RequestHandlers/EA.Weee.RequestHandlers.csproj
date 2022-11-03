@@ -107,7 +107,7 @@
     <Compile Include="AatfEvidence\EditEvidenceNoteRequestHandler.cs" />
     <Compile Include="AatfEvidence\Reports\GetAatfSummaryReportHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesSelectedForTransferRequestHandler.cs" />
-    <Compile Include="AatfEvidence\GetOrganisationSchemeDataForFilterRequestHandler.cs" />
+    <Compile Include="AatfEvidence\GetSchemeDataForFilterRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequestHandler.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteRequestHandler.cs" />

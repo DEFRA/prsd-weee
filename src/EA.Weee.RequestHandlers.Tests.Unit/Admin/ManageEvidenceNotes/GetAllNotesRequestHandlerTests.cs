@@ -40,11 +40,11 @@
 
             message = new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3,
                 TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved, 
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>());
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(), TestFixture.Create<Guid?>());
 
             messageWithEmptyNoteInternalTypeList = new GetAllNotesInternal(new List<NoteType>(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 2, 3,
                 TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>());
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(), TestFixture.Create<Guid?>());
 
             handler = new GetAllNotesInternalRequestHandler(weeeAuthorization, noteDataAccess, mapper, systemDataDataAccess);
         }
@@ -126,8 +126,9 @@
             var obligationType = TestFixture.Create<Core.AatfEvidence.WasteType?>();
             var submittedByAatfId = TestFixture.Create<Guid>();
             var searchRef = TestFixture.Create<string>();
+            var transferOrganisationId = TestFixture.Create<Guid?>();
 
-            var request = GetNoteFilter(startDate, endDate, recipientId, noteStatus, obligationType, submittedByAatfId, searchRef);
+            var request = GetNoteFilter(startDate, endDate, recipientId, noteStatus, obligationType, submittedByAatfId, searchRef, transferOrganisationId);
 
             // act
             await handler.HandleAsync(request);
@@ -140,7 +141,8 @@
                 e.NoteStatusId == (int?)noteStatus &&
                 e.WasteTypeId == (int?)obligationType &&
                 e.AatfId == submittedByAatfId &&
-                e.SearchRef == searchRef))).MustHaveHappenedOnceExactly();
+                e.SearchRef == searchRef &&
+                e.OrganisationId == transferOrganisationId))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -206,14 +208,14 @@
         {
             return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 1, 2,
                 TestFixture.Create<DateTime>(), TestFixture.Create<DateTime>(), TestFixture.Create<Guid>(), NoteStatus.Approved,
-                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>());    
+                Core.AatfEvidence.WasteType.Household, TestFixture.Create<Guid>(), TestFixture.Create<string>(), TestFixture.Create<Guid?>());    
         }
 
         private GetAllNotesInternal GetNoteFilter(DateTime? startDateTime, DateTime? endDateTime, Guid? recipientId, NoteStatus? noteStatus, 
-            Core.AatfEvidence.WasteType? obligationType, Guid? submittedByAatfId, string searchRef)
+            Core.AatfEvidence.WasteType? obligationType, Guid? submittedByAatfId, string searchRef, Guid? transferOrganisationId)
         {
             return new GetAllNotesInternal(TestFixture.CreateMany<NoteType>().ToList(), TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<int>(), 1, 2,
-                startDateTime, endDateTime, recipientId, noteStatus, obligationType, submittedByAatfId, searchRef);
+                startDateTime, endDateTime, recipientId, noteStatus, obligationType, submittedByAatfId, searchRef, transferOrganisationId);
         }
     }
 }
