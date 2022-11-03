@@ -13,13 +13,17 @@
 
         public string QueryString { get; set; }
 
+        public bool ReturnToView { get; protected set; }
+
         public EditNoteMapTransfer(List<EntityIdDisplayNameData> schemes,
             EditEvidenceNoteViewModel existingModel,
-            Guid organisationId, Guid aatfId, EvidenceNoteData noteData, int complianceYear, string queryString = null) : base(schemes, existingModel, organisationId, aatfId)
+            Guid organisationId, Guid aatfId, EvidenceNoteData noteData, int complianceYear, 
+            string queryString, bool returnToView) : base(schemes, existingModel, organisationId, aatfId)
         {
             ComplianceYear = complianceYear;
             NoteData = noteData;
             QueryString = queryString;
+            ReturnToView = returnToView;
         }
     }
 }
