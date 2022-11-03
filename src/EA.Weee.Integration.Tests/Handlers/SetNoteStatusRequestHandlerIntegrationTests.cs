@@ -301,10 +301,11 @@
                 history.Reason.Should().Be("reason returned");
             };
 
-            private readonly It shouldHaveNotHaveSetApprovedDetails = () =>
+            private readonly It shouldHaveSetApprovedDetails = () =>
             {
-                note.ApprovedRecipientSchemeName.Should().BeNull();
-                note.ApprovedRecipientAddress.Should().BeNull();
+                note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
+                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
             };
@@ -361,12 +362,13 @@
                 history.Reason.Should().Be("reason returned");
             };
 
-            private readonly It shouldHaveNotHaveSetApprovedDetails = () =>
+            private readonly It shouldHaveSetApprovedDetails = () =>
             {
-                note.ApprovedRecipientSchemeName.Should().BeNull();
-                note.ApprovedRecipientAddress.Should().BeNull();
-                note.ApprovedTransfererAddress.Should().BeNull();
-                note.ApprovedTransfererSchemeName.Should().BeNull();
+                note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
+                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+
+                note.ApprovedTransfererSchemeName.Should().Be(note.Organisation.Scheme.SchemeName);
+                note.ApprovedTransfererAddress.Should().Be($"{note.Organisation.Scheme.SchemeName}<br/>{note.Organisation.OrganisationName}<br/>{note.Organisation.BusinessAddress.Address1}<br/>{note.Organisation.BusinessAddress.Address2}<br/>{note.Organisation.BusinessAddress.TownOrCity}<br/>{note.Organisation.BusinessAddress.CountyOrRegion}<br/>{note.Organisation.BusinessAddress.Postcode}");
             };
         }
 
