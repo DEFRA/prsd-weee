@@ -24,7 +24,7 @@
             
             //act
             var exception = Record.Exception(() => new EditNoteMapTransfer(null,
-                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.NewGuid(), noteData, TestFixture.Create<int>()));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.NewGuid(), noteData, TestFixture.Create<int>(), TestFixture.Create<string>(), TestFixture.Create<bool>()));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -38,7 +38,7 @@
 
             //act
             var exception = Record.Exception(() => new EditNoteMapTransfer(new List<EntityIdDisplayNameData>(),
-                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), noteData, TestFixture.Create<int>()));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.Empty, Guid.NewGuid(), noteData, TestFixture.Create<int>(), TestFixture.Create<string>(), TestFixture.Create<bool>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -52,7 +52,7 @@
 
             //act
             var exception = Record.Exception(() => new EditNoteMapTransfer(new List<EntityIdDisplayNameData>(),
-                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, noteData, TestFixture.Create<int>()));
+                new EditEvidenceNoteViewModel(new CategoryValueTotalCalculator()), Guid.NewGuid(), Guid.Empty, noteData, TestFixture.Create<int>(), TestFixture.Create<string>(), TestFixture.Create<bool>()));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -68,9 +68,11 @@
             var aatfId = TestFixture.Create<Guid>();
             var noteData = TestFixture.Create<EvidenceNoteData>();
             var complianceYear = TestFixture.Create<int>();
+            var queryString = TestFixture.Create<string>();
+            var returnToView = TestFixture.Create<bool>();
 
             //act
-            var result = new EditNoteMapTransfer(schemes, evidenceModel, organisationId, aatfId, noteData, complianceYear);
+            var result = new EditNoteMapTransfer(schemes, evidenceModel, organisationId, aatfId, noteData, complianceYear, queryString, returnToView);
 
             //assert
             result.Schemes.Should().BeEquivalentTo(schemes);
