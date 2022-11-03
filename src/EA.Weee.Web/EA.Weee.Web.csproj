@@ -881,7 +881,6 @@
     <Content Include="Areas\Aatf\Views\Shared\_ContactProgressiveDisclosure_ChooseSite.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_ReviewSubmittedEvidencePartial.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\ViewObligationAndEvidenceSummary.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ViewAllNotesEmptyPartial.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\DownloadEvidenceNote.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidTransferNote.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\VoidEvidenceNote.cshtml" />
