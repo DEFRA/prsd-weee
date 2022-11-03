@@ -358,7 +358,7 @@
 
         public async Task<List<Organisation>> GetTransferOrganisations(int complianceYear)
         {
-            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear);
+            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && n.NoteType.Value == NoteType.TransferNote.Value);
 
             return await notes.Select(n => n.Organisation)
                 .Distinct()
