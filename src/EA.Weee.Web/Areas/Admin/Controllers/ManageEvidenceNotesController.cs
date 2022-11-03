@@ -266,13 +266,14 @@
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                 null,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, 
-                manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
+                manageEvidenceNoteViewModel?.FilterViewModel.SearchRef,
+                null));
 
             var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
                     new SubmittedDateFilterBase(manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate));
 
             var schemeData = await client.SendAsync(User.GetAccessToken(),
-               new GetOrganisationSchemeDataForFilterRequest(null, selectedComplianceYear));
+               new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, selectedComplianceYear));
 
             var aatfData = await client.SendAsync(User.GetAccessToken(),
                    new GetAllAatfsForComplianceYearRequest(selectedComplianceYear));
@@ -313,23 +314,24 @@
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                 null,
-                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
-                manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
+                null,
+                manageEvidenceNoteViewModel?.FilterViewModel.SearchRef,
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy));
 
             var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
                     new SubmittedDateFilterBase(manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate));
 
-            var schemeData = await client.SendAsync(User.GetAccessToken(),
-               new GetOrganisationSchemeDataForFilterRequest(null, selectedComplianceYear));
+            var recipientData = await client.SendAsync(User.GetAccessToken(),
+               new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, selectedComplianceYear));
 
-            var aatfData = await client.SendAsync(User.GetAccessToken(),
-                   new GetAllAatfsForComplianceYearRequest(selectedComplianceYear));
+            var transferData = await client.SendAsync(User.GetAccessToken(),
+                new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, null, selectedComplianceYear));
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
-                        new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+                        new RecipientWasteStatusFilterBase(recipientData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                         null,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true, false));
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, transferData, true, false));
 
             var model = mapper.Map<ViewAllTransferNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
