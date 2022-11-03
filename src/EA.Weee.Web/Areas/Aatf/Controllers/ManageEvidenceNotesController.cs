@@ -399,7 +399,7 @@
                 new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var schemeData = await client.SendAsync(User.GetAccessToken(),
-                new GetOrganisationSchemeDataForFilterRequest(aatfId, selectedComplianceYear));
+                new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, aatfId, selectedComplianceYear));
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 

@@ -46,8 +46,9 @@
                 RecipientId = message.RecipientIdFilter,
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 WasteTypeId = (int?)message.ObligationTypeFilter,
-                AatfId = message.SubmittedByAatfIdFilter,
-                SearchRef = message.SearchRef
+                AatfId = message.AatfOrganisationId,
+                SearchRef = message.SearchRef,
+                OrganisationId = message.TransferOrganisationId
             };
 
             var noteData = await noteDataAccess.GetAllNotes(noteFilter);
