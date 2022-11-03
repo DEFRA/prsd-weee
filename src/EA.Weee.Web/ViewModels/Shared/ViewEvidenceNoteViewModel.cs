@@ -103,8 +103,6 @@
 
         public bool IsInternalUser { get; set; }
 
-        public string QueryString { get; set; }
-
         public bool CanDisplayPdfLink => (Status == NoteStatus.Approved || Status == NoteStatus.Submitted || Status == NoteStatus.Rejected || Status == NoteStatus.Returned);
 
         public bool ReturnToView { get; set; }
