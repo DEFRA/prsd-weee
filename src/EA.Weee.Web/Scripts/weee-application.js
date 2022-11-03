@@ -287,11 +287,17 @@ function selectAllTransferNoteJourney() {
 
     // case when if all 14th checkboxes are ticked => selectAll gets ticked too
     $('.allCategoryCheckBox').change(function () {
+        setDefaultAsChecked();
+    });
+
+    function setDefaultAsChecked() {
         var a = $("input[type='checkbox'].allCategoryCheckBox");
-        if (a.length == a.filter(":checked").length) {
+        if (a.length === a.filter(":checked").length) {
             $('#all_checkbox_select_id').prop("checked", true);
         }
-    });
+    }
+
+    setDefaultAsChecked();
 };
 
 $(".transfer-choose-notes-submit").closest('form').on('submit', function (event) {
