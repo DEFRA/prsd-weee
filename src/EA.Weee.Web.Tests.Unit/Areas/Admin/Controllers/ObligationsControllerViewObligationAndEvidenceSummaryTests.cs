@@ -69,7 +69,7 @@
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._,
-                    A<GetObligationComplianceYears>.That.Matches(g => g.IncludeCurrentYear == false &&
+                    A<GetObligationComplianceYears>.That.Matches(g => g.IncludeCurrentYear == true &&
                                                                       g.Authority == null))).MustHaveHappenedOnceExactly();
         }
 
