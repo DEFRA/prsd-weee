@@ -19,7 +19,9 @@
 
         public WasteType? ObligationTypeFilter { get; set; }
 
-        public Guid? SubmittedByAatfIdFilter { get; set; }
+        public Guid? AatfOrganisationId { get; set; }
+        
+        public Guid? TransferOrganisationId { get; set; }
 
         public GetAllNotesInternal(List<NoteType> noteTypeFilterList, 
             List<NoteStatus> allowedStatuses, 
@@ -31,8 +33,9 @@
             Guid? recipientId,
             NoteStatus? noteStatus,
             WasteType? obligationType,
-            Guid? submittedAatfIdBy, 
-            string searchRef)
+            Guid? aatfOrganisationId, 
+            string searchRef,
+            Guid? transferOrganisationId)
         {
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
             Condition.Requires(allowedStatuses).IsNotEmpty();
@@ -51,8 +54,9 @@
             RecipientIdFilter = recipientId;
             NoteStatusFilter = noteStatus;
             ObligationTypeFilter = obligationType;
-            SubmittedByAatfIdFilter = submittedAatfIdBy;
+            AatfOrganisationId = aatfOrganisationId;
             SearchRef = searchRef;
+            TransferOrganisationId = transferOrganisationId;
         }
     }
 }
