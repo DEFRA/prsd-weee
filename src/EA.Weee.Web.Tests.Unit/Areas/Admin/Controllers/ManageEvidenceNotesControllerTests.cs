@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
+    using Core.Helpers;
+    using Core.Shared;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Requests.AatfEvidence;
     using EA.Weee.Requests.Admin;
@@ -20,6 +22,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
+    using Web.Areas.Admin.ViewModels.Shared;
     using Web.Filters;
     using Web.ViewModels.Shared.Mapping;
     using Xunit;
@@ -496,7 +499,6 @@
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        [InlineData("view-all-evidence-transfers")]
         public async Task IndexGet_GivenRecipientWasteStatusFilterViewModelFilter_NoteShouldBeRetrieved(string tab)
         {
             // arrange
@@ -510,7 +512,60 @@
                 g => g.RecipientIdFilter == model.RecipientWasteStatusFilterViewModel.ReceivedId && 
                 g.NoteStatusFilter == model.RecipientWasteStatusFilterViewModel.NoteStatusValue &&
                 g.ObligationTypeFilter == null &&
-                g.SubmittedByAatfIdFilter == model.RecipientWasteStatusFilterViewModel.SubmittedBy)))
+                g.AatfOrganisationId == model.RecipientWasteStatusFilterViewModel.SubmittedBy &&
+                g.TransferOrganisationId == null)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenViewAllEvidenceTransfersTabAndRecipientWasteStatusFilterViewModelFilter_NoteShouldBeRetrieved()
+        {
+            // arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+
+            //act
+            await ManageEvidenceController.Index(Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers), model);
+
+            //assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That.Matches(
+                    g => g.RecipientIdFilter == model.RecipientWasteStatusFilterViewModel.ReceivedId &&
+                         g.NoteStatusFilter == model.RecipientWasteStatusFilterViewModel.NoteStatusValue &&
+                         g.ObligationTypeFilter == null &&
+                         g.TransferOrganisationId == model.RecipientWasteStatusFilterViewModel.SubmittedBy &&
+                         g.AatfOrganisationId == null)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task IndexGet_GivenViewAllEvidenceTransfersTab_RecipientWasteStatusFilterViewModelFilterShouldBeBuilt()
+        {
+            // arrange
+            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
+            var recipients = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
+            var transfers = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._,
+                A<GetSchemeDataForFilterRequest>.That.Matches(r =>
+                    r.RecipientOrTransfer == RecipientOrTransfer.Recipient && r.AatfId == null && r.ComplianceYear == model.SelectedComplianceYear))).Returns(recipients);
+
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._,
+                A<GetSchemeDataForFilterRequest>.That.Matches(r =>
+                    r.RecipientOrTransfer == RecipientOrTransfer.Transfer && r.AatfId == null && r.ComplianceYear == model.SelectedComplianceYear))).Returns(transfers);
+
+            //act
+            await ManageEvidenceController.Index(Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers), model);
+
+            //assert
+            A.CallTo(() => Mapper.Map<RecipientWasteStatusFilterViewModel>(
+                    A<RecipientWasteStatusFilterBase>.That.Matches(r =>
+                        r.RecipientList.SequenceEqual(recipients) &&
+                        r.SubmittedByList.SequenceEqual(transfers) &&
+                        r.WasteType == null &&
+                        r.ReceivedId == model.RecipientWasteStatusFilterViewModel.ReceivedId &&
+                        r.AllStatuses == false &&
+                        r.Internal == true &&
+                        r.SubmittedBy == model.RecipientWasteStatusFilterViewModel.SubmittedBy &&
+                        r.NoteStatus == model.RecipientWasteStatusFilterViewModel.NoteStatusValue)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -545,9 +600,10 @@
             await ManageEvidenceController.Index(tab, model);
 
             // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == model.SelectedComplianceYear &&
-                     g.AatfId == null))).MustHaveHappenedOnceExactly();
+                     g.AatfId == null &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -564,15 +620,15 @@
             await ManageEvidenceController.Index(tab);
 
             // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == complianceYears[0] &&
-                     g.AatfId == null))).MustHaveHappenedOnceExactly();
+                     g.AatfId == null &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        [InlineData("view-all-evidence-transfers")]
         public async void IndexGet_GivenManageEvidenceNoteViewModel_GetAllAatfsForComplianceYearRequest(string tab)
         {
             // arrange
@@ -587,10 +643,25 @@
                 g => g.ComplianceYear == model.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async void IndexGet_GivenTransferEvidenceAndManageEvidenceNoteViewModel_GetSchemeDataForFilterRequestByTransferShouldBeCalled()
+        {
+            // arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+                .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
+
+            // act
+            await ManageEvidenceController.Index(Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers), model);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == model.SelectedComplianceYear &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        [InlineData("view-all-evidence-transfers")]
         public async void IndexGet_GivenManageEvidenceNoteViewModelIsNull_GetAllAatfsForComplianceYearRequest(string tab)
         {
             // arrange
@@ -603,6 +674,22 @@
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllAatfsForComplianceYearRequest>.That.Matches(
                 g => g.ComplianceYear == complianceYears[0]))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void IndexGet_GivenTransferEvidenceAndManageEvidenceNoteViewModelIsNull_GetSchemeDataForFilterRequestByTransferShouldBeCalled()
+        {
+            // arrange
+            var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
+
+            // act
+            await ManageEvidenceController.Index(Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers), null);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == complianceYears[0] &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]

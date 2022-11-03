@@ -89,7 +89,7 @@
                 notesSet.Add(evidenceWithVoidStatus);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, null, null);
+                    null, null, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -137,7 +137,7 @@
                 notesSet.Add(evidenceWithDraftStatus2);
 
                 request = new GetAllNotesInternal(noteTypeFilterForTransferNote, notAllowedStatuses, SystemTime.UtcNow.Year, 1, int.MaxValue,
-                    null, null, null, null, null, null, null);
+                    null, null, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -229,7 +229,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    startDateSubmittedFilter, endDateSubmittedFilter, null, null, null, null, null);
+                    startDateSubmittedFilter, endDateSubmittedFilter, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -320,7 +320,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    startDateSubmittedFilter, null, null, null, null, null, null);
+                    startDateSubmittedFilter, null, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -401,7 +401,7 @@
                 notesSet.Add(evidence2NotInSubmittedDates);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, endDateSubmittedFilter, null, null, null, null, null);
+                    null, endDateSubmittedFilter, null, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -489,7 +489,7 @@
                 notesSet.Add(evidence2NoRecipient);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, recipientOrganisation.Id, null, null, null, null);
+                    null, null, recipientOrganisation.Id, null, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -597,7 +597,7 @@
                 notesSet.Add(evidence2WithVoidStatus);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, NoteStatus.Void, null, null, null);
+                    null, null, null, NoteStatus.Void, null, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -673,7 +673,7 @@
                 notesSet.Add(evidence1NonHouseholdType);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, WasteType.Household, null, null);
+                    null, null, null, null, WasteType.Household, null, null, null);
             };
 
             private readonly Because of = () =>
@@ -783,7 +783,7 @@
                 notesSet.Add(evidence2WithNonSelectedAatf);
 
                 request = new GetAllNotesInternal(noteTypeFilter, allowedStatuses, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, aatfSelected.Id, null);
+                    null, null, null, null, null, aatfSelected.Id, null, null);
             };
 
             private readonly Because of = () =>
@@ -850,7 +850,7 @@
                 filterReference = evidenceWithFilteredReference.Reference;
 
                 request = new GetAllNotesInternal(noteTypeFilter, new List<NoteStatus> { NoteStatus.Draft }, complianceYear, 1, int.MaxValue,
-                    null, null, null, null, null, null, filterReference.ToString());
+                    null, null, null, null, null, null, filterReference.ToString(), null);
             };
 
             private readonly Because of = () =>
