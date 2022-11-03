@@ -67,6 +67,7 @@
             result.SelectedSchemeName.Should().BeNullOrEmpty();
             result.ComplianceYear.Should().Be(source.NoteData.ComplianceYear);
             result.QueryString.Should().Be(source.QueryString);
+            result.ReturnToView.Should().Be(source.ReturnToView);
         }
 
         [Fact]
@@ -138,7 +139,8 @@
             result.RejectedReason.Should().Be(source.ExistingModel.RejectedReason);
             result.SelectedSchemeName.Should().BeNullOrEmpty();
             result.ComplianceYear.Should().Be(source.ExistingModel.ComplianceYear);
-            result.QueryString.Should().Be(source.QueryString);
+            result.QueryString.Should().Be(source.ExistingModel.QueryString);
+            result.ReturnToView.Should().Be(source.ExistingModel.ReturnToView);
         }
         [Fact]
         public void Map_GivenSourceContainRecipientId_SelectedSchemeNameShouldBeMapped()
