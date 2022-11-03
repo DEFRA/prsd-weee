@@ -109,6 +109,30 @@
             model.OpenedInNewTab.Should().Be(openedInNewTab);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithIsPrintable_PropertiesShouldBeSet(bool isPrintable)
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
+            {
+                IsPrintable = isPrintable
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.IsPrintable.Should().Be(isPrintable);
+        }
+
         [Fact]
 
         public void ViewTransferNoteViewModelMap_GivenSourceWithPage_PagePropertyShouldBeSet()

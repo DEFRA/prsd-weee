@@ -12,7 +12,12 @@
     @if (Model.ReturnToView)
     {
         @(this.WeeeGds().BackLink(
-            Url.RouteUrl(AatfEvidenceRedirect.AatfViewRouteName(Model.Status), new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id })));
+            Url.RouteUrl(AatfEvidenceRedirect.AatfViewRouteName(Model.Status), new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id, queryString = Model.QueryString })));
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.QueryString))
+    {
+        @(this.WeeeGds().BackLink(
+            string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
     }
     else
     {
