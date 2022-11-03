@@ -2,14 +2,14 @@
 
 <style>
 </style>
-<div class="govuk-grid-column-one-half govuk-!-margin-left-2 govuk-!-padding-left3" style="width: 210px; z-index: 3; position: relative">
+<div class="govuk-grid-column-one-half govuk-!-margin-left-2 govuk-!-padding-left3" style="width: 210px; z-index: 5; position: relative">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, new { @class = "govuk-label--s" }, false)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, Model.RecipientWasteStatusFilterViewModel.SubmittedByList,
         string.Empty, new { @class = "use-overlay" }, useHalfWidth: false, withLookAhead: true)
     </div>
 </div>
-<div class="govuk-grid-column-one-half govuk-!-margin-left-2 govuk-!-padding-left-3" style="width:210px;">
+<div class="govuk-grid-column-one-half govuk-!-margin-left-2 govuk-!-padding-left-3" style="width: 210px; z-index: 4; position: relative">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.ReceivedId)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, new { @class = "govuk-label--s" }, false)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.ReceivedId, Model.RecipientWasteStatusFilterViewModel.RecipientList,

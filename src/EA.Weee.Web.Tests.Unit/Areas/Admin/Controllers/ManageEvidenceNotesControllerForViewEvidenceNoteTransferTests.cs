@@ -51,7 +51,8 @@
                 {
                     typeof(Guid),
                     typeof(int),
-                    typeof(bool)
+                    typeof(bool),
+                    typeof(string),
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -64,7 +65,8 @@
                 {
                     typeof(Guid),
                     typeof(int),
-                    typeof(bool)
+                    typeof(bool),
+                    typeof(string),
                 }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
@@ -95,7 +97,9 @@
             //assert
             A.CallTo(() =>
                     Mapper.Map<ViewTransferNoteViewModel>(
-                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.Page == 1)))
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => 
+                            v.Page == 1 &&
+                            v.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -111,7 +115,9 @@
             //assert
             A.CallTo(() =>
                     Mapper.Map<ViewTransferNoteViewModel>(
-                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.OpenedInNewTab == false)))
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => 
+                            v.OpenedInNewTab == false &&
+                            v.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -129,7 +135,9 @@
             //assert
             A.CallTo(() =>
                     Mapper.Map<ViewTransferNoteViewModel>(
-                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.OpenedInNewTab == openedInNewTab)))
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => 
+                            v.OpenedInNewTab == openedInNewTab &&
+                            v.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -147,7 +155,9 @@
             //assert
             A.CallTo(() =>
                     Mapper.Map<ViewTransferNoteViewModel>(
-                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => v.Page == pageSize)))
+                        A<ViewTransferNoteViewModelMapTransfer>.That.Matches(v => 
+                            v.Page == pageSize &&
+                            v.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -225,7 +235,8 @@
             A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
                 v => v.TransferEvidenceNoteData.Equals(TransferEvidenceNoteData) &&
                      v.DisplayNotification == null &&
-                     v.User == ManageEvidenceController.HttpContext.User))).MustHaveHappenedOnceExactly();
+                     v.User == ManageEvidenceController.HttpContext.User &&
+                     v.IsPrintable == false))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -264,7 +275,8 @@
             // assert
             A.CallTo(() => Mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
                     t => t.TransferEvidenceNoteData.Equals(TransferEvidenceNoteData) &&
-                         t.DisplayNotification.Equals(displayNotification))))
+                         t.DisplayNotification.Equals(displayNotification) &&
+                         t.IsPrintable == false)))
                 .MustHaveHappenedOnceExactly();
         }
 
