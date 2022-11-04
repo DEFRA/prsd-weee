@@ -3,7 +3,7 @@
 
 <div class="govuk-form-group govuk-button-group">
    
-    @this.WeeeGds().Button("Filter", new { name = "ActionFilter", id = "filter-apply", style = "z-index: 1;position:relative" }, secondaryButton: false, filterButton: true)
+    @this.WeeeGds().Button("Filter", new { name = "ActionFilter", id = "filter-apply-button" }, secondaryButton: false, filterButton: true)
 
     @Html.ActionLink("Clear filter", "Index", "ManageEvidenceNotes",
     new { selectedComplianceYear = Model.SelectedComplianceYear, organisationId = Model.OrganisationId, aatfId = @Model.AatfId, tab = @ViewData["tab"].ToString() },
