@@ -1,0 +1,38 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ManageEvidenceNotesViewModel
+
+<div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+    <div class="govuk-grid-row govuk-!-padding-left-3">
+        <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+        </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-left-3">
+        <div class="govuk-grid-column-full">
+            <span class="govuk-label--s">
+                Filter by
+            </span>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
+        </div>
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0">
+            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByRecipientFiltersViewModel")
+        </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+        <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-desktop">
+            <div>
+                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel", string.Empty)
+            </div>
+        </div>
+        <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
+            @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                new ViewDataDictionary() { new KeyValuePair<string, object>("tab", "view-all-evidence-notes") })
+        </div>
+    </div>
+</div>
