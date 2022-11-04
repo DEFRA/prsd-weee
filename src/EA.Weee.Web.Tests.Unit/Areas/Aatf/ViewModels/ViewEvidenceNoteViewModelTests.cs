@@ -281,7 +281,7 @@
         [InlineData(NoteStatus.Approved, true)]
         [InlineData(NoteStatus.Returned, true)]
         [InlineData(NoteStatus.Submitted, true)]
-        [InlineData(NoteStatus.Void, false)]
+        [InlineData(NoteStatus.Void, true)]
         public void CanDisplayPdfLink_GivenNoteStatus_ShouldHaveCorrectValue(NoteStatus status, bool expected)
         {
             //arrange
