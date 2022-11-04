@@ -292,7 +292,7 @@
             if (transferRequest.EvidenceNoteIds.Any())
             {
                 currentSelectedNotes = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesSelectedForTransferRequest(pcsId, transferRequest.EvidenceNoteIds, transferRequest.CategoryIds));
+                    new GetEvidenceNotesSelectedForTransferRequest(pcsId, transferRequest.EvidenceNoteIds, transferRequest.CategoryIds, noteData.Id));
             }
 
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
