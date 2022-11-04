@@ -38,14 +38,14 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string), typeof(bool) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string) }).Should()
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string), typeof(bool) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
@@ -389,7 +389,7 @@
         [Fact]
         public void EditDraftEvidenceNoteGet_ShouldHaveCheckEditEvidenceNoteStatusAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string) })
+            typeof(ManageEvidenceNotesController).GetMethod("EditEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(bool), typeof(string), typeof(bool) })
                 .Should()
                 .BeDecoratedWith<CheckCanEditEvidenceNoteAttribute>();
         }

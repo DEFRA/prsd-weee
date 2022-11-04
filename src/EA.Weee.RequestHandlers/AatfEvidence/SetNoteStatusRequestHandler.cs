@@ -46,15 +46,15 @@
 
             evidenceDataAccess.DeleteZeroTonnageFromSubmittedTransferNote(evidenceNote, message.Status.ToDomainEnumeration<Domain.Evidence.NoteStatus>(), evidenceNote.NoteType);
 
-            SetApprovedRecipientAddress(evidenceNote, message.Status);
-            SetApprovedTransferAddress(evidenceNote, message.Status);
+            SetRecipientAddress(evidenceNote, message.Status);
+            SetTransferAddress(evidenceNote, message.Status);
             
             return await UpdateNoteStatus(evidenceNote, message.Status, currentDate, message.Reason);
         }
 
-        private void SetApprovedTransferAddress(Note evidenceNote, NoteStatus status)
+        private void SetTransferAddress(Note evidenceNote, NoteStatus status)
         {
-            if (evidenceNote.NoteType == NoteType.TransferNote && status == NoteStatus.Approved && evidenceNote.Organisation.IsBalancingScheme == false)
+            if (evidenceNote.NoteType == NoteType.TransferNote && (status == NoteStatus.Approved || status == NoteStatus.Rejected) && evidenceNote.Organisation.IsBalancingScheme == false)
             {
                 var organisationAddress = evidenceNote.Organisation.HasBusinessAddress
                     ? evidenceNote.Organisation.BusinessAddress
@@ -72,9 +72,9 @@
             }
         }
 
-        private void SetApprovedRecipientAddress(Note evidenceNote, NoteStatus status)
+        private void SetRecipientAddress(Note evidenceNote, NoteStatus status)
         {
-            if (evidenceNote.Recipient.IsBalancingScheme == false && status == NoteStatus.Approved)
+            if (evidenceNote.Recipient.IsBalancingScheme == false && (status == NoteStatus.Approved || status == NoteStatus.Rejected))
             {
                 var organisationAddress = evidenceNote.Recipient.HasBusinessAddress
                     ? evidenceNote.Recipient.BusinessAddress

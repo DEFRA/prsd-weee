@@ -79,6 +79,7 @@
             result.TotalAvailable.Should().Be(source.EvidenceNoteData.TotalReceivedAvailable.ToTonnageDisplay());
             result.QueryString.Should().BeNullOrEmpty();
             result.OpenedInNewTab.Should().BeFalse();
+            result.ReturnToView.Should().BeFalse();
         }
 
         [Fact]
@@ -1437,6 +1438,27 @@
 
             //assert
             model.OpenedInNewTab.Should().Be(openedInNewTab);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+
+        public void ViewEvidenceNoteViewModelMap_GivenSourceWithRedirectToView_PropertiesShouldBeSet(bool redirectToView)
+        {
+            //arrange
+            var evidenceNoteData = TestFixture.Create<EvidenceNoteData>();
+
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, false, null)
+            {
+                ReturnToView = redirectToView
+            };
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.ReturnToView.Should().Be(redirectToView);
         }
 
         [Fact]

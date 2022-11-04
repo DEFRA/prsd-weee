@@ -15,6 +15,10 @@
         width: 30%;
     }
 
+    .printable-tonnage-column-padding {
+        padding-right: 10px;
+    }
+
     .breakdown-reference-column {
         width: 15%;
     }
@@ -156,14 +160,17 @@ else
     @{
         var summaryCategoryWidthCss = string.Empty;
         var summaryTonnageWidthCss = string.Empty;
+        var printableTonnageColumnPadding = string.Empty;
 
         if (Model.IsPrintable)
         {
             <colgroup>
                 <col style="width: 45%; max-width: 45%;"/>
                 <col style="width: 27.5%; max-width: 27.5%;"/>
-                <col style="width: 27.5%; max-width: 27.5%; "/>
+                <col style="width: 27.5%; max-width: 27.5%;"/>
             </colgroup>
+
+            printableTonnageColumnPadding = "printable-tonnage-column-padding";
         }
         else
         {
@@ -179,10 +186,10 @@ else
         <th class="govuk-table__header govuk-!-text-align-left @summaryCategoryWidthCss">
             Category
         </th>
-        <th class="govuk-table__header govuk-table__header--numeric @summaryTonnageWidthCss">
+        <th class="govuk-table__header govuk-table__header--numeric @summaryTonnageWidthCss @printableTonnageColumnPadding">
             Total transferred (tonnes)
         </th>
-        <th class="govuk-table__header govuk-table__header--numeric @summaryTonnageWidthCss">
+        <th class="govuk-table__header govuk-table__header--numeric govuk-!-padding-right-1 @summaryTonnageWidthCss">
             Total reuse transferred (tonnes)
         </th>
     </tr>
@@ -199,7 +206,7 @@ else
                     <span class="category-id" id="summary-@item.CategoryId-label">@(item.CategoryId).&nbsp;</span><span class="category-description">@item.CategoryDisplay</span>
                 </div>
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric @printableTonnageColumnPadding">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
             <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">@Model.TotalCategoryValues[categoryCount].TotalReused</td>
         </tr>
     }
@@ -273,7 +280,7 @@ else
             <th class="govuk-table__header govuk-!-text-align-left @breakdownCategoryWidthCss">
                 Category
             </th>
-            <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss">
+            <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss @printableTonnageColumnPadding">
                 Total transferred (tonnes)
             </th>
             <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss">
@@ -303,7 +310,7 @@ else
                             <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
                         </div>
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <td class="govuk-table__cell govuk-table__cell--numeric @printableTonnageColumnPadding">
                         @category.Received
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">

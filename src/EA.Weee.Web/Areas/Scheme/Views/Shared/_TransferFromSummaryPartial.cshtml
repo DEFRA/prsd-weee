@@ -42,6 +42,21 @@
     }
 </ul>
 <p class="govuk-body govuk-!-padding-bottom-5">Select evidence notes from the available evidence notes table. A maximum of 5 notes can be chosen.</p>
+
+@{
+    var displayWarning = false;
+    if (Model.ViewTransferNoteViewModel != null)
+    {
+        displayWarning = true;
+    }
+
+    var displayRemovingWarningCss = displayWarning ? "block" : "none";
+}
+
+<div class="govuk-!-padding-bottom-3" style="display:@displayRemovingWarningCss">
+    @(this.WeeeGds().Warning("Removing notes may remove data you have previously entered"))
+</div>
+
 <table id="selected-notes-selection" class="govuk-table">
     <caption class="govuk-table__caption govuk-heading-m">Selected evidence notes</caption>
     <thead class="govuk-table__head">

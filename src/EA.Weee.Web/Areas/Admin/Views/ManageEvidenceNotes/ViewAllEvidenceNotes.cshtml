@@ -53,43 +53,42 @@
                             </tr>
                             </thead>
                             <tbody class="govuk-table__body">
-                            @if (Model.EvidenceNotesDataList.Any())
-                            {
-                                foreach (var note in Model.EvidenceNotesDataList)
+                                @if (Model.EvidenceNotesDataList.Any())
                                 {
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                        @if (note.SubmittedDate.HasValue)
-                                        {
-                                            <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="govuk-table__cell"></td>
-                                        }
-                                        <td class="govuk-table__cell">@note.SubmittedBy</td>
-                                        <td class="govuk-table__cell">@note.Recipient</td>
-                                        <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                        <td class="govuk-table__cell">
-                                            @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "admin_view_evidence_note_details", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
+                                    foreach (var note in Model.EvidenceNotesDataList)
+                                    {
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                            @if (note.SubmittedDate.HasValue)
+                                            {
+                                                <td class="govuk-table__cell">@note.SubmittedDate.Value.ToShortDateString()</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="govuk-table__cell"></td>
+                                            }
+                                            <td class="govuk-table__cell">@note.SubmittedBy</td>
+                                            <td class="govuk-table__cell">@note.Recipient</td>
+                                            <td class="govuk-table__cell">@note.Status.ToString() </td>
+                                            <td class="govuk-table__cell">
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "admin_view_evidence_note_details", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes to view </p>") })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6">
+                                            <p> Showing 0 - 0 of 0 </p>
                                         </td>
                                     </tr>
                                 }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="6">
-                                        @Html.Partial("~/Areas/Admin/Views/ManageEvidenceNotes/_ViewAllNotesEmptyPartial.cshtml", Model, new ViewDataDictionary()
-                                        { new KeyValuePair<string, object>("no-evidence-results-message", "<p>There are currently no evidence notes to view </p>") })
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6">
-                                        <p> Showing 0 - 0 of 0 </p>
-                                    </td>
-                                </tr>
-                            }
                             </tbody>
                         </table>
                     </div>
