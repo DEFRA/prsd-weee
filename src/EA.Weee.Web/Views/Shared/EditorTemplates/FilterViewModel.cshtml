@@ -8,7 +8,7 @@
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FilterViewModel.SearchRef)">
     @Html.Gds().LabelFor(m => m.FilterViewModel.SearchRef, new { @class = "govuk-label--s" }, false)
     @Html.Gds().TextBoxFor(m => m.FilterViewModel.SearchRef, new { type = "search" })
-    <button class="govuk-button weee-search-button"><span class="fa fa-search" aria-hidden="true" title="search by reference"></span><span class="sr-only">Search by reference number</span></button>
+    <button id="search-by-reference-button" class="govuk-button weee-search-button"><span class="fa fa-search" aria-hidden="true" title="search by reference" style="z-index: 200 !important;"></span><span class="sr-only">Search by reference number</span></button>
     
     @if (addClearLink == true)
     {

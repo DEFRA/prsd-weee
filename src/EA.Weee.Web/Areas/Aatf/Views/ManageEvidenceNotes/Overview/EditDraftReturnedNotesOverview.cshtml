@@ -1,15 +1,11 @@
-﻿@using EA.Weee.Web.Areas.Aatf.Controllers
-@using EA.Weee.Core.Shared
-@using MvcNavigationHelpers
-@using EA.Weee.Web.Extensions
+﻿@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.ViewModels.Shared
 
 @model EditDraftReturnedNotesViewModel
 
-<section id="main-content">
+@section full_main_content{
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="govuk-tabs">
@@ -28,10 +24,23 @@
                     {
                         @Html.Hidden("tab", Model.ActiveOverviewDisplayOption, new { id = "tab-hidden" })
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
-                        <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                        <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
 
-                            <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                            <div class="govuk-grid-row govuk-!-padding-left-3">
+                                <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
+                                             new
+                                             {
+                                                 addClearLink = true,
+                                                      clearRouteValues = new
+                                                 {
+                                                     organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId,
+                                                     aatfId = Model.ManageEvidenceNoteViewModel.AatfId,
+                                                     tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
+                                                     selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
+                                                 }
+                                             })
+                                </div>
                             </div>
                         </div>
                     }
@@ -101,11 +110,11 @@
                     <br />
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                         { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
+                                 { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
                          manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
                     }
                 </section>
             </div>
         </div>
     </div>
-</section>
+}
