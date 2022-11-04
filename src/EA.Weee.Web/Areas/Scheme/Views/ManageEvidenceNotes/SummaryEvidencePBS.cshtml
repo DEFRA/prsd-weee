@@ -69,7 +69,9 @@
 
                             <tr class="govuk-table__row" id="category-row-@category.CategoryId">
                                 <td class="govuk-table__cell">
-                                    <span id="@category.CategoryId-label">@(@category.CategoryId). @category.CategoryDisplay</span>
+                                    <div class="category">
+                                        <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                                    </div>
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
                                     @category.EvidenceOriginal
