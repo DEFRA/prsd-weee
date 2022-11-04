@@ -15,14 +15,21 @@
     {
         @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
-        <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-            <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
-                    new { addClearLink = true, clearRouteValues = new { 
-                        pcsId = Model.OrganisationId,
-                        tab = Model.ActiveDisplayOption.ToDisplayString(),
-                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
-                    } })
+        <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+            
+            <div class="govuk-grid-row govuk-!-padding-left-3">
+                <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
+                        new
+                        {
+                            addClearLink = true, clearRouteValues = new
+                            {
+                                pcsId = Model.OrganisationId,
+                                tab = Model.ActiveDisplayOption.ToDisplayString(),
+                                selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
+                            }
+                        })
+                </div>
             </div>
         </div>
     }

@@ -957,6 +957,11 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     width: 20px;
 }
 
+#filter-apply-button {
+    z-index: 0;
+    position: relative;
+}
+
 @media only screen and (max-width: 640px) {
     .weee-evidence-padding-right {
         padding-right: 0px;
