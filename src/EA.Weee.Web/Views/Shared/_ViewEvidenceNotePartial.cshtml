@@ -57,7 +57,7 @@ else
 
 </style>
 
-<div class="govuk-width-container govuk-!-margin-top-3">
+<div class="govuk-!-margin-top-3">
 
     <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1">
         @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
@@ -160,7 +160,7 @@ else
         </div>
     }*@
 
-<div class="govuk-width-container govuk-!-padding-left-0 printable-padding-top">
+<div class="govuk-!-padding-left-0 printable-padding-top">
     <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
         <span id="site" class="govuk-label--s">Site</span><br />
         <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>
@@ -175,7 +175,7 @@ else
     </div>
 </div>
 <div class="ui-helper-clearfix"></div>
-<div class="govuk-width-container govuk-!-padding-top-7">
+<div class="govuk-!-padding-top-7">
     <p>
         By submitting this information you confirm that the following waste and electronic equipment from UK <strong>@Model.WasteDisplay.ToLower()</strong> has been received between
         <strong>@(Model.StartDate.Value.ToShortDateString())</strong> and <strong>@(Model.EndDate.Value.ToShortDateString())</strong> at this site.
