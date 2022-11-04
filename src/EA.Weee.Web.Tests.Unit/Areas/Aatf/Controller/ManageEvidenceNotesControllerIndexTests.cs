@@ -686,9 +686,10 @@
             await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), null, 1);
 
             // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == currentDate.Year &&
-                     g.AatfId == AatfId))).MustHaveHappenedOnceExactly();
+                     g.AatfId == AatfId &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -701,9 +702,10 @@
             await ManageEvidenceController.Index(OrganisationId, AatfId, Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes), existingManageEvidenceNoteViewModel, 1);
 
             // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationSchemeDataForFilterRequest>.That.Matches(
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == existingManageEvidenceNoteViewModel.SelectedComplianceYear &&
-                     g.AatfId == AatfId))).MustHaveHappenedOnceExactly();
+                     g.AatfId == AatfId &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]

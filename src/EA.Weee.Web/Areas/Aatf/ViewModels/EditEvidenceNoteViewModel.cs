@@ -53,6 +53,8 @@
 
         public ActionEnum Action { get; set; }
 
+        public bool ReturnToView { get; set; }
+
         public EditEvidenceNoteViewModel() : base()
         {
         }

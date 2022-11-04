@@ -110,6 +110,7 @@
     <Compile Include="AatfEvidence\EvidenceNoteDataListResult.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteSearchDataResult.cs" />
     <Compile Include="AatfEvidence\TonnageToDisplayReportEnum.cs" />
+    <Compile Include="AatfEvidence\RecipientOrTransfer.cs" />
     <Compile Include="Admin\Obligation\ObligationEvidenceTonnageData.cs" />
     <Compile Include="Admin\Obligation\ObligationEvidenceSummaryData.cs" />
     <Compile Include="AatfEvidence\TransferEvidenceCategoryValues.cs" />

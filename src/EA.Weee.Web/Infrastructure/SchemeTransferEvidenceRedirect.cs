@@ -26,32 +26,32 @@
                 switch (noteStatus)
                 {
                     case NoteStatus.Draft:
-                        return SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName;
+                        return ViewDraftTransferEvidenceRouteName;
                     case NoteStatus.Submitted:
-                        return SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName;
+                        return ViewSubmittedTransferEvidenceRouteName;
                     case NoteStatus.Approved:
-                        return SchemeTransferEvidenceRedirect.ViewApprovedTransferEvidenceRouteName;
+                        return ViewApprovedTransferEvidenceRouteName;
                     case NoteStatus.Rejected:
-                        return SchemeTransferEvidenceRedirect.ViewRejectedTransferEvidenceRouteName;
+                        return ViewRejectedTransferEvidenceRouteName;
                     case NoteStatus.Returned:
-                        return SchemeTransferEvidenceRedirect.ViewReturnedTransferEvidenceRouteName;
+                        return ViewReturnedTransferEvidenceRouteName;
                     case NoteStatus.Void:
-                        return SchemeTransferEvidenceRedirect.ViewVoidedTransferEvidenceRouteName;
+                        return ViewVoidedTransferEvidenceRouteName;
                 }
             }
 
             switch (noteStatus)
             {
                 case NoteStatus.Approved:
-                    return SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName;
+                    return ViewApprovedEvidenceNoteRouteName;
                 case NoteStatus.Rejected:
-                    return SchemeTransferEvidenceRedirect.ViewRejectedEvidenceNoteRouteName;
+                    return ViewRejectedEvidenceNoteRouteName;
                 case NoteStatus.Returned:
-                    return SchemeTransferEvidenceRedirect.ViewReturnedEvidenceNoteRouteName;
+                    return ViewReturnedEvidenceNoteRouteName;
                 case NoteStatus.Submitted:
-                    return SchemeTransferEvidenceRedirect.ViewSubmittedEvidenceNoteRouteName;
+                    return ViewSubmittedEvidenceNoteRouteName;
                 case NoteStatus.Void:
-                    return SchemeTransferEvidenceRedirect.ViewVoidedEvidenceNoteRouteName;
+                    return ViewVoidedEvidenceNoteRouteName;
             }
 
             return string.Empty;
