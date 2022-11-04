@@ -44,29 +44,7 @@
 
         public string SubmittedDateDisplay => SubmittedDate.HasValue ? SubmittedDate.Value.ToShortDateString() : "-";
 
-        public string AatfViewRouteName
-        {
-            get
-            {
-                switch (Status)
-                {
-                    case NoteStatus.Approved:
-                        return AatfEvidenceRedirect.ViewApprovedEvidenceRouteName;
-                    case NoteStatus.Rejected:
-                        return AatfEvidenceRedirect.ViewRejectedEvidenceRouteName;
-                    case NoteStatus.Draft:
-                        return AatfEvidenceRedirect.ViewDraftEvidenceRouteName;
-                    case NoteStatus.Returned:
-                        return AatfEvidenceRedirect.ViewReturnedEvidenceRouteName;
-                    case NoteStatus.Submitted:
-                        return AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
-                    case NoteStatus.Void:
-                        return AatfEvidenceRedirect.ViewVoidedEvidenceRouteName;
-                }
-
-                throw new InvalidOperationException("Invalid route name");
-            }
-        }
+        public string AatfViewRouteName => AatfEvidenceRedirect.AatfViewRouteName(Status);
 
         public string SchemeViewRouteName => SchemeTransferEvidenceRedirect.SchemeViewRouteName(Type, Status);
 

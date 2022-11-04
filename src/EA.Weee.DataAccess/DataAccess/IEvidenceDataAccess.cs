@@ -58,6 +58,8 @@
 
         Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, int complianceYear);
 
+        Task<List<Organisation>> GetTransferOrganisations(int complianceYear);
+
         Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear);
 
         Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear);

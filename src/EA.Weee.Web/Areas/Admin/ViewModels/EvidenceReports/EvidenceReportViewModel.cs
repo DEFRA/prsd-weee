@@ -15,7 +15,7 @@
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [Required(ErrorMessage = "Select whether you want to view the original tonnages or net of transfers")]
+        [Required(ErrorMessage = "Select whether you want to download the original tonnages or net of transfers")]
         [Display(Name = "Tonnage values")]
         public TonnageToDisplayReportEnum SelectedTonnageToDisplay { get; set; }
 

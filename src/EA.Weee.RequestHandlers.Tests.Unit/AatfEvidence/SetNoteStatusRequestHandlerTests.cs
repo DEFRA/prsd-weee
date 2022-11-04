@@ -349,9 +349,9 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public async Task HandleAsync_ExternalUser_WithStatusNotApproved_ApprovedDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
+        public async Task HandleAsync_ExternalUser_WithStatusNotApprovedOrRejected_ApprovedDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
         {
-            if (status == Core.AatfEvidence.NoteStatus.Approved)
+            if (status == Core.AatfEvidence.NoteStatus.Approved || status == Core.AatfEvidence.NoteStatus.Rejected)
             {
                 return;
             }
@@ -415,8 +415,10 @@
             note.ApprovedTransfererSchemeName.Should().BeNull();
         }
 
-        [Fact]
-        public async Task HandleAsync_ExternalUser_WithStatusApprovedAndTransferNoteAndTransferOrganisationIsBalancingScheme_ApprovedDetailsShouldNotBeSet()
+        [Theory]
+        [InlineData(Core.AatfEvidence.NoteStatus.Approved)]
+        [InlineData(Core.AatfEvidence.NoteStatus.Rejected)]
+        public async Task HandleAsync_ExternalUser_WithStatusApprovedOrRejectedAndTransferNoteAndTransferOrganisationIsBalancingScheme_ApprovedDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
@@ -433,7 +435,7 @@
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
                 A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
 
-            var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
+            var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
             // Act
@@ -446,8 +448,10 @@
             note.ApprovedTransfererSchemeName.Should().BeNull();
         }
 
-        [Fact]
-        public async Task HandleAsync_ExternalUser_WithStatusApprovedAndNotTransferNoteAndTransferOrganisationIsNotBalancingScheme_ApprovedDetailsShouldNotBeSet()
+        [Theory]
+        [InlineData(Core.AatfEvidence.NoteStatus.Approved)]
+        [InlineData(Core.AatfEvidence.NoteStatus.Rejected)]
+        public async Task HandleAsync_ExternalUser_WithStatusOrRejectedApprovedAndNotTransferNoteAndTransferOrganisationIsNotBalancingScheme_ApprovedDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
@@ -464,7 +468,7 @@
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(A<string>._, A<string>._, A<string>._,
                 A<string>._, A<string>._, A<string>._, A<string>._, A<string>._)).Returns("address");
 
-            var message = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Approved, "reason passed as parameter");
+            var message = new SetNoteStatusRequest(note.Id, status, "reason passed as parameter");
             A.CallTo(() => context.Notes.FindAsync(A<Guid>._)).Returns(note);
 
             // Act
@@ -530,9 +534,9 @@
 
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
-        public async Task HandleAsync_ExternalUser_WithStatusNotApprovedAndRecipientIsNotBalancingScheme_ApprovedTransfererDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
+        public async Task HandleAsync_ExternalUser_WithStatusNotApprovedOrRejectedAndRecipientIsNotBalancingScheme_ApprovedTransfererDetailsShouldNotBeSet(Core.AatfEvidence.NoteStatus status)
         {
-            if (status == Core.AatfEvidence.NoteStatus.Approved)
+            if (status == Core.AatfEvidence.NoteStatus.Approved || status == Core.AatfEvidence.NoteStatus.Rejected)
             {
                 return;
             }
