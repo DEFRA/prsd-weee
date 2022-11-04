@@ -71,7 +71,7 @@
                 noteData.TotalReceivedAvailable = source.CategoryFilter.Any() ? source.Note.FilteredNoteTonnage(source.CategoryFilter)
                     .Select(nt => nt.Received != null
                         ? nt.Received - (nt.NoteTransferTonnage.Where(tn =>
-                                !excludedStatus.Contains(tn.TransferNote.Status))
+                                !excludedStatus.Contains(tn.TransferNote.Status) && tn.TransferNoteId != source.TransferNoteId)
                             .Sum(tn => tn.Received))
                         : 0).Sum() : source.Note.NoteTonnage.Sum(n => n.Received);
             }
