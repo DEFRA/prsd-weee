@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
 @using EA.Weee.Web.RazorHelpers
 @using DisplayExtensions = EA.Weee.Web.Extensions.DisplayExtensions
 
@@ -53,7 +54,7 @@
                                 </div>
                                 <div class="govuk-grid-column-full govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
                                     @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                        new ViewDataDictionary() { new KeyValuePair<string, object>("tab", "view-all-evidence-notes") })
+                                        new ViewDataDictionary() { new KeyValuePair<string, object>("tab", ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString()) })
                                 </div>
                             </div>
                         </div>

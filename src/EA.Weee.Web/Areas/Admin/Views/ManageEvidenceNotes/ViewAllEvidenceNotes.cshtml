@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Shared
 @using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllEvidenceNotesViewModel
@@ -24,7 +25,11 @@
                             View all evidence notes
                         </h2>
 
-                        Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model);
+                        Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model, new ViewDataDictionary()
+                        {
+                            new KeyValuePair<string, object>("tab",
+                                ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString())
+                        });
 
                     }
                     <div class="govuk-!-padding-top-6">
