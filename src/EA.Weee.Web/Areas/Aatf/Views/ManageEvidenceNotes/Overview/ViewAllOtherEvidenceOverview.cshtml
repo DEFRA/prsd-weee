@@ -1,12 +1,11 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Areas.Aatf.ViewModels
 @using DisplayExtensions = EA.Weee.Web.Extensions.DisplayExtensions
 
 @model EA.Weee.Web.Areas.Aatf.ViewModels.AllOtherManageEvidenceNotesViewModel
 
-<section id="main-content">
+@section full_main_content{
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="govuk-tabs">
@@ -26,31 +25,36 @@
                         @Html.Gds().ValidationSummary()
                         @Html.Hidden("tab", Model.ActiveOverviewDisplayOption, new { id = "tab-hidden" })
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
-                        <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                        <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
 
-                            <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
-                            </div>
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-full govuk-!-padding-right-5">
-                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFilterViewModel", new { htmlAttributes = new { @class = "govuk-grid-column-one-third govuk-!-padding-left-2 govuk-!-padding-right-3" } })
+                            <div class="govuk-grid-row govuk-!-padding-left-3">
+                                <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
                                 </div>
                             </div>
-                            <div class="govuk-form-group govuk-!-width-one-full govuk-!-padding-left-0 govuk-!-padding-top-1 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                                <div class="govuk-grid-row">
-                                    <div class="govuk-grid-column-full">
-                                        <div class="govuk-grid-row">
-                                            <div class="govuk-grid-column-three-quarters govuk-!-padding-right-1">
-                                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientWasteStatusFilterViewModel")
-                                            </div>
-                                            <div class="govuk-grid-column-one-quarter govuk-!-padding-top-1 govuk-!-margin-top-1 govuk-!-padding-bottom-0">
-                                                @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                                                        new ViewDataDictionary() { new KeyValuePair<string, object>("tab", ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString()) })
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
+                            <div class="govuk-grid-row govuk-!-padding-left-3">
+                                <div class="govuk-grid-column-full">
+                                    <span class="govuk-label--s">
+                                        Filter by
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                                <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
+                                </div>
+                            </div>
+
+                            <div class="govuk-grid-row govuk-!-padding-top-5">
+                                <div class="govuk-grid-column-full govuk-grid-column-three-quarters-from-desktop weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientWasteStatusFilterViewModel")
+                                </div>
+                                <div class="govuk-grid-column-full govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
+                                    @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                                        new ViewDataDictionary() { new KeyValuePair<string, object>("tab", "view-all-evidence-notes") })
+                                </div>
                             </div>
                         </div>
                     }
@@ -121,7 +125,7 @@
                             {
                                 <tr>
                                     <td colspan="6">
-                                        @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() 
+                                        @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary()
                                    { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes </p>") })
                                     </td>
                                 </tr>
@@ -137,7 +141,7 @@
                     <br />
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                    {
+                                            {
                             {
                                 "pagerRouteValues", new
                                 {
@@ -161,4 +165,4 @@
             </div>
         </div>
     </div>
-</section>
+}

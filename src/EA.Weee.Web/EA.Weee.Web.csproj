@@ -854,7 +854,6 @@
     <Content Include="Areas\Admin\Views\Obligations\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\SelectAuthority.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\TransferredEvidence.cshtml" />
-    <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\SubmittedDatesFilterViewModel.cshtml" />
     <Content Include="Areas\Aatf\Views\Shared\EditorTemplates\RecipientWasteStatusFilterViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Obligations\UploadObligations.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_PDProtocolTypesPartial.cshtml" />
@@ -889,17 +888,16 @@
     <Content Include="Areas\Admin\Views\EvidenceReports\ChooseReport.cshtml" />
     <Content Include="Areas\Scheme\Views\TransferEvidence\DownloadTransferEvidenceNote.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ObligationTypeStatusFiltersViewModel.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\EvidenceAndObligationProgress.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\DownloadEvidenceNotePdf.cshtml" />
     <Content Include="Views\Shared\_EvidenceNotesReportsLinks.cshtml" />
     <Content Include="Areas\Admin\Views\EvidenceTransferReport\EvidenceTransferNoteReport.cshtml" />
-    <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_internalFiltersPartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
@@ -1638,6 +1636,7 @@
     <Content Include="Views\Shared\_EvidenceNotePdfLayout.cshtml" />
     <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

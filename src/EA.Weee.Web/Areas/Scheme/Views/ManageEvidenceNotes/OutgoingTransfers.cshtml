@@ -2,7 +2,6 @@
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.TransferredOutEvidenceNotesSchemeViewModel
@@ -23,22 +22,29 @@
                     @Html.Gds().ValidationSummary()
                     @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
                     @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
-
-                    <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                        <div class="govuk-form-group govuk-!-width-one-half govuk-!-margin-left-2 govuk-!-padding-top-4 govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
-                        </div>
-                    </div>
-
-                    <div class="govuk-!-width-full govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-3">
-                        <div class="govuk-grid-row">
-                            <div class="govuk-grid-column-one-quarter govuk-!-padding-right-1 govuk-!-padding-left-3 govuk-!-padding-bottom-3">
-                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientStatusFiltersViewModel", new { htmlAttributes = new { @class = "govuk-grid-column-half" } })
+                    <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                        <div class="govuk-grid-row govuk-!-padding-left-3">
+                            <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
                             </div>
-                            <div class="govuk-grid-column-one-quarter govuk-!-padding-top-9 govuk-!-padding-bottom-1">
+                        </div>
+                        
+                        <div class="govuk-grid-row govuk-!-padding-left-3">
+                            <div class="govuk-grid-column-full">
+                                <span class="govuk-label--s">
+                                    Filter by
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                            <div class="govuk-grid-column-one-quarter-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientStatusFiltersViewModel")
+                            </div>
+                            <div class="govuk-grid-column-three-quarters-from-desktop govuk-!-padding-top-6">
                                 @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                                                              new ViewDataDictionary() { new KeyValuePair<string, object>("tab",
-                                                        ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString()) })
+                                    new ViewDataDictionary() { new KeyValuePair<string, object>("tab",
+                                        ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString()) })
                             </div>
                         </div>
                     </div>
@@ -103,7 +109,7 @@
                 <br />
                 @{
                     Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+                                                            { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
                          manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
                          manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
                          Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null} } });
