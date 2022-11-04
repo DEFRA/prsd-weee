@@ -18,7 +18,7 @@
 
         [Theory]
         [InlineData("SelectedYear", "Select a compliance year")]
-        [InlineData("SelectedTonnageToDisplay", "Select whether you want to view the original tonnages or net of transfers")]
+        [InlineData("SelectedTonnageToDisplay", "Select whether you want to download the original tonnages or net of transfers")]
         public void EvidenceReportViewModel_PropertiesShouldHaveRequiredAttribute(string property, string message)
         {
             typeof(EvidenceReportViewModel).GetProperty(property).Should()
