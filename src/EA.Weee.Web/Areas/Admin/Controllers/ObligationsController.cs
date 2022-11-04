@@ -160,7 +160,7 @@
                 var schemeData = new List<SchemeData>();
 
                 var complianceYears =
-                    await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(null, false));
+                    await client.SendAsync(User.GetAccessToken(), new GetObligationComplianceYears(null, true));
 
                 var complianceYear = selectedComplianceYear ?? (complianceYears.Any() ? complianceYears.ElementAt(0) : (int?)null);
 
