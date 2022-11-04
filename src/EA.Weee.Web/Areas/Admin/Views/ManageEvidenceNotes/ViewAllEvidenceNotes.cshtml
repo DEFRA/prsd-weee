@@ -120,3 +120,17 @@
         </div>
     </div>
 }
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var autocompletes = document.getElementsByClassName('autocomplete__wrapper');
+            autocompletes[0].style.zIndex = 10;
+            autocompletes[1].style.zIndex = 9;
+
+            var calendar = document.getElementById("ui-datepicker-div");
+            calendar.style['z-index'] = 11;
+        });
+
+    </script>
+}
