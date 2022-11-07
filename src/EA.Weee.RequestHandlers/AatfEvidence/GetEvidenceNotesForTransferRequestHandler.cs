@@ -53,7 +53,8 @@
                 var evidenceNoteData = mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(new EvidenceNoteRowCriteriaMapper(note)
                 {
                     CategoryFilter = request.Categories,
-                    IncludeTotal = true
+                    IncludeTotal = true,
+                    TransferNoteId = request.TransferNoteId
                 });
 
                 mappedNotes.Add(evidenceNoteData);
