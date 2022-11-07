@@ -22,13 +22,16 @@
 
         public string SearchReference { get; private set; }
 
+        public Guid? TransferNoteId { get; private set; }
+
         public GetEvidenceNotesForTransferRequest(Guid organisationId, 
             List<int> categories, 
             int complianceYear,
             List<Guid> excludeEvidenceNotes,
             string searchReference = null,
             int pageNumber = 1,
-            int pageSize = 10)
+            int pageSize = 10,
+            Guid? transferNoteId = null)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(categories).IsNotEmpty();
@@ -40,6 +43,7 @@
             SearchReference = searchReference;
             PageNumber = pageNumber;
             PageSize = pageSize;
+            TransferNoteId = transferNoteId;
         }
     }
 }
