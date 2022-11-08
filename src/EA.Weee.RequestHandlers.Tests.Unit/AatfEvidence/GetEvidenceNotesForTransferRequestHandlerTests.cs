@@ -47,7 +47,8 @@
                 TestFixture.CreateMany<Guid>().ToList(),
                 TestFixture.Create<string>(),
                 TestFixture.Create<int>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(), 
+                TestFixture.Create<Guid>());
 
             handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, organisationDataAccess);
         }
@@ -204,6 +205,36 @@
                 .That.Matches(e => e.Note.Equals(note3) &&
                                    e.CategoryFilter.SequenceEqual(request.Categories) &&
                                    e.IncludeTotal == true))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenTransferNoteId_ReturnedNotesDataShouldBeMapped()
+        {
+            // arrange
+            var noteList = TestFixture.CreateMany<Note>(2).ToList();
+
+            var noteData = new List<EvidenceNoteData>()
+            {
+                A.Fake<EvidenceNoteData>(),
+                A.Fake<EvidenceNoteData>()
+            };
+
+            var evidenceNoteResults = new EvidenceNoteResults(noteList, 2);
+
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._,
+                A<List<int>>._,
+                A<List<Guid>>._,
+                A<int>._,
+                A<string>._,
+                A<int>._,
+                A<int>._)).Returns(evidenceNoteResults);
+
+            // act
+            var result = await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>
+            .That.Matches(e => e.TransferNoteId.Equals(request.TransferNoteId)))).MustHaveHappened(noteList.Count, Times.Exactly);
         }
 
         [Fact]
