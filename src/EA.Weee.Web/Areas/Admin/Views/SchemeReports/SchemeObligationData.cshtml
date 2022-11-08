@@ -1,7 +1,7 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.SchemeReports.SchemeObligationDataViewModel
 @{
-    ViewBag.Title = "Download PCS EEE obligation data";
+    ViewBag.Title = "Download PCS obligation EEE data";
 }
 
 @section main_content
@@ -29,7 +29,7 @@
         </p>
 
         @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-           "Report download", "PCS EEE obligation data", new Dictionary<string, object> { { "class", "button" } }))
+           "Report download", "PCS obligation EEE data", new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
