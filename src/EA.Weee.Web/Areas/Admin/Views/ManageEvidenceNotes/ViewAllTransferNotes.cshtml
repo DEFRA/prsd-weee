@@ -1,5 +1,8 @@
-﻿@using EA.Weee.Core.Helpers
+﻿@using System.IdentityModel.Protocols.WSTrust
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Shared
 @using EA.Weee.Web.RazorHelpers
+@using iText.StyledXmlParser.Jsoup.Select
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllTransferNotesViewModel
 
 
@@ -23,7 +26,9 @@
                         @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-view-add-transfers" })
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
-                        Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model);
+                        Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model,
+                            new ViewDataDictionary() { new KeyValuePair<string, object>("tab",
+                                ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString()) });
                     }
 
                     <table id="all-transfer-notes-table" class="govuk-table">
