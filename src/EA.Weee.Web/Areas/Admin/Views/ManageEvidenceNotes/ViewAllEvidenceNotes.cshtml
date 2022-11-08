@@ -36,26 +36,26 @@
                         <table id="all-evidence-notes-table" class="govuk-table">
                             <caption class="govuk-table__caption govuk-visually-hidden">All evidence notes</caption>
                             <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="col" style="width: 15%;">
-                                    Reference ID
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="width: 12%;">
-                                    Submitted date
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="width: 29%;">
-                                    Submitted by
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="width: 29%;">
-                                    Recipient
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="width: 10%;">
-                                    Status
-                                </th>
-                                <th class="govuk-table__header" scope="col" style="width: 5%;">
-                                    @Html.Gds().VisuallyHidden("actions")
-                                </th>
-                            </tr>
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col" style="width: 15%;">
+                                        Reference ID
+                                    </th>
+                                    <th class="govuk-table__header" scope="col" style="width: 12%;">
+                                        Submitted date
+                                    </th>
+                                    <th class="govuk-table__header" scope="col" style="width: 29%;">
+                                        Submitted by
+                                    </th>
+                                    <th class="govuk-table__header" scope="col" style="width: 29%;">
+                                        Recipient
+                                    </th>
+                                    <th class="govuk-table__header" scope="col" style="width: 10%;">
+                                        Status
+                                    </th>
+                                    <th class="govuk-table__header" scope="col" style="width: 5%;">
+                                        @Html.Gds().VisuallyHidden("actions")
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody class="govuk-table__body">
                                 @if (Model.EvidenceNotesDataList.Any())
@@ -97,10 +97,10 @@
                             </tbody>
                         </table>
                     </div>
-                    <br/>
+                    <br />
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                        {
+                                        {
                             {
                                 "pagerRouteValues", new
                                 {
@@ -125,3 +125,11 @@
         </div>
     </div>
 }
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setAAAutoCompleteZIndex();
+        });
+    </script>
+}
+@{ Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_mobileCss.cshtml"); }

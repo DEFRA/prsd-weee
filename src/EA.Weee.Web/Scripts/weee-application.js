@@ -300,6 +300,12 @@ function selectAllTransferNoteJourney() {
     setDefaultAsChecked();
 };
 
+function setAAAutoCompleteZIndex() {
+    var autoCompletes = document.getElementsByClassName('autocomplete__wrapper');
+    autoCompletes[0].style.zIndex = 10;
+    autoCompletes[1].style.zIndex = 9;
+}
+
 $(".transfer-choose-notes-submit").closest('form').on('submit', function (event) {
     event.preventDefault();
     $(".transfer-choose-notes-submit").prop("disabled", true);
