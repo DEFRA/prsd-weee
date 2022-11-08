@@ -52,7 +52,7 @@
                                 <div class="govuk-grid-column-full govuk-grid-column-three-quarters-from-desktop weee-evidence-padding-right">
                                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientWasteStatusFilterViewModel")
                                 </div>
-                                <div class="govuk-grid-column-full govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
+                                <div class="govuk-grid-column-full govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6 weee-filter-button-padding">
                                     @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
                                         new ViewDataDictionary() { new KeyValuePair<string, object>("tab", ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString()) })
                                 </div>
