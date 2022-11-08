@@ -2,7 +2,7 @@
 
 @model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
-<div class="govuk-grid-column-one-half" style="z-index: 998;">
+<div class="govuk-grid-column-one-half">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
         @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-<div class="govuk-grid-column-one-half" style="z-index:999;">
+<div class="govuk-grid-column-one-half">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.EndDate)">
         @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.EndDate)

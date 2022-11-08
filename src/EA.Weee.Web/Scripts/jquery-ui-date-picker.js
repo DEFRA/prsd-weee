@@ -7,7 +7,10 @@
             showButtonPanel: true,
             closeText: "Close",
             onClose: removeAria,
-            dateFormat: "dd/mm/yy"
+            dateFormat: "dd/mm/yy",
+            beforeShow: function (elem, dp) {
+                dp.dpDiv.addClass("weee-override-z-index");
+            }
         }).next("button").button({
             icons: {
                 primary: ""
@@ -23,7 +26,7 @@
                 .attr("aria-describedby", $(this)
                     .prev("label").attr("id"));
         })
-    
+
         dayTripper();
 
         $("#ui-datepicker-div").detach().appendTo("main");

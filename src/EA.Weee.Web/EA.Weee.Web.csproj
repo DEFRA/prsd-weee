@@ -898,6 +898,7 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_internalFiltersPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_mobileCss.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
     <Content Include="Content\govuk_frontend\all.js" />
