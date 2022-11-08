@@ -77,8 +77,9 @@
 
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell govuk-!-padding-left-0 govuk-!-padding-right-0">
-
-                                @category.CategoryId. @category.CategoryDisplay
+                                <div class="category">
+                                    <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                                </div>
 
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryId)
                                 @Html.HiddenFor(m => Model.TransferCategoryValues[elementCount].CategoryDisplay)
