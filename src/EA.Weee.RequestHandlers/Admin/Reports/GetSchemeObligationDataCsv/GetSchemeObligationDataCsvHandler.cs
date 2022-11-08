@@ -38,7 +38,7 @@
 
             string fileContent = csvWriter.Write(items);
 
-            string fileName = string.Format("{0}_pcseeeobligationdata_{1:ddMMyyyy_HHmm}.csv",
+            string fileName = string.Format("{0}_pcsobligationeeedata_{1:ddMMyyyy_HHmm}.csv",
                     request.ComplianceYear,
                     SystemTime.UtcNow);
 
