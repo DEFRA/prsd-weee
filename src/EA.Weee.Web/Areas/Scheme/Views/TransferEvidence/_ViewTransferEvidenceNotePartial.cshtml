@@ -218,6 +218,10 @@ else
     <hr class="govuk-!-padding-top-5 govuk-section-break govuk-section-break--l govuk-section-break--visible">
 }
 
+@if (Model.IsPrintable)
+{
+    <p><br/></p>
+}
 <div class="govuk-table govuk-!-margin-bottom-0 govuk-!-padding-top-5">
     <div class="govuk-grid-column-one-half govuk-!-margin-left-0 govuk-!-padding-left-0 govuk-!-margin-bottom-0">
         <h2 class="govuk-heading-m govuk-!-padding-left-0 govuk-!-margin-left-0" style="text-align: left;">Breakdown of evidence transferred</h2>
