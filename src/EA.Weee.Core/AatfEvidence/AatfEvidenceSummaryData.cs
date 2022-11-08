@@ -13,19 +13,19 @@
 
         public int NumberOfSubmittedNotes { get; protected set; }
 
-        public int NumberOfApprovedNotes { get; protected set; }
+        public int NumberOfReturnedNotes { get; protected set; }
 
         public AatfEvidenceSummaryData(List<EvidenceSummaryTonnageData> evidenceCategoryTotals,
             int numberOfDraftNotes,
             int numberOfSubmittedNotes,
-            int numberOfApprovedNotes)
+            int numberOfReturnedNotes)
         {
             Condition.Requires(evidenceCategoryTotals).IsNotNull();
 
             EvidenceCategoryTotals = evidenceCategoryTotals;
             NumberOfDraftNotes = numberOfDraftNotes;
             NumberOfSubmittedNotes = numberOfSubmittedNotes;
-            NumberOfApprovedNotes = numberOfApprovedNotes;
+            NumberOfReturnedNotes = numberOfReturnedNotes;
         }
     }
 }
