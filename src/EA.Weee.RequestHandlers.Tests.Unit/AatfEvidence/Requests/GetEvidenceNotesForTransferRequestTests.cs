@@ -72,5 +72,18 @@
             request.OrganisationId.Should().Be(organisationId);
             request.ExcludeEvidenceNotes.Should().BeEquivalentTo(excludedNotes);
         }
+
+        [Fact]
+        public void GetEvidenceNotesForTransferRequest_GivenTransferNoteId_PropertiesShouldBeSet()
+        {
+            var organisationId = Guid.NewGuid();
+            var categories = new List<int>() { WeeeCategory.ConsumerEquipment.ToInt() };
+            var complianceYear = TestFixture.Create<int>();
+            var transferNoteId = TestFixture.Create<Guid>();
+
+            var request = new GetEvidenceNotesForTransferRequest(organisationId, categories, complianceYear, null, null, transferNoteId: transferNoteId);
+
+            request.TransferNoteId.Should().Be(transferNoteId);
+        }
     }
 }
