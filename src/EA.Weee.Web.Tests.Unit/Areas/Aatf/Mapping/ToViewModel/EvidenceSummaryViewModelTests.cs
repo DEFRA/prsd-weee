@@ -10,7 +10,6 @@
     using FakeItEasy;
     using FluentAssertions;
     using Web.Areas.Aatf.Mappings.ToViewModel;
-    using Web.Areas.Aatf.ViewModels;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Xunit;
 
@@ -50,7 +49,7 @@
             var model = mapper.Map(source);
 
             //assert
-            model.NumberOfApprovedNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfApprovedNotes.ToString());
+            model.NumberOfReturnedNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfReturnedNotes.ToString());
             model.NumberOfSubmittedNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfSubmittedNotes.ToString());
             model.NumberOfDraftNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfDraftNotes.ToString());
             model.ManageEvidenceNoteViewModel.OrganisationId.Should().Be(source.OrganisationId);
@@ -90,7 +89,7 @@
             var model = mapper.Map(source);
 
             //assert
-            model.NumberOfApprovedNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfApprovedNotes.ToString());
+            model.NumberOfReturnedNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfReturnedNotes.ToString());
             model.NumberOfSubmittedNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfSubmittedNotes.ToString());
             model.NumberOfDraftNotes.Should().Be(source.AatfEvidenceSummaryData.NumberOfDraftNotes.ToString());
             model.TotalReceivedEvidence.Should().Be("4");
