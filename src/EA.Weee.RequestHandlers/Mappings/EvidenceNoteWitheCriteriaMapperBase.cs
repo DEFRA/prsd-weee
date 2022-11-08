@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using System;
     using System.Collections.Generic;
     using Domain.Evidence;
 
@@ -8,6 +9,8 @@
         public List<int> CategoryFilter { get; set; }
 
         public bool IncludeTotal { get; set; }
+        
+        public Guid? TransferNoteId { get; set; }
 
         public Note Note { get; private set; }
 

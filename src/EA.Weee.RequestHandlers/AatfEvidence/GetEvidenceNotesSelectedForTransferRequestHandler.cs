@@ -48,7 +48,8 @@
                 {
                     CategoryFilter = request.Categories,
                     IncludeTonnage = true,
-                    IncludeTotal = true
+                    IncludeTotal = true,
+                    TransferNoteId = request.TransferNoteId
                 });
 
                 mappedNotes.Add(evidenceNoteData);

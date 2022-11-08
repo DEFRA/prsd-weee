@@ -1581,6 +1581,30 @@
         }
 
         [Fact]
+        public async Task EditTransferFromGet_GivenTransferNoteId_TransferNotesShouldNotBeRetrieved()
+        {
+            //arrange
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, new List<Guid>())
+                .Create();
+
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+        
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidenceNoteData);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(request);
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(organisationId, TestFixture.Create<Guid>());
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(
+                   g => g.TransferNoteId == transferEvidenceNoteData.Id)))
+               .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task EditTransferFromGet_TransferRequestShouldBeRetrievedFromSession()
         {
             //act
@@ -1940,6 +1964,32 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                 A<GetTransferEvidenceNoteForSchemeRequest>.That.Matches(r =>
                     r.EvidenceNoteId == model.ViewTransferNoteViewModel.EvidenceNoteId))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditTransferFromPost_GivenTransferNoteId_ShouldRetrieveTransferNote()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+           
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidenceNoteData);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await outgoingTransferEvidenceController.EditTransferFrom(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
+                g.TransferNoteId == transferEvidenceNoteData.Id))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -3543,6 +3593,32 @@
                 g.Categories.SequenceEqual(request.CategoryIds) &&
                 g.OrganisationId == model.PcsId &&
                 g.EvidenceNotes.SequenceEqual(evidenceNoteIds.Union(transferEvidenceNoteData.CurrentEvidenceNoteIds))))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SelectEvidenceNotePost_GivenTransferNoteId_SelectedTransferNotesShouldBeRetrieved()
+        {
+            //arrange
+            var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
+            var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
+         
+            var request = TestFixture.Build<TransferEvidenceNoteRequest>()
+                .With(t => t.EvidenceNoteIds, evidenceNoteIds)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
+                .Returns(transferEvidenceNoteData);
+
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(request);
+
+            AddModelError();
+
+            //act
+            await outgoingTransferEvidenceController.SelectEvidenceNote(model);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(g =>
+                g.TransferNoteId == transferEvidenceNoteData.Id))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
