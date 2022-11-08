@@ -203,5 +203,29 @@
             result.Results.ElementAt(1).Should().Be(noteData.ElementAt(1));
             result.NoteCount.Should().Be(2);
         }
+
+        [Fact]
+        public async void HandleAsync_GivenTransferNoteId_ReturnedNotesDataShouldBeMapped()
+        {
+            // arrange
+            var noteList = TestFixture.CreateMany<Note>(2).ToList();
+
+            var noteData = new List<EvidenceNoteData>()
+            {
+                A.Fake<EvidenceNoteData>(),
+                A.Fake<EvidenceNoteData>()
+            };
+
+            var evidenceNoteResults = new EvidenceNoteResults(noteList, 2);
+
+            A.CallTo(() => evidenceDataAccess.GetTransferSelectedNotes(A<Guid>._, A<List<Guid>>._, A<List<int>>._)).Returns(evidenceNoteResults);
+
+            // act
+            var result = await handler.HandleAsync(request);
+
+            // assert
+            A.CallTo(() => mapper.Map<EvidenceNoteWithCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteWithCriteriaMapper>
+            .That.Matches(e => e.TransferNoteId.Equals(request.TransferNoteId)))).MustHaveHappened(noteList.Count, Times.Exactly);
+        }
     }
 }
