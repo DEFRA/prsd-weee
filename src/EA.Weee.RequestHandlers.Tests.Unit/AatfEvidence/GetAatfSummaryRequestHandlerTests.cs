@@ -4,7 +4,6 @@
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
     using DataAccess.StoredProcedure;
-    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.RequestHandlers.AatfEvidence;
     using EA.Weee.RequestHandlers.Security;
@@ -116,13 +115,13 @@
         }
 
         [Fact]
-        public async Task HandleAsync_GivenRequest_ApprovedNoteTotalsShouldBeRetrieved()
+        public async Task HandleAsync_GivenRequest_ReturnedNoteTotalsShouldBeRetrieved()
         {
             //act
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Approved, request.AatfId, request.ComplianceYear))
+            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(NoteStatus.Returned, request.AatfId, request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -169,7 +168,7 @@
         {
             //arrange
             var tonnageData = fixture.CreateMany<EvidenceSummaryTonnageData>().ToList();
-            var approvedNotes = fixture.Create<int>();
+            var returnedNotes = fixture.Create<int>();
             var submittedNotes = fixture.Create<int>();
             var draftNotes = fixture.Create<int>();
 
@@ -177,14 +176,14 @@
                 mapper.Map<List<AatfEvidenceSummaryTotalsData>, List<EvidenceSummaryTonnageData>>(
                     A<List<AatfEvidenceSummaryTotalsData>>._)).Returns(tonnageData);
 
-            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(A<NoteStatus>._, A<Guid>._, A<int>._)).ReturnsNextFromSequence(approvedNotes, submittedNotes, draftNotes);
+            A.CallTo(() => noteDataAccess.GetNoteCountByStatusAndAatf(A<NoteStatus>._, A<Guid>._, A<int>._)).ReturnsNextFromSequence(submittedNotes, draftNotes, returnedNotes);
 
             //act
             var result = await handler.HandleAsync(request);
 
             //assert
             result.EvidenceCategoryTotals.Should().BeEquivalentTo(tonnageData);
-            result.NumberOfApprovedNotes.Should().Be(approvedNotes);
+            result.NumberOfReturnedNotes.Should().Be(returnedNotes);
             result.NumberOfSubmittedNotes.Should().Be(submittedNotes);
             result.NumberOfDraftNotes.Should().Be(draftNotes);
         }
