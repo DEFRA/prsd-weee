@@ -49,8 +49,8 @@
             model.TotalReceivedEvidence = totalCalculator.Total(model.CategoryValues.Select(t => t.Received).ToList());
             model.TotalReuseEvidence = totalCalculator.Total(model.CategoryValues.Select(t => t.Reused).ToList());
             model.NumberOfSubmittedNotes = source.AatfEvidenceSummaryData.NumberOfSubmittedNotes.ToString();
-            model.NumberOfApprovedNotes = source.AatfEvidenceSummaryData.NumberOfApprovedNotes.ToString();
             model.NumberOfDraftNotes = source.AatfEvidenceSummaryData.NumberOfDraftNotes.ToString();
+            model.NumberOfReturnedNotes = source.AatfEvidenceSummaryData.NumberOfReturnedNotes.ToString();
 
             return model;
         }
