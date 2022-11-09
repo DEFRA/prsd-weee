@@ -78,18 +78,29 @@ WHERE
 							OR s.Id IN (SELECT 
 											p.Id
 										FROM [Evidence].Note n
-											INNER JOIN [Organisation].Organisation o ON o.Id = n.RecipientId
-											INNER JOIN [PCS].Scheme p ON p.OrganisationId = o.Id
+											INNER JOIN [Organisation].Organisation o WITH (NOLOCK) ON o.Id = n.RecipientId
+											INNER JOIN [PCS].Scheme p WITH (NOLOCK) ON p.OrganisationId = o.Id
 										WHERE 
 											n.ComplianceYear = @ComplianceYear
+											AND n.NoteType = 1
 										)
 							OR s.Id IN (SELECT 
 											p.Id
 										FROM [Evidence].Note n
-											INNER JOIN [Organisation].Organisation o ON o.Id = n.OrganisationId
-											INNER JOIN [PCS].Scheme p ON p.OrganisationId = o.Id
+											INNER JOIN [Organisation].Organisation o WITH (NOLOCK) ON o.Id = n.OrganisationId
+											INNER JOIN [PCS].Scheme p WITH (NOLOCK) ON p.OrganisationId = o.Id
 										WHERE 
 											n.ComplianceYear = @ComplianceYear
+											AND n.NoteType = 2
+											)
+							OR s.Id IN (SELECT 
+											p.Id
+										FROM [Evidence].Note n
+											INNER JOIN [Organisation].Organisation o WITH (NOLOCK) ON o.Id = n.RecipientId
+											INNER JOIN [PCS].Scheme p WITH (NOLOCK) ON p.OrganisationId = o.Id
+										WHERE 
+											n.ComplianceYear = @ComplianceYear
+											AND n.NoteType = 2
 											)
 						))
 	AND (s.CompetentAuthorityId = @AppropriateAuthorityId OR @AppropriateAuthorityId IS NULL)
