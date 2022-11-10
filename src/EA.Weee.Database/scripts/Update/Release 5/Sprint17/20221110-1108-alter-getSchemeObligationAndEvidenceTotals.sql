@@ -252,7 +252,7 @@ SELECT
 	CategoryId,
 	CategoryName,
 	NULL AS SchemeId,
-	'All PCS''s' AS SchemeName,
+	'All producer compliance schemes' AS SchemeName,
 	'' AS ApprovalNumber,
 	SUM(COALESCE(Obligation, 0)) AS Obligation,
 	SUM(COALESCE(EvidenceReceivedInTotal, 0) + (COALESCE(TransferEvidenceReceivedIn, 0) - COALESCE(TransferEvidenceReceivedOut, 0))) AS Evidence,
@@ -291,7 +291,7 @@ FROM
 
 ) x
 ORDER BY
-	CASE SchemeName WHEN 'All PCS''s' THEN 0 ELSE 1 END,
+	CASE SchemeName WHEN 'All producer compliance schemes' THEN 0 ELSE 1 END,
 	SchemeName,
 	CategoryId
 
