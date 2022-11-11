@@ -1249,6 +1249,18 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .Create();
 
+                //a scheme that has no notes but an aatf with notes should not be included
+                var organisationWithAatfAndScheme = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id)
+                    .WithSchemeName("DO NOT INCLUDE")
+                    .Create();
+
+                var aatf = AatfDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithAatf(aatf.Id)
+                    .WithRecipient(anotherRecipientOrganisation.Id)
+                    .WithComplianceYear(2022).Create();
+                
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, null, 2022);
             };
 
@@ -1341,7 +1353,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Category 2-10 summary,0.000,9.000,9.000,0.000,0.000,9.000,,
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Total (tonnes),0.000,14.000,14.000,0.000,0.000,14.000,0.000,0.000
 ");
-
+                result.FileContent.Should().NotContain("DO NOT INCLUDE");
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
@@ -1814,6 +1826,18 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .Create();
 
+                //a scheme that has no notes but an aatf with notes should not be included
+                var organisationWithAatfAndScheme = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id)
+                    .WithSchemeName("DO NOT INCLUDE")
+                    .Create();
+
+                var aatf = AatfDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithAatf(aatf.Id)
+                    .WithRecipient(anotherRecipientOrganisation.Id)
+                    .WithComplianceYear(2022).Create();
+
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, eaAuthority.Id, null, 2022);
             };
 
@@ -1891,6 +1915,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
 ");
 
+                result.FileContent.Should().NotContain("DO NOT INCLUDE");
                 result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
