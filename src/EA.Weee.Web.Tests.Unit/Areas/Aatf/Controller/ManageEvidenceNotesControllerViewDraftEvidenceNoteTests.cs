@@ -90,7 +90,9 @@
                 v => v.EvidenceNoteData.Equals(data) &&
                      v.NoteStatus == null &&
                      v.PrintableVersion == false &&
-                     v.User == null))).MustHaveHappenedOnceExactly();
+                     v.User == null &&
+                     v.ReturnToView == false &&
+                     v.QueryString == null))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -111,7 +113,9 @@
                 v => v.EvidenceNoteData.Equals(data) &&
                      v.NoteStatus.Equals(status) &&
                      v.PrintableVersion == false &&
-                     v.User == null))).MustHaveHappenedOnceExactly();
+                     v.User == null &&
+                     v.ReturnToView == false &&
+                     v.QueryString == null))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
