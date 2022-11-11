@@ -251,6 +251,7 @@
     <Compile Include="Admin\Obligations\SchemeObligationsDataProcessorTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationTests.cs" />
+    <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidenceByComplianceYearHandlerTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
