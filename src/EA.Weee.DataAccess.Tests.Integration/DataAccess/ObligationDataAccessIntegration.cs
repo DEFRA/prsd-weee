@@ -918,7 +918,7 @@
         }
 
         [Fact]
-        public async Task GetSchemesWithObligations_ShouldReturnSchemes()
+        public async Task GetSchemesWithObligationOrEvidence_ShouldReturnSchemes()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -928,22 +928,32 @@
 
                 var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+                var authority = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-                var authority1 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var authority2 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.NorthernIreland);
+                var obligatedUpload = new ObligationUpload(authority, context.GetCurrentUser(), "data", "filename");
 
-                var obligatedUpload = new ObligationUpload(authority1, context.GetCurrentUser(), "data", "filename");
+                var defaultOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation3 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation4 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation5 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation6 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation7 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation8 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation9 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
-                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                // scheme should be included as has obligation in compliance year
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority.Id, scheme1);
 
-                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority1.Id, scheme1);
+                // scheme should be included as has obligation in compliance year
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation2);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority.Id, scheme2);
 
-                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority2.Id, scheme2);
-
-                var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority2.Id, scheme3);
+                // scheme should not be returned as incorrect compliance year
+                var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation3);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority.Id, scheme3);
 
                 var obligationScheme12020 = new ObligationScheme(scheme1, 2022);
                 var obligationScheme22020 = new ObligationScheme(scheme2, 2022);
@@ -957,12 +967,62 @@
 
                 await context.SaveChangesAsync();
 
-                var results = await dataAccess.GetSchemesWithObligations(2022);
+                // scheme should be returned as note will be created in compliance year 
+                var scheme4 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation4);
+                // scheme should not be returned as note will be created in an incorrect compliance year
+                var scheme5 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation5);
+                // scheme should be returned as recipient of transfer note in compliance year
+                var scheme6 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation6);
+                // scheme should not be returned as recipient of transfer note in incorrect compliance year
+                var scheme7 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation7);
+                // scheme should be returned as originator of transfer note in compliance year
+                var scheme8 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation8);
+                // scheme should not be returned as originator of transfer note in incorrect compliance year
+                var scheme9 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation9);
+
+                context.Schemes.Add(scheme4);
+                context.Schemes.Add(scheme5);
+                context.Schemes.Add(scheme6);
+                context.Schemes.Add(scheme7);
+                context.Schemes.Add(scheme8);
+                context.Schemes.Add(scheme9);
+
+                await context.SaveChangesAsync();
+
+                var note1 = NoteCommon.CreateNote(database, defaultOrganisation, organisation1, 
+                    complianceYear: 2022);
+                var note2 = NoteCommon.CreateNote(database, defaultOrganisation, organisation4, 
+                    complianceYear: 2022);
+                var note3 = NoteCommon.CreateNote(database, defaultOrganisation, organisation5, 
+                    complianceYear: 2023);
+                var note4 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation6, complianceYear: 2022);
+                var note5 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation7, complianceYear: 2023);
+                var note6 = NoteCommon.CreateTransferNote(database, organisation8, organisation2, complianceYear: 2022);
+                var note7 = NoteCommon.CreateTransferNote(database, organisation9, organisation2, complianceYear: 2023);
+
+                context.Notes.Add(note1);
+                context.Notes.Add(note2);
+                context.Notes.Add(note3);
+                context.Notes.Add(note4);
+                context.Notes.Add(note5);
+                context.Notes.Add(note6);
+                context.Notes.Add(note7);
+
+                await context.SaveChangesAsync();
+
+                var results = await dataAccess.GetSchemesWithObligationOrEvidence(2022);
 
                 results.Should().OnlyHaveUniqueItems();
                 results.Should().Contain(scheme1);
                 results.Should().Contain(scheme2);
+                results.Should().Contain(scheme4);
+                results.Should().Contain(scheme6);
+                results.Should().Contain(scheme8);
                 results.Should().NotContain(scheme3);
+                results.Should().NotContain(scheme5);
+                results.Should().NotContain(scheme7);
+                results.Should().NotContain(scheme9);
+                results.Should().BeInAscendingOrder(r => r.SchemeName);
             }
         }
     }
