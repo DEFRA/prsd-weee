@@ -11,9 +11,11 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Domain.Scheme;
     using Xunit;
 
@@ -30,7 +32,7 @@
             noteDataAccess = A.Fake<IEvidenceDataAccess>();
 
             request = new GetSchemeDataForFilterRequest(TestFixture.Create<RecipientOrTransfer>(), TestFixture.Create<Guid?>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(), TestFixture.CreateMany<NoteStatus>().ToList());
 
             handler = new GetSchemeDataForFilterRequestHandler(weeeAuthorization, noteDataAccess);
         }
@@ -79,7 +81,10 @@
         public async Task HandleAsync_GivenRequestWithNoOrganisationId_ShouldCheckInternalAccess()
         {
             //arrange
-            var request = new GetSchemeDataForFilterRequest(TestFixture.Create<RecipientOrTransfer>(), null, TestFixture.Create<int>());
+            var request = new GetSchemeDataForFilterRequest(TestFixture.Create<RecipientOrTransfer>(), 
+                null, 
+                TestFixture.Create<int>(),
+                TestFixture.CreateMany<NoteStatus>().ToList());
 
             //act
 
@@ -104,28 +109,35 @@
         {
             //arrange
             var request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, TestFixture.Create<Guid?>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(),
+                TestFixture.CreateMany<NoteStatus>().ToList());
 
             // act
             await handler.HandleAsync(request);
 
             // assert
             A.CallTo(() => noteDataAccess.GetRecipientOrganisations(request.AatfId,
-                request.ComplianceYear)).MustHaveHappenedOnceExactly();
+                request.ComplianceYear, 
+                A<List<Domain.Evidence.NoteStatus>>.That.IsSameSequenceAs(
+                    request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async void HandleAsync_GivenRequestWithTransfer_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            var request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, TestFixture.Create<Guid?>(),
-                TestFixture.Create<int>());
+            var request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, 
+                TestFixture.Create<Guid?>(),
+                TestFixture.Create<int>(),
+                TestFixture.CreateMany<NoteStatus>().ToList());
 
             // act
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => noteDataAccess.GetTransferOrganisations(request.ComplianceYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => noteDataAccess.GetTransferOrganisations(request.ComplianceYear,
+                A<List<Domain.Evidence.NoteStatus>>.That.IsSameSequenceAs(
+                    request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList()))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -150,11 +162,13 @@
             A.CallTo(() => scheme2.SchemeName).Returns(TestFixture.Create<string>());
             A.CallTo(() => organisation2WithScheme.Schemes).Returns(new List<Scheme>() { scheme2 });
 
-            A.CallTo(() => noteDataAccess.GetRecipientOrganisations(A<Guid>._, A<int>._))
+            A.CallTo(() => noteDataAccess.GetRecipientOrganisations(A<Guid>._, 
+                    A<int>._, 
+                    A<List<Domain.Evidence.NoteStatus>>._))
                 .Returns(new List<Organisation>() { organisation1WithScheme, organisationPbs, organisation2WithScheme });
 
             var request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, TestFixture.Create<Guid?>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(), TestFixture.CreateMany<NoteStatus>().ToList());
 
             // act
             var result = await handler.HandleAsync(request);
@@ -192,11 +206,11 @@
             A.CallTo(() => scheme2.SchemeName).Returns(TestFixture.Create<string>());
             A.CallTo(() => organisation2WithScheme.Schemes).Returns(new List<Scheme>() { scheme2 });
 
-            A.CallTo(() => noteDataAccess.GetTransferOrganisations(A<int>._))
+            A.CallTo(() => noteDataAccess.GetTransferOrganisations(A<int>._, A<List<Domain.Evidence.NoteStatus>>._))
                 .Returns(new List<Organisation>() { organisation1WithScheme, organisationPbs, organisation2WithScheme });
 
             var request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, TestFixture.Create<Guid?>(),
-                TestFixture.Create<int>());
+                TestFixture.Create<int>(), TestFixture.CreateMany<NoteStatus>().ToList());
 
             // act
             var result = await handler.HandleAsync(request);

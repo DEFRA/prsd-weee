@@ -270,10 +270,7 @@
 
                 note = EvidenceNoteDbSetup.Init()
                     .WithRecipient(recipientOrganisation.Id)
-                    .With(n =>
-                    {
-                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), DateTime.UtcNow);
-                    })
+                    .WithStatus(NoteStatus.Submitted, UserId.ToString())
                     .Create();
 
                 request = new SetNoteStatusRequest(note.Id, Core.AatfEvidence.NoteStatus.Rejected, "reason returned");

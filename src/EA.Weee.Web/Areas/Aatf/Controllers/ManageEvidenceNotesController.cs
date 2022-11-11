@@ -382,9 +382,11 @@
         {
             EvidenceNoteSearchDataResult resultAllNotes = new EvidenceNoteSearchDataResult();
 
+            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
+
             if (ModelState.IsValid)
             {
-               resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected },
+               resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, allowedStatus,
                manageEvidenceViewModel?.FilterViewModel.SearchRef,
                selectedComplianceYear,
                manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
@@ -400,7 +402,7 @@
                 new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             var schemeData = await client.SendAsync(User.GetAccessToken(),
-                new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, aatfId, selectedComplianceYear));
+                new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, aatfId, selectedComplianceYear, allowedStatus));
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 

@@ -689,7 +689,10 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == currentDate.Year &&
                      g.AatfId == AatfId &&
-                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                     g.AllowedStatuses.SequenceEqual(
+                         new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected }))))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -705,7 +708,10 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == existingManageEvidenceNoteViewModel.SelectedComplianceYear &&
                      g.AatfId == AatfId &&
-                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                     g.AllowedStatuses.SequenceEqual(
+                         new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected }))))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Theory]

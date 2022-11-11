@@ -7,9 +7,7 @@
     using Autofac;
     using Base;
     using Builders;
-    using Core.Helpers;
     using Core.Scheme;
-    using Domain.Organisation;
     using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
