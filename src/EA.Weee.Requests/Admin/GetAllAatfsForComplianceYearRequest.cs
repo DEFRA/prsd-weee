@@ -2,17 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
+    using AatfEvidence;
+    using Core.AatfEvidence;
     using EA.Weee.Core.Shared;
     using Prsd.Core.Mediator;
 
     [Serializable]
-    public class GetAllAatfsForComplianceYearRequest : IRequest<List<EntityIdDisplayNameData>>
+    public class GetAllAatfsForComplianceYearRequest : EvidenceEntityIdDisplayNameDataBase
     {
-        public int ComplianceYear { get; private set; }
+        private static readonly List<NoteStatus> AllowedStatusList = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
 
-        public GetAllAatfsForComplianceYearRequest(int complianceYear)
+        public GetAllAatfsForComplianceYearRequest(int complianceYear) : base(complianceYear, AllowedStatusList)
         {
-            ComplianceYear = complianceYear;
         }
     }
 }
