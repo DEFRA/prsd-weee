@@ -1377,6 +1377,58 @@
         }
 
         [Fact]
+        public async Task GetAllNotes_GivenTransferOrganisation_ShouldMatchOnOrganisationId()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, A.Fake<IUserContext>(), new GenericDataAccess(database.WeeeContext));
+
+                var currentComplianceYear = SystemTime.Now.Year;
+
+                var transferOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var transferScheme1  = ObligatedWeeeIntegrationCommon.CreateScheme(transferOrganisation1);
+
+                var transferOrganisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var transferScheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(transferOrganisation2);
+
+                context.Schemes.Add(transferScheme1);
+                context.Schemes.Add(transferScheme2);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var note1ToBeIncluded = NoteCommon.CreateTransferNote(database, transferOrganisation1, complianceYear: currentComplianceYear);
+                var note2ToBeIncluded = NoteCommon.CreateTransferNote(database, transferOrganisation1, complianceYear: currentComplianceYear);
+                var note3ToNotBeIncluded = NoteCommon.CreateTransferNote(database, transferOrganisation2, complianceYear: currentComplianceYear);
+                var note4ToBeIncluded = NoteCommon.CreateNote(database, transferOrganisation1, complianceYear: currentComplianceYear);
+
+                context.Notes.Add(note1ToBeIncluded);
+                context.Notes.Add(note2ToBeIncluded);
+                context.Notes.Add(note3ToNotBeIncluded);
+                context.Notes.Add(note4ToBeIncluded);
+
+                await database.WeeeContext.SaveChangesAsync();
+
+                var filter = new NoteFilter(currentComplianceYear, int.MaxValue, 1)
+                {
+                    AllowedStatuses = new List<NoteStatus>(),
+                    NoteTypeFilter = new List<NoteType>(),
+                    OrganisationId = transferOrganisation1.Id
+                };
+
+                var notes = await dataAccess.GetAllNotes(filter);
+
+                notes.NumberOfResults.Should().Be(3);
+                notes.Notes.Count.Should().Be(3);
+                notes.Notes.Should().Contain(e => e.Id == note1ToBeIncluded.Id);
+                notes.Notes.Should().Contain(e => e.Id == note2ToBeIncluded.Id);
+                notes.Notes.Should().Contain(e => e.Id == note4ToBeIncluded.Id);
+                notes.Notes.Should().NotContain(e => e.Id == note3ToNotBeIncluded.Id);
+                notes.Notes.Should().BeInDescendingOrder(e => e.Reference);
+            }
+        }
+
+        [Fact]
         public async Task GetAllNotes_GivenMultipleNoteType_ShouldReturnAllNotes_OfThoseType()
         {
             using (var database = new DatabaseWrapper())
