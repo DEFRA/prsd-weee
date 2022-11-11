@@ -224,6 +224,61 @@
         }
 
         [Fact]
+        public async Task GetTransferOrganisations_GivenOrganisationIdAndComplianceYear_RecipientOrganisationsShouldBeReturned()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                var originatingOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(originatingOrganisation1);
+
+                var originatingOrganisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(originatingOrganisation2);
+
+                var originatingOrganisation3 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme4 = ObligatedWeeeIntegrationCommon.CreateScheme(originatingOrganisation3);
+
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var note1Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: originatingOrganisation1, recipientOrganisation: recipientOrganisation1);
+                var note2NoMatchCy = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: originatingOrganisation2, recipientOrganisation: recipientOrganisation1);
+                var note3NoMatchCy = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year + 1, organisation: originatingOrganisation1, recipientOrganisation: recipientOrganisation1);
+                var note4Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: originatingOrganisation2, recipientOrganisation: recipientOrganisation1);
+                var note5NoMatchAsEvidenceNote = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: originatingOrganisation3);
+
+                // act
+                context.Schemes.Add(scheme1);
+                context.Schemes.Add(scheme2);
+                context.Schemes.Add(scheme3);
+                context.Schemes.Add(scheme4);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1Match);
+                context.Notes.Add(note2NoMatchCy);
+                context.Notes.Add(note3NoMatchCy);
+                context.Notes.Add(note4Match);
+                context.Notes.Add(note5NoMatchAsEvidenceNote);
+
+                await context.SaveChangesAsync();
+
+                var recipientList = await dataAccess.GetTransferOrganisations(SystemTime.UtcNow.Year);
+
+                // assert
+                recipientList.Should().Contain(r => r.Id == originatingOrganisation1.Id);
+                recipientList.Should().Contain(r => r.Id == originatingOrganisation2.Id);
+                recipientList.Should().NotContain(r => r.Id == originatingOrganisation3.Id);
+            }
+        }
+
+        [Fact]
         public async Task HasApprovedWasteHouseHoldEvidence_GivenApprovedWasteEvidenceNotes_ShouldReturnTrue()
         {
             // arrange
