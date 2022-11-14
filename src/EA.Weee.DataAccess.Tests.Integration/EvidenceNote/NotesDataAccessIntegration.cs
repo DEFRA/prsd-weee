@@ -838,7 +838,6 @@
 
                 var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
-                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldBeFound);
 
@@ -967,7 +966,6 @@
 
                 var noteShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: aatf.ComplianceYear, endDate: SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
-                noteShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 noteShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(noteShouldBeFound);
 
@@ -1011,13 +1009,11 @@
 
                 var note1ShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: SystemTime.UtcNow.Year);
                 note1ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
-                note1ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 note1ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(note1ShouldBeFound);
 
                 var note2ShouldBeFound = NoteCommon.CreateNote(database, organisation, null, aatf, complianceYear: SystemTime.UtcNow.Year);
                 note2ShouldBeFound.UpdateStatus(NoteStatus.Submitted, context.GetCurrentUser(), SystemTime.UtcNow);
-                note2ShouldBeFound.UpdateStatus(NoteStatus.Approved, context.GetCurrentUser(), SystemTime.UtcNow);
                 note2ShouldBeFound.UpdateStatus(NoteStatus.Rejected, context.GetCurrentUser(), SystemTime.UtcNow);
                 context.Notes.Add(note2ShouldBeFound);
 

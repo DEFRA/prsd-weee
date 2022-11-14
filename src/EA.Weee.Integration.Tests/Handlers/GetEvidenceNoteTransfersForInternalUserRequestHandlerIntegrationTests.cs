@@ -255,7 +255,6 @@
                         .With(n =>
                         {
                             n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                            n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddMilliseconds(2));
                             n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow.AddMilliseconds(400));
                         }).Create();
 

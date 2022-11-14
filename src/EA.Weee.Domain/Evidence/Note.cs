@@ -104,28 +104,28 @@
 
         public virtual void UpdateStatus(NoteStatus newStatus, string changedBy, DateTime date, string reason = null)
         {
-            if (newStatus.Equals(NoteStatus.Draft) && Status.Equals(NoteStatus.Draft))
+            if (newStatus == NoteStatus.Draft && Status == NoteStatus.Draft)
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if ((newStatus.Equals(NoteStatus.Submitted) && Status.Equals(NoteStatus.Submitted)))
+            if (newStatus == NoteStatus.Submitted && Status == NoteStatus.Submitted)
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if ((newStatus.Equals(NoteStatus.Submitted) && 
-                 (Status != NoteStatus.Draft && Status != NoteStatus.Returned)))
+            if (newStatus == NoteStatus.Submitted && (Status != NoteStatus.Draft && Status != NoteStatus.Returned))
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if ((newStatus.Equals(NoteStatus.Approved) && !Status.Equals(NoteStatus.Submitted)))
+            if ((newStatus == NoteStatus.Approved || newStatus == NoteStatus.Rejected || newStatus == NoteStatus.Returned) 
+                && Status != NoteStatus.Submitted)
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }
 
-            if ((newStatus.Equals(NoteStatus.Void) && !Status.Equals(NoteStatus.Approved)))
+            if (newStatus == NoteStatus.Void && Status != NoteStatus.Approved)
             {
                 ThrowInvalidStateTransitionError(newStatus);
             }
