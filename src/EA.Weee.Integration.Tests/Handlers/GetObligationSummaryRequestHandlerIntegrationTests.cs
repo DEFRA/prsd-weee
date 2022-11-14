@@ -169,6 +169,7 @@
 
                 EvidenceNoteDbSetup.Init()
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -181,6 +182,7 @@
 
                 EvidenceNoteDbSetup.Init()
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -664,6 +666,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(pbsId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -675,6 +678,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(pbsId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
