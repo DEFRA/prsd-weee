@@ -194,6 +194,7 @@
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .With(t =>
                 {
+                    t.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3).Create();
 

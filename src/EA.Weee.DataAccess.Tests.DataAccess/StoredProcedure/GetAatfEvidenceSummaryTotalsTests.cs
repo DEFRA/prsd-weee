@@ -660,7 +660,6 @@
             var note = Note(db, organisation1, recipientOrganisation, aatf1, complianceYear);
 
             note.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
-            note.UpdateStatus(NoteStatus.Approved, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
             note.UpdateStatus(NoteStatus.Rejected, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
             return note;
         }
@@ -670,7 +669,6 @@
             var note = Note(db, organisation1, recipientOrganisation, aatf1, complianceYear);
 
             note.UpdateStatus(NoteStatus.Submitted, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
-            note.UpdateStatus(NoteStatus.Approved, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
             note.UpdateStatus(NoteStatus.Returned, db.WeeeContext.GetCurrentUser(), SystemTime.UtcNow);
             return note;
         }
