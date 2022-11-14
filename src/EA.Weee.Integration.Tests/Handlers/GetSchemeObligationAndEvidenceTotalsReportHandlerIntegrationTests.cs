@@ -164,6 +164,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -175,6 +176,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -549,6 +551,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -560,6 +563,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -970,6 +974,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -981,6 +986,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -1543,6 +1549,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -1554,6 +1561,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
