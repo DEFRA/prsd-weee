@@ -300,6 +300,18 @@ function selectAllTransferNoteJourney() {
     setDefaultAsChecked();
 };
 
+function setupSelectedYear(url) {
+    $("#SelectedYear").change(function () {
+        console.log('changing')
+        var year = $(this).val();
+        if (year) {
+            window.location.href = url + '?selectedYear=' + year;
+        }
+    });
+}
+
+
+
 function setAAAutoCompleteZIndex() {
     var autoCompletes = document.getElementsByClassName('autocomplete__wrapper');
     autoCompletes[0].style.zIndex = 10;

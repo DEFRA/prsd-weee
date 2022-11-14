@@ -1229,15 +1229,15 @@
         [Fact]
         public void EvidenceAndObligationProgressGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(SchemeReportsController).GetMethod("EvidenceAndObligationProgress", types: Type.EmptyTypes).Should()
-                .BeDecoratedWith<HttpGetAttribute>();
+            typeof(SchemeReportsController).GetMethod("EvidenceAndObligationProgress", types: new[] { typeof(int?) })
+                .Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public async Task EvidenceAndObligationProgressGet_ShouldSetBreadCrumb()
         {
             //act
-            await controller.EvidenceAndObligationProgress();
+            await controller.EvidenceAndObligationProgress(TestFixture.Create<int?>());
 
             //assert
             breadcrumbService.InternalActivity.Should().Be("View reports");
@@ -1247,42 +1247,81 @@
         public async Task EvidenceAndObligationProgressGet_SystemDateShouldBeRetrieved()
         {
             //act
-            await controller.EvidenceAndObligationProgress();
+            await controller.EvidenceAndObligationProgress(TestFixture.Create<int?>());
 
             //assert
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task EvidenceAndObligationProgressGet_SchemesShouldBeRetrieved()
+        public async Task EvidenceAndObligationProgressGet_GivenSelectedYear_SchemesShouldBeRetrieved()
         {
+            //arrange
+            var selectedYear = TestFixture.Create<int>();
+
             //act
-            await controller.EvidenceAndObligationProgress();
+            await controller.EvidenceAndObligationProgress(selectedYear);
 
             //assert
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>.That.Matches(g => g.Filter == GetSchemes.FilterType.ApprovedOrWithdrawn))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemesWithObligationOrEvidence>.That.Matches(g => g.ComplianceYear == selectedYear))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task EvidenceAndObligationProgressGet_ModelShouldBeBuilt()
+        public async Task EvidenceAndObligationProgressGet_GivenNoSelectedYear_SchemesShouldNotBeRetrieved()
+        {
+            //arrange
+
+            //act
+            await controller.EvidenceAndObligationProgress((int?)null);
+
+            //assert
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemesWithObligationOrEvidence>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_GivenNoSelectedYear_ModelShouldBeBuilt()
         {
             //arrange
             var currentDate = new DateTime(2023, 1, 1);
             var evidenceStartDate = new DateTime(2020, 1, 1);
-            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
 
             A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
                 .Returns(evidenceStartDate);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>._)).Returns(schemeData);
             //act
-            var result = await controller.EvidenceAndObligationProgress() as ViewResult;
+            var result = await controller.EvidenceAndObligationProgress((int?)null) as ViewResult;
 
             //assert
             var convertedModel = result.Model as EvidenceAndObligationProgressViewModel;
             convertedModel.SelectedSchemeId.Should().BeNull();
             convertedModel.SelectedYear.Should().Be(0);
+            convertedModel.ComplianceYears.Should().BeEquivalentTo(new SelectList(new List<int>() { 2023, 2022, 2021, 2020 }));
+            convertedModel.Schemes.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task EvidenceAndObligationProgressGet_GivenSelectedYear_ModelShouldBeBuilt()
+        {
+            //arrange
+            var currentDate = new DateTime(2023, 1, 1);
+            var evidenceStartDate = new DateTime(2020, 1, 1);
+            var schemeData = TestFixture.CreateMany<SchemeData>().ToList();
+            const int selectedYear = 2023;
+
+            A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
+                .Returns(evidenceStartDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemesWithObligationOrEvidence>._)).Returns(schemeData);
+
+            //act
+            var result = await controller.EvidenceAndObligationProgress(selectedYear) as ViewResult;
+
+            //assert
+            var convertedModel = result.Model as EvidenceAndObligationProgressViewModel;
+            convertedModel.SelectedSchemeId.Should().BeNull();
+            convertedModel.SelectedYear.Should().Be(selectedYear);
             convertedModel.ComplianceYears.Should().BeEquivalentTo(new SelectList(new List<int>() { 2023, 2022, 2021, 2020 }));
             convertedModel.Schemes.Should().BeEquivalentTo(new SelectList(schemeData, "Id", "SchemeName"));
         }
@@ -1291,7 +1330,7 @@
         public async Task EvidenceAndObligationProgressGet_DefaultViewShouldBeReturned()
         {
             //arrange
-            var result = await controller.EvidenceAndObligationProgress() as ViewResult;
+            var result = await controller.EvidenceAndObligationProgress(TestFixture.Create<int?>()) as ViewResult;
 
             //assert
             result.ViewName.Should().BeNullOrWhiteSpace();
@@ -1354,7 +1393,8 @@
 
             //assert
 
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>.That.Matches(g => g.Filter == GetSchemes.FilterType.ApprovedOrWithdrawn))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemesWithObligationOrEvidence>
+                .That.Matches(g => g.ComplianceYear == model.SelectedYear))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -1376,7 +1416,7 @@
             A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom)
                 .Returns(evidenceStartDate);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>._)).Returns(schemeData);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemesWithObligationOrEvidence>._)).Returns(schemeData);
 
             //act
             var result = await controller.EvidenceAndObligationProgress(model) as ViewResult;
@@ -1439,7 +1479,7 @@
         public async Task EvidenceAndObligationProgressGet_ViewBagTriggerDownloadShouldBeFalse()
         {
             //act
-            var result = await controller.EvidenceAndObligationProgress() as ViewResult;
+            var result = await controller.EvidenceAndObligationProgress(TestFixture.Create<int?>()) as ViewResult;
 
             //assert
             ((bool)result.ViewBag.TriggerDownload).Should().BeFalse();
