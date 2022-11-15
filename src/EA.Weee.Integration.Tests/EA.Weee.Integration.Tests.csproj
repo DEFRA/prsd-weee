@@ -208,6 +208,7 @@
     <Compile Include="Handlers\EvidenceNoteSeeder.cs" />
     <Compile Include="Handlers\GetEvidenceNotesSelectedForTransferRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationAndEvidenceTotalsReportHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetSchemesWithObligationOrEvidenceByComplianceYearHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemesWithObligationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetObligationSummaryRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteForInternalUserRequestHandlerIntegrationTests.cs" />
