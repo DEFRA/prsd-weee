@@ -18,7 +18,10 @@
             ((int)schemeData.ObligationType.Value).Should().Be((int)scheme.ObligationType);
             schemeData.CompetentAuthorityId.Should().Be(scheme.CompetentAuthorityId);
             schemeData.Contact.Id.Should().Be(scheme.ContactId.Value);
-            schemeData.Name.Should().Be(scheme.Organisation.Name);
+            if (scheme.Organisation != null)
+            {
+                schemeData.Name.Should().Be(scheme.Organisation.Name);
+            }
             schemeData.OrganisationId.Should().Be(scheme.OrganisationId);
             ((int)schemeData.SchemeStatus).Should().Be((int)scheme.SchemeStatus.Value);
         }
