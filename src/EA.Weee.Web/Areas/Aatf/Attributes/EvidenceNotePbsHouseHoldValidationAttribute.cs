@@ -11,7 +11,7 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNotePbsHouseHoldValidationAttribute : ValidationAttribute
     {
-        private string RecipientProperty { get; set; }
+        public string RecipientProperty { get; set; }
 
         private IWeeeCache cache;
 
