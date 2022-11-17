@@ -160,6 +160,7 @@
                 ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Void, note7NoStatusMatch);
                 var note8NoStatusMatch = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, aatf: aatf, organisation: organisation1);
                 ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note8NoStatusMatch);
+                var note8NoNoteTypeMatch = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1);
 
                 // act
                 context.Schemes.Add(scheme1);
@@ -177,6 +178,7 @@
                 context.Notes.Add(note6NoStatusMatch);
                 context.Notes.Add(note7NoStatusMatch);
                 context.Notes.Add(note8NoStatusMatch);
+                context.Notes.Add(note8NoNoteTypeMatch);
 
                 await context.SaveChangesAsync();
 
@@ -184,6 +186,10 @@
                     new List<NoteStatus>()
                     {
                         NoteStatus.Draft
+                    },
+                    new List<NoteType>()
+                    {
+                        NoteType.EvidenceNote
                     });
 
                 // assert
@@ -195,11 +201,12 @@
                 recipientList.Should().NotContain(r => r.Id == note6NoStatusMatch.RecipientId);
                 recipientList.Should().NotContain(r => r.Id == note7NoStatusMatch.RecipientId);
                 recipientList.Should().NotContain(r => r.Id == note8NoStatusMatch.RecipientId);
+                recipientList.Should().NotContain(r => r.Id == note8NoNoteTypeMatch.RecipientId);
             }
         }
 
         [Fact]
-        public async Task GetRecipientOrganisations_GivenComplianceYear_RecipientOrganisationsShouldBeReturned()
+        public async Task GetRecipientOrganisations_GivenComplianceYearAndEvidenceNotes_RecipientOrganisationsShouldBeReturned()
         {
             // arrange
             using (var database = new DatabaseWrapper())
@@ -238,6 +245,7 @@
                 ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Rejected, note9NoMatchNotRequestedStatus);
                 var note10NoMatchNotRequestedStatus = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation4);
                 ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Void, note10NoMatchNotRequestedStatus);
+                var note11NoMatchNotNoteType = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation4);
 
                 // act
                 context.Schemes.Add(recipientScheme1);
@@ -253,14 +261,107 @@
                 context.Notes.Add(note4Match);
                 context.Notes.Add(note5Match);
                 context.Notes.Add(note6Match);
+                context.Notes.Add(note7NoMatchNotRequestedStatus);
+                context.Notes.Add(note8NoMatchNotRequestedStatus);
+                context.Notes.Add(note9NoMatchNotRequestedStatus);
+                context.Notes.Add(note10NoMatchNotRequestedStatus);
+                context.Notes.Add(note11NoMatchNotNoteType);
 
                 await context.SaveChangesAsync();
 
                 var recipientList = await dataAccess.GetRecipientOrganisations(null, SystemTime.UtcNow.Year, new List<NoteStatus>()
-                {
-                    NoteStatus.Draft,
-                    NoteStatus.Submitted
-                });
+                    {
+                        NoteStatus.Draft,
+                        NoteStatus.Submitted
+                    },
+                    new List<NoteType>()
+                    {
+                        NoteType.EvidenceNote
+                    });
+
+                // assert
+                recipientList.Should().HaveCount(4);
+                recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
+                recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
+                recipientList.Should().Contain(r => r.Id == recipientOrganisation3.Id);
+                recipientList.Should().Contain(r => r.Id == note4Match.Recipient.Id);
+                recipientList.Should().NotContain(r => r.Id == recipientOrganisation4.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetRecipientOrganisations_GivenComplianceYearAndTransferNotes_RecipientOrganisationsShouldBeReturned()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientScheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+                var recipientOrganisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientScheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation2);
+                var recipientOrganisation3 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientScheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation3);
+
+                var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var note1Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
+                var note2NoMatchCy = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: organisation1);
+                var note3NoMatchCy = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year - 2, organisation: organisation1);
+                var note4Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation2);
+                var note5Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation2);
+                var note6Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation3);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Submitted, note6Match);
+
+                var recipientOrganisation4 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientScheme4 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation4);
+
+                var note7NoMatchNotRequestedStatus = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation4);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note7NoMatchNotRequestedStatus);
+                var note8NoMatchNotRequestedStatus = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation4);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Returned, note8NoMatchNotRequestedStatus);
+                var note9NoMatchNotRequestedStatus = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation4);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Rejected, note9NoMatchNotRequestedStatus);
+                var note10NoMatchNotRequestedStatus = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation4);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Void, note10NoMatchNotRequestedStatus);
+                var note11NoMatchNotNoteType = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation4);
+
+                // act
+                context.Schemes.Add(recipientScheme1);
+                context.Schemes.Add(recipientScheme2);
+                context.Schemes.Add(recipientScheme3);
+                context.Schemes.Add(recipientScheme4);
+
+                await context.SaveChangesAsync();
+
+                context.Notes.Add(note1Match);
+                context.Notes.Add(note2NoMatchCy);
+                context.Notes.Add(note3NoMatchCy);
+                context.Notes.Add(note4Match);
+                context.Notes.Add(note5Match);
+                context.Notes.Add(note6Match);
+                context.Notes.Add(note7NoMatchNotRequestedStatus);
+                context.Notes.Add(note8NoMatchNotRequestedStatus);
+                context.Notes.Add(note9NoMatchNotRequestedStatus);
+                context.Notes.Add(note10NoMatchNotRequestedStatus);
+                context.Notes.Add(note11NoMatchNotNoteType);
+
+                await context.SaveChangesAsync();
+
+                var recipientList = await dataAccess.GetRecipientOrganisations(null, SystemTime.UtcNow.Year, new List<NoteStatus>()
+                    {
+                        NoteStatus.Draft,
+                        NoteStatus.Submitted
+                    },
+                    new List<NoteType>()
+                    {
+                        NoteType.TransferNote
+                    });
 
                 // assert
                 recipientList.Should().HaveCount(4);
@@ -318,6 +419,7 @@
                 ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Rejected, note9NoMatchNotRequestedStatus);
                 var note10NoMatchNotRequestedStatus = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: originatingOrganisation5, recipientOrganisation: recipientOrganisation1);
                 ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Void, note10NoMatchNotRequestedStatus);
+                var note10NoMatchNotNoteType = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: originatingOrganisation5, recipientOrganisation: recipientOrganisation1);
 
                 // act
                 context.Schemes.Add(scheme1);
@@ -339,14 +441,19 @@
                 context.Notes.Add(note8NoMatchNotRequestedStatus);
                 context.Notes.Add(note9NoMatchNotRequestedStatus);
                 context.Notes.Add(note10NoMatchNotRequestedStatus);
+                context.Notes.Add(note10NoMatchNotNoteType);
 
                 await context.SaveChangesAsync();
 
                 var recipientList = await dataAccess.GetTransferOrganisations(SystemTime.UtcNow.Year, new List<NoteStatus>()
-                {
-                    NoteStatus.Draft,
-                    NoteStatus.Submitted
-                });
+                    {
+                        NoteStatus.Draft,
+                        NoteStatus.Submitted
+                    },
+                    new List<NoteType>()
+                    {
+                        NoteType.TransferNote
+                    });
 
                 // assert
                 recipientList.Should().HaveCount(3);

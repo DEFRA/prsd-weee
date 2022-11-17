@@ -22,6 +22,7 @@
     using Requests.AatfEvidence;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
+    using NoteType = Core.AatfEvidence.NoteType;
     using UserStatus = Domain.User.UserStatus;
 
     public class GetSchemeDataForFilterRequestHandlerIntegrationTests : IntegrationTestBase
@@ -112,7 +113,10 @@
                     .Create();
 
                 var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
-                request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, aatf.Id, ComplianceYear, allowedStatus);
+                request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, aatf.Id, ComplianceYear, allowedStatus, new List<NoteType>()
+                {
+                    NoteType.Evidence
+                });
             };
 
             private readonly Because of = () =>
@@ -247,7 +251,9 @@
                     .Create();
 
                 var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
-                request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, null, ComplianceYear, allowedStatuses);
+                var allowedNoteTypes = new List<NoteType> { NoteType.Transfer };
+
+                request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, null, ComplianceYear, allowedStatuses, allowedNoteTypes);
             };
 
             private readonly Because of = () =>
@@ -305,7 +311,7 @@
         }
 
         [Component]
-        public class WhenIGetRecipientSchemesForLookupForAnInternalUser : GetSchemeDataForFilterRequestHandlerIntegrationTestBase
+        public class WhenIGetRecipientSchemesForTransferNoteLookupForAnInternalUser : GetSchemeDataForFilterRequestHandlerIntegrationTestBase
         {
             private static Scheme scheme1;
             private static Scheme scheme2;
@@ -377,7 +383,137 @@
                     .Create();
 
                 var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
-                request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, ComplianceYear, allowedStatuses);
+                var allowedNotes = new List<NoteType> { NoteType.Transfer };
+                request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, ComplianceYear, allowedStatuses, allowedNotes);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldReturnListOfEntityIdDisplayNameData = () =>
+            {
+                result.Should().NotBeNull();
+            };
+
+            private readonly It shouldHaveExpectedResultsCount = () =>
+            {
+                result.Should().HaveCount(2);
+            };
+
+            private readonly It shouldHaveExpectedData = () =>
+            {
+                var schemeData = result.FirstOrDefault(e => e.Id == scheme1.OrganisationId);
+                schemeData.Should().NotBeNull();
+                schemeData.Id.Should().Be(scheme1.OrganisationId);
+                schemeData.DisplayName.Should().Be(scheme1.SchemeName);
+
+                schemeData = result.FirstOrDefault(e => e.Id == scheme2.OrganisationId);
+                schemeData.Should().NotBeNull();
+                schemeData.Id.Should().Be(scheme2.OrganisationId);
+                schemeData.DisplayName.Should().Be(scheme2.SchemeName);
+            };
+
+            private readonly It shouldHaveExcludedExpectedData = () =>
+            {
+                result.FirstOrDefault(e => e.Id == transferScheme.OrganisationId)
+                    .Should().BeNull();
+
+                result.FirstOrDefault(e => e.Id == schemeNotIncludedAsHasDraftNote.OrganisationId)
+                    .Should().BeNull();
+
+                result.FirstOrDefault(e => e.Id == schemeNotIncludedAsHasNoteInIncorrectYear.OrganisationId)
+                    .Should().BeNull();
+            };
+
+            private readonly It shouldHaveDistinctItems = () =>
+            {
+                result.Should().OnlyHaveUniqueItems();
+            };
+
+            private readonly It shouldBeOrderedCorrectly = () =>
+            {
+                result.Should().BeInAscendingOrder(e => e.DisplayName);
+            };
+        }
+
+        [Component]
+        public class WhenIGetRecipientSchemesForEvidenceNoteLookupForAnInternalUser : GetSchemeDataForFilterRequestHandlerIntegrationTestBase
+        {
+            private static Scheme scheme1;
+            private static Scheme scheme2;
+            private static Scheme transferScheme;
+            private static Scheme schemeNotIncludedAsHasDraftNote;
+            private static Scheme schemeNotIncludedAsHasNoteInIncorrectYear;
+
+            private readonly Establish context = () =>
+            {
+                LocalInternalSetup();
+
+                scheme1 = SchemeDbSetup.Init().WithNewOrganisation().Create();
+                scheme2 = SchemeDbSetup.Init().WithNewOrganisation().Create();
+                transferScheme = SchemeDbSetup.Init().WithNewOrganisation().Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(scheme1.OrganisationId)
+                    .WithOrganisation(transferScheme.OrganisationId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithComplianceYear(ComplianceYear)
+                    .Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(scheme1.OrganisationId)
+                    .WithOrganisation(transferScheme.OrganisationId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
+                    .WithComplianceYear(ComplianceYear)
+                    .Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(scheme1.OrganisationId)
+                    .WithOrganisation(transferScheme.OrganisationId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
+                    .WithComplianceYear(ComplianceYear)
+                    .Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(scheme2.OrganisationId)
+                    .WithOrganisation(transferScheme.OrganisationId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Approved, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Void, UserId.ToString())
+                    .WithComplianceYear(ComplianceYear)
+                    .Create();
+
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(scheme2.OrganisationId)
+                    .WithOrganisation(transferScheme.OrganisationId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
+                    .WithComplianceYear(ComplianceYear)
+                    .Create();
+
+                schemeNotIncludedAsHasDraftNote = SchemeDbSetup.Init().WithNewOrganisation().Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(schemeNotIncludedAsHasDraftNote.OrganisationId)
+                    .WithOrganisation(transferScheme.OrganisationId)
+                    .WithComplianceYear(ComplianceYear)
+                    .Create();
+
+                schemeNotIncludedAsHasNoteInIncorrectYear = SchemeDbSetup.Init().WithNewOrganisation().Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(schemeNotIncludedAsHasNoteInIncorrectYear.OrganisationId)
+                    .WithOrganisation(transferScheme.OrganisationId)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
+                    .WithComplianceYear(ComplianceYear + 1)
+                    .Create();
+
+                var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+                var allowedNotes = new List<NoteType> { NoteType.Evidence };
+
+                request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, ComplianceYear, allowedStatuses, allowedNotes);
             };
 
             private readonly Because of = () =>

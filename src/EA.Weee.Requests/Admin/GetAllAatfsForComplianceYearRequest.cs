@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using AatfEvidence;
     using Core.AatfEvidence;
-    using EA.Weee.Core.Shared;
-    using Prsd.Core.Mediator;
 
     [Serializable]
     public class GetAllAatfsForComplianceYearRequest : EvidenceEntityIdDisplayNameDataBase
