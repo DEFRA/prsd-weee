@@ -77,6 +77,15 @@
             typeof(EditEvidenceNoteViewModel).GetProperty(property).Should().BeDecoratedWith<RequiredAttribute>(r => r.ErrorMessage.Equals(message));
         }
 
+        [Fact]
+        public void EvidenceNoteViewModel_WasteTypeValue_ShouldHaveEvidenceNotePbsHouseHoldValidationAttribute()
+        {
+            typeof(EditEvidenceNoteViewModel).GetProperty("WasteTypeValue").Should()
+                .BeDecoratedWith<EvidenceNotePbsHouseHoldValidationAttribute>(e =>
+                    e.ErrorMessage.Equals("You cannot issue non-household evidence to the PBS. Select household.") &&
+                    e.RecipientProperty.Equals("RecipientId"));
+        }
+
         [Theory]
         [InlineData("StartDate", DataType.Date)]
         [InlineData("EndDate", DataType.Date)]
