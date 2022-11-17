@@ -14,6 +14,7 @@
 
         public StoredProcedures(WeeeContext context)
         {
+            context.Database.CommandTimeout = 180;
             this.context = context;
         }
 
@@ -22,7 +23,12 @@
             var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAatfSubmissions] @AatfId, @ComplianceYear", aatfIdParameter, complianceYearParameter).ToListAsync();
+            return await context.Database
+                .SqlQuery<AatfSubmissionHistory>(
+                    "[AATF].[getAatfSubmissions] @AatfId, @ComplianceYear",
+                    aatfIdParameter,
+                    complianceYearParameter)
+                .ToListAsync();
         }
 
         public async Task<List<AatfSubmissionHistory>> GetAeSubmissions(Guid aatfId, short complianceYear)
@@ -30,11 +36,15 @@
             var aatfIdParameter = new SqlParameter("@AeId", aatfId);
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<AatfSubmissionHistory>("[AATF].[getAeSubmissions] @AeId, @ComplianceYear", aatfIdParameter, complianceYearParameter).ToListAsync();
+            return await context.Database
+                .SqlQuery<AatfSubmissionHistory>(
+                    "[AATF].[getAeSubmissions] @AeId, @ComplianceYear",
+                    aatfIdParameter,
+                    complianceYearParameter)
+                .ToListAsync();
         }
 
-        public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
-            int complianceYear)
+        public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear)
         {
             var organisationIdParameter = new SqlParameter("@OrganisationId", organisationId);
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -137,26 +147,28 @@
             var result = new SpgSchemeWeeeCsvResult();
 
             var command = context.Database.Connection.CreateCommand();
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[PCS].[SpgSchemeWeeeCsv]";
 
             var complianceYearParameter = command.CreateParameter();
-            complianceYearParameter.DbType = System.Data.DbType.Int32;
+            complianceYearParameter.DbType = DbType.Int32;
             complianceYearParameter.Value = complianceYear;
             complianceYearParameter.ParameterName = "@ComplianceYear";
             command.Parameters.Add(complianceYearParameter);
 
             var schemeIdParameter = command.CreateParameter();
-            schemeIdParameter.DbType = System.Data.DbType.Guid;
+            schemeIdParameter.DbType = DbType.Guid;
             schemeIdParameter.Value = schemeId;
             schemeIdParameter.ParameterName = "@SchemeId";
             command.Parameters.Add(schemeIdParameter);
 
             var obligationTypeParameter = command.CreateParameter();
-            obligationTypeParameter.DbType = System.Data.DbType.String;
+            obligationTypeParameter.DbType = DbType.String;
             obligationTypeParameter.Value = obligationType;
             obligationTypeParameter.ParameterName = "@ObligationType";
             command.Parameters.Add(obligationTypeParameter);
+
+            command.CommandTimeout = 180;
 
             await context.Database.Connection.OpenAsync();
 
@@ -258,11 +270,12 @@
             var result = new ProducerEeeHistoryCsvData();
 
             var command = context.Database.Connection.CreateCommand();
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 180;
+            command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[Producer].[spgProducerEeeHistoryCsvDataByPRN]";
 
             var prnParameter = command.CreateParameter();
-            prnParameter.DbType = System.Data.DbType.String;
+            prnParameter.DbType = DbType.String;
             prnParameter.Value = prn;
             prnParameter.ParameterName = "@PRN";
             command.Parameters.Add(prnParameter);
@@ -485,16 +498,21 @@
 
             var table = new DataTable();
             var cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText = "[AATF].[getAllAatfObligatedCsvData] @ComplianceYear, @AatfName, @ObligationType, @CA, @PanArea, @ColumnType";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "[AATF].[getAllAatfObligatedCsvData]";
             cmd.Parameters.Add(complianceYearParameter);
             cmd.Parameters.Add(aatfNameParameter);
             cmd.Parameters.Add(obligationTypeParameter);
             cmd.Parameters.Add(authorityParameter);
             cmd.Parameters.Add(panAreaParameter);
             cmd.Parameters.Add(columnTypeParameter);
+
+            cmd.CommandTimeout = 180;
             await cmd.Connection.OpenAsync();
-            table.Load(await cmd.ExecuteReaderAsync());
-            
+
+            var res = await cmd.ExecuteReaderAsync();
+            table.Load(res);
+
             return table;
         }
 
@@ -506,16 +524,17 @@
             var aatfIdParameter = new SqlParameter("@AatfId", aatfId);
 
             var table = new DataTable();
-            
+
             var cmd = context.Database.Connection.CreateCommand();
             cmd.CommandText = "[AATF].[getAatfObligatedCsvData] @ComplianceYear, @Quarter, @ReturnId, @AatfId";
             cmd.Parameters.Add(complianceYearParameter);
             cmd.Parameters.Add(quarterParameter);
             cmd.Parameters.Add(returnIdParameter);
             cmd.Parameters.Add(aatfIdParameter);
+            cmd.CommandTimeout = 180;
             await cmd.Connection.OpenAsync();
             table.Load(await cmd.ExecuteReaderAsync());
-            
+
             return table;
         }
 
@@ -528,6 +547,7 @@
             var cmd = context.Database.Connection.CreateCommand();
             cmd.CommandText = "[AATF].[getReturnObligatedCsvData] @ReturnId";
             cmd.Parameters.Add(returnIdParameter);
+            cmd.CommandTimeout = 180;
             await cmd.Connection.OpenAsync();
             obligatedData.Load(await cmd.ExecuteReaderAsync());
 
@@ -538,7 +558,9 @@
         {
             var returnIdParameter = new SqlParameter("@ReturnId", returnId);
 
-            return await context.Database.SqlQuery<NonObligatedWeeeReceivedCsvData>("[AATF].[getReturnNonObligatedCsvData] @ReturnId", returnIdParameter).ToListAsync();
+            return await context.Database.SqlQuery<NonObligatedWeeeReceivedCsvData>(
+                "[AATF].[getReturnNonObligatedCsvData] @ReturnId",
+                returnIdParameter).ToListAsync();
         }
 
         public async Task<DataSet> GetAllAatfSentOnDataCsv(int complianceYear, string obligationType, Guid? authority, Guid? panArea)
@@ -560,11 +582,13 @@
             cmd.Parameters.Add(obligationTypeParameter);
             cmd.Parameters.Add(authorityParameter);
             cmd.Parameters.Add(panAreaParameter);
+            cmd.CommandTimeout = 180;
             await cmd.Connection.OpenAsync();
             dataSet.Load(await cmd.ExecuteReaderAsync(), LoadOption.OverwriteChanges, sentOnData, addressData);
-           
+
             return dataSet;
         }
+
         public async Task<List<AatfReuseSitesData>> GetAllAatfReuseSitesCsvData(int complianceYear, Guid? authority, Guid? panArea)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -599,7 +623,6 @@
             SqlParameter quarterParameter = new SqlParameter("@Quarter", (object)quarter ?? 0);
             SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", (object)obligationType ?? DBNull.Value);
 
-            context.Database.CommandTimeout = 180;
             return await context.Database
                .SqlQuery<PcsAatfComparisonDataCsvData>(
                    "[AATF].[getPcsAatfDiscrepancyCsvData] @ComplianceYear, @Quarter, @ObligationType",
