@@ -185,6 +185,7 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteByPbsOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesByOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\GetSchemeDataForFilterRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\SetNoteStatusRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\VoidTransferNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\VoidNoteRequestHandlerTests.cs" />
