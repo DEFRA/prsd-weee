@@ -35,7 +35,9 @@
         public string SelectedSchemeName { get; set; }
 
         [RequiredSubmitAction(ErrorMessage = "Select an obligation type")]
+        [EvidenceNotePbsHouseHoldValidation(nameof(RecipientId), ErrorMessage = "You cannot issue non-household evidence to the PBS. Select household.")]
         [Display(Name = "Obligation type")]
+
         public override WasteType? WasteTypeValue { get; set; }
 
         public IEnumerable<SelectListItem> WasteTypeList { get; set; }
