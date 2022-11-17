@@ -12,6 +12,7 @@
     using Requests.AatfEvidence;
     using Security;
     using NoteStatus = Domain.Evidence.NoteStatus;
+    using NoteType = Domain.Evidence.NoteType;
 
     internal class GetSchemeDataForFilterRequestHandler : IRequestHandler<GetSchemeDataForFilterRequest, List<EntityIdDisplayNameData>>
     {
@@ -38,15 +39,17 @@
 
             List<Organisation> organisations;
             var status = request.AllowedStatuses.Select(s => s.ToDomainEnumeration<NoteStatus>()).ToList();
+            var noteTypes = request.AllowedNoteTypes.Select(n => n.ToDomainEnumeration<NoteType>()).ToList();
+
             if (request.RecipientOrTransfer == RecipientOrTransfer.Recipient)
             {
                 organisations =
-                    await evidenceDataAccess.GetRecipientOrganisations(request.AatfId, request.ComplianceYear, status);
+                    await evidenceDataAccess.GetRecipientOrganisations(request.AatfId, request.ComplianceYear, status, noteTypes);
             }
             else
             {
                 organisations =
-                    await evidenceDataAccess.GetTransferOrganisations(request.ComplianceYear, status);
+                    await evidenceDataAccess.GetTransferOrganisations(request.ComplianceYear, status, noteTypes);
             }
 
             return organisations.Select(x =>

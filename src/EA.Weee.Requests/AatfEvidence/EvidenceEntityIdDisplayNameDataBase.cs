@@ -8,9 +8,9 @@
 
     public class EvidenceEntityIdDisplayNameDataBase : IRequest<List<EntityIdDisplayNameData>>
     {
-        public int ComplianceYear { get; private set; }
+        public int ComplianceYear { get; }
 
-        public List<NoteStatus> AllowedStatuses { get; private set; }
+        public List<NoteStatus> AllowedStatuses { get; }
 
         public EvidenceEntityIdDisplayNameDataBase(int complianceYear,
             List<NoteStatus> allowedStatuses)
