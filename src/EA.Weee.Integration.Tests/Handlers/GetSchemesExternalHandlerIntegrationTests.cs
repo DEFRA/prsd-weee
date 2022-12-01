@@ -199,7 +199,7 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetData: true)
                     .WithExternalUserAccess();
 
                 handler = Container.Resolve<IRequestHandler<GetSchemesExternal, List<SchemeData>>>();
