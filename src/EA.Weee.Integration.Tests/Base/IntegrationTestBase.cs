@@ -114,15 +114,15 @@
                 return this;
             }
 
-            public IntegrationTestSetupBuilder WithDefaultSettings(bool resetDb = false)
+            public IntegrationTestSetupBuilder WithDefaultSettings(bool hardReset = false, bool resetData = false)
             {
                 return WithIoC(true)
-                    .WithTestData(resetDb);
+                    .WithTestData(hardReset, resetData);
             }
 
-            public IntegrationTestSetupBuilder WithTestData(bool reset = false)
+            public IntegrationTestSetupBuilder WithTestData(bool hardReset = false, bool resetData = false)
             {
-                ResetTestDatabaseData(reset);
+                ResetTestDatabaseData(hardReset, resetData);
                 return this;
             }
 
@@ -143,7 +143,7 @@
                 return Container;
             }
 
-            protected static void ResetTestDatabaseData(bool hardReset = false)
+            protected static void ResetTestDatabaseData(bool hardReset = false, bool resetData = false)
             {
                 if (TestingStatus.IsDbSeedingFaulted)
                 {
@@ -156,6 +156,12 @@
                     {
                         Console.WriteLine("Rebuilding Test database");
                         new DatabaseSeeder().RebuildDatabase();
+                    }
+
+                    if (resetData)
+                    {
+                        Console.WriteLine("Resetting Test database");
+                        new DatabaseDeleter(ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ToString(), false).DeleteAllData();
                     }
 
                     var userManager = Container.Resolve<ApplicationUserManager>();

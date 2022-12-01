@@ -1938,7 +1938,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
             public static void LocalSetup(bool clearDb = false)
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(clearDb)
+                    .WithDefaultSettings(resetData: clearDb)
                     .WithInternalUserAccess();
 
                 Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
@@ -1949,7 +1949,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
             public static void LocalOrganisationSetup(bool clearDb = false)
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(clearDb)
+                    .WithDefaultSettings(resetData: clearDb)
                     .WithExternalUserAccess();
 
                 handler = Container.Resolve<IRequestHandler<GetSchemeObligationAndEvidenceTotalsReportRequest, CSVFileData>>();
