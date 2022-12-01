@@ -554,7 +554,7 @@
             private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(true)
+                    .WithDefaultSettings(resetData: true)
                     .WithExternalUserAccess();
 
                 handler = Container.Resolve<IRequestHandler<GetObligationSummaryRequest, ObligationEvidenceSummaryData>>();

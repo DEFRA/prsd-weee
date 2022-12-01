@@ -479,7 +479,7 @@
             {
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
-                    .WithTestData(true)
+                    .WithTestData(resetData: true)
                     .WithInternalUserAccess();
 
                 Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
@@ -497,7 +497,7 @@
             {
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
-                    .WithTestData(true)
+                    .WithTestData(resetData: true)
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();

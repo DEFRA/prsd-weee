@@ -906,7 +906,7 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetData: true)
                     .WithInternalUserAccess();
 
                 var authority = Query.GetEaCompetentAuthority();
