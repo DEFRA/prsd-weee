@@ -232,7 +232,7 @@
             public static void LocalSetup(bool clearDb = true)
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: clearDb)
+                    .WithDefaultSettings(resetData: clearDb)
                     .WithInternalUserAccess();
 
                 Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
