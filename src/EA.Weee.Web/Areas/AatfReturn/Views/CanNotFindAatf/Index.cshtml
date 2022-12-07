@@ -1,0 +1,29 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.CanNotFindAatfViewModel
+
+@{
+    ViewBag.Title = "Can't find AATF";
+}
+
+<section id="main-content">
+    @if (Model.IsCanNotFindLinkClick)
+    {
+        <h1 class="govuk-heading-l">Can't find the AATF you're looking for?</h1>
+    }
+    else
+    {
+        <h1 class="govuk-heading-l">No results found</h1>
+        <h3 class="govuk-heading-m">We found no results for '@Model.AatfName'</h3>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+
+        Html.RenderPartial("_SearchResultPartial", Model);
+    }
+</section>

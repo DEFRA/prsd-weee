@@ -1,0 +1,81 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchAnAatfViewModel
+
+@{
+    ViewBag.Title = "Search for an AATF";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l">
+        Add the treatment facility where WEEE was sent to
+    </h1>
+    <p>
+        A treatment facility where WEEE was sent on to can be an AATF or an ATF (an ATF is an authorised treatment facility that is not approved to issue evidence).
+    </p>
+
+    <p class="govuk-body">
+        <div>
+            @this.WeeeGds().CreateProgressiveDisclosure("What's the difference between an AATF and an ATF?",
+           @Html.Partial("_DifferenceAnAATFandATFPartial").ToString(),
+           "Hidden content",
+           "Progressive disclosure",
+           "What's the difference between an AATF and an ATF?")
+        </div>
+    </p>    
+
+    @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+
+        <div class="govuk-!-padding-bottom-3"></div>
+        <h2 class="govuk-heading-m">
+            Add an AATF
+        </h2>
+        <p>
+            Use the search to find and add an AATF for this compliance year. If you are unsure if the treatment facility is an AATF or ATF, perform a search.
+        </p>        
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
+            <label class="govuk-body" style="font-size: 16px">
+                Search for the AATF by name, operator name or approval number <br />
+            </label>
+            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
+            @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
+            @Html.HiddenFor(model => model.SelectedAatfId, new { id = "hdnSelectedAatfId" })
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "govuk-!-width-full" })
+            <button id="searchButton" type="submit" class="govuk-button">
+                <img src="@Url.Content("~/Content/weee/images/icon-search.png")" alt="Search" />
+            </button>
+        </div>
+    }
+
+    <h2 class="govuk-heading-m">
+        Add an ATF
+    </h2>
+    <p class="govuk-body">
+        If you know the treatment facility is an ATF, use the link to add it. If you are unsure if the treatment facility is an ATF or an AATF, perform a search.
+    </p>
+    <p class="govuk-body">
+        @Html.RouteLink("Add an ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, isAddDetails = true, action = "Index", controller = "SentOnCreateSite" }, null)
+    </p>    
+
+    <p class="govuk-body">
+        @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
+    </p>
+
+</section>
+
+@Scripts.Render("~/bundles/search-an-aatf")
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            SearchAnAATF();
+        });
+    </script>
+}
