@@ -51,7 +51,7 @@
             RequiredAttribute attr = attrs.FirstOrDefault(p => p is RequiredAttribute) as RequiredAttribute;
 
             Assert.NotNull(attr);
-            Assert.Equal("Enter AATF / ATF site name", attr.ErrorMessage);
+            Assert.Equal("Enter ATF site name", attr.ErrorMessage);
         }
     }
 }

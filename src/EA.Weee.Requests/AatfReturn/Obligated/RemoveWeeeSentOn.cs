@@ -7,9 +7,12 @@
     {
         public Guid WeeeSentOnId { get; set; }
 
-        public RemoveWeeeSentOn(Guid weeeSentOnId)
+        public bool IsAatf { get; set; }
+
+        public RemoveWeeeSentOn(Guid weeeSentOnId, bool isAatf = false)
         {
             WeeeSentOnId = weeeSentOnId;
+            IsAatf = isAatf;
         }
     }
 }

@@ -44,5 +44,13 @@
         {
             return await context.Returns.Where(r => r.Quarter.Year == @return.Quarter.Year && (int)r.Quarter.Q == (int)@return.Quarter.Q && r.Organisation.Id == @return.Organisation.Id && r.FacilityType.Value == @return.FacilityType.Value).ToListAsync();
         }
+
+        public async Task<Return> GetByYearAndQuarter(Guid organisationId, int year, int quarter)
+        {
+            return await context.Returns
+                    .Include(o => o.Organisation)
+                    .OrderByDescending(o => o.CreatedDate)
+                    .FirstOrDefaultAsync(o => o.Organisation.Id == organisationId && o.Quarter.Year == year && (int)o.Quarter.Q == quarter);
+        }
     }
 }

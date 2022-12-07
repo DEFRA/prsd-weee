@@ -39,7 +39,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId, bool? isEditDetails = false, bool? isEditTonnage = false)
+        public virtual async Task<ActionResult> Index(Guid returnId, Guid aatfId, Guid? weeeSentOnId, bool? isEditDetails = false, bool? isEditTonnage = false, bool? isAddDetails = false)
         {
             using (var client = apiClient())
             {
@@ -63,6 +63,7 @@
 
                 viewModel.IsEditDetails = isEditDetails;
                 viewModel.IsEditTonnage = isEditTonnage;
+                viewModel.IsAddDetails = isAddDetails;
 
                 if (isEditTonnage.Value)
                 {
