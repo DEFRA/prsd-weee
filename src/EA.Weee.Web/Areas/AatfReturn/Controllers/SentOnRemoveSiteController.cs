@@ -35,7 +35,7 @@
         }
 
         [HttpGet]
-        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid weeeSentOnId)
+        public virtual async Task<ActionResult> Index(Guid organisationId, Guid returnId, Guid aatfId, Guid weeeSentOnId, bool isAatf)
         {
             using (var client = apiClient())
             {
@@ -51,7 +51,8 @@
                     ReturnId = returnId,
                     AatfId = aatfId,
                     OrganisationId = organisationId,
-                    WeeeSentOn = weeeSentOn
+                    WeeeSentOn = weeeSentOn,
+                    IsAaft = isAatf
                 });
 
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
@@ -75,7 +76,7 @@
                 {
                     if (viewModel.SelectedValue == "Yes")
                     {
-                        var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new RemoveWeeeSentOn(viewModel.WeeeSentOnId));
+                        await client.SendAsync(User.GetAccessToken(), new RemoveWeeeSentOn(viewModel.WeeeSentOnId, viewModel.IsAatf));
                     }
                     return AatfRedirect.SentOnSummaryList(viewModel.OrganisationId, viewModel.ReturnId, viewModel.AatfId);
                 }

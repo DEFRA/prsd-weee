@@ -148,7 +148,6 @@
         {
             var sentOn = context.WeeeSentOn.Where(w => w.ReturnId == message.ReturnId)
                 .Include(w => w.WeeeSentOnAmounts)
-                .Include(w => w.OperatorAddress)
                 .Include(w => w.Aatf)
                 .Include(w => w.SiteAddress)
                 .ToList();
@@ -160,11 +159,11 @@
 
                 foreach (var weeeSentOn in sentOn)
                 {
-                    context.Entry(weeeSentOn.SiteAddress).State = EntityState.Added;
                     context.Entry(weeeSentOn.Aatf).State = EntityState.Unchanged;
 
-                    if (weeeSentOn.OperatorAddress != null)
+                    if (weeeSentOn.SiteAddress != null && weeeSentOn.OperatorAddress != null)
                     {
+                        context.Entry(weeeSentOn.SiteAddress).State = EntityState.Added;
                         context.Entry(weeeSentOn.OperatorAddress).State = EntityState.Added;
                     }
                 }

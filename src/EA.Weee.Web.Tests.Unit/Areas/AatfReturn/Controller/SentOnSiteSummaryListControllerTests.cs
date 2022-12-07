@@ -92,6 +92,15 @@
         [Fact]
         public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
             result.ViewName.Should().BeEmpty();
@@ -102,6 +111,14 @@
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>(), returnId, aatfId);
 
@@ -116,6 +133,12 @@
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
             var weeeSentOnList = A.Fake<List<WeeeSentOnSummaryListData>>();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
 
             var model = new SentOnSiteSummaryListViewModel()
             {
@@ -127,6 +150,8 @@
 
             A.CallTo(() => mapper.Map(A<ReturnAndAatfToSentOnSummaryListViewModelMapTransfer>._)).Returns(model);
 
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
             var result = await controller.Index(organisationId, returnId, aatfId) as ViewResult;
 
             result.Model.Should().BeEquivalentTo(model);
@@ -136,8 +161,15 @@
         public async void IndexGet_GivenReturn_SentOnSiteSummaryListViewModelShouldBeBuilt()
         {
             var weeeSentOnList = A.Fake<List<WeeeSentOnData>>();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
@@ -145,16 +177,35 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        public async void IndexPost_OnSubmit_CopyPreviousQuarterData_And_PageRedirectsToSentOnSiteSummaryList()
         {
-            var model = new SentOnSiteSummaryListViewModel();
             var returnId = new Guid();
+            var organisationId = new Guid();
+            var aatfId = new Guid();
+            var @return = A.Fake<ReturnData>();
+            var quarterData = new Quarter(2019, QuarterType.Q1);
+            var quarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow();
+
+            @return.Quarter = quarterData;
+            @return.QuarterWindow = quarterWindow;
+
+            var model = new SentOnSiteSummaryListViewModel()
+            {
+                ReturnId = returnId,
+                OrganisationId = organisationId,
+                AatfId = aatfId
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
+
             var result = await controller.Index(model) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("AatfTaskList");
+            result.RouteValues["controller"].Should().Be("SentOnSiteSummaryList");
             result.RouteValues["area"].Should().Be("AatfReturn");
             result.RouteValues["returnId"].Should().Be(returnId);
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+            result.RouteValues["aatfId"].Should().Be(aatfId);
         }
     }
 }
