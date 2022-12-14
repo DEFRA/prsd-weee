@@ -22,11 +22,13 @@
 
         if (Model.IsChkCopyPreviousQuarterVisible)
         {
-            <div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" id="chkCopyPreviousQuater" name="chkCopyPreviousQuater" type="checkbox" onclick="copyPreviousQuaterData();">
-                <label class="govuk-label govuk-checkboxes__label" for="chkCopyPreviousQuater">
-                    Copy added AATFs / ATFs from previous quarter
-                </label>
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="chkCopyPreviousQuater" name="chkCopyPreviousQuater" type="checkbox" onclick="copyPreviousQuaterData();">
+                    <label class="govuk-label govuk-checkboxes__label" for="chkCopyPreviousQuater">
+                        Copy added AATFs / ATFs from previous quarter
+                    </label>
+                </div>
             </div>
         }
     }
@@ -41,7 +43,7 @@
                         <th class="govuk-table__header" scope="col">AATF approval number</th>
                         <th class="govuk-table__header" scope="col">WEEE sent B2C (tonnes)</th>
                         <th class="govuk-table__header" scope="col">WEEE sent B2B (tonnes)</th>
-                        <th class="govuk-table__header" scope="col" style="min-width:125px">Actions</th>
+                        <th class="govuk-table__header" scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">

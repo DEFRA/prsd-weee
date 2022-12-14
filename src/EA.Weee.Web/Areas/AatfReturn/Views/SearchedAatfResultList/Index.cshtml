@@ -9,7 +9,7 @@
 
 <section id="main-content">
     <h1 class="govuk-heading-l" style="padding-top: 0px;">Search results</h1>
-    <h3 class="govuk-heading-m">We found results for '@Model.AatfName'</h3>
+    <h2 class="govuk-heading-m">We found results for '@Model.AatfName'</h2>
 
     @using (Html.BeginForm("Index", "SearchedAatfResultList", FormMethod.Post))
     {
@@ -23,49 +23,53 @@
         @Html.HiddenFor(m => m.SelectedSiteName)
 
         <p class="govuk-body">Select the AATF the waste was sent to from the list below</p>
-        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-            @if (Model.Sites.Count > 0)
-            {
-                <div class="govuk-table__head">
-                    <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                        <div class="govuk-grid-column-one-quarter" style="width:30% !important">
+
+        if (Model.Sites.Count > 0)
+        {
+            <table class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-grid-row govuk-table__row govuk-table__header">
+                        <th scope="col" class="govuk-table__header">
                             AATF name and address
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="width:30% !important">
+                        </th>
+                        <th scope="col" class="govuk-table__header">
                             Operator name and address
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="width:30% !important">
+                        </th>
+                        <th scope="col" class="govuk-table__header">
                             AATF approval number
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="width:10% !important">
+                        </th>
+                        <th scope="col" class="govuk-table__header">
                             Select
-                        </div>
-                    </div>
-                </div>
-                foreach (var weeeSentOn in Model.Sites)
-                {
-                    <div class="govuk-grid-row govuk-table__cell">
-                        <div class="govuk-grid-column-one-quarter" style="width:30% !important">
-                            @Html.Raw(Model.CreateLongAddress(weeeSentOn.SiteAddress))
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="width:30% !important">
-                            @Html.Raw(Model.CreateLongAddress(weeeSentOn.OperatorAddress))
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="width:30% !important">
-                            @Html.Raw(weeeSentOn.ApprovalNumber)
-                        </div>
-                        <div class="govuk-grid-column-one-quarter" style="width:10% !important">
-                            @Html.RadioButtonFor(m => m.SelectedAatfId, weeeSentOn.WeeeAatfId, new { @onclick = "setSiteSelectedId('" + weeeSentOn.WeeeAatfId + "','" + weeeSentOn.SiteAddress.Name + "')" })
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="govuk-!-padding-bottom-8"></div>
-                <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another ATF link.</p>
-            }
-        </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var weeeSentOn in Model.Sites)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @Html.Raw(Model.CreateLongAddress(weeeSentOn.SiteAddress))
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.Raw(Model.CreateLongAddress(weeeSentOn.OperatorAddress))
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.Raw(weeeSentOn.ApprovalNumber)
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.RadioButtonFor(m => m.SelectedAatfId, weeeSentOn.WeeeAatfId, new { @onclick = "setSiteSelectedId('" + weeeSentOn.WeeeAatfId + "','" + weeeSentOn.SiteAddress.Name + "')" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="govuk-!-padding-bottom-8"></div>
+            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another ATF link.</p>
+        }
+
         <div class="govuk-!-padding-bottom-2"></div>
 
         <p class="govuk-body">

@@ -970,15 +970,11 @@ input[type="search"]:focus::-webkit-search-cancel-button {
 
 input[type='radio'] {
     -webkit-appearance: none;
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
     border: 2px solid black;
     border-radius: 100%;
     outline: none;
-}
-
-input[type='radio']:hover {
-    box-shadow: 0 0 5px 0px orange inset;
 }
 
 input[type='radio']:before {
