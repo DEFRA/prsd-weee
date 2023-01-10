@@ -7,13 +7,13 @@
     using Core.Helpers;
     using Domain.AatfReturn;
     using Domain.Organisation;
-    using Domain.Scheme;
     using Evidence;
     using FakeItEasy;
     using FluentAssertions;
     using Lookup;
     using Prsd.Core;
     using Weee.Tests.Core;
+    using Weee.Tests.Core.DataHelpers;
     using Xunit;
 
     public class NoteTests : SimpleUnitTestBase
@@ -217,110 +217,6 @@
 
             TransferNoteShouldBeEqualTo(result, date);
             SystemTime.Unfreeze();
-        }
-        
-        [Fact]
-        public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_StatusShouldBeUpdated()
-        {
-            //arrange
-            var date = new DateTime(2022, 4, 1);
-
-            var note = CreateNote();
-            
-            //act
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-
-            //asset
-            note.Status.Should().Be(NoteStatus.Submitted);
-        }
-
-        [Fact]
-        public void UpdateStatus_GivenSubmittedToReturnedStatusUpdate_StatusShouldBeUpdated()
-        {
-            //arrange
-            var date = new DateTime(2022, 4, 1);
-            var note = CreateNote();
-
-            //act
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-            note.UpdateStatus(NoteStatus.Returned, "user", date);
-
-            //asset
-            note.Status.Should().Be(NoteStatus.Returned);
-        }
-
-        [Fact]
-        public void UpdateStatus_GivenReturnedToSubmittedStatusUpdate_StatusShouldBeUpdated()
-        {
-            //arrange
-            var date = new DateTime(2022, 4, 1);
-            var note = CreateNote();
-
-            //act
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-            note.UpdateStatus(NoteStatus.Approved, "user", date);
-            note.UpdateStatus(NoteStatus.Returned, "user", date);
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-
-            //asset
-            note.Status.Should().Be(NoteStatus.Submitted);
-        }
-
-        [Fact]
-        public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_ShouldAddStatusHistory()
-        {
-            //arrange
-            var date = new DateTime(2022, 4, 1);
-            var note = CreateNote();
-
-            //act
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-
-            //asset
-            note.NoteStatusHistory.Count.Should().Be(1);
-            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
-            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Draft);
-            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Submitted);
-            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
-        }
-
-        [Fact]
-        public void UpdateStatus_GivenReturnedToSubmittedStatusUpdate_ShouldAddStatusHistory()
-        {
-            //arrange
-            var date = new DateTime(2022, 4, 1);
-            var note = CreateNote();
-
-            //act
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-            note.UpdateStatus(NoteStatus.Returned, "user", date);
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-
-            //asset
-            note.NoteStatusHistory.Count.Should().Be(3);
-            note.NoteStatusHistory.ElementAt(2).ChangedById.Should().Be("user");
-            note.NoteStatusHistory.ElementAt(2).FromStatus.Should().Be(NoteStatus.Returned);
-            note.NoteStatusHistory.ElementAt(2).ToStatus.Should().Be(NoteStatus.Submitted);
-            note.NoteStatusHistory.ElementAt(2).ChangedDate.Should().Be(date);
-        }
-
-        [Fact]
-        public void UpdateStatus_GivenSubmittedToReturnedStatusUpdate_ShouldAddStatusHistory()
-        {
-            //arrange
-            var date = new DateTime(2022, 4, 1);
-            var note = CreateNote();
-
-            //act
-            note.UpdateStatus(NoteStatus.Submitted, "user", date);
-            note.UpdateStatus(NoteStatus.Returned, "user", date);
-
-            //asset
-            note.NoteStatusHistory.Count.Should().Be(2);
-            note.NoteStatusHistory.ElementAt(1).ChangedById.Should().Be("user");
-            note.NoteStatusHistory.ElementAt(1).FromStatus.Should().Be(NoteStatus.Submitted);
-            note.NoteStatusHistory.ElementAt(1).ToStatus.Should().Be(NoteStatus.Returned);
-            note.NoteStatusHistory.ElementAt(1).ChangedDate.Should().Be(date);
         }
 
         [Fact]
@@ -592,6 +488,322 @@
             //assert
             note.ApprovedTransfererSchemeName.Should().Be(schemeName);
             note.ApprovedTransfererAddress.Should().Be(address);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Submitted);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenReturnedToSubmittedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Returned, "user", date);
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Returned);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void UpdateStatus_GivenNotDraftOrReturnedToSubmittedStatusUpdate_InvalidOperationExpected(NoteStatus status)
+        {
+            if (status == NoteStatus.Draft || status == NoteStatus.Returned)
+            {
+                return;
+            }
+
+            //arrange
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, status, note);
+
+            //act
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Submitted, "user", TestFixture.Create<DateTime>()));
+
+            //asset
+            result.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenDraftToSubmittedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Draft, note);
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(1);
+            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Draft);
+            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenReturnedToSubmittedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Returned, note);
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(1);
+            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Returned);
+            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenApprovedToVoidStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Approved, "user", date);
+            note.UpdateStatus(NoteStatus.Void, "user", date);
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Void);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenApprovedToVoidStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note);
+
+            //act
+            note.UpdateStatus(NoteStatus.Void, "user", date);
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(1);
+            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Approved);
+            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Void);
+            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void UpdateStatus_GivenNotApprovedToVoidStatusUpdate_InvalidOperationExpected(NoteStatus status)
+        {
+            if (status == NoteStatus.Approved)
+            {
+                return;
+            }
+
+            //arrange
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, status, note);
+
+            //act
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Void, "user", TestFixture.Create<DateTime>()));
+
+            //asset
+            result.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenSubmittedToApprovedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Approved, "user", date);
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Approved);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void UpdateStatus_GivenNotSubmittedToApprovedStatusUpdate_InvalidOperationExpected(NoteStatus status)
+        {
+            if (status == NoteStatus.Submitted)
+            {
+                return;
+            }
+
+            //arrange
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, status, note);
+
+            //act
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Approved, "user", TestFixture.Create<DateTime>()));
+
+            //asset
+            result.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenSubmittedToApprovedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Submitted, note);
+
+            //act
+            note.UpdateStatus(NoteStatus.Approved, "user", date);
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(1);
+            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Approved);
+            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenSubmittedToRejectedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Rejected, "user", date);
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Rejected);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenSubmittedToRejectedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Submitted, note);
+
+            //act
+            note.UpdateStatus(NoteStatus.Rejected, "user", date);
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(1);
+            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Rejected);
+            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenSubmittedToReturnedStatusUpdate_StatusShouldBeUpdated()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+
+            //act
+            note.UpdateStatus(NoteStatus.Submitted, "user", date);
+            note.UpdateStatus(NoteStatus.Returned, "user", date);
+
+            //asset
+            note.Status.Should().Be(NoteStatus.Returned);
+        }
+
+        [Fact]
+        public void UpdateStatus_GivenSubmittedToReturnedStatusUpdate_ShouldAddStatusHistory()
+        {
+            //arrange
+            var date = new DateTime(2022, 4, 1);
+
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Submitted, note);
+
+            //act
+            note.UpdateStatus(NoteStatus.Returned, "user", date);
+
+            //asset
+            note.NoteStatusHistory.Count.Should().Be(1);
+            note.NoteStatusHistory.ElementAt(0).ChangedById.Should().Be("user");
+            note.NoteStatusHistory.ElementAt(0).FromStatus.Should().Be(NoteStatus.Submitted);
+            note.NoteStatusHistory.ElementAt(0).ToStatus.Should().Be(NoteStatus.Returned);
+            note.NoteStatusHistory.ElementAt(0).ChangedDate.Should().Be(date);
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void UpdateStatus_GivenNotSubmittedToRejectedStatusUpdate_InvalidOperationExpected(NoteStatus status)
+        {
+            if (status == NoteStatus.Submitted)
+            {
+                return;
+            }
+
+            //arrange
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, status, note);
+
+            //act
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Rejected, "user", TestFixture.Create<DateTime>()));
+
+            //asset
+            result.Should().BeOfType<InvalidOperationException>();
+        }
+
+        [Theory]
+        [ClassData(typeof(NoteStatusData))]
+        public void UpdateStatus_GivenNotSubmittedToReturnedStatusUpdate_InvalidOperationExpected(NoteStatus status)
+        {
+            if (status == NoteStatus.Submitted)
+            {
+                return;
+            }
+
+            //arrange
+            var note = CreateNote();
+            ObjectInstantiator<Note>.SetProperty(n => n.Status, status, note);
+
+            //act
+            var result = Record.Exception(() => note.UpdateStatus(NoteStatus.Returned, "user", TestFixture.Create<DateTime>()));
+
+            //asset
+            result.Should().BeOfType<InvalidOperationException>();
         }
 
         private void ShouldBeEqualTo(Note result, DateTime date)
