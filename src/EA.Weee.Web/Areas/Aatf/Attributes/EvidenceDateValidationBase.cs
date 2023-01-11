@@ -108,7 +108,7 @@
 
         protected ValidationResult ValidateStartDate(DateTime startDate, DateTime? endDate, DateTime currentDate)
         {
-            if (startDate > new DateTime(currentDate.Year, SystemTime.UtcNow.Month, SystemTime.UtcNow.Day))
+            if (startDate.Date > currentDate.Date)
             {
                 return new ValidationResult("The start date cannot be in the future. Select today's date or earlier.");
             }
