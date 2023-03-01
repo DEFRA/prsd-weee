@@ -6,6 +6,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.AatfReturn;
+    using EA.Weee.Requests.AatfReturn.Obligated;
     using EA.Weee.Web.Areas.AatfReturn.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.AatfReturn.Requests;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
@@ -22,7 +23,7 @@
     [ValidateReturnCreatedActionFilter]
     public class SearchedAatfResultListController : ExternalSiteController
     {
-        private readonly Func<IWeeeClient> apiClient;        
+        private readonly Func<IWeeeClient> apiClient;
         private readonly IMap<ReturnAndAatfToSearchedAatfViewModelMapTransfer, SearchedAatfResultListViewModel> mapper;
         private readonly ICreateWeeeSentOnAatfRequestCreator requestCreator;
         private readonly BreadcrumbService breadcrumb;
@@ -104,7 +105,7 @@
                     }
                     else
                     {
-                        return await Task.Run<ActionResult>(() => RedirectToAction("Index", "NoResultsFound", new { area = "AatfReturn", returnId = returnId, aatfId = aatfId, aatfName = selectedAatfName, isCanNotFindLinkClick = false }));                        
+                        return await Task.Run<ActionResult>(() => RedirectToAction("Index", "NoResultsFound", new { area = "AatfReturn", returnId = returnId, aatfId = aatfId, aatfName = selectedAatfName, isCanNotFindLinkClick = false }));
                     }
                 }
             }
@@ -118,20 +119,29 @@
             {
                 using (var client = apiClient())
                 {
-                    var aatfData = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternalSearch(searchedAatfModel.SelectedAatfId));
+                    var aatf = await client.SendAsync(User.GetAccessToken(), new Weee.Requests.Aatf.GetAatfById(searchedAatfModel.SelectedAatfId));
+                    var weeeSentOn = await client.SendAsync(User.GetAccessToken(), new GetWeeeSentOn(searchedAatfModel.AatfId, searchedAatfModel.ReturnId, null));
 
-                    var viewModel = new CreateWeeeSentOnViewModel()
+                    var isAlreadyExists = weeeSentOn.Find(x => x.SiteAddressId == aatf.SiteAddress.Id && x.OperatorAddressId == aatf.Organisation.BusinessAddress.Id);
+                    if (isAlreadyExists != null)
                     {
-                        AatfId = searchedAatfModel.AatfId,
-                        OrganisationId = searchedAatfModel.OrganisationId,
-                        ReturnId = searchedAatfModel.ReturnId,
-                        SelectedAatfId = searchedAatfModel.SelectedAatfId
-                    };
+                        return AatfRedirect.ObligatedSentOn(searchedAatfModel.SelectedSiteName, searchedAatfModel.OrganisationId, searchedAatfModel.AatfId, searchedAatfModel.ReturnId, isAlreadyExists.WeeeSentOnId, false, true);
+                    }
+                    else
+                    {
+                        var viewModel = new CreateWeeeSentOnViewModel()
+                        {
+                            AatfId = searchedAatfModel.AatfId,
+                            OrganisationId = searchedAatfModel.OrganisationId,
+                            ReturnId = searchedAatfModel.ReturnId,
+                            SelectedAatfId = searchedAatfModel.SelectedAatfId
+                        };
 
-                    var request = requestCreator.ViewModelToRequest(viewModel);
-                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                        var request = requestCreator.ViewModelToRequest(viewModel);
+                        var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return AatfRedirect.ObligatedSentOn(searchedAatfModel.SelectedSiteName, searchedAatfModel.OrganisationId, searchedAatfModel.AatfId, searchedAatfModel.ReturnId, result, false, true);
+                        return AatfRedirect.ObligatedSentOn(searchedAatfModel.SelectedSiteName, searchedAatfModel.OrganisationId, searchedAatfModel.AatfId, searchedAatfModel.ReturnId, result, false, true);
+                    }
                 }
             }
             else
