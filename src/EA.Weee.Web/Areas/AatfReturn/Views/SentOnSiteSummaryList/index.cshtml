@@ -50,7 +50,7 @@
                     @foreach (var address in Model.Sites)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell break-word">
                                 @Html.Raw(Model.CreateLongAddress(address.SiteAddress))
                             </td>
                             <td class="govuk-table__cell break-word">
@@ -59,13 +59,13 @@
                             <td class="govuk-table__cell break-word">
                                 @address.ApprovalNumber
                             </td>
-                            <td class="govuk-table__cell break-word">
+                            <td class="govuk-table__cell">
                                 @address.Tonnages.B2C
                             </td>
-                            <td class="govuk-table__cell break-word">
+                            <td class="govuk-table__cell">
                                 @address.Tonnages.B2B
                             </td>
-                            <td class="govuk-table__cell break-word">
+                            <td class="govuk-table__cell">
                                 @if (address.ApprovalNumber == null || address.ApprovalNumber == "")
                                 {
                                     @Html.NavigationRouteLink("Edit details", "Edit site address" + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, isEditDetails = true, isEditTonnage = false, action = "Index", controller = "SentOnCreateSite" })
@@ -90,7 +90,7 @@
         else
         {
             <div class="govuk-!-padding-bottom-8"></div>
-            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another ATF link.</p>
+            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another AATF / ATF link.</p>
         }
     </div>
     <div class="govuk-!-padding-bottom-2"></div>

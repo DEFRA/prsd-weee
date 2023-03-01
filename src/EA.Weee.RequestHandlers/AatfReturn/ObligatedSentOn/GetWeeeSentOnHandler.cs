@@ -79,6 +79,7 @@
                         };
                         weeeSentOnData.OperatorAddressId = item.OperatorAddressId;
                         weeeSentOnData.ApprovalNumber = aatfData.ApprovalNumber;
+                        weeeSentOnData.AatfId = aatfData.AatfId;
                     }
 
                     weeeSentOnList.Add(weeeSentOnData);

@@ -31,8 +31,10 @@
             var weeeSentOnList = new List<WeeeSentOnData>();
             var weeeSentOn = await getSentOnAatfSiteDataAccess.GetWeeeSentOnByReturnAndAatf(searchAatfAddress.CurrentSelectedAatfId, searchAatfAddress.CurrentSelectedReturnId);
 
-            var aatfIdList = new List<Guid>();
-            aatfIdList.Add(searchAatfAddress.CurrentSelectedAatfId);
+            var aatfIdList = new List<Guid>
+            {
+                searchAatfAddress.CurrentSelectedAatfId
+            };
 
             foreach (var item in weeeSentOn)
             {
@@ -49,6 +51,7 @@
                                          .Where(x => (x.Name.Contains(searchAatfAddress.SearchTerm) ||
                                                       x.ApprovalNumber.Contains(searchAatfAddress.SearchTerm) ||
                                                       x.Organisation.Name.Contains(searchAatfAddress.SearchTerm)) &&
+                                                      (x.FacilityType.Value == 1) &&
                                                      (!(aatfIdList.Contains(x.Id)) && x.ComplianceYear == selectedAatf.ComplianceYear))
                                          .Select(x => new ReturnAatfAddressResult { SearchTermId = x.Id, SearchTermName = x.Name, OrganisationId = x.Organisation.Id })
                                          .OrderBy(x => x.SearchTermName)
@@ -61,6 +64,7 @@
                 var resultlist = await context.Aatfs.Where(x => (x.Name.Contains(searchAatfAddress.SearchTerm) ||
                                                        x.ApprovalNumber.Contains(searchAatfAddress.SearchTerm) ||
                                                        x.Organisation.Name.Contains(searchAatfAddress.SearchTerm)) &&
+                                                       (x.FacilityType.Value == 1) &&
                                                       (!(aatfIdList.Contains(x.Id)) && x.ComplianceYear == selectedAatf.ComplianceYear))
 
                                          .Select(x => new ReturnAatfAddressResult { SearchTermId = x.Id, SearchTermName = (x.Name + " - " + x.ApprovalNumber), OrganisationId = x.Organisation.Id })

@@ -137,6 +137,7 @@
     <Compile Include="AatfReturn\CopyPreviousQuarterAatfDataHandler.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
+    <Compile Include="Aatf\GetAatfByIdHandler.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
     <Compile Include="Admin\GetComplianceYearsFilterHandler.cs" />
