@@ -832,7 +832,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGetWithDefaultAndEvidenceSummaryTab_GivenAatfSummary_ModelShouldBeBuilt(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithDefaultAndEvidenceSummaryTab_GivenAatfSummary_ModelShouldBeBuilt(ManageEvidenceOverviewDisplayOption? selectedTab)
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -842,7 +842,7 @@
                 WeeeClient.SendAsync(A<string>._,
                     A<GetAatfSummaryRequest>._)).Returns(summary);
 
-            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString());
+            await ManageEvidenceController.Index(organisationId, aatfId, selectedTab?.ToDisplayString());
 
             A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>.That.Matches(e =>
                 e.AatfEvidenceSummaryData.Equals(summary) && 
@@ -853,7 +853,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGetWithDefaultAndEvidenceSummaryTab_Model_ModelShouldBeReturned(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithDefaultAndEvidenceSummaryTab_Model_ModelShouldBeReturned(ManageEvidenceOverviewDisplayOption? selectedTab)
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -863,7 +863,7 @@
             A.CallTo(() => Mapper.Map<ManageEvidenceSummaryViewModel>(A<EvidenceSummaryMapTransfer>._)).Returns(model);
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(evidenceNoteViewModel);
 
-            var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab.ToDisplayString()) as ViewResult;
+            var result = await ManageEvidenceController.Index(organisationId, aatfId, selectedTab?.ToDisplayString()) as ViewResult;
 
             var resultModel = (ManageEvidenceSummaryViewModel)result.Model;
             resultModel.Should().Be(model);

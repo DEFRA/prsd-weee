@@ -10,7 +10,7 @@
         {
             var address = AddressBuilder.NewAddress;
 
-            Assert.NotEqual(null, address);
+            Assert.NotNull(address);
         }
 
         [Fact]

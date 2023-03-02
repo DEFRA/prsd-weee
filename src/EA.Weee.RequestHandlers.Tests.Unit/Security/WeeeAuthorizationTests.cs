@@ -37,7 +37,7 @@
             Action action = () => authorization.EnsureCanAccessInternalArea();
 
             // Assert
-            Assert.Throws(typeof(SecurityException), action);
+            Assert.Throws<SecurityException>(action);
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).MustNotHaveHappened();
         }
 
@@ -61,7 +61,7 @@
             Action action = () => authorization.EnsureCanAccessInternalArea();
 
             // Assert
-            Assert.Throws(typeof(SecurityException), action);
+            Assert.Throws<SecurityException>(action);
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).MustHaveHappened();
         }
 
@@ -199,7 +199,7 @@
             Action action = () => authorization.EnsureCanAccessExternalArea();
 
             // Assert
-            Assert.Throws(typeof(SecurityException), action);
+            Assert.Throws<SecurityException>(action);
         }
 
         [Fact]
@@ -261,7 +261,7 @@
             Action action = () => authorization.EnsureOrganisationAccess(organisationID);
 
             // Assert
-            Assert.Throws(typeof(SecurityException), action);
+            Assert.Throws<SecurityException>(action);
         }
 
         [Fact]
@@ -323,7 +323,7 @@
             Action action = () => authorization.EnsureInternalOrOrganisationAccess(organisationID);
 
             // Assert
-            Assert.Throws(typeof(SecurityException), action);
+            Assert.Throws<SecurityException>(action);
         }
 
         [Fact]
@@ -415,7 +415,7 @@
             Action action = () => authorization.EnsureSchemeAccess(schemeID);
 
             // Assert
-            Assert.Throws(typeof(SecurityException), action);
+            Assert.Throws<SecurityException>(action);
         }
 
         [Fact]

@@ -10,7 +10,7 @@
         {
             var contact = ContactBuilder.NewContact;
 
-            Assert.NotEqual(null, contact);
+            Assert.NotNull(contact);
         }
 
         [Fact]
