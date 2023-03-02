@@ -201,6 +201,7 @@
     <Compile Include="DatabaseSeedingException.cs" />
     <Compile Include="Handlers\EditTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAatfSummaryReportHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetSchemeDataForFilterRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAllAatfsForComplianceYearHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceTransferNoteReportHandlerRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteReportHandlerRequestHandlerIntegrationTests.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Handlers\EvidenceNoteSeeder.cs" />
     <Compile Include="Handlers\GetEvidenceNotesSelectedForTransferRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeObligationAndEvidenceTotalsReportHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\GetSchemesWithObligationOrEvidenceByComplianceYearHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemesWithObligationHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetObligationSummaryRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetEvidenceNoteForInternalUserRequestHandlerIntegrationTests.cs" />

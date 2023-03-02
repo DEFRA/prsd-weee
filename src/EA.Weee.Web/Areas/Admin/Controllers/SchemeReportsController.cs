@@ -115,13 +115,17 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EvidenceAndObligationProgress()
+        public async Task<ActionResult> EvidenceAndObligationProgress(int? selectedYear)
         {
             SetBreadcrumb();
 
             ViewBag.TriggerDownload = false;
 
-            var model = new EvidenceAndObligationProgressViewModel();
+            var model = new EvidenceAndObligationProgressViewModel
+            {
+                SelectedYear = selectedYear ?? 0
+            };
+
             await PopulateFilters(model);
 
             return View(model);
@@ -495,7 +499,7 @@
                 configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom,
                 await FetchCurrentSystemDate());
 
-            var schemes = await FetchSchemes();
+            var schemes = await FetchSchemesWithObligationOrEvidence(model.SelectedYear);
 
             model.ComplianceYears = new SelectList(years);
             model.Schemes = new SelectList(schemes, "Id", "SchemeName");

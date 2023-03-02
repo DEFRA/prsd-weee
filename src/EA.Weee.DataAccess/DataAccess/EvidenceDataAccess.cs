@@ -159,17 +159,13 @@
             return complianceYearsList;
         }
 
-        public async Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear)
+        public async Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear, List<NoteStatus> allowedStatus)
         {
-            return await context.Notes.Where(n => n.ComplianceYear == complianceYear).Select(s => s.Aatf).Distinct().ToListAsync();
-        }
+            var status = allowedStatus.Select(e => e.Value);
 
-        public async Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds)
-        {
-            var note = await context.Notes.Where(n => evidenceNoteIds.Contains(n.Id))
-                .OrderBy(n1 => n1.StartDate).FirstAsync();
-
-            return note.ComplianceYear;
+            return await context.Notes.Where(n => n.ComplianceYear == complianceYear && status.Contains(n.Status.Value))
+                .Select(s => s.Aatf)
+                .Distinct().ToListAsync();
         }
 
         public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId,
@@ -324,7 +320,10 @@
             return note;
         }
 
-        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, int complianceYear)
+        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, 
+            int complianceYear, 
+            List<NoteStatus> allowedStatus,
+            List<NoteType> allowedNoteTypes)
         {
             var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear);
 
@@ -351,14 +350,24 @@
                 }
             }
 
-            return await notes.Select(n => n.Recipient)
+            var status = allowedStatus.Select(e => e.Value);
+            var noteTypes = allowedNoteTypes.Select(e => e.Value);
+
+            return await notes.Where(n => status.Contains(n.Status.Value) && noteTypes.Contains(n.NoteType.Value))
+                .Select(n => n.Recipient)
                 .Distinct()
                 .ToListAsync();
         }
 
-        public async Task<List<Organisation>> GetTransferOrganisations(int complianceYear)
+        public async Task<List<Organisation>> GetTransferOrganisations(int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes)
         {
-            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && n.NoteType.Value == NoteType.TransferNote.Value);
+            var status = allowedStatus.Select(e => e.Value);
+            var noteTypes = allowedNoteTypes.Select(e => e.Value);
+
+            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && 
+                                                 n.NoteType.Value == NoteType.TransferNote.Value &&
+                                                 status.Contains(n.Status.Value) && 
+                                                 noteTypes.Contains(n.NoteType.Value));
 
             return await notes.Select(n => n.Organisation)
                 .Distinct()
