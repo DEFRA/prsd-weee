@@ -49,20 +49,18 @@
 
         Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids);
 
-        Task<int> GetComplianceYearByNotes(List<Guid> evidenceNoteIds);
-
         Task<Note> UpdateTransfer(Note note, Organisation recipient,
             IList<NoteTransferTonnage> tonnages,
             NoteStatus status,
             DateTime updateDate);
 
-        Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, int complianceYear);
+        Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes);
 
-        Task<List<Organisation>> GetTransferOrganisations(int complianceYear);
+        Task<List<Organisation>> GetTransferOrganisations(int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes);
 
         Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear);
 
-        Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear);
+        Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear, List<NoteStatus> allowedStatus);
 
         Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type);
     }

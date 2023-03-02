@@ -543,14 +543,30 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
             var recipients = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var transfers = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                NoteType.Transfer
+            };
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetSchemeDataForFilterRequest>.That.Matches(r =>
-                    r.RecipientOrTransfer == RecipientOrTransfer.Recipient && r.AatfId == null && r.ComplianceYear == model.SelectedComplianceYear))).Returns(recipients);
+                    r.RecipientOrTransfer == RecipientOrTransfer.Recipient && 
+                    r.AatfId == null && 
+                    r.ComplianceYear == model.SelectedComplianceYear &&
+                    r.AllowedStatuses.SequenceEqual(allowedStatus) &&
+                    r.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).Returns(recipients);
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._,
                 A<GetSchemeDataForFilterRequest>.That.Matches(r =>
-                    r.RecipientOrTransfer == RecipientOrTransfer.Transfer && r.AatfId == null && r.ComplianceYear == model.SelectedComplianceYear))).Returns(transfers);
+                    r.RecipientOrTransfer == RecipientOrTransfer.Transfer && 
+                    r.AatfId == null && 
+                    r.ComplianceYear == model.SelectedComplianceYear &&
+                    r.AllowedStatuses.SequenceEqual(allowedStatus) && 
+                    r.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).Returns(transfers);
 
             //act
             await ManageEvidenceController.Index(Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers), model);
@@ -587,14 +603,22 @@
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("view-all-evidence-notes")]
-        [InlineData("view-all-evidence-transfers")]
-        public async void IndexGet_GivenManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab)
+        [InlineData(null, NoteType.Evidence)]
+        [InlineData("view-all-evidence-notes", NoteType.Evidence)]
+        [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
+        public async void IndexGet_GivenManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
               .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                noteType
+            };
 
             // act
             await ManageEvidenceController.Index(tab, model);
@@ -603,18 +627,28 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == model.SelectedComplianceYear &&
                      g.AatfId == null &&
-                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                     g.AllowedStatuses.SequenceEqual(allowedStatus) &&
+                     g.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("view-all-evidence-notes")]
-        [InlineData("view-all-evidence-transfers")]
-        public async void IndexGet_GivenManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab)
+        [InlineData(null, NoteType.Evidence)]
+        [InlineData("view-all-evidence-notes", NoteType.Evidence)]
+        [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
+        public async void IndexGet_GivenManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
             var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                noteType
+            };
 
             // act
             await ManageEvidenceController.Index(tab);
@@ -623,7 +657,9 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == complianceYears[0] &&
                      g.AatfId == null &&
-                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                     g.AllowedStatuses.SequenceEqual(allowedStatus) &&
+                     g.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -634,13 +670,23 @@
             // arrange
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
               .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                NoteType.Evidence
+            };
 
             // act
             await ManageEvidenceController.Index(tab, model);
 
             // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllAatfsForComplianceYearRequest>.That.Matches(
-                g => g.ComplianceYear == model.SelectedComplianceYear))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, 
+                A<GetAllAatfsForComplianceYearRequest>.That
+                .Matches(g => g.ComplianceYear == model.SelectedComplianceYear &&
+                              g.AllowedStatuses.SequenceEqual(allowedStatus)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -649,14 +695,24 @@
             // arrange
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
                 .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                NoteType.Transfer
+            };
 
             // act
             await ManageEvidenceController.Index(Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers), model);
 
             // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
-                g => g.ComplianceYear == model.SelectedComplianceYear &&
-                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, 
+                A<GetSchemeDataForFilterRequest>.That.Matches(g => g.ComplianceYear == model.SelectedComplianceYear &&
+                                                                   g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                                                                   g.AllowedStatuses.SequenceEqual(allowedStatus) &&
+                                                                   g.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -667,13 +723,23 @@
             // arrange
             var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                NoteType.Evidence
+            };
 
             // act
             await ManageEvidenceController.Index(tab);
 
             // assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllAatfsForComplianceYearRequest>.That.Matches(
-                g => g.ComplianceYear == complianceYears[0]))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, 
+                A<GetAllAatfsForComplianceYearRequest>.That.Matches(g =>
+                    g.ComplianceYear == complianceYears[0] &&
+                    g.AllowedStatuses.SequenceEqual(allowedStatus)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -682,6 +748,10 @@
             // arrange
             var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                NoteType.Transfer
+            };
 
             // act
             await ManageEvidenceController.Index(Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers), null);
@@ -689,7 +759,8 @@
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
                 g => g.ComplianceYear == complianceYears[0] &&
-                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient))).MustHaveHappenedOnceExactly();
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                     g.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
