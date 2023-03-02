@@ -101,11 +101,11 @@
     <Reference Include="FluentValidator, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidator.2.0.4\lib\netstandard1.3\FluentValidator.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl, Version=3.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.3.0.4\lib\net472\Flurl.dll</HintPath>
+    <Reference Include="Flurl, Version=3.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.3.0.7\lib\net472\Flurl.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl.Http, Version=3.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.Http.3.2.2\lib\net472\Flurl.Http.dll</HintPath>
+    <Reference Include="Flurl.Http, Version=3.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.Http.3.2.4\lib\net472\Flurl.Http.dll</HintPath>
     </Reference>
     <Reference Include="IdentityModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IdentityModel.1.13.1\lib\net45\IdentityModel.dll</HintPath>
