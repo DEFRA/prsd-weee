@@ -228,7 +228,7 @@
                 var result = await dataAccess.GetMemberRegistrationSchemesByComplianceYear(firstComplianceYear);
 
                 // Assert
-                Assert.Equal(1, result.Count);
+                Assert.Single(result);
                 Assert.Equal(scheme.SchemeName, result[0]);
             }
         }
@@ -385,7 +385,7 @@
                 var result = await dataAccess.GetEEEWEEEDataReturnSchemesByComplianceYear(secondComplianceYear);
 
                 // Assert
-                Assert.Equal(1, result.Count);
+                Assert.Single(result);
                 Assert.Equal(scheme.SchemeName, result[0]);
             }
         }

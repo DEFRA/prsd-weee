@@ -23,7 +23,7 @@
         {
             var aatfDeliveryLocation = AatfDeliveryLocationBuilder.NewAatfDeliveryLocation;
 
-            Assert.NotEqual(aatfDeliveryLocation, null);
+            Assert.NotEqual(null, aatfDeliveryLocation);
         }
 
         [Fact]

@@ -218,7 +218,7 @@
             ProducerDetailsScheme result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(true, result.HasSubmittedEEE);
+            Assert.True(result.HasSubmittedEEE);
         }
 
         /// <summary>
@@ -297,7 +297,7 @@
             ProducerDetailsScheme result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(false, result.HasSubmittedEEE);
+            Assert.False(result.HasSubmittedEEE);
         }
 
         /// <summary>
@@ -370,7 +370,7 @@
             ProducerDetailsScheme result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(false, result.HasSubmittedEEE);
+            Assert.False(result.HasSubmittedEEE);
         }
 
         /// <summary>
@@ -444,7 +444,7 @@
             ProducerDetailsScheme result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(false, result.HasSubmittedEEE);
+            Assert.False(result.HasSubmittedEEE);
         }
 
         [Fact]

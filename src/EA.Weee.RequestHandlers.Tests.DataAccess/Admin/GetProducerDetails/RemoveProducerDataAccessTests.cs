@@ -58,8 +58,8 @@
 
                 //Assert
                 Assert.NotNull(prodSubs);
-                Assert.Equal(1, prodSubs.Count());
-                Assert.Equal(true, prodSubs.First().MemberUpload.IsSubmitted);
+                Assert.Single(prodSubs);
+                Assert.True(prodSubs.First().MemberUpload.IsSubmitted);
             }
         }
     }

@@ -89,7 +89,7 @@
         [InlineData(QuarterType.Q4, FacilityType.Ae)]
         public async Task HandleAsync_GivenAddReturnRequest_DataAccessSubmitsIsCalled(QuarterType quarterType, FacilityType facility)
         {
-            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarterType, Year = year, FacilityType = Core.AatfReturn.FacilityType.Aatf };
+            var request = new AddReturn { OrganisationId = Guid.NewGuid(), Quarter = quarterType, Year = year, FacilityType = facility };
 
             var @return = A.Dummy<Return>();
             var organisation = new Organisation();

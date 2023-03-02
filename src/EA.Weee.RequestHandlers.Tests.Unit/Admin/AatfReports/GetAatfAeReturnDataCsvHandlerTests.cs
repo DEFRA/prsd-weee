@@ -232,10 +232,6 @@
         [Theory]
         [InlineData("Exclude resubmissions", false)]
         [InlineData("Include resubmissions", true)]
-        [InlineData("Exclude resubmissions", false)]
-        [InlineData("Include resubmissions", true)]
-        [InlineData("Exclude resubmissions", false)]
-        [InlineData("Include resubmissions", true)]
         public async Task HandleAsync_GivenMandatoryParametersAndAuthority_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
         {
             var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, fixture.Create<Guid>(), null, null, fixture.Create<string>(), includeResubmissions);
@@ -257,10 +253,6 @@
         [Theory]
         [InlineData("Exclude resubmissions", false)]
         [InlineData("Include resubmissions", true)]
-        [InlineData("Exclude resubmissions", false)]
-        [InlineData("Include resubmissions", true)]
-        [InlineData("Exclude resubmissions", false)]
-        [InlineData("Include resubmissions", true)]
         public async Task HandleAsync_GivenMandatoryParametersAndPanArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
         {
             var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), null, null, fixture.Create<Guid>(), null, fixture.Create<string>(), includeResubmissions);
@@ -280,10 +272,6 @@
         }
 
         [Theory]
-        [InlineData("Exclude resubmissions", false)]
-        [InlineData("Include resubmissions", true)]
-        [InlineData("Exclude resubmissions", false)]
-        [InlineData("Include resubmissions", true)]
         [InlineData("Exclude resubmissions", false)]
         [InlineData("Include resubmissions", true)]
         public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldNotContainLocalArea(string expectedText, bool includeResubmissions)

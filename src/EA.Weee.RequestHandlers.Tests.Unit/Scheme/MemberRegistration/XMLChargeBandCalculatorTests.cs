@@ -93,7 +93,7 @@
 
             // Assert
             Assert.NotNull(producerCharges);
-            Assert.Equal(producerCharges.Count, 5);
+            Assert.Equal(5, producerCharges.Count);
             Assert.True(producerCharges.ContainsKey("The Empire"));
             Assert.True(producerCharges.ContainsKey("Tom and Jerry"));
             Assert.True(producerCharges.ContainsKey("The Empire 1"));

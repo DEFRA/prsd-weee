@@ -136,7 +136,8 @@
             Assert.NotEmpty(data.FileContent);
         }
 
-        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        [Fact]
+        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect()
         {
             var request = new GetUkNonObligatedWeeeReceivedDataCsv(fixture.Create<int>());
 

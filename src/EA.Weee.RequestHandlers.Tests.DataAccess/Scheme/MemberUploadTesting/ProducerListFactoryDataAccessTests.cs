@@ -113,7 +113,7 @@
                 var result = await dataAccess.GetRegistrationNumbers(organisationId, complianceYear, 1);
 
                 // Assert
-                Assert.Equal(1, result.Count);
+                Assert.Single(result);
             }
         }
 
@@ -157,7 +157,7 @@
                 var result = await dataAccess.GetRegistrationNumbers(organisationId2, complianceYear, 2);
 
                 // Assert
-                Assert.Equal(1, result.Count);
+                Assert.Single(result);
                 Assert.Equal("987", result.First());
             }
         }
@@ -196,7 +196,7 @@
                 var result = await dataAccess.GetRegistrationNumbers(organisationId, 2015, 2);
 
                 // Assert
-                Assert.Equal(1, result.Count);
+                Assert.Single(result);
                 Assert.Equal("1234", result.First());
             }
         }
@@ -237,7 +237,7 @@
                 var result = await dataAccess.GetRegistrationNumbers(organisationId, complianceYear, 2);
 
                 // Assert
-                Assert.Equal(1, result.Count);
+                Assert.Single(result);
                 Assert.Equal("987", result.First());
             }
         }

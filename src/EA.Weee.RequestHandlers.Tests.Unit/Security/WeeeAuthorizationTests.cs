@@ -106,7 +106,7 @@
             bool result = authorization.CheckCanAccessInternalArea();
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).MustNotHaveHappened();
         }
 
@@ -130,7 +130,7 @@
             bool result = authorization.CheckCanAccessInternalArea();
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).MustHaveHappened();
         }
 
@@ -154,7 +154,7 @@
             bool result = authorization.CheckCanAccessInternalArea();
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).MustHaveHappened();
         }
 
@@ -178,7 +178,7 @@
             bool result = authorization.CheckCanAccessInternalArea(false);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).MustNotHaveHappened();
         }
 
@@ -219,7 +219,7 @@
             bool result = authorization.CheckCanAccessExternalArea();
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         [Fact]
@@ -242,7 +242,7 @@
             bool result = authorization.CheckCanAccessExternalArea();
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -280,7 +280,7 @@
             bool result = authorization.CheckOrganisationAccess(organisationID);
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         [Fact]
@@ -304,7 +304,7 @@
             bool result = authorization.CheckOrganisationAccess(organisationID);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -342,7 +342,7 @@
             bool result = authorization.CheckInternalOrOrganisationAccess(organisationID);
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         [Fact]
@@ -366,7 +366,7 @@
             bool result = authorization.CheckInternalOrOrganisationAccess(organisationID);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -396,7 +396,7 @@
             bool result = authorization.CheckInternalOrOrganisationAccess(organisationID);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -434,7 +434,7 @@
             bool result = authorization.CheckSchemeAccess(schemeID);
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         [Fact]
@@ -465,7 +465,7 @@
             bool result = authorization.CheckSchemeAccess(schemeID);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         [Fact]

@@ -73,9 +73,9 @@
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
 
-            Assert.True(exception.Message.ToUpperInvariant().Contains("MEMBER UPLOAD"));
-            Assert.True(exception.Message.Contains(otherPcsId.ToString()));
-            Assert.True(exception.Message.Contains(memberUploads.First().Id.ToString()));
+            Assert.Contains("MEMBER UPLOAD", exception.Message.ToUpperInvariant());
+            Assert.Contains(otherPcsId.ToString(), exception.Message);
+            Assert.Contains(memberUploads.First().Id.ToString(), exception.Message);
         }
 
         [Fact]
@@ -108,7 +108,6 @@
 
             var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(pcsId, memberUpload.Id));
 
-            Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUpload.Id);
         }
     }

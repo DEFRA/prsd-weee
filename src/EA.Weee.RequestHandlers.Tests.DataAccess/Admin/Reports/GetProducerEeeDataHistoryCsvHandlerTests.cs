@@ -77,9 +77,9 @@
                     iterator.MoveNext();
                     GetProducerEeeDataHistoryCsvHandler.EeeHistoryCsvResult result = iterator.Current;
 
-                    Assert.Equal(result.PRN, prn);
-                    Assert.Equal(result.Quarter, 1);
-                    Assert.Equal(result.ComplianceYear, complianceYear);
+                    Assert.Equal(prn, result.PRN);
+                    Assert.Equal(1, result.Quarter);
+                    Assert.Equal(complianceYear, result.ComplianceYear);
 
                     Assert.Equal(result.Cat1B2C, (decimal)1.01);
                     Assert.Equal(result.Cat2B2C, (decimal)1.02);
