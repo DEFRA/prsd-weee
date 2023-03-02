@@ -226,6 +226,8 @@
                 var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
 
+                var existingNotes = context.Notes.ToList();
+
                 var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
                 var note2NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: organisation1);
                 var note3NoMatchCy = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year - 2, organisation: organisation1);
@@ -280,6 +282,10 @@
                     });
 
                 // assert
+                var existingRecipientOrganisations = existingNotes.Select(e => e.Recipient);
+
+                recipientList = recipientList.Except(existingRecipientOrganisations).ToList();
+
                 recipientList.Should().HaveCount(4);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
@@ -309,6 +315,8 @@
 
                 var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var existingNotes = context.Notes.ToList();
 
                 var note1Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1);
                 var note2NoMatchCy = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: organisation1);
@@ -364,6 +372,10 @@
                     });
 
                 // assert
+                var existingRecipientOrganisations = existingNotes.Select(e => e.Recipient);
+
+                recipientList = recipientList.Except(existingRecipientOrganisations).ToList();
+
                 recipientList.Should().HaveCount(4);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation1.Id);
                 recipientList.Should().Contain(r => r.Id == recipientOrganisation2.Id);
@@ -399,6 +411,8 @@
                 var originatingScheme4 = ObligatedWeeeIntegrationCommon.CreateScheme(originatingOrganisation4);
 
                 var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var existingNotes = context.Notes.ToList();
 
                 var note1Match = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: originatingOrganisation1, recipientOrganisation: recipientOrganisation1);
                 var note2NoMatchCy = NoteCommon.CreateTransferNote(database, complianceYear: SystemTime.UtcNow.Year - 1, organisation: originatingOrganisation2, recipientOrganisation: recipientOrganisation1);
@@ -456,6 +470,10 @@
                     });
 
                 // assert
+                var existingRecipientOrganisations = existingNotes.Select(e => e.Organisation);
+
+                recipientList = recipientList.Except(existingRecipientOrganisations).ToList();
+
                 recipientList.Should().HaveCount(3);
                 recipientList.Should().Contain(r => r.Id == originatingOrganisation1.Id);
                 recipientList.Should().Contain(r => r.Id == originatingOrganisation2.Id);

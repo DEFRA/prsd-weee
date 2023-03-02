@@ -577,7 +577,7 @@
             public static void LocalExternalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetData: true)
                     .WithExternalUserAccess();
 
                 handler = Container.Resolve<IRequestHandler<GetSchemeDataForFilterRequest, List<EntityIdDisplayNameData>>>();
@@ -586,7 +586,7 @@
             public static void LocalInternalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetData: true)
                     .WithInternalUserAccess();
 
                 Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
