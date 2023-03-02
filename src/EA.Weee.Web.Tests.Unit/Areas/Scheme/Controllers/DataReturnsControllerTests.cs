@@ -315,7 +315,7 @@
 
             // Act
             ActionDescriptor actionDescriptor = A.Fake<ActionDescriptor>();
-            A.CallTo(() => actionDescriptor.ActionName == "SomeOtherAction");
+            A.CallTo(() => actionDescriptor.ActionName).Returns("SomeOtherAction");
 
             ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
             actionExecutingContext.ActionParameters = new Dictionary<string, object>();
@@ -326,19 +326,16 @@
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
-            Action testCode = () =>
+            object[] args = new object[] { actionExecutingContext };
+            try
             {
-                object[] args = new object[] { actionExecutingContext };
-                try
-                {
-                    onActionExecutingMethod.Invoke(controller, args);
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
-            };
-
+                onActionExecutingMethod.Invoke(controller, args);
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+            
             // Assert
             RedirectToRouteResult redirectResult = actionExecutingContext.Result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
