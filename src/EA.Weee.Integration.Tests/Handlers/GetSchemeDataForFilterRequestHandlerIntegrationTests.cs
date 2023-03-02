@@ -42,7 +42,8 @@
                 LocalExternalSetup();
 
                 var organisation = OrganisationDbSetup.Init().Create();
-                aatf = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                aatf = AatfDbSetup.Init().WithComplianceYear(ComplianceYear).WithOrganisation(organisation.Id).Create();
+
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id)
                     .WithStatus(UserStatus.Active)
                     .Create();
