@@ -30,7 +30,7 @@
         {
             var weeeDeliveredAmount = WeeeDeliveredAmountBuilder.NewWeeeDeliveredAmount;
 
-            Assert.NotEqual(null, weeeDeliveredAmount);
+            Assert.NotNull(weeeDeliveredAmount);
         }
 
         [Fact]

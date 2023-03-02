@@ -97,7 +97,7 @@
             var addressInfo = addresses.FirstOrDefault();
 
             Assert.NotNull(organisationInfo);
-            Assert.NotNull(organisationId);
+            
             Assert.Equal(organisationInfo.BusinessAddress.Address1, addressInfo.Address1);
             Assert.Equal(organisationInfo.BusinessAddress.Address2, addressInfo.Address2);
             Assert.Equal(organisationInfo.BusinessAddress.TownOrCity, addressInfo.TownOrCity);

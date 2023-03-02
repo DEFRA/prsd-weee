@@ -12,7 +12,7 @@
         {
             var weeeCollectedAmount = WeeeCollectedAmountBuilder.NewWeeeCollectedAmount;
 
-            Assert.NotEqual(null, weeeCollectedAmount);
+            Assert.NotNull(weeeCollectedAmount);
         }
 
         [Fact]

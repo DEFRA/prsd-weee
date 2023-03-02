@@ -10,7 +10,7 @@
         {
             var producerContact = ProducerContactBuilder.NewProducerContact;
 
-            Assert.NotEqual(null, producerContact);
+            Assert.NotNull(producerContact);
         }
 
         [Fact]
