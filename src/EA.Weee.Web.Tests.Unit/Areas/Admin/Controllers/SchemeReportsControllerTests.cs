@@ -1270,8 +1270,6 @@
         [Fact]
         public async Task EvidenceAndObligationProgressGet_GivenNoSelectedYear_SchemesShouldNotBeRetrieved()
         {
-            //arrange
-
             //act
             await controller.EvidenceAndObligationProgress((int?)null);
 
