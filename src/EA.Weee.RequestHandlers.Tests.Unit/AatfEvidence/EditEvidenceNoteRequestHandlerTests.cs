@@ -6,11 +6,13 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Helpers;
     using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
+    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -40,6 +42,7 @@
         private readonly Note note;
         private readonly Aatf aatf;
         private const string Error = "You cannot create evidence if the start and end dates are not in the current compliance year";
+
         public EditEvidenceNoteRequestHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
@@ -58,7 +61,7 @@
             A.CallTo(() => aatf.ApprovalDate).Returns(currentDate.AddDays(-1));
             A.CallTo(() => aatf.AatfStatus).Returns(AatfStatus.Approved);
             A.CallTo(() => aatf.ComplianceYear).Returns((short)currentDate.Year);
-
+            A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(null);
             A.CallTo(() => recipientOrganisation.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => organisation.Id).Returns(organisationId);
             A.CallTo(() => note.Organisation).Returns(organisation);
@@ -218,6 +221,72 @@
 
             AssertTonnages(tonnageValues);
             SystemTime.Unfreeze();
+        }
+
+        [Theory]
+        [InlineData(true, WasteType.Household)]
+        [InlineData(false, WasteType.Household)]
+        [InlineData(false, WasteType.NonHousehold)]
+        public async Task HandleAsync_GivenRequestRecipientOrganisation_DataAccessShouldBeCalled(bool isPbs, WasteType wasteType)
+        {
+            //arrange
+            var currentDate = new DateTime(2021, 12, 1);
+            SystemTime.Freeze(currentDate);
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => genericDataAccess.GetById<Organisation>(A<Guid>._)).Returns(recipientOrganisation);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(currentDate);
+            if (isPbs)
+            {
+                A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(new ProducerBalancingScheme());
+                A.CallTo(() => recipientOrganisation.Schemes).Returns(null);
+            }
+            else
+            {
+                A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(null);
+                A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
+            }
+
+            var request = Request();
+            request.WasteType = wasteType;
+
+            var tonnageValues = request.TonnageValues.Select(t => new NoteTonnage(
+                (WeeeCategory)t.CategoryId,
+                t.FirstTonnage,
+                t.SecondTonnage)).ToList();
+
+            //act
+            await handler.HandleAsync(request);
+
+            //assert
+            A.CallTo(() => evidenceDataAccess.Update(note, 
+                recipientOrganisation, 
+                request.StartDate, 
+                request.EndDate, 
+                (Domain.Evidence.WasteType)wasteType, 
+                (Domain.Evidence.Protocol)request.Protocol, 
+                A<IList<NoteTonnage>>._, 
+                A<NoteStatus>._, 
+                A<DateTime>.That.IsEqualTo(CurrentSystemTimeHelper.GetCurrentTimeBasedOnSystemTime(currentDate)))).MustHaveHappenedOnceExactly();
+
+            AssertTonnages(tonnageValues);
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithRecipientOrganisationAsPbsAndWasteTypeIsNonHouseHold_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => evidenceDataAccess.GetNoteById(A<Guid>._)).Returns(note);
+            A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(new ProducerBalancingScheme());
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(null);
+
+            var request = Request();
+
+            //act
+            var result = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+
+            //assert
+            result.Should().BeOfType<InvalidOperationException>();
         }
 
         [Theory]

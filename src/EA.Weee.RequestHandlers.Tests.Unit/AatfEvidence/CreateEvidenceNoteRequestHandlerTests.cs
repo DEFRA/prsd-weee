@@ -12,6 +12,7 @@
     using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Organisation;
+    using Domain.Scheme;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -229,27 +230,40 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenDraftRequest_NoteShouldBeAddedToContext()
+        [Theory]
+        [InlineData(true, WasteType.Household)]
+        [InlineData(false, WasteType.Household)]
+        [InlineData(false, WasteType.NonHousehold)]
+        public async Task HandleAsync_GivenDraftRequestWithRecipientOrganisation_NoteShouldBeAddedToContext(bool isPbs, WasteType wasteType)
         {
-            //act
+            //arrange
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
 
             A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
-
-            //arrange
+            if (isPbs)
+            {
+                A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(new ProducerBalancingScheme());
+                A.CallTo(() => recipientOrganisation.Schemes).Returns(null);
+            }
+            else
+            {
+                A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(null);
+                A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
+            }
+            
             var request = new CreateEvidenceNoteRequest(organisation.Id,
                 aatf.Id,
                 recipientOrganisation.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                TestFixture.Create<WasteType>(),
+                wasteType,
                 TestFixture.Create<Protocol>(),
                 TestFixture.CreateMany<TonnageValues>().ToList(),
                 Core.AatfEvidence.NoteStatus.Draft,
                 Guid.Empty);
 
+            //act
             await handler.HandleAsync(request);
 
             //assert
@@ -280,29 +294,42 @@
             SystemTime.Unfreeze();
         }
 
-        [Fact]
-        public async Task HandleAsync_GivenSubmittedRequest_NoteShouldBeAddedToContext()
+        [Theory]
+        [InlineData(true, WasteType.Household)]
+        [InlineData(false, WasteType.Household)]
+        [InlineData(false, WasteType.NonHousehold)]
+        public async Task HandleAsync_GivenSubmittedRequest_NoteShouldBeAddedToContext(bool isPbs, WasteType wasteType)
         {
-            //act
+            //arrange
             var currentDate = TestFixture.Create<DateTime>();
             SystemTime.Freeze(currentDate);
 
             var systemDateTime = new DateTime(2021, 12, 1);
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(systemDateTime);
             A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
+            if (isPbs)
+            {
+                A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(new ProducerBalancingScheme());
+                A.CallTo(() => recipientOrganisation.Schemes).Returns(null);
+            }
+            else
+            {
+                A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(null);
+                A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { A.Fake<Scheme>() });
+            }
 
-            //arrange
             var request = new CreateEvidenceNoteRequest(organisation.Id,
                 aatf.Id,
                 recipientOrganisation.Id,
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
-                TestFixture.Create<WasteType>(),
+                wasteType,
                 TestFixture.Create<Protocol>(),
                 TestFixture.CreateMany<TonnageValues>().ToList(),
                 Core.AatfEvidence.NoteStatus.Submitted,
                 Guid.Empty);
 
+            //act
             await handler.HandleAsync(request);
 
             //assert
@@ -339,6 +366,31 @@
                 c.ToStatus.Equals(NoteStatus.Submitted)) != null))).MustHaveHappenedOnceExactly();
 
             SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenRequestWithRecipientOrganisationAsPbsAndWasteTypeIsNonHouseHold_InvalidOperationExceptionExpected()
+        {
+            //arrange
+            A.CallTo(() => recipientOrganisation.ProducerBalancingScheme).Returns(new ProducerBalancingScheme());
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(null);
+            
+            var request = new CreateEvidenceNoteRequest(organisation.Id,
+                aatf.Id,
+                recipientOrganisation.Id,
+                DateTime.Now,
+                DateTime.Now.AddDays(1),
+                WasteType.NonHousehold,
+                TestFixture.Create<Protocol>(),
+                TestFixture.CreateMany<TonnageValues>().ToList(),
+                Core.AatfEvidence.NoteStatus.Submitted,
+                Guid.Empty);
+
+            //act
+            var result = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
+            
+            //assert
+            result.Should().BeOfType<InvalidOperationException>();
         }
 
         [Fact]
