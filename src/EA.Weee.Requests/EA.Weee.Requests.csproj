@@ -57,6 +57,7 @@
     <Compile Include="AatfEvidence\Reports\GetEvidenceNoteReportRequest.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
+    <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
     <Compile Include="Shared\GetObligationSummaryRequest.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequest.cs" />
