@@ -90,7 +90,6 @@
 
             var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(pcsId, memberUploads.First().Id));
 
-            Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUploads.First().Id);
         }
 
