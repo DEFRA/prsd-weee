@@ -273,7 +273,10 @@
                     new SubmittedDateFilterBase(manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate));
 
             var schemeData = await client.SendAsync(User.GetAccessToken(),
-               new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, selectedComplianceYear));
+               new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, selectedComplianceYear, allowedStatuses, new List<NoteType>()
+               {
+                   NoteType.Evidence
+               }));
 
             var aatfData = await client.SendAsync(User.GetAccessToken(),
                    new GetAllAatfsForComplianceYearRequest(selectedComplianceYear));
@@ -301,6 +304,7 @@
         private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber)
         {
             var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var allowedNotes = new List<NoteType> { NoteType.Transfer };
 
             var complianceYearsList = (await ComplianceYearsList(client, allowedStatuses)).ToList();
 
@@ -322,10 +326,10 @@
                     new SubmittedDateFilterBase(manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate));
 
             var recipientData = await client.SendAsync(User.GetAccessToken(),
-               new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, selectedComplianceYear));
+               new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, null, selectedComplianceYear, allowedStatuses, allowedNotes));
 
             var transferData = await client.SendAsync(User.GetAccessToken(),
-                new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, null, selectedComplianceYear));
+                new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, null, selectedComplianceYear, allowedStatuses, allowedNotes));
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                         new RecipientWasteStatusFilterBase(recipientData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,

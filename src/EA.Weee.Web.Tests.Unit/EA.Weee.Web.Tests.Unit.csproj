@@ -290,6 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\Aatf\Attributes\CheckCanCreateEvidenceAttributeTests.cs" />
+    <Compile Include="Areas\Aatf\Attributes\EvidenceNotePbsHouseHoldValidationAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteFilterEndDateAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteEndDateAttributeTests.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteFilterStartDateAttributeTests.cs" />
