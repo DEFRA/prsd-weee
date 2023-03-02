@@ -64,6 +64,7 @@
             var complianceYearAatf = await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(aatf.AatfId, message.StartDate.Year);
 
             AatfIsValidToSave(complianceYearAatf, currentDate);
+            ValidatePbsWasteType(recipientOrganisation, message.WasteType);
 
             if (aatf.Organisation.Id != message.OrganisationId)
             {

@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
     using System;
+    using Core.AatfEvidence;
     using Core.Helpers;
     using Domain.AatfReturn;
+    using Domain.Organisation;
 
     public abstract class SaveEvidenceNoteRequestBase
     {
@@ -14,6 +16,17 @@
                 || (aatf.ApprovalDate.HasValue && aatf.ApprovalDate.Value.Date > systemDateTime.Date))
             {
                 throw new InvalidOperationException("You cannot create evidence if the start and end dates are not in the current compliance year");
+            }
+        }
+
+        public void ValidatePbsWasteType(Organisation recipientOrganisation, WasteType? wasteType)
+        {
+            if (wasteType.HasValue)
+            {
+                if (wasteType != WasteType.Household && recipientOrganisation.IsBalancingScheme)
+                {
+                    throw new InvalidOperationException("You cannot issue non-household evidence to the PBS. Select household.");
+                }
             }
         }
     }
