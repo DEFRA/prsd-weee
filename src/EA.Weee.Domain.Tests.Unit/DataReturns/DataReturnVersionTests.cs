@@ -22,7 +22,7 @@
 
             // Assert
             Assert.True(dataReturnVersion.IsSubmitted);
-            Assert.Equal(dataReturnVersion.SubmittingUserId, "test@co.uk");
+            Assert.Equal("test@co.uk", dataReturnVersion.SubmittingUserId);
             Assert.Equal(dataReturnVersion.DataReturn.Id, dataReturn.Id);
         }
 
@@ -54,7 +54,7 @@
             dataReturnVersion.Submit("test@co.uk");
 
             // Assert
-            Assert.Equal(1, dataReturnVersion.Events.Count());
+            Assert.Single(dataReturnVersion.Events);
             Assert.IsType<SchemeDataReturnSubmissionEvent>(dataReturnVersion.Events.Single());
             Assert.Same(dataReturnVersion, ((SchemeDataReturnSubmissionEvent)dataReturnVersion.Events.Single()).DataReturnVersion);
         }

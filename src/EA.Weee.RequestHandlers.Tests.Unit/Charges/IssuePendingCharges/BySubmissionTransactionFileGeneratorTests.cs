@@ -134,9 +134,9 @@
             Assert.Equal(TransactionType.Invoice, invoice.TransactionType);
             Assert.Equal("WEE800001H", invoice.TransactionReference);
             Assert.Equal(123.45m, invoice.TransactionTotal);
-            Assert.Equal(null, invoice.TransactionHeaderNarrative);
+            Assert.Null(invoice.TransactionHeaderNarrative);
             Assert.Equal(new DateTime(2015, 12, 31), invoice.TransactionDate);
-            Assert.Equal(null, invoice.RelatedTransactionReference);
+            Assert.Null(invoice.RelatedTransactionReference);
             Assert.Equal(CurrencyCode.GBP, invoice.CurrencyCode);
             Assert.Equal("WEE00000001", invoice.CustomerReference);
 
@@ -153,7 +153,7 @@
             Assert.Equal("W", lineItem.IncomeStreamCode);
             Assert.Equal((ulong)1, lineItem.Quantity);
             Assert.Equal(UnitOfMeasure.Each, lineItem.UnitOfMeasure);
-            Assert.Equal(null, lineItem.VatCode);
+            Assert.Null(lineItem.VatCode);
         }
 
         /// <summary>

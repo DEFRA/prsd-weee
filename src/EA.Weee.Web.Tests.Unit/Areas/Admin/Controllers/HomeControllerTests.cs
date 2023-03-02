@@ -306,7 +306,7 @@
 
             // Assert
             NotSupportedException error = Assert.Throws<NotSupportedException>(testCode);
-            Assert.True(ValidateModel(viewModel).Any(v => v.MemberNames.Contains("SelectedValue") && v.ErrorMessage.Contains("Select the activity you would like to do")));
+            Assert.Contains(ValidateModel(viewModel), v => v.MemberNames.Contains("SelectedValue") && v.ErrorMessage.Contains("Select the activity you would like to do"));
         }
 
         private IList<ValidationResult> ValidateModel(object model)

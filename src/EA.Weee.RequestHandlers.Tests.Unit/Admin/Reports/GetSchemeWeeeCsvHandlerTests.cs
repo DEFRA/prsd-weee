@@ -277,7 +277,7 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.Dcf);
+            Assert.Null(result1.Dcf);
         }
 
         /// <summary>
@@ -347,7 +347,7 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.Distributors);
+            Assert.Null(result1.Distributors);
         }
 
         /// <summary>
@@ -417,7 +417,7 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.FinalHolders);
+            Assert.Null(result1.FinalHolders);
         }
 
         /// <summary>
@@ -487,7 +487,7 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.TotalDelivered);
+            Assert.Null(result1.TotalDelivered);
         }
 
         /// <summary>

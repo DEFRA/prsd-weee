@@ -20,7 +20,7 @@
             bool result = sanitizer.IsThreat(input);
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@
             bool result = sanitizer.IsThreat(input);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         /// <summary>

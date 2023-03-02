@@ -239,7 +239,7 @@
             Assert.Equal(organisationId, viewModel.OrganisationId);
             Assert.Equal(UserStatus.Active, viewModel.Status);
             Assert.Equal("Test Company", viewModel.OrganisationName);
-            Assert.Equal(true, viewModel.AnyActiveUsers);
+            Assert.True(viewModel.AnyActiveUsers);
         }
 
         [Fact]
@@ -443,7 +443,7 @@
             Assert.NotNull(redirectResult);
 
             Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
-            Assert.Equal(new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"), redirectResult.RouteValues["OrganisationId"]);
+            Assert.Equal(redirectResult.RouteValues["OrganisationId"], new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
 
         [Fact]
@@ -553,7 +553,7 @@
             Assert.NotNull(redirectResult);
 
             Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
-            Assert.Equal(new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"), redirectResult.RouteValues["OrganisationId"]);
+            Assert.Equal(redirectResult.RouteValues["OrganisationId"], new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
     }
 }

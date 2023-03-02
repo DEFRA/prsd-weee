@@ -174,8 +174,8 @@
             var responseNotDcfWeee = response.Where(n => n.Dcf == false);
             Assert.Equal(CategoryCount, responseDcfWeee.Count());
             Assert.Equal(CategoryCount, responseNotDcfWeee.Count());
-            Assert.False(responseNotDcfWeee.Any(n => n.Tonnage != n.CategoryId * 15));
-            Assert.False(responseDcfWeee.Any(n => n.Tonnage != (n.CategoryId + 14) * 15));
+            Assert.DoesNotContain(responseNotDcfWeee, n => n.Tonnage != n.CategoryId * 15);
+            Assert.DoesNotContain(responseDcfWeee, n => n.Tonnage != (n.CategoryId + 14) * 15);
         }
 
         [Fact]
@@ -202,8 +202,8 @@
             // Assert
             saveCall.MustNotHaveHappened();
             Assert.Equal(numberWeeeToCreate, response.Count());
-            Assert.False(response.Any(n => n.ReturnId != aatfReturn.Id));
-            Assert.False(response.Any(n => n.ReturnId == otherAatfReturn.Id));
+            Assert.DoesNotContain(response, n => n.ReturnId != aatfReturn.Id);
+            Assert.DoesNotContain(response, n => n.ReturnId == otherAatfReturn.Id);
         }
 
         public class NonObligatedWeeeWrapper : NonObligatedWeee

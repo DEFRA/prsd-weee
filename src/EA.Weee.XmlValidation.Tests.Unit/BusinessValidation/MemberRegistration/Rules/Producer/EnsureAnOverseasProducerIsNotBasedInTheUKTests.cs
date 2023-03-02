@@ -28,7 +28,7 @@
             RuleResult result = rule.Evaluate(producer);
 
             // Assert
-            Assert.Equal(true, result.IsValid);
+            Assert.True(result.IsValid);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@
             RuleResult result = rule.Evaluate(producer);
 
             // Assert
-            Assert.Equal(true, result.IsValid);
+            Assert.True(result.IsValid);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@
             RuleResult result = rule.Evaluate(producer);
 
             // Assert
-            Assert.Equal(true, result.IsValid);
+            Assert.True(result.IsValid);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@
             RuleResult result = rule.Evaluate(producer);
 
             // Assert
-            Assert.Equal(true, result.IsValid);
+            Assert.True(result.IsValid);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@
             RuleResult result = rule.Evaluate(producer);
 
             // Assert
-            Assert.Equal(false, result.IsValid);
+            Assert.False(result.IsValid);
             Assert.Equal(ErrorLevel.Error, result.ErrorLevel);
         }
     }

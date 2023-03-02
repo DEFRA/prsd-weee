@@ -61,8 +61,8 @@
                 Assert.ThrowsAsync<ArgumentException>(
                     async () => await handler.HandleAsync(message));
 
-            Assert.True(exception.Message.ToUpperInvariant().Contains("COULD NOT FIND"));
-            Assert.True(exception.Message.ToUpperInvariant().Contains("ORGANISATION"));
+            Assert.Contains("COULD NOT FIND", exception.Message.ToUpperInvariant());
+            Assert.Contains("ORGANISATION", exception.Message.ToUpperInvariant());
         }
 
         [Fact]
@@ -84,8 +84,8 @@
                 Assert.ThrowsAsync<ArgumentException>(
                     async () => await handler.HandleAsync(message));
 
-            Assert.True(exception.Message.ToUpperInvariant().Contains("COULD NOT FIND"));
-            Assert.True(exception.Message.ToUpperInvariant().Contains("COUNTRY"));
+            Assert.Contains("COULD NOT FIND", exception.Message.ToUpperInvariant());
+            Assert.Contains("COUNTRY", exception.Message.ToUpperInvariant());
         }
 
         [Fact]

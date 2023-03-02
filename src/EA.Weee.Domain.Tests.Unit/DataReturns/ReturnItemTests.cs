@@ -28,7 +28,7 @@
         {
             var returnItem = ReturnItemBuilder.NewReturnItem;
 
-            Assert.NotEqual(returnItem, null);
+            Assert.NotEqual(null, returnItem);
         }
 
         [Fact]

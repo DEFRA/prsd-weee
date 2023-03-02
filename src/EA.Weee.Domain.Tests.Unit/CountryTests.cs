@@ -10,7 +10,7 @@
         {
             var country = NewCountry();
 
-            Assert.NotEqual(country, null);
+            Assert.NotEqual(null, country);
         }
 
         [Fact]

@@ -84,7 +84,7 @@
         [InlineData(ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearHasValue_ModelMapperShouldBeCalledWithCorrectYear(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndSessionSelectedYearHasValue_ModelMapperShouldBeCalledWithCorrectYear(ManageEvidenceOverviewDisplayOption? selectedTab)
         {
             //arrange
             var currentDate = Fixture.Create<DateTime>();
@@ -813,7 +813,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData(ManageEvidenceOverviewDisplayOption.EvidenceSummary)]
-        public async void IndexGetWithDefaultAndEvidenceSummaryTab_GivenAatf_EvidenceSummaryShouldBeRetrieved(ManageEvidenceOverviewDisplayOption selectedTab)
+        public async void IndexGetWithDefaultAndEvidenceSummaryTab_GivenAatf_EvidenceSummaryShouldBeRetrieved(ManageEvidenceOverviewDisplayOption? selectedTab)
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();

@@ -10,7 +10,7 @@
         {
             var brandName = BrandNameBuilder.NewBrandName;
 
-            Assert.NotEqual(brandName, null);
+            Assert.NotEqual(null, brandName);
         }
 
         [Fact]

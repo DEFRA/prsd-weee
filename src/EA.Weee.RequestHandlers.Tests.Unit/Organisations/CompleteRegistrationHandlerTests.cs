@@ -47,9 +47,9 @@
             var exception = await
                 Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
 
-            Assert.True(exception.Message.ToUpperInvariant().Contains("COULD NOT FIND"));
-            Assert.True(exception.Message.ToUpperInvariant().Contains("ORGANISATION"));
-            Assert.True(exception.Message.Contains(message.OrganisationId.ToString()));
+            Assert.Contains("COULD NOT FIND", exception.Message.ToUpperInvariant());
+            Assert.Contains("ORGANISATION", exception.Message.ToUpperInvariant());
+            Assert.Contains(message.OrganisationId.ToString(), exception.Message);
         }
 
         [Fact]

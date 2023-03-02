@@ -375,7 +375,7 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.ProducerReturnsHistoryData.Count);
+                Assert.Single(results.ProducerReturnsHistoryData);
                 Assert.Equal("PRN897", results.ProducerReturnsHistoryData[0].PRN);
                 Assert.Equal("WEE/TE3334ST/SCH", results.ProducerReturnsHistoryData[0].ApprovalNumber);
                 Assert.Equal("Yes", results.ProducerReturnsHistoryData[0].LatestData);
@@ -422,7 +422,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.ProducerRemovedFromReturnsData.Count);
+                Assert.Single(results.ProducerRemovedFromReturnsData);
 
                 Assert.Collection(results.ProducerRemovedFromReturnsData,
                    (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate));
@@ -473,7 +473,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.ProducerRemovedFromReturnsData.Count);
+                Assert.Single(results.ProducerRemovedFromReturnsData);
 
                 Assert.Collection(results.ProducerRemovedFromReturnsData,
                    (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate));
@@ -543,7 +543,7 @@
                    (r1) => Assert.Equal(new DateTime(2015, 1, 1), r1.SubmittedDate),
                    (r2) => Assert.Equal(new DateTime(2015, 1, 3), r2.SubmittedDate));
 
-                Assert.Equal(1, results.ProducerRemovedFromReturnsData.Count);
+                Assert.Single(results.ProducerRemovedFromReturnsData);
 
                 Assert.Collection(results.ProducerRemovedFromReturnsData,
                    (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate));
@@ -583,7 +583,7 @@
                 var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
 
                 //Assert
-                Assert.Equal(0, results.ProducerReturnsHistoryData.Count);
+                Assert.Empty(results.ProducerReturnsHistoryData);
             }
         }
 
@@ -756,7 +756,7 @@
                 var results = await database.StoredProcedures.SpgProducerEeeHistoryCsvData(producerRegistrationNumber1);
 
                 // Assert
-                Assert.Equal(1, results.ProducerReturnsHistoryData.Count);
+                Assert.Single(results.ProducerReturnsHistoryData);
 
                 // Check first row
                 var result = results.ProducerReturnsHistoryData.First();

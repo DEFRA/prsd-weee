@@ -286,6 +286,7 @@
         /// when the configuration has data returns enabled, the specified "pcsId" parameter is for a non-approved scheme and the user
         /// is not already requesting the "AuthorizationRequired" action.
         /// </summary>
+        [Fact]
         public void OnActionExecuting_ConfigEnabledAndSpecifiedSchemeIsNotApprovedAndActionIsNotAuthorisationRequired_RedirectsToAuthorisationRequired()
         {
             // Arrange
