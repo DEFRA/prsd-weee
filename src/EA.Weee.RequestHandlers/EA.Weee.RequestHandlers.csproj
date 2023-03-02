@@ -143,6 +143,7 @@
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
+    <Compile Include="Admin\GetSchemes\GetSchemesWithObligationOrEvidenceByComplianceYearHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />

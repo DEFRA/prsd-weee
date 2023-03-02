@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Evidence;
     using Domain.Obligation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
@@ -56,14 +57,6 @@
             return await schemes.ToListAsync();
         }
 
-        public async Task<List<Scheme>> GetSchemesWithObligations(int complianceYear)
-        {
-            return await weeeContext.ObligationSchemes.Where(os => os.ComplianceYear == complianceYear)
-                .Select(s => s.Scheme)
-                .Distinct()
-                .ToListAsync();
-        }
-
         public async Task<Guid> AddObligationUpload(UKCompetentAuthority ukCompetentAuthority,
             string data, 
             string fileName,
@@ -109,6 +102,26 @@
             var updatedObligationUpload = await genericDataAccess.Add(obligationUpload);
 
             return updatedObligationUpload.Id;
+        }
+
+        public async Task<List<Scheme>> GetSchemesWithObligationOrEvidence(int complianceYear)
+        {
+            var schemes = new List<Scheme>();
+            schemes.AddRange(weeeContext.ObligationSchemes.Where(os =>
+                os.ComplianceYear == complianceYear).Select(os => os.Scheme).ToList());
+
+            var notesInComplianceYear = weeeContext.Notes.Where(n => n.ComplianceYear == complianceYear);
+
+            schemes.AddRange(notesInComplianceYear.Where(n =>
+                n.NoteType.Value == NoteType.EvidenceNote.Value).SelectMany(n => n.Recipient.Schemes));
+
+            var transferNotes = notesInComplianceYear
+                .Where(n => n.NoteType.Value == NoteType.TransferNote.Value);
+
+            schemes.AddRange(transferNotes.SelectMany(n => n.Recipient.Schemes));
+            schemes.AddRange(transferNotes.SelectMany(n => n.Organisation.Schemes));
+
+            return await Task.FromResult(schemes.Distinct().OrderBy(s => s.SchemeName).ToList());
         }
     }
 }

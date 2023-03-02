@@ -163,7 +163,7 @@ else
         <p class="govuk-details__text">The total after transfer (tonnes) and total reused after transfer (tonnes) account for approved transfers only</p>
     </div>
 }
-<table class="govuk-table">
+<table class="govuk-table category-row-no-break">
     @if (Model.IsPrintable)
     {
         <colgroup>
@@ -215,26 +215,26 @@ else
         {
             var category = Model.CategoryValues[i];
 
-            <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1">
+            <tr class="govuk-table__row category-row-no-break" id="category-row-@category.CategoryId">
+                <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1 category-cell-no-break">
                     <div class="category">
                         <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
                     </div>
                 </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
                     @Html.Gds().VisuallyHidden("Received for " + @category.CategoryDisplay) @category.Received
                 </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
                     @Html.Gds().VisuallyHidden("Reused for " + @category.CategoryDisplay) @category.Reused
                 </td>
                 @if (Model.DisplayTransferEvidenceColumns)
                 {
                     var transferCategory = Model.RemainingTransferCategoryValues[i];
 
-                    <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break">
+                    <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
                         @Html.Gds().VisuallyHidden("Received after for  " + @transferCategory.CategoryDisplay) @transferCategory.Received
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1 printable-word-break">
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1 printable-word-break category-cell-no-break">
                         @Html.Gds().VisuallyHidden("Reused after for " + @transferCategory.CategoryDisplay) @transferCategory.Reused
                     </td>
                 }

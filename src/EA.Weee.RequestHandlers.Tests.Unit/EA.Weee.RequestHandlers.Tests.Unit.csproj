@@ -185,6 +185,7 @@
     <Compile Include="AatfEvidence\Requests\GetEvidenceNoteByPbsOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesByOrganisationRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\GetEvidenceNotesForTransferRequestTests.cs" />
+    <Compile Include="AatfEvidence\Requests\GetSchemeDataForFilterRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\SetNoteStatusRequestTests.cs" />
     <Compile Include="AatfEvidence\Requests\VoidTransferNoteRequestTests.cs" />
     <Compile Include="AatfEvidence\VoidNoteRequestHandlerTests.cs" />
@@ -251,6 +252,7 @@
     <Compile Include="Admin\Obligations\SchemeObligationsDataProcessorTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationTests.cs" />
+    <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidenceByComplianceYearHandlerTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
     <Compile Include="AatfReturn\GetAatfInfoByOrganisationRequestHandlerTests.cs" />
     <Compile Include="AatfReturn\GetPopulatedReturnTests.cs" />
