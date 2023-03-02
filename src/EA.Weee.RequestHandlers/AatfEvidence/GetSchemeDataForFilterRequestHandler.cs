@@ -4,12 +4,15 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.AatfEvidence;
+    using Core.Helpers;
     using Domain.Organisation;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
     using Security;
+    using NoteStatus = Domain.Evidence.NoteStatus;
+    using NoteType = Domain.Evidence.NoteType;
 
     internal class GetSchemeDataForFilterRequestHandler : IRequestHandler<GetSchemeDataForFilterRequest, List<EntityIdDisplayNameData>>
     {
@@ -35,15 +38,18 @@
             }
 
             List<Organisation> organisations;
+            var status = request.AllowedStatuses.Select(s => s.ToDomainEnumeration<NoteStatus>()).ToList();
+            var noteTypes = request.AllowedNoteTypes.Select(n => n.ToDomainEnumeration<NoteType>()).ToList();
+
             if (request.RecipientOrTransfer == RecipientOrTransfer.Recipient)
             {
                 organisations =
-                    await evidenceDataAccess.GetRecipientOrganisations(request.AatfId, request.ComplianceYear);
+                    await evidenceDataAccess.GetRecipientOrganisations(request.AatfId, request.ComplianceYear, status, noteTypes);
             }
             else
             {
                 organisations =
-                    await evidenceDataAccess.GetTransferOrganisations(request.ComplianceYear);
+                    await evidenceDataAccess.GetTransferOrganisations(request.ComplianceYear, status, noteTypes);
             }
 
             return organisations.Select(x =>
