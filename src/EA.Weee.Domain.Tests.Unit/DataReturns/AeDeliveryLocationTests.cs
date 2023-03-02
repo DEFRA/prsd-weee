@@ -25,7 +25,7 @@
         {
             var aeDeliveryLocation = AeDeliveryLocationBuilder.NewAeDeliveryLocation;
 
-            Assert.NotEqual(null, aeDeliveryLocation);
+            Assert.NotNull(aeDeliveryLocation);
         }
 
         [Fact]

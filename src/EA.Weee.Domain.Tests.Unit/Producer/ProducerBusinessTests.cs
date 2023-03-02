@@ -10,7 +10,7 @@
         {
             var producerBusiness = ProducerBusinessBuilder.NewProducerBusiness;
 
-            Assert.NotEqual(null, producerBusiness);
+            Assert.NotNull(producerBusiness);
         }
 
         [Fact]

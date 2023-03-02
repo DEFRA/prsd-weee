@@ -10,7 +10,7 @@
         {
             var sicCode = SICCodeBuilder.NewSICCode;
 
-            Assert.NotEqual(null, sicCode);
+            Assert.NotNull(sicCode);
         }
 
         [Fact]
