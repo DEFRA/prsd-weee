@@ -28,7 +28,7 @@
             var input = new List<string>() { "+2.000", "-3.000", "1.000" };
             var output = calculator.Total(input);
 
-            Assert.Equal(output, "1.000");
+            Assert.Equal("1.000", output);
         }
 
         [Fact]
@@ -37,7 +37,7 @@
             var input = new List<string>() { "1.6687", "7.88845555", "1.000" };
             var output = calculator.Total(input);
 
-            Assert.Equal(output, "1.000");
+            Assert.Equal("1.000", output);
         }
 
         [Fact]
@@ -46,7 +46,7 @@
             var input = new List<string>() { null, null, null };
             var output = calculator.Total(input);
 
-            Assert.Equal(output, "0.000");
+            Assert.Equal("0.000", output);
         }
     }
 }

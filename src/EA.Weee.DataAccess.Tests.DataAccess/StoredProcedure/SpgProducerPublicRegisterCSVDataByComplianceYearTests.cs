@@ -66,7 +66,7 @@
                 Assert.NotNull(results);
                 Assert.True(results.TrueForAll(i => i.ComplianceYear == 2016));
 
-                Assert.False(results.Any(i => i.PRN == "WEE/11ZZZZ11" && i.ComplianceYear == 2017));
+                Assert.DoesNotContain(results, i => i.PRN == "WEE/11ZZZZ11" && i.ComplianceYear == 2017);
 
                 var result = results.SingleOrDefault(i => i.PRN == "WEE/99ZZZZ99" && i.ComplianceYear == 2016);
 
@@ -112,7 +112,7 @@
                    await db.StoredProcedures.SpgProducerPublicRegisterCSVDataByComplianceYear(2016);
 
                 // Assert
-                Assert.False(results.Any(i => i.PRN == "WEE/99ZZZZ99"));
+                Assert.DoesNotContain(results, i => i.PRN == "WEE/99ZZZZ99");
             }
         }
 

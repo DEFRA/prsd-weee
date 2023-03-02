@@ -107,6 +107,7 @@
             await action.Should().ThrowAsync<SecurityException>();
         }
 
+        [Fact]
         public async Task GetReturnData_GivenReturn_ReturnShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();

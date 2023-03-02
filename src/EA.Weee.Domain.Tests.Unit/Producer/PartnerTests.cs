@@ -10,7 +10,7 @@
         {
             var partner = PartnerBuilder.NewPartner;
 
-            Assert.NotEqual(partner, null);
+            Assert.NotEqual(null, partner);
         }
 
         [Fact]

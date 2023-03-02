@@ -57,7 +57,7 @@
             var result = translator.MakeFriendlyErrorMessages(errors);
 
             // Assert
-            Assert.Equal(1, result.Count);
+            Assert.Single(result);
         }
 
         [Fact]

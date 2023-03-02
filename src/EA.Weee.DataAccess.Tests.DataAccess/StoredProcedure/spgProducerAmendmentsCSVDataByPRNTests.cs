@@ -49,7 +49,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(results.Count, 2);
+                Assert.Equal(2, results.Count);
                 Assert.True(results.TrueForAll(i => i.PRN == "WEE/11ZZZZ11"));
                 Assert.False(results.TrueForAll(i => i.VATRegistered));
             }
@@ -96,7 +96,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(results.Count, 3);
+                Assert.Equal(3, results.Count);
 
                 results = results.OrderBy(i => i.DateAmended).ToList();
 
@@ -134,7 +134,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -163,7 +163,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 Assert.Equal(producer1.Business.Company.Name, results[0].ProducerName);
             }
@@ -194,7 +194,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 Assert.Equal(producer1.Business.Partnership.Name, results[0].ProducerName);
             }
@@ -248,7 +248,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(results.Count, 4);
+                Assert.Equal(4, results.Count);
 
                 Assert.Equal(2017, results[0].ComplianceYear);
                 Assert.Equal(new DateTime(2015, 1, 3), results[0].DateAmended);

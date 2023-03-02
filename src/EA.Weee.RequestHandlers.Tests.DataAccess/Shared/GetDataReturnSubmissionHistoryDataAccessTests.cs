@@ -224,7 +224,7 @@
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(1, result.Count);
+                Assert.Single(result);
                 Assert.Equal("DataReturnUpload1.xml", result[0].FileName);
             }
         }

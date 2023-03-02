@@ -22,7 +22,7 @@
         {
             var eeeOutputAmount = EeeOutputAmountBuilder.NewEeeOutputAmount;
 
-            Assert.NotEqual(eeeOutputAmount, null);
+            Assert.NotEqual(null, eeeOutputAmount);
         }
 
         [Fact]

@@ -104,8 +104,8 @@
             var result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(user.FirstName, "Test");
-            Assert.Equal(user.Surname, "Test");
+            Assert.Equal("Test", user.FirstName);
+            Assert.Equal("Test", user.Surname);
             A.CallTo(() => userManager.UpdateAsync(user)).MustHaveHappened();
         }
     }

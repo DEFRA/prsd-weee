@@ -24,9 +24,9 @@
 
             scheme.UpdateScheme(schemeName, approvalNumber, ibisCustomerReference, obligationType, competentAuthorityId);
 
-            Assert.Equal(scheme.SchemeName, schemeName);
-            Assert.Equal(scheme.ApprovalNumber, approvalNumber);
-            Assert.Equal(scheme.IbisCustomerReference, ibisCustomerReference);
+            Assert.Equal(schemeName, scheme.SchemeName);
+            Assert.Equal(approvalNumber, scheme.ApprovalNumber);
+            Assert.Equal(ibisCustomerReference, scheme.IbisCustomerReference);
             Assert.Equal(scheme.ObligationType, obligationType);
             Assert.Equal(scheme.CompetentAuthorityId, competentAuthorityId);
         }

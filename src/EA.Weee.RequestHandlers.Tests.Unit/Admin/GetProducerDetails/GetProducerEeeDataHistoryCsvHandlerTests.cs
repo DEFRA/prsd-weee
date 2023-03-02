@@ -121,7 +121,7 @@
                (r2) => Assert.Equal("No", r2.LatestData));
 
             Assert.Collection(csvResults,
-              (r1) => Assert.Equal(null, r1.Cat1B2B),
+              (r1) => Assert.Null(r1.Cat1B2B),
               (r2) => Assert.Equal(100, r2.Cat1B2B));
         }
 
@@ -174,7 +174,7 @@
 
             Assert.Collection(csvResults,
               (r1) => Assert.Equal(200, r1.Cat1B2B),
-              (r2) => Assert.Equal(null, r2.Cat1B2B),
+              (r2) => Assert.Null(r2.Cat1B2B),
               (r3) => Assert.Equal(100, r3.Cat1B2B));
         }
 
@@ -227,7 +227,7 @@
 
             Assert.Collection(csvResults,
               (r1) => Assert.Equal(100, r1.Cat1B2B),
-              (r2) => Assert.Equal(null, r2.Cat1B2B),
+              (r2) => Assert.Null(r2.Cat1B2B),
               (r3) => Assert.Equal(100, r3.Cat1B2B));
         }
 
@@ -283,7 +283,7 @@
 
             Assert.Collection(csvResults,
               (r1) => Assert.Equal(200, r1.Cat1B2B),
-              (r2) => Assert.Equal(null, r2.Cat1B2B),
+              (r2) => Assert.Null(r2.Cat1B2B),
               (r3) => Assert.Equal(100, r3.Cat1B2B));
         }
 
@@ -333,7 +333,7 @@
                (r2) => Assert.Equal("No", r2.LatestData));
 
             Assert.Collection(csvResults,
-              (r1) => Assert.Equal(null, r1.Cat1B2B),
+              (r1) => Assert.Null(r1.Cat1B2B),
               (r2) => Assert.Equal(100, r2.Cat1B2B));
         }
         private static ProducerEeeHistoryCsvData.ProducerInReturnsResult CreateEeeDataForProducer(string prn, string approvalNumber, string schemeName, int year,

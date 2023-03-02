@@ -25,12 +25,11 @@
         public void Map_AddNonObligated(bool isDcf)
         {
             // Arrange
-            bool dcf = true;
             var request = new AddNonObligated()
             {
                 CategoryValues = values,
                 ReturnId = returnId,
-                Dcf = dcf,
+                Dcf = isDcf,
                 OrganisationId = Guid.NewGuid()
             };
 
@@ -44,7 +43,7 @@
                 var actual = response.FirstOrDefault(r => r.CategoryId == expected.CategoryId);
                 Assert.NotNull(actual);
                 Assert.Equal(expected.Tonnage, actual.Tonnage);
-                Assert.Equal(dcf, actual.Dcf);
+                Assert.Equal(isDcf, actual.Dcf);
                 Assert.Equal(aatfReturn, actual.Return);
             }
         }

@@ -11,7 +11,7 @@
         {
             var producerAddress = ProducerAddressBuilder.NewProducerAddress;
 
-            Assert.NotEqual(producerAddress, null);
+            Assert.NotEqual(null, producerAddress);
         }
 
         [Fact]

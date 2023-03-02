@@ -117,9 +117,9 @@
             Assert.IsType<ManageUsersViewModel>(result.Model);
             var viewModel = result.Model as ManageUsersViewModel;
             Assert.Equal(orderBy, viewModel.OrderBy);
-            Assert.Equal(null, viewModel.Filter.Name);
-            Assert.Equal(null, viewModel.Filter.OrganisationName);
-            Assert.Equal(null, viewModel.Filter.Status);
+            Assert.Null(viewModel.Filter.Name);
+            Assert.Null(viewModel.Filter.OrganisationName);
+            Assert.Null(viewModel.Filter.Status);
         }
 
         [Fact]

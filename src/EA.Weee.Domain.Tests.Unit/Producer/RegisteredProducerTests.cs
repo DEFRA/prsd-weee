@@ -14,7 +14,7 @@
         {
             var producer = RegisteredProducerBuilder.NewRegisteredProducer;
 
-            Assert.NotEqual(producer, null);
+            Assert.NotEqual(null, producer);
         }
 
         [Fact]

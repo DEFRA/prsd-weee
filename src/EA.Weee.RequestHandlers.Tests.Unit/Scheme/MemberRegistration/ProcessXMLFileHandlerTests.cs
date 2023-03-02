@@ -284,15 +284,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_SavesMemberUpload()
-        {
-            SetupSchemeTypeComplianceYear();
-            var id = await handler.HandleAsync(Message);
-            Assert.NotNull(id);
-        }
-
-        [Fact]
-        public async void ProcessXmlfile_GivenSchemeDoesNotHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
+        public async void ProcessXmlFile_GivenSchemeDoesNotHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
         {
             A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(false);
             SetupSchemeTypeComplianceYear();
@@ -304,7 +296,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_GivenSchemeDoesHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
+        public async void ProcessXmlFile_GivenSchemeDoesHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
         {
             A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(true);
             SetupSchemeTypeComplianceYear();

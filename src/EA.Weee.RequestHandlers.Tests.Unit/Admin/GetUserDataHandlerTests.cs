@@ -69,8 +69,8 @@
 
             // Assert 
             Assert.NotNull(response);
-            Assert.Equal(response.Email, "xyz@test.com");
-            Assert.Equal(response.OrganisationName, "Test ltd.");
+            Assert.Equal("xyz@test.com", response.Email);
+            Assert.Equal("Test ltd.", response.OrganisationName);
         }
 
         [Fact]
