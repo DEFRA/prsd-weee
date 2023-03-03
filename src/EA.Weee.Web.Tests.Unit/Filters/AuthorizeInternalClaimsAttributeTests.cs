@@ -9,6 +9,7 @@
     using System.Web;
     using System.Web.Mvc;
     using Xunit;
+    using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
     public class AuthorizeInternalClaimsAttributeTests
     {
