@@ -326,7 +326,6 @@
     <Content Include="scripts\Update\Release 2\Support01\20191029-1059-alter-getNonObligatedWeeeReceived.sql" />
     <Content Include="scripts\Update\Release 2\Support01\20191112-1554-alter-getAllAatfObligatedCsvData.sql" />
     <Content Include="scripts\Update\Release 4\20210706-1645-missing-producer-data-report-changes.sql" />
-    <Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220401-1056-status-history.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220325-1311-schema-updates.sql" />
     <Content Include="scripts\Update\Release 5\Sprint01\20220314-1536-schema.sql" />
@@ -398,6 +397,10 @@
     <Content Include="scripts\Update\Release 5\Sprint17\20221110-1108-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 5\Sprint17\20221027-1100-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <None Include="rebuild-development.bat" />
+	
+	<Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
+    <Content Include="scripts\Update\Release 4\20220923-1751-remove-weeesenton-table-relation.sql" />
+
     <None Include="scripts\Update\Release 1\Sprint23\20160212-1430-AddDataReturnVersionSubmittedDateIndex.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160209-1422-AddEmailToCompetentAuthority.sql" />
     <Content Include="scripts\Update\Release 1\Sprint23\20160211-1547-UpdateSpgforProducerEeeDataHistory.sql" />
