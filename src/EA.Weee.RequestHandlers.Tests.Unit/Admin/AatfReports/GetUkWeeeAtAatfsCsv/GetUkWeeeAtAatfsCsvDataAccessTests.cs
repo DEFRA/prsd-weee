@@ -71,15 +71,15 @@
             var results = await dataAccess.FetchPartialAatfReturnsForComplianceYearAsync(year);
 
             // Assert
-            Assert.Equal(1, results.Count());
+            Assert.Single(results);
 
             var result = results.First();
             Assert.Equal(year, result.Quarter.Year);
-            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            Assert.Single(result.ObligatedWeeeReceivedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2bQ1, receivedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            Assert.Single(result.ObligatedWeeeReusedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2bQ1, reusedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            Assert.Single(result.ObligatedWeeeSentOnData);
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2bQ1, sentOnB2cQ1);
         }
 
@@ -123,15 +123,15 @@
             var results = await dataAccess.FetchPartialAatfReturnsForComplianceYearAsync(year);
 
             // Assert
-            Assert.Equal(1, results.Count());
+            Assert.Single(results);
 
             var result = results.First();
             Assert.Equal(year, result.Quarter.Year);
-            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            Assert.Single(result.ObligatedWeeeReceivedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2bQ1, receivedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            Assert.Single(result.ObligatedWeeeReusedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2bQ1, reusedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            Assert.Single(result.ObligatedWeeeSentOnData);
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2bQ1, sentOnB2cQ1);
         }
 
@@ -183,19 +183,19 @@
 
             var result = results.First();
             Assert.Equal(year, result.Quarter.Year);
-            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            Assert.Single(result.ObligatedWeeeReceivedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2bQ1, receivedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            Assert.Single(result.ObligatedWeeeReusedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2bQ1, reusedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            Assert.Single(result.ObligatedWeeeSentOnData);
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2bQ1, sentOnB2cQ1);
 
             result = results.Skip(1).First();
-            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            Assert.Single(result.ObligatedWeeeReceivedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2bQ2, receivedB2cQ2);
-            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            Assert.Single(result.ObligatedWeeeReusedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2bQ2, reusedB2cQ2);
-            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            Assert.Single(result.ObligatedWeeeSentOnData);
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2bQ2, sentOnB2cQ2);
         }
 
@@ -247,19 +247,19 @@
 
             var result = results.First();
             Assert.Equal(year, result.Quarter.Year);
-            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            Assert.Single(result.ObligatedWeeeReceivedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2b1, receivedB2c1);
-            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            Assert.Single(result.ObligatedWeeeReusedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2b1, reusedB2c1);
-            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            Assert.Single(result.ObligatedWeeeSentOnData);
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2b1, sentOnB2c1);
 
             result = results.Skip(1).First();
-            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            Assert.Single(result.ObligatedWeeeReceivedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2b2, receivedB2c2);
-            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            Assert.Single(result.ObligatedWeeeReusedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2b2, reusedB2c2);
-            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            Assert.Single(result.ObligatedWeeeSentOnData);
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2b2, sentOnB2c2);
         }
 
@@ -314,15 +314,15 @@
             var results = await dataAccess.FetchPartialAatfReturnsForComplianceYearAsync(year);
 
             // Assert
-            Assert.Equal(1, results.Count());
+            Assert.Single(results);
 
             var result = results.First();
             Assert.Equal(year, result.Quarter.Year);
-            Assert.Equal(1, result.ObligatedWeeeReceivedData.Count());
+            Assert.Single(result.ObligatedWeeeReceivedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReceivedData.First(), categoryReceived, receivedB2bQ1, receivedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeReusedData.Count());
+            Assert.Single(result.ObligatedWeeeReusedData);
             AssertWeeeObligatedData(result.ObligatedWeeeReusedData.First(), categoryReused, reusedB2bQ1, reusedB2cQ1);
-            Assert.Equal(1, result.ObligatedWeeeSentOnData.Count());
+            Assert.Single(result.ObligatedWeeeSentOnData);
             AssertWeeeObligatedData(result.ObligatedWeeeSentOnData.First(), categorySentOn, sentOnB2bQ1, sentOnB2cQ1);
         }
 

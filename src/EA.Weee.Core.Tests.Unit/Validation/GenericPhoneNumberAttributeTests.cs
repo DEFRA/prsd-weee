@@ -18,7 +18,7 @@
             var result = attribute.IsValid(phoneNumber);
 
             //Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         [Theory]
@@ -38,7 +38,7 @@
             var result = attribute.IsValid(phoneNumber);
 
             //Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
     }
 }

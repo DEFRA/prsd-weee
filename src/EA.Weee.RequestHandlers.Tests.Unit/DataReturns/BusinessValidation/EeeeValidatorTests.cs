@@ -97,7 +97,7 @@
             var errors = await builder.InvokeValidate(prn);
 
             // Assert
-            Assert.Equal(1, errors.Count);
+            Assert.Single(errors);
             ErrorData error = errors[0];
             Assert.Equal(ErrorLevel.Error, error.ErrorLevel);
             Assert.Contains(prn, error.Description);

@@ -193,11 +193,11 @@
             Assert.IsType<ManageAatfsViewModel>(result.Model);
             var viewModel = result.Model as ManageAatfsViewModel;
             Assert.Equal(facilityType, viewModel.FacilityType);
-            Assert.Equal(null, viewModel.Filter.Name);
-            Assert.Equal(null, viewModel.Filter.ApprovalNumber);
-            Assert.Equal(false, viewModel.Filter.SelectApproved);
-            Assert.Equal(false, viewModel.Filter.SelectCancelled);
-            Assert.Equal(false, viewModel.Filter.SelectSuspended);
+            Assert.Null(viewModel.Filter.Name);
+            Assert.Null(viewModel.Filter.ApprovalNumber);
+            Assert.False(viewModel.Filter.SelectApproved);
+            Assert.False(viewModel.Filter.SelectCancelled);
+            Assert.False(viewModel.Filter.SelectSuspended);
         }
 
         [Theory]
@@ -235,7 +235,7 @@
         }
 
         [Theory]
-        [MemberData("FacilityTypeEnumValues")]
+        [MemberData(nameof(FacilityTypeEnumValues))]
         public async Task ManageAatfsPost_InvalidModel_CheckViewModelFacilityTypeSetCorrectly(FacilityType type)
         {
             SetUpControllerContext(false);
@@ -263,7 +263,7 @@
             await controller.ManageAatfs(FacilityType.Aatf);
 
             Assert.Equal("Manage AATFs", breadcrumbService.InternalActivity);
-            Assert.Equal(null, breadcrumbService.InternalAatf);
+            Assert.Null(breadcrumbService.InternalAatf);
         }
 
         [Theory]
@@ -281,7 +281,7 @@
         }
 
         [Theory]
-        [MemberData("FacilityTypeEnumValues")]
+        [MemberData(nameof(FacilityTypeEnumValues))]
         public async Task GetManageAatfs_TypeParameterSent_ViewModelSetCorrectly(FacilityType facilityType)
         {
             SetUpControllerContext(false);
@@ -327,8 +327,8 @@
         }
 
         [Theory]
-        [MemberData("FacilityTypeEnumValues")]
-        [MemberData("FacilityTypeEnumValues")]
+        [MemberData(nameof(FacilityTypeEnumValues))]
+        [MemberData(nameof(FacilityTypeEnumValues))]
         public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();
@@ -363,12 +363,12 @@
 
             if (type == FacilityType.Aatf)
             {
-                Assert.Equal(breadcrumbService.InternalActivity, InternalUserActivity.ManageAatfs);
+                Assert.Equal(InternalUserActivity.ManageAatfs, breadcrumbService.InternalActivity);
                 Assert.Equal(breadcrumbService.InternalAatf, aatfData.Name);
             }
             else
             {
-                Assert.Equal(breadcrumbService.InternalActivity, InternalUserActivity.ManageAes);
+                Assert.Equal(InternalUserActivity.ManageAes, breadcrumbService.InternalActivity);
                 Assert.Equal(breadcrumbService.InternalAe, aatfData.Name);
             }
         }
@@ -1197,7 +1197,7 @@
         }
 
         [Theory]
-        [MemberData("FacilityTypeEnumValues")]
+        [MemberData(nameof(FacilityTypeEnumValues))]
         public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
             var activity = type == FacilityType.Aatf ? InternalUserActivity.ManageAatfs : InternalUserActivity.ManageAes;
@@ -1406,7 +1406,7 @@
         }
 
         [Theory]
-        [MemberData("FacilityTypeEnumValues")]
+        [MemberData(nameof(FacilityTypeEnumValues))]
         public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();

@@ -77,7 +77,7 @@
             var userId = Guid.NewGuid();
 
             var previousOrganisationUser = new OrganisationUser(userId, organisationId, previousUserStatus.ToDomainEnumeration<UserStatus>());
-            var currentOrganisationUser = new OrganisationUser(userId, organisationId, previousUserStatus.ToDomainEnumeration<UserStatus>());
+            var currentOrganisationUser = new OrganisationUser(userId, organisationId, currentUserStatus.ToDomainEnumeration<UserStatus>());
 
             A.CallTo(() => context.OrganisationUsers)
                 .Returns(Data(new List<OrganisationUser>

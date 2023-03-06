@@ -207,7 +207,7 @@
         [Theory]
         [InlineData(false)]
         [InlineData(null)]
-        public async void IndexPost_GivenNoJavascriptCopyIsFalseOrNull_SentOnAatfSiteShouldBeSent(bool javascript)
+        public async void IndexPost_GivenNoJavascriptCopyIsFalseOrNull_SentOnAatfSiteShouldBeSent(bool? javascript)
         {
             var model = new SentOnCreateSiteViewModel
             {

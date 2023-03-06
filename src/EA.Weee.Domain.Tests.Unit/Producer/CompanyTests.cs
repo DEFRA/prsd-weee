@@ -10,7 +10,7 @@
         {
             var company = CompanyBuilder.NewCompany;
 
-            Assert.NotEqual(company, null);
+            Assert.NotNull(company);
         }
 
         [Fact]
