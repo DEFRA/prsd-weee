@@ -8,9 +8,11 @@
     {
         public virtual AatfAddress OperatorAddress { get; private set; }
 
+        public virtual Guid OperatorAddressId { get; private set; }
+
         public virtual AatfAddress SiteAddress { get; private set; }
 
-        public virtual Guid SiteAddressId { get; private set; }
+        public virtual Guid SiteAddressId { get; private set; }        
 
         public IList<WeeeSentOnAmount> WeeeSentOnAmounts { get; set; }
 
@@ -21,6 +23,14 @@
 
         public WeeeSentOn()
         {
+        }
+
+        public WeeeSentOn(Guid returnId, Guid aatfId, Guid operatorAddressId, Guid siteAddressId)
+        {
+            this.ReturnId = returnId;
+            this.AatfId = aatfId;
+            this.OperatorAddressId = operatorAddressId;
+            this.SiteAddressId = siteAddressId;
         }
 
         public WeeeSentOn(Guid siteAddress, Guid aatf, Guid @return)

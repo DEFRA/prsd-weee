@@ -69,6 +69,7 @@
     <Compile Include="AatfEvidence\Reports\GetSchemeObligationAndEvidenceTotalsReportRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceReportBaseRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceNoteReportRequest.cs" />
+    <Compile Include="Aatf\GetAatfById.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="AatfEvidence\TransferTonnageValue.cs" />
     <Compile Include="AatfReturn\AddReturnReportOn.cs" />
     <Compile Include="AatfReturn\AddReturnScheme.cs" />
+    <Compile Include="AatfReturn\CopyPreviousQuarterAatf.cs" />
+    <Compile Include="AatfReturn\GetAatfAddressBySearchId.cs" />
     <Compile Include="AatfReturn\GetAatfById.cs" />
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityType.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemes.cs" />
@@ -99,6 +102,10 @@
     <Compile Include="AatfReturn\GetReturns.cs" />
     <Compile Include="AatfReturn\GetReturnScheme.cs" />
     <Compile Include="AatfEvidence\EvidenceNoteBaseRequest.cs" />
+    <Compile Include="AatfReturn\GetSearchAatfAddress.cs" />
+    <Compile Include="AatfReturn\Obligated\CopyPreviousQuarterAatfData.cs" />
+    <Compile Include="AatfReturn\Obligated\CreateWeeeSentOnAatfSite.cs" />
+    <Compile Include="Aatf\GetAatfByIdExternalSearch.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsv.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnNonObligatedCsv.cs" />
     <Compile Include="Admin\AatfReports\GetPcsAatfComparisonData.cs" />
