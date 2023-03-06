@@ -3,6 +3,7 @@
     using EA.Weee.Core.AatfReturn;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class SentOnSiteSummaryListViewModel
     {
@@ -18,9 +19,11 @@
 
         public ObligatedCategoryValue Tonnages { get; set; }
 
-        public SentOnSiteSummaryListViewModel()
-        {
-        }
+        public bool IsChkCopyPreviousQuarterVisible { get; set; }
+
+        [Required]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Please select copy selection from previous quarter")]
+        public bool IsCopyChecked { get; set; }        
 
         public string CreateLongAddress(AatfAddressData address)
         {

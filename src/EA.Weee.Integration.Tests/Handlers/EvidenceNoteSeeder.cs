@@ -17,6 +17,7 @@
     using EA.Weee.Domain.Lookup;
     using NUnit.Framework;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;

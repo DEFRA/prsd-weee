@@ -14,6 +14,7 @@
     using EA.Weee.Domain.Lookup;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence;
@@ -532,7 +533,10 @@
                     new NoteTonnage(WeeeCategory.ConsumerEquipment, 2, 1),
                 };
 
-                var note1 = EvidenceNoteDbSetup.Init().WithTonnages(existingTonnagesNote1).Create();
+                var note1 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithTonnages(existingTonnagesNote1).Create();
+
                 var transferTonnage1 =
                     note1.NoteTonnage.First(nt => nt.CategoryId.Equals(WeeeCategory.ConsumerEquipment));
 

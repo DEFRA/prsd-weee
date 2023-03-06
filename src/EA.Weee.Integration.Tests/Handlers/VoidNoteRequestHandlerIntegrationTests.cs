@@ -14,6 +14,7 @@
     using Prsd.Core.Mediator;
     using System;
     using System.Threading.Tasks;
+    using NUnit.Specifications.Categories;
     using NoteStatus = Domain.Evidence.NoteStatus;
 
     public class VoidNoteRequestHandlerIntegrationTests : IntegrationTestBase
