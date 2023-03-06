@@ -20,13 +20,12 @@
         {
             using (var database = new DatabaseWrapper())
             {
-                var helper = new ModelHelper(database.Model);
-
                 var dataAccess = new CommonDataAccess(database.WeeeContext);
 
                 var result = await dataAccess.FetchCompetentAuthority(abbreviation);
 
                 result.Abbreviation.Should().Be(abbreviation);
+                result.Id.Should().Be(id);
             }
         }
 

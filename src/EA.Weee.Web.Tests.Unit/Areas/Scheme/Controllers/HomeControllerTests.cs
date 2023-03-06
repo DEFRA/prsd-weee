@@ -796,7 +796,7 @@
             var result = await HomeController().ManageOrganisationUsers(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
-            Assert.Equal(((ViewResult)result).ViewName, "ManageOrganisationUsers");
+            Assert.Equal("ManageOrganisationUsers", ((ViewResult)result).ViewName);
         }
 
         [Fact]
@@ -866,7 +866,7 @@
             var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
-            Assert.Equal(((ViewResult)result).ViewName, "ManageOrganisationUser");
+            Assert.Equal("ManageOrganisationUser", ((ViewResult)result).ViewName);
         }
 
         [Fact]
@@ -1055,7 +1055,7 @@
             var result = await HomeController().ViewOrganisationDetails(A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
-            Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
+            Assert.Equal("ViewOrganisationDetails", ((ViewResult)result).ViewName);
         }
 
         [Fact]
@@ -1313,7 +1313,7 @@
             Assert.Equal(countries, schemeData.Address.Countries);
 
             Assert.NotNull(result);
-            Assert.IsType(typeof(ViewResult), result);
+            Assert.IsType<ViewResult>(result);
 
             var viewResult = (ViewResult)result;
 
@@ -1360,7 +1360,7 @@
             Assert.Equal(countries, schemeData.Address.Countries);
 
             Assert.NotNull(result);
-            Assert.IsType(typeof(ViewResult), result);
+            Assert.IsType<ViewResult>(result);
 
             var viewResult = (ViewResult)result;
 
@@ -1400,7 +1400,7 @@
             A.CallTo(() => client.SendAsync(A<string>._, A<UpdateSchemeContactDetails>._)).MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
-            Assert.IsType(typeof(RedirectToRouteResult), result);
+            Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectResult = (RedirectToRouteResult)result;
 

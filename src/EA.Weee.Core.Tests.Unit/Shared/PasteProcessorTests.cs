@@ -164,7 +164,6 @@
         [Theory]
         [InlineData("1\t15\r\n2\t16\r\n3\t17\r\n4\t18\r\n5\t19\r\n6\t20\r\n7\t21")]
         [InlineData("1\t15\n2\t16\n3\t17\n4\t18\n5\t19\n6\t20\n7\t21")]
-        [InlineData("1\t15\n2\t16\n3\t17\n4\t18\n5\t19\n6\t20\n7\t21")]
         public void BuildModel_GivenStringContainsTwoColumnsAndLessThanFourteenRows_CategoryValuesShouldBePopulatedOnlyForFirstColumn(string value)
         {
             var result = pasteProcessor.BuildModel(value);

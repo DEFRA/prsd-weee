@@ -11,7 +11,7 @@
         {
             var partnership = PartnershipBuilder.NewPartnership;
 
-            Assert.NotEqual(partnership, null);
+            Assert.NotNull(partnership);
         }
 
         [Fact]

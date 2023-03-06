@@ -101,8 +101,8 @@
 
             organisation.UpdateRegisteredCompanyDetails("SFW Ltd.", "999999999", tradingName);
 
-            Assert.Equal(organisation.Name, "SFW Ltd.");
-            Assert.Equal(organisation.CompanyRegistrationNumber, "999999999");
+            Assert.Equal("SFW Ltd.", organisation.Name);
+            Assert.Equal("999999999", organisation.CompanyRegistrationNumber);
         }
 
         [Fact]
@@ -126,8 +126,8 @@
 
             organisation.UpdateSoleTraderDetails("SFW Ltd.", null);
 
-            Assert.Equal(organisation.Name, "SFW Ltd.");
-            Assert.Equal(organisation.TradingName, null);
+            Assert.Equal("SFW Ltd.", organisation.Name);
+            Assert.Null(organisation.TradingName);
         }
 
         [Fact]
@@ -140,8 +140,8 @@
 
             organisation.UpdateSoleTraderDetails("SFW Ltd.", "SFW");
 
-            Assert.Equal(organisation.Name, "SFW Ltd.");
-            Assert.Equal(organisation.TradingName, "SFW");
+            Assert.Equal("SFW Ltd.", organisation.Name);
+            Assert.Equal("SFW", organisation.TradingName);
         }
 
         [Fact]
@@ -163,7 +163,7 @@
 
             organisation.UpdatePartnershipDetails("SFW Ltd.");
 
-            Assert.Equal(organisation.TradingName, "SFW Ltd.");
+            Assert.Equal("SFW Ltd.", organisation.TradingName);
         }
     }
 }

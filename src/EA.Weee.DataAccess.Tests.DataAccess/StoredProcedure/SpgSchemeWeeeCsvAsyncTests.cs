@@ -220,11 +220,11 @@
                 Assert.NotNull(result);
 
                 Assert.NotNull(result.Schemes);
-                Assert.Equal(1, result.Schemes.Count);
+                Assert.Single(result.Schemes);
                 Assert.Equal(scheme1.Id, result.Schemes[0].SchemeId);
 
                 Assert.NotNull(result.CollectedAmounts);
-                Assert.Equal(1, result.CollectedAmounts.Count);
+                Assert.Single(result.CollectedAmounts);
                 Assert.Equal(scheme1.Id, result.CollectedAmounts[0].SchemeId);
             }
         }

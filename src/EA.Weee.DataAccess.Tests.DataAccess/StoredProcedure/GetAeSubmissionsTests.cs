@@ -80,6 +80,7 @@
             }
         }
 
+        [Fact]
         public async Task Execute_GivenNonSubmittedReturn_ReturnShouldNotBeReturned()
         {
             using (var db = new DatabaseWrapper())

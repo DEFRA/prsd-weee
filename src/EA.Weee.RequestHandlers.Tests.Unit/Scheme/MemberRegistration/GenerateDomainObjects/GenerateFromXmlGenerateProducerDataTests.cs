@@ -347,7 +347,7 @@
             A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
                 .MustNotHaveHappened();
 
-            Assert.Equal(0, result.Count());
+            Assert.Empty(result);
         }
 
         [Fact]
