@@ -193,8 +193,11 @@
     <Compile Include="AatfReturn\Internal\AatfDataAccessTests.cs" />
     <Compile Include="AatfReturn\NonObligated\AddNonObligatedHandlerTests.cs" />
     <Compile Include="AatfReturn\NonObligated\NonObligatedWeeeHandlerTestsBase.cs" />
+    <Compile Include="AatfReturn\ObligatedSentOn\CreateWeeeSentOnAatfSiteHandlerTests.cs" />
     <Compile Include="AatfReturn\RemoveReturnSchemeHandlerTests.cs" />
     <Compile Include="AatfReturn\Reports\GetReturnObligatedCsvHandlerTests.cs" />
+    <Compile Include="AatfReturn\SearchAatfAddress\GetSearchAnAatfAddressHandlerTests.cs" />
+    <Compile Include="AatfReturn\SearchedAatfResultList\GetSearchedAatfResultListHandlerTests.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeDetailsCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfObligatedDataHandlerTests.cs" />
@@ -501,6 +504,10 @@
     <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
       <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>
       <Name>EA.Weee.Tests.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Web\EA.Weee.Web.csproj">
+      <Project>{2e112d48-a841-4db7-b96f-4211c4da31c0}</Project>
+      <Name>EA.Weee.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
       <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>

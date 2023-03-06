@@ -1,0 +1,94 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Infrastructure
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchedAatfResultListViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<section id="main-content">
+    <h1 class="govuk-heading-l" style="padding-top: 0px;">Search results</h1>
+    <h2 class="govuk-heading-m">We found results for '@Model.AatfName'</h2>
+
+    @using (Html.BeginForm("Index", "SearchedAatfResultList", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.AatfId)
+        @Html.HiddenFor(m => m.SelectedAatfId)
+        @Html.HiddenFor(m => m.SelectedAatfName)
+        @Html.HiddenFor(m => m.SelectedSiteName)
+
+        <p class="govuk-body">Select the AATF the waste was sent to from the list below</p>
+
+        if (Model.Sites.Count > 0)
+        {
+            <table class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-grid-row govuk-table__row govuk-table__header">
+                        <th scope="col" class="govuk-table__header">
+                            AATF name and address
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Operator name and address
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            AATF approval number
+                        </th>
+                        <th scope="col" class="govuk-table__header">
+                            Select
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var weeeSentOn in Model.Sites)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @Html.Raw(Model.CreateLongAddress(weeeSentOn.SiteAddress))
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.Raw(Model.CreateLongAddress(weeeSentOn.OperatorAddress))
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.Raw(weeeSentOn.ApprovalNumber)
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.RadioButtonFor(m => m.SelectedAatfId, weeeSentOn.WeeeAatfId, new { @onclick = "setSiteSelectedId('" + weeeSentOn.WeeeAatfId + "','" + weeeSentOn.SiteAddress.Name + "')" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="govuk-!-padding-bottom-8"></div>
+            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another ATF link.</p>
+        }
+
+        <div class="govuk-!-padding-bottom-2"></div>
+
+        <p class="govuk-body">
+            @Html.RouteLink("Can't find the AATF you're looking for?", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, isCanNotFindLinkClick = true, organisationId = Model.OrganisationId, action = "Index", controller = "CanNotFindAatf" }, null)
+        </p>
+
+        <div class="govuk-!-padding-bottom-4"></div>
+        @(this.WeeeGds().Submit("Save and continue"))
+
+        <p class="govuk-body">
+            @Html.RouteLink("Back", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SearchAnAatf" }, new { @class = "govuk-back-link" })
+        </p>
+
+        <div class="govuk-!-padding-bottom-8"></div>
+    }
+</section>
+<script type="text/javascript">
+    function setSiteSelectedId(siteValue, siteName) {
+        document.getElementById("SelectedAatfId").value = siteValue;
+        document.getElementById("SelectedSiteName").value = siteName;
+    }
+</script>
