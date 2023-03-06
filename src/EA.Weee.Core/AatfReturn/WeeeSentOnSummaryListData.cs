@@ -17,5 +17,7 @@
         public virtual AatfAddressData SiteAddress { get; set; }
 
         public virtual bool Removed { get; set; }
+
+        public virtual string ApprovalNumber { get; set; }
     }
 }

@@ -72,6 +72,7 @@
             var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
             var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(database, organisation);
             var siteAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
+            var operatorAddress = ObligatedWeeeIntegrationCommon.CreateAatfAddress(database);
             var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, database.Model.AspNetUsers.First().Id);
 
             database.WeeeContext.Organisations.Add(organisation);
@@ -79,10 +80,11 @@
             database.WeeeContext.Aatfs.Add(aatf);
             database.WeeeContext.Returns.Add(@return);
             database.WeeeContext.AatfAddress.Add(siteAddress);
+            database.WeeeContext.AatfAddress.Add(operatorAddress);
 
             await database.WeeeContext.SaveChangesAsync();
 
-            var weeeSentOn = new WeeeSentOn(siteAddress.Id, aatf.Id, @return.Id);
+            var weeeSentOn = new WeeeSentOn(@return.Id, aatf.Id, operatorAddress.Id, siteAddress.Id);
 
             var weeeSentOnAmount = new List<WeeeSentOnAmount>();
 
