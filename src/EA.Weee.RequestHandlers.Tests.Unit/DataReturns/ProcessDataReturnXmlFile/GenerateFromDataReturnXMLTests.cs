@@ -29,7 +29,7 @@
             var result = builder.Build().GenerateDataReturns<SchemeReturn>(new ProcessDataReturnXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.NotEmpty(result.SchemaErrors);
-            Assert.Equal(1, result.SchemaErrors.Count);
+            Assert.Single(result.SchemaErrors);
         }
 
         [Fact]

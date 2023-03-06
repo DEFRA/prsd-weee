@@ -61,7 +61,7 @@
                 // Assert
                 Assert.NotNull(producer);
                 Assert.Equal(producerSubmission.RegisteredProducer.ProducerRegistrationNumber, producer.RegisteredProducer.ProducerRegistrationNumber);
-                Assert.Equal(1, producerSubmissionList.Count);
+                Assert.Single(producerSubmissionList);
             }
         }
 
@@ -115,7 +115,7 @@
                 var results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(domainAuthority, 2000, scheme.Id);
 
                 // Assert
-                Assert.Equal(1, results.Count());
+                Assert.Single(results);
 
                 var producerResult = results.Single();
                 Assert.Equal(producerSubmission.Id, producerResult.Id);

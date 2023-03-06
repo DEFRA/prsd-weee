@@ -513,7 +513,7 @@
             Assert.NotNull(jsonResult);
 
             Type type = jsonResult.Data.GetType();
-            Assert.Equal(true, (bool)type.GetProperty("Success").GetValue(jsonResult.Data));
+            Assert.True((bool)type.GetProperty("Success").GetValue(jsonResult.Data));
             Assert.Equal(invoiceRunId, (Guid?)type.GetProperty("InvoiceRunId").GetValue(jsonResult.Data));
         }
 
@@ -552,7 +552,7 @@
             Assert.NotNull(jsonResult);
 
             Type type = jsonResult.Data.GetType();
-            Assert.Equal(false, (bool)type.GetProperty("Success").GetValue(jsonResult.Data));
+            Assert.False((bool)type.GetProperty("Success").GetValue(jsonResult.Data));
             Assert.Equal(errors, (List<string>)type.GetProperty("Errors").GetValue(jsonResult.Data));
         }
 

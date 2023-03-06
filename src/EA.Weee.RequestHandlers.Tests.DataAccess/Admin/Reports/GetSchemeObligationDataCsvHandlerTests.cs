@@ -53,7 +53,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result1 = results.Find(x => (x.ApprovalNumber == "WEE/TE0001ST/SCH"));
                 Assert.Equal("PRN123", result1.PRN);
                 Assert.Equal("B2C", result1.ObligationTypeForPreviousYear);

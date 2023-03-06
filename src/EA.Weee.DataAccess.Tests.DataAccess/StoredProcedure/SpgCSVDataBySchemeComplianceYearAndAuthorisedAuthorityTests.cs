@@ -38,7 +38,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 MembersDetailsCsvData result = results[0];
 
@@ -74,7 +74,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -107,7 +107,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 MembersDetailsCsvData result = results[0];
 
@@ -144,7 +144,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 MembersDetailsCsvData result = results[0];
 
@@ -181,7 +181,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 MembersDetailsCsvData result = results[0];
 
@@ -224,7 +224,7 @@
                 List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 MembersDetailsCsvData result = results[0];
 
@@ -402,7 +402,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 Assert.Collection(results,
                    (r1) => Assert.Equal("WEE/33CCCC33", r1.PRN));
             }

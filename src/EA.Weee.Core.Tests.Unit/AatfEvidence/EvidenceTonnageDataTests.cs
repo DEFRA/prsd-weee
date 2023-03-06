@@ -5,6 +5,8 @@
     using EA.Weee.Core.DataReturns;
     using FluentAssertions;
     using System;
+    using System.Collections.Generic;
+    using Prsd.Core;
     using Xunit;
 
     public class EvidenceTonnageDataTests
@@ -16,12 +18,17 @@
             fixture = new Fixture();
         }
 
+        public static IEnumerable<object[]> Values()
+        {
+            yield return new object[] { 5m, null, 5m };
+            yield return new object[] { 5m, 0m, 5m };
+            yield return new object[] { 5m, 5m, 0m };
+            yield return new object[] { 5m, 4m, 1m };
+            yield return new object[] { 5m, 6m, 0m };
+        }
+
         [Theory]
-        [InlineData(5, null, 5)]
-        [InlineData(5, 0, 5)]
-        [InlineData(5, 5, 0)]
-        [InlineData(5, 4, 1)]
-        [InlineData(5, 6, 0)]
+        [MemberData(nameof(Values))]
         public void EvidenceNoteData_EvidenceTonnageDataAvailableReceivedGet_ShouldCalculate_CorrectValues(decimal total, decimal transferred, decimal expectedAvailable)
         {
             //Arrange
@@ -32,12 +39,8 @@
         }
 
         [Theory]
-        [InlineData(5, null, 5)]
-        [InlineData(5, 0, 5)]
-        [InlineData(5, 5, 0)]
-        [InlineData(5, 4, 1)]
-        [InlineData(5, 6, 0)]
-        public void EvidenceNoteDataAvailableReusedGet_ShouldCalculate_CorrectValues(decimal total, decimal transferred, decimal expectedReused)
+        [MemberData(nameof(Values))]
+        public void EvidenceNoteDataAvailableReusedGet_ShouldCalculate_CorrectValues(decimal total, decimal? transferred, decimal expectedReused)
         {
             //Arrange
             var noteData = new EvidenceTonnageData(fixture.Create<Guid>(), fixture.Create<WeeeCategory>(), null, total, null, transferred);

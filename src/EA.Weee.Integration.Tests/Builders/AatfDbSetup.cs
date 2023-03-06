@@ -60,5 +60,12 @@
 
             return this;
         }
+
+        public AatfDbSetup WithComplianceYear(Int16 complianceYear)
+        {
+            ObjectInstantiator<Aatf>.SetProperty((o) => o.ComplianceYear, complianceYear, instance);
+
+            return this;
+        }
     }
 }

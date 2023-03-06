@@ -67,7 +67,7 @@
         [InlineData(null)]
         [InlineData(false)]
 
-        public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsFalse_PropertiesShouldBeSet(bool returnToView)
+        public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsFalse_PropertiesShouldBeSet(bool? returnToView)
         {
             //arrange
             var orgId = TestFixture.Create<Guid>();

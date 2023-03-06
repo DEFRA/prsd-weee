@@ -40,7 +40,7 @@
 
             var result = dataAccess.CheckSchemeHasAnnualCharge(scheme, 2019);
 
-            Assert.Equal(result, true);
+            Assert.True(result);
         }
 
         [Fact]
@@ -62,7 +62,7 @@
 
             var result = dataAccess.CheckSchemeHasAnnualCharge(scheme, 2019);
 
-            Assert.Equal(result, false);
+            Assert.False(result);
         }
 
         [Fact]
@@ -84,7 +84,7 @@
 
             var result = dataAccess.CheckSchemeHasAnnualCharge(scheme, 2019);
 
-            Assert.Equal(result, false);
+            Assert.False(result);
         }
 
         [Fact]
@@ -106,7 +106,7 @@
 
             var result = dataAccess.CheckSchemeHasAnnualCharge(scheme, 2019);
 
-            Assert.Equal(result, false);
+            Assert.False(result);
         }
 
         [Fact]
@@ -128,7 +128,7 @@
 
             var result = dataAccess.CheckSchemeHasAnnualCharge(scheme, 2019);
 
-            Assert.Equal(result, false);
+            Assert.False(result);
         }
 
         private MemberUpload MemberUpload(Scheme scheme)

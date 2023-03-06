@@ -185,26 +185,26 @@
 
             // Assert
             GetUkWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.DcfTotal);
-            Assert.Equal(null, result1.DcfQ1);
-            Assert.Equal(null, result1.DcfQ2);
-            Assert.Equal(null, result1.DcfQ3);
-            Assert.Equal(null, result1.DcfQ4);
-            Assert.Equal(null, result1.DistributorTotal);
-            Assert.Equal(null, result1.DistributorQ1);
-            Assert.Equal(null, result1.DistributorQ2);
-            Assert.Equal(null, result1.DistributorQ3);
-            Assert.Equal(null, result1.DistributorQ4);
-            Assert.Equal(null, result1.FinalHolderTotal);
-            Assert.Equal(null, result1.FinalHolderQ1);
-            Assert.Equal(null, result1.FinalHolderQ2);
-            Assert.Equal(null, result1.FinalHolderQ3);
-            Assert.Equal(null, result1.FinalHolderQ4);
-            Assert.Equal(null, result1.DeliveredTotal);
-            Assert.Equal(null, result1.DeliveredQ1);
-            Assert.Equal(null, result1.DeliveredQ2);
-            Assert.Equal(null, result1.DeliveredQ3);
-            Assert.Equal(null, result1.DeliveredQ4);
+            Assert.Null(result1.DcfTotal);
+            Assert.Null(result1.DcfQ1);
+            Assert.Null(result1.DcfQ2);
+            Assert.Null(result1.DcfQ3);
+            Assert.Null(result1.DcfQ4);
+            Assert.Null(result1.DistributorTotal);
+            Assert.Null(result1.DistributorQ1);
+            Assert.Null(result1.DistributorQ2);
+            Assert.Null(result1.DistributorQ3);
+            Assert.Null(result1.DistributorQ4);
+            Assert.Null(result1.FinalHolderTotal);
+            Assert.Null(result1.FinalHolderQ1);
+            Assert.Null(result1.FinalHolderQ2);
+            Assert.Null(result1.FinalHolderQ3);
+            Assert.Null(result1.FinalHolderQ4);
+            Assert.Null(result1.DeliveredTotal);
+            Assert.Null(result1.DeliveredQ1);
+            Assert.Null(result1.DeliveredQ2);
+            Assert.Null(result1.DeliveredQ3);
+            Assert.Null(result1.DeliveredQ4);
         }
 
         /// <summary>
@@ -244,9 +244,9 @@
             Assert.NotNull(result);
 
             Assert.Equal(0, result.DcfQ1);
-            Assert.Equal(null, result.DcfQ2);
-            Assert.Equal(null, result.DcfQ3);
-            Assert.Equal(null, result.DcfQ4);
+            Assert.Null(result.DcfQ2);
+            Assert.Null(result.DcfQ3);
+            Assert.Null(result.DcfQ4);
             Assert.Equal(0, result.DcfTotal);
         }
 
@@ -287,9 +287,9 @@
             Assert.NotNull(result);
 
             Assert.Equal(0, result.DistributorQ1);
-            Assert.Equal(null, result.DistributorQ2);
-            Assert.Equal(null, result.DistributorQ3);
-            Assert.Equal(null, result.DistributorQ4);
+            Assert.Null(result.DistributorQ2);
+            Assert.Null(result.DistributorQ3);
+            Assert.Null(result.DistributorQ4);
             Assert.Equal(0, result.DistributorTotal);
         }
 
@@ -330,9 +330,9 @@
             Assert.NotNull(result);
 
             Assert.Equal(0, result.FinalHolderQ1);
-            Assert.Equal(null, result.FinalHolderQ2);
-            Assert.Equal(null, result.FinalHolderQ3);
-            Assert.Equal(null, result.FinalHolderQ4);
+            Assert.Null(result.FinalHolderQ2);
+            Assert.Null(result.FinalHolderQ3);
+            Assert.Null(result.FinalHolderQ4);
             Assert.Equal(0, result.FinalHolderTotal);
         }
 
@@ -373,9 +373,9 @@
             Assert.NotNull(result);
 
             Assert.Equal(0, result.DeliveredQ1);
-            Assert.Equal(null, result.DeliveredQ2);
-            Assert.Equal(null, result.DeliveredQ3);
-            Assert.Equal(null, result.DeliveredQ4);
+            Assert.Null(result.DeliveredQ2);
+            Assert.Null(result.DeliveredQ3);
+            Assert.Null(result.DeliveredQ4);
             Assert.Equal(0, result.DeliveredTotal);
         }
 

@@ -35,8 +35,8 @@
 
             AssertResults(aatfData, result);
 
-            Assert.Equal(null, result.LocalAreaId);
-            Assert.Equal(null, result.PanAreaId);
+            Assert.Null(result.LocalAreaId);
+            Assert.Null(result.PanAreaId);
         }
 
         private static void AssertResults(AatfData aatfData, CopyFacilityViewModelBase result)

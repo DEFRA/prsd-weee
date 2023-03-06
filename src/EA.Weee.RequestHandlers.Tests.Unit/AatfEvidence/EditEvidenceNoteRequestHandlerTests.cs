@@ -196,7 +196,7 @@
 
         [Theory]
         [ClassData(typeof(ProtocolData))]
-        public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.Protocol protocol)
+        public async Task HandleAsync_GivenRequest_Protocol_DataAccessShouldBeCalled(Domain.Evidence.Protocol protocol)
         {
             //arrange
             var currentDate = new DateTime(2021, 12, 1);
@@ -291,7 +291,7 @@
 
         [Theory]
         [ClassData(typeof(WasteTypeData))]
-        public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled(Domain.Evidence.WasteType waste)
+        public async Task HandleAsync_GivenRequest_WasteType_DataAccessShouldBeCalled(Domain.Evidence.WasteType waste)
         {
             //arrange
             var currentDate = new DateTime(2021, 12, 1);
