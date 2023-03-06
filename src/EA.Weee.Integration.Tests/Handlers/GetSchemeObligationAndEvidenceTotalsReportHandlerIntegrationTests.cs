@@ -18,6 +18,7 @@
     using Core.Constants;
     using Domain.Scheme;
     using FluentAssertions;
+    using NUnit.Specifications.Categories;
     using Requests.AatfEvidence.Reports;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
 
