@@ -15,6 +15,7 @@
     using EA.Prsd.Core;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.AatfEvidence.Reports;

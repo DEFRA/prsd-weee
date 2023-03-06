@@ -20,7 +20,8 @@
                 CountyOrRegion = source.CountyOrRegion,
                 Name = source.Name,
                 Postcode = source.Postcode,
-                CountryName = source.Country.Name
+                CountryName = source.Country.Name,
+                Id = source.Id,
             };
 
             return siteAddress;
