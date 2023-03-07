@@ -694,13 +694,43 @@ input[type="file"].form-control {
     text-align: right;
 }
 
+.task-list-row {
+    line-height: 2.5rem;
+}
+
+.task-list-title-cell {
+    padding-left: 0.75rem;
+}
+
+.task-list-aatf-title {
+    padding-left: 0.75rem;
+}
+
+.weee-actions-display > a {
+    white-space: nowrap;
+}
 
 .tasklist-row {
     padding-bottom: 0 !important;
 }
 
-.weee-actions-display > a {
-    white-space: nowrap;
+@media only screen and (max-width: 640px) {
+
+    .task-list-title-cell {
+        padding-left: 0;
+    }
+
+    .task-list-row {
+        line-height: 1rem;
+    }
+
+    .task-list-aatf-title {
+        padding-left: 0.5rem;
+    }
+
+    .weee-actions-display > a {
+        float: right;
+    }
 }
 
 .not-reported-column {
@@ -713,7 +743,7 @@ input.tonnage-entry {
 }
 
 @media only screen and (max-width: 640px) {
-    .weee-tonnage-right-aligned-display{
+    .weee-tonnage-right-aligned-display {
         text-align: left;
         word-break: normal;
         padding: 2px;
@@ -945,7 +975,7 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     min-width: 107px;
 }
 
-.weee-float-right{
+.weee-float-right {
     float: right;
 }
 
@@ -970,46 +1000,4 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     .weee-evidence-padding-right {
         padding-right: 0px;
     }
-}
-
-input[type='radio'] {
-    -webkit-appearance: none;
-    width: 25px;
-    height: 25px;
-    border: 2px solid black;
-    border-radius: 100%;
-    outline: none;
-}
-
-input[type='radio']:before {
-    content: '';
-    display: block;
-    width: 60%;
-    height: 60%;
-    margin: 20% auto;
-    border-radius: 100%;
-}
-
-input[type='radio']:checked:before {
-    background: black;
-}
-
-.govuk-grid-column-one-six {
-    max-width: 16.66%;
-}
-
-#searchButton {
-    font-size: 0px !important;
-    margin-left: -4px !important;
-    height: 38px !important;
-    width: 45px !important;
-}
-
-#searchButton img {
-    margin-top: -2px;
-}
-
-.govuk-grid-column-one-quarter {
-    overflow-wrap: break-word !important;
-    padding-right: 15px !important;
 }
