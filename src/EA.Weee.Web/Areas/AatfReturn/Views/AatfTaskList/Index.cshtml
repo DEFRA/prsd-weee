@@ -11,7 +11,31 @@
     var displayObligatedGroup = Model.ReportOnDisplayOptions.DisplayObligatedReceived || Model.ReportOnDisplayOptions.DisplayObligatedSentOn || Model.ReportOnDisplayOptions.DisplayObligatedReused;
 }
 
-<section id="main-content">
+<style>
+    @@media only screen and (max-width: 640px) {
+
+
+        .aatf-task-list-table td:nth-of-type(1):before {
+            content: "";
+        }
+
+        .aatf-task-list-table td:nth-of-type(2):before {
+            content: "B2C (tonnes)";
+        }
+
+        .aatf-task-list-table td:nth-of-type(3):before {
+            content: "B2B (tonnes)";
+        }
+
+        .aatf-task-list-table td:nth-of-type(4):before {
+            content: "";
+        }
+
+    }
+</style>
+
+@section full_main_content
+{
     <header class="hgroup">
         <div>
             <h1 class="govuk-heading-l">AATF return task list for @Model.OrganisationName</h1>
@@ -21,224 +45,192 @@
     <table class="govuk-table govuk-!-width-one-half">
         <caption class="govuk-table__caption govuk-visually-hidden">Compliance month and year</caption>
         <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell gov-uk-no-bottom-border">@Html.DisplayNameFor(model => model.Year)</td>
-                <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Year</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell gov-uk-no-bottom-border">@Html.DisplayNameFor(model => model.Period)</td>
-                <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Period</td>
-            </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell gov-uk-no-bottom-border">@Html.DisplayNameFor(model => model.Year)</td>
+            <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Year</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell gov-uk-no-bottom-border">@Html.DisplayNameFor(model => model.Period)</td>
+            <td class="govuk-table__cell govuk-!-font-weight-bold gov-uk-no-bottom-border">@Model.Period</td>
+        </tr>
         </tbody>
     </table>
 
+    <h2 class="govuk-heading-m">Obligated WEEE</h2>
+
     @if (displayObligatedGroup && Model.AatfsData.Any())
     {
-        <h2 class="govuk-heading-m">Obligated WEEE</h2>
-        <div class="govuk-table govuk-grid-column-full">
-            @for (var count = 0; count < Model.AatfsData.Count(); count++)
+        for (var count = 0; count < Model.AatfsData.Count(); count++)
+        {
+            var item = Model.AatfsData.ElementAt(count);
+
+            if (count != 0)
             {
-                var item = Model.AatfsData.ElementAt(count);
-
-                if (count != 0)
-                {
-                    <div class="govuk-!-padding-top-8"></div>
-                }
-                else
-                {
-                    <div class="govuk-!-padding-top-4"></div>
-                }
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        <p>
-                            <strong>@item.Aatf.Name (@item.Aatf.ApprovalNumber) Status: @item.Aatf.AatfStatus</strong>
-                        </p>
-                    </div>
-                </div>
-                <div class="govuk-grid-row govuk-table__cell--thick tasklist-row">
-                    <div class="govuk-grid-column-one-half">
-                        &nbsp;
-                    </div>
-                    <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-one-third">
-                            <p class="summary-paragraph">
-                                <strong>B2C (tonnes)</strong>
-                            </p>
-                        </div>
-                        <div class="govuk-grid-column-one-third">
-                            <p class="summary-paragraph">
-                                <strong>B2B (tonnes)</strong>
-                            </p>
-                        </div>
-                        <div class="govuk-grid-column-one-third">
-                            &nbsp;
-                        </div>
-                    </div>
-                </div>
-
-                if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
-                {
-                    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display tasklist-row">
-                        <div class="govuk-grid-column-one-half">
-                            <p class="summary-paragraph">
-                                Received on behalf of PCS(s)
-                            </p>
-                        </div>
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
-                                <p class="summary-paragraph">
-                                    @item.WeeeReceived.B2C
-                                </p>
-                            </div>
-
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
-                                <p class="summary-paragraph">
-                                    @item.WeeeReceived.B2B
-                                </p>
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-actions-display">
-                                <p>
-                                    @Html.NavigationRouteLink("add / edit data", "add or edit received on behalf of PCS(s) data relating to " + @item.Aatf.Name, AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
-                {
-                    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display tasklist-row">
-                        <div class="govuk-grid-column-one-half">
-                            <p class="summary-paragraph">
-                                Sent to another AATF / ATF
-                            </p>
-                        </div>
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
-                                <p class="summary-paragraph">
-                                    @item.WeeeSentOn.B2C
-                                </p>
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
-                                <p class="summary-paragraph">
-                                    @item.WeeeSentOn.B2B
-                                </p>
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-actions-display">
-                                <p>
-                                    @Html.NavigationRouteLink("add / edit data", "add or edit sent to another AATF / ATF data relating to " + @item.Aatf.Name, AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" }, null)
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
-                {
-                    <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display tasklist-row">
-                        <div class="govuk-grid-column-one-half">
-                            <p class="summary-paragraph">
-                                Reused as a whole appliance
-                            </p>
-                        </div>
-                        <div class="govuk-grid-column-one-half">
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
-                                <p class="summary-paragraph">
-                                    @item.WeeeReused.B2C
-                                </p>
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display break-word">
-                                <p class="summary-paragraph">
-                                    @item.WeeeReused.B2B
-                                </p>
-                            </div>
-                            <div class="govuk-grid-column-one-third weee-actions-display">
-                                <p>
-                                    @{
-                                        var message = "add or edit reused as a whole appliance data relating to " + @item.Aatf.Name;
-                                    }
-
-                                    @if (item.WeeeReused.RedirectToSummary)
-                                    {
-                                        @Html.NavigationRouteLink("add / edit data", @message, AatfRedirect.AatfSelectedRoute, new {returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst"}, null)
-                                    }
-                                    else
-                                    {
-                                        @Html.NavigationRouteLink("add / edit data", @message, AatfRedirect.AatfSelectedRoute, new {returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused"}, null)
-                                    }
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                }
+                <div class="govuk-!-padding-top-8"></div>
             }
-            <div class="govuk-!-padding-bottom-6"></div>
-        </div>
-    }
+            else
+            {
+                <div class="govuk-!-padding-top-4"></div>
+            }
 
+            <div class="aatf-task-list-table">
+
+                <table class="govuk-table prsd-table-small-collapse aatf-task-list-table">
+                <caption class="govuk-table__caption govuk-table__caption--s task-list-aatf-title">@item.Aatf.Name (@item.Aatf.ApprovalNumber) Status: @item.Aatf.AatfStatus</caption>
+                <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+                    <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
+                        <th scope="col" class="govuk-table__header prsd-table-small-collapse" style="width: 50%;"><span class="govuk-visually-hidden">task</span></th>
+                        <th scope="col" class="govuk-table__header govuk-!-text-align-right prsd-table-small-collapse" style="width: 16.6%;">B2C (tonnes)</th>
+                        <th scope="col" class="govuk-table__header govuk-!-text-align-right prsd-table-small-collapse" style="width: 16.6%;">B2B (tonnes)</th>
+                        <th scope="col" class="govuk-table__header govuk-!-text-align-right prsd-table-small-collapse" style="width: 16.6%;"><span class="govuk-visually-hidden">actions</span> </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body prsd-table-small-collapse">
+
+                @if (Model.ReportOnDisplayOptions.DisplayObligatedReceived)
+                {
+                    <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+                        <td class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph">
+                                Received on behalf of PCS(s)
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph">
+                                @item.WeeeReceived.B2C
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph">
+                                @item.WeeeReceived.B2B
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell weee-actions-display govuk-!-text-align-centre prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            @Html.NavigationRouteLink("add / edit data", "add or edit received on behalf of PCS(s) data relating to " + @item.Aatf.Name, AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ReceivedPcsList" }, null)
+                        </td>
+                    </tr>
+                }
+
+                @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+                {
+                    <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+                        <td class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph task-list-title-cell">
+                                Sent to another AATF / ATF
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph">
+                                @item.WeeeSentOn.B2C
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph">
+                                @item.WeeeSentOn.B2B
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell weee-actions-display govuk-!-text-align-centre prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            @Html.NavigationRouteLink("add / edit data", "add or edit sent to another AATF / ATF data relating to " + @item.Aatf.Name, AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = @item.Aatf.Id, action = "Index", controller = "SentOnSiteSummaryList" }, null)
+                        </td>
+                    </tr>
+                }
+
+                @if (Model.ReportOnDisplayOptions.DisplayObligatedReused)
+                {
+                    <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+                        <td class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph task-list-title-cell ">
+                                Reused as a whole appliance
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph">
+                                @item.WeeeReused.B2C
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="summary-paragraph">
+                                @item.WeeeReused.B2B
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell weee-actions-display govuk-!-text-align-centre prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            @{
+                                var message = "add or edit reused as a whole appliance data relating to " + @item.Aatf.Name;
+                            }
+
+                            @if (item.WeeeReused.RedirectToSummary)
+                            {
+                                @Html.NavigationRouteLink("add / edit data", @message, AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, organisationId = Model.OrganisationId, action = "Index", controller = "ReusedOffSiteSummaryLIst" }, null)
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink("add / edit data", @message, AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = @item.Aatf.Id, action = "Index", controller = "ObligatedReused" }, null)
+                            }
+                        </td>
+                    </tr>
+                }
+
+                </tbody>
+            </table>
+            </div>
+            <div class="govuk-!-padding-bottom-6"></div>
+        }
+    }
 
     @if (Model.ReportOnDisplayOptions.DisplayNonObligated)
     {
         <div class="govuk-!-padding-top-8"></div>
+
         <h2 class="govuk-heading-m">Non-obligated WEEE</h2>
-        <div class="govuk-table govuk-grid-column-full">
-            <div class="govuk-grid-row govuk-table__cell--thick tasklist-row">
-                <div class="govuk-grid-column-one-half">
-                    &nbsp;
-                </div>
-                <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-two-thirds">
-                        <p class="summary-paragraph summary-paragraph-align-right">
-                            <strong>Total (tonnes)</strong>
-                        </p>
-                    </div>
-                    <div class="govuk-grid-column-one-third">
-                        &nbsp;
-                    </div>
-                </div>
-            </div>
-            <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display tasklist-row">
-                <div class="govuk-grid-column-one-half">
-                    <p class="summary-paragraph">
+        <table class="govuk-table govuk-grid-column-full">
+            <caption class="govuk-table__caption govuk-heading-m govuk-visually-hidden">Non-obligated WEEE</caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row govuk-table__cell--thick">
+                <th scope="col" class="govuk-table__header" style="width: 50%;">&nbsp;</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 33.3%;">Total (tonnes)</th>
+
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 16.6%;"><span class="govuk-visually-hidden">actions</span> </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row task-list-row govuk-table__cell--thick">
+                <td class="govuk-table__cell">
+                    <span class="summary-paragraph task-list-title-cell">
                         Received
-                    </p>
-                </div>
-                <div class="govuk-grid-column-one-half">
-                    <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display break-word">
-                        <p class="summary-paragraph">
-                            @Model.NonObligatedTonnageTotal
-                        </p>
-                    </div>
-                    <div class="govuk-grid-column-one-third weee-actions-display">
-                        <p>
-                            @Html.NavigationRouteLink("add / edit data", "add or edit data relating to non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }, null)
-                        </p>
-                    </div>
-                </div>
-            </div>
+                    </span>
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                    <span class="summary-paragraph">
+                        @Model.NonObligatedTonnageTotal
+                    </span>
+                </td>
+                <td class="govuk-table__cell weee-actions-display govuk-!-text-align-centre">
+                    @Html.NavigationRouteLink("add / edit data", "add or edit data relating to non obligated received", AatfRedirect.NonObligatedRouteName, new { returnId = Model.ReturnId, dcf = false }, null)
+                </td>
+            </tr>
+
             @if (Model.ReportOnDisplayOptions.DisplayNonObligatedDcf)
             {
-                <div class="govuk-grid-row govuk-table__cell--thick weee-tonnage-top-aligned-display tasklist-row">
-                    <div class="govuk-grid-column-one-half">
-                        <p class="summary-paragraph">
+                <tr class="govuk-table__row task-list-row govuk-table__cell--thick">
+                    <td class="govuk-table__cell">
+                        <span class="summary-paragraph task-list-title-cell">
                             Kept / retained by a DCF
-                        </p>
-                    </div>
-                    <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-two-thirds weee-tonnage-right-aligned-display break-word">
-                            <p class="summary-paragraph">
-                                @Model.NonObligatedTonnageTotalDcf
-                            </p>
-                        </div>
-                        <div class="govuk-grid-column-one-third weee-actions-display">
-                            <p>
-                                @Html.NavigationRouteLink("add / edit data", "add or edit data relating to non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }, null)
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right break-word">
+                        <span class="summary-paragraph">
+                            @Model.NonObligatedTonnageTotalDcf
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell weee-actions-display govuk-!-text-align-centre">
+                        @Html.NavigationRouteLink("add / edit data", "add or edit data relating to non obligated DCF retained", AatfRedirect.NonObligatedDcfRouteName, new { returnId = Model.ReturnId, dcf = true }, null)
+                    </td>
+                </tr>
             }
-        </div>
+
+            </tbody>
+        </table>
+
     }
 
     @if (!displayObligatedGroup && !Model.ReportOnDisplayOptions.DisplayNonObligated)
@@ -258,22 +250,22 @@
 
         <p>
             @(this.WeeeGds().ActionLinkWithEventTracking("Change what you want to report on",
-            "Change reporting options",
-            Url.RouteUrl(AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId }),
-            "AATF return",
-            "Change report options",
-            "Change report options"
-            ))
+                "Change reporting options",
+                Url.RouteUrl(AatfRedirect.SelectReportOptionsRouteName, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId }),
+                "AATF return",
+                "Change report options",
+                "Change report options"
+                ))
         </p>
     }
 
     <div>
-        @this.WeeeGds().CreateProgressiveDisclosure(" Some of my AATFs are missing",
-       @Html.Partial("_ContactProgressiveDisclosure").ToString(),
-       "Hidden content",
-       "Progressive disclosure",
-       "Some of my AATFs are missing")
+        @this.WeeeGds().CreateProgressiveDisclosure("Some of my AATFs are missing",
+            @Html.Partial("_ContactProgressiveDisclosure").ToString(),
+            "Hidden content",
+            "Progressive disclosure",
+            "Some of my AATFs are missing")
     </div>
 
-    <a href="@Url.Action("Index", "Returns", new { organisationId = Model.OrganisationId})" class="govuk-back-link">Back</a>
-</section>
+    <a href="@Url.Action("Index", "Returns", new { organisationId = Model.OrganisationId })" class="govuk-back-link">Back</a>
+}
