@@ -11,7 +11,8 @@
     var hideOpenClass = Model.AnyAatfSchemes ? "" : "hide";
 }
 
-<section id="main-content">
+@section full_main_content
+{
     <header class="hgroup">
         <div>
             <h1 class="govuk-heading-l">Check your AATF return for @Model.Organisation.OrganisationName</h1>
@@ -23,32 +24,21 @@
 
     <div class="govuk-!-padding-bottom-6"></div>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-quarter">
-                @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
+    @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
 
-                    @Html.HiddenFor(m => m.ReturnId)
-                    @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.ReturnId)
+        @Html.HiddenFor(m => m.OrganisationId)
 
-                    <div class="govuk-form-group">
-                        @this.WeeeGds().CreateButtonWithEventTracking("Submit", "AATF return", "Submit AATF return", "Submit AATF return")
-                    </div>
-                }
-
-            </div>
+        <div class="govuk-form-group">
+            @this.WeeeGds().CreateButtonWithEventTracking("Submit", "AATF return", "Submit AATF return", "Submit AATF return")
         </div>
-    </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter govuk-!-padding-left-0">
-            <div class="govuk-body govuk-!-font-size-19">               
-                    @Html.NavigationRouteLink("AATF task list", "TaskList", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
-            </div>
-        </div>
-    </div>
-</section>
+    }
+    
+    @Html.NavigationRouteLink("AATF task list", "TaskList", AatfRedirect.Default, new { returnId = Model.ReturnId, action = "Index", controller = "AatfTaskList" }, null)
+   
+}
 
 @Scripts.Render("~/bundles/weee-collapsible-link")
 @section scripts {

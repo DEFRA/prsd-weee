@@ -1,0 +1,15 @@
+﻿@model EA.Weee.Web.ViewModels.Returns.ReturnViewModel
+
+<table class="govuk-table govuk-!-width-one-half">
+    <caption class="govuk-table__caption govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.ComplianceYearAndMonth</caption>
+    <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__cell gov-uk-no-bottom-border govuk-table__header">@Html.DisplayNameFor(model => model.Year)</th>
+            <td class="govuk-table__cellgov-uk-no-bottom-border">@Model.Year</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <td scope="row" class="govuk-table__cell gov-uk-no-bottom-border govuk-table__header">@Html.DisplayNameFor(model => model.Period)</td>
+            <td class="govuk-table__cell gov-uk-no-bottom-border">@Model.Period</td>
+        </tr>
+    </tbody>
+</table>
