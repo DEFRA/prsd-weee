@@ -410,6 +410,11 @@
     <Compile Include="App_Start\AutoFacValidatorFactory.cs" />
     <Compile Include="App_Start\CustomDateBinder.cs" />
     <Compile Include="App_Start\CustomModelBindersConfig.cs" />
+    <Compile Include="Areas\AatfReturn\Views\App_LocalResources\ReturnsResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReturnsResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Aatf\Attributes\CheckCanCreateEvidenceNoteAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteFilterEndDateAttribute.cs" />
     <Compile Include="Areas\Aatf\Attributes\EvidenceNoteFilterStartDateAttribute.cs" />
@@ -999,6 +1004,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="Areas\AatfReturn\Views\Shared\_SummaryReportingPeriodPartial.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -1982,6 +1988,13 @@
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
     <Folder Include="ViewModels\Shared\Utilities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Areas\AatfReturn\Views\App_LocalResources\ReturnsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ReturnsResources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Resources.AatfReturn</CustomToolNamespace>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
