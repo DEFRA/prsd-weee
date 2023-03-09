@@ -61,6 +61,33 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AATF approval number.
+        /// </summary>
+        public static string AATFApprovalNumber {
+            get {
+                return ResourceManager.GetString("AATFApprovalNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AATF / ATF name and address.
+        /// </summary>
+        public static string AATFATFnameAndAddress {
+            get {
+                return ResourceManager.GetString("AATFATFnameAndAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AATF name and address.
+        /// </summary>
+        public static string AATFNameAndAddress {
+            get {
+                return ResourceManager.GetString("AATFNameAndAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to actions.
         /// </summary>
         public static string Actions {
@@ -142,6 +169,24 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit details.
+        /// </summary>
+        public static string EditDetails {
+            get {
+                return ResourceManager.GetString("EditDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit tonnage.
+        /// </summary>
+        public static string EditTonnage {
+            get {
+                return ResourceManager.GetString("EditTonnage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kept / retained by a DCF.
         /// </summary>
         public static string KeptRetainedByDcf {
@@ -187,6 +232,15 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operator name and address.
+        /// </summary>
+        public static string OperatorNameAndAddress {
+            get {
+                return ResourceManager.GetString("OperatorNameAndAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PCS name.
         /// </summary>
         public static string PCSName {
@@ -210,6 +264,15 @@ namespace Resources.AatfReturn {
         public static string ReceivedOnBehalfOfPcs {
             get {
                 return ResourceManager.GetString("ReceivedOnBehalfOfPcs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string Remove {
+            get {
+                return ResourceManager.GetString("Remove", resourceCulture);
             }
         }
         
@@ -241,6 +304,15 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sent to another AATF / ATF.
         /// </summary>
         public static string SentToAnotherAatf {
@@ -255,6 +327,24 @@ namespace Resources.AatfReturn {
         public static string TotalTonnes {
             get {
                 return ResourceManager.GetString("TotalTonnes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WEEE sent B2B (tonnes).
+        /// </summary>
+        public static string WEEESentB2B {
+            get {
+                return ResourceManager.GetString("WEEESentB2B", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WEEE sent B2C (tonnes).
+        /// </summary>
+        public static string WEEESentB2C {
+            get {
+                return ResourceManager.GetString("WEEESentB2C", resourceCulture);
             }
         }
     }

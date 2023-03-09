@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AATFApprovalNumber" xml:space="preserve">
+    <value>AATF approval number</value>
+  </data>
+  <data name="AATFATFnameAndAddress" xml:space="preserve">
+    <value>AATF / ATF name and address</value>
+  </data>
+  <data name="AATFNameAndAddress" xml:space="preserve">
+    <value>AATF name and address</value>
+  </data>
   <data name="Actions" xml:space="preserve">
     <value>actions</value>
   </data>
@@ -144,6 +153,12 @@
   <data name="ComplianceYearAndMonth" xml:space="preserve">
     <value>Compliance month and year</value>
   </data>
+  <data name="EditDetails" xml:space="preserve">
+    <value>Edit details</value>
+  </data>
+  <data name="EditTonnage" xml:space="preserve">
+    <value>Edit tonnage</value>
+  </data>
   <data name="KeptRetainedByDcf" xml:space="preserve">
     <value>Kept / retained by a DCF</value>
   </data>
@@ -159,6 +174,9 @@
   <data name="ObligatedWeee" xml:space="preserve">
     <value>Obligated WEEE</value>
   </data>
+  <data name="OperatorNameAndAddress" xml:space="preserve">
+    <value>Operator name and address</value>
+  </data>
   <data name="PCSName" xml:space="preserve">
     <value>PCS name</value>
   </data>
@@ -167,6 +185,9 @@
   </data>
   <data name="ReceivedOnBehalfOfPcs" xml:space="preserve">
     <value>Received on behalf of PCS(s)</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
   </data>
   <data name="ReportData" xml:space="preserve">
     <value>Report data</value>
@@ -177,10 +198,19 @@
   <data name="ReusedAsWholeAppliance" xml:space="preserve">
     <value>Reused as a whole appliance</value>
   </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
   <data name="SentToAnotherAatf" xml:space="preserve">
     <value>Sent to another AATF / ATF</value>
   </data>
   <data name="TotalTonnes" xml:space="preserve">
     <value>Total (tonnes)</value>
+  </data>
+  <data name="WEEESentB2B" xml:space="preserve">
+    <value>WEEE sent B2B (tonnes)</value>
+  </data>
+  <data name="WEEESentB2C" xml:space="preserve">
+    <value>WEEE sent B2C (tonnes)</value>
   </data>
 </root>
