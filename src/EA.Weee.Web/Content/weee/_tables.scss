@@ -164,6 +164,7 @@
     .weee-actions-display {
         text-align: right;
         padding-left: 0.5em !important;
+        min-height: 55px !important;
         @extend .break-word;
     }
 
