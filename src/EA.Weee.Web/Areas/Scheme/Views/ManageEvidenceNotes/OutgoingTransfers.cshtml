@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Core.Helpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.RazorHelpers
 
 
@@ -44,7 +45,7 @@
                             <div class="govuk-grid-column-three-quarters-from-desktop govuk-!-padding-top-6">
                                 @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
                                     new ViewDataDictionary() { new KeyValuePair<string, object>("tab",
-                                        ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString()) })
+                                        Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)) })
                             </div>
                         </div>
                     </div>
@@ -81,10 +82,10 @@
                                     <td class="govuk-table__cell">@note.Recipient</td>
                                     <td class="govuk-table__cell">@note.Status</td>
                                     <td class="govuk-table__cell">
-                                        @Html.NavigationRouteLink("View", "View transfer note with reference " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
+                                        @Html.NavigationRouteLink("View", "View transfer note with reference " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                         @if (note.DisplayEditLink)
                                         {
-                                            @Html.NavigationRouteLink("Edit", "Edit transfer note with reference " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
+                                            @Html.NavigationRouteLink("Edit", "Edit transfer note with reference " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                         }
                                     </td>
                                 </tr>
@@ -109,7 +110,7 @@
                 <br />
                 @{
                     Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                            { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+                                                            { { "pagerRouteValues", new { tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
                          manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
                          manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
                          Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null} } });
