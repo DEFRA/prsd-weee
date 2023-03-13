@@ -10,68 +10,76 @@
     ViewBag.Title = "WEEE received for treatment at " + aatfName + " - GOV.UK";
 }
 
-    <section id="main-content">
-        <header class="hgroup">
-            <div>
-                <h1 class="govuk-heading-l">
-                    WEEE received for treatment at @Model.AatfName
-                </h1>
-            </div>
-        </header>
-        <div class="govuk-!-padding-bottom-3"></div>
+<section id="main-content">
+    <header class="hgroup">
+        <div>
+            <h1 class="govuk-heading-l">
+                WEEE received for treatment at @Model.AatfName
+            </h1>
+        </div>
+    </header>
+    <div class="govuk-!-padding-bottom-3"></div>
 
-        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-            <div class="govuk-table__head">
-                <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                    <div class="govuk-grid-column-one-quarter">
-                        PCS name
-                    </div>
-                    <div class="govuk-grid-column-one-quarter">
-                        Approval number
-                    </div>
-                    <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-one-third" style="text-align:right">
-                            B2C (tonnes)
-                        </div>
-                        <div class="govuk-grid-column-one-third" style="text-align:right">
-                            B2B (tonnes)
-                        </div>
-                        <div class="govuk-grid-column-one-third">&nbsp;</div>
-                    </div>
-                </div>
-            </div>
-
+    <table class="govuk-table prsd-table-small-collapse aatf-task-list-table">
+        <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+            <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
+                <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.PCSName</th>
+                <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.ApprovalNumber</th>
+                <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.B2C</th>
+                <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.B2B</th>
+                <th scope="col" class="govuk-table__header prsd-table-small-collapse govuk-table_action_header">
+                    <span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body prsd-table-small-collapse">
             @foreach (var item in Model.SchemeList)
             {
-                <div class="govuk-grid-row govuk-table__cell">
-                    <div class="govuk-grid-column-one-quarter">
-                        @item.SchemeName
-                    </div>
-                    <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
-                        @item.ApprovalNumber
-                    </div>
-                    <div class="govuk-grid-column-one-half">
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+                    <td data-label="@Resources.AatfReturn.ReturnsResources.PCSName" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                        <span class="summary-paragraph">
+                            @item.SchemeName
+                        </span>
+                    </td>
+                    <td data-label="@Resources.AatfReturn.ReturnsResources.ApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                        <span class="summary-paragraph">
+                            @item.ApprovalNumber
+                        </span>
+                    </td>
+                    <td data-label="@Resources.AatfReturn.ReturnsResources.B2C" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                        <span class="summary-paragraph">
                             @item.Tonnages.B2C
-                        </div>
-                        <div class="govuk-grid-column-one-third weee-tonnage-right-aligned-display">
+                        </span>
+                    </td>
+                    <td data-label="@Resources.AatfReturn.ReturnsResources.B2B" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                        <span class="summary-paragraph">
                             @item.Tonnages.B2B
-                        </div>
-                        <div class="govuk-grid-column-one-third" style="text-align:right">
-                            @Html.NavigationRouteLink("add / edit data", "add / edit data for " + @item.SchemeName, AatfRedirect.AatfSchemeSelectedRoute, new { returnId = Model.ReturnId, schemeId = @item.SchemeId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReceived" }, null)
-                        </div>
-                    </div>
-                </div>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell weee-actions-display govuk-!-text-align-centre prsd-table-small-collapse prsd-table-small-collapse-cell">
+                        @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.AddEditData, "add / edit data for " + @item.SchemeName,
+                                                  AatfRedirect.AatfSchemeSelectedRoute, 
+                                                  new
+                                                  {
+                                                    returnId = Model.ReturnId,
+                                                    schemeId = @item.SchemeId,
+                                                    aatfId = Model.AatfId,
+                                                    action = "Index",
+                                                    controller = "ObligatedReceived"
+                                                  }, null)
+                    </td>
+                </tr>
             }
-        </div>
+        </tbody>
+    </table>
 
-        <div class=" govuk-!-font-size-19">
-            <p>
-                @Html.NavigationRouteLink("Change your PCS selection", null, AatfRedirect.SelectPcsRouteName, new { organisationId = @Model.OrganisationId, returnId = Model.ReturnId, reselect = true })
-            </p>
-        </div>
+    <div class=" govuk-!-font-size-19">
+        <p>
+            @Html.NavigationRouteLink("Change your PCS selection", null, AatfRedirect.SelectPcsRouteName, new { organisationId = @Model.OrganisationId, returnId = Model.ReturnId, reselect = true })
+        </p>
+    </div>
 
-        @{
-            Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
-        }
-    </section>
+    @{
+        Html.RenderPartial("_AatfTaskListButton", Model.ReturnId);
+    }
+</section>
