@@ -89,8 +89,7 @@
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     // Do nothing.
-                },
-                disabled: window.innerWidth <= 640
+                }
             }).autocomplete("instance")._renderItem = function (ul, item) {
                 $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
                 return $("<li></li>")
@@ -98,11 +97,6 @@
                     .append("<span>" + item.label + "</span>")
                     .appendTo(ul);
             };
-
-        $(window).resize(function () {
-            $("#SearchTerm").autocomplete("option", "disabled", window.innerWidth <= 640);
-        });
-
     </script>
 }
 
