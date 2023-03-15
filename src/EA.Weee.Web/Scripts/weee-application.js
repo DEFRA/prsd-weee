@@ -45,7 +45,7 @@
     // next time it is displayed.
     // See: http://stackoverflow.com/questions/8037483/repositioning-jquery-ui-autocomplete-on-browser-resize
     $(window).resize(function () {
-        $('.ui-autocomplete').css('display', 'none');
+        $(".ui-autocomplete").autocomplete("search");
     });
 
     // There is a bug with jQuery UI autocomplete whereby the content
