@@ -32,80 +32,80 @@
             </div>
         }
     }
-    <div class="govuk-table govuk-grid-column-full">
-        @if (Model.Sites.Count > 0)
-        {
-            <table class="govuk-table prsd-table-small-collapse aatf-task-list-table">
-                <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
-                    <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
-                        <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.AATFATFnameAndAddress</th>
-                        <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress</th>
-                        <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber</th>
-                        <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.WEEESentB2C</th>
-                        <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.WEEESentB2B</th>
-                        <th class="govuk-table__header prsd-table-small-collapse govuk-table_action_header" scope="col">
-                            <span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="govuk-table__body prsd-table-small-collapse">
-                    @foreach (var address in Model.Sites)
-                    {
-                        <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
-                            <td data-label="@Resources.AatfReturn.ReturnsResources.AATFATFnameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                <span>
-                                    @Html.Raw(Model.CreateLongAddress(address.SiteAddress))
-                                </span>
-                            </td>
-                            <td data-label="@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                <span>
-                                    @Html.Raw(Model.CreateLongAddress(address.OperatorAddress))
-                                </span>
-                            </td>
-                            <td data-label="@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                <span>
-                                    @address.ApprovalNumber
-                                </span>
-                            </td>
-                            <td data-label="@Resources.AatfReturn.ReturnsResources.WEEESentB2C" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                <span>
-                                    @address.Tonnages.B2C
-                                </span>
-                            </td>
-                            <td data-label="@Resources.AatfReturn.ReturnsResources.WEEESentB2B" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                <span>
-                                    @address.Tonnages.B2B
-                                </span>
-                            </td>
-                            <td class="govuk-table__cell weee-actions-display prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                @if (address.ApprovalNumber == null || address.ApprovalNumber == "")
-                                {
-                                    @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.EditDetails, "Edit site address" + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, isEditDetails = true, isEditTonnage = false, action = "Index", controller = "SentOnCreateSite" })
-                                    <br />
-                                }
-
-                                @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.EditTonnage, "Edit site tonnage", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, siteName = address.SiteAddress.Name, isEditDetails = false, isEditTonnage = true, action = "Index", controller = "ObligatedSentOn" })
+    
+    @if (Model.Sites.Count > 0)
+    {
+        <table class="govuk-table prsd-table-small-collapse aatf-task-list-table">
+            <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+                <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
+                    <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.AATFATFnameAndAddress</th>
+                    <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress</th>
+                    <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber</th>
+                    <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.WEEESentB2C</th>
+                    <th class="govuk-table__header prsd-table-small-collapse" scope="col">@Resources.AatfReturn.ReturnsResources.WEEESentB2B</th>
+                    <th class="govuk-table__header prsd-table-small-collapse govuk-table_action_header" scope="col">
+                        <span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body prsd-table-small-collapse">
+                @foreach (var address in Model.Sites)
+                {
+                    <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.AATFATFnameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span>
+                                @Html.Raw(Model.CreateLongAddress(address.SiteAddress))
+                            </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                        <span>
+                                @Html.Raw(Model.CreateLongAddress(address.OperatorAddress))
+                        </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span>
+                                @address.ApprovalNumber
+                            </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.WEEESentB2C" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span>
+                                @address.Tonnages.B2C
+                            </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.WEEESentB2B" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span>
+                                @address.Tonnages.B2B
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell weee-actions-display prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            @if (address.ApprovalNumber == null || address.ApprovalNumber == "")
+                            {
+                                @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.EditDetails, "Edit details for " + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, isEditDetails = true, isEditTonnage = false, action = "Index", controller = "SentOnCreateSite" })
                                 <br />
-                                @if (address.ApprovalNumber == null || address.ApprovalNumber == "")
-                                {
-                                    @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.Remove, "Remove site address" + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, isAatf = false, action = "Index", controller = "SentOnRemoveSite" })
-                                }
-                                else
-                                {
-                                    @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.Remove, "Remove site address" + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, isAatf = true, action = "Index", controller = "SentOnRemoveSite" })
-                                }
-                            </td>                            
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="govuk-!-padding-bottom-8"></div>
-            <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another AATF / ATF link.</p>
-        }
-    </div>
+                            }
+
+                            @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.EditTonnage, "Edit tonnage for " + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, siteName = address.SiteAddress.Name, isEditDetails = false, isEditTonnage = true, action = "Index", controller = "ObligatedSentOn" })
+                            <br />
+                            @if (address.ApprovalNumber == null || address.ApprovalNumber == "")
+                            {
+                                @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.Remove, "Remove AATF " + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, isAatf = false, action = "Index", controller = "SentOnRemoveSite" })
+                            }
+                            else
+                            {
+                                @Html.NavigationRouteLink(@Resources.AatfReturn.ReturnsResources.Remove, "Remove AATF " + address.SiteAddress.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, weeeSentOnId = address.WeeeSentOnId, isAatf = true, action = "Index", controller = "SentOnRemoveSite" })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="govuk-!-padding-bottom-8"></div>
+        <p class="govuk-grid-row govuk-table__row govuk-table__header--noline">You have not entered any sites. If WEEE has been sent to another AATF / ATF for treatment, use the add another AATF / ATF link.</p>
+    }
+ 
     <div class="govuk-!-padding-bottom-2"></div>
     <p class="govuk-body" style="margin-bottom: 0px;">
         @Html.RouteLink("Add another AATF / ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, action = "Index", controller = "SearchAnAatf" }, null)
