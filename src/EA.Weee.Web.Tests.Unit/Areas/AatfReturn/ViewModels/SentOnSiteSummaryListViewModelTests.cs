@@ -17,7 +17,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Town,<br/>Country";
+            string expected = "<span>Name,</span><span>Address 1,</span><span>Town,</span><span>Country</span>";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
@@ -38,7 +38,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>Country";
+            string expected = "<span>Name,</span><span>Address 1,</span><span>Address 2,</span><span>Town,</span><span>Country</span>";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
@@ -71,7 +71,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Town,<br/>County,<br/>Country";
+            string expected = "<span>Name,</span><span>Address 1,</span><span>Town,</span><span>County,</span><span>Country</span>";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
@@ -92,7 +92,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Town,<br/>Postcode,<br/>Country";
+            string expected = "<span>Name,</span><span>Address 1,</span><span>Town,</span><span>Postcode,</span><span>Country</span>";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
@@ -115,7 +115,7 @@
                 CountryName = "Country"
             };
 
-            string expected = "Name,<br/>Address 1,<br/>Address 2,<br/>Town,<br/>County,<br/>Postcode,<br/>Country";
+            string expected = "<span>Name,</span><span>Address 1,</span><span>Address 2,</span><span>Town,</span><span>County,</span><span>Postcode,</span><span>Country</span>";
 
             SentOnSiteSummaryListViewModel viewModel = new SentOnSiteSummaryListViewModel();
 
