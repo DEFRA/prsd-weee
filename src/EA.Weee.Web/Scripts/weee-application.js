@@ -354,7 +354,7 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
     };
 })(jQuery);
 
-function initJQueryAutoComplete(searchUrl, mapFunction, selectedValueControl) {
+function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl) {
     var searchTerm = '';
     $("#SearchTerm")
         .focus(function () { searchTerm = $(this).val(); })
@@ -375,8 +375,9 @@ function initJQueryAutoComplete(searchUrl, mapFunction, selectedValueControl) {
             minLength: 1,
             select: function (event, ui) {
                 $(this).val(ui.item.label);
-                selectedValueControl.val(ui.item.organisationId);
+                selectedValueControl.val(ui.item.id);
                 searchTerm = $(this).val();
+
                 return false;
             },
             open: function () {
@@ -392,8 +393,14 @@ function initJQueryAutoComplete(searchUrl, mapFunction, selectedValueControl) {
             $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
             return $("<li></li>")
                 .data("item.autocomplete", item)
-                .append("<span>" + item.label + "</span>")
-                .appendTo(ul);
+                .append(() => {
+                    if (renderFunction) {
+                        return renderFunction(item);
+                    } else {
+                        return "<span>" + item.label + "</span>";
+                    }
+                })
+                .appendTo(ul)
         };
 
 
