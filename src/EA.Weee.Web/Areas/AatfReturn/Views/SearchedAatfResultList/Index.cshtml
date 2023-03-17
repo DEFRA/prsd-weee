@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchedAatfResultListViewModel
@@ -40,13 +41,13 @@
                     {
                         <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
                             <td data-label="@Resources.AatfReturn.ReturnsResources.AATFNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                <span>
-                                    @Html.Raw(Model.CreateLongAddress(weeeSentOn.SiteAddress))
+                                <span class="prsd-long-address">
+                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.SiteAddress, false))
                                 </span>
                             </td>
                             <td data-label="@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
-                                <span>
-                                    @Html.Raw(Model.CreateLongAddress(weeeSentOn.OperatorAddress))
+                                <span class="prsd-long-address">
+                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.OperatorAddress, false))
                                 </span>
                             </td>
                             <td data-label="@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">

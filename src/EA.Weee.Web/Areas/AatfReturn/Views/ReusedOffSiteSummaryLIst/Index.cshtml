@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.Infrastructure
+﻿@using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteSummaryListViewModel
 @{
@@ -66,12 +67,14 @@
                         <td data-label="@Resources.AatfReturn.ReturnsResources.SiteName" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell break-word">
                             @address.Name
                         </td>
-                        <td data-label="@Resources.AatfReturn.ReturnsResources.Address" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell" style=" word-break:break-all">
-                            @Html.Raw(Model.CreateLongAddress(address))
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.Address" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell" style="word-break: break-all">
+                            <span class="prsd-long-address">
+                                @Html.Raw(AddressData.ToAccessibleDisplayString(address, false))
+                            </span>
                         </td>
                         <td data-label="@Resources.AatfReturn.ReturnsResources.CapitalisedActions" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                             <div>
-                                @Html.NavigationRouteLink("Change", "Change the address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
+                                @Html.NavigationRouteLink("Change", "Change the site address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
                             </div>
                             <div style="padding-top: 0.5em;">
                                 @Html.NavigationRouteLink("Remove", "Remove site address " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedRemoveSite" })
