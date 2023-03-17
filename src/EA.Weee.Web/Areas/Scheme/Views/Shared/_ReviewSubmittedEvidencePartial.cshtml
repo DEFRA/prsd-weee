@@ -2,6 +2,7 @@
 @using EA.Weee.Core.AatfEvidence
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewSubmittedManageEvidenceNotesSchemeViewModel
@@ -25,7 +26,7 @@
                             addClearLink = true, clearRouteValues = new
                             {
                                 pcsId = Model.OrganisationId,
-                                tab = Model.ActiveDisplayOption.ToDisplayString(),
+                                tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
                                 selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
                             }
                         })
@@ -66,7 +67,7 @@
                         <td class="govuk-table__cell">@note.SubmittedBy</td>
                         @if (note.TypeOfWaste.HasValue)
                         {
-                            <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                            <td class="govuk-table__cell">@(Extensions.ToDisplayString(note.TypeOfWaste.Value)) </td>
                         }
                         else
                         {
@@ -79,23 +80,23 @@
                                 {
                                     if (Model.SchemeInfo != null)
                                     {
-                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = @Context.Request.QueryString }, null)
+                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                     }
                                 }
                                 else
                                 {
-                                    @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), queryString = @Context.Request.QueryString }, null)
+                                    @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                 }
                             }
                             else
                             {
                                 if (Model.CanSchemeManageEvidence)
                                 {
-                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), queryString = @Context.Request.QueryString }, null)
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                 }
                                 else
                                 {
-                                    @Html.NavigationRouteLink("View", "View transfer note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), queryString = @Context.Request.QueryString }, null)
+                                    @Html.NavigationRouteLink("View", "View transfer note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                 }
                             }
                         </td>
@@ -120,7 +121,7 @@
     <br />
     @{
         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-            { { "pagerRouteValues", new { tab = Model.ActiveDisplayOption.ToDisplayString(),
+            { { "pagerRouteValues", new { tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
                          manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
     }
 </section>
