@@ -81,8 +81,8 @@
                 }
                 else
                 {
-                    <td colspan="@colSpan" class="govuk-table__cell task-list-title-cell not-reported-column">
-                        <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
+                    <td colspan="@colSpan" class="govuk-table__cell not-reported-column govuk-table__cell__bottom--none">
+                        <p>
                             @Resources.AatfReturn.ReturnsResources.NotSelectedForReporting
                         </p>
                     </td>
@@ -124,8 +124,8 @@
                                     <caption class="govuk-table__caption govuk-visually-hidden">Breakdown by PCS</caption>
                                     <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
                                         <tr class="govuk-table__row prsd-table-small-collapse prsd-table-small-collapse-header">
-                                            <th scope="col" class="govuk-!-text-align-left prsd-table-small-collapse" style="width: 33.3%;">@Resources.AatfReturn.ReturnsResources.PCSName</th>
-                                            <th scope="col" class="govuk-!-text-align-left prsd-table-small-collapse" style="width: 16.6%;">@Resources.AatfReturn.ReturnsResources.ApprovalNumber</th>
+                                            <th scope="col" class="govuk-!-text-align-left prsd-table-small-collapse" style="width: 30%;">@Resources.AatfReturn.ReturnsResources.PCSName</th>
+                                            <th scope="col" class="govuk-!-text-align-left prsd-table-small-collapse" style="width: 20%;">@Resources.AatfReturn.ReturnsResources.ApprovalNumber</th>
                                             <th scope="col" class="govuk-!-text-align-right prsd-table-small-collapse" style="width: @tableHeaderWidth;"><span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.B2C</span> </th>
                                             <th scope="col" class="govuk-!-text-align-right prsd-table-small-collapse" style="width: @tableHeaderWidth;"><span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.B2B</span> </th>
                                             @if (isCheckReturn)
@@ -138,7 +138,7 @@
                                     <tbody class="govuk-table__body prsd-table-small-collapse">
                                         @foreach (var pcsdata in item.SchemeData)
                                         {
-                                            <tr class="govuk-table__row task-list-row prsd-table-small-collapse">
+                                            <tr class="govuk-table__row prsd-table-small-collapse">
                                                 <td data-label="@Resources.AatfReturn.ReturnsResources.PCSName" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell collapsible-padding-right">
                                                     @pcsdata.Scheme.SchemeName
                                                 </td>
@@ -153,7 +153,7 @@
                                                 </td>
                                                 @if (isCheckReturn)
                                                 {
-                                                    <td class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-!-text-align-right collapsible-padding-right">
+                                                    <td class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-!-text-align-centre">
                                                         @(this.WeeeGds().ActionLinkWithEventTracking(@Resources.AatfReturn.ReturnsResources.Change,
                                                             "change received for treatment relating to scheme " + pcsdata.Scheme.SchemeName,
                                                             Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReceived" }),
@@ -174,33 +174,27 @@
                 </tr>
             }
 
-            <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
-                <td data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__border-top--thick aatf-task-list-mobile-border">
-                    <span class="summary-paragraph">
-                        @Resources.AatfReturn.ReturnsResources.SentToAnotherAatf
-                    </span>
-                </td>
+        <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+            <td data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__border-top--thick aatf-task-list-mobile-border">
+                @Resources.AatfReturn.ReturnsResources.SentToAnotherAatf
+            </td>
 
-                @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
-                {
-                    <td data-label="@Resources.AatfReturn.ReturnsResources.B2C" class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__border-top--thick">
-                        <span class="summary-paragraph break-word">
-                            @item.WeeeSentOn.B2C
-                        </span>
-                    </td>
-                    <td data-label="@Resources.AatfReturn.ReturnsResources.B2B" class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__border-top--thick">
-                        <span class="summary-paragraph break-word">
-                            @item.WeeeSentOn.B2B
-                        </span>
-                    </td>
+            @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
+            {
+                <td data-label="@Resources.AatfReturn.ReturnsResources.B2C" class="govuk-table__cell govuk-!-text-align-right collapsible-padding-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__border-top--thick">
+                    @item.WeeeSentOn.B2C
+                </td>
+                <td data-label="@Resources.AatfReturn.ReturnsResources.B2B" class="govuk-table__cell govuk-!-text-align-right collapsible-padding-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__border-top--thick">
+                    @item.WeeeSentOn.B2B
+                </td>
                 }
                 else
                 {
-                    <td colspan="@colSpan" class="govuk-table__cell task-list-title-cell not-reported-column govuk-table__cell__border-top--thick">
-                        <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
-                            @Resources.AatfReturn.ReturnsResources.NotSelectedForReporting
-                        </p>
-                    </td>
+                <td colspan="@colSpan" class="govuk-table__cell not-reported-column govuk-table__cell__border-top--thick">
+                    <p>
+                        @Resources.AatfReturn.ReturnsResources.NotSelectedForReporting
+                    </p>
+                </td>
                 }
 
                 @if (isCheckReturn)
@@ -234,21 +228,17 @@
                 </td>
                 @if (Model.ReportOnDisplayOptions.DisplayObligatedSentOn)
                 {
-                    <td data-label="@Resources.AatfReturn.ReturnsResources.B2C" class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
-                        <span class="summary-paragraph break-word">
-                            @item.WeeeReused.B2C
-                        </span>
+                    <td data-label="@Resources.AatfReturn.ReturnsResources.B2C" class="govuk-table__cell govuk-!-text-align-right collapsible-padding-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
+                        @item.WeeeReused.B2C
                     </td>
                     <td data-label="@Resources.AatfReturn.ReturnsResources.B2B" class="govuk-table__cell govuk-!-text-align-right break-word prsd-table-small-collapse prsd-table-small-collapse-cell">
-                        <span class="summary-paragraph break-word">
-                            @item.WeeeReused.B2B
-                        </span>
+                        @item.WeeeReused.B2B
                     </td>
                 }
                 else
                 {
-                    <td colspan="@colSpan" class="govuk-table__cell task-list-title-cell not-reported-column">
-                        <p class="not-reported-option-center summary-paragraph summary-paragraph-align-right">
+                    <td colspan="@colSpan" class="govuk-table__cell not-reported-column">
+                        <p>
                             @Resources.AatfReturn.ReturnsResources.NotSelectedForReporting
                         </p>
                     </td>
@@ -315,11 +305,11 @@
     <thead class="govuk-table__head">
 
         <tr class="govuk-table__row govuk-table__cell--thick">
-            <th scope="col" class="govuk-table__header" style="width: 50%;"><span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.ReportingOn</span></th>
+            <th scope="col" class="govuk-table__header" style="width: 45%;"><span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.ReportingOn</span></th>
             @if (isCheckReturn)
             {
-                <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 33.3%;">@Resources.AatfReturn.ReturnsResources.TotalTonnes</th>
-                <th scope="col" class="govuk-table__header" style="width: 16.6%;"><span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.Actions</span></th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 38.3%;">@Resources.AatfReturn.ReturnsResources.TotalTonnes</th>
+                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.Actions</span></th>
             }
             else
             {
@@ -342,7 +332,7 @@
             }
             else
             {
-                <td colspan="2" class="govuk-table__cell govuk-!-text-align-right break-word">
+                <td class="govuk-table__cell govuk-!-text-align-right break-word">
                     @Resources.AatfReturn.ReturnsResources.NotSelectedForReporting
                 </td>
             }
@@ -383,7 +373,7 @@
             }
             else
             {
-                <td colspan="2" class="govuk-table__cell govuk-!-text-align-right break-word">
+                <td class="govuk-table__cell govuk-!-text-align-right break-word">
                     @Resources.AatfReturn.ReturnsResources.NotSelectedForReporting
                 </td>
             }
