@@ -31,7 +31,7 @@
     </div>
     <div class="govuk-grid-column-full">
         <span id="mainLink-collapsible" class="mainLink-collapsibleclass collapsible-font-size">
-            <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all</a>
+            <a href="#" id="collapsibleHref" class="@hideOpenClass">Open all<span class="govuk-visually-hidden">Breakdown by PCS(s) links</span></a>
         </span>
     </div>
     <div class="govuk-!-padding-bottom-6"></div>
@@ -64,7 +64,7 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body prsd-table-small-collapse">
-            <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+            <tr class="govuk-table__row task-list-row prsd-table-small-collapse">
                 <td data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__bottom--none collapsible-padding-right">
                     <span class="summary-paragraph">
                         @Resources.AatfReturn.ReturnsResources.ReceivedOnBehalfOfPcs
@@ -113,16 +113,15 @@
             {
                 <tr>
                     <td colspan="@fullColSpan">
-                        <div class="govuk-!-padding-top-2"></div>
                         <details class="govuk-details collapsible-font-size" data-module="govuk-details" aria-live="polite" role="group">
                             <summary id="details-@item.Aatf.Id" class="govuk-details__summary" aria-controls="details-content-@count" aria-expanded="false">
                                 <span class="govuk-details__summary-text">
-                                    @Resources.AatfReturn.ReturnsResources.BreakDownByPcs
+                                    @Resources.AatfReturn.ReturnsResources.BreakDownByPcs <span class="govuk-visually-hidden">Expand for breakdown of received on behalf of PCS for @item.Aatf.Name </span>
                                 </span>
                             </summary>
                             <div class="govuk-details__text" aria-hidden="true" id="details-content-@count">
                                 <table class="govuk-table prsd-table-small-collapse aatf-task-list-pcs-table">
-                                    <caption class="govuk-table__caption govuk-visually-hidden">Breakdown by PCS for scheme</caption>
+                                    <caption class="govuk-table__caption govuk-visually-hidden">Breakdown by PCS</caption>
                                     <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
                                         <tr class="govuk-table__row prsd-table-small-collapse prsd-table-small-collapse-header">
                                             <th scope="col" class="govuk-!-text-align-left prsd-table-small-collapse" style="width: 33.3%;">@Resources.AatfReturn.ReturnsResources.PCSName</th>
