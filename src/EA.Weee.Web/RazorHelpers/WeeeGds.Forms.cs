@@ -31,7 +31,7 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
-            var html = $@"<input type=""submit"" class=""govuk-button"" value=""{text}"" {attributes.ToString()}/>";
+            var html = $@"<input type=""submit"" class=""govuk-button"" data-module=""govuk-button"" data-prevent-double-click=""true"" value=""{text}"" {attributes.ToString()}/>";
 
             return new MvcHtmlString(html);
         }
@@ -39,7 +39,7 @@
         public MvcHtmlString Submit(string value)
         {
             var html =
-                $@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(null)}/>{SpinnerHtml(false)}</div>";
+                $@"<div class=""left-cleared""><input type=""submit"" data-module=""govuk-button"" data-prevent-double-click=""true"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(null)}/>{SpinnerHtml(false)}</div>";
 
             return new MvcHtmlString(html);
         }
@@ -47,7 +47,7 @@
         public MvcHtmlString Submit(string value, IDictionary<string, object> htmlAttributes = null, bool withSpinner = false)
         {
             var html =
-                $@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(htmlAttributes)}/>{SpinnerHtml(withSpinner)}</div>";
+                $@"<div class=""left-cleared""><input type=""submit"" data-module=""govuk-button"" data-prevent-double-click=""true"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(htmlAttributes)}/>{SpinnerHtml(withSpinner)}</div>";
 
             return new MvcHtmlString(html);
         }
@@ -55,7 +55,7 @@
         public MvcHtmlString Submit(string value, object htmlAttributes = null, bool withSpinner = false)
         {
             var html =
-                $@"<div class=""left-cleared""><input type=""submit"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(htmlAttributes)}/>{SpinnerHtml(withSpinner)}</div>";
+                $@"<div class=""left-cleared""><input type=""submit"" data-module=""govuk-button"" data-prevent-double-click=""true"" class=""govuk-button"" value=""{value}"" {AttributesHelper.AttributesHtml(htmlAttributes)}/>{SpinnerHtml(withSpinner)}</div>";
 
             return new MvcHtmlString(html);
         }
