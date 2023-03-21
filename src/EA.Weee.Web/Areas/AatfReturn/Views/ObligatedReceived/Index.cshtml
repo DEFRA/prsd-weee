@@ -47,10 +47,8 @@
         @Html.HiddenFor(m => m.SchemeId)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.AntiForgeryToken()
-   
-        <button type="submit" name="save" class="govuk-button" id="aatf-task-list" data-module="govuk-button" data-prevent-double-click="true">
-            Save and continue
-        </button>
+
+        @(this.WeeeGds().Submit(Resources.AatfReturn.ReturnsResources.SaveAndContinue, new { name="save"}))
     }
     @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ReceivedPcsList" }, new { @class = "govuk-back-link" })
 </section>
