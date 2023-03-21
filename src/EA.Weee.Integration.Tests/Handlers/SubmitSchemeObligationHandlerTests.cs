@@ -186,11 +186,14 @@
                     new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 4000)
                 };
 
-                obligationUpload = ObligationUploadDbSetup.Init().Create();
+                obligationUpload = ObligationUploadDbSetup
+                    .Init()
+                    .Create();
 
                 var obligationScheme1 = ObligationSchemeDbSetup
                     .Init()
                     .WithScheme(schemes.ElementAt(0).Id)
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
                     .WithObligationAmounts(amounts1)
                     .WithObligationUpload(obligationUpload.Id)
                     .Create();
@@ -217,6 +220,7 @@
 
                 var obligationScheme2 = ObligationSchemeDbSetup
                     .Init()
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
                     .WithScheme(schemes.ElementAt(1).Id)
                     .WithObligationAmounts(amounts2)
                     .WithObligationUpload(obligationUpload.Id)
