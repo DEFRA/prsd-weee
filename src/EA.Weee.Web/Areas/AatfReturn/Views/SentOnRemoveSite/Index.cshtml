@@ -16,58 +16,62 @@
         @Html.HiddenFor(m => m.IsAatf)
 
         <h1 class="govuk-heading-l">@Resources.AatfReturn.ReturnsResources.RemoveAATFATFConfirmTitle</h1>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
 
-        <table class="govuk-table prsd-table-collapse" style="width: 50%">
-            <caption class="govuk-table__caption govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.RemoveAATFATFfromyourlist</caption>
-            <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
-                    <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 60%">@Resources.AatfReturn.ReturnsResources.Typeofaddress</th>
-                    <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 40%">@Resources.AatfReturn.ReturnsResources.Address</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body prsd-table-collapse">
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                    <th scope="row" class="govuk-table__header">AATF / ATF name and address</th>
-                    <td class="govuk-table__cell">
-                        @Html.HiddenFor(model => model.SiteAddress)
-                        @Html.Raw(Model.SiteAddress.Replace("\r\n", "<br />"))
-                    </td>
-                </tr>
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                    <th scope="row" class="govuk-table__header">Operator name and address</th>
-                    <td class="govuk-table__cell">
-                        @Html.HiddenFor(model => model.OperatorAddress)
-                        @Html.Raw(Model.OperatorAddress.Replace("\r\n", "<br />"))
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <table class="govuk-table prsd-table-collapse">
+                    <caption class="govuk-table__caption govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.RemoveAATFATFfromyourlist</caption>
+                    <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
+                        <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
+                            <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 60%">@Resources.AatfReturn.ReturnsResources.Typeofaddress</th>
+                            <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 40%">@Resources.AatfReturn.ReturnsResources.Address</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body prsd-table-collapse">
+                        <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                            <th scope="row" class="govuk-table__header">AATF / ATF name and address</th>
+                            <td class="govuk-table__cell">
+                                @Html.HiddenFor(model => model.SiteAddress)
+                                @Html.Raw(Model.SiteAddress.Replace("\r\n", "<br />"))
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                            <th scope="row" class="govuk-table__header">Operator name and address</th>
+                            <td class="govuk-table__cell">
+                                @Html.HiddenFor(model => model.OperatorAddress)
+                                @Html.Raw(Model.OperatorAddress.Replace("\r\n", "<br />"))
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-        <table class="govuk-table prsd-table-collapse" style="width: 50%">
-            <caption class="govuk-table__caption govuk-visually-hidden">WEEE sent on</caption>
-            <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
-                    <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 60%">WEEE sent on</th>
-                    <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 40%">@Resources.AatfReturn.ReturnsResources.Quantity</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body prsd-table-collapse">
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                    <th scope="row" class="govuk-table__header" style="border-bottom: 0px;">@Resources.AatfReturn.ReturnsResources.B2C</th>
-                    <td class="govuk-table__cell" style="border-bottom: 0px;">
-                        @Html.HiddenFor(m => m.TonnageB2C)
-                        @Model.TonnageB2C
-                    </td>
-                </tr>
-                <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
-                    <th scope="row" class="govuk-table__header">@Resources.AatfReturn.ReturnsResources.B2B</th>
-                    <td class="govuk-table__cell">
-                        @Html.HiddenFor(m => m.TonnageB2B)
-                        @Model.TonnageB2B
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <table class="govuk-table prsd-table-collapse">
+                    <caption class="govuk-table__caption govuk-visually-hidden">WEEE sent on</caption>
+                    <thead class="govuk-table__head prsd-table-collapse prsd-table-collapse-header">
+                        <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-header">
+                            <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 60%">WEEE sent on</th>
+                            <th scope="col" class="govuk-table__header prsd-table-collapse" style="width: 40%">@Resources.AatfReturn.ReturnsResources.Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body prsd-table-collapse">
+                        <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                            <th scope="row" class="govuk-table__header" style="border-bottom: 0px;">@Resources.AatfReturn.ReturnsResources.B2C</th>
+                            <td class="govuk-table__cell" style="border-bottom: 0px;">
+                                @Html.HiddenFor(m => m.TonnageB2C)
+                                @Model.TonnageB2C
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row prsd-table-collapse prsd-table-collapse-row">
+                            <th scope="row" class="govuk-table__header">@Resources.AatfReturn.ReturnsResources.B2B</th>
+                            <td class="govuk-table__cell">
+                                @Html.HiddenFor(m => m.TonnageB2B)
+                                @Model.TonnageB2B
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <div class="govuk-grid-column-full">
             <div class="govuk-grid-row">
