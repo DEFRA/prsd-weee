@@ -1,6 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Areas.Aatf.ViewModels
+@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.RazorHelpers
 @using DisplayExtensions = EA.Weee.Web.Extensions.DisplayExtensions
 
@@ -54,7 +55,7 @@
                                 </div>
                                 <div class="govuk-grid-column-full govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6 weee-filter-button-padding">
                                     @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                        new ViewDataDictionary() { new KeyValuePair<string, object>("tab", ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString()) })
+                                        new ViewDataDictionary() { new KeyValuePair<string, object>("tab", Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes)) })
                                 </div>
                             </div>
                         </div>
@@ -112,7 +113,7 @@
                                         @if (note.DisplayViewLink)
                                         {
                                             <td class="govuk-table__cell">
-                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)<br />
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)<br />
                                             </td>
                                         }
                                         else
