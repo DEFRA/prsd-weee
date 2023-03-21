@@ -132,6 +132,9 @@
   <data name="AddEditData" xml:space="preserve">
     <value>add / edit data</value>
   </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
   <data name="ApprovalNumber" xml:space="preserve">
     <value>Approval number</value>
   </data>
@@ -180,6 +183,9 @@
   <data name="PCSName" xml:space="preserve">
     <value>PCS name</value>
   </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
   <data name="Received" xml:space="preserve">
     <value>Received</value>
   </data>
@@ -188,6 +194,15 @@
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
+  </data>
+  <data name="RemoveAATFATFConfirmTitle" xml:space="preserve">
+    <value>Are you sure you want to remove this AATF / ATF from your list?</value>
+  </data>
+  <data name="RemoveAATFATFfromyourlist" xml:space="preserve">
+    <value>Remove AATF / ATF from your list</value>
+  </data>
+  <data name="RemoveAATFATFMsg" xml:space="preserve">
+    <value>Removing this AATF / ATF will delete all tonnage data associated with it</value>
   </data>
   <data name="ReportData" xml:space="preserve">
     <value>Report data</value>
@@ -198,6 +213,9 @@
   <data name="ReusedAsWholeAppliance" xml:space="preserve">
     <value>Reused as a whole appliance</value>
   </data>
+  <data name="Saveandcontinue" xml:space="preserve">
+    <value>Save and continue</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Select</value>
   </data>
@@ -206,6 +224,9 @@
   </data>
   <data name="TotalTonnes" xml:space="preserve">
     <value>Total (tonnes)</value>
+  </data>
+  <data name="Typeofaddress" xml:space="preserve">
+    <value>Type of address</value>
   </data>
   <data name="WEEESentB2B" xml:space="preserve">
     <value>WEEE sent B2B (tonnes)</value>
