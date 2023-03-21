@@ -1384,7 +1384,6 @@
     <Content Include="Areas\AatfReturn\Views\Shared\_DifferenceAnAATFandATFPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\Shared\_SearchResultPartial.cshtml" />
     <Content Include="Areas\AatfReturn\Views\NoResultsFound\Index.cshtml" />
-    <None Include="Content\weee-returns-aatf-mobile.scss" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
