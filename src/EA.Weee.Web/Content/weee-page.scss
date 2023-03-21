@@ -1043,3 +1043,7 @@ input[type='radio']:checked:before {
     overflow-wrap: break-word !important;
     padding-right: 15px !important;
 }
+
+.prsd-long-address span {
+    display: block;
+}
