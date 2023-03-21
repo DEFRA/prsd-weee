@@ -126,11 +126,17 @@
   <data name="AATFNameAndAddress" xml:space="preserve">
     <value>AATF name and address</value>
   </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
   <data name="Actions" xml:space="preserve">
     <value>actions</value>
   </data>
   <data name="AddEditData" xml:space="preserve">
     <value>add / edit data</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
   </data>
   <data name="ApprovalNumber" xml:space="preserve">
     <value>Approval number</value>
@@ -146,6 +152,9 @@
   </data>
   <data name="BreakDownByPcs" xml:space="preserve">
     <value>Breakdown by PCS</value>
+  </data>
+  <data name="CapitalisedActions" xml:space="preserve">
+    <value>Actions</value>
   </data>
   <data name="Change" xml:space="preserve">
     <value>Change</value>
@@ -204,8 +213,20 @@
   <data name="SentToAnotherAatf" xml:space="preserve">
     <value>Sent to another AATF / ATF</value>
   </data>
+  <data name="SiteName" xml:space="preserve">
+    <value>Site name</value>
+  </data>
   <data name="TotalTonnes" xml:space="preserve">
     <value>Total (tonnes)</value>
+  </data>
+  <data name="TotalWeeeReusedTableCaption" xml:space="preserve">
+    <value>Total WEEE that has been reused</value>
+  </data>
+  <data name="WeeeReusedDescription" xml:space="preserve">
+    <value>This is WEEE that has been refurbished or repaired to the point it is no longer waste</value>
+  </data>
+  <data name="WeeeReusedSitesTableCaption" xml:space="preserve">
+    <value>WEEE that has been reused sites</value>
   </data>
   <data name="WEEESentB2B" xml:space="preserve">
     <value>WEEE sent B2B (tonnes)</value>
