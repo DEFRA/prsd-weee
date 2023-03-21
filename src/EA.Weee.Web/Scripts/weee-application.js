@@ -39,16 +39,6 @@
     });
 
     // There is a bug with jQuery UI autocomplete whereby the content
-    // of the drop-down list becomes detached from the text-field when
-    // the window is resized. A simple fix for this is to hide the
-    // content if the window is resized. It will be re-positioned the
-    // next time it is displayed.
-    // See: http://stackoverflow.com/questions/8037483/repositioning-jquery-ui-autocomplete-on-browser-resize
-    /*$(window).resize(function () {
-       $(".ui-autocomplete").autocomplete("search");
-    });*/
-
-    // There is a bug with jQuery UI autocomplete whereby the content
     // of the drop-down list has the incorrect width. a fix for this
     // is to override the implementation of "_resizeMenu" to correctly
     // identify the parent element of the list.
@@ -373,18 +363,13 @@ function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selected
                 });
             },
             minLength: 1,
+            delay: 500,
             select: function (event, ui) {
                 $(this).val(ui.item.label);
                 selectedValueControl.val(ui.item.id);
                 searchTerm = $(this).val();
 
                 return false;
-            },
-            open: function () {
-                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-            },
-            close: function () {
-                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 // Do nothing.
@@ -402,9 +387,4 @@ function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selected
                 })
                 .appendTo(ul)
         };
-
-
-    $(window).resize(function () {
-        $("#SearchTerm").autocomplete("search");
-    });
 }

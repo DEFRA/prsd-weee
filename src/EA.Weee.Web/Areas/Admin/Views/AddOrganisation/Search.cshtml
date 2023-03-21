@@ -49,9 +49,7 @@
 @section scripts {
     <script type="text/javascript">
         initJQueryAutoComplete("@Url.Action("FetchSearchResultsJson")",
-            function (item) {
-                return { label: item.Name, id: item.OrganisationId }
-            },
+            (item) => { return { label: item.Name, id: item.OrganisationId } },
             null,
             $("#SelectedOrganisationId")
         );
