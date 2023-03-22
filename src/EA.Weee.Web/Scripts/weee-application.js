@@ -39,16 +39,6 @@
     });
 
     // There is a bug with jQuery UI autocomplete whereby the content
-    // of the drop-down list becomes detached from the text-field when
-    // the window is resized. A simple fix for this is to hide the
-    // content if the window is resized. It will be re-positioned the
-    // next time it is displayed.
-    // See: http://stackoverflow.com/questions/8037483/repositioning-jquery-ui-autocomplete-on-browser-resize
-    $(window).resize(function () {
-        $('.ui-autocomplete').css('display', 'none');
-    });
-
-    // There is a bug with jQuery UI autocomplete whereby the content
     // of the drop-down list has the incorrect width. a fix for this
     // is to override the implementation of "_resizeMenu" to correctly
     // identify the parent element of the list.
@@ -321,6 +311,20 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
     this.submit(); 
 });
 
+/* When a uer selects an item from the autocomplete, the ID is stored in the hidden input
+            called "SelectedOrganisationId".If the user changes the value of the search term
+            after making a selected, we need to clear this hidden value.
+
+            To do this, we cannot use the change event because FireFox fires this event
+            after the autocomplete's select event completes. This clears the value immediately
+            after it is set.
+
+            To avoid this, we can store the original search term in a variable and use the focus
+            and blur events to check for a change.The variable is updated by the autocomplete
+            select event to avoid the value being cleared after a selection is made.
+        */
+
+
 //USAGE: $("#form").serializeFiles();
 (function ($) {
     $.fn.serializeFiles = function () {
@@ -339,3 +343,48 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
         return formData;
     };
 })(jQuery);
+
+function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl) {
+    var searchTerm = '';
+    $("#SearchTerm")
+        .focus(function () { searchTerm = $(this).val(); })
+        .blur(function () { if (searchTerm != $(this).val()) { selectedValueControl.val(""); } })
+        .autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: searchUrl,
+                    context: document.body,
+                    data: { SearchTerm: request.term, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                    success: (data) => {
+                        var data = $.map(data, mapFunction);
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            delay: 500,
+            select: function (event, ui) {
+                $(this).val(ui.item.label);
+                selectedValueControl.val(ui.item.id);
+                searchTerm = $(this).val();
+
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // Do nothing.
+            }
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append(() => {
+                    if (renderFunction) {
+                        return renderFunction(item);
+                    } else {
+                        return "<span>" + item.label + "</span>";
+                    }
+                })
+                .appendTo(ul)
+        };
+}
