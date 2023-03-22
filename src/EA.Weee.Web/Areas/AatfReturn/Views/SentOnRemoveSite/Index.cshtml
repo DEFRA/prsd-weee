@@ -93,9 +93,7 @@
             </div>
         </div>
         <div class="govuk-!-padding-bottom-7"></div>
-        <button type="submit" name="save" class="govuk-button" id="site-details" data-module="govuk-button" data-prevent-double-click="true">
-            @Resources.AatfReturn.ReturnsResources.SaveAndContinue
-        </button>
+        @(this.WeeeGds().Submit(Resources.AatfReturn.ReturnsResources.SaveAndContinue, new { name="save", id= "site-details" }))
     }
 
 </section>

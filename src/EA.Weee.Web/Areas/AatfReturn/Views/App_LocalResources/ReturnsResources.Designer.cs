@@ -88,6 +88,15 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action.
+        /// </summary>
+        public static string Action {
+            get {
+                return ResourceManager.GetString("Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to actions.
         /// </summary>
         public static string Actions {
@@ -156,6 +165,15 @@ namespace Resources.AatfReturn {
         public static string BreakDownByPcs {
             get {
                 return ResourceManager.GetString("BreakDownByPcs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string CapitalisedActions {
+            get {
+                return ResourceManager.GetString("CapitalisedActions", resourceCulture);
             }
         }
         
@@ -349,6 +367,15 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save and continue.
+        /// </summary>
+        public static string SaveAndContinue {
+            get {
+                return ResourceManager.GetString("SaveAndContinue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select.
         /// </summary>
         public static string Select {
@@ -367,6 +394,15 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Site name.
+        /// </summary>
+        public static string SiteName {
+            get {
+                return ResourceManager.GetString("SiteName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total (tonnes).
         /// </summary>
         public static string TotalTonnes {
@@ -378,9 +414,36 @@ namespace Resources.AatfReturn {
         /// <summary>
         ///   Looks up a localized string similar to Type of address.
         /// </summary>
-        public static string Typeofaddress {
+        public static string Typeofaddress {         
             get {
                 return ResourceManager.GetString("Typeofaddress", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Total WEEE that has been reused.
+        /// </summary>
+        public static string TotalWeeeReusedTableCaption {
+            get {
+                return ResourceManager.GetString("TotalWeeeReusedTableCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is WEEE that has been refurbished or repaired to the point it is no longer waste.
+        /// </summary>
+        public static string WeeeReusedDescription {
+            get {
+                return ResourceManager.GetString("WeeeReusedDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WEEE that has been reused sites.
+        /// </summary>
+        public static string WeeeReusedSitesTableCaption {
+            get {
+                return ResourceManager.GetString("WeeeReusedSitesTableCaption", resourceCulture);
             }
         }
         
