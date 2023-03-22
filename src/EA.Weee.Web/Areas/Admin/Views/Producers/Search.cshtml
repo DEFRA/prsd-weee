@@ -48,58 +48,11 @@
             $("#introJavaScriptEnabled").show();
         });
 
-        @*  When a uer selects an item from the autocomplete, the ID is stored in the hidden input
-            called "SelectedRegistrationNumber". If the user changes the value of the search term
-            after making a selected, we need to clear this hidden value.
+        initJQueryAutoComplete("@Url.Action("FetchSearchResultsJson")",
+            (item) => { return { label: item.Name + ', ' + item.RegistrationNumber, id: item.RegistrationNumber, name: item.Name } },
+            (item) => { return "<span>" + item.name + "</span><span class=\"registrationNumber\">" + item.id + "</span>" },
+            $("#SelectedRegistrationNumber")
+        );
 
-            To do this, we cannot use the change event because FireFox fires this event
-            after the autocomplete's select event completes. This clears the value immediately
-            after it is set.
-
-            To avoid this, we can store the original search term in a variable and use the focus
-            and blur events to check for a change. The variable is updated by the autocomplete
-            select event to avoid the value being cleared after a selection is made.
-        *@
-        var searchTerm = '';
-
-        $("#SearchTerm")
-            .focus(function () { searchTerm = $(this).val(); })
-            .blur(function () { if (searchTerm != $(this).val()) { $("#SelectedRegistrationNumber").val(""); } })
-            .autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("FetchSearchResultsJson")",
-                    context: document.body,
-                    data: { SearchTerm : request.term, __RequestVerificationToken : $("[name=__RequestVerificationToken]").val() },
-                    success: function (data) {
-                        response($.map(data, function (item) { return item }))
-                    }
-                });
-            },
-            minLength: 1,
-            select: function (event, ui) {
-                $("#SearchTerm").val(ui.item.Name + ', ' + ui.item.RegistrationNumber);
-                $("#SelectedRegistrationNumber").val(ui.item.RegistrationNumber);
-                searchTerm = $("#SearchTerm").val();
-                return false;
-            },
-            open: function () {
-                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-            },
-            close: function () {
-                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                // Do nothing.
-            },
-                disabled: window.innerWidth <= 640
-            }).autocomplete("instance")._renderItem = function (ul, item) {
-                $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
-            return $("<li></li>")
-                .data("item.autocomplete", item)
-                .append("<span>" + item.Name + "</span><span class=\"registrationNumber\">" + item.RegistrationNumber + "</span>")
-                .appendTo(ul);
-        };
     </script>
 }
