@@ -24,7 +24,7 @@
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 40%;">@Resources.AatfReturn.ReturnsResources.B2C</th>
                 <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 40%;">@Resources.AatfReturn.ReturnsResources.B2B</th>
-                <th scope="col" class="govuk-table__header">@Resources.AatfReturn.ReturnsResources.Action</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-centre">@Resources.AatfReturn.ReturnsResources.Action</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -35,7 +35,7 @@
                 <td class="govuk-table__cell break-word govuk-!-text-align-right">
                     @Model.B2bTotal
                 </td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell govuk-!-text-align-centre">
                     @Html.NavigationRouteLink("Change", "Change WEEE re-used", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
                 </td>
             </tr>
