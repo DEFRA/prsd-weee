@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.Infrastructure
+﻿@using EA.Weee.Core.AatfReturn
+@using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.ReusedOffSiteSummaryListViewModel
 @{
@@ -14,84 +15,81 @@
     </header>
 
     <p class="govuk-body">
-        This is WEEE that has been refurbished or repaired to the point it is no longer waste
+        @Resources.AatfReturn.ReturnsResources.WeeeReusedDescription
     </p>
 
-    <div class="govuk-table">
-        <div class="govuk-grid-column-one-half weee-data-entry-table">
-            <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                <div class="govuk-grid-column-one-third" style="word-break:break-all">
-                    B2C (tonnes)
-                </div>
-                <div class="govuk-grid-column-one-third" style="word-break:break-all">
-                    B2B (tonnes)
-                </div>
-                <div class="govuk-grid-column-one-third">
-                    Action
-                </div>
-            </div>
-            <div class="govuk-grid-row govuk-table__row govuk-table__cell">
-                <div class="govuk-grid-column-one-third weee-tonnage-left-aligned-display">
+    <table class="govuk-table govuk-!-width-one-half">
+        <caption class="govuk-table__caption govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.TotalWeeeReusedTableCaption</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 40%;">@Resources.AatfReturn.ReturnsResources.B2C</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-right" style="width: 40%;">@Resources.AatfReturn.ReturnsResources.B2B</th>
+                <th scope="col" class="govuk-table__header govuk-!-text-align-centre">@Resources.AatfReturn.ReturnsResources.Action</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell break-word govuk-!-text-align-right">
                     @Model.B2cTotal
-                </div>
-                <div class="govuk-grid-column-one-third weee-tonnage-left-aligned-display">
+                </td>
+                <td class="govuk-table__cell break-word govuk-!-text-align-right">
                     @Model.B2bTotal
-                </div>
-                <div class="govuk-grid-column-one-third">
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-centre">
                     @Html.NavigationRouteLink("Change", "Change WEEE re-used", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, action = "Index", controller = "ObligatedReused" }, null)
-                </div>
-            </div>
-        </div>
-    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
     <div class="govuk-grid-column-full govuk-!-padding-left-0">
         <div class="govuk-!-padding-bottom-8"></div>
         <p class="govuk-body">
             A reuse site is where WEEE that has been received at the premises of the reuse establishment or undertaking directly rather than having been received at this AATF first. If WEEE has been received at another site, enter the site details.
         </p>
     </div>
-    <div class="govuk-table govuk-grid-column-full govuk-!-padding-left-0">
-        @if (Model.Addresses.Count > 0)
-        {
-            <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-                <div class="govuk-grid-row govuk-table__row govuk-table__header">
-                    <div class="govuk-!-padding-bottom-8"></div>
-                    <div class="govuk-grid-column-one-quarter">
-                        Site name
-                    </div>
-                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left">
-                        Address
-                    </div>
-                    <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
-                        Actions
-                    </div>
-                </div>
+
+    @if (Model.Addresses.Count > 0)
+    {
+        <table class="aatf-task-list-table govuk-table prsd-table-small-collapse">
+            <caption class="govuk-table__caption govuk-visually-hidden">@Resources.AatfReturn.ReturnsResources.WeeeReusedSitesTableCaption</caption>
+            <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+                <tr class="govuk-table__row prsd-table-small-collapse prsd-table-small-collapse-header">
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse govuk-!-text-align-left" style="width: 40%;">@Resources.AatfReturn.ReturnsResources.SiteName</th>
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse govuk-!-text-align-left" style="width: 50%;">@Resources.AatfReturn.ReturnsResources.Address</th>
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.CapitalisedActions</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body prsd-table-small-collapse">
                 @foreach (var address in Model.Addresses)
                 {
-                    <div class="govuk-grid-row govuk-table__row govuk-table__cell">
-                        <div class="govuk-grid-column-one-quarter" style="word-break:break-all">
+                    <tr class="govuk-table__row prsd-table-small-collapse">
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.SiteName" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell break-word">
                             @address.Name
-                        </div>
-                        <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="word-break:break-all">
-                            @Html.Raw(Model.CreateLongAddress(address))
-                        </div>
-                        <div class="govuk-grid-column-one-quarter weee-tonnage-column-padding-left">
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.Address" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell" style="word-break: break-all">
+                            <span class="prsd-long-address">
+                                @Html.Raw(AddressData.ToAccessibleDisplayString(address, false))
+                            </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.CapitalisedActions" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                             <div>
-                                @Html.NavigationRouteLink("Change", "Change the address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
+                                @Html.NavigationRouteLink("Change", "Change the site address of " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedOffSiteCreateSite" })
                             </div>
-                            <div style="padding-top: 10px;">
+                            <div style="padding-top: 0.5em;">
                                 @Html.NavigationRouteLink("Remove", "Remove site address " + address.Name, AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, siteId = address.Id, action = "Index", controller = "ReusedRemoveSite" })
                             </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="govuk-!-padding-bottom-8"></div>
-            <p>You have not entered any reuse sites</p>
-        }
-    </div>
+                        </td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="govuk-body">You have not entered any reuse sites</p>
+    }
+
     <div style="clear: both">
         @{
             var buttonText = Model.Addresses.Count > 0 ? "Add another site" : "Add a site";
