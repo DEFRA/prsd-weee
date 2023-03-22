@@ -349,15 +349,6 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save and continue.
-        /// </summary>
-        public static string Saveandcontinue {
-            get {
-                return ResourceManager.GetString("Saveandcontinue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Select.
         /// </summary>
         public static string Select {

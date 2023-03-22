@@ -213,9 +213,6 @@
   <data name="ReusedAsWholeAppliance" xml:space="preserve">
     <value>Reused as a whole appliance</value>
   </data>
-  <data name="Saveandcontinue" xml:space="preserve">
-    <value>Save and continue</value>
-  </data>
   <data name="Select" xml:space="preserve">
     <value>Select</value>
   </data>
