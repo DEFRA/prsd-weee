@@ -14,7 +14,7 @@ namespace EA.Weee.Web.RazorHelpers
 
             foreach (var key in data.Keys)
             {
-                html += string.Format("<tr class=\"govuk-table__row\"><th class=\"govuk-table__header\">{0}</th>", key);
+                html += string.Format("<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\">{0}</th>", key);
                 html += string.Format("<td class=\"govuk-table__cell\">{0}</td></tr>", data[key]);
             }
 
