@@ -44,7 +44,7 @@
                                         <strong>Organisation:&nbsp;</strong>@Model.Breadcrumb.ExternalOrganisation<span>&nbsp;</span>
 
                                         @(this.WeeeGds().ActionLinkWithEventTracking("Change organisation",
-                                            "Change organisation",
+                                            string.Empty,
                                             Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index()),
                                             "Navigation",
                                             "Organisation",
@@ -63,7 +63,7 @@
                                     <strong>Activity:&nbsp;</strong>@Model.Breadcrumb.ExternalActivity<span>&nbsp;</span>
 
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change activity",
-                                        "Change activity",
+                                        string.Empty,
                                         Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
                                         "Navigation",
                                         "External activity",
@@ -79,7 +79,7 @@
                                     <strong>Activity:&nbsp;</strong>@Model.Breadcrumb.InternalActivity<span>&nbsp;</span>
 
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change activity",
-                                        "Internal change activity",
+                                        string.Empty,
                                         Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
                                         "Navigation",
                                         "Internal activity",
