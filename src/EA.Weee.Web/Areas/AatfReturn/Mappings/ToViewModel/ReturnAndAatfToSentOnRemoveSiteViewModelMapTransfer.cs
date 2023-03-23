@@ -15,6 +15,8 @@
 
         public string SelectedValue { get; set; }
 
+        public bool IsAaft { get; set; }
+
         public ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer()
         {
         }

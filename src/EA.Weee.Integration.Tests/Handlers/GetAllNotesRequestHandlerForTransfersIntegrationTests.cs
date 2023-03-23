@@ -8,6 +8,8 @@
     using AutoFixture;
     using Base;
     using Builders;
+    using Core.Shared;
+    using Domain.Organisation;
     using EA.Prsd.Core;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.Evidence;
@@ -62,6 +64,7 @@
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .With(n =>
                     {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                         n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .WithComplianceYear(complianceYear)
@@ -153,6 +156,61 @@
             };
         }
 
+        [Component]
+        public class WhenIGetAListOfEvidenceNoteDataAsTransferNotesWithTransferOrganisation : GetAllNotesRequestHandlerTestBase
+        {
+            private static Organisation transferOrganisation;
+
+            private readonly Establish context = () =>
+            {
+                LocalSetup(false);
+
+                transferOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(transferOrganisation.Id).Create();
+
+                var recipientScheme = SchemeDbSetup.Init().WithNewOrganisation().Create();
+
+                var note1 = TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(transferOrganisation.Id)
+                    .WithRecipient(recipientScheme.OrganisationId)
+                    .Create();
+
+                var noMatchingTransferOrganisation = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(noMatchingTransferOrganisation.Id).Create();
+
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(noMatchingTransferOrganisation.Id)
+                    .WithRecipient(recipientScheme.OrganisationId)
+                    .Create();
+
+                var note2 = TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(transferOrganisation.Id)
+                    .WithRecipient(recipientScheme.OrganisationId)
+                    .Create();
+
+                notesSet.Add(note1);
+                notesSet.Add(note2);
+                
+                request = new GetAllNotesInternal(new List<NoteType>(), 
+                    new List<NoteStatus>()
+                    {
+                        NoteStatus.Draft
+                    }, SystemTime.UtcNow.Year, 1, int.MaxValue,
+                    null, null, null, null, null, null, null, transferOrganisation.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                evidenceNoteData = Task.Run(async () => await handler.HandleAsync(request)).Result;
+            };
+
+            private readonly It shouldReturnCorrectNotes = () =>
+            {
+                evidenceNoteData.NoteCount.Should().Be(2);
+                notesSet.All(e => evidenceNoteData.Results.Select(n => n.Id).Contains(e.Id)).Should().BeTrue();
+            };
+        }
+
         public class GetAllNotesRequestHandlerTestBase : WeeeContextSpecification
         {
             protected static EvidenceNoteSearchDataResult evidenceNoteData;
@@ -171,20 +229,13 @@
             protected static WasteType? obligationTypeFilter;
             protected static Guid? submittedAatfIdFilter;
 
-            public static void LocalSetup()
+            public static void LocalSetup(bool clearDb = true)
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetDb: clearDb)
                     .WithInternalUserAccess();
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetInternalUserRole();
-
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString(), role.Id))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
+                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 notesSet = new List<Note>();

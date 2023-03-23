@@ -151,6 +151,7 @@
                     .WithRecipient(recipientOrganisation.Id)
                      .With(n =>
                      {
+                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                          n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), SystemTime.UtcNow, "reason returned");
                      })
                     .Create();
@@ -205,6 +206,7 @@
                     .WithRecipient(recipientOrganisation.Id)
                      .With(n =>
                      {
+                         n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow, "reason submitted");
                          n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow, "reason rejected");
                      })
                     .Create();

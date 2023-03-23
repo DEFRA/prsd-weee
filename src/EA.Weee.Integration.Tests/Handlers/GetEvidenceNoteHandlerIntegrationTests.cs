@@ -138,7 +138,8 @@
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
-                        n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatus.Returned, UserId.ToString(), SystemTime.UtcNow, "returned reason");
                     })
                     .Create();
 
@@ -188,6 +189,7 @@
                     .WithOrganisation(organisation.Id)
                     .With(n =>
                     {
+                        n.UpdateStatus(NoteStatus.Submitted, UserId.ToString(), SystemTime.UtcNow);
                         n.UpdateStatus(NoteStatus.Rejected, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .Create();

@@ -128,7 +128,7 @@
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id)
                     .WithStatus(UserStatus.Active).Create();
 
-                var evidence1 = EvidenceNoteDbSetup.Init()
+                EvidenceNoteDbSetup.Init()
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .WithAatf(aatf.Id)
@@ -137,21 +137,23 @@
                     .WithStatus(NoteStatusDomain.Void, UserId.ToString())
                     .Create();
 
-                var evidence2 = EvidenceNoteDbSetup.Init()
+                EvidenceNoteDbSetup.Init()
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .WithAatf(aatf.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .Create();
 
-                var evidence3 = EvidenceNoteDbSetup.Init()
+                EvidenceNoteDbSetup.Init()
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .WithAatf(aatf.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .Create();
 
-                var evidence4 = EvidenceNoteDbSetup.Init()
+                EvidenceNoteDbSetup.Init()
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .WithOrganisation(organisation.Id)
                     .WithAatf(aatf.Id)
