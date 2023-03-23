@@ -277,6 +277,15 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quantity.
+        /// </summary>
+        public static string Quantity {
+            get {
+                return ResourceManager.GetString("Quantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Received.
         /// </summary>
         public static string Received {
@@ -300,6 +309,33 @@ namespace Resources.AatfReturn {
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove this AATF / ATF from your list?.
+        /// </summary>
+        public static string RemoveAATFATFConfirmTitle {
+            get {
+                return ResourceManager.GetString("RemoveAATFATFConfirmTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove AATF / ATF from your list.
+        /// </summary>
+        public static string RemoveAATFATFfromyourlist {
+            get {
+                return ResourceManager.GetString("RemoveAATFATFfromyourlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removing this AATF / ATF will delete all tonnage data associated with it.
+        /// </summary>
+        public static string RemoveAATFATFMsg {
+            get {
+                return ResourceManager.GetString("RemoveAATFATFMsg", resourceCulture);
             }
         }
         
@@ -375,6 +411,15 @@ namespace Resources.AatfReturn {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Type of address.
+        /// </summary>
+        public static string Typeofaddress {         
+            get {
+                return ResourceManager.GetString("Typeofaddress", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Total WEEE that has been reused.
         /// </summary>
