@@ -164,6 +164,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -175,6 +176,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -218,6 +220,7 @@
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage1)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 2
@@ -233,6 +236,7 @@
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage2)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 3 not counted as submitted
@@ -246,6 +250,7 @@
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 4 not counted
@@ -256,6 +261,7 @@
 
                 TransferEvidenceNoteDbSetup.Init().WithTonnages(newTransferNoteTonnage4)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 5 not counted as rejected
@@ -270,6 +276,7 @@
                     t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage5)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 6 not counted as returned
@@ -284,6 +291,7 @@
                     t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage6)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 7 not counted as void
@@ -299,6 +307,7 @@
                     t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage7)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 8 not counted as not recipient
@@ -313,6 +322,7 @@
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage8)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 9 not counted as out of compliance year
@@ -344,6 +354,7 @@
                 }).WithTonnages(newTransferNoteOutTonnage)
                     .WithOrganisation(recipientOrganisation.Id)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 var recipientAsOriginatorTonnages = new List<NoteTonnage>()
@@ -371,6 +382,7 @@
                     .WithTonnages(recipientAsOriginatorTonnages)
                     .WithWasteType(WasteType.HouseHold)
                     .WithStatusUpdate(NoteStatus.Approved)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(scheme.Id, null, null, 2022);
@@ -402,7 +414,7 @@
 {scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 ");
 
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_{scheme.ApprovalNumber}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().Contain($"2022_{scheme.ApprovalNumber}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
@@ -549,6 +561,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -560,6 +573,7 @@
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -603,6 +617,7 @@
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage1)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 2
@@ -618,6 +633,7 @@
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage2)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 3 not counted as submitted
@@ -631,6 +647,7 @@
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 4 not counted
@@ -641,6 +658,7 @@
 
                 TransferEvidenceNoteDbSetup.Init().WithTonnages(newTransferNoteTonnage4)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 5 not counted as rejected
@@ -655,6 +673,7 @@
                     t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage5)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 6 not counted as returned
@@ -669,6 +688,7 @@
                     t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage6)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 7 not counted as void
@@ -684,6 +704,7 @@
                     t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage7)
                     .WithRecipient(recipientOrganisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 8 not counted as not recipient
@@ -698,6 +719,7 @@
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage8)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 9 not counted as out of compliance year
@@ -729,6 +751,7 @@
                 }).WithTonnages(newTransferNoteOutTonnage)
                     .WithOrganisation(recipientOrganisation.Id)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 var recipientAsOriginatorTonnages = new List<NoteTonnage>()
@@ -756,6 +779,7 @@
                     .WithTonnages(recipientAsOriginatorTonnages)
                     .WithWasteType(WasteType.HouseHold)
                     .WithStatusUpdate(NoteStatus.Approved)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, recipientOrganisation.Id, 2022);
@@ -786,7 +810,7 @@
 Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
 Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 ");
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS Summary{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileName.Should().Contain($"2022_PCS Summary{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
@@ -970,6 +994,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -981,6 +1006,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -1024,6 +1050,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage1)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 2
@@ -1039,6 +1066,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage2)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 3 not counted as submitted
@@ -1052,6 +1080,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 4 not counted
@@ -1062,6 +1091,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 
                 TransferEvidenceNoteDbSetup.Init().WithTonnages(newTransferNoteTonnage4)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 5 not counted as rejected
@@ -1076,6 +1106,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage5)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 6 not counted as returned
@@ -1090,6 +1121,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage6)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 7 not counted as void
@@ -1105,6 +1137,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage7)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 8 not counted as not recipient
@@ -1119,6 +1152,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage8)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 9 not counted as out of compliance year
@@ -1150,6 +1184,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                 }).WithTonnages(newTransferNoteOutTonnage)
                     .WithOrganisation(recipient1Organisation.Id)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 var recipientAsOriginatorTonnages = new List<NoteTonnage>()
@@ -1179,6 +1214,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     .WithTonnages(recipientAsOriginatorTonnages)
                     .WithWasteType(WasteType.HouseHold)
                     .WithStatusUpdate(NoteStatus.Approved)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create note for scheme 2 to to be able to check totals
@@ -1249,6 +1285,18 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .Create();
 
+                //a scheme that has no notes but an aatf with notes should not be included
+                var organisationWithAatfAndScheme = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id)
+                    .WithSchemeName("DO NOT INCLUDE")
+                    .Create();
+
+                var aatf = AatfDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithAatf(aatf.Id)
+                    .WithRecipient(anotherRecipientOrganisation.Id)
+                    .WithComplianceYear(2022).Create();
+                
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, null, 2022);
             };
 
@@ -1341,8 +1389,8 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Category 2-10 summary,0.000,9.000,9.000,0.000,0.000,9.000,,
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Total (tonnes),0.000,14.000,14.000,0.000,0.000,14.000,0.000,0.000
 ");
-
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileContent.Should().NotContain("DO NOT INCLUDE");
+                result.FileName.Should().Contain($"2022_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }
@@ -1531,6 +1579,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Rejected, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages7).Create();
@@ -1542,6 +1591,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
+                    .WithStatus(NoteStatusDomain.Submitted, UserId.ToString())
                     .WithStatus(NoteStatusDomain.Returned, UserId.ToString())
                     .WithComplianceYear(2022)
                     .WithTonnages(tonnages8).Create();
@@ -1584,6 +1634,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage1)
+                    .WithComplianceYear(2022)
                     .WithRecipient(recipient1Organisation.Id)
                     .Create();
 
@@ -1600,6 +1651,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow.AddHours(1));
                 }).WithTonnages(newTransferNoteTonnage2)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 3 not counted as submitted
@@ -1613,6 +1665,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage3)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 4 not counted
@@ -1623,6 +1676,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
 
                 TransferEvidenceNoteDbSetup.Init().WithTonnages(newTransferNoteTonnage4)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 5 not counted as rejected
@@ -1636,6 +1690,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage5)
+                    .WithComplianceYear(2022)
                     .WithRecipient(recipient1Organisation.Id)
                     .Create();
 
@@ -1650,6 +1705,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
                     t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage6)
+                    .WithComplianceYear(2022)
                     .WithRecipient(recipient1Organisation.Id)
                     .Create();
 
@@ -1666,6 +1722,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage7)
                     .WithRecipient(recipient1Organisation.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 8 not counted as not recipient
@@ -1680,6 +1737,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                 }).WithTonnages(newTransferNoteTonnage8)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create transfer in note 9 not counted as out of compliance year
@@ -1711,6 +1769,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                 }).WithTonnages(newTransferNoteOutTonnage)
                     .WithOrganisation(recipient1Organisation.Id)
                     .WithRecipient(recipientOrganisation2.Id)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 var recipientAsOriginatorTonnages = new List<NoteTonnage>()
@@ -1744,6 +1803,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     .WithTonnages(recipientAsOriginatorTonnages)
                     .WithWasteType(WasteType.HouseHold)
                     .WithStatusUpdate(NoteStatus.Approved)
+                    .WithComplianceYear(2022)
                     .Create();
 
                 // create note for scheme 2 to to be able to check totals
@@ -1813,6 +1873,18 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     .WithComplianceYear(2023)
                     .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
                     .Create();
+
+                //a scheme that has no notes but an aatf with notes should not be included
+                var organisationWithAatfAndScheme = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id)
+                    .WithSchemeName("DO NOT INCLUDE")
+                    .Create();
+
+                var aatf = AatfDbSetup.Init().WithOrganisation(organisationWithAatfAndScheme.Id).Create();
+                EvidenceNoteDbSetup.Init()
+                    .WithAatf(aatf.Id)
+                    .WithRecipient(anotherRecipientOrganisation.Id)
+                    .WithComplianceYear(2022).Create();
 
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, eaAuthority.Id, null, 2022);
             };
@@ -1891,7 +1963,8 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
 ");
 
-                result.FileName.Should().Contain($"{SystemTime.Now.Year}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
+                result.FileContent.Should().NotContain("DO NOT INCLUDE");
+                result.FileName.Should().Contain($"2022_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
             };
         }

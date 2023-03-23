@@ -57,6 +57,15 @@
             bundles.Add(new ScriptBundle("~/bundles/show-warning").Include(
                 "~/Scripts/show-warning.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/search-an-aatf").Include(
+                "~/Scripts/search-an-aatf.js"));
+
+            bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
+                      "~/Content/weee-page-ie6.css"));
+
+            bundles.Add(new StyleBundle("~/Content/weee-page-ie7").Include(
+                      "~/Content/weee-page-ie7.css"));
+
             bundles.Add(new StyleBundle("~/Content/weee-page-ie8").Include(
                       "~/Content/weee-page-ie8.css"));
 
