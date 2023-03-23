@@ -1,6 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Areas.Admin.ViewModels.Shared
+@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes.ViewAllEvidenceNotesViewModel
@@ -18,7 +19,7 @@
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
                     {
                         @Html.Gds().ValidationSummary()
-                        @Html.Hidden("tab", Model.ActiveDisplayOption.ToDisplayString(), new { id = "tab-all-evidence" })
+                        @Html.Hidden("tab", Extensions.ToDisplayString(Model.ActiveDisplayOption), new { id = "tab-all-evidence" })
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
                         <h2 class="govuk-heading-m govuk-!-padding-bottom-4">
@@ -28,7 +29,7 @@
                         Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model, new ViewDataDictionary()
                         {
                             new KeyValuePair<string, object>("tab",
-                                ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString())
+                                Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes))
                         });
 
                     }
@@ -76,7 +77,7 @@
                                             <td class="govuk-table__cell">@note.Recipient</td>
                                             <td class="govuk-table__cell">@note.Status.ToString() </td>
                                             <td class="govuk-table__cell">
-                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "admin_view_evidence_note_details", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = @Context.Request.QueryString }, null)
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "admin_view_evidence_note_details", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", evidenceNoteId = note.Id, page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
                                             </td>
                                         </tr>
                                     }
@@ -104,7 +105,7 @@
                             {
                                 "pagerRouteValues", new
                                 {
-                                    tab = Model.ActiveDisplayOption.ToDisplayString(),
+                                    tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
                                     manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
                                     manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate =
                                         Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,

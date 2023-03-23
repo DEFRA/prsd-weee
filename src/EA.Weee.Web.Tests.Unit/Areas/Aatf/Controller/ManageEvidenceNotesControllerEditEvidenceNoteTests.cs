@@ -100,7 +100,31 @@
         }
 
         [Fact]
-        public async Task EditDraftEvidenceNoteGet_GivenRequestData_EditEvidenceNoteModelShouldBeBuilt()
+        public async Task EditDraftEvidenceNoteGet_ExistingEditModelShouldBeRetrievedFromSession()
+        {
+            //act
+            await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant
+                .EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditDraftEvidenceNoteGet_EditModelShouldBeClearedFromSession()
+        {
+            //act
+            await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId);
+
+            A.CallTo(() => SessionService.SetTransferSessionObject(null, SessionKeyConstant
+                .EditEvidenceViewModelKey)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("querystring", true)]
+        [InlineData("querystring", false)]
+        [InlineData(null, true)]
+        [InlineData(null, false)]
+        public async Task EditDraftEvidenceNoteGet_GivenRequestDataWithActionParametersAndReturnFromCopyAndPasteIsFalse_EditEvidenceNoteModelShouldBeBuilt(string queryString, bool returnToView)
         {
             //arrange
             var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
@@ -109,7 +133,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
 
             //act
-            await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId);
+            await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId, false, queryString, returnToView);
 
             //asset
             A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<EditNoteMapTransfer>.That.Matches(
@@ -118,7 +142,39 @@
                      v.OrganisationId.Equals(OrganisationId) &&
                      v.AatfId.Equals(noteData.AatfData.Id) && 
                      v.ExistingModel == null &&
-                     v.ComplianceYear == noteData.ComplianceYear))).MustHaveHappenedOnceExactly();
+                     v.ComplianceYear == noteData.ComplianceYear &&
+                     v.ReturnToView == returnToView &&
+                     v.QueryString == queryString))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("querystring", true)]
+        [InlineData("querystring", false)]
+        [InlineData(null, true)]
+        [InlineData(null, false)]
+        public async Task EditDraftEvidenceNoteGet_GivenRequestDataWithActionParametersAndReturnFromCopyAndPasteIsTrue_EditEvidenceNoteModelShouldBeBuilt(string queryString, bool returnToView)
+        {
+            //arrange
+            var schemes = Fixture.CreateMany<EntityIdDisplayNameData>().ToList();
+            var existingModel = Fixture.Create<EditEvidenceNoteViewModel>();
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(noteData);
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetOrganisationScheme>._)).Returns(schemes);
+            A.CallTo(() => SessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant
+                        .EditEvidenceViewModelKey)).Returns(existingModel);
+
+            //act
+            await ManageEvidenceController.EditEvidenceNote(OrganisationId, EvidenceNoteId, true, queryString, returnToView);
+
+            //asset
+            A.CallTo(() => Mapper.Map<EditEvidenceNoteViewModel>(A<EditNoteMapTransfer>.That.Matches(
+                v => v.Schemes.Equals(schemes) &&
+                     v.NoteData.Equals(noteData) &&
+                     v.OrganisationId.Equals(OrganisationId) &&
+                     v.AatfId.Equals(noteData.AatfData.Id) &&
+                     v.ExistingModel == existingModel &&
+                     v.ComplianceYear == noteData.ComplianceYear &&
+                     v.ReturnToView == existingModel.ReturnToView &&
+                     v.QueryString == existingModel.QueryString))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -195,7 +251,9 @@
                                                          && c.OrganisationId.Equals(OrganisationId)
                                                          && c.AatfId.Equals(AatfId) 
                                                          && c.NoteData == null 
-                                                         && c.ComplianceYear == model.ComplianceYear))).MustHaveHappenedOnceExactly();
+                                                         && c.ComplianceYear == model.ComplianceYear
+                                                         && c.ReturnToView == model.ReturnToView
+                                                         && c.QueryString == model.QueryString))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

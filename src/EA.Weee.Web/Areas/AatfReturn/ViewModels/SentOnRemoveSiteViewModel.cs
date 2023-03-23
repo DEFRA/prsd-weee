@@ -32,6 +32,8 @@
 
         public override string SelectedValue { get; set; }
 
+        public bool IsAatf { get; set; }
+
         public SentOnRemoveSiteViewModel() : base(new List<string> { "Yes", "No" })
         {
         }

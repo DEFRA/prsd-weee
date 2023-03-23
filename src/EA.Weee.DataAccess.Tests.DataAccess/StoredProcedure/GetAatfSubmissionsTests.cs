@@ -176,7 +176,7 @@
             {
                 var @return = CreateSubmittedReturn(db);
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
-                var weeeSentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return);
+                var weeeSentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return);
 
                 var weeeSentOnAmounts = new List<WeeeSentOnAmount>()
                 {
@@ -207,7 +207,7 @@
             {
                 var @return = CreateSubmittedReturn(db);
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return.Organisation);
-                var weeeSentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return);
+                var weeeSentOn = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return);
 
                 var weeeSentOnAmounts = new List<WeeeSentOnAmount>()
                 {
@@ -242,7 +242,7 @@
                 var scheme = ObligatedWeeeIntegrationCommon.CreateScheme(@return1.Organisation);
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(db, @return1.Organisation);
 
-                var weeeSentOn1 = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return1);
+                var weeeSentOn1 = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return1);
                 var weeeSentOnAmount1 = new EA.Weee.Domain.AatfReturn.WeeeSentOnAmount(weeeSentOn1, 1, 1, 2);
 
                 var weeeReceived1 = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return1);
@@ -251,7 +251,7 @@
                 var weeeReused1 = new EA.Weee.Domain.AatfReturn.WeeeReused(aatf, @return1);
                 var weeeReusedAmount1 = new Domain.AatfReturn.WeeeReusedAmount(weeeReused1, 1, 5, 6);
 
-                var weeeSentOn2 = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return2);
+                var weeeSentOn2 = new EA.Weee.Domain.AatfReturn.WeeeSentOn(ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), ObligatedWeeeIntegrationCommon.CreateAatfAddress(db), aatf, @return2);
                 var weeeSentOnAmount2 = new EA.Weee.Domain.AatfReturn.WeeeSentOnAmount(weeeSentOn2, 1, 7, 8);
 
                 var weeeReceived2 = new EA.Weee.Domain.AatfReturn.WeeeReceived(scheme, aatf, @return2);
@@ -296,7 +296,7 @@
                 results.First(r => r.ReturnId.Equals(@return2.Id)).WeeeReusedNonHouseHold.Should().Be(12);
             }
         }
-     
+
         [Fact]
         public async Task Execute_GivenNoData_NoResultsShouldBeReturned()
         {
