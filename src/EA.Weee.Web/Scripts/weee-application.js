@@ -55,6 +55,7 @@
     // When there is a validation erorr, move the ID from the select element to the auto-complete
     // textbox so that the links in the validation summary will work.
     countryInput.each(function () {
+        $(this).next("input").attr("autocomplete", "new-password");
 
         if ($(this).hasClass("input-validation-error")) {
             var validationInput = $(this).next("input");
