@@ -343,7 +343,23 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
         });
         return formData;
     };
+
+    $(window).resize(function () {
+        var autocompleteInput = $("#SearchTerm");
+        var inputTop = autocompleteInput.offset().top;
+        var inputHeight = autocompleteInput.outerHeight();
+        var divTop = inputTop + inputHeight;
+
+        var autoComplete = $('.ui-autocomplete');
+        $(autoComplete).css({
+            'position': 'absolute',
+            'top': divTop,
+            'left': autocompleteInput.offset().left
+        });
+    });
+    
 })(jQuery);
+
 
 function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl) {
     var searchTerm = '';
