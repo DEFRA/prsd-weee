@@ -6,16 +6,31 @@ namespace EA.Weee.Web.RazorHelpers
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString TableSummary(string caption, Dictionary<string, object> data)
+        public MvcHtmlString TableSummary(string caption, Dictionary<string, object> data, string columnHeading = null, string columnDescription = null)
         {
             Guard.ArgumentNotNullOrEmpty(() => caption, caption);
 
-            var html = string.Format("<div class=\"govuk-form-group\"><table class=\"govuk-table\"><caption class=\"govuk-table__caption\"><span class=\"govuk-visually-hidden\">{0}</span></caption><thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\" colspan=\"2\"></th></tr></thead><tbody class=\"govuk-table__body\">", caption);
+            var html = "<div class=\"govuk-form-group\"><table class=\"govuk-table\">" +
+                       $"<caption class=\"govuk-table__caption\"><span class=\"govuk-visually-hidden\">{caption}</span></caption>";
+
+            html += "<thead class=\"govuk-table__head\">";
+
+            if (columnDescription != null && columnHeading != null)
+            {
+                html += $"<tr class=\"govuk-table__row govuk-visually-hidden\"><th class=\"govuk-table__header govuk-visually-hidden\" scope=\"col\">{columnHeading}</th>" +
+                        $"<th class=\"govuk-table__header govuk-visually-hidden\" scope=\"col\">{columnDescription}</th></tr>";
+            }
+            else
+            {
+                html += "<tr class=\"govuk-table__row govuk-visually-hidden\"><th class=\"govuk-table__header\" scope=\"col\" colspan=\"2\"></th></tr>";
+            }
+
+            html += "</thead><tbody class=\"govuk-table__body\">";
 
             foreach (var key in data.Keys)
             {
-                html += string.Format("<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\">{0}</th>", key);
-                html += string.Format("<td class=\"govuk-table__cell\">{0}</td></tr>", data[key]);
+                html += $"<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\">{key}</th>";
+                html += $"<td class=\"govuk-table__cell\">{data[key]}</td></tr>";
             }
 
             html += "</tbody></table></div>";
