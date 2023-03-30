@@ -41,7 +41,7 @@
                                 <li>
                                     @if (Model.ShowLinkToSelectOrganisation)
                                     {
-                                        <strong>Organisation:&nbsp;</strong>@Model.Breadcrumb.ExternalOrganisation<span>&nbsp;</span>
+                                        <span>Organisation:&nbsp;<strong>@Model.Breadcrumb.ExternalOrganisation</strong>&nbsp;</span>
 
                                         @(this.WeeeGds().ActionLinkWithEventTracking("Change organisation",
                                             string.Empty,
@@ -52,7 +52,7 @@
                                     }
                                     else
                                     {
-                                        @:Organisation: @Model.Breadcrumb.ExternalOrganisation
+                                        @:Organisation: <strong>@Model.Breadcrumb.ExternalOrganisation</strong>
                                     }
                                 </li>
                             }
@@ -60,7 +60,7 @@
                             @if (Model.Breadcrumb.ExternalActivity != null)
                             {
                                 <li>
-                                    <strong>Activity:&nbsp;</strong>@Model.Breadcrumb.ExternalActivity<span>&nbsp;</span>
+                                    <span>Activity:&nbsp;<strong>@Model.Breadcrumb.ExternalActivity</strong> &nbsp;</span>
 
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change activity",
                                         string.Empty,
@@ -76,7 +76,7 @@
                             @if (Model.Breadcrumb.InternalActivity != null)
                             {
                                 <li>
-                                    <strong>Activity:&nbsp;</strong>@Model.Breadcrumb.InternalActivity<span>&nbsp;</span>
+                                    <span>Activity:&nbsp;<strong>@Model.Breadcrumb.InternalActivity</strong> &nbsp;</span>
 
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change activity",
                                         string.Empty,
@@ -92,7 +92,7 @@
                             @if (Model.Breadcrumb.InternalOrganisation != null)
                             {
                                 <li>
-                                    <strong>Organisation:&nbsp;</strong>@Model.Breadcrumb.InternalOrganisation<span>&nbsp;</span>
+                                    <span>Organisation:&nbsp;<strong>@Model.Breadcrumb.InternalOrganisation</strong>&nbsp;</span>
 
                                     <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Change organisation</a>
                                 </li>
@@ -100,7 +100,7 @@
                             else if (Model.Breadcrumb.InternalScheme != null)
                             {
                                 <li>
-                                    <strong>PCS:&nbsp;</strong>@Model.Breadcrumb.InternalScheme<span>&nbsp;</span>
+                                    <span>PCS:&nbsp;<strong>@Model.Breadcrumb.InternalScheme</strong>&nbsp;</span>
 
                                     <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Change PCS</a>
                                 </li>
@@ -109,7 +109,7 @@
                             @if (Model.Breadcrumb.InternalAatf != null)
                             {
                                 <li>
-                                    <strong>AATF:&nbsp;</strong>@Model.Breadcrumb.InternalAatf<span>&nbsp;</span>
+                                    <span>AATF:&nbsp;<strong>@Model.Breadcrumb.InternalAatf</strong>&nbsp;</span>
 
                                     <a href="@Url.Action("ManageAatfs", "Aatf", new { Area = "admin", FacilityType = 1 })">Change AATF</a>
                                 </li>
@@ -118,7 +118,7 @@
                             @if (Model.Breadcrumb.InternalAe != null)
                             {
                                 <li>
-                                    <strong>AE:&nbsp;</strong>@Model.Breadcrumb.InternalAe<span>&nbsp;</span>
+                                    <span>AE:&nbsp;<strong>@Model.Breadcrumb.InternalAe</strong>&nbsp;</span>
 
                                     <a href="@Url.Action("ManageAatfs", "Aatf", new { Area = "admin", FacilityType = 2 })">Change AE</a>
                                 </li>
@@ -127,7 +127,7 @@
                             @if (Model.Breadcrumb.TestAreaActivity != null)
                             {
                                 <li>
-                                    <strong>Activity:&nbsp;</strong>@Model.Breadcrumb.TestAreaActivity<span>&nbsp;</span>
+                                    <span>Activity:&nbsp;<strong>@Model.Breadcrumb.TestAreaActivity</strong>&nbsp;</span>
 
                                     <a href="@Url.Action("Index", "Home", new { Area = "test" })">Change activity</a>
                                 </li>
