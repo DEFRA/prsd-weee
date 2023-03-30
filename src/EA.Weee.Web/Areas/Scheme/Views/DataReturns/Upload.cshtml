@@ -2,7 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.PCSFileUploadViewModel
 @{
-    ViewBag.Title = "Submit EEE/WEEE data return";
+    ViewBag.Title = "Submit EEE/WEEE data return - GOV.UK";
     HtmlHelper.ClientValidationEnabled = true;
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
 }
@@ -74,6 +74,12 @@
             }
         }
     </script>
+    
+    <header class="hgroup">
+        <h1 id="title" class="govuk-heading-l" aria-live="off">
+            Submit EEE/WEEE data return
+        </h1>
+    </header>
 
     @using (Html.BeginForm("Upload", "DataReturns", FormMethod.Post,
         new
@@ -84,12 +90,6 @@
             autocomplete = "off"
         }))
     {
-        <header class="hgroup">
-            <h1 id="title" class="govuk-heading-l" aria-live="off">
-                Submit EEE/WEEE data return
-            </h1>
-        </header>
-
         <div id="preSubmissionContent">
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
