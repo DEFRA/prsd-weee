@@ -412,20 +412,20 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type of address.
-        /// </summary>
-        public static string Typeofaddress {         
-            get {
-                return ResourceManager.GetString("Typeofaddress", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Total WEEE that has been reused.
         /// </summary>
         public static string TotalWeeeReusedTableCaption {
             get {
                 return ResourceManager.GetString("TotalWeeeReusedTableCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type of address.
+        /// </summary>
+        public static string Typeofaddress {
+            get {
+                return ResourceManager.GetString("Typeofaddress", resourceCulture);
             }
         }
         
@@ -462,6 +462,15 @@ namespace Resources.AatfReturn {
         public static string WEEESentB2C {
             get {
                 return ResourceManager.GetString("WEEESentB2C", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WEEE sent on.
+        /// </summary>
+        public static string WEEESentOn {
+            get {
+                return ResourceManager.GetString("WEEESentOn", resourceCulture);
             }
         }
     }
