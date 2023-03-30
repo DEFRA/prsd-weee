@@ -252,4 +252,7 @@
   <data name="WEEESentB2C" xml:space="preserve">
     <value>WEEE sent B2C (tonnes)</value>
   </data>
+  <data name="WEEESentOn" xml:space="preserve">
+    <value>WEEE sent on</value>
+  </data>
 </root>
