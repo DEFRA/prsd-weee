@@ -2,7 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.PCSFileUploadViewModel
 @{
-    ViewBag.Title = "Submit members details";
+    ViewBag.Title = "Submit members details - GOV.UK";
     HtmlHelper.ClientValidationEnabled = true;
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
 }
@@ -74,6 +74,11 @@
             }
         }
     </script>
+    <header class="hgroup">
+        <h1 id="title" class="govuk-heading-l">
+            Submit members' details
+        </h1>
+    </header>
 
     @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post,
         new
@@ -84,11 +89,7 @@
             autocomplete = "off"
         }))
     {
-        <header class="hgroup">
-            <h1 id="title" class="govuk-heading-l" aria-live="off">
-                Submit members' details
-            </h1>
-        </header>
+       
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         <div id="preSubmissionContent">
