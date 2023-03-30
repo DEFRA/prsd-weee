@@ -435,6 +435,11 @@
     <Compile Include="Areas\Aatf\ViewModels\EditEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModel.cs" />
     <Compile Include="Areas\Aatf\ViewModels\IActionModel.cs" />
+    <Compile Include="Areas\Aatf\Views\App_LocalResources\AatfResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AatfResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\TransferEvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceReportsController.cs" />
@@ -1994,6 +1999,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ReturnsResources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Resources.AatfReturn</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Aatf\Views\App_LocalResources\AatfResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AatfResources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Resources.Aatf</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
