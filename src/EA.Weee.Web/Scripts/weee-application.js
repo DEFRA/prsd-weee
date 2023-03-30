@@ -65,6 +65,34 @@
         }
     });
 
+    $(window).resize(function () {
+
+        function positionDiv(input, div) {
+            var inputTop = input.offset().top;
+            var inputHeight = input.outerHeight();
+            var divTop = inputTop + inputHeight;
+
+            $(div).css({
+                position: "absolute",
+                top: divTop,
+                left: input.offset().left
+            });
+        }
+
+        //fix the search and country autocompletes
+        var autocompleteInput = $("#SearchTerm");
+        var autoCompleteSearchDiv = $(".ui-autocomplete");
+
+        if (autocompleteInput.length > 0) {
+            positionDiv(autocompleteInput, autoCompleteSearchDiv);
+        }
+        
+        var countryInput = $(".govuk-form-group.countries select");
+        if (countryInput.length > 0) {
+            positionDiv(countryInput.next("input"), autoCompleteSearchDiv);
+        }
+    });
+
     //fn setCurPosition
     $.fn.setCurPosition = function (pos) {
         this.focus();
@@ -344,20 +372,6 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
         return formData;
     };
 
-    $(window).resize(function () {
-        var autocompleteInput = $("#SearchTerm");
-        var inputTop = autocompleteInput.offset().top;
-        var inputHeight = autocompleteInput.outerHeight();
-        var divTop = inputTop + inputHeight;
-
-        var autoComplete = $('.ui-autocomplete');
-        $(autoComplete).css({
-            'position': 'absolute',
-            'top': divTop,
-            'left': autocompleteInput.offset().left
-        });
-    });
-    
 })(jQuery);
 
 
