@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnRemoveSiteViewModel
 @{
@@ -22,19 +23,13 @@
                 <dl class="govuk-summary-list">
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key" style="width: 40%">
-                            @Resources.AatfReturn.ReturnsResources.Typeofaddress
-                        </dt>
-                        <dd class="govuk-summary-list__value" style="font-weight: 700;">
-                            @Resources.AatfReturn.ReturnsResources.Address
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
                             @Resources.AatfReturn.ReturnsResources.AATFATFnameAndAddress
                         </dt>
                         <dd class="govuk-summary-list__value">
                             @Html.HiddenFor(model => model.SiteAddress)
-                            @Html.Raw(Model.SiteAddress.Replace("\r\n", "<br />"))
+                            <span class="prsd-long-address">
+                                @Html.Raw(AddressData.ToAccessibleDisplayString(Model.SiteAddressData, true))
+                            </span>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -43,20 +38,15 @@
                         </dt>
                         <dd class="govuk-summary-list__value">
                             @Html.HiddenFor(model => model.OperatorAddress)
-                            @Html.Raw(Model.OperatorAddress.Replace("\r\n", "<br />"))
+                            <span class="prsd-long-address">
+                                @Html.Raw(AddressData.ToAccessibleDisplayString(Model.OperatorAddressData, true))
+                            </span>
                         </dd>
                     </div>
+
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            @Resources.AatfReturn.ReturnsResources.WEEESentOn
-                        </dt>
-                        <dd class="govuk-summary-list__value" style="font-weight: 700;">
-                            @Resources.AatfReturn.ReturnsResources.Quantity
-                        </dd>
-                    </div>
-                    <div class="govuk-summary-list__row" style="border-bottom: none">
-                        <dt class="govuk-summary-list__key">
-                            @Resources.AatfReturn.ReturnsResources.B2C
+                            @Resources.AatfReturn.ReturnsResources.WEEESentB2C
                         </dt>
                         <dd class="govuk-summary-list__value">
                             @Html.HiddenFor(m => m.TonnageB2C)
@@ -65,7 +55,7 @@
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            @Resources.AatfReturn.ReturnsResources.B2B
+                            @Resources.AatfReturn.ReturnsResources.WEEESentB2B
                         </dt>
                         <dd class="govuk-summary-list__value">
                             @Html.HiddenFor(m => m.TonnageB2B)
