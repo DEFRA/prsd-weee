@@ -106,6 +106,24 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add an AATF.
+        /// </summary>
+        public static string AddAnAATF {
+            get {
+                return ResourceManager.GetString("AddAnAATF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add an ATF.
+        /// </summary>
+        public static string AddAnATF {
+            get {
+                return ResourceManager.GetString("AddAnATF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to add / edit data.
         /// </summary>
         public static string AddEditData {
@@ -192,6 +210,15 @@ namespace Resources.AatfReturn {
         public static string ComplianceYearAndMonth {
             get {
                 return ResourceManager.GetString("ComplianceYearAndMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What&apos;s the difference between an AATF and an ATF?.
+        /// </summary>
+        public static string DifferenceAnAATFAndATF {
+            get {
+                return ResourceManager.GetString("DifferenceAnAATFAndATF", resourceCulture);
             }
         }
         
@@ -372,6 +399,51 @@ namespace Resources.AatfReturn {
         public static string SaveAndContinue {
             get {
                 return ResourceManager.GetString("SaveAndContinue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search for the AATF by name, operator name or approval number.
+        /// </summary>
+        public static string SearchAnAATFByNameInfo {
+            get {
+                return ResourceManager.GetString("SearchAnAATFByNameInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add the treatment facility where WEEE was sent to.
+        /// </summary>
+        public static string SearchAnAATFHeading {
+            get {
+                return ResourceManager.GetString("SearchAnAATFHeading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A treatment facility where WEEE was sent on to can be an AATF or an ATF (an ATF is an authorised treatment facility that is not approved to issue evidence)..
+        /// </summary>
+        public static string SearchAnAATFHeadingInfo {
+            get {
+                return ResourceManager.GetString("SearchAnAATFHeadingInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the search to find and add an AATF for this compliance year. If you are unsure if the treatment facility is an AATF or ATF, perform a search..
+        /// </summary>
+        public static string SearchAnAATFInfo {
+            get {
+                return ResourceManager.GetString("SearchAnAATFInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you know the treatment facility is an ATF, use the link to add it. If you are unsure if the treatment facility is an ATF or an AATF, perform a search..
+        /// </summary>
+        public static string SearchAnATFInfo {
+            get {
+                return ResourceManager.GetString("SearchAnATFInfo", resourceCulture);
             }
         }
         
