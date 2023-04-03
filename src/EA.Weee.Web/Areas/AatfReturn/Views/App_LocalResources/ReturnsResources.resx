@@ -255,4 +255,28 @@
   <data name="WEEESentOn" xml:space="preserve">
     <value>WEEE sent on</value>
   </data>
+  <data name="AddAnAATF" xml:space="preserve">
+    <value>Add an AATF</value>
+  </data>
+  <data name="AddAnATF" xml:space="preserve">
+    <value>Add an ATF</value>
+  </data>
+  <data name="DifferenceAnAATFAndATF" xml:space="preserve">
+    <value>What's the difference between an AATF and an ATF?</value>
+  </data>
+  <data name="SearchAnAATFByNameInfo" xml:space="preserve">
+    <value>Search for the AATF by name, operator name or approval number</value>
+  </data>
+  <data name="SearchAnAATFHeading" xml:space="preserve">
+    <value>Add the treatment facility where WEEE was sent to</value>
+  </data>
+  <data name="SearchAnAATFHeadingInfo" xml:space="preserve">
+    <value>A treatment facility where WEEE was sent on to can be an AATF or an ATF (an ATF is an authorised treatment facility that is not approved to issue evidence).</value>
+  </data>
+  <data name="SearchAnAATFInfo" xml:space="preserve">
+    <value>Use the search to find and add an AATF for this compliance year. If you are unsure if the treatment facility is an AATF or ATF, perform a search.</value>
+  </data>
+  <data name="SearchAnATFInfo" xml:space="preserve">
+    <value>If you know the treatment facility is an ATF, use the link to add it. If you are unsure if the treatment facility is an ATF or an AATF, perform a search.</value>
+  </data>
 </root>
