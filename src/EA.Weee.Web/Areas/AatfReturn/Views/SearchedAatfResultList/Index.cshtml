@@ -55,9 +55,10 @@
                                     @Html.Raw(weeeSentOn.ApprovalNumber)
                                 </span>
                             </td>
-                            <td data-label="@Resources.AatfReturn.ReturnsResources.Select" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <td data-label="@Resources.AatfReturn.ReturnsResources.Select @weeeSentOn.SiteAddress.Address1" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                                <label class="govuk-visually-hidden" for="@Model.SelectedAatfId">@weeeSentOn.SiteAddress.Address1</label>
                                 @Html.RadioButtonFor(m => m.SelectedAatfId, weeeSentOn.WeeeAatfId, new { @onclick = "setSiteSelectedId('" + weeeSentOn.WeeeAatfId + "','" + weeeSentOn.SiteAddress.Name + "')" })
-                            </td>                            
+                            </td>
                         </tr>
                     }
                 </tbody>
