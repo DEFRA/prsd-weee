@@ -205,6 +205,15 @@ namespace Resources.AatfReturn {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close all breakdown by PCS.
+        /// </summary>
+        public static string CloseAllPcs {
+            get {
+                return ResourceManager.GetString("CloseAllPcs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compliance month and year.
         /// </summary>
         public static string ComplianceYearAndMonth {
@@ -282,6 +291,15 @@ namespace Resources.AatfReturn {
         public static string ObligatedWeee {
             get {
                 return ResourceManager.GetString("ObligatedWeee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open all breakdown by PCS.
+        /// </summary>
+        public static string OpenAllPcs {
+            get {
+                return ResourceManager.GetString("OpenAllPcs", resourceCulture);
             }
         }
         
