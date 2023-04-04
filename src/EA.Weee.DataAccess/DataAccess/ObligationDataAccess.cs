@@ -112,11 +112,10 @@
 
             var notesInComplianceYear = weeeContext.Notes.Where(n => n.ComplianceYear == complianceYear);
 
-            schemes.AddRange(notesInComplianceYear.Where(n =>
-                n.NoteType.Value == NoteType.EvidenceNote.Value).SelectMany(n => n.Recipient.Schemes));
+            schemes.AddRange(notesInComplianceYear.Where(n => n.NoteType.Value == NoteType.EvidenceNote.Value && n.Status.Value == NoteStatus.Approved.Value).SelectMany(n => n.Recipient.Schemes));
 
             var transferNotes = notesInComplianceYear
-                .Where(n => n.NoteType.Value == NoteType.TransferNote.Value);
+                .Where(n => n.NoteType.Value == NoteType.TransferNote.Value && n.Status.Value == NoteStatus.Approved.Value);
 
             schemes.AddRange(transferNotes.SelectMany(n => n.Recipient.Schemes));
             schemes.AddRange(transferNotes.SelectMany(n => n.Organisation.Schemes));
