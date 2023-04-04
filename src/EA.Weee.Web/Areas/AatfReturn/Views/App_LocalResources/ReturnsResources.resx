@@ -279,4 +279,10 @@
   <data name="SearchAnATFInfo" xml:space="preserve">
     <value>If you know the treatment facility is an ATF, use the link to add it. If you are unsure if the treatment facility is an ATF or an AATF, perform a search.</value>
   </data>
+  <data name="CloseAllPcs" xml:space="preserve">
+    <value>Close all breakdown by PCS</value>
+  </data>
+  <data name="OpenAllPcs" xml:space="preserve">
+    <value>Open all breakdown by PCS</value>
+  </data>
 </root>

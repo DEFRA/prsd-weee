@@ -43,8 +43,9 @@
 @Scripts.Render("~/bundles/weee-collapsible-link")
 @section scripts {
     <script type="text/javascript">
+
         $(document).ready(function () {
-            InitialStartup();
+            InitialStartup('@Resources.AatfReturn.ReturnsResources.OpenAllPcs', '@Resources.AatfReturn.ReturnsResources.CloseAllPcs');
         });
     </script>
 }
