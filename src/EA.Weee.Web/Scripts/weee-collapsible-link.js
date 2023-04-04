@@ -1,7 +1,4 @@
 ﻿
-//var openAllText = "Open all";
-//var closeAllText = "Close all";
-
 function InitialStartup(openAllText, closeAllText) {
     var summaries = document.querySelectorAll(".govuk-details__summary");
 
