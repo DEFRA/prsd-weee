@@ -944,8 +944,8 @@
 
         public static IEnumerable<object[]> EndDates() 
         {
-            yield return new object[] { SystemTime.UtcNow };
-            yield return new object[] { SystemTime.UtcNow.AddDays(1) };
+            yield return new object[] { DateTime.UtcNow };
+            yield return new object[] { DateTime.UtcNow.AddDays(1) };
         }
 
         [Theory, MemberData(nameof(EndDates))]
