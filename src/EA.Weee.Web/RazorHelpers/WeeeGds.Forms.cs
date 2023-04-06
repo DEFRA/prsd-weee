@@ -70,7 +70,7 @@
             var img = new TagBuilder("img");
             img.Attributes.Add("id", "spinner");
             img.Attributes.Add("src", VirtualPathUtility.ToAbsolute(@"~/Content/weee/images/spinner.gif"));
-            img.Attributes.Add("alt", "spinning wheel");
+            img.Attributes.Add("alt", "spinning wheel - Content is loading...");
             img.Attributes.Add("class", "spinner-image");
 
             return img.ToString(TagRenderMode.SelfClosing);
