@@ -16,361 +16,361 @@
     }
 }
 
-    <div class="govuk-grid-row">
-        <section class="govuk-grid-column-full" id="main-content">
-            <header class="hgroup">
-                <h1 class="govuk-heading-l" style="word-break: break-word"> @Model.Name</h1>
-            </header>
-        </section>
-    </div>
-    @Html.HiddenFor(m => m.AatfId)
+<div class="govuk-grid-row">
+    <section class="govuk-grid-column-full" id="main-content">
+        <header class="hgroup">
+            <h1 class="govuk-heading-l" style="word-break: break-word"> @Model.Name</h1>
+        </header>
+    </section>
+</div>
+@Html.HiddenFor(m => m.AatfId)
 
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
-        <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedComplianceYear):</span>
-        @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
-        <span class="text-margin">
-            @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
-        </span>
-    </div>
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
+    <span class="font-bold govuk-body">@Html.LabelFor(m => m.SelectedComplianceYear):</span>
+    @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+    <span class="text-margin">
+        @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), new { @class = "govuk-!-width-one-quarter", autocomplete = "false" })
+    </span>
+</div>
 
-    <div class="govuk-tabs" data-module="govuk-tabs">
-        <h2 class="govuk-tabs__title">
-            Contents
-        </h2>
+<div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+        Contents
+    </h2>
 
-        <ul class="govuk-tabs__list">
-            <li class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab" href="#aatfDetails">
-                    @Model.FacilityType.ToDisplayString() details
-                </a>
-            </li>
-            <li class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab" href="#data">
-                    Data
-                </a>
-            </li>
-            <li class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab" href="#organisationDetails">
-                    Organisation details
-                </a>
-            </li>
-            <li class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab" href="#contactDetails">
-                    Contact details
-                </a>
-            </li>
-        </ul>
-
-        <section class="govuk-tabs__panel" id="aatfDetails">
-            <header>
-               <h1 class="govuk-heading-l">
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#aatfDetails">
                 @Model.FacilityType.ToDisplayString() details
-              </h1>
-            </header>
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#data">
+                Data
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#organisationDetails">
+                Organisation details
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#contactDetails">
+                Contact details
+            </a>
+        </li>
+    </ul>
 
-            @if (Model.CanEdit && Model.IsValidComplianceYear)
-            {
-                <div style="float:right">
-                    <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
-                </div>
-            }
-            <table class="govuk-table">
-                <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-!-width-one-half">&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Name of  @Model.FacilityType.ToDisplayString()</th>
-                        <td class="govuk-table__cell" style="word-break: break-word">@Model.Name</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">@Model.AddressHeadingName</th>
-                        <td class="govuk-table__cell">
-                            @Html.Raw(Model.SiteAddressLong.Replace("\r\n", "<br />"))
-                        </td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Approval number</th>
-                        <td class="govuk-table__cell">@Model.ApprovalNumber</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Appropriate authority</th>
-                        <td class="govuk-table__cell">
-                            @Model.CompetentAuthority.Abbreviation <br />
-                        </td>
-                    </tr>
-                    @if (Model.HasPatArea)
-                    {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">WROS Pan Area Team</th>
-                            <td class="govuk-table__cell">
-                                @Model.PanArea.Name <br />
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.HasLocalArea)
-                    {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">EA Area</th>
-                            <td class="govuk-table__cell">
-                                @Model.LocalArea.Name <br />
-                            </td>
-                        </tr>
-                    }
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Status</th>
-                        <td class="govuk-table__cell">@Model.AatfStatus</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Size</th>
-                        <td class="govuk-table__cell">@Model.Size</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Approval date</th>
-                        <td class="govuk-table__cell">@Model.ApprovalDateString</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Compliance year</th>
-                        <td class="govuk-table__cell">@Model.ComplianceYear</td>
-                    </tr>
-                </tbody>
-            </table>
-            @if (Model.CanEdit)
-            {
-                if (Model.IsValidComplianceYear)
+    <div class="govuk-tabs__panel" id="aatfDetails" tabindex="0">
+        <h1 class="sr-only" tabindex="0">AATF Details</h1>
+        <header>
+            <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
+                @Model.FacilityType.ToDisplayString() details
+            </h1>
+        </header>
+
+        @if (Model.CanEdit && Model.IsValidComplianceYear)
+        {
+            <div style="float:right">
+                <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
+            </div>
+        }
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name of  @Model.FacilityType.ToDisplayString()</th>
+                    <td class="govuk-table__cell" style="word-break: break-word">@Model.Name</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">@Model.AddressHeadingName</th>
+                    <td class="govuk-table__cell">
+                        <span class="prsd-long-address">
+                            @Html.Raw(AddressData.ToAccessibleDisplayString(Model.SiteAddress, false))
+                        </span>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Approval number</th>
+                    <td class="govuk-table__cell">@Model.ApprovalNumber</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Appropriate authority</th>
+                    <td class="govuk-table__cell">
+                        @Model.CompetentAuthority.Abbreviation <br />
+                    </td>
+                </tr>
+                @if (Model.HasPatArea)
                 {
-                    <p>
-                        <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
-                    </p>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">WROS Pan Area Team</th>
+                        <td class="govuk-table__cell">
+                            @Model.PanArea.Name <br />
+                        </td>
+                    </tr>
                 }
-                if (Model.ShowCopyLink)
+                @if (Model.HasLocalArea)
                 {
-                    <p>
-                        <a href="@(Url.UrlFor<CopyAatfController>(a => a.CopyAatfDetails(Model.Id)))">Copy  @Model.FacilityType.ToDisplayString() details for a new compliance year</a>
-                    </p>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">EA Area</th>
+                        <td class="govuk-table__cell">
+                            @Model.LocalArea.Name <br />
+                        </td>
+                    </tr>
                 }
-            }
-        </section>
-        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data">
-            <header>
-                <h1 class="govuk-heading-l">
-                    @Model.FacilityType.ToDisplayString() data returns
-                    </h1>
-                </header>
-
-                    @if (Model.HasSubmissionData)
-                    {
-                        if (Model.FacilityType.Equals(FacilityType.Aatf))
-                        {
-                            <table class="govuk-table">
-                                <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
-                                <thead class="govuk-table__head">
-                                    <tr class="govuk-table__row">
-                                        <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
-                                        <th class="govuk-table__header" style="text-align: right" scope="col">B2C total obligated (tonnes)</th>
-                                        <th class="govuk-table__header" style="text-align: right" scope="col">B2B total obligated (tonnes)</th>
-                                        <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
-                                        <th class="govuk-table__header" scope="col">Submitted by</th>
-                                        <th class="govuk-table__header" scope="col"><span class="hidden-for-screen-reader">download</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody class="govuk-table__body">
-
-                                    @for (var returnCount = 0; returnCount < Model.SubmissionHistoryData.Count; returnCount++)
-                                    {
-                                        var item = Model.SubmissionHistoryData[returnCount];
-
-                                        <tr class="govuk-table__row">
-                                            <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
-                                            <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedHouseHoldTotal</td>
-                                            <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedNonHouseHoldTotal</td>
-                                            <td class="govuk-table__cell">@item.SubmittedDate</td>
-                                            <td class="govuk-table__cell">@item.SubmittedBy</td>
-                                            <td class="govuk-table__cell"> <a href="@(Url.UrlFor<AatfController>(u => u.Download(item.ReturnId, item.ComplianceYear, (int)item.Quarter, Model.Id)))">Download</a> </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        else
-                        {
-                            <table class="govuk-table">
-                                <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
-                                <thead class="govuk-table__head">
-                                    <tr class="govuk-table__row">
-                                        <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
-                                        <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
-                                        <th class="govuk-table__header" scope="col">Submitted by</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="govuk-table__body">
-
-                                    @for (var returnCount = 0; returnCount < Model.SubmissionHistoryData.Count; returnCount++)
-                                    {
-                                        var item = Model.SubmissionHistoryData[returnCount];
-
-                                        <tr class="govuk-table__row">
-                                            <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
-                                            <td class="govuk-table__cell">@item.SubmittedDate</td>
-                                            <td class="govuk-table__cell">@item.SubmittedBy</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                    }
-                    else
-                    {
-                        <p>No @Model.FacilityType.ToDisplayString() submission history </p>
-                    }
-
-        </section>
-        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails">
-            <header class="hgroup">
-                <h1 class="govuk-heading-l">
-                    Organisation details
-                </h1>
-            </header>
-            <table class="govuk-table">
-                <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-!-width-one-half">&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Organisation type</th>
-                        <td class="govuk-table__cell">
-                            @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
-                            {
-                                @:Sole trader or individual
-                            }
-                            else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
-                            {
-                                @:Partnership
-                            }
-                            else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-                            {
-                                @:Registered company
-                            }
-                        </td>
-                    </tr>
-                    @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-                    {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Company name</th>
-                            <td class="govuk-table__cell">@Model.Organisation.Name</td>
-                        </tr>
-                    }
-                    else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
-                    {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Sole trader / individual name</th>
-                            <td class="govuk-table__cell">@Model.Organisation.Name</td>
-                        </tr>
-                    }
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Business trading name</th>
-                        <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
-                    </tr>
-                    @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
-                    {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
-                            <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
-                        </tr>
-                    }
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Address</th>
-                        <td class="govuk-table__cell">
-                            @Html.Raw(Model.OrganisationAddress.Replace("\r\n", "<br />"))
-                        </td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Telephone</th>
-                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Email address</th>
-                        <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
-                    </tr>
-
-                    @Html.Partial("_OrganisationRelatedEntities", Model.AssociatedEntities)
-
-                </tbody>
-            </table>
-
-            @if (Model.CanEdit)
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Status</th>
+                    <td class="govuk-table__cell">@Model.AatfStatus</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Size</th>
+                    <td class="govuk-table__cell">@Model.Size</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Approval date</th>
+                    <td class="govuk-table__cell">@Model.ApprovalDateString</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Compliance year</th>
+                    <td class="govuk-table__cell">@Model.ComplianceYear</td>
+                </tr>
+            </tbody>
+        </table>
+        @if (Model.CanEdit)
+        {
+            if (Model.IsValidComplianceYear)
             {
                 <p>
-                    @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
-                    {
-                        <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
-                    }
-                    else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-                    {
-                        <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
-                    }
-                    else
-                    {
-                        <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
-                    }
+                    <a href="@(Url.UrlFor<AatfController>(a => a.ManageAatfDetails(Model.Id)))">Edit  @Model.FacilityType.ToDisplayString() details</a>
                 </p>
             }
-        </section>
-        <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails">
-            <header class="hgroup">
-                <h1 class="govuk-heading-l">
-                    Contact details
-                </h1>
-            </header>
-
-            <p>Only contact details for the latest compliance year are shown to the customer in WEEE Online</p>
-            <table class="govuk-table">
-                <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Name</th>
-                        <td class="govuk-table__cell">@(Model.ContactData.FirstName + " " + Model.ContactData.LastName)</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Position</th>
-                        <td class="govuk-table__cell">@Model.ContactData.Position</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Address</th>
-                        <td class="govuk-table__cell">
-                            @Html.Raw(Model.ContactAddressLong.Replace("\r\n", "<br />"))
-                        </td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Telephone</th>
-                        <td class="govuk-table__cell">@Model.ContactData.Telephone</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Email</th>
-                        <td class="govuk-table__cell">@Model.ContactData.Email</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            @if (Model.CanEdit && Model.IsValidComplianceYear)
+            if (Model.ShowCopyLink)
             {
                 <p>
-                    <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit @Model.FacilityType.ToDisplayString() contact details</a>
+                    <a href="@(Url.UrlFor<CopyAatfController>(a => a.CopyAatfDetails(Model.Id)))">Copy  @Model.FacilityType.ToDisplayString() details for a new compliance year</a>
                 </p>
             }
-        </section>
-        <div>&nbsp;</div>
-        <p>
-            <a class="govuk-button" href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Perform another activity</a>
-        </p>
-        <p>
-            <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
-        </p>
+        }
     </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data" tabindex="1">
+        <h1 class="sr-only" tabindex="0">Data</h1>
+        <header>
+            <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
+                @Model.FacilityType.ToDisplayString() data returns
+            </h1>
+        </header>
+        @if (Model.HasSubmissionData)
+        {
+            if (Model.FacilityType.Equals(FacilityType.Aatf))
+            {
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
+                            <th class="govuk-table__header" style="text-align: right" scope="col">B2C total obligated (tonnes)</th>
+                            <th class="govuk-table__header" style="text-align: right" scope="col">B2B total obligated (tonnes)</th>
+                            <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
+                            <th class="govuk-table__header" scope="col">Submitted by</th>
+                            <th class="govuk-table__header" scope="col"><span class="hidden-for-screen-reader">download</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
 
-    @section scripts {
-        <script type="text/javascript">
+                        @for (var returnCount = 0; returnCount < Model.SubmissionHistoryData.Count; returnCount++)
+                        {
+                            var item = Model.SubmissionHistoryData[returnCount];
+
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
+                                <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedHouseHoldTotal</td>
+                                <td class="govuk-table__cell break-word" style="text-align: right">@item.ObligatedNonHouseHoldTotal</td>
+                                <td class="govuk-table__cell">@item.SubmittedDate</td>
+                                <td class="govuk-table__cell">@item.SubmittedBy</td>
+                                <td class="govuk-table__cell"> <a href="@(Url.UrlFor<AatfController>(u => u.Download(item.ReturnId, item.ComplianceYear, (int)item.Quarter, Model.Id)))">Download</a> </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-visually-hidden">Submission history</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="text-align: left" scope="col">Quarter</th>
+                            <th class="govuk-table__header" scope="col">Submitted date (GMT)</th>
+                            <th class="govuk-table__header" scope="col">Submitted by</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+
+                        @for (var returnCount = 0; returnCount < Model.SubmissionHistoryData.Count; returnCount++)
+                        {
+                            var item = Model.SubmissionHistoryData[returnCount];
+
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell" style="text-align: left">@item.Quarter.ToDisplayString()</td>
+                                <td class="govuk-table__cell">@item.SubmittedDate</td>
+                                <td class="govuk-table__cell">@item.SubmittedBy</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+        else
+        {
+            <p>No @Model.FacilityType.ToDisplayString() submission history</p>
+        }
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails" tabindex="2">
+        <h1 class="sr-only" tabindex="0">Organisation details</h1>
+        <header>
+            <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
+                Organisation details
+            </h1>
+        </header>
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Organisation type</th>
+                    <td class="govuk-table__cell">
+                        @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                        {
+                            @:Sole trader or individual
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.Partnership)
+                        {
+                            @:Partnership
+                        }
+                        else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                        {
+                            @:Registered company
+                        }
+                    </td>
+                </tr>
+                @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Company name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
+                }
+                else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Sole trader / individual name</th>
+                        <td class="govuk-table__cell">@Model.Organisation.Name</td>
+                    </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Business trading name</th>
+                    <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
+                </tr>
+                @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
+                {
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                        <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
+                    </tr>
+                }
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address</th>
+                    <td class="govuk-table__cell">
+                        <span class="prsd-long-address">
+                            @Html.Raw(AddressData.ToAccessibleDisplayString(Model.OrganisationAddressData, false))
+                        </span>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email address</th>
+                    <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
+                </tr>
+
+                @Html.Partial("_OrganisationRelatedEntities", Model.AssociatedEntities)
+
+            </tbody>
+        </table>
+
+        @if (Model.CanEdit)
+        {
+            <p>
+                @if (Model.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditRegisteredCompanyOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+                }
+                else if (Model.Organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+                }
+                else
+                {
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(null, Model.Organisation.Id, Model.Id, Model.FacilityType)))">Edit organisation details</a>
+                }
+            </p>
+        }
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails" tabindex="3">
+        <h1 class="sr-only" tabindex="0">Contact details</h1>
+        <header>
+            <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
+                Contact details
+            </h1>
+        </header>
+        <p>Only contact details for the latest compliance year are shown to the customer in WEEE Online</p>
+
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name</th>
+                    <td class="govuk-table__cell">@(Model.ContactData.FirstName + " " + Model.ContactData.LastName)</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Position</th>
+                    <td class="govuk-table__cell">@Model.ContactData.Position</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Address</th>
+                    <td class="govuk-table__cell">
+                        <span class="prsd-long-address">
+                            @Html.Raw(AatfContactData.ToAccessibleDisplayString(Model.ContactData.AddressData, false))
+                        </span>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <td class="govuk-table__cell">@Model.ContactData.Telephone</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Email</th>
+                    <td class="govuk-table__cell">@Model.ContactData.Email</td>
+                </tr>
+            </tbody>
+        </table>
+
+        @if (Model.CanEdit && Model.IsValidComplianceYear)
+        {
+            <p>
+                <a href="@(Url.UrlFor<AatfController>(a => a.ManageContactDetails(Model.Id, Model.FacilityType)))">Edit @Model.FacilityType.ToDisplayString() contact details</a>
+            </p>
+        }
+    </div>
+    <div>&nbsp;</div>
+    <p>
+        <a class="govuk-button" href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Perform another activity</a>
+    </p>
+    <p>
+        <a href="@(Url.UrlFor<AatfController>(u => u.ManageAatfs(Model.FacilityType)))">Back</a>
+    </p>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
         $("#SelectedComplianceYear")
             .change(function() {
                 var selectedYear = $("#SelectedComplianceYear").val();
@@ -400,5 +400,5 @@
                 window.location.hash = hash;
             }
         });
-        </script>
-    }
+    </script>
+}
