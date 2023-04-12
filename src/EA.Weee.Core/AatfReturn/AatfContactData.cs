@@ -4,6 +4,8 @@
     using EA.Weee.Core.Validation;
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Text;
+    using System.Web.Mvc;
 
     [Serializable]
     public class AatfContactData
@@ -13,14 +15,7 @@
             this.AddressData = new AatfContactAddressData();
         }
 
-        public AatfContactData(
-            Guid id,
-            string firstName,
-            string lastName,
-            string position,
-            AatfContactAddressData addressData,
-            string telephone,
-            string email)
+        public AatfContactData(Guid id, string firstName, string lastName, string position, AatfContactAddressData addressData, string telephone, string email)
         {
             Id = id;
             FirstName = firstName;
@@ -29,6 +24,62 @@
             AddressData = addressData;
             Telephone = telephone;
             Email = email;
+        }
+
+        public static string ToAccessibleDisplayString(AatfContactAddressData address, bool includeName)
+        {
+            if (address != null)
+            {
+                var siteAddressStringBuilder = new StringBuilder();
+
+                const string spanTagName = "span";
+
+                var address1Span = new TagBuilder(spanTagName);
+
+                if (includeName)
+                {
+                    var addressNameSpan = new TagBuilder(spanTagName);
+                    addressNameSpan.SetInnerText($"{address.Name},");
+                    siteAddressStringBuilder.Append(addressNameSpan);
+                }
+
+                address1Span.SetInnerText($"{address.Address1},");
+                siteAddressStringBuilder.Append(address1Span);
+
+                if (address.Address2 != null)
+                {
+                    var address2Span = new TagBuilder(spanTagName);
+                    address2Span.SetInnerText($"{address.Address2},");
+
+                    siteAddressStringBuilder.Append(address2Span);
+                }
+
+                var townOrCitySpan = new TagBuilder(spanTagName);
+                townOrCitySpan.SetInnerText($"{address.TownOrCity},");
+                siteAddressStringBuilder.Append(townOrCitySpan);
+
+                if (address.CountyOrRegion != null)
+                {
+                    var countySpan = new TagBuilder(spanTagName);
+                    countySpan.SetInnerText($"{address.CountyOrRegion},");
+                    siteAddressStringBuilder.Append(countySpan);
+                }
+
+                if (address.Postcode != null)
+                {
+                    var postCodeSpan = new TagBuilder(spanTagName);
+                    postCodeSpan.SetInnerText($"{address.Postcode},");
+                    siteAddressStringBuilder.Append(postCodeSpan);
+                }
+
+                var countrySpan = new TagBuilder(spanTagName);
+                countrySpan.SetInnerText(address.CountryName);
+                siteAddressStringBuilder.Append(countrySpan);
+
+                return siteAddressStringBuilder.ToString();
+            }
+
+            return "&nbsp";
         }
 
         public Guid Id { get; set; }
