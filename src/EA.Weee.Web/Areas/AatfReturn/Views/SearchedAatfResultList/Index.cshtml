@@ -5,10 +5,11 @@
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchedAatfResultListViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AATF Search results - GOV.UK";
 }
 
-<section id="main-content">
+@section full_main_content{
+
     <h1 class="govuk-heading-l" style="padding-top: 0px;">Search results</h1>
     <h2 class="govuk-heading-m">We found results for '@Model.AatfName'</h2>
 
@@ -42,12 +43,12 @@
                         <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
                             <td data-label="@Resources.AatfReturn.ReturnsResources.AATFNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                                 <span class="prsd-long-address">
-                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.SiteAddress, false))
+                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.SiteAddress, true))
                                 </span>
                             </td>
                             <td data-label="@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                                 <span class="prsd-long-address">
-                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.OperatorAddress, false))
+                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.OperatorAddress, true))
                                 </span>
                             </td>
                             <td data-label="@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
@@ -85,7 +86,7 @@
 
         <div class="govuk-!-padding-bottom-8"></div>
     }
-</section>
+}
 <script type="text/javascript">
     function setSiteSelectedId(siteValue, siteName) {
         document.getElementById("SelectedAatfId").value = siteValue;
