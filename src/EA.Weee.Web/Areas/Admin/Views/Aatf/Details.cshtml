@@ -85,7 +85,7 @@
                     <th class="govuk-table__header" scope="col">@Model.AddressHeadingName</th>
                     <td class="govuk-table__cell">
                         <span class="prsd-long-address">
-                            @Html.Raw(AddressData.ToAccessibleDisplayString(Model.SiteAddress, false))
+                            @Html.Raw(@Model.SiteAddress.ToAccessibleDisplayString(false, false))
                         </span>
                     </td>
                 </tr>
@@ -279,7 +279,7 @@
                     <th class="govuk-table__header" scope="col">Address</th>
                     <td class="govuk-table__cell">
                         <span class="prsd-long-address">
-                            @Html.Raw(AddressData.ToAccessibleDisplayString(Model.OrganisationAddressData, false))
+                            @Html.Raw(Model.OrganisationAddressData.ToAccessibleDisplayString(false, false))
                         </span>
                     </td>
                 </tr>
@@ -338,8 +338,8 @@
                     <th class="govuk-table__header" scope="col">Address</th>
                     <td class="govuk-table__cell">
                         <span class="prsd-long-address">
-                            @Html.Raw(AatfContactData.ToAccessibleDisplayString(Model.ContactData.AddressData, false))
-                        </span>
+                            @Html.Raw(Model.ContactData.AddressData.ToAccessibleDisplayString(false, false))
+                   </span>
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
