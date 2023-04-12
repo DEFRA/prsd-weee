@@ -42,12 +42,12 @@
                         <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
                             <td data-label="@Resources.AatfReturn.ReturnsResources.AATFNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                                 <span class="prsd-long-address">
-                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.SiteAddress, false))
+                                    @Html.Raw(weeeSentOn.SiteAddress.ToAccessibleDisplayString(false, true))
                                 </span>
                             </td>
                             <td data-label="@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                                 <span class="prsd-long-address">
-                                    @Html.Raw(AddressData.ToAccessibleDisplayString(weeeSentOn.OperatorAddress, false))
+                                    @Html.Raw(weeeSentOn.OperatorAddress.ToAccessibleDisplayString(false, true))
                                 </span>
                             </td>
                             <td data-label="@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
