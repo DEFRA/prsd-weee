@@ -74,60 +74,56 @@
             CountryName = countryName;
         }
 
-        public static string ToAccessibleDisplayString(AddressData address, bool includeName)
+        public string ToAccessibleDisplayString(bool includeName, bool endLineWithComma = true)
         {
-            if (address != null)
+            var siteAddressStringBuilder = new StringBuilder();
+
+            const string spanTagName = "span";
+            var comma = endLineWithComma ? "," : string.Empty;
+
+            var address1Span = new TagBuilder(spanTagName);
+
+            if (includeName)
             {
-                var siteAddressStringBuilder = new StringBuilder();
-
-                const string spanTagName = "span";
-
-                var address1Span = new TagBuilder(spanTagName);
-
-                if (includeName)
-                {
-                    var addressNameSpan = new TagBuilder(spanTagName);
-                    addressNameSpan.SetInnerText($"{address.Name},");
-                    siteAddressStringBuilder.Append(addressNameSpan);
-                }
-
-                address1Span.SetInnerText($"{address.Address1},");
-                siteAddressStringBuilder.Append(address1Span);
-
-                if (address.Address2 != null)
-                {
-                    var address2Span = new TagBuilder(spanTagName);
-                    address2Span.SetInnerText($"{address.Address2},");
-
-                    siteAddressStringBuilder.Append(address2Span);
-                }
-
-                var townOrCitySpan = new TagBuilder(spanTagName);
-                townOrCitySpan.SetInnerText($"{address.TownOrCity},");
-                siteAddressStringBuilder.Append(townOrCitySpan);
-
-                if (address.CountyOrRegion != null)
-                {
-                    var countySpan = new TagBuilder(spanTagName);
-                    countySpan.SetInnerText($"{address.CountyOrRegion},");
-                    siteAddressStringBuilder.Append(countySpan);
-                }
-
-                if (address.Postcode != null)
-                {
-                    var postCodeSpan = new TagBuilder(spanTagName);
-                    postCodeSpan.SetInnerText($"{address.Postcode},");
-                    siteAddressStringBuilder.Append(postCodeSpan);
-                }
-
-                var countrySpan = new TagBuilder(spanTagName);
-                countrySpan.SetInnerText(address.CountryName);
-                siteAddressStringBuilder.Append(countrySpan);
-
-                return siteAddressStringBuilder.ToString();
+                var addressNameSpan = new TagBuilder(spanTagName);
+                addressNameSpan.SetInnerText($"{Name}{comma}");
+                siteAddressStringBuilder.Append(addressNameSpan);
             }
 
-            return "&nbsp";
+            address1Span.SetInnerText($"{Address1}{comma}");
+            siteAddressStringBuilder.Append(address1Span);
+
+            if (Address2 != null)
+            {
+                var address2Span = new TagBuilder(spanTagName);
+                address2Span.SetInnerText($"{Address2}{comma}");
+
+                siteAddressStringBuilder.Append(address2Span);
+            }
+
+            var townOrCitySpan = new TagBuilder(spanTagName);
+            townOrCitySpan.SetInnerText($"{TownOrCity}{comma}");
+            siteAddressStringBuilder.Append(townOrCitySpan);
+
+            if (CountyOrRegion != null)
+            {
+                var countySpan = new TagBuilder(spanTagName);
+                countySpan.SetInnerText($"{CountyOrRegion}{comma}");
+                siteAddressStringBuilder.Append(countySpan);
+            }
+
+            if (Postcode != null)
+            {
+                var postCodeSpan = new TagBuilder(spanTagName);
+                postCodeSpan.SetInnerText($"{Postcode}{comma}");
+                siteAddressStringBuilder.Append(postCodeSpan);
+            }
+
+            var countrySpan = new TagBuilder(spanTagName);
+            countrySpan.SetInnerText(CountryName);
+            siteAddressStringBuilder.Append(countrySpan);
+
+            return siteAddressStringBuilder.ToString();
         }
     }
 }

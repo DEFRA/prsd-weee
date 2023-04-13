@@ -6,12 +6,12 @@
 
     public class AddressDataTests
     {
-        public const string NameSpan = "<span>Name,</span>";
-
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ToAccessibleDisplayString_WithoutOptionalFields_ReturnsCorrectAddress(bool includeName)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public void ToAccessibleDisplayString_WithoutOptionalFields_ReturnsCorrectAddress(bool includeName, bool endLineWithComma)
         {
             var address = new AatfAddressData()
             {
@@ -21,22 +21,26 @@
                 CountryName = "Country"
             };
 
-            var expected = "<span>Address 1,</span><span>Town,</span><span>Country</span>";
+            var comma = endLineWithComma ? "," : string.Empty;
+            var expected = $"<span>Address 1{comma}</span><span>Town{comma}</span><span>Country</span>";
+
             if (includeName)
             {
                 address.Name = "Name";
-                expected = $"{NameSpan}{expected}";
+                expected = $"<span>Name{comma}</span>{expected}";
             }
 
-            var result = AddressData.ToAccessibleDisplayString(address, includeName);
+            var result = address.ToAccessibleDisplayString(includeName, endLineWithComma);
 
             result.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ToAccessibleDisplayString_WithOptionalAddress2_ReturnsCorrectAddress(bool includeName)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public void ToAccessibleDisplayString_WithOptionalAddress2_ReturnsCorrectAddress(bool includeName, bool endLineWithComma)
         {
             var address = new AatfAddressData()
             {
@@ -46,34 +50,26 @@
                 CountryName = "Country"
             };
 
-            var expected = "<span>Address 1,</span><span>Address 2,</span><span>Town,</span><span>Country</span>";
+            var comma = endLineWithComma ? "," : string.Empty;
+            var expected = $"<span>Address 1{comma}</span><span>Address 2{comma}</span><span>Town{comma}</span><span>Country</span>";
+
             if (includeName)
             {
                 address.Name = "Name";
-                expected = $"{NameSpan}{expected}";
+                expected = $"<span>Name{comma}</span>{expected}";
             }
 
-            var result = AddressData.ToAccessibleDisplayString(address, includeName);
+            var result = address.ToAccessibleDisplayString(includeName, endLineWithComma);
 
             result.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ToAccessibleDisplayString_OperatorAddressIsNull_ReturnsNonBreakingWhiteSpace(bool includeName)
-        {
-            var expected = "&nbsp";
-
-            var result = AddressData.ToAccessibleDisplayString(null, includeName);
-
-            result.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ToAccessibleDisplayString_WithOptionalCounty_ReturnsCorrectAddress(bool includeName)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public void ToAccessibleDisplayString_WithOptionalCounty_ReturnsCorrectAddress(bool includeName, bool endLineWithComma)
         {
             var address = new AatfAddressData()
             {
@@ -83,22 +79,26 @@
                 CountryName = "Country"
             };
 
-            var expected = "<span>Address 1,</span><span>Town,</span><span>County,</span><span>Country</span>";
+            var comma = endLineWithComma ? "," : string.Empty;
+            var expected = $"<span>Address 1{comma}</span><span>Town{comma}</span><span>County{comma}</span><span>Country</span>";
+
             if (includeName)
             {
                 address.Name = "Name";
-                expected = $"{NameSpan}{expected}";
+                expected = $"<span>Name{comma}</span>{expected}";
             }
 
-            var result = AddressData.ToAccessibleDisplayString(address, includeName);
+            var result = address.ToAccessibleDisplayString(includeName, endLineWithComma);
 
             result.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ToAccessibleDisplayString_WithOptionalPostcode_ReturnsCorrectAddress(bool includeName)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public void ToAccessibleDisplayString_WithOptionalPostcode_ReturnsCorrectAddress(bool includeName, bool endLineWithComma)
         {
             var address = new AatfAddressData()
             {
@@ -108,22 +108,26 @@
                 CountryName = "Country"
             };
 
-            var expected = "<span>Address 1,</span><span>Town,</span><span>Postcode,</span><span>Country</span>";
+            var comma = endLineWithComma ? "," : string.Empty;
+            var expected = $"<span>Address 1{comma}</span><span>Town{comma}</span><span>Postcode{comma}</span><span>Country</span>";
+
             if (includeName)
             {
                 address.Name = "Name";
-                expected = $"{NameSpan}{expected}";
+                expected = $"<span>Name{comma}</span>{expected}";
             }
 
-            var result = AddressData.ToAccessibleDisplayString(address, includeName);
+            var result = address.ToAccessibleDisplayString(includeName, endLineWithComma);
 
             result.Should().Be(expected);
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ToAccessibleDisplayString_WithAllOptionalFields_ReturnsCorrectAddress(bool includeName)
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        public void ToAccessibleDisplayString_WithAllOptionalFields_ReturnsCorrectAddress(bool includeName, bool endLineWithComma)
         {
             var address = new AatfAddressData()
             {
@@ -135,14 +139,16 @@
                 CountryName = "Country"
             };
 
-            var expected = "<span>Address 1,</span><span>Address 2,</span><span>Town,</span><span>County,</span><span>Postcode,</span><span>Country</span>";
+            var comma = endLineWithComma ? "," : string.Empty;
+            var expected = $"<span>Address 1{comma}</span><span>Address 2{comma}</span><span>Town{comma}</span><span>County{comma}</span><span>Postcode{comma}</span><span>Country</span>";
+
             if (includeName)
             {
                 address.Name = "Name";
-                expected = $"{NameSpan}{expected}";
+                expected = $"<span>Name{comma}</span>{expected}";
             }
 
-            var result = AddressData.ToAccessibleDisplayString(address, includeName);
+            var result = address.ToAccessibleDisplayString(includeName, endLineWithComma);
 
             result.Should().Be(expected);
         }

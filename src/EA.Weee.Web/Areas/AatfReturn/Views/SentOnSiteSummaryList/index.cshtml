@@ -55,12 +55,12 @@
                     <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
                         <td data-label="@Resources.AatfReturn.ReturnsResources.AATFATFnameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                             <span class="prsd-long-address">
-                                @Html.Raw(AddressData.ToAccessibleDisplayString(address.SiteAddress, true))
+                                @Html.Raw(address.SiteAddress.ToAccessibleDisplayString(true, true))
                             </span>
                         </td>
                         <td data-label="@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                         <span class="prsd-long-address">
-                            @Html.Raw(AddressData.ToAccessibleDisplayString(address.OperatorAddress, true))
+                            @Html.Raw(address.OperatorAddress.ToAccessibleDisplayString(true, true))
                         </span>
                         </td>
                         <td data-label="@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
