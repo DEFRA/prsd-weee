@@ -28,7 +28,7 @@
                         <dd class="govuk-summary-list__value">
                             @Html.HiddenFor(model => model.SiteAddress)
                             <span class="prsd-long-address">
-                                @Html.Raw(AddressData.ToAccessibleDisplayString(Model.SiteAddressData, true))
+                                @Html.Raw(Model.SiteAddressData.ToAccessibleDisplayString(true, true))
                             </span>
                         </dd>
                     </div>
@@ -39,7 +39,7 @@
                         <dd class="govuk-summary-list__value">
                             @Html.HiddenFor(model => model.OperatorAddress)
                             <span class="prsd-long-address">
-                                @Html.Raw(AddressData.ToAccessibleDisplayString(Model.OperatorAddressData, true))
+                                @Html.Raw(Model.OperatorAddressData.ToAccessibleDisplayString(true, true))
                             </span>
                         </dd>
                     </div>
