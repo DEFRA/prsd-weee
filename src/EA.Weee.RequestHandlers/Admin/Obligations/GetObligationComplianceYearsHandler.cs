@@ -30,8 +30,8 @@
 
         public async Task<List<int>> HandleAsync(GetObligationComplianceYears request)
         {
-            authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalAdmin);
+            //authorization.EnsureCanAccessInternalArea();
+            //authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             Domain.UKCompetentAuthority authority = null;
             if (request.Authority.HasValue)

@@ -6,7 +6,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
 
-    [AuthorizeInternalClaims(Claims.InternalAdmin)]
+    //[AuthorizeInternalClaims(Claims.CanAccessInternalArea)]
     [ValidatePcsObligationsEnabled]
     public abstract class ObligationsBaseController : AdminBreadcrumbBaseController
     {
