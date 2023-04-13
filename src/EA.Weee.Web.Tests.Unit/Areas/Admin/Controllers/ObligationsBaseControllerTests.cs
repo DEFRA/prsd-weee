@@ -19,7 +19,7 @@
         public void Controller_IsDecoratedWith_AuthorizeInternalClaimsAttribute()
         {
             typeof(ObligationsBaseController).Should()
-                .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+                .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.CanAccessInternalArea)));
         }
 
         [Fact]
