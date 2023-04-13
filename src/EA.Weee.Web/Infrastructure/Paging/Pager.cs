@@ -105,10 +105,10 @@ namespace EA.Weee.Web.Infrastructure.Paging
 
             if (start > 1)
             {
-                model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = 1, DisplayText = "1", Url = generateUrl(1) });
+                model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = 1, DisplayText = "1", Url = generateUrl(1), DisplayTitle = GetSelectedPageTitle(1) });
                 if (start > 3)
                 {
-                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = 2, DisplayText = "2", Url = generateUrl(2) });
+                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = 2, DisplayText = "2", Url = generateUrl(2), DisplayTitle = GetSelectedPageTitle(2) });
                 }
                 if (start > 2)
                 {
@@ -120,11 +120,11 @@ namespace EA.Weee.Web.Infrastructure.Paging
             {
                 if (i == CurrentPage || (CurrentPage <= 0 && i == 1))
                 {
-                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = i, IsCurrent = true, DisplayText = i.ToString() });
+                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = i, IsCurrent = true, DisplayText = i.ToString(), DisplayTitle = GetSelectedPageTitle(i) });
                 }
                 else
                 {
-                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = i, DisplayText = i.ToString(), Url = generateUrl(i) });
+                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = i, DisplayText = i.ToString(), Url = generateUrl(i), DisplayTitle = GetSelectedPageTitle(i) });
                 }
             }
 
@@ -136,10 +136,10 @@ namespace EA.Weee.Web.Infrastructure.Paging
                 }
                 if (pageCount - 2 > end)
                 {
-                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = pageCount - 1, DisplayText = (pageCount - 1).ToString(), Url = generateUrl(pageCount - 1) });
+                    model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = pageCount - 1, DisplayText = (pageCount - 1).ToString(), Url = generateUrl(pageCount - 1), DisplayTitle = GetSelectedPageTitle(pageCount - 1) });
                 }
 
-                model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = pageCount, DisplayText = pageCount.ToString(), Url = generateUrl(pageCount) });
+                model.PaginationLinks.Add(new PaginationLink { Active = true, PageIndex = pageCount, DisplayText = pageCount.ToString(), Url = generateUrl(pageCount), DisplayTitle = GetSelectedPageTitle(pageCount) });
             }
 
             // Next page
@@ -245,6 +245,11 @@ namespace EA.Weee.Web.Infrastructure.Paging
             var virtualPathForArea = RouteTable.Routes.GetVirtualPathForArea(viewContext.RequestContext, pageLinkValueDictionary);
 
             return virtualPathForArea == null ? null : virtualPathForArea.VirtualPath;
+        }
+
+        private string GetSelectedPageTitle(int page)
+        {
+            return string.Format(this.PagerOptions.SelectPageTitle, page);
         }
     }
 }
