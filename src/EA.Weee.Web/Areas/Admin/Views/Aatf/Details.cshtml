@@ -62,7 +62,7 @@
     </ul>
 
     <div class="govuk-tabs__panel" id="aatfDetails" tabindex="0">
-        <h1 class="sr-only" tabindex="0">@Model.FacilityType.ToDisplayString() Details</h1>
+        <h1 class="sr-only" tabindex="0">tab 1 content @Model.FacilityType.ToDisplayString() Details</h1>
         <header>
             <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
                 @Model.FacilityType.ToDisplayString() details
@@ -75,14 +75,15 @@
                 <a href="@(Url.UrlFor<AatfController>(a => a.Delete(Model.Id, Model.Organisation.Id, Model.FacilityType)))">Delete  @Model.FacilityType.ToDisplayString()</a>
             </div>
         }
+
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Name of  @Model.FacilityType.ToDisplayString()</th>
+                    <th class="govuk-table__header" scope="row">Name of  @Model.FacilityType.ToDisplayString()</th>
                     <td class="govuk-table__cell" style="word-break: break-word">@Model.Name</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">@Model.AddressHeadingName</th>
+                    <th class="govuk-table__header" scope="row">@Model.AddressHeadingName</th>
                     <td class="govuk-table__cell">
                         <span class="prsd-long-address">
                             @Html.Raw(@Model.SiteAddress.ToAccessibleDisplayString(false, false))
@@ -90,47 +91,47 @@
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Approval number</th>
+                    <th class="govuk-table__header" scope="row">Approval number</th>
                     <td class="govuk-table__cell">@Model.ApprovalNumber</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Appropriate authority</th>
+                    <th class="govuk-table__header" scope="row">Appropriate authority</th>
                     <td class="govuk-table__cell">
-                        @Model.CompetentAuthority.Abbreviation <br />
+                        @Model.CompetentAuthority.Abbreviation
                     </td>
                 </tr>
                 @if (Model.HasPatArea)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">WROS Pan Area Team</th>
+                        <th class="govuk-table__header" scope="row">WROS Pan Area Team</th>
                         <td class="govuk-table__cell">
-                            @Model.PanArea.Name <br />
+                            @Model.PanArea.Name
                         </td>
                     </tr>
                 }
                 @if (Model.HasLocalArea)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">EA Area</th>
+                        <th class="govuk-table__header" scope="row">EA Area</th>
                         <td class="govuk-table__cell">
-                            @Model.LocalArea.Name <br />
+                            @Model.LocalArea.Name
                         </td>
                     </tr>
                 }
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Status</th>
+                    <th class="govuk-table__header" scope="row">Status</th>
                     <td class="govuk-table__cell">@Model.AatfStatus</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Size</th>
+                    <th class="govuk-table__header" scope="row">Size</th>
                     <td class="govuk-table__cell">@Model.Size</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Approval date</th>
+                    <th class="govuk-table__header" scope="row">Approval date</th>
                     <td class="govuk-table__cell">@Model.ApprovalDateString</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Compliance year</th>
+                    <th class="govuk-table__header" scope="row">Compliance year</th>
                     <td class="govuk-table__cell">@Model.ComplianceYear</td>
                 </tr>
             </tbody>
@@ -152,7 +153,7 @@
         }
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="data" tabindex="1">
-        <h1 class="sr-only" tabindex="0">Data</h1>
+        <h1 class="sr-only" tabindex="0">tab 2 content @Model.FacilityType.ToDisplayString() data returns</h1>
         <header>
             <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
                 @Model.FacilityType.ToDisplayString() data returns
@@ -225,7 +226,7 @@
         }
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="organisationDetails" tabindex="2">
-        <h1 class="sr-only" tabindex="0">Organisation details</h1>
+        <h1 class="sr-only" tabindex="0">tab 3 content Organisation details</h1>
         <header>
             <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
                 Organisation details
@@ -316,7 +317,7 @@
         }
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contactDetails" tabindex="3">
-        <h1 class="sr-only" tabindex="0">Contact details</h1>
+        <h1 class="sr-only" tabindex="0">tab 4 content Contact details</h1>
         <header>
             <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
                 Contact details
