@@ -21,12 +21,14 @@
 
         public MvcHtmlString CreateButtonWithEventTracking(string buttonText, string eventCategory, string eventAction, string eventLabel)
         {
-            return new MvcHtmlString(string.Format(@"<button class=""govuk-button"" data-module=""govuk-button"" onclick=""{0}"" type=""submit"" data-prevent-double-click=""true"" >{1}</button>", EventTrackingFunction(eventCategory, eventAction, eventLabel), buttonText));
+            return new MvcHtmlString(
+                $@"<button class=""govuk-button"" data-module=""govuk-button"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}"" type=""submit"" data-prevent-double-click=""true"" >{buttonText}</button>");
         }
 
         public MvcHtmlString CreateLinkButtonWithEventTracking(string buttonText, string eventCategory, string eventAction, string eventLabel)
         {
-            return new MvcHtmlString(string.Format(@"<button class=""link-submit"" data-module=""govuk-button"" onclick=""{0}"" type=""submit"" data-prevent-double-click=""true"" >{1}</button>", EventTrackingFunction(eventCategory, eventAction, eventLabel), buttonText));
+            return new MvcHtmlString(
+                $@"<button class=""link-submit"" data-module=""govuk-button"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}"" type=""submit"" data-prevent-double-click=""true"" >{buttonText}</button>");
         }
 
         public MvcHtmlString ActionLinkWithEventTracking(string linkText,
@@ -68,12 +70,21 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
+            const string newBrowserText = "This link opens in a new browser window";
+
             if (explanationText == null)
             {
                 explanationText = "This link opens in a new browser window";
             }
-
-            string link = string.Format(@"<a href=""{0}"" {1}><span class=""govuk-visually-hidden"">{2}</span>{3}</a>", url, attributes.ToString(), explanationText, linkText);
+            else
+            {
+                if (newTab)
+                {
+                    explanationText = $"{explanationText}. {newBrowserText}";
+                }
+            }
+            string link =
+                $@"<a href=""{url}"" {attributes.ToString()}><span class=""govuk-visually-hidden"">{explanationText}</span>{linkText}</a>";
 
             return new MvcHtmlString(link);
         }
