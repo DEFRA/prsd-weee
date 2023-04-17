@@ -4,10 +4,12 @@
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.PcsDetails.PcsDetailsOverviewViewModel
 <div class="govuk-!-padding-bottom-8"></div>
 
-<div class="govuk-tabs">
-   @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+@section full_main_content{
+    <div class="govuk-tabs">
+    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
-    <section class="govuk-tabs__panel" id="pcsDetails">
+    <div class="govuk-tabs__panel" id="pcsDetails">
+
         <header class="hgroup">
             <h1 class="govuk-heading-l">
                 PCS details
@@ -52,13 +54,23 @@
         </table>
         <br />
         @if (!(Model.Status == SchemeStatus.Rejected.ToString() || Model.Status == SchemeStatus.Withdrawn.ToString())
-                && Model.CanEditPcs)
+             && Model.CanEditPcs)
         {
             <p>
                 <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
             </p>
         }
-    </section>
+    </div>
 
     @Html.Partial("Overview/_OverviewAvailableActions")
 </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
+}
