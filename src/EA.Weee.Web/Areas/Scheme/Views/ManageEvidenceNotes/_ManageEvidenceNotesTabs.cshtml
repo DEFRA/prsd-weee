@@ -1,0 +1,23 @@
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ManageEvidenceNoteSchemeViewModel
+
+<ul class="govuk-tabs__list" role="tablist">
+    @this.WeeeGds().Tab("Summary",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.Summary.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "pcsEvidenceSummaryAnchor" }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.Summary, "pcsEvidenceSummaryAnchor")
+    @this.WeeeGds().Tab("Review submitted evidence",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "reviewSubmittedEvidenceAnchor" }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence, "reviewSubmittedEvidenceAnchor")
+    @this.WeeeGds().Tab("View and transfer evidence",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "viewAndTransferEvidenceAnchor" }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence, "viewAndTransferEvidenceAnchor")
+    @this.WeeeGds().Tab("Outgoing transfers",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @pcsId = Model.OrganisationId, @tab = ManageEvidenceNotesDisplayOptions.OutgoingTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "outgoingEvidenceAnchor" }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesDisplayOptions.OutgoingTransfers, "outgoingEvidenceAnchor")
+</ul>
