@@ -9,143 +9,159 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-            @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
+            @Html.Partial("~/Areas/Scheme/Views/ManageEvidenceNotes/_ManageEvidenceNotesHeader.cshtml", Model)
 
-            <section class="govuk-tabs__panel" id="pcsEvidenceSummary">
+            <div class="govuk-tabs">
 
-                <header class="hgroup">
-                    <h2 class="govuk-heading-m">
-                        @if (Model.ManageEvidenceNoteViewModel.SelectedComplianceYear > 0)
-                        {
-                            <span>Evidence summary for @Model.ManageEvidenceNoteViewModel.SelectedComplianceYear</span>
-                        }
-                        else
-                        {
-                            <span>Evidence summary</span>
-                        }
-                    </h2>
-                </header>
+                @Html.Partial("~/Areas/Scheme/Views/ManageEvidenceNotes/_ManageEvidenceNotesTabs.cshtml", Model)
 
-                <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Download summary report (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceSummaryReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
-                                                                 "Downloads",
-                                                                 "Evidence evidence transfers report (CSV)"))
-                </p>
+                <div class="govuk-tabs__panel" id="pcsEvidenceSummary">
 
-                @Html.Partial("_EvidenceNotesReportsLinks", Model)
+                    <header class="hgroup">
+                        <h2 class="govuk-heading-m">
+                            @if (Model.ManageEvidenceNoteViewModel.SelectedComplianceYear > 0)
+                            {
+                                <span>Evidence summary for @Model.ManageEvidenceNoteViewModel.SelectedComplianceYear</span>
+                            }
+                            else
+                            {
+                                <span>Evidence summary</span>
+                            }
+                        </h2>
+                    </header>
 
-                <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-7">
-                    @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence transfers report (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceTransfersReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
-                                                                 "Downloads",
-                                                                 "Evidence evidence transfers report (CSV)"))
-                </p>
+                    <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+                        @(this.WeeeGds().ActionLinkWithEventTracking("Download summary report (CSV)",
+                        null,
+                        Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceSummaryReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
+                        "Downloads",
+                        "Evidence evidence transfers report (CSV)"))
+                    </p>
 
-                @Html.Partial("_EvidenceReportHintText", new ViewDataDictionary() { new KeyValuePair<string, object>("extraHintMessage", "<br /> Reuse and non-household evidence is available in the summary report.") })
+                    @Html.Partial("_EvidenceNotesReportsLinks", Model)
 
-                <table id="evidence-summary-table" class="govuk-table">
-                    <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
-                    <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col" style="width: 10%;">
-                                Category
-                            </th>
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
-                                Obligation (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
-                                Evidence (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
-                                <div>
-                                    <span style=" white-space: nowrap ">Transferred out &nbsp;</span> <span>(tonnes) </span>
-                                </div>
-                            </th>
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
-                                Transferred in (tonnes)
-                            </th>
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
-                                Difference (tonnes)
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        @for (var i = 0; i < Model.ObligationEvidenceValues.Count; i++)
-                        {
-                            var category = Model.ObligationEvidenceValues[i];
+                    <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-7">
+                        @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence transfers report (CSV)",
+                        null,
+                        Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceTransfersReport(Model.OrganisationId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
+                        "Downloads",
+                        "Evidence evidence transfers report (CSV)"))
+                    </p>
 
-                        <tr class="govuk-table__row" id="category-row-@category.CategoryId">
-                            <td class="govuk-table__cell govuk-!-text-align-left">
-                                <div class="category">
-                                    <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
-                                </div>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric break-word">
-                                @category.Obligation
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric break-word">
-                                @category.Evidence
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric break-word">
-                                @category.TransferredOut
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric break-word">
-                                @category.TransferredIn
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric break-word">
-                                @category.Difference
-                            </td>
-                        </tr>
-                        }
+                    @Html.Partial("_EvidenceReportHintText", new ViewDataDictionary() { new KeyValuePair<string, object>("extraHintMessage", "<br /> Reuse and non-household evidence is available in the summary report.") })
 
-                        <tr class="govuk-table__row govuk-panel-grey-background">
-                            <td class="govuk-table__cell">
-                                <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="Obligation2To10Total">@Model.Obligation210Total</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="Evidence2To10Total">@Model.Evidence210Total</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body govuk-!-text-align-right break-word" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="Difference2To10Total">@Model.Difference210Total</p>
-                            </td>
-                        </tr>
+                    <table id="evidence-summary-table" class="govuk-table">
+                        <caption class="govuk-table__caption govuk-visually-hidden">Obligation evidence summary</caption>
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col" style="width: 10%;">
+                                    Category
+                                </th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
+                                    Obligation (tonnes)
+                                </th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
+                                    Evidence (tonnes)
+                                </th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
+                                    <div>
+                                        <span style=" white-space: nowrap ">Transferred out &nbsp;</span> <span>(tonnes) </span>
+                                    </div>
+                                </th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
+                                    Transferred in (tonnes)
+                                </th>
+                                <th class="govuk-table__header govuk-table__header--numeric" scope="col" style="width: 17%;">
+                                    Difference (tonnes)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            @for (var i = 0; i < Model.ObligationEvidenceValues.Count; i++)
+                            {
+                                var category = Model.ObligationEvidenceValues[i];
 
-                        <tr class="govuk-table__row govuk-panel-grey-background">
-                            <td class="govuk-table__cell">
-                                <p class="govuk-body"><strong>Total (tonnes)</strong></p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="ObligationTotal">@Model.ObligationTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="EvidenceTotal">@Model.EvidenceTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="TransferredInTotal">@Model.TransferredInTotal</p>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <p class="govuk-body break-word" id="DifferenceTotal">@Model.DifferenceTotal</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                                    <td class="govuk-table__cell govuk-!-text-align-left">
+                                        <div class="category">
+                                            <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                                        </div>
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric break-word">
+                                        @category.Obligation
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric break-word">
+                                        @category.Evidence
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric break-word">
+                                        @category.TransferredOut
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric break-word">
+                                        @category.TransferredIn
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric break-word">
+                                        @category.Difference
+                                    </td>
+                                </tr>
+                            }
 
-            </section>
+                            <tr class="govuk-table__row govuk-panel-grey-background">
+                                <td class="govuk-table__cell">
+                                    <p class="govuk-body"><strong>Category 2-10 summary</strong></p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="Obligation2To10Total">@Model.Obligation210Total</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="Evidence2To10Total">@Model.Evidence210Total</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="TransferredOut2To10Total">@Model.TransferredOut210Total</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body govuk-!-text-align-right break-word" id="TransferredIn2To10Total">@Model.TransferredIn210Total</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="Difference2To10Total">@Model.Difference210Total</p>
+                                </td>
+                            </tr>
+
+                            <tr class="govuk-table__row govuk-panel-grey-background">
+                                <td class="govuk-table__cell">
+                                    <p class="govuk-body"><strong>Total (tonnes)</strong></p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="ObligationTotal">@Model.ObligationTotal</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="EvidenceTotal">@Model.EvidenceTotal</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="TransferredOutTotal">@Model.TransferredOutTotal</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="TransferredInTotal">@Model.TransferredInTotal</p>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">
+                                    <p class="govuk-body break-word" id="DifferenceTotal">@Model.DifferenceTotal</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
         </div>
     </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
 }
