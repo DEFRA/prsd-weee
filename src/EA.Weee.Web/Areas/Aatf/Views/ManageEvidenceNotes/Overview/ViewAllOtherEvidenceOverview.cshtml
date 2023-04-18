@@ -10,11 +10,14 @@
 @section full_main_content{
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
+
+            @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeader.cshtml", Model)
+
             <div class="govuk-tabs">
 
-                @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
+                @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesTabs.cshtml", Model)
 
-                <section class="govuk-tabs__panel" id="allOtherNotes">
+                <div class="govuk-tabs__panel" id="allOtherNotes">
 
                     <header class="hgroup">
                         <h2 class="govuk-heading-m">
@@ -128,7 +131,7 @@
                                 <tr>
                                     <td colspan="6">
                                         @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary()
-                                   { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes </p>") })
+                                        { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes </p>") })
                                     </td>
                                 </tr>
                                 <tr>
@@ -143,7 +146,7 @@
                     <br />
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                            {
+                                        {
                             {
                                 "pagerRouteValues", new
                                 {
@@ -163,8 +166,17 @@
                             }
                         });
                     }
-                </section>
+                </div>
             </div>
         </div>
     </div>
+
+}
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
 }
