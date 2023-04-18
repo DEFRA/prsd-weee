@@ -1,0 +1,28 @@
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Aatf.ViewModels
+
+<ul class="govuk-tabs__list" role="tablist">
+
+    @this.WeeeGds().Tab("Evidence summary",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, @tab = ManageEvidenceOverviewDisplayOption.EvidenceSummary.ToDisplayString(),
+                @aatfId = Model.ManageEvidenceNoteViewModel.AatfId, @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "evidenceSummaryAnchor"
+            }),
+        Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EvidenceSummary, "evidenceSummaryAnchor")
+
+    @this.WeeeGds().Tab("Edit draft and returned notes",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, @tab = ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes.ToDisplayString(),
+                @aatfId = Model.ManageEvidenceNoteViewModel.AatfId, @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "editDraftReturnedNotesAnchor"
+            }),
+        Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes, "editDraftReturnedNotesAnchor")
+
+    @this.WeeeGds().Tab("View all other evidence notes",
+        Url.Action("Index", "ManageEvidenceNotes",
+            new { @organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, @tab = ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes.ToDisplayString(),
+                @aatfId = Model.ManageEvidenceNoteViewModel.AatfId, @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "viewAllOtherEvidenceNotesAnchor"
+            }),
+        Model.ActiveOverviewDisplayOption == ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes, "viewAllOtherEvidenceNotesAnchor")
+
+</ul>

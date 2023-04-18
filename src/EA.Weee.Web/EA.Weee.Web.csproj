@@ -909,12 +909,12 @@
     </Content>
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\EditDraftReturnedNotesOverview.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_CreateEvidenceNotePartial.cshtml" />
-    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_ManageEvidenceNotesOverviewHeader.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\EditEvidenceNote.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\_EditEvidenceNotePartial.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewSubmittedEvidence.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesAvailableActions.cshtml" />
-    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeaderAndTabs.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeader.cshtml" />
     <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\ViewAllOtherEvidenceOverview.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ReviewEvidenceNote.cshtml" />
     <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\ViewAndTransferEvidence.cshtml" />
@@ -938,7 +938,7 @@
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditDraftTransfer.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\SubmittedTransfer.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\ViewAllEvidenceNotes.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ManageEvidenceNotesTabs.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ManageEvidenceNotesHeader.cshtml" />
     <Content Include="Areas\Scheme\Views\OutgoingTransfers\EditTransferFrom.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_TransferSummaryPartial.cshtml" />
     <Content Include="Areas\Scheme\Views\Shared\_TransferFromSummaryPartial.cshtml" />
@@ -1011,6 +1011,9 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Areas\AatfReturn\Views\Shared\_SummaryReportingPeriodPartial.cshtml" />
+    <Content Include="Areas\Scheme\Views\ManageEvidenceNotes\_ManageEvidenceNotesTabs.cshtml" />
+    <Content Include="Areas\Aatf\Views\ManageEvidenceNotes\Overview\_ManageEvidenceNotesTabs.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_ManageEvidenceNotesTabs.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -1764,6 +1767,7 @@
     <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\RenderInitialiseTabsSnippet.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
