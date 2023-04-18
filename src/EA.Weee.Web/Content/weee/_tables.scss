@@ -141,6 +141,7 @@
             padding-left: 50%;
             min-height: 20px;
             text-align: right;
+            padding-right: 0;
         }
 
         .prsd-table-small-collapse-cell:before {
@@ -153,8 +154,18 @@
             padding: 10px 20px 10px 0;
             text-align: left;
         }
+
+        .prsd-table-small-collapse-cell-align-right > a {
+            float: right;
+        }
     }
 
+
+    @media only screen and (max-width: 360px){
+        .prsd-table-small-collapse-cell {
+            padding-top: 15%;
+        }
+    }
     .weee-tonnage-right-aligned-display {
         text-align: right;
         padding-left: 1em !important;
