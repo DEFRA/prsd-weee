@@ -64,8 +64,8 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body prsd-table-small-collapse">
-            <tr class="govuk-table__row task-list-row prsd-table-small-collapse">
-                <td data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__bottom--none collapsible-padding-right">
+            <tr class="govuk-table__row task-list-row prsd-table-small-collapse collapsible-padding-right">
+                <td data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__bottom--none">
                     <span class="summary-paragraph">
                         @Resources.AatfReturn.ReturnsResources.ReceivedOnBehalfOfPcs
                     </span>
@@ -111,8 +111,8 @@
 
             @if (item.SchemeData.Count > 0)
             {
-                <tr>
-                    <td colspan="@fullColSpan">
+                <tr class="prsd-table-small-collapse">
+                    <td colspan="@fullColSpan" class="prsd-table-small-collapse">
                         <details class="govuk-details collapsible-font-size" data-module="govuk-details" aria-live="polite" role="group">
                             <summary id="details-@item.Aatf.Id" class="govuk-details__summary" aria-controls="details-content-@count" aria-expanded="false">
                                 <span class="govuk-details__summary-text">
@@ -153,7 +153,7 @@
                                                 </td>
                                                 @if (isCheckReturn)
                                                 {
-                                                    <td class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-!-text-align-centre">
+                                                    <td class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-!-text-align-centre prsd-table-small-collapse-cell-align-right">
                                                         @(this.WeeeGds().ActionLinkWithEventTracking(@Resources.AatfReturn.ReturnsResources.Change,
                                                             "change received for treatment relating to scheme " + pcsdata.Scheme.SchemeName,
                                                             Url.RouteUrl(AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, schemeId = pcsdata.Scheme.Id, aatfId = item.Aatf.Id, action = "Index", controller = "ObligatedReceived" }),
@@ -174,7 +174,7 @@
                 </tr>
             }
 
-        <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+        <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse collapsible-padding-right">
             <td data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell govuk-table__cell__border-top--thick aatf-task-list-mobile-border">
                 @Resources.AatfReturn.ReturnsResources.SentToAnotherAatf
             </td>
@@ -220,7 +220,7 @@
                 }
             </tr>
 
-            <tr data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+            <tr data-label="@Resources.AatfReturn.ReturnsResources.ReportingOn" class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse collapsible-padding-right">
                 <td class="govuk-table__cell task-list-title-cell prsd-table-small-collapse prsd-table-small-collapse-cell">
                     <span class="summary-paragraph">
                         @Resources.AatfReturn.ReturnsResources.ReusedAsWholeAppliance
