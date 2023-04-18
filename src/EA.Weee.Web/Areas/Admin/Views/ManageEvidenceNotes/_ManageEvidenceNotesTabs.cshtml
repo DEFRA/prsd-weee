@@ -1,35 +1,19 @@
-﻿@using EA.Weee.Core.Helpers
+﻿
+@using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes
 @using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.Admin.ViewModels.Shared
-@using EA.Weee.Web.Areas.Admin.Controllers
 
 @model ManageEvidenceNotesViewModel
-@{
-    var title = "Manage evidence notes";
-    ViewBag.Title = title + " - GOV.UK";
-}
 
-@(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.Index())))
-
-<header class="hgroup">
-    <h1 class="govuk-heading-l">
-        @title
-    </h1>
-</header>
-
-@{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }});}
-
-
-<ul class="govuk-tabs__list govuk-!-padding-top-5">
+<ul class="govuk-tabs__list govuk-!-padding-top-5" role="tablist">
     @this.WeeeGds().Tab("View all evidence notes",
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
-        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes, "viewAllEvidenceNotes")
+            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "viewAllEvidenceNotesAnchor" }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes, "viewAllEvidenceNotesAnchor")
 
     @this.WeeeGds().Tab("View all evidence transfers",
         Url.Action("Index", "ManageEvidenceNotes",
-            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }),
-        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers, "viewAllEvidenceTransfers")
+            new { @tab = ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers.ToDisplayString(), @selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, @clickedTab = "viewAllEvidenceTransfersAnchor" }),
+        Model.ActiveDisplayOption == ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers, "viewAllEvidenceTransfersAnchor")
 </ul>
