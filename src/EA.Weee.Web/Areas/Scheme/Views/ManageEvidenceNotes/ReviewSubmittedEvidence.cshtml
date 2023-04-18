@@ -4,9 +4,22 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
+            @Html.Partial("~/Areas/Scheme/Views/ManageEvidenceNotes/_ManageEvidenceNotesHeader.cshtml", Model)
 
-            @Html.Partial("_ReviewSubmittedEvidencePartial", Model)
+            <div class="govuk-tabs">
+                @Html.Partial("~/Areas/Scheme/Views/ManageEvidenceNotes/_ManageEvidenceNotesTabs.cshtml", Model)
+
+                @Html.Partial("_ReviewSubmittedEvidencePartial", Model)
+            </div>
         </div>
     </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
 }

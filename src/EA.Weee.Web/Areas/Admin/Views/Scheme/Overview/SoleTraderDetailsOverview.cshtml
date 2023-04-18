@@ -1,21 +1,22 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.OrganisationDetails.SoleTraderDetailsOverviewViewModel
-<div class="govuk-!-padding-bottom-8"></div>
-<div class="govuk-tabs">
-    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+@section full_main_content{
+    <div class="govuk-!-padding-bottom-8"></div>
+    <div class="govuk-tabs">
+        @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
-    <section class="govuk-tabs__panel" id="organisationDetails">
-        <h1 class="govuk-heading-l">
-            Organisation details
-        </h1>
-        <table id="pcs-details-table" class="govuk-table">
-            <thead class="govuk-table__head">
+        <div class="govuk-tabs__panel" id="organisationDetails">
+            <h1 class="govuk-heading-l">
+                Organisation details
+            </h1>
+            <table id="pcs-details-table" class="govuk-table">
+                <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
                     <th colspan="2">Organisation details</th>
                 </tr>
-            </thead>
-            <tbody class="govuk-table__body">
+                </thead>
+                <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Organisation type</th>
                     <td class="govuk-table__cell">Sole trader or individual</td>
@@ -31,12 +32,14 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Address</th>
                     <td class="govuk-table__cell">
-                        @Model.Address.Address.Address1<br />
-                        @Model.Address.Address.Address2<br />
-                        @Model.Address.Address.TownOrCity<br />
-                        @Model.Address.Address.CountyOrRegion<br />
-                        @Model.Address.Address.Postcode<br />
-                        @Model.Address.Address.CountryName<br />
+                        <span class="prsd-long-address">
+                            <span>@Model.Address.Address.Address1</span>
+                            <span>@Model.Address.Address.Address2</span>
+                            <span>@Model.Address.Address.TownOrCity</span>
+                            <span>@Model.Address.Address.CountyOrRegion</span>
+                            <span>@Model.Address.Address.Postcode</span>
+                            <span>@Model.Address.Address.CountryName</span>
+                        </span>
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -49,15 +52,24 @@
                 </tr>
 
                 @Html.Partial("_OrganisationRelatedEntities", Model.AssociatedEntities)
-            </tbody>
-        </table>
-        @if (Model.CanEditOrganisation)
-        {
-            <br />
-            <p>
-                <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null, null)))">Edit organisation details</a>
-            </p>
-        }
-    </section>
-    @Html.Partial("Overview/_OverviewAvailableActions")
-</div>
+                </tbody>
+            </table>
+            @if (Model.CanEditOrganisation)
+            {
+                <br/>
+                <p>
+                    <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditSoleTraderOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null, null)))">Edit organisation details</a>
+                </p>
+            }
+        </div>
+        @Html.Partial("Overview/_OverviewAvailableActions")
+    </div>
+}
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
+}

@@ -11,112 +11,137 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Html.Partial("_ManageEvidenceNotesHeaderAndTabs", Model)
+            @Html.Partial("~/Areas/Scheme/Views/ManageEvidenceNotes/_ManageEvidenceNotesHeader.cshtml", Model)
 
-            <section class="govuk-tabs__panel" id="pcsDetails">
-                <h2 class="govuk-heading-m">
-                    View evidence that has been transferred
-                </h2>
+            <div class="govuk-tabs">
 
-                @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
-                {
-                    @Html.Gds().ValidationSummary()
-                    @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
-                    @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
-                    <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-                        <div class="govuk-grid-row govuk-!-padding-left-3">
-                            <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
-                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
-                            </div>
-                        </div>
-                        
-                        <div class="govuk-grid-row govuk-!-padding-left-3">
-                            <div class="govuk-grid-column-full">
-                                <span class="govuk-label--s">
-                                    Filter by
-                                </span>
-                            </div>
-                        </div>
+                @Html.Partial("~/Areas/Scheme/Views/ManageEvidenceNotes/_ManageEvidenceNotesTabs.cshtml", Model)
 
-                        <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                            <div class="govuk-grid-column-one-quarter-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
-                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientStatusFiltersViewModel")
+                <div class="govuk-tabs__panel" id="outgoingEvidence">
+                    <h2 class="govuk-heading-m">
+                        View evidence that has been transferred
+                    </h2>
+
+                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
+                    {
+                        @Html.Gds().ValidationSummary()
+                        @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
+                        @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
+                        <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+                            <div class="govuk-grid-row govuk-!-padding-left-3">
+                                <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                                </div>
                             </div>
-                            <div class="govuk-grid-column-three-quarters-from-desktop govuk-!-padding-top-6">
-                                @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                    new ViewDataDictionary() { new KeyValuePair<string, object>("tab",
-                                        Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)) })
+
+                            <div class="govuk-grid-row govuk-!-padding-left-3">
+                                <div class="govuk-grid-column-full">
+                                    <span class="govuk-label--s">
+                                        Filter by
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                }
-                <table id="outgoing-transfers-notes-table" class="govuk-table">
-                    <caption class="govuk-table__caption govuk-visually-hidden">View evidence that has been transferred to another PCS</caption>
-                    <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header govuk-!-text-align-left" scope="col">
-                                Reference ID
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-left" scope="col">
-                                Submitted date
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-left" scope="col">
-                                Recipient
-                            </th>
-                            <th class="govuk-table__header govuk-!-text-align-left" scope="col">
-                                Status
-                            </th>
-                            <th class="govuk-table__header" style="width: 5%">
-                                @Html.Gds().VisuallyHidden("actions")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        @if (Model.EvidenceNotesDataList.Any())
-                        {
-                            foreach (var note in Model.EvidenceNotesDataList)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                                    <td class="govuk-table__cell">@note.SubmittedDateDisplay</td>
-                                    <td class="govuk-table__cell">@note.Recipient</td>
-                                    <td class="govuk-table__cell">@note.Status</td>
-                                    <td class="govuk-table__cell">
-                                        @Html.NavigationRouteLink("View", "View transfer note with reference " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
-                                        @if (note.DisplayEditLink)
+
+                            <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                                <div class="govuk-grid-column-one-quarter-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientStatusFiltersViewModel")
+                                </div>
+                                <div class="govuk-grid-column-three-quarters-from-desktop govuk-!-padding-top-6">
+                                    @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                                        new ViewDataDictionary()
                                         {
-                                            @Html.NavigationRouteLink("Edit", "Edit transfer note with reference " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
-                                        }
+                                            new KeyValuePair<string, object>("tab",
+                                                Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))
+                                        })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <table id="outgoing-transfers-notes-table" class="govuk-table">
+                        <caption class="govuk-table__caption govuk-visually-hidden">View evidence that has been transferred to another PCS</caption>
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header govuk-!-text-align-left" scope="col">
+                                    Reference ID
+                                </th>
+                                <th class="govuk-table__header govuk-!-text-align-left" scope="col">
+                                    Submitted date
+                                </th>
+                                <th class="govuk-table__header govuk-!-text-align-left" scope="col">
+                                    Recipient
+                                </th>
+                                <th class="govuk-table__header govuk-!-text-align-left" scope="col">
+                                    Status
+                                </th>
+                                <th class="govuk-table__header" style="width: 5%">
+                                    @Html.Gds().VisuallyHidden("actions")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            @if (Model.EvidenceNotesDataList.Any())
+                            {
+                                foreach (var note in Model.EvidenceNotesDataList)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                                        <td class="govuk-table__cell">@note.SubmittedDateDisplay</td>
+                                        <td class="govuk-table__cell">@note.Recipient</td>
+                                        <td class="govuk-table__cell">@note.Status</td>
+                                        <td class="govuk-table__cell">
+                                            @Html.NavigationRouteLink("View", "View transfer note with reference " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                            @if (note.DisplayEditLink)
+                                            {
+                                                @Html.NavigationRouteLink("Edit", "Edit transfer note with reference " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6">
+                                        @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary()
+                                        { new KeyValuePair<string, object>("no-results-message", "<p>There have not been any evidence note transfers </p>") })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <p> Showing 0 - 0 of 0 </p>
                                     </td>
                                 </tr>
                             }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="6">
-                                    @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary()
-                                                                                               { new KeyValuePair<string, object>("no-results-message", "<p>There have not been any evidence note transfers </p>") })
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <p> Showing 0 - 0 of 0 </p>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <br />
-                @{
-                    Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                            { { "pagerRouteValues", new { tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
-                         manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                         manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
-                         Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null} } });
-                }
+                        </tbody>
+                    </table>
+                    <br />
+                    @{
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
+                                        {
+                            {
+                                "pagerRouteValues", new
+                                {
+                                    tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
+                                    manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
+                                        Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null
+                                }
+                            }
+                        });
+                    }
 
-            </section>
+                </div>
+
+            </div>
         </div>
     </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
 }
