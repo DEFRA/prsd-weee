@@ -1767,7 +1767,6 @@
     <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
-    <Content Include="Views\Shared\RenderInitialiseTabsSnippet.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
