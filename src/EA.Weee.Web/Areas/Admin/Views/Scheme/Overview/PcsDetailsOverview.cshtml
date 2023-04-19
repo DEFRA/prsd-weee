@@ -6,64 +6,59 @@
 
 @section full_main_content{
     <div class="govuk-tabs">
-    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+        @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
-    <div class="govuk-tabs__panel" id="pcsDetails">
+        <div class="govuk-tabs__panel" id="pcsDetails">
+            <h1 class="sr-only" tabindex="0">tab 1 content PCS details</h1>
+            <header>
+                <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
+                    PCS details
+                </h1>
+            </header>
 
-        <header class="hgroup">
-            <h1 class="govuk-heading-l">
-                PCS details
-            </h1>
-        </header>
+            <table id="pcs-details-table" class="govuk-table">
+                <tbody class="govuk-table__body">
+                    @if (!Model.IsRejected)
+                    {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">PCS name</th>
+                            <td class="govuk-table__cell">@Model.SchemeName</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Approval number</th>
+                            <td class="govuk-table__cell">@Model.ApprovalNumber</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Billing reference</th>
+                            <td class="govuk-table__cell">@Model.BillingReference</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Obligation type</th>
+                            <td class="govuk-table__cell">@Model.ObligationType</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Appropriate Authority</th>
+                            <td class="govuk-table__cell">@Model.AppropriateAuthority</td>
+                        </tr>
+                    }
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Status</th>
+                        <td class="govuk-table__cell">@Model.Status</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            @if (!(Model.Status == SchemeStatus.Rejected.ToString() || Model.Status == SchemeStatus.Withdrawn.ToString())
+                 && Model.CanEditPcs)
+            {
+                <p>
+                    <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
+                </p>
+            }
+        </div>
 
-        <table id="pcs-details-table" class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="2">PCS Details</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                @if (!Model.IsRejected)
-                {
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">PCS name</th>
-                        <td class="govuk-table__cell">@Model.SchemeName</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Approval number</th>
-                        <td class="govuk-table__cell">@Model.ApprovalNumber</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Billing reference</th>
-                        <td class="govuk-table__cell">@Model.BillingReference</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Obligation type</th>
-                        <td class="govuk-table__cell">@Model.ObligationType</td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Appropriate Authority</th>
-                        <td class="govuk-table__cell">@Model.AppropriateAuthority</td>
-                    </tr>
-                }
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Status</th>
-                    <td class="govuk-table__cell">@Model.Status</td>
-                </tr>
-            </tbody>
-        </table>
-        <br />
-        @if (!(Model.Status == SchemeStatus.Rejected.ToString() || Model.Status == SchemeStatus.Withdrawn.ToString())
-             && Model.CanEditPcs)
-        {
-            <p>
-                <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
-            </p>
-        }
+        @Html.Partial("Overview/_OverviewAvailableActions")
     </div>
-
-    @Html.Partial("Overview/_OverviewAvailableActions")
-</div>
 }
 
 @section scripts {

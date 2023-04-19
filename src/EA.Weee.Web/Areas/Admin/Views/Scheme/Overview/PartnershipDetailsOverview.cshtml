@@ -9,53 +9,52 @@
         @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
         <div class="govuk-tabs__panel" id="organisationDetails">
-            <h1 class="govuk-heading-l">
-                Organisation details
-            </h1>
-            <table id="pcs-details-table" class="govuk-table">
-                <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="2">Organisation details</th>
-                </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Organisation type</th>
-                    <td class="govuk-table__cell">Partnership</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Business trading name</th>
-                    <td class="govuk-table__cell">@Model.BusinessTradingName</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell">
-                        <span class="prsd-long-address">
-                            <span>@Model.Address.Address.Address1</span>
-                            <span>@Model.Address.Address.Address2</span>
-                            <span>@Model.Address.Address.TownOrCity</span>
-                            <span>@Model.Address.Address.CountyOrRegion</span>
-                            <span>@Model.Address.Address.Postcode</span>
-                            <span>@Model.Address.Address.CountryName</span>
-                        </span>
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Telephone</th>
-                    <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Email address</th>
-                    <td class="govuk-table__cell">@Model.Address.Address.Email</td>
-                </tr>
+            <h1 class="sr-only" tabindex="0">tab 3 content Organisation details</h1>
+            <header>
+                <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
+                    Organisation details
+                </h1>
+            </header>
 
-                @Html.Partial("_OrganisationRelatedEntities", Model.AssociatedEntities)
+            <table id="pcs-details-table" class="govuk-table">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Organisation type</th>
+                        <td class="govuk-table__cell">Partnership</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Business trading name</th>
+                        <td class="govuk-table__cell">@Model.BusinessTradingName</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Address</th>
+                        <td class="govuk-table__cell">
+                            <span class="prsd-long-address">
+                                <span>@Model.Address.Address.Address1</span>
+                                <span>@Model.Address.Address.Address2</span>
+                                <span>@Model.Address.Address.TownOrCity</span>
+                                <span>@Model.Address.Address.CountyOrRegion</span>
+                                <span>@Model.Address.Address.Postcode</span>
+                                <span>@Model.Address.Address.CountryName</span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Telephone</th>
+                        <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Email address</th>
+                        <td class="govuk-table__cell">@Model.Address.Address.Email</td>
+                    </tr>
+
+                    @Html.Partial("_OrganisationRelatedEntities", Model.AssociatedEntities)
                 </tbody>
             </table>
 
             @if (Model.CanEditOrganisation)
             {
-                <br/>
+                <br />
                 <p>
                     <a href="@(Url.UrlFor<EditOrganisationController>(a => a.EditPartnershipOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId, null, null)))">Edit organisation details</a>
                 </p>
@@ -65,11 +64,11 @@
     </div>
 }
 
-    @section scripts {
-        <script type="text/javascript">
+@section scripts {
+    <script type="text/javascript">
 
-            $(document).ready(function () {
-                initialiseTabs();
-            });
-        </script>
-    }
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
+}
