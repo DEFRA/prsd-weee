@@ -448,7 +448,7 @@ function initialiseTabs() {
 
         if (nextIndex >= 0 && nextIndex < tabListItems.length) {
             var nextTab = tabListItems[nextIndex];
-            nextTab.querySelector('.govuk-tabs__tab').click();
+            nextTab.querySelector('a').click();
         }
     };
 
