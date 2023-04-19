@@ -235,7 +235,7 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Organisation type</th>
+                    <th class="govuk-table__header" scope="row">Organisation type</th>
                     <td class="govuk-table__cell">
                         @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                         {
@@ -254,30 +254,30 @@
                 @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Company name</th>
+                        <th class="govuk-table__header" scope="row">Company name</th>
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
                 else if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Sole trader / individual name</th>
+                        <th class="govuk-table__header" scope="row">Sole trader / individual name</th>
                         <td class="govuk-table__cell">@Model.Organisation.Name</td>
                     </tr>
                 }
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Business trading name</th>
+                    <th class="govuk-table__header" scope="row">Business trading name</th>
                     <td class="govuk-table__cell">@Model.Organisation.TradingName</td>
                 </tr>
                 @if (Model.Organisation.OrganisationType == EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany)
                 {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Company registration number (CRN)</th>
+                        <th class="govuk-table__header" scope="row">Company registration number (CRN)</th>
                         <td class="govuk-table__cell">@Model.Organisation.CompanyRegistrationNumber</td>
                     </tr>
                 }
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Address</th>
+                    <th class="govuk-table__header" scope="row">Address</th>
                     <td class="govuk-table__cell">
                         <span class="prsd-long-address">
                             @Html.Raw(Model.OrganisationAddressData.ToAccessibleDisplayString(false, false))
@@ -285,11 +285,11 @@
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <th class="govuk-table__header" scope="row">Telephone</th>
                     <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Telephone</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Email address</th>
+                    <th class="govuk-table__header" scope="row">Email address</th>
                     <td class="govuk-table__cell">@Model.Organisation.BusinessAddress.Email</td>
                 </tr>
 
@@ -328,15 +328,15 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Name</th>
+                    <th class="govuk-table__header" scope="row">Name</th>
                     <td class="govuk-table__cell">@(Model.ContactData.FirstName + " " + Model.ContactData.LastName)</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Position</th>
+                    <th class="govuk-table__header" scope="row">Position</th>
                     <td class="govuk-table__cell">@Model.ContactData.Position</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Address</th>
+                    <th class="govuk-table__header" scope="row">Address</th>
                     <td class="govuk-table__cell">
                         <span class="prsd-long-address">
                             @Html.Raw(Model.ContactData.AddressData.ToAccessibleDisplayString(false, false))
@@ -344,11 +344,11 @@
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Telephone</th>
+                    <th class="govuk-table__header" scope="row">Telephone</th>
                     <td class="govuk-table__cell">@Model.ContactData.Telephone</td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Email</th>
+                    <th class="govuk-table__header" scope="row">Email</th>
                     <td class="govuk-table__cell">@Model.ContactData.Email</td>
                 </tr>
             </tbody>
