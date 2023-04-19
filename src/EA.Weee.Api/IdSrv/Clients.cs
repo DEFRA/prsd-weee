@@ -25,6 +25,7 @@
                     ClientId = clientId,
                     Enabled = true,
                     AccessTokenType = AccessTokenType.Reference,
+                    AllowAccessToAllCustomGrantTypes = true,
                     Flow = Flows.ResourceOwner,
                     ClientSecrets = new List<Secret>
                     {
@@ -32,7 +33,10 @@
                     },
                     AccessTokenLifetime = 10805, // 3 hour,
                     AllowAccessToAllScopes = true,
-                    AllowClientCredentialsOnly = true
+                    //AllowClientCredentialsOnly = true,
+                    AllowedCustomGrantTypes = new List<string> { "refresh_token" },
+                    //RefreshTokenUsage = TokenUsage.ReUse,
+                    RefreshTokenExpiration = TokenExpiration.Sliding,
                 },
                 new Client
                 {

@@ -5,25 +5,24 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Api
 {
-    using System.Linq;
+    using System.Configuration;
     using System.Net;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Web;
+    using System.Web.Http;
+    using System.Web.Http.ExceptionHandling;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Elmah.Contrib.WebApi;
     using IdentityServer3.AccessTokenValidation;
     using IdentityServer3.Core.Configuration;
-    using IdentityServer3.Core.Logging;
     using IdSrv;
+    using Infrastructure.Infrastructure;
     using Microsoft.Owin.Security.DataProtection;
     using Newtonsoft.Json.Serialization;
     using Owin;
     using Serilog;
     using Services;
-    using System.Web;
-    using System.Web.Http;
-    using System.Web.Http.ExceptionHandling;
-    using System.Web.Http.Filters;
-    using Infrastructure.Infrastructure;
     using LoggerConfigurationExtensions = Logging.LoggerConfigurationExtensions;
 
     public class Startup
@@ -87,14 +86,43 @@ namespace EA.Weee.Api
             return new IdentityServerOptions
             {
                 Factory = factory,
-                RequireSsl = false,
+                RequireSsl = true,
                 EnableWelcomePage = false,
                 EventsOptions = new EventsOptions()
                 {
                     RaiseSuccessEvents = true,
                     RaiseFailureEvents = true,
                 },
+                SigningCertificate = LoadSigningCertificate("6d240a2a1ce9ebd62f623ff82a290733591c6882")
             };
+        }
+
+        /// <summary>
+        /// Loads the signing certificate from the (Current User) Azure/Windows Certificate Store.
+        /// </summary>
+        /// <param name="thumbPrint">The thumbprint of the certificate to load</param>
+        /// <returns>The loaded certificate object</returns>
+        private static X509Certificate2 LoadSigningCertificate(string thumbPrint)
+        {
+            var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+
+            try
+            {
+                store.Open(OpenFlags.ReadOnly);
+
+                X509Certificate2Collection certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, thumbPrint, validOnly: false);
+
+                if (certCollection == null || certCollection.Count == 0)
+                {
+                    throw new ConfigurationErrorsException("No certificate found containing the specified thumbprint.");
+                }
+
+                return certCollection[0];
+            }
+            finally
+            {
+                store.Close();
+            }
         }
     }
 }

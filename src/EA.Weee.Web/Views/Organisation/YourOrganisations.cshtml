@@ -36,7 +36,17 @@
                 <a class="govuk-link" href="@Url.Action("Search", "OrganisationRegistration")">Access another organisation</a>
             </div>
     }
+    
+    @using (Html.BeginForm("Refresh", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @(this.WeeeGds().Submit("Refresh"))
+    }
 }
+
+
 
 @{
     // It's ok if the ViewBag property isn't defined here. The partial view can load the
