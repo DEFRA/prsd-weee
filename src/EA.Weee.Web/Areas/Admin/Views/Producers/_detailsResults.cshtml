@@ -8,50 +8,49 @@
 
 @foreach (var scheme in Model.Schemes)
 {
-    <div class="govuk-tabs" data-module="govuk-tabs">
-        <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" id="@(scheme.ObligationType)-registration-details-tab">
-            <a class="govuk-tabs__tab" href="#registration-details">Overview</a>
+    <div class="govuk-tabs">
+        <ul class="govuk-tabs__list" role="tablist">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+            <a class="govuk-tabs__tab" href="#registration-details" id="@(scheme.ObligationType)-registration-details-tab" role="tab">Overview</a>
         </li>
 
-        <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-contact-details-tab">
-            <a class="govuk-tabs__tab" href="#contact-details">Contact details</a>
+        <li class="govuk-tabs__list-item" role="presentation">
+            <a class="govuk-tabs__tab" href="#contact-details" id="@(scheme.ObligationType)-contact-details-tab" role="tab">Contact details</a>
         </li>
 
-        <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-total-eee-details-tab" >
-            <a class="govuk-tabs__tab" href="#eee-details">Total EEE</a>
-        </li>
-
+            <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab" href="#eee-details" id="@(scheme.ObligationType)-total-eee-details-tab" role="tab">Total EEE</a>
+            </li>
         @if (scheme.ProducerEeeDetails.Q1EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q1-details-tab">
-                <a class="govuk-tabs__tab" href="#q1-details">Q1</a>
+            <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab" href="#q1-details" id="@(scheme.ObligationType)-q1-details-tab"role="tab">Q1</a>
             </li>
         }
 
         @if (scheme.ProducerEeeDetails.Q2EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q2-details-tab">
-                <a class="govuk-tabs__tab" href="#q2-details">Q2</a>
+            <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab" href="#q2-details" id="@(scheme.ObligationType)-q2-details-tab" role="tab">Q2</a>
             </li>
         }
 
         @if (scheme.ProducerEeeDetails.Q3EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q3-details-tab">
-                <a class="govuk-tabs__tab" href="#q3-details">Q3</a>
+            <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab" href="#q3-details" id="@(scheme.ObligationType)-q3-details-tab" role="tab">Q3</a>
             </li>
         }
 
         @if (scheme.ProducerEeeDetails.Q4EEE.Any())
         {
-            <li class="govuk-tabs__list-item" id="@(scheme.ObligationType)-q4-details-tab">
-                <a class="govuk-tabs__tab" href="#q4-details">Q4</a>
+            <li class="govuk-tabs__list-item" role="presentation">
+                <a class="govuk-tabs__tab" href="#q4-details" id="@(scheme.ObligationType)-q4-details-tab" role="tab">Q4</a>
             </li>
         }
     </ul>
 
-    <section class="govuk-tabs__panel" id="registration-details">
+    <div class="govuk-tabs__panel" id="registration-details">
         <table id="@(scheme.ObligationType)-registration-details-table" class="govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
@@ -113,8 +112,8 @@
                 }
             </tbody>
         </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contact-details">
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contact-details">
         <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden govuk-table" >
             <thead class="govuk-table__head">
                 <tr class="visually-hidden">
@@ -145,9 +144,9 @@
                 </tr>
             </tbody>
         </table>
-    </section>
+    </div>
 
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="eee-details">
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="eee-details">
         <table id="@(scheme.ObligationType)-total-eee-details-table" class="visually-hidden govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
@@ -232,8 +231,8 @@
                 </tr>
             </tbody>
         </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q1-details">
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q1-details">
         <table id="@(scheme.ObligationType)-q1-details-table" class="visually-hidden govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
@@ -318,8 +317,8 @@
                 </tr>
             </tbody>
         </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q2-details">
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q2-details">
         <table id="@(scheme.ObligationType)-q2-details-table" class="visually-hidden govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
@@ -404,8 +403,8 @@
                 </tr>
             </tbody>
         </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q3-details">
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q3-details">
         <table id="@(scheme.ObligationType)-q3-details-table" class="visually-hidden govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
@@ -490,8 +489,8 @@
                 </tr>
             </tbody>
         </table>
-    </section>
-    <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q4-details">
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="q4-details">
         <table id="@(scheme.ObligationType)-q4-details-table" class="visually-hidden govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-visually-hidden">
@@ -576,16 +575,16 @@
                 </tr>
             </tbody>
         </table>
-    </section>
+    </div>
 </div>
 }
 <script type="text/javascript">
-    $("li[id$='details-tab']").click(function (event) {
+    $("a[id$='details-tab']").click(function(event) {
         event.preventDefault();
 
-        var sectionId = $(this).children('a').attr('href').replace('#', '');
+        var sectionId = $(this).attr('href').replace('#', '');
 
-        $("section[id$='details']").each(function () {
+        $("div[id$='details']").each(function() {
             if ($(this).attr('id') !== sectionId) {
                 $(this).addClass('govuk-tabs__panel--hidden');
             } else {
@@ -604,19 +603,19 @@
             .replace('-details-tab', '');
 
         // Inactivate scheme tags
-        $("li[id$='details-tab']").each(function () {
+        $("a[id$='details-tab']").each(function() {
             if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
-                $(this).removeClass('govuk-tabs__list-item--selected');
+                $(this).parent().removeClass('govuk-tabs__list-item--selected');
             }
         });
 
         // Except this tab
-        $(this).addClass('govuk-tabs__list-item--selected');
+        $(this).parent().addClass('govuk-tabs__list-item--selected');
 
         var tableIdentifier = $(this).attr('id').replace('details-tab', '');
 
         // Hide all data tables in scheme
-        $("table[id$='details-table']").each(function () {
+        $("table[id$='details-table']").each(function() {
             if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
                 $(this).addClass('govuk-visually-hidden');
             }
@@ -624,5 +623,8 @@
 
         // Except for the table corresponding to this tab
         $("table[id$='" + tableIdentifier + "details-table']").removeClass('govuk-visually-hidden');
-    })
+        $(this).focus();
+    });
+
+    initialiseTabs();
 </script>

@@ -10,16 +10,16 @@
         @Html.HiddenFor(m => m.Year, new { id = "ComplianceYear" })
         @Html.HiddenFor(m => m.Scheme, new { id = "SchemeId" })
 
-        <div class="govuk-tabs" id="tabs-div" data-module="tabs">
-            <ul class="govuk-tabs__list">
-                <li id="collectedDelivered-list-item" class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-                    <a class="govuk-tabs__tab" href="#collected-details" id="collectedDelivered-data-tab">WEEE data</a>
+        <div class="govuk-tabs" id="tabs-div">
+            <ul class="govuk-tabs__list" role="tablist">
+                <li id="collectedDelivered-list-item" class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+                    <a class="govuk-tabs__tab" href="#collected-details" id="collectedDelivered-data-tab" role="tab">WEEE data</a>
                 </li>
-                <li id="output-list-item" class="govuk-tabs__list-item">
-                    <a class="govuk-tabs__tab" href="#output-details" id="output-data-tab">EEE data</a>
+                <li id="output-list-item" class="govuk-tabs__list-item" role="presentation">
+                    <a class="govuk-tabs__tab" href="#output-details" id="output-data-tab" role="tab">EEE data</a>
                 </li>
             </ul>
-            <section class="govuk-tabs__panel" id="collected-details" >
+            <div class="govuk-tabs__panel" id="collected-details">
                 <table id="collectedDelivered-data-table" class="govuk-table">
                     <caption class="govuk-visually-hidden">This table shows the data return submissions and the associated WEEE data for the selected year and scheme.</caption>
                     <thead class="govuk-table__head">
@@ -90,9 +90,9 @@
                         }
                     </tbody>
                 </table>
-            </section>
+            </div>
 
-            <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="output-details">
+            <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="output-details">
                 <table id="output-data-table" class="govuk-table govuk-visually-hidden">
                     <caption class="govuk-visually-hidden">This table shows the data return submissions and the associated EEE data for the selected year and scheme.</caption>
                     <thead class="govuk-table__head">
@@ -169,15 +169,16 @@
                         }
                     </tbody>
                 </table>
-            </section>
+            </div>
 
             <script type="text/javascript">
                 $("a[id$='data-tab']").click(function (event) {
+
                     event.preventDefault();
 
                     var sectionId = $(this).attr('href').replace('#', '');
 
-                    $("section[id$='details']").each(function () {
+                    $("div[id$='details']").each(function () {
                         if ($(this).attr('id') !== sectionId) {
                             $(this).addClass('govuk-tabs__panel--hidden');
                         } else {
@@ -210,6 +211,8 @@
                     // Resize the div containing the tabs after the data for the visible table has been loaded
                     InitialiseWidth();
 
+                    initialiseTabs();
+                    $(this).focus();
                 });
 
                 $("#collected-date-descending, #collected-date, #output-date-descending, #output-date").click(function (event) {
@@ -237,9 +240,9 @@
                         if (!$(this).hasClass("govuk-visually-hidden")) {
                             var width = $("#" + $(this).attr('id')).width();
                             $("#tabs-div").width(width);
-                            $(this).closest('section').width(width);
+                            $(this).closest('div').width(width);
                             //$(this).closest('section').siblings('ul').width(calculatedWidth);
-                            $(this).closest('section').siblings('ul').width($(this).closest('section').outerWidth());
+                            $(this).closest('div').siblings('ul').width($(this).closest('div').outerWidth());
 
                         }
                     });
@@ -256,7 +259,7 @@
                         data: { year: selectedYear, schemeId: selectedScheme, orderBy: orderBy },
                         success: function (data) {
                             // Remember the ID of the active tab
-                            var activeTab = $('.active').attr('id');
+                            var activeTab = $('.govuk-tabs__list-item--selected').attr('id');
 
                             $('#submissionsGrid').replaceWith(data);
 
@@ -267,6 +270,7 @@
                 }
 
                 InitialiseWidth();
+                initialiseTabs();
             </script>
         </div>
     }
@@ -276,3 +280,4 @@
 
     }
 </div>
+
