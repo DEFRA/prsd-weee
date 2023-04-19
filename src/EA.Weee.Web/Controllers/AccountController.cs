@@ -73,6 +73,15 @@
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Refresh()
+        {
+            var loginResult = await weeeAuthorization.RefreshAuthentication();
+
+            return RedirectToAction("SignIn");
+        }
+
         // POST: /Account/SignOut
         [HttpPost]
         [ValidateAntiForgeryToken]

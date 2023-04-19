@@ -147,6 +147,25 @@
         private static void CheckAccessToken(CookieValidateIdentityContext context)
         {
             var expiresAt = context.Identity.FindFirst(ClaimTypes.ExpiresAt);
+            var sessionExpiresClaim = context.Identity.FindFirst("sessionExpires");
+
+            if (sessionExpiresClaim != null)
+            {
+                if (!DateTime.TryParseExact(sessionExpiresClaim.Value, "u", CultureInfo.InvariantCulture,
+                        DateTimeStyles.AdjustToUniversal, out var expiryDate))
+                {
+                    // If the session expiry date can't be parsed then sign the user out.
+                    RejectIdentity(context);
+                    return;
+                }
+
+                if (expiryDate < SystemTime.UtcNow)
+                {
+                    RejectIdentity(context);
+                    return;
+                }
+            }
+
             if (expiresAt != null)
             {
                 DateTime expiryDate;

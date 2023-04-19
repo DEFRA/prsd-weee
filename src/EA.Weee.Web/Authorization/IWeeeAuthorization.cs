@@ -8,6 +8,8 @@
 
         Task<LoginResult> SignIn(string emailAddress, string password, bool rememberMe);
 
+        Task<LoginResult> RefreshAuthentication();
+
         void SignOut();
     }
 }

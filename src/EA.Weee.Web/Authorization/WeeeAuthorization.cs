@@ -1,22 +1,29 @@
 ﻿namespace EA.Weee.Web.Authorization
 {
+    using EA.Prsd.Core;
+    using EA.Weee.Web.App_Start;
     using IdentityModel;
     using Infrastructure;
+    using Microsoft.Owin;
     using Microsoft.Owin.Security;
+    using Microsoft.Owin.Security.Cookies;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Security;
     using System;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using ClaimTypes = Prsd.Core.Web.ClaimTypes;
 
     public class WeeeAuthorization : IWeeeAuthorization
     {
         private readonly Func<IOAuthClient> oauthClient;
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IUserInfoClient> userInfoClient;
+
         private HttpContext context = HttpContext.Current;
 
         public WeeeAuthorization(Func<IOAuthClient> oauthClient, IAuthenticationManager authenticationManager, Func<IUserInfoClient> userInfoClient)
@@ -55,6 +62,52 @@
 
             var accessToken = HttpContext.Current.User.GetAccessToken();
             return LoginResult.Success(accessToken, await GetLoginAction(accessToken));
+        }
+
+        public async Task<LoginResult> RefreshAuthentication()
+        {
+            if ((await GetAuthorizationState()).IsLoggedIn)
+            {
+                var claimsIdentity = HttpContext.Current.User.Identity as ClaimsIdentity;
+
+                var expiresAt = claimsIdentity.FindFirst("sessionExpires");
+
+                if (expiresAt != null)
+                {
+                    authenticationManager.SignOut();
+                    return LoginResult.Fail("User has already extended");
+                }
+
+                var refreshToken = claimsIdentity.FindFirst(OidcConstants.AuthorizeResponse.RefreshToken);
+
+                var response = await oauthClient().GetRefreshTokenAsync(refreshToken.Value);
+
+                if (response.AccessToken == null)
+                {
+                    return LoginResult.Fail(ParseLoginError(response.Error));
+                }
+
+                // check existing identity if it has the session claim, should not be able to refresh again
+                // Also store it so it can be restored after creating the new identity
+
+                var newIdentity = response.GenerateUserIdentity();
+
+                newIdentity.AddClaim(new Claim("sessionExpires", new DateTimeOffset(SystemTime.UtcNow).AddMinutes(10).ToString("u")));
+                authenticationManager.AuthenticationResponseGrant =
+                    new AuthenticationResponseGrant(
+                        new ClaimsPrincipal(newIdentity),
+                        new AuthenticationProperties { IsPersistent = true });
+
+                authenticationManager.SignOut(Constants.WeeeAuthType);
+
+                ReturnUrlMapping returnUrlMapping = new ReturnUrlMapping();
+                returnUrlMapping.Add("/account/sign-out", null);
+                returnUrlMapping.Add("/admin/account/sign-out", null);
+
+                authenticationManager.SignIn(newIdentity);
+            }
+
+            return LoginResult.Fail("User not authentication");
         }
 
         public void SignOut()

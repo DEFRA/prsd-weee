@@ -71,7 +71,7 @@ namespace EA.Prsd.Core.Web.Mvc.Owin
             }
 
             var accessTokenClaim = context.Identity.FindFirst(OidcConstants.AuthorizeResponse.AccessToken);
-
+            
             if (accessTokenClaim == null)
             {
                 RejectIdentity(context);
@@ -93,6 +93,7 @@ namespace EA.Prsd.Core.Web.Mvc.Owin
 
             claims.Add(accessTokenClaim);
             claims.Add(context.Identity.FindFirst(OidcConstants.AuthorizeResponse.RefreshToken));
+            claims.Add(context.Identity.FindFirst("sessionExpires"));
             claims.Add(context.Identity.FindFirst(ClaimTypes.ExpiresAt));
 
             var nameId = context.Identity.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
