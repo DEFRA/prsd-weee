@@ -24,21 +24,19 @@
 
     <div class="govuk-!-padding-bottom-5"></div>
     <div class="govuk-body">
-        <ul>
-            @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.DeSelected))
-            {
-                <li style="padding-top: 10px; list-style-type: none;">
-                    @if (deselectedOption.AlternativeDescription != null)
-                    {
-                        @deselectedOption.AlternativeDescription
-                    }
-                    else
-                    {
-                        @deselectedOption.Title
-                    }
-                </li>
-            }
-        </ul>
+        @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.DeSelected))
+        {
+            <ol class="govuk-!-padding-left-0">
+                @if (deselectedOption.AlternativeDescription != null)
+                {
+                    @deselectedOption.AlternativeDescription
+                }
+                else
+                {
+                    @deselectedOption.Title
+                }
+            </ol>
+        }
     </div>
     @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsDeselectRouteName, FormMethod.Post))
     {
