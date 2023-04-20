@@ -51,7 +51,6 @@
         </ul>
 
         <div class="govuk-tabs__panel" id="registration-details">
-            <h1 class="sr-only" tabindex="0">tab 1 content Overview</h1>
             <table id="@(scheme.ObligationType)-registration-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
@@ -110,12 +109,11 @@
             </table>
         </div>
         <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="contact-details">
-            <h1 class="sr-only" tabindex="0">tab 2 content Contact details</h1>
-            <header>
-                <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
-                    Contact details
-                </h1>
-            </header>
+            <h2 class="sr-only" tabindex="0">tab 2 content Contact details</h2>
+            <h2 class="govuk-heading-m govuk-!-text-align-centre" aria-hidden="true">
+                Contact details
+            </h2>
+            
 
             <table id="@(scheme.ObligationType)-contact-details-table" class="visually-hidden govuk-table">
                 <tbody class="govuk-table__body">
@@ -568,9 +566,17 @@
 }
 <script type="text/javascript">
     $("a[id$='details-tab']").click(function (event) {
+        
         event.preventDefault();
 
         var sectionId = $(this).attr('href').replace('#', '');
+
+        $('.govuk-tabs__tab').each(function (e) {
+            $(this).attr('aria-selected', 'false');
+            $(this).attr('tabindex', '-1');
+        });
+        $(this).attr('aria-selected', 'true');
+        $(this).attr('tabindex', '0');
 
         $("div[id$='details']").each(function () {
             if ($(this).attr('id') !== sectionId) {
@@ -614,5 +620,7 @@
         $(this).focus();
     });
 
-    initialiseTabs();
+    $(document).ready(function () {
+        initialiseTabs();
+    });
 </script>
