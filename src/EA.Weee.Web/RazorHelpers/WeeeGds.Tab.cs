@@ -14,13 +14,25 @@
             }
             linkBuilder.AddCssClass("govuk-tabs__tab");
             linkBuilder.Attributes.Add("role", "tab");
+
+            if (isActive)
+            {
+                linkBuilder.Attributes.Add("tabindex", "0");
+                linkBuilder.Attributes.Add("aria-selected", "true");
+            }
+            else
+            {
+                linkBuilder.Attributes.Add("tabindex", "-1");
+                linkBuilder.Attributes.Add("aria-selected", "false");
+            }
+
             linkBuilder.SetInnerText(displayText);
 
             var tagBuilder = new TagBuilder("li") { InnerHtml = linkBuilder.ToString() };
 
             if (isActive)
             {
-                tagBuilder.AddCssClass("govuk-tabs__list-item--selected ");
+                tagBuilder.AddCssClass("govuk-tabs__list-item--selected");
             }
             tagBuilder.AddCssClass("govuk-tabs__list-item");
             tagBuilder.Attributes.Add("role", "presentation");
