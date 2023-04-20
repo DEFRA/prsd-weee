@@ -9,50 +9,47 @@
         @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
         <div class="govuk-tabs__panel" id="contactDetails">
-            <h1 class="govuk-heading-l">
-                Contact details
-            </h1>
-
-            <table id="pcs-details-table" class="govuk-table">
-                <thead class="govuk-table__head">
-                <tr class="govuk-visually-hidden">
-                    <th colspan="2">Contact Details</th>
-                </tr>
-                </thead>
+            <h1 class="sr-only" tabindex="0">tab 4 content Contact details</h1>
+            <header>
+                <h1 class="govuk-heading-l" aria-hidden="true" style="margin-top: 10px">
+                    Contact details
+                </h1>
+            </header>
+            <table id="pcs-details-table" class="govuk-table">                
                 <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Name</th>
-                    <td class="govuk-table__cell">@(Model.Contact.FirstName + " " + Model.Contact.LastName)</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Position</th>
-                    <td class="govuk-table__cell">@Model.Contact.Position</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Address</th>
-                    <td class="govuk-table__cell">
-                        <span class="prsd-long-address">
-                            <span>@Model.Address.Address.Address1</span>
-                            <span>@Model.Address.Address.Address2</span>
-                            <span>@Model.Address.Address.TownOrCity</span>
-                            <span>@Model.Address.Address.CountyOrRegion</span>
-                            <span>@Model.Address.Address.Postcode</span>
-                            <span>@Model.Address.Address.CountryName</span>
-                        </span>
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Telephone</th>
-                    <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Email</th>
-                    <td class="govuk-table__cell">@Model.Address.Address.Email</td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Name</th>
+                        <td class="govuk-table__cell">@(Model.Contact.FirstName + " " + Model.Contact.LastName)</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Position</th>
+                        <td class="govuk-table__cell">@Model.Contact.Position</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Address</th>
+                        <td class="govuk-table__cell">
+                            <span class="prsd-long-address">
+                                <span>@Model.Address.Address.Address1</span>
+                                <span>@Model.Address.Address.Address2</span>
+                                <span>@Model.Address.Address.TownOrCity</span>
+                                <span>@Model.Address.Address.CountyOrRegion</span>
+                                <span>@Model.Address.Address.Postcode</span>
+                                <span>@Model.Address.Address.CountryName</span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Telephone</th>
+                        <td class="govuk-table__cell">@Model.Address.Address.Telephone</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Email</th>
+                        <td class="govuk-table__cell">@Model.Address.Address.Email</td>
+                    </tr>
                 </tbody>
             </table>
 
-            <br/>
+            <br />
             @if (Model.CanEditContactDetails)
             {
                 <p>
