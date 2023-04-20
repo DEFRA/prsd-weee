@@ -16,27 +16,30 @@
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <strong class="govuk-warning-text__text">
                     <span class="govuk-warning-text__assistive">Warning</span>
-                    Any data entered against these options will be deleted
+                    Any data entered against the options in the list will be deleted
                 </strong>
             </div>
         </div>
     </div>
-    
-    <div class="govuk-!-padding-bottom-5"></div>
-    @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.DeSelected))
-    {
-        <p class="govuk-body">
-            @if (deselectedOption.AlternativeDescription != null)
-            {
-                @deselectedOption.AlternativeDescription
-            }
-            else
-            {
-                @deselectedOption.Title
-            }
-        </p>
-    }
 
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-body">
+        <ul>
+            @foreach (var deselectedOption in Model.ReportOnQuestions.Where(r => r.DeSelected))
+            {
+                <li style="padding-top: 10px; list-style-type: none;">
+                    @if (deselectedOption.AlternativeDescription != null)
+                    {
+                        @deselectedOption.AlternativeDescription
+                    }
+                    else
+                    {
+                        @deselectedOption.Title
+                    }
+                </li>
+            }
+        </ul>
+    </div>
     @using (Html.BeginRouteForm(AatfRedirect.SelectReportOptionsDeselectRouteName, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
