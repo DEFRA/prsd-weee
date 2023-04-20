@@ -173,10 +173,16 @@
 
             <script type="text/javascript">
                 $("a[id$='data-tab']").click(function (event) {
-
                     event.preventDefault();
 
                     var sectionId = $(this).attr('href').replace('#', '');
+
+                    $('.govuk-tabs__tab').each(function (e) {
+                        $(this).attr('aria-selected', 'false');
+                        $(this).attr('tabindex', '-1');
+                    });
+                    $(this).attr('aria-selected', 'true');
+                    $(this).attr('tabindex', '0');
 
                     $("div[id$='details']").each(function () {
                         if ($(this).attr('id') !== sectionId) {
