@@ -102,6 +102,7 @@
                         default:
                             <th class="govuk-table__header">
                                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.FullNameAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Name</a>
+                                <span class="govuk-visually-hidden">Sortable by Name alphabetically</span>
                             </th>
                             break;
                     }
@@ -127,6 +128,7 @@
                         default:
                             <th class="govuk-table__header">
                                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.OrganisationAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Organisation</a>
+                                <span class="govuk-visually-hidden">Sortable by Organisation alphabetically</span>
                             </th>
                             break;
                     }
@@ -149,6 +151,7 @@
                         default:
                             <th class="govuk-table__header">
                                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Role</a>
+                                <span class="govuk-visually-hidden">Sortable by role rank</span>
                             </th>
                             break;
                     }
@@ -171,6 +174,7 @@
                         default:
                             <th class="govuk-table__header">
                                 <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.StatusAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Status</a>
+                                <span class="govuk-visually-hidden">Sortable by status alphabetically</span>
                             </th>
                             break;
                     }
