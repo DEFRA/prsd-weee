@@ -8,7 +8,6 @@
     using Requests.Admin.Obligations;
     using Security;
     using Shared;
-    using Weee.Security;
 
     public class GetObligationComplianceYearsHandler : IRequestHandler<GetObligationComplianceYears, List<int>>
     {
@@ -19,7 +18,7 @@
 
         public GetObligationComplianceYearsHandler(IWeeeAuthorization authorization,
             IObligationDataAccess obligationDataAccess,
-            ICommonDataAccess commonDataAccess, 
+            ICommonDataAccess commonDataAccess,
             ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
@@ -30,17 +29,13 @@
 
         public async Task<List<int>> HandleAsync(GetObligationComplianceYears request)
         {
-            //authorization.EnsureCanAccessInternalArea();
-            //authorization.EnsureUserInRole(Roles.InternalAdmin);
-
             Domain.UKCompetentAuthority authority = null;
             if (request.Authority.HasValue)
             {
                 authority = await commonDataAccess.FetchCompetentAuthority(request.Authority.Value);
             }
-            
-            var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
+            var systemDateTime = await systemDataAccess.GetSystemDateTime();
             var complianceYears = await obligationDataAccess.GetObligationComplianceYears(authority);
 
             if (!complianceYears.Contains(systemDateTime.Year) && request.IncludeCurrentYear)
