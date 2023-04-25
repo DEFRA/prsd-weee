@@ -1,13 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using AutoFixture;
+    using Core.Admin.Obligation;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin.Obligations;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Obligations;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -18,7 +21,6 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Core.Admin.Obligation;
     using Prsd.Core.Mapper;
     using Web.Areas.Admin.Mappings.ToViewModel;
     using Weee.Tests.Core;
@@ -66,6 +68,15 @@
             typeof(ObligationsController).GetMethod("SelectAuthority", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(SelectAuthorityViewModel) }, null)
             .Should()
             .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void SelectAuthorityPost_ShouldHaveAuthorizeInternalClaimsAttribute()
+        {
+            // assert
+            typeof(ObligationsController).GetMethod("SelectAuthority", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(SelectAuthorityViewModel) }, null)
+                .Should()
+                .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         /// <summary>
@@ -177,7 +188,7 @@
             ObligationsController controller = new ObligationsController(
                                                                         A.Dummy<IAppConfiguration>(),
                                                                         A.Dummy<BreadcrumbService>(),
-                                                                        A.Dummy<IWeeeCache>(), 
+                                                                        A.Dummy<IWeeeCache>(),
                                                                         () => A.Dummy<IWeeeClient>(),
                                                                         mapper);
 
@@ -195,11 +206,11 @@
         public void PostSelectAuthority_WithInvalidModel_SelectAuthorityViewWithViewModel()
         {
             // Arrange
-            
+
             ObligationsController controller = new ObligationsController(
                                                                         A.Dummy<IAppConfiguration>(),
                                                                         A.Dummy<BreadcrumbService>(),
-                                                                        A.Dummy<IWeeeCache>(), 
+                                                                        A.Dummy<IWeeeCache>(),
                                                                         () => A.Dummy<IWeeeClient>(),
                                                                         mapper);
             var model = TestFixture.Create<SelectAuthorityViewModel>();
@@ -211,7 +222,7 @@
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");  
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "SelectAuthority");
             Assert.True(viewResult.Model.Equals(model));
         }
 
@@ -248,8 +259,16 @@
         public void UploadObligationsPost_IsDecoratedWith_ValidateAntiForgeryTokenAttribute()
         {
             typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(UploadObligationsViewModel) }, null)
-            .Should()
-            .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+                                         .Should()
+                                         .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public void UploadObligationsPost_ShouldHaveAuthorizeInternalClaimsAttribute()
+        {
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(UploadObligationsViewModel) }, null)
+                                         .Should()
+                                         .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         [Fact]
@@ -258,6 +277,14 @@
             typeof(ObligationsController).GetMethod("DownloadTemplate", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority) }, null)
             .Should()
             .BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void DownloadTemplateGet_ShouldHaveAuthorizeInternalClaimsAttribute()
+        {
+            typeof(ObligationsController).GetMethod("DownloadTemplate", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(CompetentAuthority) }, null)
+                                         .Should()
+                                         .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         [Fact]
@@ -366,7 +393,7 @@
             var selectedComplianceYear = TestFixture.Create<int?>();
             var complianceYears = TestFixture.CreateMany<int>().ToList();
             var obligationData = TestFixture.CreateMany<SchemeObligationData>().ToList();
-            
+
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<GetSchemeObligation>._)).Returns(obligationData);
 
@@ -381,8 +408,8 @@
             //assert
             A.CallTo(() =>
                     mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
-                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u => 
-                            u.CompetentAuthority == authority && 
+                        A<UploadObligationsViewModelMapTransfer>.That.Matches(u =>
+                            u.CompetentAuthority == authority &&
                             u.ErrorData == schemeUploadObligationData &&
                             u.SelectedComplianceYear == selectedComplianceYear &&
                             u.ComplianceYears.SequenceEqual(complianceYears) &&
@@ -452,7 +479,7 @@
             //arrange
             var model = UploadObligationsViewModel();
             controller.ModelState.AddModelError("error", new Exception());
-            
+
             //act
             var result = await controller.UploadObligations(model) as ViewResult;
 
@@ -595,8 +622,8 @@
             A.CallTo(() =>
                 mapper.Map<UploadObligationsViewModelMapTransfer, UploadObligationsViewModel>(
                     A<UploadObligationsViewModelMapTransfer>.That.Matches(u => u.DisplayNotification == false &&
-                                                                               u.SelectedComplianceYear == complianceYear && 
-                                                                               u.CompetentAuthority == authority && 
+                                                                               u.SelectedComplianceYear == complianceYear &&
+                                                                               u.CompetentAuthority == authority &&
                                                                                u.ComplianceYears.SequenceEqual(complianceYears) &&
                                                                                u.ErrorData == null &&
                                                                                u.ObligationData.SequenceEqual(schemeObligationData)))).MustHaveHappenedOnceExactly();
