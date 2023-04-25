@@ -21,6 +21,8 @@
     using Extensions;
     using ViewModels.Obligations;
     using Weee.Requests.Shared;
+    using EA.Weee.Security;
+    using EA.Weee.Web.Filters;
 
     public class ObligationsController : ObligationsBaseController
     {
@@ -48,6 +50,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public ActionResult SelectAuthority()
         {
             return View("SelectAuthority", new SelectAuthorityViewModel());
@@ -55,6 +58,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public ActionResult SelectAuthority(SelectAuthorityViewModel model)
         {
             if (ModelState.IsValid)
@@ -66,6 +70,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> UploadObligations(CompetentAuthority authority, Guid? id, int? selectedComplianceYear, bool displayNotification = false)
         {
             using (var client = apiClient())
@@ -106,6 +111,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> UploadObligations(UploadObligationsViewModel model)
         {
             using (var client = apiClient())
@@ -138,6 +144,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> DownloadTemplate(CompetentAuthority authority)
         {
             using (var client = apiClient())
