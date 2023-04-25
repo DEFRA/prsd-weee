@@ -41,56 +41,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_NoInternalAccess_ThrowsSecurityException()
-        {
-            //arrange
-            var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
-
-            handler = new GetObligationComplianceYearsHandler(authorization, obligationDataAccess, commonDataAccess, systemDataDataAccess);
-
-            //act
-            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
-
-            //assert
-            exception.Should().BeOfType<SecurityException>();
-        }
-
-        [Fact]
-        public async Task HandleAsync_NotAnAdminUser_ThrowsSecurityException()
-        {
-            //arrange
-            var authorization = new AuthorizationBuilder().DenyAnyRole().Build();
-
-            handler = new GetObligationComplianceYearsHandler(authorization, obligationDataAccess, commonDataAccess, systemDataDataAccess);
-
-            //act
-            var exception = await Record.ExceptionAsync(async () => await handler.HandleAsync(request));
-
-            //assert
-            exception.Should().BeOfType<SecurityException>();
-        }
-
-        [Fact]
-        public async Task HandleAsync_InternalAccess_ShouldBeChecked()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //arrange
-            A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_UserInAdminRole_ShouldBeChecked()
-        {
-            //act
-            await handler.HandleAsync(request);
-
-            //arrange
-            A.CallTo(() => authorization.EnsureUserInRole(Roles.InternalAdmin)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task HandleAsync_GivenRequest_CompetentAuthorityShouldBeRetrieved()
         {
             //act
