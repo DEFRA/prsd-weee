@@ -248,6 +248,14 @@
         }
 
         [Fact]
+        public void UploadObligationsGet_ShouldHaveAuthorizeInternalClaimsAttribute()
+        {
+            typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(UploadObligationsViewModel) }, null)
+                                         .Should()
+                                         .BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
         public void UploadObligationsPost_IsDecoratedWith_HttpPostAttribute()
         {
             typeof(ObligationsController).GetMethod("UploadObligations", BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.Any, new Type[] { typeof(UploadObligationsViewModel) }, null)
