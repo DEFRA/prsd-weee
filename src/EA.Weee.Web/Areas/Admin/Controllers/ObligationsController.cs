@@ -2,8 +2,13 @@
 {
     using Api.Client;
     using Base;
+    using Core.Admin.Obligation;
+    using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Requests.Admin.Obligations;
+    using EA.Weee.Security;
+    using EA.Weee.Web.Filters;
+    using Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -16,13 +21,8 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Core.Admin.Obligation;
-    using Core.Scheme;
-    using Extensions;
     using ViewModels.Obligations;
     using Weee.Requests.Shared;
-    using EA.Weee.Security;
-    using EA.Weee.Web.Filters;
 
     public class ObligationsController : ObligationsBaseController
     {
@@ -63,9 +63,9 @@
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("UploadObligations", new { authority = model.SelectedAuthority.Value});
+                return RedirectToAction("UploadObligations", new { authority = model.SelectedAuthority.Value });
             }
-            
+
             return View("SelectAuthority", model);
         }
 
