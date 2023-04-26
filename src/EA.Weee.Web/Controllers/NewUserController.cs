@@ -160,6 +160,13 @@
 
         [HttpGet]
         [AllowAnonymous]
+        public ActionResult AccessibilityInternal()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Feedback()
         {
             if (!string.IsNullOrEmpty(appConfig.DonePageUrl))

@@ -2,6 +2,19 @@
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 
+@{
+    object token;
+    var action = "Accessibility";
+    if (ViewContext.RouteData.DataTokens.TryGetValue("area", out token))
+    {
+        var areaName = token.ToString();
+        if (areaName.ToLower().Equals("admin"))
+        {
+            action = "AccessibilityInternal";
+        }
+    }
+}
+
 <ul class="govuk-footer__inline-list">
     @* Show terms and conditions and privacy policy only on external site *@
     @if ((HttpContext.Current.Session["ShowFooterAndLinks"] == null) || ((bool)HttpContext.Current.Session["ShowFooterAndLinks"] == false))
@@ -16,7 +29,9 @@
     <li class="govuk-footer__inline-list-item">
         <a href="~/NewUser/Cookies" class="govuk-footer__link">Cookies</a>
     </li>
+    
     <li class="govuk-footer__inline-list-item">
-        <a href="~/NewUser/Accessibility" class="govuk-footer__link">Accessibility statement</a>
+        @Html.ActionLink("Accessibility statement", @action, "NewUser", new { area = string.Empty }, new {@class="govuk-footer__link" })
     </li>
+
 </ul>
