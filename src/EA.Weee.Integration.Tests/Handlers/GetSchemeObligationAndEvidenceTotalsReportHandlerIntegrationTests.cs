@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
+    using System;
     using Autofac;
     using Base;
     using Builders;
@@ -16,6 +17,7 @@
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Constants;
+    using Domain.Organisation;
     using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications.Categories;
@@ -385,6 +387,8 @@
                     .WithStatusUpdate(NoteStatus.Approved)
                     .WithComplianceYear(2022)
                     .Create();
+
+                SetupNotesThatShouldNotBeIncludedDueToTheirStatus(recipientOrganisation);
 
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(scheme.Id, null, null, 2022);
             };
@@ -782,6 +786,8 @@
                     .WithStatusUpdate(NoteStatus.Approved)
                     .WithComplianceYear(2022)
                     .Create();
+
+                SetupNotesThatShouldNotBeIncludedDueToTheirStatus(recipientOrganisation);
 
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, recipientOrganisation.Id, 2022);
             };
@@ -1298,6 +1304,8 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     .WithRecipient(anotherRecipientOrganisation.Id)
                     .WithComplianceYear(2022).Create();
                 
+                SetupNotesThatShouldNotBeIncludedDueToTheirStatus(recipient1Organisation);
+
                 request = new GetSchemeObligationAndEvidenceTotalsReportRequest(null, null, null, 2022);
             };
 
@@ -1994,6 +2002,152 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
                     .WithExternalUserAccess();
 
                 handler = Container.Resolve<IRequestHandler<GetSchemeObligationAndEvidenceTotalsReportRequest, CSVFileData>>();
+            }
+
+            protected static void SetupNotesThatShouldNotBeIncludedDueToTheirStatus(Organisation recipientOrganisation)
+            {
+                var recipientOrganisationWithNotesNotInCorrectStatus = OrganisationDbSetup.Init().Create();
+
+                // draft
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisationWithNotesNotInCorrectStatus.Id).Create();
+                EvidenceNoteDbSetup.Init().WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(recipientOrganisationWithNotesNotInCorrectStatus.Id)
+                    .WithWasteType(WasteType.HouseHold)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // rejected
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisationWithNotesNotInCorrectStatus.Id).Create();
+                EvidenceNoteDbSetup.Init().WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(recipientOrganisationWithNotesNotInCorrectStatus.Id)
+                    .WithWasteType(WasteType.HouseHold)
+                    .WithStatusUpdate(NoteStatus.Rejected)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // returned
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisationWithNotesNotInCorrectStatus.Id).Create();
+                EvidenceNoteDbSetup.Init().WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(recipientOrganisationWithNotesNotInCorrectStatus.Id)
+                    .WithWasteType(WasteType.HouseHold)
+                    .WithStatusUpdate(NoteStatus.Returned)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // void
+                SchemeDbSetup.Init().WithOrganisation(recipientOrganisationWithNotesNotInCorrectStatus.Id).Create();
+                EvidenceNoteDbSetup.Init().WithOrganisation(recipientOrganisation.Id)
+                    .WithRecipient(recipientOrganisationWithNotesNotInCorrectStatus.Id)
+                    .WithWasteType(WasteType.HouseHold)
+                    .WithStatusUpdate(NoteStatus.Void)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                var recipientOfTransferNotesNotInCorrectStatus = OrganisationDbSetup.Init().Create();
+                var transferrerOfTransferNotesNotInCorrectStatus = OrganisationDbSetup.Init().Create();
+                SchemeDbSetup.Init().WithSchemeName("DO NOT INCLUDE").WithOrganisation(recipientOfTransferNotesNotInCorrectStatus.Id).Create();
+                SchemeDbSetup.Init().WithSchemeName("DO NOT INCLUDE").WithOrganisation(transferrerOfTransferNotesNotInCorrectStatus.Id).Create();
+
+                // submitted from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                    {
+                        t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithOrganisation(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022);
+
+                 // submitted from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                })
+                    .WithOrganisation(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // draft from & to
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // draft from & to
+                TransferEvidenceNoteDbSetup.Init()
+                    .WithOrganisation(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // returned from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                })
+                    .WithOrganisation(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // returned from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                })
+                    .WithOrganisation(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // rejected from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
+                })
+                    .WithOrganisation(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // rejected from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
+                })
+                    .WithOrganisation(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // rejected from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                })
+                    .WithOrganisation(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
+
+                // rejected from & to
+                TransferEvidenceNoteDbSetup.Init().With(t =>
+                {
+                    t.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                    t.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
+                })
+                    .WithOrganisation(recipientOfTransferNotesNotInCorrectStatus.Id)
+                    .WithRecipient(transferrerOfTransferNotesNotInCorrectStatus.Id)
+                    .WithComplianceYear(2022)
+                    .Create();
             }
         }
     }
