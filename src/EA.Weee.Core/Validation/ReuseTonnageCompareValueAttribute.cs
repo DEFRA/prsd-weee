@@ -52,27 +52,31 @@
             {
                 return ValidationResult.Success;
             }
-
-            var valid = TonnageValueValidator.Validate(availableReceivedValue);
-            if (valid != TonnageValidationResult.Success)
+            if (string.IsNullOrWhiteSpace(transferReusedValue?.ToString()))
             {
                 return ValidationResult.Success;
             }
 
-            valid = TonnageValueValidator.Validate(transferRecievedValue);
-            if (valid != TonnageValidationResult.Success)
+            var validAvailableReceived = TonnageValueValidator.Validate(availableReceivedValue);
+            if (validAvailableReceived != TonnageValidationResult.Success)
             {
                 return ValidationResult.Success;
             }
 
-            valid = TonnageValueValidator.Validate(availableReusedValue);
-            if (valid != TonnageValidationResult.Success)
+            var validTransferReceived = TonnageValueValidator.Validate(transferRecievedValue);
+            if (validTransferReceived != TonnageValidationResult.Success)
             {
                 return ValidationResult.Success;
             }
 
-            valid = TonnageValueValidator.Validate(transferReusedValue);
-            if (valid != TonnageValidationResult.Success)
+            var validAvailableReused = TonnageValueValidator.Validate(availableReusedValue);
+            if (validAvailableReused != TonnageValidationResult.Success)
+            {
+                return ValidationResult.Success;
+            }
+
+            var validTransferReused = TonnageValueValidator.Validate(transferReusedValue);
+            if (validTransferReused != TonnageValidationResult.Success)
             {
                 return ValidationResult.Success;
             }
