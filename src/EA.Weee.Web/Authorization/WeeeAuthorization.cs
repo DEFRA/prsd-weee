@@ -92,13 +92,15 @@
 
                 var newIdentity = response.GenerateUserIdentity();
 
-                newIdentity.AddClaim(new Claim("sessionExpires", new DateTimeOffset(SystemTime.UtcNow).AddMinutes(10).ToString("u")));
+                var expires = new DateTimeOffset(SystemTime.UtcNow).AddMinutes(10);
+
+                newIdentity.AddClaim(new Claim("sessionExpires", expires.ToString("u")));
                 authenticationManager.AuthenticationResponseGrant =
                     new AuthenticationResponseGrant(
                         new ClaimsPrincipal(newIdentity),
-                        new AuthenticationProperties { IsPersistent = true });
+                        new AuthenticationProperties { IsPersistent = true, ExpiresUtc = expires });
 
-                authenticationManager.SignOut(Constants.WeeeAuthType);
+                //authenticationManager.SignOut(Constants.WeeeAuthType);
 
                 ReturnUrlMapping returnUrlMapping = new ReturnUrlMapping();
                 returnUrlMapping.Add("/account/sign-out", null);
