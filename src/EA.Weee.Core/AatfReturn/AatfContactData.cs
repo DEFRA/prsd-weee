@@ -4,6 +4,8 @@
     using EA.Weee.Core.Validation;
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Text;
+    using System.Web.Mvc;
 
     [Serializable]
     public class AatfContactData
@@ -13,14 +15,7 @@
             this.AddressData = new AatfContactAddressData();
         }
 
-        public AatfContactData(
-            Guid id,
-            string firstName,
-            string lastName,
-            string position,
-            AatfContactAddressData addressData,
-            string telephone,
-            string email)
+        public AatfContactData(Guid id, string firstName, string lastName, string position, AatfContactAddressData addressData, string telephone, string email)
         {
             Id = id;
             FirstName = firstName;

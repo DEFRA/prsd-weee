@@ -77,7 +77,7 @@
             var result = await XmlValidator().Validate(new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>()));
 
             Assert.NotEmpty(result);
-            Assert.Equal(1, result.Count());
+            Assert.Single(result);
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._)).MustNotHaveHappened();
         }

@@ -35,7 +35,7 @@
             await dataAccess.GetOrAddAatfDeliveryLocation(approvalNumber, facilityName);
 
             // Assert
-            Assert.Equal(1, dataAccess.CachedAatfDeliveryLocations.Count);
+            Assert.Single(dataAccess.CachedAatfDeliveryLocations);
             Assert.Contains(aatfDeliveryLocationDb, dataAccess.CachedAatfDeliveryLocations.Values);
         }
 
@@ -60,7 +60,7 @@
             var result = await dataAccess.GetOrAddAatfDeliveryLocation(approvalNumber, facilityName);
 
             // Assert
-            Assert.Equal(1, dataAccess.CachedAatfDeliveryLocations.Count);
+            Assert.Single(dataAccess.CachedAatfDeliveryLocations);
             A.CallTo(() => aatfDeliveryLocations.Add(result))
                 .MustNotHaveHappened();
         }
@@ -196,7 +196,7 @@
             await dataAccess.GetOrAddAeDeliveryLocation(approvalNumber, operatorName);
 
             // Assert
-            Assert.Equal(1, dataAccess.CachedAeDeliveryLocations.Count);
+            Assert.Single(dataAccess.CachedAeDeliveryLocations);
             Assert.Contains(aeDeliveryLocationDb, dataAccess.CachedAeDeliveryLocations.Values);
         }
 
@@ -221,7 +221,7 @@
             var result = await dataAccess.GetOrAddAeDeliveryLocation(approvalNumber, operatorName);
 
             // Assert
-            Assert.Equal(1, dataAccess.CachedAeDeliveryLocations.Count);
+            Assert.Single(dataAccess.CachedAeDeliveryLocations);
             A.CallTo(() => aeDeliveryLocations.Add(result))
                 .MustNotHaveHappened();
         }

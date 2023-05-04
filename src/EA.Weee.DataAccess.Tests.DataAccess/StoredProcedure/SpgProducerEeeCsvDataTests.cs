@@ -90,7 +90,7 @@
                     await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C");
 
                 // Assert
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 var data = results.Single();
 
@@ -411,7 +411,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 Assert.NotNull(results[0]);
                 Assert.Equal("Test Scheme 1", results[0].SchemeName);

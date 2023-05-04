@@ -418,7 +418,7 @@
             context.ActionParameters = fakeActionParameters;
             context.ActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("TestAction");
 
-            Assert.Throws(typeof(InvalidOperationException), () => fakeController.InvokeOnActionExecuting(context));
+            Assert.Throws<InvalidOperationException>(() => fakeController.InvokeOnActionExecuting(context));
         }
 
         [Fact]

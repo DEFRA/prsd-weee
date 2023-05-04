@@ -25,7 +25,7 @@
             Func<Task<ProducerList>> action = () => producerListFactory.CreateAsync(new ProducerListSettings());
 
             // Assert
-            await Assert.ThrowsAsync(typeof(ArgumentException), action);
+            await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]
@@ -46,7 +46,7 @@
             Func<Task<ProducerList>> action = () => producerListFactory.CreateAsync(new ProducerListSettings());
 
             // Assert
-            await Assert.ThrowsAsync(typeof(ArgumentException), action);
+            await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]

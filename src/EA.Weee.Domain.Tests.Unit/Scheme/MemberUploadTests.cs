@@ -77,7 +77,7 @@
             memberUpload.Submit(A.Dummy<User>());
 
             // Assert
-            Assert.Equal(1, memberUpload.Events.Count());
+            Assert.Single(memberUpload.Events);
             Assert.IsType<SchemeMemberSubmissionEvent>(memberUpload.Events.Single());
             Assert.Same(memberUpload, ((SchemeMemberSubmissionEvent)memberUpload.Events.Single()).MemberUpload);
         }

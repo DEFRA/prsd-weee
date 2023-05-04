@@ -547,6 +547,10 @@ input[type="file"].form-control {
     @include govuk-font(16);
 }
 
+.breadcrumb-title-display .organisation-title-display {
+    display: inline-block;
+}
+
 // Used to right-align the registration numbers on the admin's find producer page.
 .ui-autocomplete .ui-menu-item span.registrationNumber {
     float: right;
@@ -694,9 +698,43 @@ input[type="file"].form-control {
     text-align: right;
 }
 
+.task-list-row {
+    line-height: 2.5rem;
+}
+
+.task-list-title-cell {
+    padding-left: 0.75rem;
+}
+
+.task-list-aatf-title {
+    padding-left: 0.75rem;
+}
+
+.weee-actions-display > a {
+    white-space: nowrap;
+}
 
 .tasklist-row {
     padding-bottom: 0 !important;
+}
+
+@media only screen and (max-width: 640px) {
+
+    .task-list-title-cell {
+        padding-left: 0;
+    }
+
+    .task-list-row {
+        line-height: 1rem;
+    }
+
+    .task-list-aatf-title {
+        padding-left: 0.5rem;
+    }
+
+    .weee-actions-display > a {
+        float: right;
+    }
 }
 
 .not-reported-column {
@@ -709,7 +747,7 @@ input.tonnage-entry {
 }
 
 @media only screen and (max-width: 640px) {
-    .weee-tonnage-right-aligned-display{
+    .weee-tonnage-right-aligned-display {
         text-align: left;
         word-break: normal;
         padding: 2px;
@@ -941,7 +979,7 @@ input[type="search"]:focus::-webkit-search-cancel-button {
     min-width: 107px;
 }
 
-.weee-float-right{
+.weee-float-right {
     float: right;
 }
 
@@ -1008,4 +1046,8 @@ input[type='radio']:checked:before {
 .govuk-grid-column-one-quarter {
     overflow-wrap: break-word !important;
     padding-right: 15px !important;
+}
+
+.prsd-long-address span {
+    display: block;
 }

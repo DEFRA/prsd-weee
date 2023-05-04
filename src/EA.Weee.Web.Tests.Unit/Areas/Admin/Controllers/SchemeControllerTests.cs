@@ -225,7 +225,7 @@
             var result = await SchemeController().EditScheme(Guid.NewGuid());
             var model = (SchemeViewModelBase)((ViewResult)result).Model;
 
-            Assert.Equal(false, model.IsChangeableStatus);
+            Assert.False(model.IsChangeableStatus);
         }
 
         [Fact]
@@ -243,7 +243,7 @@
 
             var statuses = model.StatusSelectList.ToList();
 
-            Assert.Equal(statuses.Count(), 2);
+            Assert.Equal(2, statuses.Count());
 
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Approved.ToString()));
@@ -459,7 +459,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "EditScheme", StringComparison.InvariantCultureIgnoreCase));
 
-            Assert.Equal(1, controller.ModelState["ApprovalNumber"].Errors.Count);
+            Assert.Single(controller.ModelState["ApprovalNumber"].Errors);
             Assert.Equal("Approval number already exists", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
         }
 
@@ -502,7 +502,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "EditScheme", StringComparison.InvariantCultureIgnoreCase));
 
-            Assert.Equal(1, controller.ModelState["IbisCustomerReference"].Errors.Count);
+            Assert.Single(controller.ModelState["IbisCustomerReference"].Errors);
             Assert.Equal(
                 "Billing reference \"WEE1234567\" already exists for scheme \"Big Waste Co.\" (WEE/AB1234CD/SCH)",
                 controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
@@ -651,7 +651,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "AddScheme", StringComparison.InvariantCultureIgnoreCase));
 
-            Assert.Equal(1, controller.ModelState["ApprovalNumber"].Errors.Count);
+            Assert.Single(controller.ModelState["ApprovalNumber"].Errors);
             Assert.Equal("Approval number already exists", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
@@ -695,7 +695,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "AddScheme", StringComparison.InvariantCultureIgnoreCase));
 
-            Assert.Equal(1, controller.ModelState["SchemeExists"].Errors.Count);
+            Assert.Single(controller.ModelState["SchemeExists"].Errors);
             Assert.Equal("Scheme has already been created for the organisation", controller.ModelState["SchemeExists"].Errors[0].ErrorMessage);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
@@ -745,7 +745,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "AddScheme", StringComparison.InvariantCultureIgnoreCase));
 
-            Assert.Equal(1, controller.ModelState["IbisCustomerReference"].Errors.Count);
+            Assert.Single(controller.ModelState["IbisCustomerReference"].Errors);
             Assert.Equal(
                 "Billing reference \"WEE1234567\" already exists for scheme \"Big Waste Co.\" (WEE/AB1234CD/SCH)",
                 controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
@@ -791,7 +791,7 @@
             Assert.NotNull(viewResult);
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "AddScheme", StringComparison.InvariantCultureIgnoreCase));
 
-            Assert.Equal(1, controller.ModelState["IbisCustomerReference"].Errors.Count);
+            Assert.Single(controller.ModelState["IbisCustomerReference"].Errors);
             Assert.Equal(
                 "Enter a customer billing reference", controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
 
@@ -1048,7 +1048,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
-            Assert.IsType(typeof(ViewResult), result);
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -1080,7 +1080,7 @@
             Assert.Equal(countries, manageContactDetailsViewModel.OrganisationAddress.Countries);
 
             Assert.NotNull(result);
-            Assert.IsType(typeof(ViewResult), result);
+            Assert.IsType<ViewResult>(result);
 
             var viewResult = (ViewResult)result;
 
@@ -1109,7 +1109,7 @@
                 .MustHaveHappened(1, Times.Exactly);
 
             Assert.NotNull(result);
-            Assert.IsType(typeof(RedirectToRouteResult), result);
+            Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectResult = (RedirectToRouteResult)result;
             Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
@@ -1150,7 +1150,7 @@
             var result = await SchemeController().ViewOrganisationDetails(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
-            Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
+            Assert.Equal("ViewOrganisationDetails", ((ViewResult)result).ViewName);
         }
 
         [Fact]
@@ -1251,11 +1251,8 @@
             breadcrumbService.InternalScheme.Should().Be(schemeName);
         }
 
-        [Theory]
-        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure)]
-        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure)]
-        [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure)]
-        public async void HttpPost_EditScheme_UpdateSchemeInformationResultFailures_BreadcrumbShouldBeSet(CreateOrUpdateSchemeInformationResult.ResultType resultType)
+        [Fact]
+        public async void HttpPost_EditScheme_UpdateSchemeInformationResultFailures_BreadcrumbShouldBeSet()
         {
             var schemeId = Guid.NewGuid();
             var schemeName = "schemeName";
@@ -1332,10 +1329,10 @@
         }
 
         [Theory]
-        [InlineData(OrganisationType.RegisteredCompany, typeof(RegisteredCompanyDetailsOverviewViewModel), "Overview/RegisteredCompanyDetailsOverview")]
-        [InlineData(OrganisationType.Partnership, typeof(PartnershipDetailsOverviewViewModel), "Overview/PartnershipDetailsOverview")]
-        [InlineData(OrganisationType.SoleTraderOrIndividual, typeof(SoleTraderDetailsOverviewViewModel), "Overview/SoleTraderDetailsOverview")]
-        public async void HttpGet_Overview_WithOrganisationDetailsDisplayOption_AssociatedEntitiesShouldBeMapped(OrganisationType organisationType, Type expectedViewModelType, string expectedViewName)
+        [InlineData(OrganisationType.RegisteredCompany)]
+        [InlineData(OrganisationType.Partnership)]
+        [InlineData(OrganisationType.SoleTraderOrIndividual)]
+        public async void HttpGet_Overview_WithOrganisationDetailsDisplayOption_AssociatedEntitiesShouldBeMapped(OrganisationType organisationType)
         {
             var organisationId = fixture.Create<Guid>();
             var schemeId = fixture.Create<Guid>();

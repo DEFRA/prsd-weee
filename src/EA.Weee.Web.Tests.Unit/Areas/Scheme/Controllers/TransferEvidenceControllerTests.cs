@@ -1919,10 +1919,8 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2022)]
-        public async Task TransferredEvidenceGet_GivenNoteData_ModelMapperShouldBeCalled(int? complianceYear)
+        [Fact]
+        public async Task TransferredEvidenceGet_GivenNoteData_ModelMapperShouldBeCalled()
         {
             // arrange 
             var noteData = TestFixture.Create<TransferEvidenceNoteData>();
@@ -1931,6 +1929,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(noteData);
 
             var redirectTab = TestFixture.Create<string>();
+
             // act
             await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab);
 

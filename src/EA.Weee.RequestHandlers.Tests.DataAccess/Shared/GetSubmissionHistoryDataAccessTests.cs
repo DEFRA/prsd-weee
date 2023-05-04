@@ -94,8 +94,8 @@
                 Assert.NotNull(result.Data);
                 Assert.Equal(2, result.Data.Count);
                 Assert.Collection(result.Data,
-                                  r1 => Assert.Equal(r1.Year, 2015),
-                                  r2 => Assert.Equal(r2.Year, 2015));
+                                  r1 => Assert.Equal(2015, r1.Year),
+                                  r2 => Assert.Equal(2015, r2.Year));
             }
         }
 

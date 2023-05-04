@@ -30,7 +30,7 @@
 
             var orgUsers = await handler.HandleAsync(new GetUserOrganisationsByStatus(new int[] { }));
 
-            Assert.Equal(0, orgUsers.Count);
+            Assert.Empty(orgUsers);
         }
 
         [Fact]
@@ -46,8 +46,8 @@
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
-            Assert.Equal(1, orgUsers.Count);
-            Assert.Equal(organisationUserInfo.UserStatus, UserStatus.Active);
+            Assert.Single(orgUsers);
+            Assert.Equal(UserStatus.Active, organisationUserInfo.UserStatus);
         }
 
         [Fact]
@@ -107,7 +107,7 @@
                 new int[] { },
                 new int[] { (int)Core.Shared.OrganisationStatus.Incomplete }));
 
-            Assert.Equal(1, orgUsers.Count);
+            Assert.Single(orgUsers);
             Assert.True(orgUsers.First().UserStatus == UserStatus.Active);
         }
 
@@ -121,7 +121,7 @@
                 new int[] { (int)UserStatus.Rejected },
                 new int[] { (int)Core.Shared.OrganisationStatus.Complete }));
 
-            Assert.Equal(1, orgUsers.Count);
+            Assert.Single(orgUsers);
             Assert.True(orgUsers.First().UserStatus == UserStatus.Rejected);
         }
 

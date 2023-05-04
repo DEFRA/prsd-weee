@@ -31,7 +31,9 @@
                 ReturnId = source.ReturnId,
                 AatfId = source.AatfId,
                 SiteAddress = addressUtilities.FormattedAddress(source.WeeeSentOn.SiteAddress),
+                SiteAddressData = source.WeeeSentOn.SiteAddress,
                 OperatorAddress = addressUtilities.FormattedAddress(source.WeeeSentOn.OperatorAddress),
+                OperatorAddressData = source.WeeeSentOn.OperatorAddress,
                 TonnageB2B = tonnages.B2B,
                 TonnageB2C = tonnages.B2C
             };

@@ -10,11 +10,14 @@
 @section full_main_content{
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
+
+            @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeader.cshtml", Model)
+
             <div class="govuk-tabs">
 
-                @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesOverviewHeaderAndTabs.cshtml", Model)
+                @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_ManageEvidenceNotesTabs.cshtml", Model)
 
-                <section class="govuk-tabs__panel" id="evidence-summary-panel">
+                <div class="govuk-tabs__panel" id="evidenceSummary">
 
                     <h2 class="govuk-heading-m">
                         Evidence summary for @Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
@@ -28,18 +31,18 @@
 
                     <p class="govuk-body govuk-!-margin-top-3 govuk-!-margin-bottom-1">
                         @(this.WeeeGds().ActionLinkWithEventTracking("Download summary report (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceSummaryReport(Model.ManageEvidenceNoteViewModel.AatfId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
-                                                                 "Downloads",
-                                                                 "Evidence summary report (CSV)"))
+                            null,
+                            Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceSummaryReport(Model.ManageEvidenceNoteViewModel.AatfId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)),
+                            "Downloads",
+                            "Evidence summary report (CSV)"))
                     </p>
 
                     <p class="govuk-body govuk-!-margin-top-1 govuk-!-margin-bottom-7">
                         @(this.WeeeGds().ActionLinkWithEventTracking("Download evidence notes report (CSV)",
-                                                                 null,
-                                                                 Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.ManageEvidenceNoteViewModel.AatfId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.OriginalTonnages)),
-                                                                 "Downloads",
-                                                                 "Evidence notes report (CSV)"))
+                            null,
+                            Url.UrlFor<ManageEvidenceNotesController>(c => c.DownloadEvidenceNotesReport(Model.ManageEvidenceNoteViewModel.AatfId, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, TonnageToDisplayReportEnum.OriginalTonnages)),
+                            "Downloads",
+                            "Evidence notes report (CSV)"))
                     </p>
 
                     <h2 class="govuk-heading-m">
@@ -94,8 +97,19 @@
                         </tbody>
                     </table>
                     <br />
-                </section>
+                </div>
+
             </div>
         </div>
     </div>
+
+}
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
 }

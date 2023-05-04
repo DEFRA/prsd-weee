@@ -2,8 +2,13 @@
 {
     using Api.Client;
     using Base;
+    using Core.Admin.Obligation;
+    using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Requests.Admin.Obligations;
+    using EA.Weee.Security;
+    using EA.Weee.Web.Filters;
+    using Extensions;
     using Infrastructure;
     using Mappings.ToViewModel;
     using Prsd.Core.Mapper;
@@ -16,9 +21,6 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Core.Admin.Obligation;
-    using Core.Scheme;
-    using Extensions;
     using ViewModels.Obligations;
     using Weee.Requests.Shared;
 
@@ -48,6 +50,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public ActionResult SelectAuthority()
         {
             return View("SelectAuthority", new SelectAuthorityViewModel());
@@ -55,17 +58,19 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public ActionResult SelectAuthority(SelectAuthorityViewModel model)
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("UploadObligations", new { authority = model.SelectedAuthority.Value});
+                return RedirectToAction("UploadObligations", new { authority = model.SelectedAuthority.Value });
             }
-            
+
             return View("SelectAuthority", model);
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> UploadObligations(CompetentAuthority authority, Guid? id, int? selectedComplianceYear, bool displayNotification = false)
         {
             using (var client = apiClient())
@@ -106,6 +111,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> UploadObligations(UploadObligationsViewModel model)
         {
             using (var client = apiClient())
@@ -138,6 +144,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> DownloadTemplate(CompetentAuthority authority)
         {
             using (var client = apiClient())

@@ -40,7 +40,6 @@
         [InlineData(false, false, true, false, false, false, true, false)]
         [InlineData(false, true, false, false, false, false, true, false)]
         [InlineData(true, false, false, false, false, false, true, false)]
-        [InlineData(true, false, false, false, false, false, true, false)]
         public async Task Validate_GivenScenario_ExpectedFlagsShouldBePresent(bool hasMultipleOfFacility, bool organisationHasOtherFacilityType, bool organisationHasAssociatedScheme,
             bool organisationHasOtherEntityOfSameType, bool organisationHasReturns, bool aatfHasReturnData, bool expectedToDeleteAatf, bool expectedToDeleteOrganisation)
         {

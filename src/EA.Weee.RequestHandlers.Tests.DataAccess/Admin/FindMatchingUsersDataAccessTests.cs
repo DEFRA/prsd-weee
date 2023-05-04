@@ -425,7 +425,7 @@
 
                 var result = await dataAccess.GetOrganisationUsers(filter);
 
-                Assert.Equal(0, result.Count());
+                Assert.Empty(result);
             }
         }
 

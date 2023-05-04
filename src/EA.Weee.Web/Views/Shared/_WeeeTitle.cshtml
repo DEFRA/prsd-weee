@@ -16,20 +16,13 @@
 
     bool showTitle = showBreadcrumb || showIdentity;
 
-    int columnCount = (showBreadcrumb ? 1 : 0) + (showIdentity ? 1 : 0);
+    var breadcrumbWidth = string.Empty;
+    var identityWidth = "govuk-grid-column-full";
 
-    string columnClass;
-    switch (columnCount)
+    if (showBreadcrumb)
     {
-        default:
-        case 0:
-        case 1:
-            columnClass = "column-full";
-            break;
-
-        case 2:
-            columnClass = "column-one-half";
-            break;
+        breadcrumbWidth = "govuk-grid-column-two-thirds";
+        identityWidth = "govuk-grid-column-one-third";
     }
 }
 @if (TempData[Constants.ErrorOccurred] == null || (TempData[Constants.ErrorOccurred] != null && (bool)TempData[Constants.ErrorOccurred] != true))
@@ -40,7 +33,7 @@
 
             @if (showBreadcrumb)
             {
-                <div class="@columnClass">
+                <div class="@breadcrumbWidth">
                     <div class="breadcrumb-title-display font-xsmall">
                         <ul class="govuk-breadcrumbs__list">
                             @if (Model.Breadcrumb.ExternalOrganisation != null)
@@ -48,21 +41,18 @@
                                 <li>
                                     @if (Model.ShowLinkToSelectOrganisation)
                                     {
+                                        <span>Organisation:&nbsp;<strong>@Model.Breadcrumb.ExternalOrganisation</strong>&nbsp;</span>
 
-                                        <div>
-                                            @this.WeeeGds().ActionLinkWithEventTracking("Organisation",
-                                                "Organisation link",
-                                                Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index()),
-                                                "Navigation",
-                                                "Organisation",
-                                                "Organisation")
-
-                                            : @Model.Breadcrumb.ExternalOrganisation
-                                        </div>
+                                        @(this.WeeeGds().ActionLinkWithEventTracking("Change organisation",
+                                            string.Empty,
+                                            Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index()),
+                                            "Navigation",
+                                            "Organisation",
+                                            "Organisation", new Dictionary<string, object>() { { "class", "organisation-title-display" } } ))
                                     }
                                     else
                                     {
-                                        @:Organisation: @Model.Breadcrumb.ExternalOrganisation
+                                        @:Organisation: <strong>@Model.Breadcrumb.ExternalOrganisation</strong>
                                     }
                                 </li>
                             }
@@ -70,69 +60,76 @@
                             @if (Model.Breadcrumb.ExternalActivity != null)
                             {
                                 <li>
-                                    @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                                  "External activity link",
-                                                  Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
-                                                  "Navigation",
-                                                  "External activity",
-                                                  null,
-                                                     new Dictionary<string, object> { { "title", "External activity link" } })) :
-                                    @Model.Breadcrumb.ExternalActivity
+                                    <span>Activity:&nbsp;<strong>@Model.Breadcrumb.ExternalActivity</strong> &nbsp;</span>
+
+                                    @(this.WeeeGds().ActionLinkWithEventTracking("Change activity",
+                                        string.Empty,
+                                        Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId)),
+                                        "Navigation",
+                                        "External activity",
+                                        null,
+                                        new Dictionary<string, object> { { "title", "External activity link" } }))
+
                                 </li>
                             }
 
                             @if (Model.Breadcrumb.InternalActivity != null)
                             {
                                 <li>
-                                    @(this.WeeeGds().ActionLinkWithEventTracking("Activity",
-                                                  "Internal activity link",
-                                                  Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
-                                                  "Navigation",
-                                                  "Internal activity",
-                                                  null,
-                                                  null)):
-                                    @Model.Breadcrumb.InternalActivity
+                                    <span>Activity:&nbsp;<strong>@Model.Breadcrumb.InternalActivity</strong> &nbsp;</span>
+
+                                    @(this.WeeeGds().ActionLinkWithEventTracking("Change activity",
+                                        string.Empty,
+                                        Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()),
+                                        "Navigation",
+                                        "Internal activity",
+                                        null,
+                                        null))
+
                                 </li>
                             }
 
                             @if (Model.Breadcrumb.InternalOrganisation != null)
                             {
                                 <li>
-                                    <a href="@Url.Action("ManageSchemes", "Scheme", new {Area = "admin"})">Organisation</a>: @Model.Breadcrumb.InternalOrganisation
+                                    <span>Organisation:&nbsp;<strong>@Model.Breadcrumb.InternalOrganisation</strong>&nbsp;</span>
+
+                                    <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Change organisation</a>
                                 </li>
                             }
                             else if (Model.Breadcrumb.InternalScheme != null)
                             {
                                 <li>
-                                    <a href="@Url.Action("ManageSchemes", "Scheme", new {Area = "admin"})">PCS</a>: @Model.Breadcrumb.InternalScheme
+                                    <span>PCS:&nbsp;<strong>@Model.Breadcrumb.InternalScheme</strong>&nbsp;</span>
+
+                                    <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Change PCS</a>
                                 </li>
                             }
 
                             @if (Model.Breadcrumb.InternalAatf != null)
                             {
                                 <li>
-                                    <a href="@Url.Action("ManageAatfs", "Aatf", new {Area = "admin", FacilityType = 1})">AATF</a>: @Model.Breadcrumb.InternalAatf
+                                    <span>AATF:&nbsp;<strong>@Model.Breadcrumb.InternalAatf</strong>&nbsp;</span>
+
+                                    <a href="@Url.Action("ManageAatfs", "Aatf", new { Area = "admin", FacilityType = 1 })">Change AATF</a>
                                 </li>
                             }
 
                             @if (Model.Breadcrumb.InternalAe != null)
                             {
                                 <li>
-                                    <a href="@Url.Action("ManageAatfs", "Aatf", new {Area = "admin", FacilityType = 2})">AE</a>: @Model.Breadcrumb.InternalAe
-                                </li>
-                            }
+                                    <span>AE:&nbsp;<strong>@Model.Breadcrumb.InternalAe</strong>&nbsp;</span>
 
-                            @if (Model.Breadcrumb.InternalUser != null)
-                            {
-                                <li>
-                                    <a href="@Url.Action("ManageUsers", "User", new {Area = "admin"})">User</a>: @Model.Breadcrumb.InternalUser
+                                    <a href="@Url.Action("ManageAatfs", "Aatf", new { Area = "admin", FacilityType = 2 })">Change AE</a>
                                 </li>
                             }
 
                             @if (Model.Breadcrumb.TestAreaActivity != null)
                             {
                                 <li>
-                                    <a href="@Url.Action("Index", "Home", new {Area = "test"})">Activity</a>: @Model.Breadcrumb.TestAreaActivity
+                                    <span>Activity:&nbsp;<strong>@Model.Breadcrumb.TestAreaActivity</strong>&nbsp;</span>
+
+                                    <a href="@Url.Action("Index", "Home", new { Area = "test" })">Change activity</a>
                                 </li>
                             }
                         </ul>
@@ -142,8 +139,7 @@
 
             @if (showIdentity)
             {
-                <div class="@columnClass">
-
+                <div class="@identityWidth">
 
                     <div class="username-title-display font-xsmall ">
 

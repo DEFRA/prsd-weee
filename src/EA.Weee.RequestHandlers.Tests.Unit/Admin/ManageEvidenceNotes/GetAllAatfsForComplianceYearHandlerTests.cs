@@ -6,7 +6,9 @@
     using System.Security;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Core.Helpers;
     using DataAccess.DataAccess;
+    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.Admin;
@@ -69,16 +71,15 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear, 
+                A<List<NoteStatus>>.That.IsSameSequenceAs(request.AllowedStatuses.Select(e => e.ToDomainEnumeration<NoteStatus>()).ToList()))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async void HandleAsync_GivenNullListOfAatfs_ArgumentExceptionShouldBeThrown()
         {
             // arrange
-            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear))
-                .Returns<List<AatfDomain>>(null);
+            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear, A<List<NoteStatus>>._)).Returns<List<AatfDomain>>(null);
 
             // act
             var result = await Record.ExceptionAsync(() => handler.HandleAsync(request));
@@ -97,8 +98,7 @@
 
             var aatfs = new List<AatfDomain> { aatf1, aatf2, aatf3 };
 
-            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear))
-              .Returns(aatfs);
+            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear, A<List<NoteStatus>>._)).Returns(aatfs);
 
             // act
             await handler.HandleAsync(request);
@@ -127,8 +127,8 @@
 
             listOrganisationSchemeData.OrderBy(d => d.DisplayName);
 
-            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear))
-              .Returns(aatfs);
+            A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear,
+                    A<List<NoteStatus>>._)).Returns(aatfs);
 
               A.CallTo(() => mapper.Map<List<AatfDomain>, List<EntityIdDisplayNameData>>(A<List<AatfDomain>>._))
                 .Returns(listOrganisationSchemeData);

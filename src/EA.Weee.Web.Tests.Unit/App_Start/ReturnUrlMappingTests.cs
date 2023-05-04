@@ -18,7 +18,7 @@
             bool result = mapping.IsMapped("/controller1/action1");
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@
             bool result = mapping.IsMapped("/controller1/action1");
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@
             bool result = mapping.IsMapped("/weee/controller1/action1");
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         /// <summary>

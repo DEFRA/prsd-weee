@@ -33,13 +33,14 @@ namespace EA.Weee.Web.Infrastructure.Paging
             public const bool AlwaysAddFirstPageNumber = false;
             public const string DefaultPageRouteValueKey = "page";
             public const string PreviousPageText = "Prev";
-            public const string PreviousPageTitle = "Previous page";
+            public const string PreviousPageTitle = "Select previous page";
             public const string NextPageText = "Next";
-            public const string NextPageTitle = "Next page";
+            public const string NextPageTitle = "Select next page";
             public const string FirstPageText = "<";
-            public const string FirstPageTitle = "First page";
+            public const string FirstPageTitle = "Select first page";
             public const string LastPageText = ">";
-            public const string LastPageTitle = "Last page";
+            public const string LastPageTitle = "Select last page";
+            public const string SelectPageTitle = @"Select page {0}";
             public const bool DisplayFirstAndLastPage = false;
             public const bool UseItemCountAsPageCount = false;
         }
@@ -62,6 +63,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
             public static string FirstPageTitle = DefaultDefaults.FirstPageTitle;
             public static string LastPageText = DefaultDefaults.LastPageText;
             public static string LastPageTitle = DefaultDefaults.LastPageTitle;
+            public static string SelectPageTitle = DefaultDefaults.SelectPageTitle;
             public static bool DisplayFirstAndLastPage = DefaultDefaults.DisplayFirstAndLastPage;
             public static bool UseItemCountAsPageCount = DefaultDefaults.UseItemCountAsPageCount;
 
@@ -81,6 +83,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
                 LastPageTitle = DefaultDefaults.LastPageTitle;
                 DisplayFirstAndLastPage = DefaultDefaults.DisplayFirstAndLastPage;
                 UseItemCountAsPageCount = DefaultDefaults.UseItemCountAsPageCount;
+                SelectPageTitle = DefaultDefaults.SelectPageTitle;
             }
         }
 
@@ -112,6 +115,8 @@ namespace EA.Weee.Web.Infrastructure.Paging
 
         public string LastPageTitle { get; set; }
 
+        public string SelectPageTitle { get; set; }
+
         public bool DisplayFirstAndLastPage { get; internal set; }
 
         public bool UseItemCountAsPageCount { get; internal set; }
@@ -131,6 +136,7 @@ namespace EA.Weee.Web.Infrastructure.Paging
             FirstPageTitle = DefaultDefaults.FirstPageTitle;
             LastPageText = DefaultDefaults.LastPageText;
             LastPageTitle = DefaultDefaults.LastPageTitle;
+            SelectPageTitle = DefaultDefaults.SelectPageTitle;
             DisplayFirstAndLastPage = DefaultDefaults.DisplayFirstAndLastPage;
             UseItemCountAsPageCount = DefaultDefaults.UseItemCountAsPageCount;
         }

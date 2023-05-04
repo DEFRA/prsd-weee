@@ -84,7 +84,7 @@
                 // Assert
                 Assert.NotNull(result);
                 Assert.Equal(countryId, result.Id);
-                Assert.Equal(result.Name, "UK - England");
+                Assert.Equal("UK - England", result.Name);
             }
         }
 
