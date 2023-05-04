@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SentOnRemoveSiteViewModel
 @{
@@ -15,62 +16,65 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.IsAatf)
 
-        <h1 class="govuk-heading-l">Are you sure you want to remove this AATF / ATF from your list?</h1>
-        <div class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-            <div class="govuk-table__head">
-                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
-                    <div class="govuk-grid-column-one-half">
-                        AATF / ATF name and address
+        <h1 class="govuk-heading-l">@Resources.AatfReturn.ReturnsResources.RemoveAATFATFConfirmTitle</h1>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key" style="width: 40%">
+                            @Resources.AatfReturn.ReturnsResources.AATFATFnameAndAddress
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Html.HiddenFor(model => model.SiteAddress)
+                            <span class="prsd-long-address">
+                                @Html.Raw(Model.SiteAddressData.ToAccessibleDisplayString(true, true))
+                            </span>
+                        </dd>
                     </div>
-                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
-                        @Html.HiddenFor(model => model.SiteAddress)
-                        @Html.Raw(Model.SiteAddress.Replace("\r\n", "<br />"))
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            @Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Html.HiddenFor(model => model.OperatorAddress)
+                            <span class="prsd-long-address">
+                                @Html.Raw(Model.OperatorAddressData.ToAccessibleDisplayString(true, true))
+                            </span>
+                        </dd>
                     </div>
-                </div>
-                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
-                    <div class="govuk-grid-column-one-half">
-                        Operator name and address
+
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            @Resources.AatfReturn.ReturnsResources.WEEESentB2C
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Html.HiddenFor(m => m.TonnageB2C)
+                            @Model.TonnageB2C
+                        </dd>
                     </div>
-                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
-                        @Html.HiddenFor(model => model.OperatorAddress)
-                        @Html.Raw(Model.OperatorAddress.Replace("\r\n", "<br />"))
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            @Resources.AatfReturn.ReturnsResources.WEEESentB2B
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Html.HiddenFor(m => m.TonnageB2B)
+                            @Model.TonnageB2B
+                        </dd>
                     </div>
-                </div>
-                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="border-bottom: 0px; width: 50%">
-                    <div class="govuk-grid-column-one-half">
-                        WEEE sent on
-                    </div>
-                </div>
-                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="border-bottom: 0px; width: 50%">
-                    <div class="govuk-grid-column-one-half">
-                        B2C
-                    </div>
-                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
-                        @Html.HiddenFor(m => m.TonnageB2C)
-                        @Model.TonnageB2C
-                    </div>
-                </div>
-                <div class="govuk-grid-row govuk-table__row govuk-table__header" style="width: 50%">
-                    <div class="govuk-grid-column-one-half">
-                        B2B
-                    </div>
-                    <div class="govuk-grid-column-one-half weee-tonnage-column-padding-left" style="font-weight: normal">
-                        @Html.HiddenFor(m => m.TonnageB2B)
-                        @Model.TonnageB2B
-                    </div>
-                </div>
+                </dl>
             </div>
         </div>
+
         <div class="govuk-grid-column-full">
             <div class="govuk-grid-row">
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
-                        Removing this AATF / ATF will delete all tonnage data associated with it
+                        @Resources.AatfReturn.ReturnsResources.RemoveAATFATFMsg
                     </strong>
                 </div>
-                <div class="govuk-!-padding-bottom-5"></div>
                 <div class="govuk-grid-column-full govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" style="padding-left: 0px; margin-bottom: 10px;">
                     @this.WeeeGds().RadioButtonsFor(
                         m => m.SelectedValue,
@@ -82,9 +86,7 @@
             </div>
         </div>
         <div class="govuk-!-padding-bottom-7"></div>
-        <button type="submit" name="save" class="govuk-button" id="site-details" data-module="govuk-button" data-prevent-double-click="true">
-            Save and continue
-        </button>
+        @(this.WeeeGds().Submit(Resources.AatfReturn.ReturnsResources.SaveAndContinue, new { name="save", id= "site-details" }))
     }
 
 </section>

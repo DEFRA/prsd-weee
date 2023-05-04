@@ -1,0 +1,21 @@
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Admin.ViewModels.ManageEvidenceNotes
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
+
+@model ManageEvidenceNotesViewModel
+@{
+    var title = "Manage evidence notes";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.Index())))
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        @title
+    </h1>
+</header>
+
+@{ Html.RenderPartial("_ComplianceYearPartial", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary() { { "controller", "ManageEvidenceNotes" }, { "tab", Model.ActiveDisplayOption.ToDisplayString() }});}

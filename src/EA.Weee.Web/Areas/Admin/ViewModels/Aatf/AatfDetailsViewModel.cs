@@ -9,10 +9,8 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Web.Areas.Admin.Helper;
     using Extensions;
     using Scheme.Overview.OrganisationDetails;
-    using Shared;
 
     public class AatfDetailsViewModel : OrganisationDetailsOverviewViewModel
     {
@@ -43,6 +41,8 @@
 
         [AllowHtml]
         public string OrganisationAddress { get; set; }
+
+        public AatfAddressData OrganisationAddressData { get; set; }
 
         public DateTime? ApprovalDate { get; set; }
 
@@ -116,9 +116,9 @@
             {
                 if (IsLatestComplianceYear)
                 {
-                   var list = ComplianceYearHelper.FetchCurrentComplianceYears(CurrentDate).Except(ComplianceYearList.Select(x => (int)x));
+                    var list = ComplianceYearHelper.FetchCurrentComplianceYears(CurrentDate).Except(ComplianceYearList.Select(x => (int)x));
 
-                   return list.Any() ? true : false;
+                    return list.Any() ? true : false;
                 }
                 return false;
             }

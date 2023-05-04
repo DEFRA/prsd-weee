@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Error;
+    using Domain.Evidence;
     using Domain.Lookup;
     using Domain.Obligation;
     using Domain.Scheme;
@@ -918,7 +919,7 @@
         }
 
         [Fact]
-        public async Task GetSchemesWithObligations_ShouldReturnSchemes()
+        public async Task GetSchemesWithObligationOrEvidence_ShouldReturnSchemes()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -928,22 +929,47 @@
 
                 var dataAccess = new ObligationDataAccess(userContext, new GenericDataAccess(database.WeeeContext), context);
                 var commonDataAccess = new CommonDataAccess(database.WeeeContext);
+                var authority = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
 
-                var authority1 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.England);
-                var authority2 = await commonDataAccess.FetchCompetentAuthority(CompetentAuthority.NorthernIreland);
+                var obligatedUpload = new ObligationUpload(authority, context.GetCurrentUser(), "data", "filename");
 
-                var obligatedUpload = new ObligationUpload(authority1, context.GetCurrentUser(), "data", "filename");
+                var defaultOrganisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation2 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation3 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation4 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation5 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation6 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation7 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation8 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation9 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation10 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation11 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation12 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation13 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation14 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation15 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation16 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation17 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation18 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation19 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation20 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation21 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation22 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation23 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var organisation24 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
 
-                var organisation = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                // scheme should be included as has obligation in compliance year
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation1);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority.Id, scheme1);
 
-                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority1.Id, scheme1);
+                // scheme should be included as has obligation in compliance year
+                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation2);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority.Id, scheme2);
 
-                var scheme2 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority2.Id, scheme2);
-
-                var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation);
-                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority2.Id, scheme3);
+                // scheme should not be returned as incorrect compliance year
+                var scheme3 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation3);
+                ObjectInstantiator<Domain.Scheme.Scheme>.SetProperty(s => s.CompetentAuthorityId, authority.Id, scheme3);
 
                 var obligationScheme12020 = new ObligationScheme(scheme1, 2022);
                 var obligationScheme22020 = new ObligationScheme(scheme2, 2022);
@@ -957,12 +983,193 @@
 
                 await context.SaveChangesAsync();
 
-                var results = await dataAccess.GetSchemesWithObligations(2022);
+                // scheme should be returned as note will be approved in compliance year 
+                var scheme4 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation4);
+                // scheme should not be returned as note will be created in an incorrect compliance year
+                var scheme5 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation5);
+                // scheme should be returned as recipient of transfer note in compliance year
+                var scheme6 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation6);
+                // scheme should not be returned as recipient of transfer note in incorrect compliance year
+                var scheme7 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation7);
+                // scheme should be returned as originator of transfer note in compliance year
+                var scheme8 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation8);
+                // scheme should not be returned as originator of transfer note in incorrect compliance year
+                var scheme9 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation9);
+                // scheme should not be returned as recipient of draft note in compliance year
+                var scheme10 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation10);
+                // scheme should not be returned as recipient of submitted note in compliance year
+                var scheme11 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation11);
+                // scheme should not be returned as recipient of returned note in compliance year
+                var scheme12 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation12);
+                // scheme should not be returned as recipient of rejected note in compliance year
+                var scheme13 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation13);
+                // scheme should not be returned as recipient of void note in compliance year
+                var scheme14 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation14);
+                // scheme should not be returned as recipient of draft transfer note in compliance year
+                var scheme15 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation15);
+                // scheme should not be returned as recipient of submitted transfer note in compliance year
+                var scheme16 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation16);
+                // scheme should not be returned as recipient of returned transfer note in compliance year
+                var scheme17 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation17);
+                // scheme should not be returned as recipient of rejected transfer note in compliance year
+                var scheme18 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation18);
+                // scheme should not be returned as recipient of void transfer note in compliance year
+                var scheme19 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation19);
+                // scheme should not be returned as originator of draft transfer note in compliance year
+                var scheme20 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation20);
+                // scheme should not be returned as originator of submitted transfer note in compliance year
+                var scheme21 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation21);
+                // scheme should not be returned as originator of returned transfer note in compliance year
+                var scheme22 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation22);
+                // scheme should not be returned as originator of rejected transfer note in compliance year
+                var scheme23 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation22);
+                // scheme should not be returned as originator of void transfer note in compliance year
+                var scheme24 = ObligatedWeeeIntegrationCommon.CreateScheme(organisation24);
+
+                context.Schemes.Add(scheme4);
+                context.Schemes.Add(scheme5);
+                context.Schemes.Add(scheme6);
+                context.Schemes.Add(scheme7);
+                context.Schemes.Add(scheme8);
+                context.Schemes.Add(scheme9);
+                context.Schemes.Add(scheme10);
+                context.Schemes.Add(scheme11);
+                context.Schemes.Add(scheme12);
+                context.Schemes.Add(scheme13);
+                context.Schemes.Add(scheme14);
+                context.Schemes.Add(scheme15);
+                context.Schemes.Add(scheme16);
+                context.Schemes.Add(scheme17);
+                context.Schemes.Add(scheme18);
+                context.Schemes.Add(scheme19);
+                context.Schemes.Add(scheme20);
+                context.Schemes.Add(scheme21);
+                context.Schemes.Add(scheme22);
+                context.Schemes.Add(scheme23);
+                context.Schemes.Add(scheme24);
+
+                await context.SaveChangesAsync();
+
+                var note1 = NoteCommon.CreateNote(database, defaultOrganisation, organisation1, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note1);
+
+                var note2 = NoteCommon.CreateNote(database, defaultOrganisation, organisation4, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note2);
+
+                var note3 = NoteCommon.CreateNote(database, defaultOrganisation, organisation5, complianceYear: 2023);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note3);
+
+                var note4 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation6, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note4);
+
+                var note5 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation7, complianceYear: 2023);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note5);
+
+                var note6 = NoteCommon.CreateTransferNote(database, organisation8, organisation2, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note6);
+
+                var note7 = NoteCommon.CreateTransferNote(database, organisation9, organisation2, complianceYear: 2023);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Approved, note7);
+
+                var note8 = NoteCommon.CreateNote(database, defaultOrganisation, organisation10, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Draft, note8);
+                
+                var note9 = NoteCommon.CreateNote(database, defaultOrganisation, organisation11, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Submitted, note9);
+
+                var note10 = NoteCommon.CreateNote(database, defaultOrganisation, organisation12, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Returned, note10);
+
+                var note11 = NoteCommon.CreateNote(database, defaultOrganisation, organisation13, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Rejected, note11);
+
+                var note12 = NoteCommon.CreateNote(database, defaultOrganisation, organisation14, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Void, note12);
+
+                var note13 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation15, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Draft, note13);
+
+                var note14 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation16, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Submitted, note14);
+
+                var note15 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation17, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Returned, note15);
+
+                var note16 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation18, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Rejected, note16);
+
+                var note17 = NoteCommon.CreateTransferNote(database, defaultOrganisation, organisation19, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Void, note17);
+
+                var note18 = NoteCommon.CreateTransferNote(database, organisation20, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Draft, note18);
+
+                var note19 = NoteCommon.CreateTransferNote(database, organisation21, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Submitted, note19);
+
+                var note20 = NoteCommon.CreateTransferNote(database, organisation22, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Returned, note20);
+
+                var note21 = NoteCommon.CreateTransferNote(database, organisation23, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Rejected, note21);
+
+                var note22 = NoteCommon.CreateTransferNote(database, organisation24, complianceYear: 2022);
+                ObjectInstantiator<Note>.SetProperty(n => n.Status, NoteStatus.Void, note22);
+
+                context.Notes.Add(note1);
+                context.Notes.Add(note2);
+                context.Notes.Add(note3);
+                context.Notes.Add(note4);
+                context.Notes.Add(note5);
+                context.Notes.Add(note6);
+                context.Notes.Add(note7);
+                context.Notes.Add(note8);
+                context.Notes.Add(note9);
+                context.Notes.Add(note10);
+                context.Notes.Add(note11);
+                context.Notes.Add(note12);
+                context.Notes.Add(note13);
+                context.Notes.Add(note14);
+                context.Notes.Add(note15);
+                context.Notes.Add(note16);
+                context.Notes.Add(note17);
+                context.Notes.Add(note18);
+                context.Notes.Add(note19);
+                context.Notes.Add(note20);
+                context.Notes.Add(note21);
+                context.Notes.Add(note22);
+
+                await context.SaveChangesAsync();
+
+                var results = await dataAccess.GetSchemesWithObligationOrEvidence(2022);
 
                 results.Should().OnlyHaveUniqueItems();
                 results.Should().Contain(scheme1);
                 results.Should().Contain(scheme2);
+                results.Should().Contain(scheme4);
+                results.Should().Contain(scheme6);
+                results.Should().Contain(scheme8);
                 results.Should().NotContain(scheme3);
+                results.Should().NotContain(scheme5);
+                results.Should().NotContain(scheme7);
+                results.Should().NotContain(scheme9);
+                results.Should().NotContain(scheme10);
+                results.Should().NotContain(scheme11);
+                results.Should().NotContain(scheme12);
+                results.Should().NotContain(scheme13);
+                results.Should().NotContain(scheme14);
+                results.Should().NotContain(scheme15);
+                results.Should().NotContain(scheme16);
+                results.Should().NotContain(scheme17);
+                results.Should().NotContain(scheme18);
+                results.Should().NotContain(scheme19);
+                results.Should().NotContain(scheme20);
+                results.Should().NotContain(scheme21);
+                results.Should().NotContain(scheme22);
+                results.Should().NotContain(scheme23);
+                results.Should().NotContain(scheme24);
+
+                results.Should().BeInAscendingOrder(r => r.SchemeName);
             }
         }
     }

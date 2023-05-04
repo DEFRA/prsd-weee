@@ -463,14 +463,14 @@
             Assert.Equal("ResetPasswordComplete", viewResult.ViewName);
         }
 
-        [HttpGet]
+        [Fact]
         public void HttpGet_InternalUserAuthorisationRequired_NoStatusIsSupplied_ThrowsInvalidException()
         {
             Assert.ThrowsAny<InvalidOperationException>(
                 () => AccountController().InternalUserAuthorisationRequired(null));
         }
 
-        [HttpGet]
+        [Fact]
         public void HttpGet_InternalUserAuthorisationRequired_ActiveStatusIsSupplied_RedirectsToHomeIndex()
         {
             var result = AccountController().InternalUserAuthorisationRequired(UserStatus.Active);

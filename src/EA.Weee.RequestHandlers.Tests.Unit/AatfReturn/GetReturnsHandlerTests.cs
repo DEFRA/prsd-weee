@@ -72,6 +72,7 @@
             A.CallTo(() => returnDataAccess.GetByOrganisationId(organisationId)).MustHaveHappened(1, Times.Exactly);
         }
 
+        [Fact]
         public async Task HandleAsync_GivenOrganisation_GetPopulatedReturnsShouldBeCalled()
         {
             var organisationId = Guid.NewGuid();

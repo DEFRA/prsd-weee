@@ -4,7 +4,7 @@
     using Mappings;
     using Xunit;
 
-    internal class EvidenceNoteWithCriteriaMapperTests
+    public class EvidenceNoteWithCriteriaMapperTests
     {
         [Fact]
         public void EvidenceNoteCriteriaMapper_ShouldDeriveFrom_EvidenceNoteWithCriteriaMapperBase()

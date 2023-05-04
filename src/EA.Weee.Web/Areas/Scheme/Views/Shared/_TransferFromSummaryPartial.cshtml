@@ -44,11 +44,7 @@
 <p class="govuk-body govuk-!-padding-bottom-5">Select evidence notes from the available evidence notes table. A maximum of 5 notes can be chosen.</p>
 
 @{
-    var displayWarning = false;
-    if (Model.ViewTransferNoteViewModel != null)
-    {
-        displayWarning = true;
-    }
+    bool displayWarning = Model.ViewTransferNoteViewModel != null;
 
     var displayRemovingWarningCss = displayWarning ? "block" : "none";
 }
@@ -60,63 +56,63 @@
 <table id="selected-notes-selection" class="govuk-table">
     <caption class="govuk-table__caption govuk-heading-m">Selected evidence notes</caption>
     <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header reference-column govuk-!-text-align-left">
-                Reference ID
-            </th>
-            <th class="govuk-table__header submitted-column govuk-!-text-align-left">
-                Submitted by
-            </th>
-            <th class="govuk-table__header tonnage-column govuk-!-text-align-left">
-                Available total (tonnes)
-            </th>
-            <th class="govuk-table__header add-remove-column">
-                <span class="govuk-visually-hidden">remove note</span>
-            </th>
-        </tr>
+    <tr class="govuk-table__row">
+        <th class="govuk-table__header reference-column govuk-!-text-align-left">
+            Reference ID
+        </th>
+        <th class="govuk-table__header submitted-column govuk-!-text-align-left">
+            Submitted by
+        </th>
+        <th class="govuk-table__header tonnage-column govuk-!-text-align-left">
+            Available total (tonnes)
+        </th>
+        <th class="govuk-table__header add-remove-column">
+            <span class="govuk-visually-hidden">remove note</span>
+        </th>
+    </tr>
     </thead>
     <tbody class="govuk-table__body">
 
-        @if (Model.EvidenceNotesDataList.Count > 0)
-        {
-            for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
-            {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-text-align-left">
-                        @Model.EvidenceNotesDataList[i].ReferenceDisplay
-                    </td>
-                    <td class="govuk-table__cell govuk-!-text-align-left">
-                        @Model.EvidenceNotesDataList[i].SubmittedBy
-                    </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataList[i].TotalAvailable</td>
-                    <td class="govuk-table__cell govuk-!-padding-left-5">
-                        @using (Html.BeginForm(actionName: "DeselectEvidenceNote", controllerName: controller, method: FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "deselected-evidence-note-page" + i })
-                            @Html.Hidden("deselectedEvidenceNoteId", Model.EvidenceNotesDataList[i].Id, new { id = "deselected-evidence-note-id" + i })
-                            @Html.Hidden("complianceYear", Model.ComplianceYear, new { id = "deselected-evidence-compliance-year" + i })
-                            @Html.Hidden("pcsId", Model.PcsId, new { id = "deselected-evidence-pcs" + i })
-                            @Html.Hidden("selected", false, new { id = "deselected-evidence-selected-true" + i })
-                            if (Model.ViewTransferNoteViewModel != null)
-                            {
-                                @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "deselect-evidence-id" + i })
-                            }
-
-                            <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
-                        }
-                    </td>
-                </tr>
-            }
-        }
-        else
+    @if (Model.EvidenceNotesDataList.Count > 0)
+    {
+        for (var i = 0; i < Model.EvidenceNotesDataList.Count; i++)
         {
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" colspan="4">
-                    There are currently no evidence notes selected to transfer evidence from
+                <td class="govuk-table__cell govuk-!-text-align-left">
+                    @Model.EvidenceNotesDataList[i].ReferenceDisplay
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-left">
+                    @Model.EvidenceNotesDataList[i].SubmittedBy
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataList[i].TotalAvailable</td>
+                <td class="govuk-table__cell govuk-!-padding-left-5">
+                    @using (Html.BeginForm(actionName: "DeselectEvidenceNote", controllerName: controller, method: FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "deselected-evidence-note-page" + i })
+                        @Html.Hidden("deselectedEvidenceNoteId", Model.EvidenceNotesDataList[i].Id, new { id = "deselected-evidence-note-id" + i })
+                        @Html.Hidden("complianceYear", Model.ComplianceYear, new { id = "deselected-evidence-compliance-year" + i })
+                        @Html.Hidden("pcsId", Model.PcsId, new { id = "deselected-evidence-pcs" + i })
+                        @Html.Hidden("selected", false, new { id = "deselected-evidence-selected-true" + i })
+                        if (Model.ViewTransferNoteViewModel != null)
+                        {
+                            @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "deselect-evidence-id" + i })
+                        }
+
+                        <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
+                    }
                 </td>
             </tr>
         }
+    }
+    else
+    {
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell" colspan="4">
+                There are currently no evidence notes selected to transfer evidence from
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
 
@@ -131,13 +127,17 @@
 }
 <div class="govuk-!-padding-top-3"></div>
 <div class="left-cleared"></div>
-<div class="govuk-form-group @displayNoteCountError">
-    <label for="@ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError" class="govuk-visually-hidden">hidden link for navigation to evidence error</label>
-    <input id="@ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError" class="govuk-visually-hidden" />
-    <p id="selectedNotesErrorText" class="govuk-error-message">
-        <span class="govuk-visually-hidden">Error:</span> @error
-    </p>
-</div>
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="govuk-form-group @displayNoteCountError">
+        <label for="@ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError" class="govuk-visually-hidden">hidden link for navigation to evidence error</label>
+        <input id="@ValidationKeyConstants.TransferEvidenceNotesSelectedNotesError" type="hidden"  aria-hidden="true"/>
+        <p id="selectedNotesErrorText" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> @error
+        </p>
+    </div>
+}
 
 <h3 class="govuk-heading-m">Available evidence notes</h3>
 
@@ -190,80 +190,80 @@
 <table id="transfer-notes-selection" class="govuk-table">
     <caption class="govuk-table__caption govuk-heading-m govuk-visually-hidden">Available evidence notes</caption>
     <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header reference-column govuk-!-text-align-left">
-                Reference ID
-            </th>
-            <th class="govuk-table__header submitted-column govuk-!-text-align-left">
-                Submitted by
-            </th>
-            <th class="govuk-table__header tonnage-column govuk-!-text-align-left">
-                Available total (tonnes)
-            </th>
-            <th class="govuk-table__header add-remove-column">
-                <span class="govuk-visually-hidden">add note</span>
-            </th>
-        </tr>
+    <tr class="govuk-table__row">
+        <th class="govuk-table__header reference-column govuk-!-text-align-left">
+            Reference ID
+        </th>
+        <th class="govuk-table__header submitted-column govuk-!-text-align-left">
+            Submitted by
+        </th>
+        <th class="govuk-table__header tonnage-column govuk-!-text-align-left">
+            Available total (tonnes)
+        </th>
+        <th class="govuk-table__header add-remove-column">
+            <span class="govuk-visually-hidden">add note</span>
+        </th>
+    </tr>
     </thead>
     <tbody class="govuk-table__body">
 
-        @if (Model.EvidenceNotesDataListPaged.Count > 0)
-        {
-            for (var i = 0; i < Model.EvidenceNotesDataListPaged.Count; i++)
-            {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell govuk-!-text-align-left">
-                        @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay
-                    </td>
-                    <td class="govuk-table__cell govuk-!-text-align-left">
-                        @Model.EvidenceNotesDataListPaged[i].SubmittedBy
-                    </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataListPaged[i].TotalReceived</td>
-                    <td class="govuk-table__cell govuk-!-padding-left-5">
-                        @using (Html.BeginForm(actionName: "SelectEvidenceNote", controllerName: controller, method: FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "selected-evidence-note-page" + i })
-                            @Html.Hidden("pageCount", Model.EvidenceNotesDataListPaged.Count, new { id = "selected-evidence-note-page-count" + i })
-                            @Html.Hidden("selectedEvidenceNoteId", Model.EvidenceNotesDataListPaged[i].Id, new { id = "selected-evidence-note-id" + i })
-                            @Html.Hidden("complianceYear", Model.ComplianceYear, new { id = "selected-evidence-compliance-year" + i })
-                            @Html.Hidden("pcsId", Model.PcsId, new { id = "selected-evidence-pcs" + i })
-                            @Html.Hidden("numberOfSelectedNotes", Model.EvidenceNotesDataList.Count, new { id = "selected-evidence-number-notes" + i })
-                            @Html.Hidden("searchRef", Model.SearchRef, new { id = "selected-evidence-note-search-ref" + i })
-
-                            if (Model.ViewTransferNoteViewModel != null)
-                            {
-                                @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "select-evidence-id" + i })
-                            }
-
-                            @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNotesDataListPaged[i].SchemeViewRouteName, new { pcsId = Model.PcsId, evidenceNoteId = @Model.EvidenceNotesDataListPaged[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference ID {0}", @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay)))
-                            <br />
-                            <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
-
-
-
-                        }
-                    </td>
-                </tr>
-            }
-        }
-        else
+    @if (Model.EvidenceNotesDataListPaged.Count > 0)
+    {
+        for (var i = 0; i < Model.EvidenceNotesDataListPaged.Count; i++)
         {
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell" colspan="4">
-
-                    @if (Model.SearchPerformed)
+                <td class="govuk-table__cell govuk-!-text-align-left">
+                    @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-left">
+                    @Model.EvidenceNotesDataListPaged[i].SubmittedBy
+                </td>
+                <td class="govuk-table__cell govuk-!-text-align-right">@Model.EvidenceNotesDataListPaged[i].TotalReceived</td>
+                <td class="govuk-table__cell govuk-!-padding-left-5">
+                    @using (Html.BeginForm(actionName: "SelectEvidenceNote", controllerName: controller, method: FormMethod.Post))
                     {
-                        <span>There are no search results with that reference ID. Please try again with another reference ID.</span>
-                    }
-                    else
-                    {
-                        <span>There are currently no evidence notes available to transfer from</span>
-                    }
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("page", Model.EvidenceNotesDataListPaged.PageNumber, new { id = "selected-evidence-note-page" + i })
+                        @Html.Hidden("pageCount", Model.EvidenceNotesDataListPaged.Count, new { id = "selected-evidence-note-page-count" + i })
+                        @Html.Hidden("selectedEvidenceNoteId", Model.EvidenceNotesDataListPaged[i].Id, new { id = "selected-evidence-note-id" + i })
+                        @Html.Hidden("complianceYear", Model.ComplianceYear, new { id = "selected-evidence-compliance-year" + i })
+                        @Html.Hidden("pcsId", Model.PcsId, new { id = "selected-evidence-pcs" + i })
+                        @Html.Hidden("numberOfSelectedNotes", Model.EvidenceNotesDataList.Count, new { id = "selected-evidence-number-notes" + i })
+                        @Html.Hidden("searchRef", Model.SearchRef, new { id = "selected-evidence-note-search-ref" + i })
 
+                        if (Model.ViewTransferNoteViewModel != null)
+                        {
+                            @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "select-evidence-id" + i })
+                        }
+
+                        @(this.WeeeGds().ActionLinkToNewTab("View", @Url.HttpRouteUrl(@Model.EvidenceNotesDataListPaged[i].SchemeViewRouteName, new { pcsId = Model.PcsId, evidenceNoteId = @Model.EvidenceNotesDataListPaged[i].Id, openedInNewTab = true }), string.Format("View evidence note with reference ID {0}", @Model.EvidenceNotesDataListPaged[i].ReferenceDisplay)))
+                        <br />
+                        <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", Model.EvidenceNotesDataListPaged[i].ReferenceDisplay))Add</button>
+
+
+
+                    }
                 </td>
             </tr>
         }
+    }
+    else
+    {
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell" colspan="4">
+
+                @if (Model.SearchPerformed)
+                {
+                    <span>There are no search results with that reference ID. Please try again with another reference ID.</span>
+                }
+                else
+                {
+                    <span>There are currently no evidence notes available to transfer from</span>
+                }
+
+            </td>
+        </tr>
+    }
 
     </tbody>
 </table>

@@ -19,7 +19,7 @@
             bool result = attribute.IsValid(emailAddress);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
 
         [Theory]
@@ -37,7 +37,7 @@
             bool result = attribute.IsValid(emailAddress);
 
             // Assert
-            Assert.Equal(false, result);
+            Assert.False(result);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@
             bool result = attribute.IsValid(emailAddress);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.True(result);
         }
     }
 }

@@ -39,16 +39,6 @@
     });
 
     // There is a bug with jQuery UI autocomplete whereby the content
-    // of the drop-down list becomes detached from the text-field when
-    // the window is resized. A simple fix for this is to hide the
-    // content if the window is resized. It will be re-positioned the
-    // next time it is displayed.
-    // See: http://stackoverflow.com/questions/8037483/repositioning-jquery-ui-autocomplete-on-browser-resize
-    $(window).resize(function () {
-        $('.ui-autocomplete').css('display', 'none');
-    });
-
-    // There is a bug with jQuery UI autocomplete whereby the content
     // of the drop-down list has the incorrect width. a fix for this
     // is to override the implementation of "_resizeMenu" to correctly
     // identify the parent element of the list.
@@ -65,12 +55,41 @@
     // When there is a validation erorr, move the ID from the select element to the auto-complete
     // textbox so that the links in the validation summary will work.
     countryInput.each(function () {
+        $(this).next("input").attr("autocomplete", "new-password");
 
         if ($(this).hasClass("input-validation-error")) {
             var validationInput = $(this).next("input");
             var id = $(this).attr("id");
             $(this).removeAttr("id");
             validationInput.attr("id", id);
+        }
+    });
+
+    $(window).resize(function () {
+
+        function positionDiv(input, div) {
+            var inputTop = input.offset().top;
+            var inputHeight = input.outerHeight();
+            var divTop = inputTop + inputHeight;
+
+            $(div).css({
+                position: "absolute",
+                top: divTop,
+                left: input.offset().left
+            });
+        }
+
+        //fix the search and country autocompletes
+        var autocompleteInput = $("#SearchTerm");
+        var autoCompleteSearchDiv = $(".ui-autocomplete");
+
+        if (autocompleteInput.length > 0) {
+            positionDiv(autocompleteInput, autoCompleteSearchDiv);
+        }
+        
+        var countryInput = $(".govuk-form-group.countries select");
+        if (countryInput.length > 0) {
+            positionDiv(countryInput.next("input"), autoCompleteSearchDiv);
         }
     });
 
@@ -90,6 +109,8 @@
         });
         return this;
     };
+
+
 
 
     // When a link is clicked in the validation summary, move the focus to the associated input.
@@ -300,6 +321,15 @@ function selectAllTransferNoteJourney() {
     setDefaultAsChecked();
 };
 
+function setupSelectedYear(url) {
+    $("#SelectedYear").change(function () {
+        var year = $(this).val();
+        if (year) {
+            window.location.href = url + '?selectedYear=' + year;
+        }
+    });
+}
+
 function setAAAutoCompleteZIndex() {
     var autoCompletes = document.getElementsByClassName('autocomplete__wrapper');
     autoCompletes[0].style.zIndex = 10;
@@ -311,6 +341,20 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
     $(".transfer-choose-notes-submit").prop("disabled", true);
     this.submit(); 
 });
+
+/* When a uer selects an item from the autocomplete, the ID is stored in the hidden input
+            called "SelectedOrganisationId".If the user changes the value of the search term
+            after making a selected, we need to clear this hidden value.
+
+            To do this, we cannot use the change event because FireFox fires this event
+            after the autocomplete's select event completes. This clears the value immediately
+            after it is set.
+
+            To avoid this, we can store the original search term in a variable and use the focus
+            and blur events to check for a change.The variable is updated by the autocomplete
+            select event to avoid the value being cleared after a selection is made.
+        */
+
 
 //USAGE: $("#form").serializeFiles();
 (function ($) {
@@ -329,4 +373,96 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
         });
         return formData;
     };
+
 })(jQuery);
+
+
+function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl) {
+    var searchTerm = '';
+    $("#SearchTerm")
+        .focus(function () { searchTerm = $(this).val(); })
+        .blur(function () { if (searchTerm != $(this).val()) { selectedValueControl.val(""); } })
+        .autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: searchUrl,
+                    context: document.body,
+                    data: { SearchTerm: request.term, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                    success: (data) => {
+                        var data = $.map(data, mapFunction);
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            delay: 500,
+            select: function (event, ui) {
+                $(this).val(ui.item.label);
+                selectedValueControl.val(ui.item.id);
+                searchTerm = $(this).val();
+
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // Do nothing.
+            }
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            $(ul).addClass("govuk-body govuk-list govuk-list--bullet");
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append(() => {
+                    if (renderFunction) {
+                        return renderFunction(item);
+                    } else {
+                        return "<span>" + item.label + "</span>";
+                    }
+                })
+                .appendTo(ul)
+        };
+}
+
+function initialiseTabs() {
+    var keys = { left: 37, right: 39, up: 38, down: 40 };
+    var tabListItems = Array.from(document.querySelectorAll('.govuk-tabs__list-item'));
+
+    var onTabKeydown = function (e) {
+        var currentTab = e.target.closest('.govuk-tabs__list-item');
+        var currentIndex = tabListItems.indexOf(currentTab);
+        var nextIndex;
+
+        switch (e.keyCode) {
+        case keys.left:
+        case keys.up:
+            nextIndex = currentIndex - 1;
+            break;
+        case keys.right:
+        case keys.down:
+            nextIndex = currentIndex + 1;
+            break;
+        default:
+            return;
+        }
+
+        e.preventDefault();
+
+        if (nextIndex >= 0 && nextIndex < tabListItems.length) {
+            var nextTab = tabListItems[nextIndex];
+
+            tabListItems.forEach((tab) => {
+                var link = tab.querySelector('a');
+                link.setAttribute('aria-selected', 'false');
+                link.setAttribute('tabindex', '-1');
+            });
+
+            var link = nextTab.querySelector('a');
+            link.setAttribute('aria-selected', 'true');
+            link.setAttribute('tabindex', '0');
+            link.click();
+        }
+    };
+
+    tabListItems.forEach((tab) => {
+        tab.addEventListener('keydown', onTabKeydown);
+    });
+}

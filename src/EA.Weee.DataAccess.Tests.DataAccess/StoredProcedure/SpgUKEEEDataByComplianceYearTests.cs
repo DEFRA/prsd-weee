@@ -46,7 +46,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(results.Count, 14);
+                Assert.Equal(14, results.Count);
 
                 var firstCategoryRecord = results[0];
                 var secondCategoryRecord = results[1];
@@ -99,7 +99,7 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(results.Count, 14);
+                Assert.Equal(14, results.Count);
                 var firstCategoryRecord = results[0];
                 Assert.Equal("01. Large household appliances", firstCategoryRecord.Category);
 

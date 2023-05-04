@@ -884,10 +884,10 @@
         }
 
         [Theory]
-        [InlineData("7.00", "6.00", "6.00", "5.00", "1.00", "1.00")]
-        [InlineData("5.00", "5.00", "5.00", "5.00", "0.00", "0.00")]
-        [InlineData("5.00", "5.00", "0.00", "0.00", "5.00", "5.00")]
-        [InlineData("5.00", "5.00", "6.00", "6.00", "0.00", "0.00")]
+        [InlineData(7.00, 6.00, 6.00, 5.00, 1.00, 1.00)]
+        [InlineData(5.00, 5.00, 5.00, 5.00, 0.00, 0.00)]
+        [InlineData(5.00, 5.00, 0.00, 0.00, 5.00, 5.00)]
+        [InlineData(5.00, 5.00, 6.00, 6.00, 0.00, 0.00)]
         public void Map_GivenNoteTransferTonnage_ShouldSumCorrectly(decimal totalReceive, decimal totalReuse, decimal transferReceive, decimal transferReused, decimal expectedAvailableReceive, decimal expectedAvailableReuse)
         {
             //Arrange

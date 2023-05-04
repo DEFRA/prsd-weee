@@ -15,6 +15,7 @@
     using ViewModels.Home;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.GetActiveComplianceYears;
+    using Weee.Requests.Admin.Reports;
     using Weee.Requests.Shared;
 
     public class ReportsBaseController : AdminController
@@ -74,6 +75,20 @@
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
             }
+        }
+
+        protected async Task<List<SchemeData>> FetchSchemesWithObligationOrEvidence(int complianceYear)
+        {
+            if (complianceYear > 0)
+            {
+                var request = new GetSchemesWithObligationOrEvidence(complianceYear);
+                using (var client = ApiClient())
+                {
+                    return await client.SendAsync(User.GetAccessToken(), request);
+                }
+            }
+
+            return new List<SchemeData>();
         }
 
         protected async Task<List<int>> FetchComplianceYearsForAatf()

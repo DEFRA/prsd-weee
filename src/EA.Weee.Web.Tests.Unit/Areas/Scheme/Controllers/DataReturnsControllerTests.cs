@@ -225,6 +225,7 @@
         /// has data returns enabled, the specified "pcsId" parameter is for a non-approved scheme and the user
         /// is requesting the "AuthorisationRequired" action. This prevents an infinite loop from occuring.
         /// </summary>
+        [Fact]
         public void OnActionExecuting_ConfigEnabledAndSpecifiedSchemeIsNotApprovedAndActionIsAuthorisationRequired_DoesNothing()
         {
             // Arrange
@@ -253,7 +254,7 @@
 
             // Act
             ActionDescriptor actionDescriptor = A.Fake<ActionDescriptor>();
-            A.CallTo(() => actionDescriptor.ActionName == "AuthorisationRequired");
+            A.CallTo(() => actionDescriptor.ActionName).Returns("AuthorisationRequired");
 
             ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
             actionExecutingContext.ActionParameters = new Dictionary<string, object>();
@@ -264,19 +265,16 @@
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
-            Action testCode = () =>
+            object[] args = new object[] { actionExecutingContext };
+            try
             {
-                object[] args = new object[] { actionExecutingContext };
-                try
-                {
-                    onActionExecutingMethod.Invoke(controller, args);
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
-            };
-
+                onActionExecutingMethod.Invoke(controller, args);
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+            
             // Assert
             Assert.Null(actionExecutingContext.Result);
         }
@@ -286,6 +284,7 @@
         /// when the configuration has data returns enabled, the specified "pcsId" parameter is for a non-approved scheme and the user
         /// is not already requesting the "AuthorizationRequired" action.
         /// </summary>
+        [Fact]
         public void OnActionExecuting_ConfigEnabledAndSpecifiedSchemeIsNotApprovedAndActionIsNotAuthorisationRequired_RedirectsToAuthorisationRequired()
         {
             // Arrange
@@ -314,7 +313,7 @@
 
             // Act
             ActionDescriptor actionDescriptor = A.Fake<ActionDescriptor>();
-            A.CallTo(() => actionDescriptor.ActionName == "SomeOtherAction");
+            A.CallTo(() => actionDescriptor.ActionName).Returns("SomeOtherAction");
 
             ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
             actionExecutingContext.ActionParameters = new Dictionary<string, object>();
@@ -325,19 +324,16 @@
                 "OnActionExecuting",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
-            Action testCode = () =>
+            object[] args = new object[] { actionExecutingContext };
+            try
             {
-                object[] args = new object[] { actionExecutingContext };
-                try
-                {
-                    onActionExecutingMethod.Invoke(controller, args);
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException;
-                }
-            };
-
+                onActionExecutingMethod.Invoke(controller, args);
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+            
             // Assert
             RedirectToRouteResult redirectResult = actionExecutingContext.Result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);

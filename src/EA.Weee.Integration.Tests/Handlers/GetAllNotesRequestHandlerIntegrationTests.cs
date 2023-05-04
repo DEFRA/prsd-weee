@@ -16,6 +16,7 @@
     using EA.Weee.Requests.Admin;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
@@ -906,7 +907,7 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetData: true)
                     .WithInternalUserAccess();
 
                 var authority = Query.GetEaCompetentAuthority();

@@ -11,11 +11,14 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
+
+            @Html.Partial("~/Areas/Admin/Views/ManageEvidenceNotes/_ManageEvidenceNotesHeader.cshtml", Model)
+
             <div class="govuk-tabs">
+                
+                @Html.Partial("~/Areas/Admin/Views/ManageEvidenceNotes/_ManageEvidenceNotesTabs.cshtml", Model)
 
-                @Html.Partial("_ManageEvidenceNotesTabs", Model)
-
-                <section class="govuk-tabs__panel" id="allTransferNotes">
+                <div class="govuk-tabs__panel" id="allTransferNotes">
 
                     <h2 class="govuk-heading-m govuk-!-padding-bottom-4">
                         View all evidence transfers
@@ -99,7 +102,7 @@
                     <br />
                     @{
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                        {
+                                {
                             {
                                 "pagerRouteValues", new
                                 {
@@ -119,7 +122,8 @@
                             }
                         });
                     }
-                </section>
+                </div>
+
             </div>
         </div>
     </div>
@@ -128,6 +132,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             setAAAutoCompleteZIndex();
+            initialiseTabs();
         });
     </script>
 }

@@ -43,6 +43,10 @@
 
         <div class="govuk-!-margin-top-7"></div>
 
+        <p class="govuk-body">
+            @Html.ActionLink("Download as PDF", "DownloadTransferEvidenceNote", "TransferEvidence", new { area = "Scheme", pcsId = Model.ViewTransferNoteViewModel.SchemeId, transferEvidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId }, new { @class = "govuk-link" })
+        </p>
+
         <!-- radiobuttons for approved only -->
         <p class="govuk-!-margin-top-7">Choose whether to approve, reject or return the evidence note transfer</p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="SelectedValue">

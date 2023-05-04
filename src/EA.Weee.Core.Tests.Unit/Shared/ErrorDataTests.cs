@@ -15,7 +15,7 @@
             bool isEqual = error.Equals(error);
 
             // Assert
-            Assert.Equal(true, isEqual);
+            Assert.True(isEqual);
         }
 
         [Fact]
@@ -28,7 +28,7 @@
             bool isEqual = error.Equals(null);
 
             // Assert
-            Assert.Equal(false, isEqual);
+            Assert.False(isEqual);
         }
 
         [Fact]
@@ -42,7 +42,7 @@
             bool isEqual = error1.Equals(error2);
 
             // Assert
-            Assert.Equal(true, isEqual);
+            Assert.True(isEqual);
         }
 
         [Fact]
@@ -56,7 +56,7 @@
             bool isEqual = error1.Equals(error2);
 
             // Assert
-            Assert.Equal(false, isEqual);
+            Assert.False(isEqual);
         }
 
         [Fact]
@@ -70,7 +70,7 @@
             bool isEqual = error1.Equals(error2);
 
             // Assert
-            Assert.Equal(false, isEqual);
+            Assert.False(isEqual);
         }
     }
 }

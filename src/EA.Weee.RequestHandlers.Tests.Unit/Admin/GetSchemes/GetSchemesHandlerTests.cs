@@ -100,7 +100,7 @@
 
             // Assert
             Assert.NotNull(results);
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
 
             Assert.Contains(results, r => r.SchemeName == "Scheme Approved");
         }

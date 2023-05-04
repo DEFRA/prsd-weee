@@ -106,6 +106,36 @@
         }
 
         [Fact]
+        public void Map_GivenWeeeSentOnSiteAddress_MappedSiteAddressDataShouldBeReturned()
+        {
+            var siteAddressLong = "Site name<br/>Site address 1<br/>Site address 2<br/>Site town<br/>Site county<br/>GU22 7UY<br/>Site country";
+
+            var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
+
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.SiteAddress, true)).Returns(siteAddressLong);
+
+            var result = mapper.Map(transfer);
+
+            result.SiteAddress.Should().Be(siteAddressLong);
+            result.SiteAddressData.Should().Be(transfer.WeeeSentOn.SiteAddress);
+        }
+
+        [Fact]
+        public void Map_GivenWeeeSentOnOperatorAddress_OperatorAddressDataIsMapped()
+        {
+            var operatorAddrAddressLong = "Operator name<br/>Operator address 1<br/>Operator address 2<br/>Operator town<br/>Operator county<br/>GU22 7UY<br/>Operator country";
+
+            var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
+
+            A.CallTo(() => addressUtilities.FormattedAddress(transfer.WeeeSentOn.OperatorAddress, true)).Returns(operatorAddrAddressLong);
+
+            var result = mapper.Map(transfer);
+
+            result.OperatorAddress.Should().Be(operatorAddrAddressLong);
+            result.OperatorAddressData.Should().Be(transfer.WeeeSentOn.OperatorAddress);
+        }
+
+        [Fact]
         public void Map_GivenWeeeSentOnOperatorAddress_OperatorAddressShouldBeMapped()
         {
             var transfer = ReturnAndAatfToSentOnRemoveSiteViewModelMapTransfer();
@@ -130,11 +160,17 @@
 
         private WeeeSentOnData WeeeSentOn()
         {
+            var siteCoutryId = Guid.Empty;
+            var operatorCoutryId = Guid.Empty;
+
+            var siteAddress = new AatfAddressData("Site name", "Site address 1", "Site address 2", "Site town", "Site county", "GU22 7UY", siteCoutryId, "Site country");
+            var operatorAddress = new AatfAddressData("Operator name", "Operator address 1", "Operator address 2", "Operator town", "Operator county", "GU22 7UY", operatorCoutryId, "Operator country");
+
             return new WeeeSentOnData()
             {
                 Tonnages = new List<WeeeObligatedData>(),
-                SiteAddress = new AatfAddressData(),
-                OperatorAddress = new AatfAddressData(),
+                SiteAddress = siteAddress,
+                OperatorAddress = operatorAddress,
             };
         }
 

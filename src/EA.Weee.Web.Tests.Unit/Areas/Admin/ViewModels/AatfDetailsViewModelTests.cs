@@ -29,7 +29,7 @@
 
         [Theory]
         [InlineData(FacilityType.Aatf, "AATF")]
-        [InlineData(FacilityType.Aatf, "AATF")]
+        [InlineData(FacilityType.Ae, "AE")]
         public void ViewModel_GetFacilityTypeString(FacilityType type, string expected)
         {
             AatfDetailsViewModel model = new AatfDetailsViewModel()

@@ -11,6 +11,7 @@
     using Domain.User;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.Organisations;

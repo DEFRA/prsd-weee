@@ -112,7 +112,7 @@
             IEnumerable<OrganisationUserData> inaccessibleOrganisations =
                 viewResult.ViewBag.InaccessibleOrganisations as IEnumerable<OrganisationUserData>;
 
-            Assert.Equal(1, inaccessibleOrganisations.Count());
+            Assert.Single(inaccessibleOrganisations);
 
             Assert.Equal(organisationId2, inaccessibleOrganisations.First().OrganisationId);
             Assert.Equal("Organisation Name 2", inaccessibleOrganisations.First().Organisation.OrganisationName);
@@ -156,7 +156,7 @@
 
             PendingOrganisationsViewModel model = viewResult.Model as PendingOrganisationsViewModel;
 
-            Assert.Equal(1, model.InaccessibleOrganisations.Count());
+            Assert.Single(model.InaccessibleOrganisations);
 
             Assert.Equal(organisationId, model.InaccessibleOrganisations.First().OrganisationId);
             Assert.Equal("Organisation Name 1", model.InaccessibleOrganisations.First().Organisation.OrganisationName);
@@ -180,7 +180,7 @@
 
             RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
 
-            Assert.Equal(null, redirectResult.RouteValues["area"] as string, ignoreCase: true);
+            Assert.Null(redirectResult.RouteValues["area"] as string);
             Assert.Equal("organisationregistration", redirectResult.RouteValues["controller"] as string, ignoreCase: true);
             Assert.Equal("Search", redirectResult.RouteValues["action"] as string, ignoreCase: true);
         }
@@ -232,7 +232,7 @@
             Assert.IsAssignableFrom<PendingOrganisationsViewModel>(viewResult.Model);
             PendingOrganisationsViewModel model = viewResult.Model as PendingOrganisationsViewModel;
 
-            Assert.Equal(1, model.InaccessibleOrganisations.Count());
+            Assert.Single(model.InaccessibleOrganisations);
             OrganisationUserData result1 = model.InaccessibleOrganisations.First();
 
             Assert.Equal(UserStatus.Pending, result1.UserStatus);
@@ -285,7 +285,7 @@
             Assert.IsAssignableFrom<PendingOrganisationsViewModel>(viewResult.Model);
             PendingOrganisationsViewModel model = viewResult.Model as PendingOrganisationsViewModel;
 
-            Assert.Equal(1, model.InaccessibleOrganisations.Count());
+            Assert.Single(model.InaccessibleOrganisations);
             OrganisationUserData result1 = model.InaccessibleOrganisations.First();
 
             Assert.Equal(UserStatus.Inactive, result1.UserStatus);

@@ -75,7 +75,7 @@
             AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(InternalUserId.ToString());
             var id = await handler.HandleAsync(message);
             A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
-            Assert.NotNull(id);
+            Assert.Equal(Guid.Empty, id);
         }
 
         [Fact]
@@ -88,7 +88,7 @@
         }
 
         [Fact]
-        public async void AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSucess()
+        public async void AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSuccess()
         {
             A.CallTo(() => testInternalUserEmailDomains.UserTestModeEnabled).Returns(true);
             A.CallTo(() => testInternalUserEmailDomains.Domains).Returns(new List<string>() { "co.uk" });
@@ -98,7 +98,7 @@
             A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("true");
             Guid id = await handler.HandleAsync(message);
             A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
-            Assert.NotNull(id);
+            Assert.Equal(Guid.Empty, id);
         }
 
         private static User FakeUserData()
