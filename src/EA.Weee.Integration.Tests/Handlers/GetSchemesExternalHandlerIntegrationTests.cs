@@ -7,12 +7,11 @@
     using Autofac;
     using Base;
     using Builders;
-    using Core.Helpers;
     using Core.Scheme;
-    using Domain.Organisation;
     using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
@@ -199,7 +198,7 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetData: true)
                     .WithExternalUserAccess();
 
                 handler = Container.Resolve<IRequestHandler<GetSchemesExternal, List<SchemeData>>>();

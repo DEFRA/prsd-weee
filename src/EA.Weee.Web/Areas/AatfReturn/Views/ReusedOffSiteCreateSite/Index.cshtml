@@ -20,9 +20,7 @@
         @Html.EditorFor(m => m.AddressData)
 
         <div class="govuk-!-padding-bottom-3"></div>
-        <button type="submit" name="save" class="govuk-button" id="site-details" data-module="govuk-button" data-prevent-double-click="true">
-            Save and continue
-        </button>
+        @(this.WeeeGds().Submit(Resources.AatfReturn.ReturnsResources.SaveAndContinue, new { name="save", id="site-details" }))
     }
     @if (Model.HasSites)
     {

@@ -42,7 +42,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 ProducerCsvData result = results[0];
 
@@ -86,7 +86,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -120,7 +120,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 ProducerCsvData result = results[0];
 
@@ -158,7 +158,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 ProducerCsvData result = results[0];
 
@@ -196,7 +196,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 ProducerCsvData result = results[0];
 
@@ -248,7 +248,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 ProducerCsvData result = results[0];
 
@@ -295,7 +295,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 ProducerCsvData result = results[0];
 
@@ -483,7 +483,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 ProducerCsvData result = results[0];
 

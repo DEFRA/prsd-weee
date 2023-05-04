@@ -24,6 +24,10 @@
         [AllowHtml]
         public string OperatorAddress { get; set; }
 
+        public AatfAddressData SiteAddressData { get; set; }
+
+        public AatfAddressData OperatorAddressData { get; set; }
+
         public string TonnageB2B { get; set; }
 
         public string TonnageB2C { get; set; }

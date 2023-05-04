@@ -66,7 +66,7 @@
 
             var strings = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Test"));
 
-            Assert.Equal(1, strings.Results.Count());
+            Assert.Single(strings.Results);
         }
 
         [Fact]

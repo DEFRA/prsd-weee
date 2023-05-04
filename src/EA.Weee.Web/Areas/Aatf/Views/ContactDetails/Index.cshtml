@@ -13,7 +13,7 @@
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
-                @title
+            @title
         </h1>
     </header>
 
@@ -23,77 +23,21 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
 
-       <p class="govuk-body">@Model.FacilityType.ToDisplayString() name: @Model.AatfName</p>
+        <p class="govuk-body">@Model.FacilityType.ToDisplayString() name: @Model.AatfName</p>
 
-        <table class="govuk-table">
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">First name</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.FirstName
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Last name</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.LastName
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Position</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.Position
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Address line 1</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.AddressData.Address1
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Address line 2</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.AddressData.Address2
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Town or city</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.AddressData.TownOrCity
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">County or region</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.AddressData.CountyOrRegion
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Postcode</th>
-            <td class="govuk-table__cell">
-                @Model.Contact.AddressData.Postcode
-            </td>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Country</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.AddressData.CountryName
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Phone</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.Telephone
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">Email</th>
-                <td class="govuk-table__cell">
-                    @Model.Contact.Email
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        @(this.WeeeGds().TableSummary(title, new Dictionary<string, object> {
+            { @Resources.Aatf.AatfResources.FirstName, @Model.Contact.FirstName },
+            { @Resources.Aatf.AatfResources.LastName, @Model.Contact.LastName },
+            { @Resources.Aatf.AatfResources.Position, @Model.Contact.Position },
+            { @Resources.Aatf.AatfResources.AddressLine1, @Model.Contact.AddressData.Address1 },
+            { @Resources.Aatf.AatfResources.AddressLine2, @Model.Contact.AddressData.Address2 },
+            { @Resources.Aatf.AatfResources.TownOrCity, @Model.Contact.AddressData.TownOrCity },
+            { @Resources.Aatf.AatfResources.CountyOrRegion, @Model.Contact.AddressData.CountyOrRegion },
+            { @Resources.Aatf.AatfResources.Postcode, @Model.Contact.AddressData.Postcode },
+            { @Resources.Aatf.AatfResources.Country, @Model.Contact.AddressData.CountryName },
+            { @Resources.Aatf.AatfResources.Phone, @Model.Contact.Telephone },
+            { @Resources.Aatf.AatfResources.EmailAddress, @Model.Contact.Email }
+        }))
 
         <p>
             <a href="@(Url.UrlFor<ContactDetailsController>(a => a.Edit(Model.AatfId)))">Edit  @Model.FacilityType.ToDisplayString() contact details</a>

@@ -1,21 +1,54 @@
 ﻿@{
     ViewBag.Title = "ProtocolTypesProgressiveDisclosure";
 }
-<p>
-    <span class="weee-span-as-cell" style="width: 35%">
-        Actual<br>
-        LDA protocol<br>
-        SMW protocol<br>
-        Site specific protocol<br>
-        Reuse Network PWP <br>
-        Light iron protocol
-    </span>
-    <span class="weee-span-as-cell">
-        (Tonnages are determined by weighing each category)<br>
-        (Large domestic appliance protocol)<br>
-        (Small mixed WEEE protocol)<br>
-        (also referred to as 'SSP') <br>
-        (Reuse Network Product Weight Protocol) <br>
-        (WEEE in light iron protocol) <br>
-    </span>
-</p>
+
+<style>
+    #protocol-table th {
+        width: 33%;
+    }
+
+    @@media (max-width: 600px) {
+        #protocol-table tr {
+            display: flex;
+            flex-direction: column;
+        }
+        #protocol-table th {
+            width: 100%;
+            padding-top: 0.5em;
+            font-weight: 700;
+        }
+        #protocol-table td {
+            order: 2;
+            padding-top: 0.25em;
+        }
+    }
+    
+</style>
+
+
+<table id="protocol-table" role="presentation">
+    <tr>
+        <th class="govuk-!-text-align-left">Actual</th>
+        <td>(Tonnages are determined by weighing each category)</td>
+    </tr>
+    <tr>
+        <th class="govuk-!-text-align-left">LDA protocol</th>
+        <td>(Large domestic appliance protocol)</td>
+    </tr>
+    <tr>
+        <th class="govuk-!-text-align-left">SMW protocol</th>
+        <td>(Small mixed WEEE protocol)</td>
+    </tr>
+    <tr>
+        <th class="govuk-!-text-align-left">Site specific protocol</th>
+        <td>(also referred to as 'SSP')</td>
+    </tr>
+    <tr>
+        <th class="govuk-!-text-align-left">Reuse Network PWP </th>
+        <td>(Reuse Network Product Weight Protocol)</td>
+    </tr>
+    <tr>
+        <th class="govuk-!-text-align-left">Light iron protocol </th>
+        <td>(WEEE in light iron protocol)</td>
+    </tr>
+</table>

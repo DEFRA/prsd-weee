@@ -16,6 +16,7 @@
     using EA.Weee.Requests.Admin;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
@@ -232,7 +233,7 @@
             public static void LocalSetup(bool clearDb = true)
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: clearDb)
+                    .WithDefaultSettings(resetData: clearDb)
                     .WithInternalUserAccess();
 
                 Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);

@@ -10,6 +10,7 @@
     using Domain.Scheme;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
@@ -149,7 +150,7 @@
             {
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
-                    .WithTestData(true)
+                    .WithTestData(resetData: true)
                     .WithInternalUserAccess();
 
                 Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);

@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Integration.Tests.Handlers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -16,19 +15,22 @@
     using EA.Weee.Requests.Admin;
     using FluentAssertions;
     using NUnit.Specifications;
+    using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
-    using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
-    using NoteType = Core.AatfEvidence.NoteType;
     using UserStatus = Domain.User.UserStatus;
-    using WasteType = Core.AatfEvidence.WasteType;
 
     public class GetAllAatfsForComplianceYearHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIGetAListOfEntityIdDisplayNameDataWitSelectedComplianceYear : GetAllAatfsForComplianceYearHandlerTestBase
+        public class GetAllAatfsForComplianceForSelectedComplianceYear : GetAllAatfsForComplianceYearHandlerTestBase
         {
+            private static Aatf aatf1;
+            private static Aatf aatf2;
+            private static Aatf aatf3;
+            private static Aatf aatf4;
+
             private readonly Establish context = () =>
             {
                 LocalSetup();
@@ -39,6 +41,7 @@
                 aatf1 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 aatf2 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
                 aatf3 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
+                aatf4 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id)
                     .WithStatus(UserStatus.Active)
@@ -59,6 +62,7 @@
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .WithComplianceYear(complianceYear)
                     .WithAatf(aatf2.Id)
@@ -69,14 +73,47 @@
                     .With(n =>
                     {
                         n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Approved, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Void, UserId.ToString(), SystemTime.UtcNow);
                     })
                     .WithComplianceYear(complianceYear)
                     .WithAatf(aatf3.Id)
                     .Create();
 
+                var evidence4 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Returned, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatf3.Id)
+                    .Create();
+
+                var evidence5 = EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .With(n =>
+                    {
+                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
+                        n.UpdateStatus(NoteStatusDomain.Rejected, UserId.ToString(), SystemTime.UtcNow);
+                    })
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatf3.Id)
+                    .Create();
+
+                // draft note so aatf should not be in the results
+                EvidenceNoteDbSetup.Init()
+                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
+                    .WithComplianceYear(complianceYear)
+                    .WithAatf(aatf4.Id)
+                    .Create();
+
                 notesSet.Add(evidence1);
                 notesSet.Add(evidence2);
                 notesSet.Add(evidence3);
+                notesSet.Add(evidence4);
+                notesSet.Add(evidence5);
 
                 aatfSet.Add(aatf1);
                 aatfSet.Add(aatf2);
@@ -95,10 +132,9 @@
                 listOfEntityIdDisplayNameData.Should().NotBeNull();
             };
 
-            private readonly It shouldHaveExpectedResultsCountToBeSetOfNotes = () =>
+            private readonly It shouldHaveExpectedResultsCountToBeSetOfAatfsNotes = () =>
             {
-                listOfEntityIdDisplayNameData.Should().HaveCount(notesSet.Count);
-                listOfEntityIdDisplayNameData.Count.Should().Be(notesSet.Count);
+                listOfEntityIdDisplayNameData.Should().HaveCount(aatfSet.Count);
             };
 
             private readonly It shouldHaveExpectedData = () =>
@@ -108,64 +144,20 @@
 
                 resultAatfIds.Should().BeEquivalentTo(originalAatfIds);
             };
-        }
 
-        [Component]
-        public class WhenIGetAnEmptyListOfEntityIdDisplayNameDataForAComplianceYear : GetAllAatfsForComplianceYearHandlerTestBase
-        {
-            private readonly Establish context = () =>
+            private readonly It shouldHaveExcludedExpectedData = () =>
             {
-                LocalSetup();
-
-                organisation = OrganisationDbSetup.Init().Create();
-                aatf1 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
-                aatf2 = AatfDbSetup.Init().WithOrganisation(organisation.Id).Create();
-
-                OrganisationUserDbSetup.Init()
-                    .WithUserIdAndOrganisationId(UserId, organisation.Id)
-                    .WithStatus(UserStatus.Active)
-                    .Create();
-
-                var evidence1 = EvidenceNoteDbSetup.Init()
-                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
-                    .With(n =>
-                    {
-                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                    })
-                    .WithComplianceYear(1)
-                    .WithAatf(aatf1.Id)
-                    .Create();
-
-                var evidence2 = EvidenceNoteDbSetup.Init()
-                    .WithRecipient(SchemeDbSetup.Init().WithNewOrganisation().Create().OrganisationId)
-                    .With(n =>
-                    {
-                        n.UpdateStatus(NoteStatusDomain.Submitted, UserId.ToString(), SystemTime.UtcNow);
-                    })
-                    .WithComplianceYear(2)
-                    .WithAatf(aatf2.Id)
-                    .Create();
-
-                notesSet.Add(evidence1);
-                notesSet.Add(evidence2);
-
-                request = new GetAllAatfsForComplianceYearRequest(3);
+                listOfEntityIdDisplayNameData.FirstOrDefault(e => e.Id == aatf4.Id).Should().BeNull();
             };
 
-            private readonly Because of = () =>
+            private readonly It shouldHaveDistinctItems = () =>
             {
-                listOfEntityIdDisplayNameData = Task.Run(async () => await handler.HandleAsync(request)).Result;
+                listOfEntityIdDisplayNameData.Should().OnlyHaveUniqueItems();
             };
 
-            private readonly It shouldReturnAnEmptyListOfEntityIdDisplayNameData = () =>
+            private readonly It shouldBeOrderedCorrectly = () =>
             {
-                listOfEntityIdDisplayNameData.Should().NotBeNull();
-                listOfEntityIdDisplayNameData.Should().BeEmpty();
-            };
-
-            private readonly It shouldHaveZeroCount = () =>
-            {
-                listOfEntityIdDisplayNameData.Should().HaveCount(0);
+                listOfEntityIdDisplayNameData.Should().BeInAscendingOrder(e => e.DisplayName);
             };
         }
 
@@ -173,9 +165,6 @@
         {
             protected static List<EntityIdDisplayNameData> listOfEntityIdDisplayNameData;
             protected static Organisation organisation;
-            protected static Aatf aatf1;
-            protected static Aatf aatf2;
-            protected static Aatf aatf3;
             protected static List<Note> notesSet;
             protected static List<Aatf> aatfSet;
             protected static IRequestHandler<GetAllAatfsForComplianceYearRequest, List<EntityIdDisplayNameData>> handler;
@@ -185,7 +174,7 @@
             public static void LocalSetup()
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(resetDb: true)
+                    .WithDefaultSettings(resetData: true)
                     .WithInternalUserAccess();
 
                 var authority = Query.GetEaCompetentAuthority();

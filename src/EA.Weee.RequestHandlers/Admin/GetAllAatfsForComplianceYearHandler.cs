@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Helpers;
+    using Domain.Evidence;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
@@ -29,7 +31,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var listAatfs = await evidenceDataAccess.GetAatfForAllNotesForComplianceYear(message.ComplianceYear);
+            var listAatfs = await evidenceDataAccess.GetAatfForAllNotesForComplianceYear(message.ComplianceYear, message.AllowedStatuses.Select(s => s.ToDomainEnumeration<NoteStatus>()).ToList());
 
             if (listAatfs == null)
             {

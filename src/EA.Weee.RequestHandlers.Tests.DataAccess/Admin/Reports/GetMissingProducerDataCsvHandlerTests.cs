@@ -46,7 +46,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 MissingProducerDataCsvData result = results[0];
                 Assert.Equal(4, result.Quarter);
             }
@@ -142,7 +142,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 MissingProducerDataCsvData result = results[0];
                 Assert.Equal("Scheme1", result.SchemeName);
             }
@@ -186,7 +186,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 MissingProducerDataCsvData result1 = results[0];
                 Assert.Equal("Scheme1", result1.SchemeName);
             }
@@ -251,7 +251,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 MissingProducerDataCsvData result = results[0];
                 Assert.Equal(2, result.Quarter);
             }
@@ -399,7 +399,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -428,7 +428,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -456,7 +456,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 MissingProducerDataCsvData result1 = results[0];
                 Assert.Equal(1, result1.Quarter);
             }
@@ -486,7 +486,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 MissingProducerDataCsvData result1 = results[0];
                 Assert.Equal(1, result1.Quarter);
             }
@@ -516,7 +516,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -545,7 +545,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -570,7 +570,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -595,7 +595,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -629,7 +629,7 @@
                 // Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 MissingProducerDataCsvData result1 = results[0];
                 Assert.Equal("PRN123", result1.PRN);
             }

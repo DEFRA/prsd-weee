@@ -64,6 +64,7 @@
             var complianceYearAatf = await aatfDataAccess.GetAatfByAatfIdAndComplianceYear(evidenceNote.Aatf.AatfId, message.StartDate.Year);
 
             AatfIsValidToSave(complianceYearAatf, currentDate);
+            ValidatePbsWasteType(recipientOrganisation, message.WasteType);
 
             var tonnageValues = message.TonnageValues.Select(t => new NoteTonnage(
                 (WeeeCategory)t.CategoryId,

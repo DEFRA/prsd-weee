@@ -9,21 +9,21 @@
 
 <section id="main-content">
     <h1 class="govuk-heading-l">
-        Add the treatment facility where WEEE was sent to
+        @Resources.AatfReturn.ReturnsResources.SearchAnAATFHeading
     </h1>
     <p>
-        A treatment facility where WEEE was sent on to can be an AATF or an ATF (an ATF is an authorised treatment facility that is not approved to issue evidence).
+        @Resources.AatfReturn.ReturnsResources.SearchAnAATFHeadingInfo
     </p>
 
     <p class="govuk-body">
         <div>
-            @this.WeeeGds().CreateProgressiveDisclosure("What's the difference between an AATF and an ATF?",
+            @this.WeeeGds().CreateProgressiveDisclosure(@Resources.AatfReturn.ReturnsResources.DifferenceAnAATFAndATF,
            @Html.Partial("_DifferenceAnAATFandATFPartial").ToString(),
            "Hidden content",
            "Progressive disclosure",
-           "What's the difference between an AATF and an ATF?")
+           @Resources.AatfReturn.ReturnsResources.DifferenceAnAATFAndATF)
         </div>
-    </p>    
+    </p>
 
     @using (Html.BeginRouteForm(AatfRedirect.AatfOrganisationSelectedRoute, FormMethod.Post))
     {
@@ -35,15 +35,15 @@
 
         <div class="govuk-!-padding-bottom-3"></div>
         <h2 class="govuk-heading-m">
-            Add an AATF
+            @Resources.AatfReturn.ReturnsResources.AddAnAATF
         </h2>
         <p>
-            Use the search to find and add an AATF for this compliance year. If you are unsure if the treatment facility is an AATF or ATF, perform a search.
-        </p>        
+            @Resources.AatfReturn.ReturnsResources.SearchAnAATFInfo
+        </p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
             <label class="govuk-label">
-                Search for the AATF by name, operator name or approval number <br />
+                @Resources.AatfReturn.ReturnsResources.SearchAnAATFByNameInfo <br />
             </label>
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
@@ -56,17 +56,34 @@
     }
 
     <h2 class="govuk-heading-m">
-        Add an ATF
+        @Resources.AatfReturn.ReturnsResources.AddAnATF
     </h2>
     <p class="govuk-body">
-        If you know the treatment facility is an ATF, use the link to add it. If you are unsure if the treatment facility is an ATF or an AATF, perform a search.
+        @Resources.AatfReturn.ReturnsResources.SearchAnATFInfo
     </p>
     <p class="govuk-body">
-        @Html.RouteLink("Add an ATF", AatfRedirect.AatfOrganisationSelectedRoute, new { returnId = Model.ReturnId, aatfId = Model.AatfId, organisationId = Model.OrganisationId, isAddDetails = true, action = "Index", controller = "SentOnCreateSite" }, null)
-    </p>    
+        @Html.RouteLink(@Resources.AatfReturn.ReturnsResources.AddAnATF, AatfRedirect.AatfOrganisationSelectedRoute,
+                        new
+                        {
+                            returnId = Model.ReturnId,
+                            aatfId = Model.AatfId,
+                            organisationId = Model.OrganisationId,
+                            isAddDetails = true,
+                            action = "Index",
+                            controller = "SentOnCreateSite"
+                        }, null)
+    </p>
 
     <p class="govuk-body">
-        @Html.RouteLink("Back", AatfRedirect.AatfSelectedRoute, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, aatfId = Model.AatfId, action = "Index", controller = "SentOnSiteSummaryList" }, new { @class = "govuk-back-link" })
+        @Html.RouteLink(@Resources.AatfReturn.ReturnsResources.Back, AatfRedirect.AatfSelectedRoute,
+                        new
+                        {
+                            returnId = Model.ReturnId,
+                            organisationId = Model.OrganisationId,
+                            aatfId = Model.AatfId,
+                            action = "Index",
+                            controller = "SentOnSiteSummaryList"
+                        }, new { @class = "govuk-back-link" })
     </p>
 
 </section>

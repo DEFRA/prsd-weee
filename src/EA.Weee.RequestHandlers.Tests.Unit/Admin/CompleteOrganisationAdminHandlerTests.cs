@@ -88,7 +88,7 @@
             A.CallTo(() => dataAccess.SaveAsync())
                 .MustHaveHappened(1, Times.Exactly);
 
-            Assert.Equal(result, true);
+            Assert.True(result);
         }
 
         [Fact]

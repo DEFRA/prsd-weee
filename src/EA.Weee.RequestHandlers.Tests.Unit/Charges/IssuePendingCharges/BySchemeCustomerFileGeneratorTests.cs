@@ -151,8 +151,8 @@
             Assert.NotNull(customer.Address);
             Assert.Equal("John Smith", customer.Address.AddressLine1);
             Assert.Equal("1 High Street", customer.Address.AddressLine2);
-            Assert.Equal(null, customer.Address.AddressLine3);
-            Assert.Equal(null, customer.Address.AddressLine4);
+            Assert.Null(customer.Address.AddressLine3);
+            Assert.Null(customer.Address.AddressLine4);
             Assert.Equal("Some town", customer.Address.AddressLine5);
             Assert.Equal("Some county", customer.Address.AddressLine6);
             Assert.Equal("Post code", customer.Address.PostCode);

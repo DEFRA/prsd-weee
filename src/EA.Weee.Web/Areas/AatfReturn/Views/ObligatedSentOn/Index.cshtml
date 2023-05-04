@@ -28,7 +28,7 @@
 
         <div class="govuk-table govuk-!-margin-bottom-0">
             <div class="govuk-grid-column-one-half">&nbsp;</div>
-            <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="padding-left: 1em">
+            <div class="govuk-body govuk-!-font-size-19 govuk-!-text-align-right">
                 @Html.RouteLink("Use copy and paste to populate the table", AatfRedirect.Default, new { returnId = Model.ReturnId, organisationId = Model.OrganisationId, weeeSentOnId = Model.WeeeSentOnId, aatfId = Model.AatfId, siteName = Model.SiteName, isEditDetails = Model.IsEditDetails, isEditTonnage = Model.IsEditTonnage, action = "Index", controller = "ObligatedSentOnValuesCopyPaste" }, null)
             </div>
         </div>

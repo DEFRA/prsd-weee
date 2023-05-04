@@ -136,7 +136,8 @@
             Assert.NotEmpty(data.FileContent);
         }
 
-        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect(string expectedText, bool includeResubmissions)
+        [Fact]
+        public async Task HandleAsync_GivenMandatoryParametersAndLocalArea_FileNameShouldBeCorrect()
         {
             var request = new GetUkNonObligatedWeeeReceivedDataCsv(fixture.Create<int>());
 
@@ -146,7 +147,7 @@
 
             var data = await handler.HandleAsync(request);
 
-            data.FileName.Should().Be($"{ request.ComplianceYear}_UK non-obligated WEEE received at AATFs__{ date:ddMMyyyy_HHmm}.csv");
+            data.FileName.Should().Be($"{ request.ComplianceYear}_UK non-obligated WEEE received at AATFs_{ date:ddMMyyyy_HHmm}.csv");
 
             SystemTime.Unfreeze();
         }

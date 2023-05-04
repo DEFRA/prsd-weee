@@ -42,6 +42,7 @@
                         default:
                             <th class="govuk-table__header">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.ComplianceYearAscending })">Compliance year</a>
+                                <span class="govuk-visually-hidden">Sortable by compliance year.</span>
                             </th>
                             break;
                     }
@@ -65,6 +66,7 @@
                         default:
                             <th class="govuk-table__header">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.QuarterAscending })">Quarter reported</a>
+                                <span class="govuk-visually-hidden">Sortable by quarter reported.</span>
                             </th>
                             break;
                     }
@@ -88,6 +90,7 @@
                         default:
                             <th class="govuk-table__header">
                                 <a href="@Url.Action("ViewDataReturnSubmissionHistory", new { OrderBy = DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending })">Date and time (GMT)</a>
+                                <span class="govuk-visually-hidden">Sortable by submission date.</span>
                             </th>
                             break;
                     }

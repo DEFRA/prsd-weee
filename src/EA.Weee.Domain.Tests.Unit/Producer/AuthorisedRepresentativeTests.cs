@@ -14,7 +14,7 @@
                 "1",
                 null);
 
-            Assert.NotEqual(authorisedRepresentative, null);
+            Assert.NotNull(authorisedRepresentative);
         }
 
         [Fact]

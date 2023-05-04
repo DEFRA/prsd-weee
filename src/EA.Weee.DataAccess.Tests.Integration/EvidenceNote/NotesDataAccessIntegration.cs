@@ -942,11 +942,11 @@
             }
         }
 
-        public static readonly object[] EndDates =
+        public static IEnumerable<object[]> EndDates() 
         {
-            new object[] { SystemTime.UtcNow },
-            new object[] { SystemTime.UtcNow.AddDays(1) }
-        };
+            yield return new object[] { DateTime.UtcNow };
+            yield return new object[] { DateTime.UtcNow.AddDays(1) };
+        }
 
         [Theory, MemberData(nameof(EndDates))]
         public async Task GetAllNotes_GivenEndDateFilter_ShouldReturnSingleNote(DateTime date)

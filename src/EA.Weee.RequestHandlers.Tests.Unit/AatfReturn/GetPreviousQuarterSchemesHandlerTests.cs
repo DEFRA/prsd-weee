@@ -182,7 +182,7 @@
 
             PreviousQuarterReturnResult result = await handler.HandleAsync(request);
 
-            Assert.Equal(0, result.PreviousSchemes.Count);
+            Assert.Empty(result.PreviousSchemes);
 
             A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => dataAccess.GetAll<ReturnScheme>()).MustHaveHappened(1, Times.Exactly);
@@ -230,7 +230,7 @@
 
             PreviousQuarterReturnResult result = await handler.HandleAsync(request);
 
-            Assert.Equal(0, result.PreviousSchemes.Count);
+            Assert.Empty(result.PreviousSchemes);
 
             A.CallTo(() => dataAccess.GetAll<Return>()).MustHaveHappened(1, Times.Exactly);
         }

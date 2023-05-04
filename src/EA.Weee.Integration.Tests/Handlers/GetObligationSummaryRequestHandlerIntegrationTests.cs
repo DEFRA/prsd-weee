@@ -18,6 +18,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using NUnit.Specifications.Categories;
     using NoteStatusDomain = Domain.Evidence.NoteStatus;
 
     public class GetObligationSummaryRequestHandlerIntegrationTests : IntegrationTestBase
@@ -558,7 +559,7 @@
             private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings(true)
+                    .WithDefaultSettings(resetData: true)
                     .WithExternalUserAccess();
 
                 handler = Container.Resolve<IRequestHandler<GetObligationSummaryRequest, ObligationEvidenceSummaryData>>();

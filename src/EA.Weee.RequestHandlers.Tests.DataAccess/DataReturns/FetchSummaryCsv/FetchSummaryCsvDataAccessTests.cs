@@ -184,7 +184,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -240,7 +240,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -296,7 +296,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -352,7 +352,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -408,7 +408,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -466,14 +466,14 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
 
                 Assert.Equal(1, result.Quarter);
                 Assert.Equal(2, result.Type);
-                Assert.Equal(null, result.Source);
+                Assert.Null(result.Source);
                 Assert.Equal("B2C", result.ObligationType);
             }
         }
@@ -518,7 +518,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -586,7 +586,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -644,7 +644,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
 
                 DataReturnSummaryCsvData result = results[0];
                 Assert.NotNull(result);
@@ -776,8 +776,8 @@
                     r => { Assert.Equal(1, r.Type); Assert.Equal(0, r.Source); Assert.Equal("B2B", r.ObligationType); },
                     r => { Assert.Equal(1, r.Type); Assert.Equal(1, r.Source); Assert.Equal("B2C", r.ObligationType); },
                     r => { Assert.Equal(1, r.Type); Assert.Equal(1, r.Source); Assert.Equal("B2B", r.ObligationType); },
-                    r => { Assert.Equal(2, r.Type); Assert.Equal(null, r.Source); Assert.Equal("B2C", r.ObligationType); },
-                    r => { Assert.Equal(2, r.Type); Assert.Equal(null, r.Source); Assert.Equal("B2B", r.ObligationType); });
+                    r => { Assert.Equal(2, r.Type); Assert.Null(r.Source); Assert.Equal("B2C", r.ObligationType); },
+                    r => { Assert.Equal(2, r.Type); Assert.Null(r.Source); Assert.Equal("B2B", r.ObligationType); });
             }
         }
 

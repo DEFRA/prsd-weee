@@ -34,7 +34,7 @@ THE SOFTWARE.
     'remove-valueless-options': true,
     'copy-attributes-to-text-field': true,
     'autocomplete-plugin': 'jquery_ui',
-    'relevancy-sorting': true,
+    'relevancy-sorting': false,
     'relevancy-sorting-partial-match-value': 1,
     'relevancy-sorting-strict-match-value': 5,
     'relevancy-sorting-booster-attr': 'data-relevancy-booster',

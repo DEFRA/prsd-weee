@@ -1,13 +1,15 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.AatfReturn
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.AatfReturn.ViewModels.SearchedAatfResultListViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AATF search results list - GOV.UK";
 }
 
-<section id="main-content">
+@section full_main_content
+{
     <h1 class="govuk-heading-l" style="padding-top: 0px;">Search results</h1>
     <h2 class="govuk-heading-m">We found results for '@Model.AatfName'</h2>
 
@@ -26,41 +28,40 @@
 
         if (Model.Sites.Count > 0)
         {
-            <table class="govuk-table govuk-grid-column-full" id="weee-data-entry-table">
-                <thead class="govuk-table__head">
-                    <tr class="govuk-grid-row govuk-table__row govuk-table__header">
-                        <th scope="col" class="govuk-table__header">
-                            AATF name and address
-                        </th>
-                        <th scope="col" class="govuk-table__header">
-                            Operator name and address
-                        </th>
-                        <th scope="col" class="govuk-table__header">
-                            AATF approval number
-                        </th>
-                        <th scope="col" class="govuk-table__header">
-                            Select
-                        </th>
-                    </tr>
+            <table class="govuk-table prsd-table-small-collapse aatf-task-list-table" id="weee-data-entry-table">
+                <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+                <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.AATFNameAndAddress</th>
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress</th>
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber</th>
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse">@Resources.AatfReturn.ReturnsResources.Select</th>
+                </tr>
                 </thead>
-                <tbody class="govuk-table__body">
-                    @foreach (var weeeSentOn in Model.Sites)
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                                @Html.Raw(Model.CreateLongAddress(weeeSentOn.SiteAddress))
-                            </td>
-                            <td class="govuk-table__cell">
-                                @Html.Raw(Model.CreateLongAddress(weeeSentOn.OperatorAddress))
-                            </td>
-                            <td class="govuk-table__cell">
+                <tbody class="govuk-table__body prsd-table-small-collapse">
+                @foreach (var weeeSentOn in Model.Sites)
+                {
+                    <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.AATFNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="prsd-long-address">
+                                @Html.Raw(weeeSentOn.SiteAddress.ToAccessibleDisplayString(true, true))
+                            </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.OperatorNameAndAddress" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span class="prsd-long-address">
+                                @Html.Raw(weeeSentOn.OperatorAddress.ToAccessibleDisplayString(true, true))
+                            </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.AATFApprovalNumber" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <span>
                                 @Html.Raw(weeeSentOn.ApprovalNumber)
-                            </td>
-                            <td class="govuk-table__cell">
-                                @Html.RadioButtonFor(m => m.SelectedAatfId, weeeSentOn.WeeeAatfId, new { @onclick = "setSiteSelectedId('" + weeeSentOn.WeeeAatfId + "','" + weeeSentOn.SiteAddress.Name + "')" })
-                            </td>
-                        </tr>
-                    }
+                            </span>
+                        </td>
+                        <td data-label="@Resources.AatfReturn.ReturnsResources.Select @weeeSentOn.SiteAddress.Address1" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                            <label class="govuk-visually-hidden" for="@Model.SelectedAatfId">@weeeSentOn.SiteAddress.Address1</label>
+                            @Html.RadioButtonFor(m => m.SelectedAatfId, weeeSentOn.WeeeAatfId, new { @onclick = "setSiteSelectedId('" + weeeSentOn.WeeeAatfId + "','" + weeeSentOn.SiteAddress.Name + "')" })
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         }
@@ -85,7 +86,7 @@
 
         <div class="govuk-!-padding-bottom-8"></div>
     }
-</section>
+}
 <script type="text/javascript">
     function setSiteSelectedId(siteValue, siteName) {
         document.getElementById("SelectedAatfId").value = siteValue;

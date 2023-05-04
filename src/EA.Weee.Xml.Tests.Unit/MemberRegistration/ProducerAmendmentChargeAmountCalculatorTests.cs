@@ -94,7 +94,7 @@
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
             Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
-            Assert.Equal(result.Amount, 0);
+            Assert.Equal(0, result.Amount);
         }
 
         [Fact]
@@ -112,7 +112,7 @@
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
             Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
-            Assert.Equal(result.Amount, 0);
+            Assert.Equal(0, result.Amount);
         }
 
         [Fact]
@@ -128,7 +128,7 @@
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
             Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
-            Assert.Equal(result.Amount, 0);
+            Assert.Equal(0, result.Amount);
         }
 
         [Fact]
@@ -144,7 +144,7 @@
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
             Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
-            Assert.Equal(result.Amount, 0);
+            Assert.Equal(0, result.Amount);
         }
 
         [Fact]
@@ -161,9 +161,10 @@
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
             Assert.Equal(result.ChargeBandAmount, producerCharge.ChargeBandAmount);
-            Assert.Equal(result.Amount, 0);
+            Assert.Equal(0, result.Amount);
         }
 
+        [Fact]
         public void IsMatch_GivenProducerIsAmendement_TrueShouldBeReturned()
         {
             var producer = new producerType() { status = statusType.A };
@@ -174,6 +175,7 @@
             Assert.True(result);
         }
 
+        [Fact]
         public void IsMatch_GivenProducerIsInsert_FalseShouldBeReturned()
         {
             var producer = new producerType() { status = statusType.I };
@@ -183,6 +185,7 @@
             Assert.False(result);
         }
 
+        [Fact]
         public void IsMatch_GivenProducerIsInsertAndPreviousSubmissionExists_FalseShouldBeReturned()
         {
             var producer = new producerType() { status = statusType.I };

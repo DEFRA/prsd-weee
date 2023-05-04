@@ -5,6 +5,8 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Text;
+    using System.Web.Mvc;
 
     [Serializable]
     public abstract class AddressData
@@ -70,6 +72,58 @@
             Postcode = postcode;
             CountryId = countryId;
             CountryName = countryName;
+        }
+
+        public string ToAccessibleDisplayString(bool includeName, bool endLineWithComma = true)
+        {
+            var siteAddressStringBuilder = new StringBuilder();
+
+            const string spanTagName = "span";
+            var comma = endLineWithComma ? "," : string.Empty;
+
+            var address1Span = new TagBuilder(spanTagName);
+
+            if (includeName)
+            {
+                var addressNameSpan = new TagBuilder(spanTagName);
+                addressNameSpan.SetInnerText($"{Name}{comma}");
+                siteAddressStringBuilder.Append(addressNameSpan);
+            }
+
+            address1Span.SetInnerText($"{Address1}{comma}");
+            siteAddressStringBuilder.Append(address1Span);
+
+            if (Address2 != null)
+            {
+                var address2Span = new TagBuilder(spanTagName);
+                address2Span.SetInnerText($"{Address2}{comma}");
+
+                siteAddressStringBuilder.Append(address2Span);
+            }
+
+            var townOrCitySpan = new TagBuilder(spanTagName);
+            townOrCitySpan.SetInnerText($"{TownOrCity}{comma}");
+            siteAddressStringBuilder.Append(townOrCitySpan);
+
+            if (CountyOrRegion != null)
+            {
+                var countySpan = new TagBuilder(spanTagName);
+                countySpan.SetInnerText($"{CountyOrRegion}{comma}");
+                siteAddressStringBuilder.Append(countySpan);
+            }
+
+            if (Postcode != null)
+            {
+                var postCodeSpan = new TagBuilder(spanTagName);
+                postCodeSpan.SetInnerText($"{Postcode}{comma}");
+                siteAddressStringBuilder.Append(postCodeSpan);
+            }
+
+            var countrySpan = new TagBuilder(spanTagName);
+            countrySpan.SetInnerText(CountryName);
+            siteAddressStringBuilder.Append(countrySpan);
+
+            return siteAddressStringBuilder.ToString();
         }
     }
 }

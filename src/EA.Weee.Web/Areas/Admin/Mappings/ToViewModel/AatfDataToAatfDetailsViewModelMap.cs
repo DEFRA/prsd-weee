@@ -6,7 +6,6 @@
     using EA.Weee.Core.Admin.AatfReports;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Core.Shared;
     using ViewModels.Shared;
@@ -43,6 +42,17 @@
                 CanEdit = source.AatfData.Contact.CanEditContactDetails,
                 Organisation = source.AatfData.Organisation,
                 OrganisationAddress = source.OrganisationString,
+                OrganisationAddressData = new AatfAddressData()
+                {
+                    Address1 = source.AatfData.Organisation.BusinessAddress.Address1,
+                    Address2 = source.AatfData.Organisation.BusinessAddress.Address2,
+                    TownOrCity = source.AatfData.Organisation.BusinessAddress.TownOrCity,
+                    Postcode = source.AatfData.Organisation.BusinessAddress.Postcode,
+                    CountryName = source.AatfData.Organisation.BusinessAddress.CountryName,
+                    CountyOrRegion = source.AatfData.Organisation.BusinessAddress.CountyOrRegion,
+                    CountryId = source.AatfData.Organisation.BusinessAddress.CountryId,
+                    Id = source.AatfData.Organisation.BusinessAddress.Id
+                },
                 FacilityType = source.AatfData.FacilityType,
                 ComplianceYear = source.AatfData.ComplianceYear,
                 SiteAddressLong = addressUtilities.FormattedAddress(source.AatfData.SiteAddress, false),

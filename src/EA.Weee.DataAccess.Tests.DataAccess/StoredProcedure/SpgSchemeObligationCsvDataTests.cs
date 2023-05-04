@@ -51,7 +51,7 @@
                 SchemeObligationCsvData b2bProducer = results.Find(x => (x.PRN == "PRN456"));
                 Assert.Null(b2bProducer);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("test scheme name", result.SchemeName);
                 Assert.Equal("WEE/TE0000ST/SCH", result.ApprovalNumber);
@@ -153,7 +153,7 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("test scheme name", result.SchemeName);
                 Assert.Equal("WEE/TE0002ST/SCH", result.ApprovalNumber);
@@ -194,7 +194,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("PRN123", result.PRN);
                 Assert.Equal("B2B", result.ObligationTypeForPreviousYear);
@@ -236,7 +236,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("PRN123", result.PRN);
                 Assert.Equal("B2B", result.ObligationTypeForPreviousYear);
@@ -276,7 +276,7 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(0, results.Count);
+                Assert.Empty(results);
             }
         }
 
@@ -312,7 +312,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("PRN123", result.PRN);
                 Assert.Equal("B2C", result.ObligationTypeForPreviousYear);
@@ -354,7 +354,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("PRN123", result.PRN);
                 Assert.Equal("Both", result.ObligationTypeForPreviousYear);
@@ -403,7 +403,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("PRN123", result.PRN);
                 Assert.Equal("B2C", result.ObligationTypeForPreviousYear);
@@ -497,7 +497,7 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("PRN123", result.PRN);
                 Assert.Null(result.ObligationTypeForPreviousYear);
@@ -536,7 +536,7 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 SchemeObligationCsvData result = results[0];
                 Assert.Equal("PRN123", result.PRN);
                 Assert.Equal("B2C", result.ObligationTypeForPreviousYear);
@@ -586,7 +586,7 @@
                 //Producer with only B2B (both years) should not be in data
                 SchemeObligationCsvData unregisteredProd = results.Find(x => (x.PRN == "PRN456"));
                 Assert.Null(unregisteredProd);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
             }
         }
     }

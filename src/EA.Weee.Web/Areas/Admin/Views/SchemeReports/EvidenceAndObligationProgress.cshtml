@@ -57,6 +57,17 @@
 
 @section scripts
 {
+    
+    
+    
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            setupSelectedYear('@Url.Action("EvidenceAndObligationProgress", "SchemeReports")');
+        });
+
+    </script>
+
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
@@ -70,6 +81,8 @@
             location.href = url;
 
             setupAutoCompletes();
+            setupSelectedYear('@Url.Action("EvidenceAndObligationProgress", "SchemeReports")');
         </script>
     }
+
 }

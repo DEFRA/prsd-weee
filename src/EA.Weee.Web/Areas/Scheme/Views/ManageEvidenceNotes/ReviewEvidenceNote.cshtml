@@ -20,7 +20,7 @@
             Url.Action("Index", "ManageEvidenceNotes",
                 new { @pcsId = Model.ViewEvidenceNoteViewModel.SchemeId, @tab = ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence.ToDisplayString(), @selectedComplianceYear = Model.ViewEvidenceNoteViewModel.ComplianceYear })))
     }
-    
+
 
     @using (Html.BeginForm("ReviewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
     {
@@ -41,6 +41,10 @@
         <p class="govuk-body govuk-!-margin-bottom-5">After review, you can choose whether to approve, reject or return the evidence note.</p>
 
         @Html.Partial("_ViewEvidenceNotePartial", Model.ViewEvidenceNoteViewModel)
+
+        <p class="govuk-body govuk-!-margin-top-7">
+            @Html.ActionLink("Download as PDF", "DownloadEvidenceNotePdf", "ManageEvidenceNotes", new { area = "Scheme", evidenceNoteId = @Model.ViewEvidenceNoteViewModel.Id }, new { @class = "govuk-link" })
+        </p>
 
         <!-- radiobuttons for approved -->
         <p class="govuk-!-margin-top-7">Choose whether to approve, reject or return the evidence note</p>

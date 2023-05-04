@@ -101,10 +101,12 @@
                 </p>
             </div>
             <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19 govuk-!-padding-top-5 govuk-!-padding-right-0 govuk-!-padding-left-3">
-                <button aria-hidden="true" class="link-submit govuk-link govuk-link--no-visited-state govuk-!-padding-top-5" style="float: right" type="submit" name="Action" value="@ActionEnum.CopyAndPaste">Use copy and paste to populate the table</button>
+                <button class="link-submit govuk-link govuk-link--no-visited-state govuk-!-padding-top-5" style="float: right" type="submit" name="Action" value="@ActionEnum.CopyAndPaste">Use copy and paste to populate the table</button>
             </div>
-            <label for="CategoryValues" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" class="govuk-visually-hidden" />
+
+            <label for="CategoryValues" aria-hidden="true" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" type="hidden"/>
             @Html.Gds().ValidationMessageFor(m => m.CategoryValues)
+
         </div>
         <table class="govuk-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Category tonnage values</caption>

@@ -127,6 +127,24 @@
         }
 
         [Fact]
+        public void Map_GivenAddresses_OrgBusinessAddressPropertiesShouldBeMapped()
+        {
+            var model = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>()
+                               .WithAutoProperties()
+                               .Create();
+
+            var result = map.Map(model);
+
+            result.OrganisationAddressData.Address1.Should().Be(model.AatfData.Organisation.BusinessAddress.Address1);
+            result.OrganisationAddressData.Address2.Should().Be(model.AatfData.Organisation.BusinessAddress.Address2);
+            result.OrganisationAddressData.TownOrCity.Should().Be(model.AatfData.Organisation.BusinessAddress.TownOrCity);
+            result.OrganisationAddressData.Postcode.Should().Be(model.AatfData.Organisation.BusinessAddress.Postcode);
+            result.OrganisationAddressData.CountryName.Should().Be(model.AatfData.Organisation.BusinessAddress.CountryName);
+            result.OrganisationAddressData.CountyOrRegion.Should().Be(model.AatfData.Organisation.BusinessAddress.CountyOrRegion);
+            result.OrganisationAddressData.Id.Should().Be(model.AatfData.Organisation.BusinessAddress.Id);
+        }
+
+        [Fact]
         public void Map_GivenNullSubmissionHistoryOnTransfer_SubmissionHistoryDataShouldBeNull()
         {
             var source = fixture.Build<AatfDataToAatfDetailsViewModelMapTransfer>()
