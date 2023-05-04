@@ -52,9 +52,16 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
+        public async Task<ActionResult> Index(string tab = null, int page = 1,
+            RecipientWasteStatusFilterViewModel test = null, int? selectedComplianceYear = null)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            var manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
+            {
+                RecipientWasteStatusFilterViewModel = test,
+                SelectedComplianceYear = selectedComplianceYear ?? 0
+            };
 
             if (tab == null)
             {

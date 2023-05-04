@@ -218,6 +218,8 @@ function setupAutoCompletes() {
 
                     var postBackElement = document.getElementById(existingId + "-select");
                     var selectedValue = document.getElementById(existingId).value;
+                    
+
 
                     if (!isNullOrWhitespace(confirmed) || !isNullOrWhitespace(selectedValue)) {
                         var selected = confirmed || selectedValue;
@@ -254,6 +256,7 @@ function setupAutoCompletes() {
         var newListBox = document.getElementById(element.id + "__listbox");
         newListBox.setAttribute("aria-labelledby", element.id + "-label");
         var autocomplete = document.getElementById(element.id);
+        autocomplete.removeAttribute("name");
         autocomplete.setAttribute("type", "search");
         autocomplete.removeAttribute("role");
         element.style.display = "none";

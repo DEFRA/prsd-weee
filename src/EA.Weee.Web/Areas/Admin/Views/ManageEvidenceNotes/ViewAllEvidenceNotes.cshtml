@@ -24,7 +24,7 @@
                     {
                         @Html.Gds().ValidationSummary()
                         @Html.Hidden("tab", Extensions.ToDisplayString(Model.ActiveDisplayOption), new { id = "tab-all-evidence" })
-                        @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
+                        @Html.Hidden("SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
                         <h2 class="govuk-heading-m govuk-!-padding-bottom-4">
                             View all evidence notes
