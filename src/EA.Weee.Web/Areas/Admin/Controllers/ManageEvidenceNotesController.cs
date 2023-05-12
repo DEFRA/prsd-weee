@@ -51,8 +51,61 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> Index(string tab = null, int page = 1, string searchRef = null, int? selectedComplianceYear = null,
+                                              DateTime? startDate = null, DateTime? endDate = null, Guid? receivedId = null, int? wasteTypeValue = null,
+                                              int? noteStatusValue = null, Guid? submittedBy = null)
+        {
+            var manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
+            {
+                SelectedComplianceYear = selectedComplianceYear.HasValue ? selectedComplianceYear.Value : 0,
+                RecipientWasteStatusFilterViewModel = new RecipientWasteStatusFilterViewModel()
+                {
+                    NoteStatusValue = (noteStatusValue.HasValue ? (NoteStatus)noteStatusValue : (NoteStatus?)null),
+                    ReceivedId = (receivedId.HasValue ? receivedId : null),
+                    SubmittedBy = (submittedBy.HasValue ? submittedBy : null),
+                    WasteTypeValue = (wasteTypeValue.HasValue ? (WasteType)wasteTypeValue : (WasteType?)null)
+                },
+                FilterViewModel = new FilterViewModel()
+                {
+                    SearchRef = searchRef
+                },
+                SubmittedDatesFilterViewModel = new SubmittedDatesFilterViewModel()
+                {
+                    StartDate = startDate,
+                    EndDate = endDate
+                }
+            };
+
+            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
+
+            if (tab == null)
+            {
+                tab = Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes);
+            }
+
+            var value = tab.GetValueFromDisplayName<ManageEvidenceNotesTabDisplayOptions>();
+
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
+                switch (value)
+                {
+                    case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
+
+                    case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, page);
+
+                    default:
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
+                }
+            }
+        }
+
+        [HttpPost]
         [NoCacheFilter]
-        public async Task<ActionResult> Index(string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
+        public async Task<ActionResult> Index(string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -66,15 +119,17 @@
             using (var client = this.apiClient())
             {
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-               
+
                 switch (value)
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, 1);
+
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, page);
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, 1);
+
                     default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, 1);
                 }
             }
         }
