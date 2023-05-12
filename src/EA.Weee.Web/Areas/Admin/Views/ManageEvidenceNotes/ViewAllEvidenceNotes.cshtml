@@ -20,7 +20,7 @@
 
                 <div class="govuk-tabs__panel" id="allEvidenceNotes">
 
-                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
+                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Post))
                     {
                         @Html.Gds().ValidationSummary()
                         @Html.Hidden("tab", Extensions.ToDisplayString(Model.ActiveDisplayOption), new { id = "tab-all-evidence" })
@@ -31,7 +31,7 @@
                         </h2>
 
                         Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model, new ViewDataDictionary()
-                                        {
+                                            {
                                 new KeyValuePair<string, object>("tab",
                                     Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes))
                             });
@@ -104,23 +104,18 @@
                     </div>
                     <br />
                     @{
-                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                {
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary() {
                                 {
                                     "pagerRouteValues", new
                                     {
                                         tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
-                                        manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                        manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_StartDate =
-                                            Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
-                                        manageEvidenceNoteViewModel_SubmittedDatesFilterViewModel_EndDate =
-                                            Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
-                                        manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_ReceivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
-                                        manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue =
-                                            Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
-                                        manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
-                                            Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
-                                        manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_SubmittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                                        startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
+                                        endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
+                                        receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
+                                        wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
+                                        noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
+                                        submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                                     }
                                 }
                             });

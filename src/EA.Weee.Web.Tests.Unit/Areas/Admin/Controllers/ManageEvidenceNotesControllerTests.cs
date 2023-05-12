@@ -97,7 +97,7 @@
             const int pageNumber = 2;
 
             //act
-            await ManageEvidenceController.Index(tab, null, pageNumber);
+            await ManageEvidenceController.Index(tab, pageNumber);
 
             //assert
             A.CallTo(() => Mapper.Map<ViewAllEvidenceNotesViewModel>(A<ViewEvidenceNotesMapTransfer>.That
@@ -112,7 +112,7 @@
             const int pageNumber = 2;
 
             //act
-            await ManageEvidenceController.Index(tab, null, pageNumber);
+            await ManageEvidenceController.Index(tab, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
@@ -231,7 +231,7 @@
             const int pageNumber = 2;
 
             //act
-            await ManageEvidenceController.Index("view-all-evidence-transfers", null, pageNumber);
+            await ManageEvidenceController.Index("view-all-evidence-transfers", pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>.That
@@ -245,7 +245,7 @@
             const int pageNumber = 2;
 
             //act
-            await ManageEvidenceController.Index("view-all-evidence-transfers", null, pageNumber);
+            await ManageEvidenceController.Index("view-all-evidence-transfers", pageNumber);
 
             //assert
             A.CallTo(() => Mapper.Map<ViewAllTransferNotesViewModel>(A<ViewEvidenceNotesMapTransfer>.That
