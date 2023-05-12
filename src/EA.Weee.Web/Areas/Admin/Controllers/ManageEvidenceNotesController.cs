@@ -40,7 +40,7 @@
         public ManageEvidenceNotesController(IMapper mapper,
          BreadcrumbService breadcrumb,
          IWeeeCache cache,
-         Func<IWeeeClient> apiClient, 
+         Func<IWeeeClient> apiClient,
          ConfigurationService configurationService,
          ISessionService sessionService) : base(breadcrumb, cache)
         {
@@ -51,6 +51,7 @@
         }
 
         [HttpGet]
+        [NoCacheFilter]
         public async Task<ActionResult> Index(string tab = null, int page = 1, string searchRef = null, int? selectedComplianceYear = null,
                                               DateTime? startDate = null, DateTime? endDate = null, Guid? receivedId = null, int? wasteTypeValue = null,
                                               int? noteStatusValue = null, Guid? submittedBy = null)
@@ -76,36 +77,17 @@
                 }
             };
 
-            SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
-
-            if (tab == null)
-            {
-                tab = Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes);
-            }
-
-            var value = tab.GetValueFromDisplayName<ManageEvidenceNotesTabDisplayOptions>();
-
-            using (var client = this.apiClient())
-            {
-                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-
-                switch (value)
-                {
-                    case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
-
-                    case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, page);
-
-                    default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, page);
-                }
-            }
+            return await ProcessManageEvidenceNotes(tab, manageEvidenceNoteViewModel);
         }
 
         [HttpPost]
-        [NoCacheFilter]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        {
+            return await ProcessManageEvidenceNotes(tab, manageEvidenceNoteViewModel);
+        }
+
+        private async Task<ActionResult> ProcessManageEvidenceNotes(string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -313,14 +295,14 @@
 
             var selectedComplianceYear = SelectedComplianceYear(complianceYearsList, manageEvidenceNoteViewModel);
 
-            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence }, 
+            var notes = await client.SendAsync(User.GetAccessToken(), new GetAllNotesInternal(new List<NoteType> { NoteType.Evidence },
                 allowedStatuses, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
                 manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate,
                 manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                 manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                 null,
-                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, 
+                manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
                 manageEvidenceNoteViewModel?.FilterViewModel.SearchRef,
                 null));
 
@@ -365,8 +347,8 @@
 
             var selectedComplianceYear = SelectedComplianceYear(complianceYearsList, manageEvidenceNoteViewModel);
 
-            var notes = await client.SendAsync(User.GetAccessToken(), 
-                new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear, pageNumber, 
+            var notes = await client.SendAsync(User.GetAccessToken(),
+                new GetAllNotesInternal(new List<NoteType> { NoteType.Transfer }, allowedStatuses, selectedComplianceYear, pageNumber,
                 configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
                 manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate,
                 manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
