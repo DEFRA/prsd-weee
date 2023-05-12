@@ -26,6 +26,7 @@
 
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Post))
                     {
+                        @Html.AntiForgeryToken()
                         @Html.Gds().ValidationSummary()
                         @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-view-add-transfers" })
                         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
