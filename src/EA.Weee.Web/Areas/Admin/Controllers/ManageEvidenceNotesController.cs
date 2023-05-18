@@ -77,7 +77,7 @@
                 }
             };
 
-            return await ProcessManageEvidenceNotes(tab, manageEvidenceNoteViewModel);
+            return await ProcessManageEvidenceNotes(tab, manageEvidenceNoteViewModel, page);
         }
 
         [HttpPost]
@@ -87,7 +87,7 @@
             return await ProcessManageEvidenceNotes(tab, manageEvidenceNoteViewModel);
         }
 
-        private async Task<ActionResult> ProcessManageEvidenceNotes(string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel)
+        private async Task<ActionResult> ProcessManageEvidenceNotes(string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int pageNumber = 1)
         {
             SetBreadcrumb(BreadCrumbConstant.ManageEvidenceNotesAdmin);
 
@@ -105,13 +105,13 @@
                 switch (value)
                 {
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, 1);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, pageNumber);
 
                     case ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceTransfers:
-                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, 1);
+                        return await ViewAllTransferNotes(client, manageEvidenceNoteViewModel, currentDate, pageNumber);
 
                     default:
-                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, 1);
+                        return await ViewAllEvidenceNotes(client, manageEvidenceNoteViewModel, currentDate, pageNumber);
                 }
             }
         }
