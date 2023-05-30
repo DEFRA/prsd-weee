@@ -70,8 +70,8 @@
 
             var returnReportOn = CreateReportedOptions(request.ReturnId);
 
-            A.CallTo(() => dataAccess.RemoveMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 4))).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 4))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
         }
 
         [Fact]
@@ -93,8 +93,8 @@
 
             var returnReportOn = CreateReportedOptions(request.ReturnId);
 
-            A.CallTo(() => dataAccess.RemoveMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 5))).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 5))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
         }
 
         [Fact]
@@ -117,8 +117,8 @@
 
             var returnReportOn = CreateReportedOptions(request.ReturnId);
 
-            A.CallTo(() => dataAccess.RemoveMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 3))).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 3))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
         }
 
         [Fact]
