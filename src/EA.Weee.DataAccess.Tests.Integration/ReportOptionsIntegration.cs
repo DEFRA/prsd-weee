@@ -221,7 +221,7 @@
 
             foreach (var item in submittedWeeeSentOnAddresses)
             {
-                context.AatfAddress.Count(a => a.Id == item.Id).Should().Be(0);
+                context.AatfAddress.Count(a => a.Id == item.Id).Should().Be(1);
             }
         }
 
