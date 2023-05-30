@@ -4,6 +4,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
@@ -26,6 +27,7 @@
         private readonly WeeeContext context;
         private AddReturnReportOnHandler handler;
         private readonly Fixture fixture;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
 
         public AddReturnReportOnHandlerTests()
         {
@@ -33,8 +35,9 @@
             context = A.Fake<WeeeContext>();
             dataAccess = A.Fake<IGenericDataAccess>();
             fixture = new Fixture();
+            sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
 
-            handler = new AddReturnReportOnHandler(weeeAuthorization, dataAccess, context);
+            handler = new AddReturnReportOnHandler(weeeAuthorization, dataAccess, context, sentOnDataAccess);
         }
 
         [Fact]
@@ -42,7 +45,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new AddReturnReportOnHandler(authorization, A.Dummy<IGenericDataAccess>(), context);
+            handler = new AddReturnReportOnHandler(authorization, A.Dummy<IGenericDataAccess>(), context, A.Dummy<IWeeeSentOnDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturnReportOn>());
 
@@ -67,8 +70,8 @@
 
             var returnReportOn = CreateReportedOptions(request.ReturnId);
 
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 4))).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 4))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
         }
 
         [Fact]
@@ -90,8 +93,8 @@
 
             var returnReportOn = CreateReportedOptions(request.ReturnId);
 
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 5))).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 5))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
         }
 
         [Fact]
@@ -114,8 +117,8 @@
 
             var returnReportOn = CreateReportedOptions(request.ReturnId);
 
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 3))).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.Matches(r => r.Count == 3))).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.AddMany(A<IList<ReturnReportOn>>.That.IsSameAs(returnReportOn)));
         }
 
         [Fact]
@@ -137,9 +140,9 @@
             await handler.HandleAsync(request);
 
             A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeReceivedAmountByWeeeReceivedIdSpecification>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<WeeeReceivedAmount>(A<IList<WeeeReceivedAmount>>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<WeeeReceived>(A<IList<WeeeReceived>>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<ReturnScheme>(A<IList<ReturnScheme>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<WeeeReceivedAmount>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<WeeeReceived>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<ReturnScheme>>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -161,9 +164,11 @@
             await handler.HandleAsync(request);
 
             A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeSentOnAmountByWeeeSentOnIdSpecification>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<AatfAddress>(A<IList<AatfAddress>>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<WeeeSentOnAmount>(A<IList<WeeeSentOnAmount>>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<WeeeSentOn>(A<IList<WeeeSentOn>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnBySiteId(A<Guid>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => sentOnDataAccess.GetWeeeSentOnByOperatorId(A<Guid>._)).MustHaveHappened(1, Times.Exactly);
+            //A.CallTo(() => dataAccess.Remove(A<AatfAddress>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<WeeeSentOnAmount>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<WeeeSentOn>>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -186,10 +191,10 @@
 
             A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeReusedAmountByWeeeReusedIdSpecification>._)).MustHaveHappened(1, Times.Exactly);
             A.CallTo(() => dataAccess.GetManyByExpression(A<WeeeReusedSiteByWeeeReusedIdSpecification>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<WeeeReusedSite>(A<IList<WeeeReusedSite>>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<AatfAddress>(A<IList<AatfAddress>>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<WeeeReusedAmount>(A<IList<WeeeReusedAmount>>._)).MustHaveHappened(1, Times.Exactly);
-            A.CallTo(() => dataAccess.RemoveMany<WeeeReused>(A<IList<WeeeReused>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<WeeeReusedSite>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<AatfAddress>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<WeeeReusedAmount>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<WeeeReused>>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -206,7 +211,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.RemoveMany<NonObligatedWeee>(A<IList<NonObligatedWeee>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<NonObligatedWeee>>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -223,7 +228,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.RemoveMany<NonObligatedWeee>(A<IList<NonObligatedWeee>>._)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => dataAccess.RemoveMany(A<IList<NonObligatedWeee>>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -243,7 +248,7 @@
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => dataAccess.AddMany<ReturnReportOn>(A<List<ReturnReportOn>>.That.Matches(l => l.Exists(i => i.ReturnId.Equals(request.ReturnId) && i.ReportOnQuestionId.Equals((int)ReportOnQuestionEnum.NonObligatedDcf))))).MustNotHaveHappened();
+            A.CallTo(() => dataAccess.AddMany(A<List<ReturnReportOn>>.That.Matches(l => l.Exists(i => i.ReturnId.Equals(request.ReturnId) && i.ReportOnQuestionId.Equals((int)ReportOnQuestionEnum.NonObligatedDcf))))).MustNotHaveHappened();
         }
 
         private List<int> CreateSelectedOptions()
@@ -265,7 +270,7 @@
             var output = new List<ReportOnQuestion>();
             for (var i = 1; i <= 5; i++)
             {
-                output.Add(fixture.Build<Core.AatfReturn.ReportOnQuestion>().With(r => r.Id, i).Create());
+                output.Add(fixture.Build<ReportOnQuestion>().With(r => r.Id, i).Create());
             }
 
             output[4].ParentId = 4;
