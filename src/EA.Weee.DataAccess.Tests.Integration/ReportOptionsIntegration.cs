@@ -122,7 +122,7 @@
 
                 var submittedNonObligatedWeee = context.NonObligatedWeee.Where(w => w.ReturnId == @return.Id).ToList();
 
-                var handler = new AddReturnReportOnHandler(A.Fake<IWeeeAuthorization>(), dataAccess, context);
+                var handler = new AddReturnReportOnHandler(A.Fake<IWeeeAuthorization>(), dataAccess, context, A.Fake<IWeeeSentOnDataAccess>());
 
                 var deselectOptions = new List<int>() { 1, 2, 3, 4, 5 };
                 var coreReportOnQuestions = CreateReportQuestions();
