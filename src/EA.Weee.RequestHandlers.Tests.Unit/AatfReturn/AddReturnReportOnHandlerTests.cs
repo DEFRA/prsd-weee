@@ -4,6 +4,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn;
+    using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
@@ -26,6 +27,7 @@
         private readonly WeeeContext context;
         private AddReturnReportOnHandler handler;
         private readonly Fixture fixture;
+        private readonly IWeeeSentOnDataAccess sentOnDataAccess;
 
         public AddReturnReportOnHandlerTests()
         {
@@ -33,8 +35,9 @@
             context = A.Fake<WeeeContext>();
             dataAccess = A.Fake<IGenericDataAccess>();
             fixture = new Fixture();
+            sentOnDataAccess = A.Fake<IWeeeSentOnDataAccess>();
 
-            handler = new AddReturnReportOnHandler(weeeAuthorization, dataAccess, context);
+            handler = new AddReturnReportOnHandler(weeeAuthorization, dataAccess, context, sentOnDataAccess);
         }
 
         [Fact]
@@ -42,7 +45,7 @@
         {
             var authorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
-            handler = new AddReturnReportOnHandler(authorization, A.Dummy<IGenericDataAccess>(), context);
+            handler = new AddReturnReportOnHandler(authorization, A.Dummy<IGenericDataAccess>(), context, A.Dummy<IWeeeSentOnDataAccess>());
 
             Func<Task> action = async () => await handler.HandleAsync(A.Dummy<AddReturnReportOn>());
 
