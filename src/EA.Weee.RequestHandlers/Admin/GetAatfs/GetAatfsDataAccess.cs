@@ -35,7 +35,7 @@
                 (filter.Name == null || filter.Name.Trim() == string.Empty ||
                     a.Name.ToLower().Contains(filter.Name.ToLower())) &&
                 (filter.ApprovalNumber == null || filter.ApprovalNumber.Trim() == string.Empty ||
-                    a.ApprovalNumber.ToLower().Contains(filter.ApprovalNumber.ToLower()))) 
+                    a.ApprovalNumber.ToLower().Contains(filter.ApprovalNumber.ToLower())))
                 .ToListAsync();
 
             if (filter.SelectedAuthority != null && filter.SelectedAuthority.Count > 0)
@@ -46,8 +46,8 @@
             {
                 aatfList = aatfList.Where(x => filter.SelectedStatus.Contains(x.AatfStatus.Value)).ToList();
             }
-            
-            return aatfList;           
+
+            return aatfList;
         }
 
         public async Task<List<Aatf>> GetLatestAatfs()
@@ -56,6 +56,13 @@
                 .GroupBy(a => a.AatfId)
                 .Select(x => x.OrderByDescending(a => a.ComplianceYear).FirstOrDefault())
                 .ToListAsync();
+        }
+
+        public async Task<List<Aatf>> GetAatfsBySiteAddressId(Guid siteAddressId)
+        {
+            return await context.Aatfs
+                                .Where(a => a.SiteAddressId == siteAddressId)
+                                .ToListAsync();
         }
     }
 }

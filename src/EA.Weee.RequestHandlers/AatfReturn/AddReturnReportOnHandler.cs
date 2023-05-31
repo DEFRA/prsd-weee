@@ -6,6 +6,7 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
+    using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using System;
@@ -21,13 +22,19 @@
         private readonly IGenericDataAccess dataAccess;
         private readonly WeeeContext context;
         private readonly IWeeeSentOnDataAccess sentOnDataAccess;
+        private readonly IGetAatfsDataAccess getAatfsDataAccess;
 
-        public AddReturnReportOnHandler(IWeeeAuthorization authorization, IGenericDataAccess dataAccess, WeeeContext context, IWeeeSentOnDataAccess sentOnDataAccess)
+        public AddReturnReportOnHandler(IWeeeAuthorization authorization,
+                                        IGenericDataAccess dataAccess,
+                                        WeeeContext context,
+                                        IWeeeSentOnDataAccess sentOnDataAccess,
+                                        IGetAatfsDataAccess getAatfsDataAccess)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
             this.context = context;
             this.sentOnDataAccess = sentOnDataAccess;
+            this.getAatfsDataAccess = getAatfsDataAccess;
         }
 
         public async Task<bool> HandleAsync(AddReturnReportOn message)
@@ -117,24 +124,33 @@
         {
             var weeeSentOns = await dataAccess.GetManyByReturnId<WeeeSentOn>(returnId);
             var weeeSentOnAmounts = new List<WeeeSentOnAmount>();
+            var addresses = new List<AatfAddress>();
 
             foreach (var weeeSentOn in weeeSentOns)
             {
                 weeeSentOnAmounts.AddRange(await dataAccess.GetManyByExpression(new WeeeSentOnAmountByWeeeSentOnIdSpecification(weeeSentOn.Id)));
 
-                var weeeSentOnListBySite = await sentOnDataAccess.GetWeeeSentOnBySiteId(weeeSentOn.SiteAddressId);
-                if (weeeSentOnListBySite == 1)
+                var weeeSentOnSiteCount = await sentOnDataAccess.GetWeeeSentOnBySiteId(weeeSentOn.SiteAddressId);
+                if (weeeSentOnSiteCount == 1)
                 {
-                    dataAccess.Remove(weeeSentOn.SiteAddress);
+                    var aafts = await getAatfsDataAccess.GetAatfsBySiteAddressId(weeeSentOn.SiteAddressId);
+                    if (aafts.Count() == 0 && weeeSentOn.SiteAddress != null)
+                    {
+                        addresses.Add(weeeSentOn.SiteAddress);
+                    }
                 }
 
-                var weeeSentOnListByOperator = await sentOnDataAccess.GetWeeeSentOnByOperatorId(weeeSentOn.OperatorAddressId);
-                if (weeeSentOnListByOperator == 1)
+                var weeeSentOnOperatorCount = await sentOnDataAccess.GetWeeeSentOnByOperatorId(weeeSentOn.OperatorAddressId);
+                if (weeeSentOnOperatorCount == 1)
                 {
-                    dataAccess.Remove(weeeSentOn.OperatorAddress);
+                    if (weeeSentOn.OperatorAddress != null)
+                    {
+                        addresses.Add(weeeSentOn.OperatorAddress);
+                    }
                 }
             }
 
+            dataAccess.RemoveMany(addresses);
             dataAccess.RemoveMany(weeeSentOnAmounts);
             dataAccess.RemoveMany(weeeSentOns);
 
