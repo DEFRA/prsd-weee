@@ -129,6 +129,56 @@
         }
 
         [Fact]
+        public void Validate_GivenAvailableReusedValueIsZero_ShouldBeValid()
+        {
+            // Arrange
+            var received = 100;
+            var reused = 1;
+            var availableReused = "0";
+            var availableReceived = 96;
+            var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, availableReused);
+            var validationContext = new ValidationContext(tonnageValueModel);
+
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(availableReused)).Returns(TonnageValidationResult.Success);
+
+            attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
+            {
+                TonnageValueValidator = tonnageTonnageValueValidator
+            };
+
+            // Act
+            var result = Record.Exception(() => attribute.Validate(tonnageValueModel.ReceiveTonnage, validationContext));
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void Validate_GivenAvailableReusedValueIsNull_ShouldBeValid()
+        {
+            // Arrange
+            var received = 100;
+            decimal? reused = null;
+            decimal? availableReused = null;
+            var availableReceived = 96;
+            var tonnageValueModel = TransferTonnageValueModel(received, availableReceived, reused, (decimal?)null);
+            var validationContext = new ValidationContext(tonnageValueModel);
+
+            A.CallTo(() => tonnageTonnageValueValidator.Validate(availableReused)).Returns(TonnageValidationResult.Success);
+
+            attribute = new ReuseTonnageCompareValueAttribute(CategoryIdProperty, ReceiveCompareTonnage, AvailableReceiveCompareTonnage, ReuseCompareTonnage, AvailableReuseCompareTonnage, Error)
+            {
+                TonnageValueValidator = tonnageTonnageValueValidator
+            };
+
+            // Act
+            var result = Record.Exception(() => attribute.Validate(tonnageValueModel.ReceiveTonnage, validationContext));
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
         public void Validate_GivenReceivedValueIsNull_ShouldBeValid()
         {
             // Arrange
