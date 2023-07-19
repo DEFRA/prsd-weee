@@ -28,19 +28,18 @@
     @RenderSection("head", required: false)
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-NKGXGC9"></script>
-    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@System.Web.Configuration.WebConfigurationManager.AppSettings["weee.GA4DataLayerId"].ToString()"></script>
 
 </head>
 
 <body class="govuk-template__body @Html.Raw(ViewBag.BodyClasses ?? string.Empty)">
 
-    <!-- Google Tag Manager (noscript) -->
+    <!-- Google Tag Manager (no script) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKGXGC9"
-                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=@System.Web.Configuration.WebConfigurationManager.AppSettings["Iws.GA4DataLayerId"].ToString()" 
+        height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!-- End Google Tag Manager (no script) -->
 
     <script type="text/javascript">
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
@@ -194,7 +193,7 @@
     function loadAnalytics() {
 
         var googleAnalyticsAccountId = String("@System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GoogleAnalyticsAccountId"].ToString()");
-
+        var gaDataLayerId = '@(System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GA4DataLayerId"].ToString())';
 
         (function (w, d, s, l, i) {
             w[l] = w[l] || [];
@@ -203,7 +202,7 @@
                 j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
                 j.async = true;
                 j.src = 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window, document, 'script', 'dataLayer', 'GTM-NKGXGC9');
+        })(window, document, 'script', 'dataLayer', 'gaDataLayerId');
 
         gtag('create', googleAnalyticsAccountId, 'auto');
         gtag('create', 'UA-145652997-1', 'auto', 'govuk_shared', { 'allowLinker': true });
