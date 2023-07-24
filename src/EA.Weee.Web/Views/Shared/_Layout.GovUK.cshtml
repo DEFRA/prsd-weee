@@ -36,8 +36,8 @@
 
     <!-- Google Tag Manager (no script) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=@System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GA4DataLayerId"].ToString()" 
-        height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=@System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GA4DataLayerId"].ToString()"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (no script) -->
 
@@ -201,9 +201,12 @@
             var f = d.getElementsByTagName(s)[0],
                 j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
                 j.async = true;
-                j.src = 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', gaDataLayerId);
 
+        gtag('js', new Date());
+        gtag('config', gaDataLayerId);
         gtag('create', googleAnalyticsAccountId, 'auto');
         gtag('create', 'UA-145652997-1', 'auto', 'govuk_shared', { 'allowLinker': true });
         gtag('govuk_shared.require', 'linker');
@@ -214,10 +217,10 @@
         gtag('govuk_shared.send', 'pageview');
     }
 
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
         dataLayer.push(arguments);
-        }
+    }
 
     var element = document.getElementById('saveCookieChoice');
     if (typeof (element) != 'undefined' && element != null) {
