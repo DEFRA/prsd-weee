@@ -6,11 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="theme-color" content="#0b0c0c" />
-    <title>@Html.Raw(ViewBag.Title ?? "GOV.UK - The best place to find government services and information")</title>
 
-    @*<script type="text/javascript">
-                (function () { if (navigator.userAgent.match(/IEMobile\/10\.0/)) { var d = document, c = "appendChild", a = d.createElement("style"); a[c](d.createTextNode("@@-ms-viewport{width:auto!important}")); d.getElementsByTagName("head")[0][c](a); } })();
-        </script>*@
+    <title>@Html.Raw(ViewBag.Title ?? "GOV.UK - The best place to find government services and information")</title>
 
     <link rel="shortcut icon" href="@Url.Content("~/Content/govuk_frontend/assets/images/favicon.ico")" type="image/x-icon" />
     <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="@Url.Content("~/Content/govuk_frontend/assets/images/favicon.ico")" type="image/x-icon" />
@@ -29,7 +26,6 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=@System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GA4DataLayerId"].ToString()"></script>
-
 </head>
 
 <body class="govuk-template__body @Html.Raw(ViewBag.BodyClasses ?? string.Empty)">
@@ -90,10 +86,8 @@
     </div>
     <!--end global-cookie-message-->
 
-
     <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
-
             <div class="govuk-header__logo govuk-input govuk-!-width-one-quarter">
                 <a href="@Html.Raw(ViewBag.HomepageUrl ?? "https://www.gov.uk/")" title="@Html.Raw(ViewBag.LogoLinkTitle ?? "Go to the GOV.UK homepage")" id="logo" class="govuk-header__link govuk-header__link--homepage">
                     <span class="govuk-header__logotype">
@@ -108,10 +102,8 @@
                 </a>
             </div>
             @RenderSection("inside_header", required: false)
-
         </div>
         @RenderSection("proposition_header", required: false)
-
     </header>
 
     @RenderSection("after_header", required: false)
@@ -140,7 +132,6 @@
             </div>
         </div>
     </footer>
-
 
     <div hidden="hidden" class="govuk-visually-hidden">
         Version: @Startup.ApplicationVersion
