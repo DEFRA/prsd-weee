@@ -14,7 +14,7 @@
         {
             Console.Write(System.Globalization.CultureInfo.CurrentCulture.Name);
             Console.Write(DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
-
+            Console.WriteLine("test");
             AatfDetailsViewModel model = new AatfDetailsViewModel()
             {
                 ApprovalDate = new DateTime(2019, 12, 22, 13, 10, 10)
