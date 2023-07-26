@@ -9,7 +9,7 @@
 
     public class AatfDetailsViewModelTests
     {
-        [Fact(Skip ="ddd")]
+        [Fact(Skip = "my sip")]
         public void ViewModelHasApprovalDate_OnlyDisplaysDateNotTime_DDMMYYYY()
         {
             Console.Write(System.Globalization.CultureInfo.CurrentCulture.Name);
