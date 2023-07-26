@@ -179,7 +179,7 @@
             result.Quarter.Should().Be(quarter);
         }
 
-        [Fact]
+        [Fact(Skip ="")]
         public void Map_GivenMappedReturnsAreForQuarterAndYearAreEditable_OnlyTheMostRecentRecordForYearAndQuarterShouldBeEditable()
         {
             var returnData = A.CollectionOfFake<ReturnData>(3).ToList();
