@@ -120,7 +120,7 @@
                 var aatfId = Guid.NewGuid();
 
                 var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Aatf, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First(), aatfId);
-                var aatf1 = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, Convert.ToDateTime("20/01/2020"), aatfContact, FacilityType.Aatf, 2020, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First(), aatfId);
+                var aatf1 = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, new DateTime(2020, 1, 20), aatfContact, FacilityType.Aatf, 2020, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First(), aatfId);
 
                 await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf });
 
@@ -149,7 +149,7 @@
                 var aatfId = Guid.NewGuid();
 
                 var aatf = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, DateTime.Now, aatfContact, FacilityType.Ae, 2019, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First(), aatfId);
-                var aatf1 = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, Convert.ToDateTime("20/01/2020"), aatfContact, FacilityType.Ae, 2020, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First(), aatfId);
+                var aatf1 = new Aatf("KoalaBears", competentAuthority, "WEE/AB1289YZ/ATF", AatfStatus.Approved, organisation, aatfAddress, aatfSize, new DateTime(2020, 1, 20), aatfContact, FacilityType.Ae, 2020, database.WeeeContext.LocalAreas.First(), database.WeeeContext.PanAreas.First(), aatfId);
 
                 await genericDataAccess.AddMany<Aatf>(new List<Aatf>() { aatf1, aatf });
 
