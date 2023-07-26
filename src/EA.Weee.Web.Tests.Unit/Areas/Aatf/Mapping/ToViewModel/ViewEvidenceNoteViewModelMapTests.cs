@@ -596,7 +596,7 @@
         public void Map_GivenRejectedDateTime_FormatsToGMTString()
         {
             var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Rejected, TestFixture.Create<bool>());
-            source.EvidenceNoteData.RejectedDate = DateTime.Parse("21/01/2001 13:30:30");
+            source.EvidenceNoteData.RejectedDate = new DateTime(2021, 1, 21, 13, 30, 30);
 
             var result = map.Map(source);
 
