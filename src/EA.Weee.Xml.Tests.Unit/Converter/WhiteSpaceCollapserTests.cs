@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.Converter
 {
+    using System;
+    using System.Globalization;
     using Xml.Converter;
     using Xunit;
 
@@ -11,6 +13,9 @@
         [Fact]
         public void CollpaseWhiteSpace_ForStringWithNewLine_ReplacesNewLineWithSingleSpace()
         {
+            Console.Write(System.Globalization.CultureInfo.CurrentCulture.Name);
+            Console.Write(DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
+
             // Arrange
             string value = @"Lorem ipsum
 dolor sit amet,
