@@ -4,6 +4,7 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
+    using System.Globalization;
     using Xunit;
 
     public class AatfDetailsViewModelTests
@@ -11,6 +12,9 @@
         [Fact]
         public void ViewModelHasApprovalDate_OnlyDisplaysDateNotTime_DDMMYYYY()
         {
+            Console.Write(System.Globalization.CultureInfo.CurrentCulture.Name);
+            Console.Write(DateTimeFormatInfo.CurrentInfo.ShortDatePattern);
+
             AatfDetailsViewModel model = new AatfDetailsViewModel()
             {
                 ApprovalDate = new DateTime(2019, 12, 22, 13, 10, 10)
