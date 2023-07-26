@@ -184,7 +184,7 @@
         {
             var returnData = A.CollectionOfFake<ReturnData>(3).ToList();
 
-            var dateNow = DateTime.Now;
+            var dateNow = new DateTime(2023, 07, 26);
             var idToFind = Guid.NewGuid();
 
             var returnsItems = new List<ReturnsItemViewModel>()

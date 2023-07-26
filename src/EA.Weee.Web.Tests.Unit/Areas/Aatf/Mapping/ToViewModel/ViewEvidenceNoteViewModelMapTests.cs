@@ -507,7 +507,7 @@
         public void Map_GivenApprovedDateTime_FormatsToGMTString()
         {
             var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Approved, TestFixture.Create<bool>());
-            source.EvidenceNoteData.ApprovedDate = DateTime.Parse("21/01/2001 13:30:30");
+            source.EvidenceNoteData.ApprovedDate = new DateTime(2021, 1, 21, 13, 30, 30);
 
             var result = map.Map(source);
 
