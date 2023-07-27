@@ -3,11 +3,13 @@
     using Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Helpers;
+    using Microsoft.Owin;
     using Prsd.Core;
     using Prsd.Core.Mapper;
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using WebGrease.Css.Extensions;
     using Weee.Requests.Organisations;
@@ -94,7 +96,7 @@
         private static void SetEditableReturns(ReturnsViewModel model)
         {
             var groupedEdits = model.Returns.Where(r => r.ReturnsListDisplayOptions.DisplayEdit)
-                .OrderByDescending(r => Convert.ToDateTime(r.ReturnViewModel.CreatedDate))
+                .OrderByDescending(r => DateTime.ParseExact(r.ReturnViewModel.CreatedDate, "dd/MM/yyyy", CultureInfo.InvariantCulture))
                 .GroupBy(r => new { r.ReturnViewModel.Year, r.ReturnViewModel.Quarter });
 
             foreach (var groupedEdit in groupedEdits)
