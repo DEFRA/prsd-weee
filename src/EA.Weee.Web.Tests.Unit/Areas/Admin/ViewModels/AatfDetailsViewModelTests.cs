@@ -2,11 +2,12 @@
 {
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Admin.ViewModels.Aatf;
     using System;
     using Xunit;
 
-    public class AatfDetailsViewModelTests
+    public class AatfDetailsViewModelTests : SimpleUnitTestBase
     {
         [Fact]
         public void ViewModelHasApprovalDate_OnlyDisplaysDateNotTime_DDMMYYYY()
