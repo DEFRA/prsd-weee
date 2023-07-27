@@ -18,11 +18,11 @@
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
 
-    public class GetAatfsDataAccessTests
+    public class GetAatfsDataAccessTests : SimpleUnitTestBase
     {
         [Fact]
         public async Task GetAatfsDataAccess_ReturnsAatfsList()
-        {
+        { 
             using (var database = new DatabaseWrapper())
             {
                 var helper = new ModelHelper(database.Model);
