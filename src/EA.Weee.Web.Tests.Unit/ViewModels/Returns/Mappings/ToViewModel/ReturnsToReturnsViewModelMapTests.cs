@@ -16,7 +16,7 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class ReturnsToReturnsViewModelMapTests
+    public class ReturnsToReturnsViewModelMapTests : SimpleUnitTestBase
     {
         private readonly IMap<ReturnData, ReturnsItemViewModel> returnItemViewModelMap;
         private readonly IReturnsOrdering ordering;
