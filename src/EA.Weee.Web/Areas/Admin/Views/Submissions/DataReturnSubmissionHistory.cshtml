@@ -73,21 +73,18 @@
                     })
 
                     var selectedScheme = $("#SelectedScheme").val();
-                    FetchSubmissionResults(selectedYear, selectedScheme);
+                    FetchDataReturnSubmissionResults(selectedYear, selectedScheme);
                 }
             });
         }
 
-        $("#SelectedYear")
-            .change(function () {
-
+        $("#SelectedYear").change(function () {
                 var selectedYear = $(this).val();
-                var selectedScheme = $("#SelectedScheme").val();
-                FetchDataReturnSubmissionResults(selectedYear, selectedScheme);
+                //var selectedScheme = $("#SelectedScheme").val();
+                FectSchemeForComplainceYear(selectedYear);
             });
 
-        $("#SelectedScheme")
-            .change(function () {
+        $("#SelectedScheme").change(function () {
                 var selectedScheme = $(this).val();
                 var selectedYear = $("#SelectedYear").val();
                 FetchDataReturnSubmissionResults(selectedYear, selectedScheme);
