@@ -37,10 +37,10 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
 
-        public SubmissionsController(BreadcrumbService breadcrumb, Func<IWeeeClient> client, IWeeeCache cache, CsvWriterFactory csvWriterFactory)
+        public SubmissionsController(BreadcrumbService breadcrumb, Func<IWeeeClient> apiClient, IWeeeCache cache, CsvWriterFactory csvWriterFactory)
         {
             this.breadcrumb = breadcrumb;
-            this.apiClient = client;
+            this.apiClient = apiClient;
             this.cache = cache;
             this.csvWriterFactory = csvWriterFactory;
         }
@@ -107,7 +107,6 @@
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
-
                     GetMemberRegistrationSchemesByComplianceYear getSchemesRequest = new GetMemberRegistrationSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
@@ -155,7 +154,6 @@
                 {
                     GetMemberRegistrationSchemesByComplianceYear getSchemesRequest = new GetMemberRegistrationSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
-
                     IEnumerable<SelectListItem> schemeNames = new SelectList(schemes, "Id", "SchemeName");
 
                     return Json(schemeNames, JsonRequestBehavior.AllowGet);
@@ -185,10 +183,17 @@
             return RetrieveSubmissionResults(year, schemeId, orderBy);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         private async Task<ActionResult> RetrieveSubmissionResults(int year, Guid schemeId, SubmissionsHistoryOrderBy orderBy)
         {
-            if (Request != null &&
-                !Request.IsAjaxRequest())
+            if (Request != null && !Request.IsAjaxRequest())
             {
                 throw new InvalidOperationException();
             }
@@ -197,15 +202,13 @@
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
+
             using (var client = apiClient())
             {
                 try
                 {
                     var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
-
-                    var request = new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId,
-                        year, orderBy, true);
-
+                    var request = new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year, orderBy, true);
                     var searchResults = await client.SendAsync(User.GetAccessToken(), request);
 
                     var model = new SubmissionsResultsViewModel
@@ -231,9 +234,7 @@
         {
             using (var client = apiClient())
             {
-                IEnumerable<ErrorData> errors =
-                    (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
-                    .OrderByDescending(e => e.ErrorLevel);
+                IEnumerable<ErrorData> errors = (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId))).OrderByDescending(e => e.ErrorLevel);
 
                 CsvWriter<ErrorData> csvWriter = csvWriterFactory.Create<ErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
@@ -273,7 +274,6 @@
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears());
-
                     GetEEEWEEEDataReturnSchemesByComplianceYear getSchemesRequest = new GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
@@ -284,6 +284,7 @@
                         SelectedYear = allYears.FirstOrDefault(),
                         SelectedScheme = schemes.Count > 0 ? schemes.First().Id : Guid.Empty
                     };
+
                     return View(model);
                 }
                 catch (ApiBadRequestException ex)
@@ -308,7 +309,6 @@
                 {
                     GetEEEWEEEDataReturnSchemesByComplianceYear getSchemesRequest = new GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
-
                     IEnumerable<SelectListItem> schemeNames = new SelectList(schemes, "Id", "SchemeName");
 
                     return Json(schemeNames, JsonRequestBehavior.AllowGet);
@@ -351,10 +351,17 @@
             return RetrieveDataReturnsSubmissionResults(year, schemeId, orderBy);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         private async Task<ActionResult> RetrieveDataReturnsSubmissionResults(int year, Guid schemeId, DataReturnSubmissionsHistoryOrderBy orderBy)
         {
-            if (Request != null &&
-                !Request.IsAjaxRequest())
+            if (Request != null && !Request.IsAjaxRequest())
             {
                 throw new InvalidOperationException();
             }
@@ -363,6 +370,7 @@
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
+
             using (var client = apiClient())
             {
                 try
@@ -403,9 +411,14 @@
             }
 
             byte[] data = new UTF8Encoding().GetBytes(csvFileData.FileContent);
+
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileData.FileName));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private async Task SetBreadcrumb()
         {
             breadcrumb.InternalActivity = "Submissions history";
