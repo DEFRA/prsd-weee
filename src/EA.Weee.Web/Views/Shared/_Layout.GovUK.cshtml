@@ -164,7 +164,6 @@
     });
 
     $("#rejectCookies").click(function () {
-        deleteGA4Cookies();
         GOVUK.cookie('weee-cookie-consent', 'no', { days: 365 });
         document.getElementById("global-cookie-message").style.display = "none";
         GOVUK.cookie('_ga', null);
@@ -183,7 +182,6 @@
     });
 
     function loadAnalytics() {
-
         var googleAnalyticsAccountId = String("@System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GoogleAnalyticsAccountId"].ToString()");
         var gaDataLayerId = '@(System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GA4DataLayerId"].ToString())';
 
@@ -209,19 +207,6 @@
         gtag('govuk_shared.send', 'pageview');
     }
 
-    function deleteGA4Cookies() {
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie_name = cookies[i].split("=");
-                var isCookie_GA4_Available = (cookie_name[0].trim().indexOf("_ga_") > -1);
-                if (isCookie_GA4_Available) {
-                    GOVUK.cookie(cookie_name[0].trim(), null);
-                }
-            }
-        }
-    }
-
     window.dataLayer = window.dataLayer || [];
     function gtag() {
         dataLayer.push(arguments);
@@ -243,12 +228,26 @@
     }
 
     function rejectCookies() {
+        deleteGA4Cookies();
         GOVUK.cookie('weee-cookie-consent', 'no', { days: 365 });
         document.getElementById("global-cookie-message").style.display = "none";
         GOVUK.cookie('_ga', null);
         GOVUK.cookie('_gid', null);
         GOVUK.cookie('_gat', null);
         GOVUK.cookie('_gat_govuk_shared', null);
+    }
+
+    function deleteGA4Cookies() {
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie_name = cookies[i].split("=");
+                var isCookie_GA4_Available = (cookie_name[0].trim().indexOf("_ga_") > -1);
+                if (isCookie_GA4_Available) {
+                    GOVUK.cookie(cookie_name[0].trim(), null);
+                }
+            }
+        }
     }
 
     function setCookieChoice() {
