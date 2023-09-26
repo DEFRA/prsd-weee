@@ -160,15 +160,19 @@
 
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset inline">
-                <div class="govuk-radios__item">
-                    <input name="cookieChoices" type="hidden" value="True">
-                    <input id="cookieChoiceYes" name="cookieChoices" class="govuk-radios__input" type="radio" value="True">
-                    <label class="govuk-label govuk-radios__label" for="yes">Yes</label>
-                </div>
-                <div class="govuk-radios__item">
-                    <input name="cookieChoices" type="hidden" value="False">
-                    <input id="cookieChoiceNo" name="cookieChoices" class="govuk-radios__input" type="radio" value="False">
-                    <label class="govuk-label govuk-radios__label" for="no">No</label>
+                <div class="govuk-radios" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input type="radio" id="cookieChoiceYes" name="cookieChoices" value="True" class="govuk-radios__input">
+                        <label class="govuk-label govuk-radios__label" for="cookieChoiceYes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input type="radio" id="cookieChoiceNo" name="cookieChoices" value="False" class="govuk-radios__input">
+                        <label class="govuk-label govuk-radios__label" for="cookieChoiceNo">
+                            No
+                        </label>
+                    </div>
                 </div>
             </fieldset>
         </div>
