@@ -915,6 +915,7 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
+    <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\ProducerDetails.cshtml" />
@@ -1101,7 +1102,6 @@
     <Content Include="Scripts\govuk_frontend\govuk-frontend-4.0.1.min.js" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Scripts\search-an-aatf.js" />
-    <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
     <Content Include="Areas\Admin\Views\SchemeReports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\PcsAatfDataDifference.cshtml" />
