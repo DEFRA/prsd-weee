@@ -19,7 +19,7 @@
 
         Html.RenderPartial("~/Views/Shared/_EvidenceNotesFilters.cshtml", Model.ManageEvidenceNoteViewModel,
              new ViewDataDictionary() {
-                    new KeyValuePair<string, object>("tab", "reviewSubmittedEvidenceAnchor")
+                    new KeyValuePair<string, object>("tab", Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence))
              }
          );
     }
