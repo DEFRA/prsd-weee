@@ -17,6 +17,8 @@
 
         public NoteStatus? NoteStatus { get; set; }
 
+        public NoteStatus? EvidenceType { get; set; }
+
         public Guid? SubmittedBy { get; set; }
 
         public List<EntityIdDisplayNameData> SubmittedByList { get; set; }
@@ -24,7 +26,7 @@
         public bool AllStatuses { get; set; }
 
         public RecipientWasteStatusFilterBase(List<EntityIdDisplayNameData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus, 
-            Guid? submittedBy, List<EntityIdDisplayNameData> submittedByList, bool internalUser, bool allStatuses)
+            Guid? submittedBy, List<EntityIdDisplayNameData> submittedByList, NoteStatus? evidenceType, bool internalUser, bool allStatuses)
         {
             RecipientList = recipientList;
             ReceivedId = receivedId;
@@ -32,6 +34,7 @@
             NoteStatus = noteStatus;
             SubmittedBy = submittedBy;
             SubmittedByList = submittedByList;
+            EvidenceType = evidenceType;
             Internal = internalUser;
             AllStatuses = allStatuses;
         }
