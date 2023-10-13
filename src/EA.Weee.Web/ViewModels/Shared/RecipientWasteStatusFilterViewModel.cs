@@ -28,6 +28,8 @@
 
         public IEnumerable<SelectListItem> NoteStatusList { get; set; }
 
+        public IEnumerable<SelectListItem> EvidenceTypeList { get; set; }
+
         public bool SearchPerformed => NoteStatusValue.HasValue || WasteTypeValue.HasValue || ReceivedId.HasValue;
     }
 }
