@@ -1,5 +1,5 @@
 ﻿@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
-<div class="govuk-grid-column-one-half weee-evidence-padding-right" style="z-index: 4; width: 210px;">
+<div class="govuk-grid-column-one-half weee-evidence-padding-right">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)

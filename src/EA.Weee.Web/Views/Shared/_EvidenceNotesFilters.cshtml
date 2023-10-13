@@ -33,20 +33,18 @@
 
     <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
         <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
-            <div>
-                @if (ViewData.ContainsKey("displayObligationTypeFilters") && @ViewData["displayObligationTypeFilters"].ToString() == "true")
-                {
-                    @Html.EditorFor(m => m, "ObligationTypeFiltersViewModel")
-                }
-                @if (ViewData.ContainsKey("displayStatusFilters") && @ViewData["displayStatusFilters"].ToString() == "true")
-                {
-                    @Html.EditorFor(m => m, "StatusFiltersViewModel")
-                }
-                @if (ViewData.ContainsKey("displayEvidenceTypeFilters") && @ViewData["displayEvidenceTypeFilters"].ToString() == "true")
-                {
-                    @Html.EditorFor(m => m, "EvidenceTypeFiltersViewModel")
-                }
-            </div>
+            @if (ViewData.ContainsKey("displayObligationTypeFilters") && @ViewData["displayObligationTypeFilters"].ToString() == "true")
+            {
+                @Html.EditorFor(m => m, "ObligationTypeFiltersViewModel")
+            }
+            @if (ViewData.ContainsKey("displayStatusFilters") && @ViewData["displayStatusFilters"].ToString() == "true")
+            {
+                @Html.EditorFor(m => m, "StatusFiltersViewModel")
+            }
+            @if (ViewData.ContainsKey("displayEvidenceNoteTypeFilters") && @ViewData["displayEvidenceNoteTypeFilters"].ToString() == "true")
+            {
+                @Html.EditorFor(m => m, "EvidenceNoteTypeFiltersViewModel")
+            }
         </div>
         <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
             @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model, new ViewDataDictionary(ViewData))

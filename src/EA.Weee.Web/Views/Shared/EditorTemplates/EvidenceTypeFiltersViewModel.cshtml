@@ -1,8 +1,0 @@
-﻿@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
-
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.EvidenceTypeValue)">
-    @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceTypeValue, new { @class = "govuk-label--s" }, false)
-    @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceTypeValue)
-    @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceTypeValue, Model.RecipientWasteStatusFilterViewModel.EvidenceTypeList, string.Empty, new { @class = "full-width-important" },
-        false, false)
-</div>

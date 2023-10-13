@@ -29,11 +29,11 @@
         public IEnumerable<SelectListItem> SubmittedByList { get; set; }
 
         [Display(Name = "Evidence type")]
-        public NoteStatus? EvidenceTypeValue { get; set; }
+        public EvidenceNoteType? EvidenceNoteTypeValue { get; set; }
 
-        public IEnumerable<SelectListItem> EvidenceTypeList { get; set; }
+        public IEnumerable<SelectListItem> EvidenceNoteTypeList { get; set; }
 
         public bool SearchPerformed => NoteStatusValue.HasValue || WasteTypeValue.HasValue
-            || ReceivedId.HasValue || EvidenceTypeValue.HasValue;
+            || ReceivedId.HasValue || EvidenceNoteTypeValue.HasValue;
     }
 }
