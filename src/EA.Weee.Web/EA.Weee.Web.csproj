@@ -920,7 +920,7 @@
     <Content Include="Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedByFiltersViewModel.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\EvidenceTypeFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EvidenceNoteTypeFiltersViewModel.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
