@@ -915,6 +915,12 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
+    <Content Include="Views\Shared\EditorTemplates\RecipientFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ObligationTypeFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SubmittedByFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EvidenceTypeFiltersViewModel.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
