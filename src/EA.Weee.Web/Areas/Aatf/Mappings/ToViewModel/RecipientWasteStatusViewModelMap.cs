@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Mappings
 {
-    using System.Collections.Generic;
-    using System.Web.Mvc;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
     using Web.ViewModels.Shared;
 
     public class RecipientWasteStatusViewModelMap : IMap<RecipientWasteStatusFilterBase, RecipientWasteStatusFilterViewModel>
@@ -35,18 +35,20 @@
                 sortedListOfNoteStatus.Insert(4, new KeyValuePair<int, string>((int)NoteStatus.Returned, NoteStatus.Returned.ToString()));
             }
 
-            viewModel.RecipientList = source.RecipientList != null ? new SelectList(source.RecipientList, "Id", "DisplayName") : 
+            viewModel.RecipientList = source.RecipientList != null ? new SelectList(source.RecipientList, "Id", "DisplayName") :
                 new SelectList(new List<EntityIdDisplayNameData>(), "Id", "DisplayName");
 
             viewModel.NoteStatusList = new SelectList(sortedListOfNoteStatus, "Key", "Value");
             viewModel.WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value");
+            viewModel.EvidenceNoteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(EvidenceNoteType)), "Key", "Value");
             viewModel.ReceivedId = source.ReceivedId;
             viewModel.NoteStatusValue = source.NoteStatus;
             viewModel.WasteTypeValue = source.WasteType;
             viewModel.SubmittedBy = source.SubmittedBy;
 
-            viewModel.SubmittedByList = source.SubmittedByList != null ? new SelectList(source.SubmittedByList, "Id", "DisplayName") :
-         new SelectList(new List<EntityIdDisplayNameData>(), "Id", "DisplayName");
+            viewModel.SubmittedByList = source.SubmittedByList != null ? 
+                new SelectList(source.SubmittedByList, "Id", "DisplayName") :
+                new SelectList(new List<EntityIdDisplayNameData>(), "Id", "DisplayName");
 
             return viewModel;
         }
