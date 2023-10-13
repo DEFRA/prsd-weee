@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
@@ -123,6 +124,19 @@
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
                     (new ManageEvidenceNoteTransfer(organisationId, manageEvidenceNoteViewModel?.FilterViewModel, null, null, selectedComplianceYear, currentDate));
 
+                model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
+                    new SubmittedDateFilterBase(manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate));
+
+                model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
+                            new RecipientWasteStatusFilterBase(null,
+                            null,
+                            null,
+                            manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                            null,
+                            null,
+                            null,
+                            false, true));
+
                 return View("ReviewSubmittedEvidence", model);
             }
         }
@@ -185,6 +199,7 @@
                             manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                             null, 
                             null, 
+                            null,
                             false, true));
 
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
