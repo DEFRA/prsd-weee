@@ -31,9 +31,10 @@
         [Display(Name = "Evidence type")]
         public EvidenceNoteType? EvidenceNoteTypeValue { get; set; }
 
+        public IEnumerable<SelectListItem> EvidenceTypeList { get; set; }
+
         public IEnumerable<SelectListItem> EvidenceNoteTypeList { get; set; }
 
-        public bool SearchPerformed => NoteStatusValue.HasValue || WasteTypeValue.HasValue
-            || ReceivedId.HasValue || EvidenceNoteTypeValue.HasValue;
+        public bool SearchPerformed => NoteStatusValue.HasValue || WasteTypeValue.HasValue || ReceivedId.HasValue || EvidenceNoteTypeValue.HasValue;
     }
 }

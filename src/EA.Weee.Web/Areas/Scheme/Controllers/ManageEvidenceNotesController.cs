@@ -178,10 +178,13 @@
                     }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber,
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
+                var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
+                            new RecipientWasteStatusFilterBase(null, null, null, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, null, null, true, true));
+
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                  new SchemeTabViewModelMapTransfer(pcsId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, manageEvidenceNoteViewModel?.FilterViewModel, null, null, selectedComplianceYear, currentDate));
+                model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(pcsId, manageEvidenceNoteViewModel?.FilterViewModel, recipientWasteStatusViewModel, null, selectedComplianceYear, currentDate));
 
                 return View("ViewAndTransferEvidence", model);
             }
