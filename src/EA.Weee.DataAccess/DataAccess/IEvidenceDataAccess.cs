@@ -15,7 +15,7 @@
             Organisation recipient, 
             DateTime startDate, 
             DateTime endDate, 
-            WasteType? wasteType, 
+            WasteType wasteType, 
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
             NoteStatus status,
