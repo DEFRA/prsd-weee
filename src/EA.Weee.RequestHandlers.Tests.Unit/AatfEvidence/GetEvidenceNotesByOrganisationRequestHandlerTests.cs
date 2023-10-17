@@ -21,6 +21,7 @@
     using Xunit;
     using NoteStatus = Core.AatfEvidence.NoteStatus;
     using NoteType = Core.AatfEvidence.NoteType;
+    using WasteType = Core.AatfEvidence.WasteType;
 
     public class GetEvidenceNotesByOrganisationRequestHandlerTests : SimpleUnitTestBase
     {
@@ -41,7 +42,7 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue, null, null);
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue, null, null, null, null, new List<WasteType>() { WasteType.Household });
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -115,13 +116,13 @@
             await handler.HandleAsync(request);
 
             // assert
-            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e => 
-                                                              e.RecipientId == request.OrganisationId && 
+            A.CallTo(() => evidenceDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
+                                                              e.RecipientId == request.OrganisationId &&
                                                               e.AllowedStatuses.SequenceEqual(status) &&
                                                               e.AatfId == null &&
                                                               e.ComplianceYear == request.ComplianceYear &&
                                                               e.NoteTypeFilter.Contains(Domain.Evidence.NoteType.EvidenceNote) &&
-                                                              e.NoteTypeFilter.Count == 1 && 
+                                                              e.NoteTypeFilter.Count == 1 &&
                                                               e.OrganisationId == null &&
                                                               e.PageNumber == 1 &&
                                                               e.PageSize == int.MaxValue &&
@@ -134,7 +135,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
-                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, NoteStatus.Approved, null);
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
 
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
@@ -161,8 +162,8 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
-                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -179,8 +180,8 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
-                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -201,14 +202,14 @@
         {
             //arrange
             var organisation = A.Fake<Organisation>();
-            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
-                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null);
+            var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(A<Guid>._, A<int>._))
                 .Returns(hasApprovedEvidence);
             // act
-            
+
             var result = await handler.HandleAsync(request);
 
             // assert
@@ -290,7 +291,7 @@
             // arrange
             var searchRef = TestFixture.Create<string>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(),
-                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, TestFixture.Create<NoteStatus?>(), searchRef);
+                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, searchRef, null, null, null, new List<WasteType>() { WasteType.Household });
 
             // act
             var result = await handler.HandleAsync(request);
@@ -302,8 +303,8 @@
 
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
-            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), 
-                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, TestFixture.Create<NoteStatus?>(), null);
+            return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(),
+                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, string.Empty, null, null, null, new List<WasteType>() { WasteType.Household });
         }
     }
 }

@@ -54,7 +54,8 @@
             {
                 data.AatfData = new AatfData()
                 {
-                    Name = source.Note.Aatf.Name
+                    Name = source.Note.Aatf.Name,
+                    Id = source.Note.Aatf.Id
                 };
             }
 
