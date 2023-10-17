@@ -7,7 +7,6 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using CuttingEdge.Conditions;
-    using Domain.Lookup;
     using Domain.Organisation;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Evidence;
@@ -41,7 +40,7 @@
         }
 
         public async Task<Note> Update(Note note, Organisation recipient, DateTime startDate, DateTime endDate,
-            WasteType? wasteType,
+            WasteType wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
             NoteStatus status,
@@ -71,6 +70,7 @@
             var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
             var submittedStartDateFilter = filter.StartDateSubmitted?.Date;
             var submittedEndDateFilter = filter.EndDateSubmitted?.Date;
+            var wasteTypes = filter.WasteTypeFilter.ToList();
 
             Guid? groupedAatfId = null;
             if (filter.AatfId.HasValue)
@@ -98,6 +98,10 @@
             {
                 notes = notes.Where(n => n.RecipientId == filter.RecipientId);
             }
+            if (filter.SubmittedById.HasValue)
+            {
+                notes = notes.Where(n => n.Aatf.Id == filter.SubmittedById);
+            }
             if (filter.NoteStatusId.HasValue)
             {
                 notes = notes.Where(n => n.Status.Value == filter.NoteStatusId);
@@ -105,6 +109,10 @@
             if (filter.AllowedStatuses.Any() && !filter.NoteStatusId.HasValue)
             {
                 notes = notes.Where(n => allowedStatus.Contains(n.Status.Value));
+            }
+            if (filter.WasteTypeFilter.Any() && !filter.WasteTypeId.HasValue)
+            {
+                notes = notes.Where(n => wasteTypes.Contains(n.WasteType.Value));
             }
             if (submittedStartDateFilter.HasValue)
             {
@@ -126,7 +134,7 @@
             }
             if (filter.WasteTypeId.HasValue)
             {
-                notes = notes.Where(n => (int)n.WasteType == filter.WasteTypeId);
+                notes = notes.Where(n => n.WasteType.Value == (WasteType)filter.WasteTypeId.Value);
             }
             if (filter.SearchRef != null)
             {
@@ -178,7 +186,7 @@
         {
             var filteredNotes = context.Notes.Where(n => n.RecipientId == recipientOrganisationId &&
                                                          n.NoteType.Value == NoteType.EvidenceNote.Value &&
-                                                         n.WasteType.Value == WasteType.HouseHold &&
+                                                         n.WasteType == WasteType.HouseHold &&
                                                          n.Status.Value == NoteStatus.Approved.Value &&
                                                          n.ComplianceYear == complianceYear);
 
@@ -215,7 +223,7 @@
         public async Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId,
             List<Guid> evidenceNotes, List<int> categories)
         {
-            var pagedNotes = await context.Notes.Where(n => n.RecipientId == recipientOrganisationId && 
+            var pagedNotes = await context.Notes.Where(n => n.RecipientId == recipientOrganisationId &&
                                                             evidenceNotes.Contains(n.Id) &&
                                                             n.NoteTonnage.Where(nt => nt.Received != null)
                                                                 .Select(nt1 => (int)nt1.CategoryId).AsEnumerable().Any(e => categories.Contains(e)))
@@ -320,8 +328,8 @@
             return note;
         }
 
-        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId, 
-            int complianceYear, 
+        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId,
+            int complianceYear,
             List<NoteStatus> allowedStatus,
             List<NoteType> allowedNoteTypes)
         {
@@ -364,9 +372,9 @@
             var status = allowedStatus.Select(e => e.Value);
             var noteTypes = allowedNoteTypes.Select(e => e.Value);
 
-            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && 
+            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear &&
                                                  n.NoteType.Value == NoteType.TransferNote.Value &&
-                                                 status.Contains(n.Status.Value) && 
+                                                 status.Contains(n.Status.Value) &&
                                                  noteTypes.Contains(n.NoteType.Value));
 
             return await notes.Select(n => n.Organisation)
@@ -380,7 +388,7 @@
                 .AnyAsync(n => n.ComplianceYear == complianceYear &&
                                n.RecipientId == recipientId &&
                                n.Status.Value == NoteStatus.Approved.Value &&
-                               n.WasteType.Value == WasteType.HouseHold &&
+                               n.WasteType == WasteType.HouseHold &&
                                n.NoteType.Value == NoteType.EvidenceNote.Value);
         }
 
