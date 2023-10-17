@@ -5,7 +5,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
-    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.AatfEvidence;
@@ -42,9 +41,9 @@
         public ManageEvidenceNotesController(IMapper mapper,
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            Func<IWeeeClient> apiClient, 
+            Func<IWeeeClient> apiClient,
             ISessionService sessionService,
-            IMvcTemplateExecutor templateExecutor, 
+            IMvcTemplateExecutor templateExecutor,
             IPdfDocumentProvider pdfDocumentProvider,
             ConfigurationService configurationService) : base(breadcrumb, cache)
         {
@@ -58,10 +57,24 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> Index(Guid pcsId, 
+        public async Task<ActionResult> Index(Guid pcsId,
+            string tab = null,
+            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
+        {
+            return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, 1);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(Guid pcsId,
             string tab = null,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
             int page = 1)
+        {
+            return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, page);
+        }
+
+        private async Task<ActionResult> ProcessManageEvidenceNotes(Guid pcsId, string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int page)
         {
             sessionService.ClearTransferSessionObject(SessionKeyConstant.EditTransferTonnageViewModelKey);
             sessionService.ClearTransferSessionObject(SessionKeyConstant.TransferNoteKey);
@@ -75,9 +88,9 @@
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
                 var selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
 
-                if (tab == null) 
-                { 
-                    tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary); 
+                if (tab == null)
+                {
+                    tab = DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.Summary);
                 }
 
                 var value = tab.GetValueFromDisplayName<ManageEvidenceNotesDisplayOptions>();
@@ -86,12 +99,16 @@
                 {
                     case ManageEvidenceNotesDisplayOptions.Summary:
                         return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, selectedComplianceYear);
+
                     case ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence:
                         return await CreateAndPopulateReviewSubmittedEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page, selectedComplianceYear);
+
                     case ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence:
                         return await CreateAndPopulateViewAndTransferEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page, selectedComplianceYear);
+
                     case ManageEvidenceNotesDisplayOptions.OutgoingTransfers:
                         return await CreateAndPopulateOutgoingTransfersEvidenceViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, page, selectedComplianceYear);
+
                     default:
                         return await CreateAndPopulateEvidenceSummaryViewModel(pcsId, scheme, currentDate, manageEvidenceNoteViewModel, selectedComplianceYear);
                 }
@@ -114,10 +131,10 @@
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesByOrganisationRequest(organisationId, 
+                new GetEvidenceNotesByOrganisationRequest(organisationId,
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, 
-                    false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, 
+                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer },
+                    false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
                     null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -152,13 +169,13 @@
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>() 
-                    { 
-                        NoteStatus.Approved, 
+                    new GetEvidenceNotesByOrganisationRequest(pcsId, new List<NoteStatus>()
+                    {
+                        NoteStatus.Approved,
                         NoteStatus.Rejected,
                         NoteStatus.Void,
                         NoteStatus.Returned
-                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber, 
+                    }, selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber,
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, null, manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
 
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
@@ -191,8 +208,8 @@
                         NoteStatus.Void,
                         NoteStatus.Returned
                     }, selectedComplianceYear, new List<NoteType>() { NoteType.Transfer },
-                    true, 
-                    pageNumber, 
+                    true,
+                    pageNumber,
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
                     manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                     manageEvidenceNoteViewModel?.FilterViewModel.SearchRef));
@@ -202,8 +219,8 @@
                             null,
                             null,
                             manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                            null, 
-                            null, 
+                            null,
+                            null,
                             null,
                             false, true));
 
@@ -215,7 +232,7 @@
                 return View("OutgoingTransfers", model);
             }
         }
-        
+
         [HttpGet]
         [CheckCanApproveNote]
         [NoCacheFilter]
@@ -252,7 +269,7 @@
 
                     await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("ViewEvidenceNote", 
+                    return RedirectToAction("ViewEvidenceNote",
                         new { organisationId = model.OrganisationId, evidenceNoteId = request.NoteId, selectedComplianceYear = model.ViewEvidenceNoteViewModel.ComplianceYear });
                 }
 
@@ -266,9 +283,9 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId, 
-            string redirectTab = null, 
-            int page = 1, 
+        public async Task<ActionResult> ViewEvidenceNote(Guid pcsId, Guid evidenceNoteId,
+            string redirectTab = null,
+            int page = 1,
             bool openedInNewTab = false,
             string queryString = null)
         {
@@ -295,7 +312,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateAndPopulateEvidenceSummaryViewModel(Guid pcsId, SchemePublicInfo scheme, DateTime currentDate, 
+        public async Task<ActionResult> CreateAndPopulateEvidenceSummaryViewModel(Guid pcsId, SchemePublicInfo scheme, DateTime currentDate,
             ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int selectedComplianceYear)
         {
             using (var client = apiClient())

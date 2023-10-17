@@ -12,9 +12,10 @@
         Review submitted evidence
     </h2>
 
-    @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Get))
+    @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
     {
-        @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
+        @Html.AntiForgeryToken()
+        @Html.Hidden("tab", Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), new { id = "tab-all-evidence" })
         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
         Html.RenderPartial("~/Views/Shared/_EvidenceNotesFilters.cshtml", Model.ManageEvidenceNoteViewModel,
@@ -113,7 +114,7 @@
     <br />
     @{
         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-        {
+{
                 {
                     "pagerRouteValues", new
                     {
