@@ -25,5 +25,13 @@
         public List<NoteType> NoteTypeFilterList { get; protected set; }
 
         public bool TransferredOut { get; protected set; }
+
+        public Guid? SubmittedById { get; protected set; }
+
+        public DateTime? StartDateSubmittedFilter { get; set; }
+
+        public DateTime? EndDateSubmittedFilter { get; set; }
+
+        public List<WasteType> ObligationTypeFilter { get; set; }
     }
 }
