@@ -31,7 +31,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
+                new GetEvidenceNotesByOrganisationRequest(Guid.Empty, fixture.CreateMany<NoteStatus>().ToList(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -42,7 +42,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), null, complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }));
 
             //assert
             exception.Should().BeOfType<ArgumentNullException>();
@@ -53,7 +53,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), new List<NoteStatus>(), complianceYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }));
 
             //assert
             exception.Should().BeOfType<ArgumentException>();
@@ -66,7 +66,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), currentYear, new List<NoteType>() { NoteType.Evidence }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -77,7 +77,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 1, 0, null, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 1, 0, null, null, null, null, new List<WasteType>() { WasteType.Household }));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -88,7 +88,7 @@
         {
             //act
             var exception = Record.Exception(() =>
-                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 0, 25, null, null));
+                new GetEvidenceNotesByOrganisationRequest(fixture.Create<Guid>(), fixture.CreateMany<NoteStatus>().ToList(), 2022, new List<NoteType>() { NoteType.Evidence }, false, 0, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -106,7 +106,7 @@
             var searchRef = fixture.Create<string>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, noteStatus, searchRef);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, searchRef, null, null, null, new List<WasteType>() { WasteType.Household });
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
