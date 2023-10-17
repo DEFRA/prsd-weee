@@ -1,7 +1,16 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
-<div class="govuk-grid-column-full">
+<div class="govuk-grid-column-one-quarter">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
+        <label class="govuk-label form-label govuk-label--s" for="ManageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue" id="ManageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue-label">Obligation <span>type</span> </label>
+        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
+        string.Empty, new { @class = "full-width-important" })
+    </div>
+</div>
+
+<div class="govuk-grid-column-one-quarter">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
@@ -9,4 +18,13 @@
         string.Empty, new { @class = "full-width-important" })
     </div>
 </div>
- 
+
+@*<div class="govuk-grid-column-one-quarter">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy)">
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, new { @class = "govuk-label--s" }, false)
+        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, Model.RecipientWasteStatusFilterViewModel.SubmittedByList,
+        string.Empty, new { @class = "full-width-important" })
+    </div>
+</div>*@
+

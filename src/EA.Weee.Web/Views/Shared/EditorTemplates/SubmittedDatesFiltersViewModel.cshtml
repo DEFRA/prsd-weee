@@ -2,7 +2,7 @@
 
 @model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
-<div class="govuk-grid-column-one-half">
+<div class="govuk-grid-column-one-quarter">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.StartDate)">
         @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.StartDate)
@@ -13,11 +13,20 @@
         </div>
     </div>
 
-<div class="govuk-grid-column-one-half">
+<div class="govuk-grid-column-one-quarter">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.EndDate)">
         @Html.Gds().LabelFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.SubmittedDatesFilterViewModel.EndDate)
         @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.EndDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
+    </div>
+</div>
+
+<div class="govuk-grid-column-one-quarter">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy)">
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, new { @class = "govuk-label--s" }, false)
+        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, Model.RecipientWasteStatusFilterViewModel.SubmittedByList,
+        string.Empty, new { @class = "full-width-important" })
     </div>
 </div>
 
