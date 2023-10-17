@@ -19,12 +19,11 @@
     </div>
 </div>
 
-@*<div class="govuk-grid-column-one-quarter">
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy)">
-        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, new { @class = "govuk-label--s" }, false)
-        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy)
-        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.SubmittedBy, Model.RecipientWasteStatusFilterViewModel.SubmittedByList,
-        string.Empty, new { @class = "full-width-important" })
+<div class="govuk-grid-column-one-quarter">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue )">
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, new { @class = "govuk-label--s" }, false)
+        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, Model.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeList, string.Empty, new { @class = "full-width-important" },
+            false, false)
     </div>
-</div>*@
-
+</div>
