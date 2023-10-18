@@ -58,9 +58,9 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> Index(Guid pcsId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null)
+        public async Task<ActionResult> Index(Guid pcsId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int? page = 1)
         {
-            return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, 1);
+            return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, page.Value);
         }
 
         [HttpPost]
@@ -212,17 +212,37 @@
                                                                                                                      noteViewModel?.SubmittedDatesFilterViewModel.EndDate,
                                                                                                                      wasteTypeList));
 
+                var aatfResults = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesByOrganisationRequest(organisationId,
+                                                                                                                        new List<NoteStatus>()
+                                                                                                                        {
+                                                                                                                            NoteStatus.Approved,
+                                                                                                                            NoteStatus.Rejected,
+                                                                                                                            NoteStatus.Void,
+                                                                                                                            NoteStatus.Returned
+                                                                                                                        },
+                                                                                                                        selectedComplianceYear,
+                                                                                                                        new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber,
+                                                                                                                        configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
+                                                                                                                        null,
+                                                                                                                        null,
+                                                                                                                        null,
+                                                                                                                        null,
+                                                                                                                        new List<WasteType>() { WasteType.Household, WasteType.NonHousehold }));
+
                 var aatfData = new List<Core.Shared.EntityIdDisplayNameData>();
-                for (int count = 0; count < result.Results.Count(); count++)
+                for (int count = 0; count < aatfResults.Results.Count(); count++)
                 {
-                    var isValueAvailable = aatfData.Find(x => x.DisplayName == result.Results[count].AatfData.Name);
-                    if (isValueAvailable == null)
+                    if (aatfResults.Results[count].AatfData != null)
                     {
-                        aatfData.Add(new Core.Shared.EntityIdDisplayNameData()
+                        var isValueAvailable = aatfData.Find(x => x.DisplayName == aatfResults.Results[count].AatfData?.Name);
+                        if (isValueAvailable == null)
                         {
-                            Id = result.Results[count].AatfData.Id,
-                            DisplayName = result.Results[count].AatfData.Name
-                        });
+                            aatfData.Add(new Core.Shared.EntityIdDisplayNameData()
+                            {
+                                Id = aatfResults.Results[count].AatfData.Id,
+                                DisplayName = aatfResults.Results[count].AatfData.Name
+                            });
+                        }
                     }
                 }
 

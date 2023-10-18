@@ -70,7 +70,11 @@
             var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
             var submittedStartDateFilter = filter.StartDateSubmitted?.Date;
             var submittedEndDateFilter = filter.EndDateSubmitted?.Date;
-            var wasteTypes = filter.WasteTypeFilter.ToList();
+            var wasteTypes = new List<WasteType>();
+            if (filter.WasteTypeFilter != null)
+            {
+                wasteTypes.AddRange(filter.WasteTypeFilter.ToList());
+            }
 
             Guid? groupedAatfId = null;
             if (filter.AatfId.HasValue)
@@ -110,7 +114,7 @@
             {
                 notes = notes.Where(n => allowedStatus.Contains(n.Status.Value));
             }
-            if (filter.WasteTypeFilter.Any() && !filter.WasteTypeId.HasValue)
+            if (wasteTypes.Any() && !filter.WasteTypeId.HasValue)
             {
                 notes = notes.Where(n => wasteTypes.Contains(n.WasteType.Value));
             }
