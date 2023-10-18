@@ -127,13 +127,18 @@
             using (var client = this.apiClient())
             {
                 var result = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesByOrganisationRequest(organisationId,
+                new GetEvidenceNotesByOrganisationRequest(
+                    organisationId,
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, new List<NoteType>() { NoteType.Evidence, NoteType.Transfer },
-                    false, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
-                    manageEvidenceNoteViewModel?.FilterViewModel.SearchRef, manageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy.Value,
-                manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
-                new List<WasteType>() { WasteType.Household, WasteType.NonHousehold }));
+                    selectedComplianceYear, 
+                    new List<NoteType>() { NoteType.Evidence, NoteType.Transfer },
+                    false, 
+                    pageNumber, 
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
+                    manageEvidenceNoteViewModel?.FilterViewModel.SearchRef, 
+                    manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                    manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
+                    new List<WasteType>() { WasteType.Household, WasteType.NonHousehold }));
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
@@ -215,8 +220,8 @@
                 var aatfData = new List<Core.Shared.EntityIdDisplayNameData>();
                 for (int count = 0; count < result.Results.Count(); count++)
                 {
-                    var isValueAvailable = aatfData.Find(x => x.DisplayName == result.Results[count].AatfData.Name);
-                    if (isValueAvailable == null)
+                    var isValueAvailable = aatfData.Find(x => x.DisplayName == result.Results[count].AatfData?.Name);
+                    if (isValueAvailable != null)
                     {
                         aatfData.Add(new Core.Shared.EntityIdDisplayNameData()
                         {
