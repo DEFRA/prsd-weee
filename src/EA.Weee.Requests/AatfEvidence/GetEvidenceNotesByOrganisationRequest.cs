@@ -21,7 +21,8 @@
             Guid? submittedById,
             DateTime? startDateSubmitted,
             DateTime? endDateSubmitted,
-            List<WasteType> obligationTypeList)
+            List<WasteType> obligationTypeList,
+            Guid? receivedId)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
@@ -43,6 +44,7 @@
             StartDateSubmittedFilter = startDateSubmitted;
             EndDateSubmittedFilter = endDateSubmitted;
             ObligationTypeFilter = obligationTypeList;
+            ReceivedId = receivedId;
         }
     }
 }

@@ -33,5 +33,7 @@
         public DateTime? EndDateSubmittedFilter { get; set; }
 
         public List<WasteType> ObligationTypeFilter { get; set; }
+
+        public Guid? ReceivedId { get; protected set; }
     }
 }
