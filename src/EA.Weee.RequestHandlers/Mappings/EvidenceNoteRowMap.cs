@@ -71,7 +71,8 @@
             {
                 data.RecipientSchemeData = new SchemeData()
                 {
-                    SchemeName = source.Note.Recipient.Scheme.SchemeName
+                    SchemeName = source.Note.Recipient.Scheme.SchemeName,
+                    Id = source.Note.Recipient.Scheme.Id
                 };
             }
             
