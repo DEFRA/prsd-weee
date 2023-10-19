@@ -47,7 +47,7 @@
             if (request.TransferredOut)
             {
                 organisationId = request.OrganisationId;
-                recipientId = null;
+                recipientId = request.ReceivedId;
             }
             else
             {
