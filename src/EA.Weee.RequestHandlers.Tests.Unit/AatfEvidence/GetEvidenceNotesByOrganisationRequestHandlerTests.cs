@@ -42,7 +42,9 @@
 
             organisationId = Guid.NewGuid();
 
-            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue, null, null, null, null, new List<WasteType>() { WasteType.Household });
+            request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(), 
+                                                                new List<NoteType>() { NoteType.Evidence }, false, 1, int.MaxValue, null, null, null, null, 
+                                                                new List<WasteType>() { WasteType.Household }, null);
 
             handler = new GetEvidenceNotesByOrganisationRequestHandler(weeeAuthorization,
                 evidenceDataAccess,
@@ -135,7 +137,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
-                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }, null);
 
             var status = request.AllowedStatuses
                 .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
@@ -163,7 +165,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
-                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
+                new List<NoteType>() { NoteType.Transfer }, true, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -181,7 +183,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
-                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
 
@@ -203,7 +205,7 @@
             //arrange
             var organisation = A.Fake<Organisation>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(), TestFixture.Create<short>(),
-                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household });
+                new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
             A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(A<Guid>._, A<int>._))
@@ -291,7 +293,8 @@
             // arrange
             var searchRef = TestFixture.Create<string>();
             var request = new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(),
-                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, searchRef, null, null, null, new List<WasteType>() { WasteType.Household });
+                                                                    TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, 
+                                                                    searchRef, null, null, null, new List<WasteType>() { WasteType.Household }, null);
 
             // act
             var result = await handler.HandleAsync(request);
@@ -304,7 +307,8 @@
         private GetEvidenceNotesByOrganisationRequest GetEvidenceNotesByOrganisationRequest()
         {
             return new GetEvidenceNotesByOrganisationRequest(organisationId, TestFixture.CreateMany<NoteStatus>().ToList(),
-                TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, string.Empty, null, null, null, new List<WasteType>() { WasteType.Household });
+                                                             TestFixture.Create<short>(), new List<NoteType>() { NoteType.Evidence }, false, 1, 25, 
+                                                             string.Empty, null, null, null, new List<WasteType>() { WasteType.Household }, null);
         }
     }
 }
