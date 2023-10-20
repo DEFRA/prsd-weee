@@ -18,14 +18,44 @@
         @Html.Hidden("tab", Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), new { id = "tab-all-evidence" })
         @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
-        Html.RenderPartial("~/Views/Shared/_EvidenceNotesFilters.cshtml", Model.ManageEvidenceNoteViewModel,
-            new ViewDataDictionary() {
-                new KeyValuePair<string, object>("tab", Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence)),
-                new KeyValuePair<string, object>("displaySubmittedByFilters", "true"),
-                new KeyValuePair<string, object>("displayObligationTypeFilters", "true"),
-                new KeyValuePair<string, object>("displayEvidenceNoteTypeFilters", "true")
-            }
-        );
+        <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+            <div class="govuk-grid-row govuk-!-padding-left-3">
+                <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                </div>
+            </div>
+
+            <div class="govuk-grid-row govuk-!-padding-left-3">
+                <div class="govuk-grid-column-full">
+                    <span class="govuk-label--s">
+                        Filter by
+                    </span>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
+                </div>
+                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByFiltersViewModel")
+            </div>
+
+            <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "EvidenceNoteTypeFiltersViewModel")
+                </div>
+                <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
+                    @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                         new ViewDataDictionary()
+                         {
+                            new KeyValuePair<string, object>("tab", 
+                                EA.Weee.Core.Helpers.Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence))
+                         })
+                </div>
+            </div>
+        </div>
     }
 
     <table id="submitted-evidence-notes-table" class="govuk-table">
@@ -119,12 +149,14 @@
                     "pagerRouteValues", new
                     {
                         tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
-                        manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
                         startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
                         endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
                         receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
                         wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
                         noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
+                        evidenceNoteTypeValue = 1,
+                        //evidenceNoteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.Value.ToInt() : (int?)null,
                         submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                     }
                 }

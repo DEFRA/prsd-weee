@@ -65,7 +65,7 @@
             return note;
         }
         public async Task<EvidenceNoteResults> GetAllNotes(NoteFilter filter)
-        {
+            {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value).ToList();
             var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
             var submittedStartDateFilter = filter.StartDateSubmitted?.Date;
@@ -104,7 +104,7 @@
             }
             if (filter.SubmittedById.HasValue)
             {
-                notes = notes.Where(n => n.Aatf.Id == filter.SubmittedById);
+                notes = notes.Where(n => n.Aatf.Id == filter.SubmittedById);                
             }
             if (filter.NoteStatusId.HasValue)
             {
@@ -159,6 +159,8 @@
                 .Take(filter.PageSize)
                 .ToListAsync();
 
+            var sql = ((dynamic)notes).Sql;
+
             return new EvidenceNoteResults(returnNotes, count);
         }
 
@@ -203,7 +205,7 @@
             }
 
             var count = await notes.Select(n => n.Id).CountAsync();
-            var returnNotes = await notes.OrderByDescending(n => n.Reference).ToListAsync();
+            var returnNotes = await notes.ToListAsync();
 
             return new EvidenceNoteResults(returnNotes, count);
         }
