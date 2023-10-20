@@ -66,7 +66,8 @@
             {
                 data.OrganisationSchemaData = new SchemeData()
                 {
-                    SchemeName = source.Note.Organisation.Scheme.SchemeName
+                    SchemeName = source.Note.Organisation.Scheme.SchemeName,
+                    Id = source.Note.Organisation.Scheme.Id
                 };
             }
 
