@@ -12,7 +12,6 @@
     using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Scheme.Mappings.ToViewModels;
     using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes;
-    using EA.Weee.Web.Areas.Test.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
@@ -59,8 +58,32 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> Index(Guid pcsId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int? page = 1)
+        public async Task<ActionResult> Index(Guid pcsId,  int? page = 1, string tab = null, int? selectedComplianceYear = null,
+            DateTime? startDate = null, DateTime? endDate = null, Guid? receivedId = null, int? wasteTypeValue = null, int? evidenceNoteTypeValue = null,
+            string searchRef = null, int? noteStatusValue = null, Guid? submittedBy = null)
         {
+            var manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
+            {
+                SelectedComplianceYear = selectedComplianceYear.HasValue ? selectedComplianceYear.Value : 0,
+                RecipientWasteStatusFilterViewModel = new RecipientWasteStatusFilterViewModel()
+                {
+                    NoteStatusValue = (noteStatusValue.HasValue ? (NoteStatus)noteStatusValue : (NoteStatus?)null),
+                    ReceivedId = (receivedId.HasValue ? receivedId : null),
+                    SubmittedBy = (submittedBy.HasValue ? submittedBy : null),
+                    WasteTypeValue = (wasteTypeValue.HasValue ? (WasteType)wasteTypeValue : (WasteType?)null),
+                    EvidenceNoteTypeValue = (evidenceNoteTypeValue.HasValue ? (EvidenceNoteType)evidenceNoteTypeValue : (EvidenceNoteType?)null)
+                },
+                FilterViewModel = new FilterViewModel()
+                {
+                    SearchRef = searchRef
+                },
+                SubmittedDatesFilterViewModel = new SubmittedDatesFilterViewModel()
+                {
+                    StartDate = startDate,
+                    EndDate = endDate
+                }
+            };
+
             return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, page.Value);
         }
 
@@ -131,15 +154,19 @@
                 new GetEvidenceNotesByOrganisationRequest(
                     organisationId,
                     new List<NoteStatus>() { NoteStatus.Submitted },
-                    selectedComplianceYear, 
-                    new List<NoteType>() { NoteType.Evidence, NoteType.Transfer },
-                    false, 
-                    pageNumber, 
+                    selectedComplianceYear,
+                    GetEvidenceNoteTypeQueryFilter(manageEvidenceNoteViewModel),
+                    false,
+                    pageNumber,
                     configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
-                    manageEvidenceNoteViewModel?.FilterViewModel.SearchRef, 
+                    manageEvidenceNoteViewModel?.FilterViewModel.SearchRef,
                     manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
-                    manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
-                    new List<WasteType>() { WasteType.Household, WasteType.NonHousehold }));
+                    manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.StartDate, 
+                    manageEvidenceNoteViewModel?.SubmittedDatesFilterViewModel.EndDate,
+                    GetWasteTypeQueryFilter(manageEvidenceNoteViewModel),
+                    null));
+
+                var aatfData = await GetAatfDataForOrg(organisationId, pageNumber, selectedComplianceYear, client);
 
                 var model = mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                     new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
@@ -153,15 +180,57 @@
                 model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
                             new RecipientWasteStatusFilterBase(null,
                             null,
-                            null,
+                            manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
                             manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
                             null,
+                            aatfData,
                             null,
-                            null,
-                            false, true));
+                            false, 
+                            true));
 
                 return View("ReviewSubmittedEvidence", model);
             }
+        }
+
+        private async Task<List<Core.Shared.EntityIdDisplayNameData>> GetAatfDataForOrg(Guid organisationId, int pageNumber, int selectedComplianceYear, IWeeeClient client)
+        {
+            var evidenceNotesForOrg = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesByOrganisationRequest(organisationId,
+                    new List<NoteStatus>()
+                    {
+                        NoteStatus.Approved,
+                        NoteStatus.Rejected,
+                        NoteStatus.Void,
+                        NoteStatus.Returned
+                    },
+                    selectedComplianceYear,
+                    new List<NoteType>() { NoteType.Evidence, NoteType.Transfer }, false, pageNumber,
+                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new List<WasteType>() { WasteType.Household, WasteType.NonHousehold },
+                    null));
+
+            var aatfData = new List<Core.Shared.EntityIdDisplayNameData>();
+            for (int count = 0; count < evidenceNotesForOrg.Results.Count(); count++)
+            {
+                if (evidenceNotesForOrg.Results[count].AatfData != null)
+                {
+                    var isValueAvailable = aatfData.Find(x => x.DisplayName == evidenceNotesForOrg.Results[count].AatfData?.Name);
+                    if (isValueAvailable == null)
+                    {
+                        aatfData.Add(new Core.Shared.EntityIdDisplayNameData()
+                        {
+                            Id = evidenceNotesForOrg.Results[count].AatfData.Id,
+                            DisplayName = evidenceNotesForOrg.Results[count].AatfData.Name
+                        });
+                    }
+                }
+            }
+
+            return aatfData;
         }
 
         private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid organisationId, SchemePublicInfo scheme, DateTime currentDate, ManageEvidenceNoteViewModel noteViewModel, int pageNumber, int selectedComplianceYear)
@@ -184,31 +253,14 @@
                     noteStatusList.Add((NoteStatus)noteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue);
                 }
 
-                var noteTypeList = new List<NoteType>();
-                if (noteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue == null)
-                {
-                    noteTypeList.AddRange(new List<NoteType>() { NoteType.Evidence, NoteType.Transfer });
-                }
-                else
-                {
-                    noteTypeList.Add((NoteType)noteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue);
-                }
+                List<NoteType> noteTypeList = GetEvidenceNoteTypeQueryFilter(noteViewModel);
 
                 Guid? submittedById = null;
                 if (noteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy.HasValue)
                 {
                     submittedById = noteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy.Value;
                 }
-
-                var wasteTypeList = new List<WasteType>();
-                if (noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue == null)
-                {
-                    wasteTypeList.AddRange(new List<WasteType>() { WasteType.Household, WasteType.NonHousehold });
-                }
-                else
-                {
-                    wasteTypeList.Add((WasteType)noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue);
-                }
+                List<WasteType> wasteTypeList = GetWasteTypeQueryFilter(noteViewModel);
 
                 var result = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesByOrganisationRequest(organisationId, noteStatusList, selectedComplianceYear, noteTypeList, false, pageNumber,
                                                                                                                      configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
@@ -259,6 +311,36 @@
 
                 return View("ViewAndTransferEvidence", model);
             }
+        }
+
+        private static List<WasteType> GetWasteTypeQueryFilter(ManageEvidenceNoteViewModel noteViewModel)
+        {
+            var wasteTypeList = new List<WasteType>();
+            if (noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue == null)
+            {
+                wasteTypeList.AddRange(new List<WasteType>() { WasteType.Household, WasteType.NonHousehold });
+            }
+            else
+            {
+                wasteTypeList.Add((WasteType)noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue);
+            }
+
+            return wasteTypeList;
+        }
+
+        private static List<EvidenceNoteType> GetEvidenceNoteTypeQueryFilter(ManageEvidenceNoteViewModel noteViewModel)
+        {
+            var noteTypeList = new List<EvidenceNoteType>();
+            if (noteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue == null)
+            {
+                noteTypeList.AddRange(new List<EvidenceNoteType>() { EvidenceNoteType.Evidence, EvidenceNoteType.Transfer });
+            }
+            else
+            {
+                noteTypeList.Add((EvidenceNoteType)noteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue);
+            }
+
+            return noteTypeList;
         }
 
         private async Task<ActionResult> CreateAndPopulateOutgoingTransfersEvidenceViewModel(Guid pcsId, SchemePublicInfo scheme, DateTime currentDate, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int pageNumber, int selectedComplianceYear)
@@ -337,8 +419,8 @@
                                                                                                                             NoteStatus.Returned
                                                                                                                         },
                                                                                                                         selectedComplianceYear,
-                                                                                                                        new List<NoteType>() { NoteType.Transfer }, 
-                                                                                                                        true, 
+                                                                                                                        new List<NoteType>() { NoteType.Transfer },
+                                                                                                                        true,
                                                                                                                         pageNumber,
                                                                                                                         configurationService.CurrentConfiguration.DefaultExternalPagingPageSize,
                                                                                                                         null,
