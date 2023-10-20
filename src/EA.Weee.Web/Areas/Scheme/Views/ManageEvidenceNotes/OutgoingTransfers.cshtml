@@ -44,18 +44,21 @@
                             </div>
 
                             <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                                <div class="govuk-grid-column-one-half govuk-grid-column-one-full-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
                                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
+                                </div>
+                                <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientFilterViewModel")
                                 </div>
                             </div>
 
                             <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
                                 <div class="govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
-                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientFilterViewModel")
+
                                 </div>
                                 <div class="govuk-grid-column-three-quarters-from-desktop govuk-!-padding-top-6">
                                     @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                                        new ViewDataDictionary()
+         new ViewDataDictionary()
                                         {
                                             new KeyValuePair<string, object>("tab",
                                                 Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))
@@ -121,22 +124,26 @@
                             }
                         </tbody>
                     </table>
-                    <br />
-                    @{
-                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                                {
+                    <br />                    
+                        @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Post))
+                        {
+                            Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
                             {
-                                "pagerRouteValues", new
                                 {
-                                    tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
-                                    manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                    manageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_NoteStatusValue =
-                                        Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null
+                                    "pagerRouteValues", new
+                                    {
+                                        tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
+                                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                                            startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
+                                            endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
+                                            receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
+                                            wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue : null,
+                                            noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue : null,
+                                            submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                    }
                                 }
-                            }
-                        });
-                    }
-
+                            });
+                        }                    
                 </div>
 
             </div>

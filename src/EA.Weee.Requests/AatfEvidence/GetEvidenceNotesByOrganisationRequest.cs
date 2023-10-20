@@ -43,7 +43,7 @@
             SubmittedById = (submittedById.HasValue ? submittedById.Value : (Guid?)null);
             StartDateSubmittedFilter = startDateSubmitted;
             EndDateSubmittedFilter = endDateSubmitted;
-            ObligationTypeFilter = obligationTypeList;
+            ObligationTypeFilterList = obligationTypeList;
             ReceivedId = receivedId;
         }
     }

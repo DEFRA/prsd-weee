@@ -14,17 +14,14 @@
     using System.Threading.Tasks;
     using NoteType = Domain.Evidence.NoteType;
 
-    public class GetEvidenceNotesByOrganisationRequestHandler : IRequestHandler<GetEvidenceNotesByOrganisationRequest, EvidenceNoteSearchDataResult>
+    public class GetEvidenceNotesByRequestHandler : IRequestHandler<GetEvidenceNotesByRequest, EvidenceNoteSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IEvidenceDataAccess noteDataAccess;
         private readonly IMapper mapper;
         private readonly IOrganisationDataAccess organisationDataAccess;
 
-        public GetEvidenceNotesByOrganisationRequestHandler(IWeeeAuthorization authorization,
-            IEvidenceDataAccess noteDataAccess,
-            IMapper mapper,
-            IOrganisationDataAccess organisationDataAccess)
+        public GetEvidenceNotesByRequestHandler(IWeeeAuthorization authorization, IEvidenceDataAccess noteDataAccess, IMapper mapper, IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
@@ -32,7 +29,7 @@
             this.organisationDataAccess = organisationDataAccess;
         }
 
-        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesByOrganisationRequest request)
+        public async Task<EvidenceNoteSearchDataResult> HandleAsync(GetEvidenceNotesByRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -66,15 +63,10 @@
                 RecipientId = recipientId,
                 OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                NoteStatusId = (int?)request.NoteStatusFilter,
-                SearchRef = request.SearchRef,
-                SubmittedById = request.SubmittedById,
-                StartDateSubmitted = request.StartDateSubmittedFilter,
-                EndDateSubmitted = request.EndDateSubmittedFilter,
-                WasteTypeFilter = wasteTypeFilter,
+                WasteTypeFilter = wasteTypeFilter                
             };
 
-            var noteData = await noteDataAccess.GetAllNotes(filter);
+            var noteData = await noteDataAccess.GetAllEvidenceNotes(filter);
 
             var mappedNotes = mapper.Map<List<Note>, List<EvidenceNoteData>>(noteData.Notes.OrderByDescending(n => n.CreatedDate).ToList());
 
