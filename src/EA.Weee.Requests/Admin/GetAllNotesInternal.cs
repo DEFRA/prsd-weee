@@ -9,10 +9,6 @@
 
     public class GetAllNotesInternal : EvidenceNoteFilterBaseRequest
     {
-        public DateTime? StartDateSubmittedFilter { get; set; }
-
-        public DateTime? EndDateSubmittedFilter { get; set; }
-
         public Guid? RecipientIdFilter { get; set; }
 
         public NoteStatus? NoteStatusFilter { get; set; }
