@@ -162,6 +162,52 @@
             return new EvidenceNoteResults(returnNotes, count);
         }
 
+        public async Task<EvidenceNoteResults> GetAllEvidenceNotes(NoteFilter filter)
+        {
+            var allowedStatus = filter.AllowedStatuses.Select(v => v.Value).ToList();
+            var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
+
+            var wasteTypes = new List<WasteType>();
+            if (filter.WasteTypeFilter != null)
+            {
+                wasteTypes.AddRange(filter.WasteTypeFilter.ToList());
+            }
+
+            var notes = context.Notes
+                               .Include(n => n.Organisation.Schemes)
+                               .Where(n => n.ComplianceYear == filter.ComplianceYear);
+
+            if (allowedNoteTypes.Any())
+            {
+                notes = notes.Where(n => allowedNoteTypes.Contains(n.NoteType.Value));
+            }
+            
+            if (filter.OrganisationId.HasValue)
+            {
+                notes = notes.Where(n => n.Organisation.Id == filter.OrganisationId.Value);
+            }
+
+            if (filter.RecipientId.HasValue)
+            {
+                notes = notes.Where(n => n.RecipientId == filter.RecipientId);
+            }
+
+            if (filter.AllowedStatuses.Any())
+            {
+                notes = notes.Where(n => allowedStatus.Contains(n.Status.Value));
+            }
+
+            if (wasteTypes.Any())
+            {
+                notes = notes.Where(n => wasteTypes.Contains(n.WasteType.Value));
+            }
+
+            var count = await notes.Select(n => n.Id).CountAsync();
+            var returnNotes = await notes.OrderByDescending(n => n.Reference).ToListAsync();
+
+            return new EvidenceNoteResults(returnNotes, count);
+        }
+
         public async Task<IEnumerable<int>> GetComplianceYearsForNotes(List<int> allowedStatuses)
         {
             var notes = context.Notes.Where(n => allowedStatuses.Contains(n.Status.Value));
@@ -176,8 +222,9 @@
             var status = allowedStatus.Select(e => e.Value);
 
             return await context.Notes.Where(n => n.ComplianceYear == complianceYear && status.Contains(n.Status.Value))
-                .Select(s => s.Aatf)
-                .Distinct().ToListAsync();
+                                      .Select(s => s.Aatf)
+                                      .Distinct()
+                                      .ToListAsync();
         }
 
         public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId,

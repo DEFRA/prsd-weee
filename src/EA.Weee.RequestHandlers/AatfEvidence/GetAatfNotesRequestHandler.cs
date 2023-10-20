@@ -22,7 +22,7 @@
         private readonly IMapper mapper;
 
         public GetAatfNotesRequestHandler(IWeeeAuthorization authorization,
-            IEvidenceDataAccess noteDataAccess, 
+            IEvidenceDataAccess noteDataAccess,
             IMapper mapper)
         {
             this.authorization = authorization;
@@ -46,14 +46,13 @@
                 WasteTypeId = (int?)message.WasteTypeId,
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,
-                EndDateSubmitted = message.EndDateSubmitted, 
+                EndDateSubmitted = message.EndDateSubmitted,
                 ComplianceYear = message.ComplianceYear,
             };
 
             var noteData = await noteDataAccess.GetAllNotes(filter);
 
-            var mappedNotes = mapper.Map<List<Note>, List<EvidenceNoteData>>(noteData.Notes
-                .OrderByDescending(n => n.CreatedDate).ToList());
+            var mappedNotes = mapper.Map<List<Note>, List<EvidenceNoteData>>(noteData.Notes.OrderByDescending(n => n.CreatedDate).ToList());
 
             return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults);
         }

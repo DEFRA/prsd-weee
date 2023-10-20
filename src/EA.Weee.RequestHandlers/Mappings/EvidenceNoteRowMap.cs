@@ -30,6 +30,7 @@
                 Reference = source.Note.Reference,
                 RecipientOrganisationData = new OrganisationData()
                 {
+                    Id = source.Note.Recipient.Id,
                     IsBalancingScheme = source.Note.Recipient.ProducerBalancingScheme != null,
                     Name = source.Note.Recipient.Name,
                     TradingName = source.Note.Recipient.TradingName,
@@ -42,10 +43,12 @@
                     : null,
                 OrganisationData = new OrganisationData()
                 {
+                    Id = source.Note.Organisation.Id,
                     Name = source.Note.Organisation.Name,
                     TradingName = source.Note.Organisation.TradingName,
                     OrganisationName = source.Note.Organisation.OrganisationName
-                }
+                },
+                RecipientId = source.Note.Recipient.Id
             };
 
             MapTonnageAvailable(source, data);

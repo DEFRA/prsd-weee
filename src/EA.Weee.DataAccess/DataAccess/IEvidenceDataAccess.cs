@@ -63,5 +63,7 @@
         Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear, List<NoteStatus> allowedStatus);
 
         Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type);
+
+        Task<EvidenceNoteResults> GetAllEvidenceNotes(NoteFilter filter);
     }
 }
