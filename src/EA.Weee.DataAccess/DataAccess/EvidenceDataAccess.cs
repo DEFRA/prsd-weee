@@ -1,16 +1,16 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using CuttingEdge.Conditions;
+    using Domain.Organisation;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Evidence;
+    using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using CuttingEdge.Conditions;
-    using Domain.Organisation;
-    using EA.Weee.Domain.AatfReturn;
-    using EA.Weee.Domain.Evidence;
-    using Prsd.Core.Domain;
 
     public class EvidenceDataAccess : IEvidenceDataAccess
     {
@@ -64,8 +64,9 @@
 
             return note;
         }
+
         public async Task<EvidenceNoteResults> GetAllNotes(NoteFilter filter)
-            {
+        {
             var allowedStatus = filter.AllowedStatuses.Select(v => v.Value).ToList();
             var allowedNoteTypes = filter.NoteTypeFilter.Select(n => n.Value).ToList();
             var submittedStartDateFilter = filter.StartDateSubmitted?.Date;
@@ -104,8 +105,16 @@
             }
             if (filter.SubmittedById.HasValue)
             {
-                notes = notes.Where(n => n.Aatf.Id == filter.SubmittedById);                
+                //So logic here,
+                //If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if it isn't
+                //Else If SubmittedDate != null then use AatfData.Name
+                notes = notes.Where(n => 
+                    n.NoteType.Value == NoteType.TransferNote.Value && (n.RecipientId == filter.SubmittedById || n.Organisation.Id == filter.SubmittedById) 
+                    || n.Aatf.Id == filter.SubmittedById);
+
+                //notes = notes.Where(n => n.RecipientId == filter.SubmittedById);
             }
+
             if (filter.NoteStatusId.HasValue)
             {
                 notes = notes.Where(n => n.Status.Value == filter.NoteStatusId);
@@ -114,10 +123,16 @@
             {
                 notes = notes.Where(n => allowedStatus.Contains(n.Status.Value));
             }
+
             if (wasteTypes.Any() && !filter.WasteTypeId.HasValue)
             {
                 notes = notes.Where(n => wasteTypes.Contains(n.WasteType.Value));
             }
+            if (filter.WasteTypeId.HasValue)
+            {
+                notes = notes.Where(n => n.WasteType.Value == (WasteType)filter.WasteTypeId.Value);
+            }
+
             if (submittedStartDateFilter.HasValue)
             {
                 notes = notes.Where(n =>
@@ -135,10 +150,6 @@
                         .Where(nsh => nsh.ToStatus.Value == NoteStatus.Submitted.Value && nsh.NoteId == n.Id)
                         .OrderByDescending(nsh1 => nsh1.ChangedDate).FirstOrDefault().ChangedDate) <=
                     submittedEndDateFilter);
-            }
-            if (filter.WasteTypeId.HasValue)
-            {
-                notes = notes.Where(n => n.WasteType.Value == (WasteType)filter.WasteTypeId.Value);
             }
             if (filter.SearchRef != null)
             {
@@ -183,7 +194,7 @@
             {
                 notes = notes.Where(n => allowedNoteTypes.Contains(n.NoteType.Value));
             }
-            
+
             if (filter.OrganisationId.HasValue)
             {
                 notes = notes.Where(n => n.Organisation.Id == filter.OrganisationId.Value);
@@ -361,7 +372,7 @@
 
             genericDataAccess.RemoveMany(itemsToRemove);
 
-            // if we are submitting the note then remove any null / zero tonnage values. Some may already be persisted to the database and some may not. 
+            // if we are submitting the note then remove any null / zero tonnage values. Some may already be persisted to the database and some may not.
             if (status == NoteStatus.Submitted)
             {
                 for (var idx = note.NoteTransferTonnage.Count() - 1; idx >= 0; idx--)

@@ -21,7 +21,10 @@
         private readonly IMapper mapper;
         private readonly IOrganisationDataAccess organisationDataAccess;
 
-        public GetEvidenceNotesByRequestHandler(IWeeeAuthorization authorization, IEvidenceDataAccess noteDataAccess, IMapper mapper, IOrganisationDataAccess organisationDataAccess)
+        public GetEvidenceNotesByRequestHandler(IWeeeAuthorization authorization, 
+            IEvidenceDataAccess noteDataAccess, 
+            IMapper mapper, 
+            IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
             this.noteDataAccess = noteDataAccess;
@@ -63,10 +66,10 @@
                 RecipientId = recipientId,
                 OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
-                WasteTypeFilter = wasteTypeFilter                
+                WasteTypeFilter = wasteTypeFilter
             };
 
-            var noteData = await noteDataAccess.GetAllEvidenceNotes(filter);
+            var noteData = await noteDataAccess.GetAllNotes(filter);
 
             var mappedNotes = mapper.Map<List<Note>, List<EvidenceNoteData>>(noteData.Notes.OrderByDescending(n => n.CreatedDate).ToList());
 
