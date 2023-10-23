@@ -45,8 +45,9 @@
             viewModel.NoteStatusValue = source.NoteStatus;
             viewModel.WasteTypeValue = source.WasteType;
             viewModel.SubmittedBy = source.SubmittedBy;
+            viewModel.EvidenceNoteTypeValue = source.EvidenceNoteType;
 
-            viewModel.SubmittedByList = source.SubmittedByList != null ? 
+            viewModel.SubmittedByList = source.SubmittedByList != null ?
                 new SelectList(source.SubmittedByList, "Id", "DisplayName") :
                 new SelectList(new List<EntityIdDisplayNameData>(), "Id", "DisplayName");
 

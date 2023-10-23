@@ -134,12 +134,11 @@
                                     {
                                         tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
                                         selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                            startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
-                                            endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
-                                            receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
-                                            wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue : null,
-                                            noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue : null,
-                                            submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                        startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
+                                        endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
+                                        receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
+                                        noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
+                                        submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                                     }
                                 }
                             });
