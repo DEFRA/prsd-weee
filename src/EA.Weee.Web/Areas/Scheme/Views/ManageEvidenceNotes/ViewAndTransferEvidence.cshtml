@@ -1,7 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.AatfEvidence
+@using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes
-@using EA.Weee.Web.Extensions
 @using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.SchemeViewAndTransferManageEvidenceSchemeViewModel
@@ -128,17 +128,17 @@
                                         <td class="govuk-table__cell">
                                             @if (@note.Type == NoteType.Transfer)
                                             {
-                                                @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                                @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = EA.Weee.Web.Extensions.ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
 
                                                 if (note.DisplayEditLink)
                                                 {
                                                     <br />
-                                                    @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceDisplay, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                                    @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceDisplay, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = EA.Weee.Web.Extensions.ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                                 }
                                             }
                                             else
                                             {
-                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = EA.Weee.Web.Extensions.ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                             }
                                         </td>
                                     </tr>
@@ -171,12 +171,13 @@
                                         startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
                                         endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
                                         receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
-                                        wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue : null,
-                                        noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue : null,
+                                        wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
+                                        evidenceNoteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.Value.ToInt() : (int?)null,
+                                        noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
                                         submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                                     }
                                 }
-                            });
+                });
                     }
                 </div>
 

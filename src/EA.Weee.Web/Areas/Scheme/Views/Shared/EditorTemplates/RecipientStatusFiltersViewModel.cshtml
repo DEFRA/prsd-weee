@@ -3,7 +3,7 @@
 
 <div class="govuk-grid-column-one-quarter">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)">
-        <label class="govuk-label form-label govuk-label--s" for="ManageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue" id="ManageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue-label">Obligation <span>type</span> </label>
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
         string.Empty, new { @class = "full-width-important" })
@@ -23,7 +23,7 @@
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue )">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue)
-        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, Model.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeList, string.Empty, new { @class = "full-width-important" },
-            false, false)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, Model.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeList, 
+        string.Empty, new { @class = "full-width-important" })
     </div>
 </div>
