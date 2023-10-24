@@ -61,8 +61,16 @@
                 {
                     typeof(Guid),
                     typeof(string),
-                    typeof(ManageEvidenceNoteViewModel),
-                    typeof(int)
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(DateTime?),
+                    typeof(DateTime?),
+                    typeof(Guid?),
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(string),
+                    typeof(int?),
+                    typeof(Guid?)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -71,13 +79,47 @@
         public void IndexGet_ShouldHaveNoCacheAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
+               {
+                    typeof(Guid),
+                    typeof(string),
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(DateTime?),
+                    typeof(DateTime?),
+                    typeof(Guid?),
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(string),
+                    typeof(int?),
+                    typeof(Guid?)
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ShouldHaveHttpPostAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
                 {
                     typeof(Guid),
                     typeof(string),
                     typeof(ManageEvidenceNoteViewModel),
                     typeof(int)
                 }).Should()
-                .BeDecoratedWith<NoCacheFilterAttribute>();
+                .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ShouldHaveValidateAntiForgeryTokenAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
+               {
+                    typeof(Guid),
+                    typeof(string),
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
+                }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
         [Fact]
@@ -156,7 +198,7 @@
         [InlineData("outgoing-transfers")]
         public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
-            //arrange 
+            //arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
             var evidenceNotes = new ManageEvidenceNoteViewModel();
 
@@ -175,7 +217,7 @@
         [InlineData("outgoing-transfers")]
         public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(string tab)
         {
-            //arrange 
+            //arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
             var evidenceNotes = new ManageEvidenceNoteViewModel();
 
@@ -203,7 +245,7 @@
                     .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>
                     .That.Matches(m =>
@@ -370,7 +412,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, null);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", model, 1);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -586,7 +628,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
+            await ManageEvidenceController.Index(OrganisationId, tab, manageEvidenceNoteViewModel, 1);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -675,7 +717,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), null, null);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), model, 1);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -788,7 +830,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, null);
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model, 1);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -865,7 +907,7 @@
             const int pageSize = 10;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, null);
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -882,7 +924,7 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_SessionShouldBeUpdated()
         {
-            // arrange 
+            // arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
 
             // act
@@ -896,7 +938,7 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_EditTransferTonnageViewModelKeySessionShouldBeUpdated()
         {
-            // arrange 
+            // arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
 
             // act
@@ -1167,7 +1209,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
@@ -1199,7 +1241,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
@@ -1265,7 +1307,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             // assert
             A.CallTo(() => Mapper.Map<SummaryEvidenceViewModel>(
@@ -1308,12 +1350,12 @@
         {
             return new List<NoteStatus>
             {
-                        NoteStatus.Draft,
-                        NoteStatus.Approved,
-                        NoteStatus.Rejected,
-                        NoteStatus.Submitted,
-                        NoteStatus.Void,
-                        NoteStatus.Returned
+                NoteStatus.Draft,
+                NoteStatus.Approved,
+                NoteStatus.Rejected,
+                NoteStatus.Submitted,
+                NoteStatus.Void,
+                NoteStatus.Returned
             };
         }
     }
