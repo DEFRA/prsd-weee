@@ -7,130 +7,160 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ManageEvidenceNotes.ReviewSubmittedManageEvidenceNotesSchemeViewModel
 
+<div class="govuk-tabs__panel" id="reviewSubmittedEvidence">
+    <h2 class="govuk-heading-m">
+        Review submitted evidence
+    </h2>
 
-    <div class="govuk-tabs__panel" id="reviewSubmittedEvidence">
-        <h2 class="govuk-heading-m">
-            Review submitted evidence
-        </h2>
+    @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("tab", Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), new { id = "tab-all-evidence" })
+        @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
 
-        @using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Get))
-        {
-            @Html.Hidden("tab", Model.ActiveDisplayOption, new { id = "tab-hidden" })
-            @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
-            <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
-
-                <div class="govuk-grid-row govuk-!-padding-left-3">
-                    <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
-                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
-                            new
-                            {
-                                addClearLink = true,
-                                clearRouteValues = new
-                                {
-                                    pcsId = Model.OrganisationId,
-                                    tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
-                                    selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
-                                }
-                            })
-                    </div>
+        <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
+            <div class="govuk-grid-row govuk-!-padding-left-3">
+                <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
                 </div>
             </div>
-        }
 
-        <table id="submitted-evidence-notes-table" class="govuk-table">
-            <caption class="govuk-table__caption govuk-visually-hidden">Review submitted evidence</caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header">
-                        Reference ID
-                    </th>
-                    <th class="govuk-table__header">
-                        Submitted date
-                    </th>
-                    <th class="govuk-table__header" style="width: 35%;">
-                        Submitted by
-                    </th>
-                    <th class="govuk-table__header">
-                        Obligation type
-                    </th>
-                    <th class="govuk-table__header">
-                        @Html.Gds().VisuallyHidden("actions")
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                @if (Model.EvidenceNotesDataList.Any())
-                {
-                    foreach (var note in Model.EvidenceNotesDataList)
+            <div class="govuk-grid-row govuk-!-padding-left-3">
+                <div class="govuk-grid-column-full">
+                    <span class="govuk-label--s">
+                        Filter by
+                    </span>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
+                </div>
+                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByFiltersViewModel")
+                </div>
+            </div>
+
+            <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
+                </div>
+                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop">
+                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "EvidenceNoteTypeFiltersViewModel")
+                </div>
+                <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop  govuk-!-padding-top-6">
+                    @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                    new ViewDataDictionary()
                     {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">@note.ReferenceDisplay</td>
-                            <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
-                            <td class="govuk-table__cell">@note.SubmittedBy</td>
-                            @if (note.TypeOfWaste.HasValue)
+                        new KeyValuePair<string, object>("tab", EA.Weee.Core.Helpers.Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence))
+                    })
+                </div>
+            </div>
+        </div>
+    }
+
+    <table id="submitted-evidence-notes-table" class="govuk-table">
+        <caption class="govuk-table__caption govuk-visually-hidden">Review submitted evidence</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header">
+                    Reference ID
+                </th>
+                <th class="govuk-table__header">
+                    Submitted date
+                </th>
+                <th class="govuk-table__header" style="width: 35%;">
+                    Submitted by
+                </th>
+                <th class="govuk-table__header">
+                    Obligation type
+                </th>
+                <th class="govuk-table__header">
+                    @Html.Gds().VisuallyHidden("actions")
+                </th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @if (Model.EvidenceNotesDataList.Any())
+            {
+                foreach (var note in Model.EvidenceNotesDataList)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@note.ReferenceDisplay</td>
+                        <td class="govuk-table__cell">@(note.SubmittedDateDisplay)</td>
+                        <td class="govuk-table__cell">@note.SubmittedBy</td>
+                        @if (note.TypeOfWaste.HasValue)
+                        {
+                            <td class="govuk-table__cell">@(Extensions.ToDisplayString(note.TypeOfWaste.Value)) </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell"> </td>
+                        }
+                        <td class="govuk-table__cell">
+                            @if (note.Type == NoteType.Evidence)
                             {
-                                <td class="govuk-table__cell">@(Extensions.ToDisplayString(note.TypeOfWaste.Value)) </td>
-                            }
-                            else
-                            {
-                                <td class="govuk-table__cell"> </td>
-                            }
-                            <td class="govuk-table__cell">
-                                @if (note.Type == NoteType.Evidence)
+                                if (Model.CanSchemeManageEvidence)
                                 {
-                                    if (Model.CanSchemeManageEvidence)
+                                    if (Model.SchemeInfo != null)
                                     {
-                                        if (Model.SchemeInfo != null)
-                                        {
-                                            @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
-                                        }
-                                    }
-                                    else
-                                    {
-                                        @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                     }
                                 }
                                 else
                                 {
-                                    if (Model.CanSchemeManageEvidence)
-                                    {
-                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
-                                    }
-                                    else
-                                    {
-                                        @Html.NavigationRouteLink("View", "View transfer note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
-                                    }
+                                    @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                 }
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4">
-                            @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes to review</p>") })
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            <p> Showing 0 - 0 of 0 </p>
+                            }
+                            else
+                            {
+                                if (Model.CanSchemeManageEvidence)
+                                {
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                }
+                                else
+                                {
+                                    @Html.NavigationRouteLink("View", "View transfer note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence), queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                }
+                            }
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
-        <br />
-        @{
-            Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
+            }
+            else
             {
+                <tr>
+                    <td colspan="4">
+                        @Html.Partial("~/Views/Shared/_NoResultsPartial.cshtml", Model, new ViewDataDictionary() { new KeyValuePair<string, object>("no-results-message", "<p>There are currently no evidence notes to review</p>") })
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <p> Showing 0 - 0 of 0 </p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    @{
+        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
+{
                 {
                     "pagerRouteValues", new
                     {
                         tab = Extensions.ToDisplayString(Model.ActiveDisplayOption),
-                        manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
+                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                        startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
+                        endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
+                        receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
+                        wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
+                        noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
+                        evidenceNoteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.Value.ToInt() : (int?)null,
+                        submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                     }
                 }
-            });
-        }
-    </div>
+        });
+    }
+</div>
