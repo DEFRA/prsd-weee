@@ -921,7 +921,6 @@
     <Content Include="Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedByFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EvidenceNoteTypeFiltersViewModel.cshtml" />
-    <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientFilterViewModel.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -1061,7 +1060,6 @@
     <Content Include="Views\Shared\EditorTemplates\FilterViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_internalFiltersPartial.cshtml" />
-    <Content Include="Areas\Scheme\Views\Shared\EditorTemplates\RecipientStatusFiltersViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\ManageEvidenceNotes\_mobileCss.cshtml" />
     <None Include="Content\weee\_auto-complete.scss" />
     <Content Include="Content\flatpickr.css" />
@@ -2018,6 +2016,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
+    <Folder Include="Areas\Scheme\Views\Shared\EditorTemplates\" />
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
     <Folder Include="ViewModels\Shared\Utilities\" />
