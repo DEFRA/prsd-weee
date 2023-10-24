@@ -194,7 +194,7 @@
 
         private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid organisationId, SchemePublicInfo scheme, DateTime currentDate, ManageEvidenceNoteViewModel noteViewModel, int pageNumber, int selectedComplianceYear)
         {
-            var defaultNoteStatusList = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void, NoteStatus.Returned, NoteStatus.Draft, NoteStatus.Submitted };
+            var defaultNoteStatusList = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void, NoteStatus.Returned };
             var defaultNoteTypeList = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
             var defaultWasteTypeList = new List<WasteType>() { WasteType.Household, WasteType.NonHousehold };
 
@@ -284,7 +284,7 @@
         {
             //if there's a selected NoteStatus then use that for the filter, otherwise all
             var noteStatusQueryFilterList = new List<NoteStatus>();
-            if (noteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue != null)
+            if (noteViewModel?.RecipientWasteStatusFilterViewModel?.NoteStatusValue != null)
             {
                 noteStatusQueryFilterList.Add((NoteStatus)noteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue);
             }
@@ -299,7 +299,7 @@
         private static List<WasteType> GetWasteTypeQueryFilter(ManageEvidenceNoteViewModel noteViewModel, List<WasteType> defaultWasteTypeList)
         {
             var wasteTypeList = new List<WasteType>();
-            if (noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue != null)
+            if (noteViewModel?.RecipientWasteStatusFilterViewModel?.WasteTypeValue != null)
             {
                 wasteTypeList.Add((WasteType)noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue);
             }
@@ -314,7 +314,7 @@
         private static List<NoteType> GetEvidenceNoteTypeQueryFilter(ManageEvidenceNoteViewModel noteViewModel, List<NoteType> defaultNoteTypeList)
         {
             var noteTypeList = new List<NoteType>();
-            if (noteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue != null)
+            if (noteViewModel?.RecipientWasteStatusFilterViewModel?.EvidenceNoteTypeValue != null)
             {
                 noteTypeList.Add((NoteType)noteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue);
             }
@@ -331,7 +331,7 @@
             using (var client = this.apiClient())
             {
                 var noteStatusList = new List<NoteStatus>();
-                if (noteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue == null)
+                if (noteViewModel?.RecipientWasteStatusFilterViewModel?.NoteStatusValue == null)
                 {
                     noteStatusList.AddRange(new List<NoteStatus>()
                     {
@@ -349,7 +349,7 @@
                 }
 
                 var noteTypeList = new List<NoteType>();
-                if (noteViewModel.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue == null)
+                if (noteViewModel?.RecipientWasteStatusFilterViewModel?.EvidenceNoteTypeValue == null)
                 {
                     noteTypeList.AddRange(new List<NoteType>() { NoteType.Transfer });
                 }
@@ -359,7 +359,7 @@
                 }
 
                 var wasteTypeList = new List<WasteType>();
-                if (noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue == null)
+                if (noteViewModel?.RecipientWasteStatusFilterViewModel?.WasteTypeValue == null)
                 {
                     wasteTypeList.AddRange(new List<WasteType>() { WasteType.Household, WasteType.NonHousehold });
                 }
@@ -369,13 +369,13 @@
                 }
 
                 Guid? submittedById = null;
-                if (noteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy.HasValue)
+                if (noteViewModel?.RecipientWasteStatusFilterViewModel?.SubmittedBy.HasValue ?? false)
                 {
                     submittedById = noteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy.Value;
                 }
 
                 Guid? receivedId = null;
-                if (noteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId.HasValue)
+                if (noteViewModel?.RecipientWasteStatusFilterViewModel?.ReceivedId.HasValue ?? false)
                 {
                     receivedId = noteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId.Value;
                 }
