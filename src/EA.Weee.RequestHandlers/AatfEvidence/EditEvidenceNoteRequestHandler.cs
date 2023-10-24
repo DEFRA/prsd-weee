@@ -75,7 +75,7 @@
                 recipientOrganisation,
                 message.StartDate,
                 message.EndDate,
-                message.WasteType != null ? (WasteType?)message.WasteType.Value : null,
+                (WasteType)message.WasteType.Value,
                 message.Protocol != null ? (Protocol?)message.Protocol.Value : null,
                 tonnageValues,
                 message.Status.ToDomainEnumeration<NoteStatus>(),

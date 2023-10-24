@@ -1,0 +1,10 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
+
+<div class="govuk-grid-column-one-quarter weee-evidence-padding-right">
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue )">
+        @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, new { @class = "govuk-label--s" }, false)
+        @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue)
+        @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, Model.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeList,
+                            string.Empty, new { @class = "use-overlay" }, useHalfWidth: false, withLookAhead: true)
+    </div>
+</div>

@@ -322,7 +322,7 @@
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                         null,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true, false));
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, null, true, false));
 
             var model = mapper.Map<ViewAllEvidenceNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
@@ -372,7 +372,7 @@
                         new RecipientWasteStatusFilterBase(recipientData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                         null,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, transferData, true, false));
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, transferData, null, true, false));
 
             var model = mapper.Map<ViewAllTransferNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));
