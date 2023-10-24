@@ -62,17 +62,25 @@
                             </div>
 
                             <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                                <div class="govuk-grid-column-one-half govuk-grid-column-one-full-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
                                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
                                 </div>
-                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByFiltersViewModel")
+                                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByFiltersViewModel")
+                                </div>
+                                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
+                                </div>
                             </div>
 
                             <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                                <div class="govuk-grid-column-full govuk-grid-column-full-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
-                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientStatusFiltersViewModel")
+                                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel")
                                 </div>
-                                <div class="govuk-grid-column-full govuk-grid-column-full-from-desktop  govuk-!-padding-top-6">
+                                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "EvidenceNoteTypeFiltersViewModel")
+                                </div>
+                                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop  govuk-!-padding-top-6">
                                     @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
                                         new ViewDataDictionary()
                                         {
@@ -177,7 +185,7 @@
                                         submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                                     }
                                 }
-                });
+        });
                     }
                 </div>
 
