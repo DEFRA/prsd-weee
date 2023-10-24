@@ -64,7 +64,7 @@
         {
             var manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
             {
-                SelectedComplianceYear = selectedComplianceYear.HasValue ? selectedComplianceYear.Value : 0,
+                SelectedComplianceYear = selectedComplianceYear.HasValue ? selectedComplianceYear.Value : 0,    
                 RecipientWasteStatusFilterViewModel = new RecipientWasteStatusFilterViewModel()
                 {
                     NoteStatusValue = (noteStatusValue.HasValue ? (NoteStatus)noteStatusValue : (NoteStatus?)null),
@@ -83,7 +83,7 @@
                     EndDate = endDate
                 }
             };
-
+            page = page ?? 1;
             return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, page.Value);
         }
 
