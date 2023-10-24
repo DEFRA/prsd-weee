@@ -169,8 +169,6 @@
                 .Take(filter.PageSize)
                 .ToListAsync();
 
-            var sql = ((dynamic)notes).Sql;
-
             return new EvidenceNoteResults(returnNotes, count);
         }
 
