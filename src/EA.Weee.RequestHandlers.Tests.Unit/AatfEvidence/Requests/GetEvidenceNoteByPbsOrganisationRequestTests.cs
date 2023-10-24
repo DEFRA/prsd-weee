@@ -81,19 +81,17 @@
             //arrange
             var organisationId = fixture.Create<Guid>();
             var statusList = fixture.CreateMany<NoteStatus>().ToList();
-            var noteStatus = fixture.Create<NoteStatus?>();
             var searchRef = fixture.Create<string>();
 
             //act
-            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, transferredOut, 1, 25, 
-                                                                   searchRef, null, null, null, new List<WasteType>() { WasteType.Household }, null);
+            var result = new GetEvidenceNotesByOrganisationRequest(organisationId, statusList, complianceYear, new List<NoteType>() { NoteType.Evidence }, 
+                transferredOut, 1, 25, searchRef, null, null, null, new List<WasteType>() { WasteType.Household }, null);
 
             //assert
             result.OrganisationId.Should().Be(organisationId);
             result.AllowedStatuses.Should().BeEquivalentTo(statusList);
             result.ComplianceYear.Should().Be(complianceYear);
             result.TransferredOut.Should().Be(transferredOut);
-            result.NoteStatusFilter.Should().Be(noteStatus);
             result.SearchRef.Should().Be(searchRef);
         }
     }
