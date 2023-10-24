@@ -48,21 +48,20 @@
                                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
                                 </div>
                                 <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
-                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientFilterViewModel")
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientFiltersViewModel")
                                 </div>
                             </div>
 
                             <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                                <div class="govuk-grid-column-one-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
-
+                                <div class="govuk-grid-column-half govuk-grid-column-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                    @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel")
                                 </div>
-                                <div class="govuk-grid-column-three-quarters-from-desktop govuk-!-padding-top-6">
-                                    @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-         new ViewDataDictionary()
-                                        {
-                                            new KeyValuePair<string, object>("tab",
-                                                Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))
-                                        })
+                                <div class="govuk-grid-column-half govuk-grid-column-half-from-desktop govuk-!-padding-top-6">
+                                    @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary()
+                                    {
+                                        new KeyValuePair<string, object>("tab",
+                                            Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers))
+                                    })
                                 </div>
                             </div>
                         </div>
@@ -124,11 +123,11 @@
                             }
                         </tbody>
                     </table>
-                    <br />                    
-                        @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Post))
-                        {
-                            Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                            {
+                    <br />
+                    @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Post))
+                    {
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
+                                {
                                 {
                                     "pagerRouteValues", new
                                     {
@@ -142,7 +141,7 @@
                                     }
                                 }
                             });
-                        }                    
+                    }
                 </div>
 
             </div>

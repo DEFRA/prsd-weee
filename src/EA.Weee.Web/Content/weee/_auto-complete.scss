@@ -4,7 +4,7 @@
 /*taken from https://github.com/alphagov/accessible-autocomplete*/
 .autocomplete__wrapper {
     position: relative;
-    z-index: 0;
+    z-index: 5;
     background-color: govuk-colour("white");
 }
 
