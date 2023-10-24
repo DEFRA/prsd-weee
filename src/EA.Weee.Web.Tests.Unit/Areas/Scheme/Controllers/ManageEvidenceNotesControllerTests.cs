@@ -21,6 +21,7 @@
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
+    using Org.BouncyCastle.Asn1.Ocsp;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -412,7 +413,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", model, 1);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", complianceYear, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -717,7 +718,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), model, 1);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), complianceYear, 1);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -824,20 +825,6 @@
         }
 
         [Fact]
-        public async Task IndexGet_GivenOutgoingTransfersTabWithRecipientStatusFilterModel_EvidenceNoteDataShouldBeRetrieved()
-        {
-            // Arrange
-            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-
-            //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model, 1);
-
-            //assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.NoteStatusFilter == model.RecipientWasteStatusFilterViewModel.NoteStatusValue))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task IndexGet_GivenOutgoingTransfersTabWithNullModel_RecipientWasteStatusFilterViewModelShouldBeNull()
         {
             // Arrange
@@ -907,7 +894,7 @@
             const int pageSize = 10;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model, pageNumber);
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", complianceYear, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
