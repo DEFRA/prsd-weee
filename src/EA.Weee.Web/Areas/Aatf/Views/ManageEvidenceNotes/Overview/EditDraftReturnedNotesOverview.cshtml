@@ -32,20 +32,52 @@
 
                                 <div class="govuk-grid-row govuk-!-padding-left-3">
                                     <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
-                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
-                                            new
-                                            {
-                                                addClearLink = true,
-                                                clearRouteValues = new
-                                                {
-                                                    organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId,
-                                                    aatfId = Model.ManageEvidenceNoteViewModel.AatfId,
-                                                    tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
-                                                    selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
-                                                }
-                                            })
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
                                     </div>
                                 </div>
+
+                                <div class="govuk-grid-row govuk-!-padding-left-3">
+                                    <div class="govuk-grid-column-full">
+                                        <span class="govuk-label--s">
+                                            Filter by
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-right-0 weee-evidence-padding-right" style="width: 50% !important">
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientFiltersViewModel")
+                                    </div>
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-right-0 weee-evidence-padding-right">
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
+                                    </div>
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-right-0 weee-evidence-padding-right">
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel")
+                                    </div>
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-top-6">
+                                        @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary()
+                                        {
+                                            new KeyValuePair<string, object>("tab", Model.ActiveOverviewDisplayOption.ToDisplayString())
+                                        })
+                                    </div>
+                                </div>
+
+                                @*<div class="govuk-grid-row govuk-!-padding-left-3">
+                                        <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
+                                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
+                                                new
+                                                {
+                                                    addClearLink = true,
+                                                    clearRouteValues = new
+                                                    {
+                                                        organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId,
+                                                        aatfId = Model.ManageEvidenceNoteViewModel.AatfId,
+                                                        tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
+                                                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
+                                                    }
+                                                })
+                                        </div>
+                                    </div>*@
                             </div>
                         }
 
@@ -114,7 +146,7 @@
                         <br />
                         @{
                             Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                    { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
+                                                                                                                { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
                                 manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
                         }
                     </div>
