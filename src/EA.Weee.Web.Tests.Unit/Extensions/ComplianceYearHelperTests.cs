@@ -44,10 +44,23 @@
         }
 
         [Fact]
-        public void GetSelectedComplianceYear_GivenModelIsNullAndSelectedComplianceYearIsNull_ComplianceYearShouldBeCurrentDateYear()
+        public void GetSelectedComplianceYear_GivenModelIsNullAndSelectedComplianceYearIsNull_ComplianceYearShouldBePreviousDateYearIfJanuary()
         {
             //arrange
             var currentDate = new DateTime(2022, 1, 1);
+
+            //act
+            var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(null, currentDate);
+
+            //assert
+            complianceYear.Should().Be(2021);
+        }
+
+        [Fact]
+        public void GetSelectedComplianceYear_GivenModelIsNullAndSelectedComplianceYearIsNull_ComplianceYearShouldBeCurrentDateYearIfAfterJanuary()
+        {
+            //arrange
+            var currentDate = new DateTime(2022, 2, 1);
 
             //act
             var complianceYear = ComplianceYearHelper.GetSelectedComplianceYear(null, currentDate);
