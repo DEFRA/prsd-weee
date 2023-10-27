@@ -9,6 +9,9 @@
             onClose: removeAria,
             dateFormat: "dd/mm/yy",
             beforeShow: function (elem, dp) {
+                setTimeout(function () {
+                    $('.ui-datepicker').css('z-index', 5);
+                }, 0);
                 dp.dpDiv.addClass("weee-override-z-index");
             }
         }).next("button").button({
