@@ -340,6 +340,7 @@
                 .With(e => e.Results, returnList).Create();
 
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
             A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
@@ -354,7 +355,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.TransferredOut == false &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes) &&
                      g.PageSize == 10 &&
@@ -646,6 +647,7 @@
             // Arrange
             var schemeName = Faker.Company.Name();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             var status = new List<NoteStatus>()
             {
                 NoteStatus.Approved,
@@ -665,7 +667,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.TransferredOut == false &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes) &&
                      g.PageSize == 10 &&
@@ -802,6 +804,7 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
                 .With(e => e.Results, returnList).Create();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             const int pageNumber = 1;
             const int pageSize = 10;
 
@@ -816,7 +819,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      statuses.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.TransferredOut == true &&
                      noteTypes.SequenceEqual(g.NoteTypeFilterList) &&
                      g.PageSize == pageSize &&
@@ -1130,6 +1133,7 @@
               .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -1141,7 +1145,7 @@
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.SchemeId.Equals(schemeId)))).MustHaveHappenedOnceExactly();
         }
 
@@ -1158,6 +1162,7 @@
                 .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
@@ -1169,7 +1174,7 @@
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.SchemeId == null))).MustHaveHappenedOnceExactly();
         }
 
@@ -1252,6 +1257,7 @@
               .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._)).Returns(obligationSummaryData);
@@ -1264,7 +1270,7 @@
             A.CallTo(() => Mapper.Map<SummaryEvidenceViewModel>(
                 A<ViewEvidenceSummaryViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) &&
-                         a.ComplianceYear.Equals(currentDate.Year) &&
+                         a.ComplianceYear.Equals(expectedComplianceYear) &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
                          a.ObligationEvidenceSummaryData.Equals(obligationSummaryData)))).MustHaveHappenedOnceExactly();
