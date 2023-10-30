@@ -314,6 +314,7 @@
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
@@ -324,7 +325,7 @@
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
                     m.OrganisationId == OrganisationId &&
                     m.CurrentDate == currentDate &&
-                    m.ComplianceYear == currentDate.Year)))
+                    m.ComplianceYear == expectedComplianceYear)))
                 .MustHaveHappenedOnceExactly();
         }
 
