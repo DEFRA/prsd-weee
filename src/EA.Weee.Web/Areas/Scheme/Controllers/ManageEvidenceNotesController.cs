@@ -64,7 +64,7 @@
         {
             var manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
             {
-                SelectedComplianceYear = selectedComplianceYear.HasValue ? selectedComplianceYear.Value : 0,    
+                SelectedComplianceYear = selectedComplianceYear.HasValue ? selectedComplianceYear.Value : 0,
                 RecipientWasteStatusFilterViewModel = new RecipientWasteStatusFilterViewModel()
                 {
                     NoteStatusValue = (noteStatusValue.HasValue ? (NoteStatus)noteStatusValue : (NoteStatus?)null),
@@ -102,6 +102,8 @@
             using (var client = this.apiClient())
             {
                 var scheme = await Cache.FetchSchemePublicInfo(pcsId);
+
+                ViewData["ShowPbsFilters"] = scheme.IsBalancingScheme;
 
                 await SetBreadcrumb(pcsId);
 
