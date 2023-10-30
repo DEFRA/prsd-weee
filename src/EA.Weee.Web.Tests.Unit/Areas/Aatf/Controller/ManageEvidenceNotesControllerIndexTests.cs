@@ -69,13 +69,14 @@
         {
             //arrange
             var currentDate = Fixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
             await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab?.ToDisplayString(), null, 1);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => 
-                m.ComplianceYear == currentDate.Year))).MustHaveHappenedOnceExactly();
+                m.ComplianceYear == expectedComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -87,6 +88,7 @@
         {
             //arrange
             var currentDate = Fixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
@@ -94,7 +96,7 @@
             await ManageEvidenceController.Index(OrganisationId, AatfId, selectedTab.HasValue ? EA.Weee.Web.Extensions.DisplayExtensions.ToDisplayString(selectedTab.Value) : null, null, 1);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m => 
-                m.ComplianceYear == currentDate.Year))).MustHaveHappenedOnceExactly();
+                m.ComplianceYear == expectedComplianceYear))).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -679,6 +681,7 @@
         {
             // arrange
             var currentDate = Fixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
@@ -686,7 +689,7 @@
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
-                g => g.ComplianceYear == currentDate.Year &&
+                g => g.ComplianceYear == expectedComplianceYear &&
                      g.AatfId == AatfId &&
                      g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
                      g.AllowedStatuses.SequenceEqual(new List<NoteStatus>
