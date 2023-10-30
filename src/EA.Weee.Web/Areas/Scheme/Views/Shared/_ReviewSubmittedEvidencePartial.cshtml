@@ -40,23 +40,33 @@
                 <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop">
                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByFiltersViewModel")
                 </div>
+                @if ((bool?)ViewData["ShowPbsFilters"] == true)
+                {
+                    <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop govuk-!-padding-top-6">
+                        @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                          new ViewDataDictionary()
+                          {
+                            new KeyValuePair<string, object>("tab", EA.Weee.Core.Helpers.Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence))
+                          })
+                    </div>
+                }
             </div>
-
-            <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop">
+            @if ((bool?)ViewData["ShowPbsFilters"] == false)
+            {
+                <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
-                </div>
-                <div class="govuk-grid-column-one-quater govuk-grid-column-one-quater-from-desktop">
+
                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "EvidenceNoteTypeFiltersViewModel")
+
+                    <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop govuk-!-padding-top-6">
+                        @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
+                         new ViewDataDictionary()
+                         {
+                            new KeyValuePair<string, object>("tab", EA.Weee.Core.Helpers.Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence))
+                         })
+                    </div>
                 </div>
-                <div class="govuk-grid-column-one-half govuk-grid-column-one-half-from-desktop  govuk-!-padding-top-6">
-                    @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel,
-                    new ViewDataDictionary()
-                    {
-                        new KeyValuePair<string, object>("tab", EA.Weee.Core.Helpers.Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence))
-                    })
-                </div>
-            </div>
+            }
         </div>
     }
 

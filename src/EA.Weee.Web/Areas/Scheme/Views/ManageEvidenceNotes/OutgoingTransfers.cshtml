@@ -53,10 +53,10 @@
                             </div>
 
                             <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                                <div class="govuk-grid-column-half govuk-grid-column-half-from-desktop govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                                <div class="govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
                                     @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel")
                                 </div>
-                                <div class="govuk-grid-column-half govuk-grid-column-half-from-desktop govuk-!-padding-top-6">
+                                <div class="govuk-grid-column-one-quarter govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
                                     @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary()
                                     {
                                         new KeyValuePair<string, object>("tab",
