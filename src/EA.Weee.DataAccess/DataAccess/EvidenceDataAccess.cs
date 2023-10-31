@@ -108,8 +108,8 @@
                 //So logic here,
                 //If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if not
                 //Else If SubmittedDate != null then use AatfData.Name
-                notes = notes.Where(n => 
-                    (n.NoteType.Value == NoteType.TransferNote.Value 
+                notes = notes.Where(n =>
+                    (n.NoteType.Value == NoteType.TransferNote.Value
                         && (n.Organisation.Schemes.Where(s => s.Id == filter.SubmittedById).Any() || n.OrganisationId == filter.SubmittedById))
                     || n.Aatf.Id == filter.SubmittedById);
             }
@@ -242,6 +242,7 @@
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
             string searchRef,
+            Guid? submittedById,
             int pageNumber,
             int pageSize)
         {
@@ -257,6 +258,11 @@
                 var formattedReference = regex.Match(searchRef.Trim()).Success ? searchRef.Trim().Remove(0, 1) : searchRef;
 
                 filteredNotes = filteredNotes.Where(n => n.NoteType.Value == NoteType.EvidenceNote.Value && n.Reference.ToString().Equals(formattedReference));
+            }
+
+            if (submittedById.HasValue)
+            {
+                filteredNotes = filteredNotes.Where(n => n.RecipientId == submittedById.Value);
             }
 
             if (excludeEvidenceNotes.Any())
@@ -277,6 +283,8 @@
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            var sql = notes.ToString();
 
             return new EvidenceNoteResults(pagedNotes, notes.Count());
         }
