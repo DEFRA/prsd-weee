@@ -151,39 +151,51 @@
             @Html.Hidden("evidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "search-reference-evidence-id" })
         }
 
-        <div class="govuk-grid-column-full">
-            <div class="govuk-grid-row govuk-panel-grey-background">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-grid-row govuk-panel-grey-background">
 
-                @{
-                    object clearFilterRouteValues = null;
+            @{
+                object clearFilterRouteValues = null;
 
-                    if (Model.ViewTransferNoteViewModel != null)
-                    {
-                        clearFilterRouteValues = new { pcsId = Model.PcsId, evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId, page = 1 };
-                    }
-                    else
-                    {
-                        clearFilterRouteValues = new { pcsId = Model.PcsId, complianceYear = Model.ComplianceYear, page = 1 };
-                    }
-
+                if (Model.ViewTransferNoteViewModel != null)
+                {
+                    clearFilterRouteValues = new { pcsId = Model.PcsId, evidenceNoteId = Model.ViewTransferNoteViewModel.EvidenceNoteId, page = 1 };
+                }
+                else
+                {
+                    clearFilterRouteValues = new { pcsId = Model.PcsId, complianceYear = Model.ComplianceYear, page = 1 };
                 }
 
-                <div class="govuk-form-group govuk-grid-column-one-half govuk-!-padding-left-2 govuk-!-padding-top-4">
-                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchRef)">
-                        @Html.Gds().LabelFor(m => m.SearchRef, new { @class = "govuk-label--s" }, false)
-                        @Html.Gds().TextBoxFor(m => m.SearchRef, new { type = "search" })
-                        <button class="govuk-button weee-search-button" id="choose-notes-search-button"><span class="fa fa-search" aria-hidden="true" title="search by reference"></span><span class="sr-only">Search by reference number</span></button>
+            }
 
-                        <span class="govuk-!-padding-left-3">
-                            @Html.ActionLink("Clear filter", postAction, controller,
-                                clearFilterRouteValues, new { @class = "link-submit govuk-link govuk-link--no-visited-state", @id = "choose-notes-clear-filter" })
-                        </span>
-                    </div>
+            <div class="govuk-form-group govuk-grid-column-one-half govuk-!-padding-left-2 govuk-!-padding-top-4">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SearchRef)">
+                    @Html.Gds().LabelFor(m => m.SearchRef, new { @class = "govuk-label--s" }, false)
+                    @Html.Gds().TextBoxFor(m => m.SearchRef, new { type = "search" })
+                    <button class="govuk-button weee-search-button" id="choose-notes-search-button">
+                        <span class="fa fa-search" aria-hidden="true" title="search by reference"></span>
+                        <span class="sr-only">Search by reference number</span>
+                    </button>
                 </div>
-
             </div>
 
         </div>
+        <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                <div class="govuk-grid-column-one-quarter govuk-!-padding-left-0 govuk-!-padding-right-0 weee-evidence-padding-right">
+                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedBy)">
+                        @Html.Gds().LabelFor(m => m.SubmittedBy, new { @class = "govuk-label--s" }, false)
+                        @Html.Gds().DropDownListFor(m => m.SubmittedBy, Model.SubmittedByList,
+                                                    string.Empty, new { @class = "use-overlay" }, useHalfWidth: false, withLookAhead: true)
+                    </div>
+            </div>
+            <div class="govuk-grid-column-one-quarter govuk-grid-column-one-quarter-from-desktop govuk-!-padding-top-6">
+                <span class="govuk-!-padding-left-3">
+                    @Html.ActionLink("Clear filter", postAction, controller,
+                        clearFilterRouteValues, new { @class = "link-submit govuk-link govuk-link--no-visited-state", @id = "choose-notes-clear-filter" })
+                </span>
+            </div>
+        </div>
+    </div>
     }
 </div>
 <div class="left-cleared govuk-!-padding-top-5"></div>

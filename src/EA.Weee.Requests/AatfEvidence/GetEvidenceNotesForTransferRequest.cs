@@ -21,6 +21,8 @@
         public int PageSize { get; private set; }
 
         public string SearchReference { get; private set; }
+        
+        public Guid? SubmittedById { get; private set; }
 
         public Guid? TransferNoteId { get; private set; }
 
@@ -29,6 +31,7 @@
             int complianceYear,
             List<Guid> excludeEvidenceNotes,
             string searchReference = null,
+            Guid? submittedById = null,
             int pageNumber = 1,
             int pageSize = 10,
             Guid? transferNoteId = null)
@@ -41,6 +44,7 @@
             ComplianceYear = complianceYear;
             ExcludeEvidenceNotes = excludeEvidenceNotes ?? new List<Guid>();
             SearchReference = searchReference;
+            SubmittedById = submittedById;
             PageNumber = pageNumber;
             PageSize = pageSize;
             TransferNoteId = transferNoteId;

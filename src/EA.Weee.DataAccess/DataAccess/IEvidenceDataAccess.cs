@@ -32,6 +32,7 @@
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
             string searchRef,
+            Guid? submittedById,
             int pageNumber,
             int pageSize);
 

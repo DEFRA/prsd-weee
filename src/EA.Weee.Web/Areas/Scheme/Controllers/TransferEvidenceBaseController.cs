@@ -20,7 +20,7 @@
             SessionService = sessionService;
         }
 
-        public abstract Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null);
+        public abstract Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null, Guid? submittedBy = null);
 
         public abstract ActionResult DeselectEvidenceNote(TransferDeselectEvidenceNoteModel model);
 
