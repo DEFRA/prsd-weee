@@ -105,6 +105,7 @@
         {
             // act
             var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
+            var allowedWasteType = new List<WasteType>() { WasteType.Household };
             var searchRef = fixture.Create<string>();
             var recievedId = fixture.Create<Guid>();
             var wasteType = fixture.Create<WasteType>();
@@ -113,7 +114,7 @@
             var endDate = fixture.Create<DateTime>();
             var selectedComplianceYear = fixture.Create<int>();
 
-            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
+            var result = new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, allowedWasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
 
             // assert
             result.OrganisationId.Should().Be(organisationId);
@@ -121,7 +122,7 @@
             result.AllowedStatuses.Should().BeEquivalentTo(allowedStatus);
             result.SearchRef.Should().Be(searchRef);
             result.RecipientId.Should().Be(recievedId);
-            result.WasteTypeId.Should().Be(wasteType);
+            result.ObligationTypeFilterList.Should().BeEquivalentTo(allowedWasteType);
             result.NoteStatusFilter.Should().Be(noteStatus);
             result.StartDateSubmitted.Should().Be(startDate);
             result.EndDateSubmitted.Should().Be(endDate);
@@ -132,6 +133,7 @@
         {
             // act
             var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
+            var allowedWasteType = new List<WasteType>() { WasteType.Household };
             var searchRef = fixture.Create<string>();
             var recievedId = fixture.Create<Guid>();
             var wasteType = fixture.Create<WasteType>();
@@ -141,7 +143,7 @@
             var selectedComplianceYear = fixture.Create<int>();
 
             //arrange
-            var exception = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 0));
+            var exception = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, allowedWasteType, noteStatus, startDate, endDate, int.MaxValue, 0));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
@@ -152,6 +154,7 @@
         {
             // act
             var allowedStatus = new List<NoteStatus>() { NoteStatus.Approved };
+            var allowedWasteType = new List<WasteType>() { WasteType.Household };
             var searchRef = fixture.Create<string>();
             var recievedId = fixture.Create<Guid>();
             var wasteType = fixture.Create<WasteType>();
@@ -161,7 +164,7 @@
             var selectedComplianceYear = fixture.Create<int>();
 
             //arrange
-            var exception = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, wasteType, noteStatus, startDate, endDate, 0, 1));
+            var exception = Record.Exception(() => new GetAatfNotesRequest(organisationId, aatfId, allowedStatus, searchRef, selectedComplianceYear, recievedId, allowedWasteType, noteStatus, startDate, endDate, 0, 1));
 
             //assert
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
