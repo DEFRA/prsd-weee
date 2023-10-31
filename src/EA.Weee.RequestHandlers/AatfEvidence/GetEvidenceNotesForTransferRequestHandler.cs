@@ -43,6 +43,7 @@
                 request.ExcludeEvidenceNotes, 
                 request.ComplianceYear, 
                 request.SearchReference,
+                request.SubmittedById,
                 request.PageNumber, 
                 request.PageSize);
 
