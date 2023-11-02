@@ -108,8 +108,8 @@
                 //So logic here,
                 //If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if not
                 //Else If SubmittedDate != null then use AatfData.Name
-                notes = notes.Where(n => 
-                    (n.NoteType.Value == NoteType.TransferNote.Value 
+                notes = notes.Where(n =>
+                    (n.NoteType.Value == NoteType.TransferNote.Value
                         && (n.Organisation.Schemes.Where(s => s.Id == filter.SubmittedById).Any() || n.OrganisationId == filter.SubmittedById))
                     || n.Aatf.Id == filter.SubmittedById);
             }
@@ -426,6 +426,19 @@
                 .Select(n => n.Recipient)
                 .Distinct()
                 .ToListAsync();
+        }
+
+        public async Task<List<Organisation>> GetRecipientLists(Guid organisationId, Guid aatfId, int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes)
+        {
+            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && n.AatfId == aatfId && n.OrganisationId == organisationId);
+
+            var noteStatus = allowedStatus.Select(e => e.Value);
+            var noteTypes = allowedNoteTypes.Select(e => e.Value);
+
+            return await notes.Where(n => noteStatus.Contains(n.Status.Value) && noteTypes.Contains(n.NoteType.Value))
+                              .Select(n => n.Recipient)
+                              .Distinct()
+                              .ToListAsync();
         }
 
         public async Task<List<Organisation>> GetTransferOrganisations(int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes)

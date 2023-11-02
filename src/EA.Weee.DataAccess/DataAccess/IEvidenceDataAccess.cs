@@ -65,5 +65,7 @@
         Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type);
 
         Task<EvidenceNoteResults> GetAllEvidenceNotes(NoteFilter filter);
+
+        Task<List<Organisation>> GetRecipientLists(Guid organisationId, Guid aatfId, int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes);
     }
 }
