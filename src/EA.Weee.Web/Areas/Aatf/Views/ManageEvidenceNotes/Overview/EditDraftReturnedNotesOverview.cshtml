@@ -3,6 +3,9 @@
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+
 @model EditDraftReturnedNotesViewModel
 
 @section full_main_content{
@@ -61,7 +64,7 @@
                                     <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-top-6">
                                         @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary()
                                         {
-                                            new KeyValuePair<string, object>("tab", Model.ActiveOverviewDisplayOption.ToDisplayString())
+                                            new KeyValuePair<string, object>("tab", Extensions.ToDisplayString(Model.ActiveOverviewDisplayOption))
                                         })
                                     </div>
                                 </div>
@@ -97,7 +100,7 @@
                                             <td class="govuk-table__cell">@note.Recipient</td>
                                             @if (note.TypeOfWaste.HasValue)
                                             {
-                                                <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                                                <td class="govuk-table__cell">@(note.TypeOfWaste.Value) </td>
                                             }
                                             else
                                             {
@@ -132,10 +135,23 @@
                         </table>
                         <br />
                         @{
-                            Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                                                                                                                    { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
-                                manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
-                        }
+                            Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList,
+                                new ViewDataDictionary() {
+                                {
+                                    "pagerRouteValues", new
+                                    {
+                                        tab = Extensions.ToDisplayString(Model.ActiveOverviewDisplayOption),
+                                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                                        startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
+                                        endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
+                                        receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
+                                        wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
+                                        noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
+                                        submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                    }
+                                }
+                            });
+                        }                        
                     </div>
 
                 </div>
