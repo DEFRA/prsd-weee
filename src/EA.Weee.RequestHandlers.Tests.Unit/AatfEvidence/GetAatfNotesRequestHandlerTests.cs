@@ -122,10 +122,10 @@
                 .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e => 
-                e.ComplianceYear.Equals(request.ComplianceYear) && 
-                e.OrganisationId.Equals(request.OrganisationId) && 
-                e.AatfId.Equals(request.AatfId) && 
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
+                e.ComplianceYear.Equals(request.ComplianceYear) &&
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.RecipientId == request.RecipientId))).MustHaveHappenedOnceExactly();
         }
@@ -157,7 +157,8 @@
         {
             //arrange
             Guid? recipientId = Guid.NewGuid();
-            var request = GetAatfNotesRequest(SystemTime.UtcNow.Year, null, recipientId);
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
+            var request = GetAatfNotesRequest(SystemTime.UtcNow.Year, null, recipientId, wasteTypeList);
 
             // act
             await handler.HandleAsync(request);
@@ -178,34 +179,11 @@
         public async void HandleAsync_GivenRequestWithWasteTypeFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
-            WasteType? wasteType = TestFixture.Create<WasteType?>();
+            //WasteType? wasteType = TestFixture.Create<WasteType?>();
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
             var allowedWasteType = new List<WasteType>() { WasteType.Household };
 
-            var request = GetAatfNotesRequest(currentYear, null, null, allowedWasteType);
-
-            // act
-            await handler.HandleAsync(request);
-
-            var status = request.AllowedStatuses
-                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
-
-            // assert
-            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
-                e.OrganisationId.Equals(request.OrganisationId) &&
-                e.AatfId.Equals(request.AatfId) &&
-                e.AllowedStatuses.SequenceEqual(status) &&
-                e.SearchRef == null && 
-                e.RecipientId == null && e.WasteTypeId.Equals((int?)wasteType) &&
-                e.NoteTypeFilter.Contains(NoteType.EvidenceNote) &&
-                e.NoteTypeFilter.Count == 1))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async void HandleAsync_GivenRequestWithNoteStatusFilterSet_EvidenceDataAccessShouldBeCalledOnce()
-        {
-            //arrange
-            NoteStatus? noteStatus = TestFixture.Create<NoteStatus?>();
-            var request = GetAatfNotesRequest(currentYear, null, null, null, noteStatus);
+            var request = GetAatfNotesRequest(currentYear, null, null, wasteTypeList);
 
             // act
             await handler.HandleAsync(request);
@@ -219,8 +197,33 @@
                 e.AatfId.Equals(request.AatfId) &&
                 e.AllowedStatuses.SequenceEqual(status) &&
                 e.SearchRef == null &&
-                e.RecipientId == null && 
-                e.WasteTypeId == null && 
+                e.RecipientId == null && e.WasteTypeId.Equals(1) &&
+                e.NoteTypeFilter.Contains(NoteType.EvidenceNote) &&
+                e.NoteTypeFilter.Count == 1))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async void HandleAsync_GivenRequestWithNoteStatusFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        {
+            //arrange
+            NoteStatus? noteStatus = TestFixture.Create<NoteStatus?>();
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
+            var request = GetAatfNotesRequest(currentYear, null, null, wasteTypeList, noteStatus);
+
+            // act
+            await handler.HandleAsync(request);
+
+            var status = request.AllowedStatuses
+                .Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList();
+
+            // assert
+            A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
+                e.OrganisationId.Equals(request.OrganisationId) &&
+                e.AatfId.Equals(request.AatfId) &&
+                e.AllowedStatuses.SequenceEqual(status) &&
+                e.SearchRef == null &&
+                e.RecipientId == null &&
+                e.WasteTypeId == null &&
                 e.NoteStatusId.Equals((int?)noteStatus)))).MustHaveHappenedOnceExactly();
         }
 
@@ -229,7 +232,8 @@
         {
             //arrange
             var startDate = TestFixture.Create<DateTime?>();
-            var request = GetAatfNotesRequest(currentYear, null, null, null, null, startDate);
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
+            var request = GetAatfNotesRequest(currentYear, null, null, wasteTypeList, null, startDate);
 
             // act
             await handler.HandleAsync(request);
@@ -254,7 +258,8 @@
         {
             //arrange
             var endDate = TestFixture.Create<DateTime?>();
-            var request = GetAatfNotesRequest(currentYear, null, null, null, null, null, endDate);
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
+            var request = GetAatfNotesRequest(currentYear, null, null, wasteTypeList, null, null, endDate);
 
             // act
             await handler.HandleAsync(request);
@@ -281,7 +286,8 @@
             //arrange
             var searchRef = TestFixture.Create<string>();
             var receivedId = Guid.NewGuid();
-            var request = GetAatfNotesRequest(currentYear, searchRef, receivedId, wasteType, noteStatus, startDate, endDate);
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
+            var request = GetAatfNotesRequest(currentYear, searchRef, receivedId, wasteTypeList, noteStatus, startDate, endDate);
 
             // act
             await handler.HandleAsync(request);
@@ -340,6 +346,7 @@
         {
             // arrange
             var noteList = TestFixture.CreateMany<Note>(2).ToList();
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
 
             var evidenceNoteDatas = new List<EvidenceNoteData>()
             {
@@ -353,7 +360,7 @@
             A.CallTo(() => mapper.Map<List<Note>, List<EvidenceNoteData>>(A<List<Note>>._)).Returns(evidenceNoteDatas);
 
             // act
-            var result = await handler.HandleAsync(GetAatfNotesRequest(currentYear));
+            var result = await handler.HandleAsync(GetAatfNotesRequest(currentYear, null, null, wasteTypeList));
 
             // assert
             result.Should().BeOfType<EvidenceNoteSearchDataResult>();
@@ -361,13 +368,11 @@
             result.Results.ToList().Should().BeEquivalentTo(evidenceNoteDatas);
         }
 
-        private GetAatfNotesRequest GetAatfNotesRequest(int selectedComplianceYear, string searchRef = null, Guid? receivedId = null, List<WasteType> wasteType = null, NoteStatus? noteStatus = null,
-            DateTime? startDate = null, DateTime? endDate = null)
+        private GetAatfNotesRequest GetAatfNotesRequest(int selectedComplianceYear, string searchRef = null, Guid? receivedId = null,
+                                                        List<WasteType> wasteType = null, NoteStatus? noteStatus = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            return new GetAatfNotesRequest(organisation.Id, 
-                aatf.Id, 
-                TestFixture.CreateMany<NoteStatus>().ToList(),
-                searchRef, selectedComplianceYear, receivedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
+            return new GetAatfNotesRequest(organisation.Id, aatf.Id, TestFixture.CreateMany<NoteStatus>().ToList(), searchRef, selectedComplianceYear,
+                                           receivedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
         }
     }
 }
