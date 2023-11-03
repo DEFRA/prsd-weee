@@ -135,13 +135,13 @@
         {
             //arrange
             var searchRef = TestFixture.Create<string>();
-            var request = GetAatfNotesRequest(SystemTime.UtcNow.Year, searchRef);
+            var wasteTypeList = TestFixture.CreateMany<WasteType>(2).ToList();
+            var request = GetAatfNotesRequest(SystemTime.UtcNow.Year, searchRef, null, wasteTypeList);
 
             // act
             await handler.HandleAsync(request);
 
-            var status = request.AllowedStatuses
-                .Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
+            var status = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList();
 
             // assert
             A.CallTo(() => noteDataAccess.GetAllNotes(A<NoteFilter>.That.Matches(e =>
