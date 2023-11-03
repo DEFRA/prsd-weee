@@ -477,6 +477,7 @@
                         excludedNote.Id
                     },
                     null,
+                    null,
                     1,
                     10,
                     transferNote.Id);
