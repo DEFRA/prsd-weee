@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.AatfEvidence
 {
-    using System;
     using Core.AatfEvidence;
     using Core.Helpers;
     using DataAccess.DataAccess;
@@ -8,7 +7,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Requests.AatfEvidence;
-    using Mappings;
     using Security;
     using System.Collections.Generic;
     using System.Linq;
@@ -35,15 +33,21 @@
             authorization.EnsureCanAccessExternalArea();
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
+            var wasteTypeFilter = new List<Domain.Evidence.WasteType>();
+            foreach (var wasteType in message.ObligationTypeFilterList)
+            {
+                wasteTypeFilter.Add((Domain.Evidence.WasteType)wasteType);
+            }
+
             var filter = new NoteFilter(message.ComplianceYear, message.PageSize, message.PageNumber)
             {
                 AatfId = message.AatfId,
                 NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                 OrganisationId = message.OrganisationId,
-                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<EA.Weee.Domain.Evidence.NoteStatus>()).ToList(),
+                AllowedStatuses = message.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
                 SearchRef = message.SearchRef,
                 RecipientId = message.RecipientId,
-                WasteTypeId = (int?)message.WasteTypeId,
+                WasteTypeFilter = wasteTypeFilter,
                 NoteStatusId = (int?)message.NoteStatusFilter,
                 StartDateSubmitted = message.StartDateSubmitted,
                 EndDateSubmitted = message.EndDateSubmitted,
