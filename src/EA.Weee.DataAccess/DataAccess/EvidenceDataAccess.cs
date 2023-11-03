@@ -262,7 +262,13 @@
 
             if (submittedById.HasValue)
             {
-                filteredNotes = filteredNotes.Where(n => n.RecipientId == submittedById.Value);
+                //So logic here,
+                //If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if not
+                //Else If SubmittedDate != null then use AatfData.Name
+                filteredNotes = filteredNotes.Where(n =>
+                    (n.NoteType.Value == NoteType.TransferNote.Value
+                        && (n.Organisation.Schemes.Where(s => s.Id == submittedById).Any() || n.OrganisationId == submittedById))
+                    || n.Aatf.Id == submittedById);
             }
 
             if (excludeEvidenceNotes.Any())
