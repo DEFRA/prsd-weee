@@ -273,7 +273,7 @@
 
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
-                var model = await TransferEvidenceNotesViewModel(pcsId, page, client, transferRequest, searchRef, noteData);
+                var model = await TransferEvidenceNotesViewModel(pcsId, page, client, transferRequest, searchRef, null, noteData);
 
                 return this.View("EditTransferFrom", model);
             }
@@ -284,6 +284,7 @@
             IWeeeClient client, 
             TransferEvidenceNoteRequest transferRequest, 
             string searchRef,
+            Guid? submittedById,
             TransferEvidenceNoteData noteData)
         {
             transferRequest.UpdateSelectedNotes(noteData.CurrentEvidenceNoteIds);
@@ -296,8 +297,8 @@
             }
 
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, transferRequest.EvidenceNoteIds, searchRef, page,
-                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, noteData.Id));
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, transferRequest.EvidenceNoteIds, 
+                searchRef, null, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, noteData.Id));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(currentSelectedNotes, availableNotes,
                 transferRequest, noteData, pcsId, searchRef, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
@@ -328,7 +329,7 @@
                 {
                     var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
 
-                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.PageNumber, client, outgoingTransfer, null, noteData);
+                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.PageNumber, client, outgoingTransfer, null, null, noteData);
                 }
 
                 return View("EditTransferFrom", model);
@@ -355,7 +356,7 @@
             {
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EditEvidenceNoteId));
 
-                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.Page, client, transferRequest, searchRef, noteData);
+                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.Page, client, transferRequest, searchRef, null, noteData);
 
                 return View("EditTransferFrom", newModel);
             }
