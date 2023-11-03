@@ -16,6 +16,7 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.AatfEvidence.Reports;
+    using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Constant;
     using Extensions;
@@ -48,11 +49,11 @@
         private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider pdfDocumentProvider;
 
-        public ManageEvidenceNotesController(IMapper mapper, 
-            BreadcrumbService breadcrumb, 
-            IWeeeCache cache, 
-            Func<IWeeeClient> apiClient, 
-            IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator, 
+        public ManageEvidenceNotesController(IMapper mapper,
+            BreadcrumbService breadcrumb,
+            IWeeeCache cache,
+            Func<IWeeeClient> apiClient,
+            IRequestCreator<EditEvidenceNoteViewModel, CreateEvidenceNoteRequest> createRequestCreator,
             IRequestCreator<EditEvidenceNoteViewModel, EditEvidenceNoteRequest> editRequestCreator,
             ISessionService sessionService,
             ConfigurationService configurationService,
@@ -72,13 +73,47 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, 
-            string tab = null,
-            ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null,
-            int page = 1)
+        public async Task<ActionResult> Index(Guid organisationId, Guid aatfId, string tab = null, int? selectedComplianceYear = null, int? page = 1, DateTime? startDate = null,
+                                              DateTime? endDate = null, Guid? receivedId = null, int? wasteTypeValue = null, int? evidenceNoteTypeValue = null, string searchRef = null,
+                                              int? noteStatusValue = null, Guid? submittedBy = null)
+        {
+            var manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
+            {
+                AatfId = aatfId,
+                SelectedComplianceYear = selectedComplianceYear.HasValue ? selectedComplianceYear.Value : 0,
+                RecipientWasteStatusFilterViewModel = new RecipientWasteStatusFilterViewModel()
+                {
+                    NoteStatusValue = (noteStatusValue.HasValue ? (NoteStatus)noteStatusValue : (NoteStatus?)null),
+                    ReceivedId = (receivedId.HasValue ? receivedId : null),
+                    SubmittedBy = (submittedBy.HasValue ? submittedBy : null),
+                    WasteTypeValue = (wasteTypeValue.HasValue ? (WasteType)wasteTypeValue : (WasteType?)null),
+                    EvidenceNoteTypeValue = (evidenceNoteTypeValue.HasValue ? (EvidenceNoteType)evidenceNoteTypeValue : (EvidenceNoteType?)null)
+                },
+                FilterViewModel = new FilterViewModel()
+                {
+                    SearchRef = searchRef
+                },
+                SubmittedDatesFilterViewModel = new SubmittedDatesFilterViewModel()
+                {
+                    StartDate = startDate,
+                    EndDate = endDate
+                }
+            };
+            page = page ?? 1;
+            return await ProcessManageEvidenceNotes(organisationId, tab, manageEvidenceNoteViewModel, page.Value);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(Guid organisationId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
+        {
+            return await ProcessManageEvidenceNotes(organisationId, tab, manageEvidenceNoteViewModel, page);
+        }
+
+        private async Task<ActionResult> ProcessManageEvidenceNotes(Guid organisationId, string tab, ManageEvidenceNoteViewModel evidenceNoteViewModel, int page)
         {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
-            
+
             if (tab == null)
             {
                 tab = Extensions.ToDisplayString(ManageEvidenceOverviewDisplayOption.EvidenceSummary);
@@ -89,39 +124,31 @@
             using (var client = this.apiClient())
             {
                 var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-                int selectedComplianceYear = SelectedComplianceYear(currentDate, manageEvidenceNoteViewModel);
+                int selectedComplianceYear = SelectedComplianceYear(currentDate, evidenceNoteViewModel);
 
-                var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(aatfId));
+                var aatf = await client.SendAsync(this.User.GetAccessToken(), new GetAatfByIdExternal(evidenceNoteViewModel.AatfId));
                 var allAatfsAndAes = await cache.FetchAatfDataForOrganisationData(organisationId);
 
                 switch (value)
                 {
-                    case ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes:
+                    case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
+                        return await EvidenceSummaryCase(organisationId, evidenceNoteViewModel.AatfId, client, aatf, allAatfsAndAes, selectedComplianceYear, currentDate);
 
-                        return await EditDraftReturnNoteCase(client, 
-                            organisationId, 
-                            aatfId, 
-                            aatf,
-                            allAatfsAndAes,
-                            currentDate,
-                            selectedComplianceYear,
-                            manageEvidenceNoteViewModel,
-                            page);
+                    case ManageEvidenceOverviewDisplayOption.EditDraftAndReturnedNotes:
+                        return await EditDraftReturnNoteCase(client, organisationId, evidenceNoteViewModel.AatfId, aatf, allAatfsAndAes, currentDate, selectedComplianceYear, evidenceNoteViewModel, page);
 
                     case ManageEvidenceOverviewDisplayOption.ViewAllOtherEvidenceNotes:
+                        return await ViewAllOtherEvidenceNotesCase(organisationId, evidenceNoteViewModel.AatfId, client, aatf, allAatfsAndAes, currentDate, selectedComplianceYear, evidenceNoteViewModel, page);
 
-                        return await ViewAllOtherEvidenceNotesCase(organisationId, aatfId, client, aatf, allAatfsAndAes, currentDate, selectedComplianceYear, manageEvidenceNoteViewModel, page);
-
-                    case ManageEvidenceOverviewDisplayOption.EvidenceSummary:
                     default:
-                        return await EvidenceSummaryCase(organisationId, aatfId, client, aatf, allAatfsAndAes, selectedComplianceYear, currentDate);
+                        return await EvidenceSummaryCase(organisationId, evidenceNoteViewModel.AatfId, client, aatf, allAatfsAndAes, selectedComplianceYear, currentDate);
                 }
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(ManageEvidenceNoteViewModel model)
+        public ActionResult CreateNewEvidenceNote(ManageEvidenceNoteViewModel model)
         {
             return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", model.OrganisationId, model.AatfId, complianceYear = model.SelectedComplianceYear });
         }
@@ -131,7 +158,7 @@
         [NoCacheFilter]
 
         public async Task<ActionResult> CreateEvidenceNote(Guid organisationId, Guid aatfId, int complianceYear, bool returnFromCopyPaste = false)
-        { 
+        {
             using (var client = apiClient())
             {
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
@@ -140,11 +167,11 @@
 
                 sessionService.SetTransferSessionObject(null, SessionKeyConstant.EditEvidenceViewModelKey);
 
-                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, null, organisationId, aatfId, complianceYear)) 
+                var model = !returnFromCopyPaste ? mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, null, organisationId, aatfId, complianceYear))
                     : mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, existingModel, organisationId, aatfId, complianceYear));
 
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
-            
+
                 return View(model);
             }
         }
@@ -187,7 +214,7 @@
                 }
 
                 var organisationSchemes = await client.SendAsync(User.GetAccessToken(), new GetOrganisationScheme(true));
-                
+
                 var model = mapper.Map<EditEvidenceNoteViewModel>(new CreateNoteMapTransfer(organisationSchemes, viewModel, organisationId, aatfId, viewModel.ComplianceYear));
 
                 ModelState.ApplyCustomValidationSummaryOrdering(EditEvidenceNoteViewModel.ValidationMessageDisplayOrder);
@@ -216,7 +243,7 @@
                 });
 
                 ViewBag.Page = page;
-               
+
                 return View(model);
             }
         }
@@ -258,10 +285,10 @@
                 var request = new GetEvidenceNoteForAatfRequest(evidenceNoteId);
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
-                var model = !returnFromCopyPaste ? 
+                var model = !returnFromCopyPaste ?
                     mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, null, organisationId, result.AatfData.Id, result, result.ComplianceYear, queryString, returnToView))
                     : mapper.Map<EditEvidenceNoteViewModel>(new EditNoteMapTransfer(organisationSchemes, existingModel, organisationId, result.AatfData.Id, result, result.ComplianceYear, existingModel.QueryString, existingModel.ReturnToView));
-                
+
                 await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
                 return View(model);
@@ -278,7 +305,7 @@
                 if (viewModel.Action == ActionEnum.CopyAndPaste)
                 {
                     sessionService.SetTransferSessionObject(viewModel, SessionKeyConstant.EditEvidenceViewModelKey);
-                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName, 
+                    return RedirectToAction("Index", EvidenceCopyPasteActionConstants.EvidenceValueCopyPasteControllerName,
                         new { organisationId, returnAction = EvidenceCopyPasteActionConstants.EditEvidenceNoteAction, complianceYear = viewModel.ComplianceYear });
                 }
                 if (ModelState.IsValid)
@@ -331,7 +358,7 @@
         {
             using (var client = apiClient())
             {
-                var request = new GetAatfSummaryReportRequest(aatfId,  complianceYear);
+                var request = new GetAatfSummaryReportRequest(aatfId, complianceYear);
 
                 var file = await client.SendAsync(User.GetAccessToken(), request);
 
@@ -376,41 +403,53 @@
                 evidenceNoteId = result
             });
         }
-        
+
+        private static List<WasteType> GetWasteTypeQueryFilter(ManageEvidenceNoteViewModel noteViewModel, List<WasteType> defaultWasteTypeList)
+        {
+            var wasteTypeList = new List<WasteType>();
+            if (noteViewModel?.RecipientWasteStatusFilterViewModel?.WasteTypeValue != null)
+            {
+                wasteTypeList.Add((WasteType)noteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue);
+            }
+            else
+            {
+                wasteTypeList.AddRange(defaultWasteTypeList);
+            }
+
+            return wasteTypeList;
+        }
+
         private async Task<ActionResult> ViewAllOtherEvidenceNotesCase(Guid organisationId, Guid aatfId, IWeeeClient client, AatfData aatf,
             List<AatfData> allAatfs, DateTime currentDate, int selectedComplianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel, int pageNumber)
         {
             EvidenceNoteSearchDataResult resultAllNotes = new EvidenceNoteSearchDataResult();
 
             var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
+            var defaultWasteTypeList = new List<WasteType>() { WasteType.Household, WasteType.NonHousehold };
+            var defaultNoteTypes = new List<NoteType>() { NoteType.Evidence };
 
             if (ModelState.IsValid)
             {
-               resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, allowedStatus,
-               manageEvidenceViewModel?.FilterViewModel.SearchRef,
-               selectedComplianceYear,
-               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
-               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
-               manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
-               manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate,
-               pageNumber,
-               configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                resultAllNotes = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, allowedStatus,
+                manageEvidenceViewModel?.FilterViewModel.SearchRef,
+                selectedComplianceYear,
+                manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+                GetWasteTypeQueryFilter(manageEvidenceViewModel, defaultWasteTypeList),
+                manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.StartDate,
+                manageEvidenceViewModel?.SubmittedDatesFilterViewModel.EndDate,
+                pageNumber,
+                configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
             }
 
             var modelAllNotes = mapper.Map<AllOtherManageEvidenceNotesViewModel>(
                 new EvidenceNotesViewModelTransfer(organisationId, aatfId, resultAllNotes, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
-            var schemeData = await client.SendAsync(User.GetAccessToken(),
-                new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, 
-                    aatfId, 
-                    selectedComplianceYear, 
-                    allowedStatus, 
-                    new List<NoteType>() { NoteType.Evidence }));
+            var schemeData = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesRecipientList(organisationId, aatfId, selectedComplianceYear, allowedStatus, defaultNoteTypes));
 
             var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
-                        new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, 
-                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue, 
+                        new RecipientWasteStatusFilterBase(schemeData, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
                         manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, new List<EntityIdDisplayNameData>(), null, false, false));
 
             var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(
@@ -440,25 +479,40 @@
             return complianceYear;
         }
 
-        private async Task<ActionResult> EditDraftReturnNoteCase(IWeeeClient client, 
-            Guid organisationId, 
-            Guid aatfId, 
-            AatfData aatf, 
-            List<AatfData> allAatfs,
-            DateTime currentDate,
-            int complianceYear,
-            ManageEvidenceNoteViewModel manageEvidenceViewModel,
-            int pageNumber)
+        private async Task<ActionResult> EditDraftReturnNoteCase(IWeeeClient client, Guid organisationId, Guid aatfId, AatfData aatf, List<AatfData> allAatfs, DateTime currentDate,
+                                                                 int complianceYear, ManageEvidenceNoteViewModel manageEvidenceViewModel, int pageNumber)
         {
-            var result = await client.SendAsync(User.GetAccessToken(), 
-                new GetAatfNotesRequest(organisationId, aatfId, new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned },
-                manageEvidenceViewModel?.FilterViewModel.SearchRef, complianceYear, null, null, null, null, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+            var defaultNoteStatus = new List<NoteStatus> { NoteStatus.Draft, NoteStatus.Returned };
+            var recipientId = (Guid?)null;
+
+            if (manageEvidenceViewModel.RecipientWasteStatusFilterViewModel.ReceivedId.HasValue)
+            {
+                recipientId = manageEvidenceViewModel.RecipientWasteStatusFilterViewModel.ReceivedId.Value;
+            }
+
+            var selectedWasteType = new List<WasteType>();
+            if (manageEvidenceViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue)
+            {
+                selectedWasteType.Add(manageEvidenceViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value);
+            }
+
+            var result = await client.SendAsync(User.GetAccessToken(), new GetAatfNotesRequest(organisationId, aatfId, defaultNoteStatus, manageEvidenceViewModel?.FilterViewModel.SearchRef,
+                                                                                               complianceYear, recipientId, selectedWasteType, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel?.NoteStatusValue,
+                                                                                               null, null, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+
+            var aatfResults = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesRecipientList(organisationId, aatfId, complianceYear, defaultNoteStatus, new List<NoteType> { NoteType.Evidence }));
+
+            var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(
+                        new RecipientWasteStatusFilterBase(aatfResults, manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
+                        manageEvidenceViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, null, null, false, false, defaultNoteStatus));
 
             var model = mapper.Map<EditDraftReturnedNotesViewModel>(
                 new EvidenceNotesViewModelTransfer(organisationId, aatfId, result, currentDate, manageEvidenceViewModel, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>
-                (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, null, null, complianceYear, currentDate));
+                (new ManageEvidenceNoteTransfer(organisationId, aatfId, aatf, allAatfs, manageEvidenceViewModel?.FilterViewModel, recipientWasteStatusViewModel, null, complianceYear, currentDate));
 
             return this.View("Overview/EditDraftReturnedNotesOverview", model);
         }

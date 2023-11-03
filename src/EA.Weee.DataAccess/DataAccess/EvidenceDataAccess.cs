@@ -442,6 +442,19 @@
                 .ToListAsync();
         }
 
+        public async Task<List<Organisation>> GetRecipientLists(Guid organisationId, Guid aatfId, int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes)
+        {
+            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && n.AatfId == aatfId && n.OrganisationId == organisationId);
+
+            var noteStatus = allowedStatus.Select(e => e.Value);
+            var noteTypes = allowedNoteTypes.Select(e => e.Value);
+
+            return await notes.Where(n => noteStatus.Contains(n.Status.Value) && noteTypes.Contains(n.NoteType.Value))
+                              .Select(n => n.Recipient)
+                              .Distinct()
+                              .ToListAsync();
+        }
+
         public async Task<List<Organisation>> GetTransferOrganisations(int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes)
         {
             var status = allowedStatus.Select(e => e.Value);

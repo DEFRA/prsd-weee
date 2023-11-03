@@ -3,6 +3,9 @@
 @using EA.Weee.Web.Infrastructure
 @using EA.Weee.Web.RazorHelpers
 
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+
 @model EditDraftReturnedNotesViewModel
 
 @section full_main_content{
@@ -24,26 +27,45 @@
                             </h2>
                         </header>
 
-                        @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Get))
+                        @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Post))
                         {
+                            @Html.AntiForgeryToken()
                             @Html.Hidden("tab", Model.ActiveOverviewDisplayOption, new { id = "tab-hidden" })
                             @Html.Hidden("ManageEvidenceNoteViewModel.SelectedComplianceYear", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear)
+                            @Html.Hidden("ManageEvidenceNoteViewModel.AatfId", Model.ManageEvidenceNoteViewModel.AatfId)
+                            @Html.Hidden("ManageEvidenceNoteViewModel.OrganisationId", Model.ManageEvidenceNoteViewModel.OrganisationId)
+
                             <div class="govuk-panel-grey-background govuk-!-padding-bottom-0 govuk-!-margin-bottom-0">
 
                                 <div class="govuk-grid-row govuk-!-padding-left-3">
                                     <div class="govuk-grid-column-one-half govuk-!-padding-top-5">
-                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel",
-                                            new
-                                            {
-                                                addClearLink = true,
-                                                clearRouteValues = new
-                                                {
-                                                    organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId,
-                                                    aatfId = Model.ManageEvidenceNoteViewModel.AatfId,
-                                                    tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
-                                                    selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear
-                                                }
-                                            })
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "FilterViewModel")
+                                    </div>
+                                </div>
+
+                                <div class="govuk-grid-row govuk-!-padding-left-3">
+                                    <div class="govuk-grid-column-full">
+                                        <span class="govuk-label--s">
+                                            Filter by
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-right-0 weee-evidence-padding-right" style="width: 50% !important">
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "RecipientFiltersViewModel")
+                                    </div>
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-right-0 weee-evidence-padding-right">
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
+                                    </div>
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-right-0 weee-evidence-padding-right">
+                                        @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel")
+                                    </div>
+                                    <div class="govuk-grid-column-one-full govuk-grid-column-one-full-from-desktop govuk-!-padding-top-6">
+                                        @Html.Partial("~/Views/Shared/_SearchFilterButtonsPartial.cshtml", Model.ManageEvidenceNoteViewModel, new ViewDataDictionary()
+                                        {
+                                            new KeyValuePair<string, object>("tab", Extensions.ToDisplayString(Model.ActiveOverviewDisplayOption))
+                                        })
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +100,7 @@
                                             <td class="govuk-table__cell">@note.Recipient</td>
                                             @if (note.TypeOfWaste.HasValue)
                                             {
-                                                <td class="govuk-table__cell">@(note.TypeOfWaste.Value.ToDisplayString()) </td>
+                                                <td class="govuk-table__cell">@(note.TypeOfWaste.Value) </td>
                                             }
                                             else
                                             {
@@ -113,10 +135,23 @@
                         </table>
                         <br />
                         @{
-                            Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                                    { { "pagerRouteValues", new { tab = Model.ActiveOverviewDisplayOption.ToDisplayString(),
-                                manageEvidenceNoteViewModel_SelectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear } } });
-                        }
+                            Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList,
+                                new ViewDataDictionary() {
+                                {
+                                    "pagerRouteValues", new
+                                    {
+                                        tab = Extensions.ToDisplayString(Model.ActiveOverviewDisplayOption),
+                                        selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
+                                        startDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.StartDate.Value.ToShortDateString() : null,
+                                        endDate = Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.HasValue ? Model.ManageEvidenceNoteViewModel.SubmittedDatesFilterViewModel.EndDate.Value.ToShortDateString() : null,
+                                        receivedId = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.ReceivedId,
+                                        wasteTypeValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value.ToInt() : (int?)null,
+                                        noteStatusValue = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.HasValue ? Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value.ToInt() : (int?)null,
+                                        submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                    }
+                                }
+                            });
+                        }                        
                     </div>
 
                 </div>
