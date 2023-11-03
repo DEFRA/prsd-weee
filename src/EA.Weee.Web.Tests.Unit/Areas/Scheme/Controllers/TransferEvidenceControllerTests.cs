@@ -135,21 +135,21 @@
         [Fact]
         public void TransferFromGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string), typeof(Guid?) }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferFromGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string), typeof(Guid?) }).Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void TransferFromGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string) }).Should()
+            typeof(TransferEvidenceController).GetMethod("TransferFrom", new[] { typeof(Guid), typeof(int), typeof(int), typeof(string), typeof(Guid?) }).Should()
                 .BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
         }
 
