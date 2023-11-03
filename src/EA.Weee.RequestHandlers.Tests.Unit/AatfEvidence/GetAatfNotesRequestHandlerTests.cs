@@ -317,6 +317,7 @@
             var evidenceNoteDatas = new List<EvidenceNoteData>()
             {
                 A.Fake<EvidenceNoteData>(),
+                A.Fake<EvidenceNoteData>(),
                 A.Fake<EvidenceNoteData>()
             };
             var noteData = new EvidenceNoteResults(noteList, noteList.Count);
