@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using CuttingEdge.Conditions;
     using ViewModels.Shared;
 
     public class ComplianceYearHelper
@@ -42,9 +41,17 @@
             var complianceYear =
                 manageEvidenceNoteViewModel != null && manageEvidenceNoteViewModel.SelectedComplianceYear > 0
                     ? manageEvidenceNoteViewModel.SelectedComplianceYear
-                    : currentDateTime.Year;
+                    : GetDefaultComplianceYear();
 
             return complianceYear;
+
+            int GetDefaultComplianceYear()
+            {
+                int currentYear = currentDateTime.Year;
+                int currentMonth = currentDateTime.Month;
+
+                return currentMonth == 1 ? currentYear - 1 : currentYear;
+            }
         }
     }
 }
