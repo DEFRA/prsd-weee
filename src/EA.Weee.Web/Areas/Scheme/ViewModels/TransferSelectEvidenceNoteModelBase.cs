@@ -10,6 +10,8 @@
 
         public int ComplianceYear { get; set; }
 
+        public Guid? SubmittedBy { get; set; }
+
         public int Page { get; set; }
 
         public int PageCount { get; set; }
