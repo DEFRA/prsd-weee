@@ -26,6 +26,7 @@
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
             Guard.ArgumentNotDefaultValue(() => aatfId, aatfId);
             Guard.ArgumentNotNull(() => allowedStatuses, allowedStatuses);
+            Guard.ArgumentNotNull(() => wasteTypeList, wasteTypeList);
             Condition.Requires(allowedStatuses).IsNotEmpty();
             Condition.Requires(complianceYear).IsGreaterThan(0);
             Condition.Requires(pageNumber).IsGreaterThan(0);

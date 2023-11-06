@@ -339,7 +339,7 @@
                                                         List<WasteType> wasteType = null, NoteStatus? noteStatus = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             return new GetAatfNotesRequest(organisation.Id, aatf.Id, TestFixture.CreateMany<NoteStatus>().ToList(), searchRef, selectedComplianceYear,
-                                           receivedId, wasteType, noteStatus, startDate, endDate, int.MaxValue, 1);
+                                           receivedId, TestFixture.CreateMany<WasteType>().ToList(), noteStatus, startDate, endDate, int.MaxValue, 1);
         }
     }
 }
