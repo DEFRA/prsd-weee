@@ -34,9 +34,12 @@
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var wasteTypeFilter = new List<Domain.Evidence.WasteType>();
-            foreach (var wasteType in message.ObligationTypeFilterList)
+            if (message.ObligationTypeFilterList != null)
             {
-                wasteTypeFilter.Add((Domain.Evidence.WasteType)wasteType);
+                foreach (var wasteType in message.ObligationTypeFilterList)
+                {
+                    wasteTypeFilter.Add((Domain.Evidence.WasteType)wasteType);
+                }
             }
 
             var filter = new NoteFilter(message.ComplianceYear, message.PageSize, message.PageNumber)
