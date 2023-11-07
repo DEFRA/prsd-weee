@@ -16,10 +16,13 @@
 
         public Guid? TransferNoteId { get; private set; }
 
+        public Guid? SubmittedById { get; private set; }
+
         public GetEvidenceNotesSelectedForTransferRequest(Guid organisationId,
             List<Guid> evidenceNotes,
             List<int> categories,
-            Guid? transferNoteId = null)
+            Guid? transferNoteId = null,
+            Guid? submittedById = null)
         {
             Condition.Requires(organisationId).IsNotEqualTo(Guid.Empty);
 
@@ -27,6 +30,7 @@
             Categories = categories ?? new List<int>();
             EvidenceNotes = evidenceNotes ?? new List<Guid>();
             TransferNoteId = transferNoteId;
+            SubmittedById = submittedById;
         }
     }
 }

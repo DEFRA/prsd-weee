@@ -305,7 +305,57 @@
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+
+            model.SubmittedByList = await GetSubmittedByList(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, 
+                transferRequest.EvidenceNoteIds, noteData.Id, client);
+
             return model;
+        }
+
+        private async Task<List<SelectListItem>> GetSubmittedByList(Guid pcsId, List<int> categoryIds, int complianceYear, 
+            List<Guid> evidenceNoteIds, Guid id, IWeeeClient client)
+        {
+            var res = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, categoryIds, complianceYear, evidenceNoteIds, null, null, 1, int.MaxValue, id));
+
+            var submittedByFilterList = new List<SelectListItem>();
+            foreach (var evidenceNoteResult in res.Results)
+            {
+                (Guid Id, string Name) submittedBy = GetSubmittedBy(evidenceNoteResult);
+                if (!submittedByFilterList.Any(x => x.Text == submittedBy.Name) && !string.IsNullOrWhiteSpace(submittedBy.Name))
+                {
+                    submittedByFilterList.Add(new SelectListItem()
+                    {
+                        Value = submittedBy.Id.ToString(),
+                        Text = submittedBy.Name
+                    });
+                }
+            }
+
+            return submittedByFilterList.OrderBy(x => x.Text).ToList();
+        }
+
+        private static (Guid, string) GetSubmittedBy(EvidenceNoteData evidenceNoteResult)
+        {
+            if (evidenceNoteResult.Type == NoteType.Transfer)
+            {
+                if (evidenceNoteResult.OrganisationSchemaData != null)
+                {
+                    return (evidenceNoteResult.OrganisationSchemaData.Id, evidenceNoteResult.OrganisationSchemaData.SchemeName);
+                }
+                else
+                {
+                    return (evidenceNoteResult.OrganisationData.Id, evidenceNoteResult.OrganisationData.OrganisationName);
+                }
+            }
+            else if (evidenceNoteResult.SubmittedDate.HasValue)
+            {
+                return (evidenceNoteResult.AatfData.Id, evidenceNoteResult.AatfData.Name);
+            }
+            else
+            {
+                return (Guid.Empty, null);
+            }
         }
 
         [HttpPost]
