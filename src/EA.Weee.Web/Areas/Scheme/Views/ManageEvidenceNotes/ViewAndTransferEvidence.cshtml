@@ -65,12 +65,15 @@
                             @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedDatesFiltersViewModel")
                         </div>
                         @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "SubmittedByFiltersViewModel")
+                        @if ((bool?)ViewData["ShowPbsFilters"] == false)
+                        {
+                            @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
+                        }
                     </div>
 
                     @if ((bool?)ViewData["ShowPbsFilters"] == false)
                     {
                         <div class="govuk-grid-row govuk-!-padding-top-5 govuk-!-padding-left-3">
-                                @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "ObligationTypeFiltersViewModel")
                                 @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "StatusFiltersViewModel")
                                 @Html.EditorFor(m => m.ManageEvidenceNoteViewModel, "EvidenceNoteTypeFiltersViewModel")
                             <div class="govuk-grid-column-one-quarter govuk-grid-column-one-quarter-from-desktop  govuk-!-padding-top-6">
