@@ -371,7 +371,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null)
+        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null, Guid? submittedById = null)
         {
             await SetBreadcrumb(model.PcsId);
 
