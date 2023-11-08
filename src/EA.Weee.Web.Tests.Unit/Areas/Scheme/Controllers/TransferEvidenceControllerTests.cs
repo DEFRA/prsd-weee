@@ -177,14 +177,14 @@
         [Fact]
         public void SelectEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
+            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string), typeof(Guid?) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
         [Fact]
         public void SelectEvidenceNotePost_ShouldHaveAntiForgeryAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
+            typeof(TransferEvidenceController).GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string), typeof(Guid?) }).Should()
                 .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
