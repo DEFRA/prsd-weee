@@ -8,9 +8,8 @@
 
     public class AatfAePublicRegisterViewModel
     {
-        [Required]
         [Display(Name = "Appropriate authority")]
-        public Guid CompetentAuthorityId { get; set; }
+        public Guid? CompetentAuthorityId { get; set; }
 
         public IEnumerable<SelectListItem> CompetentAuthoritiesList { get; set; }
 
@@ -24,6 +23,6 @@
         [Display(Name = "AATF or AE")]
         public string SelectedFacilityType { get; set; }
 
-        public IEnumerable<SelectListItem> FacilityTypes { get; set; }        
+        public IEnumerable<SelectListItem> FacilityTypes { get; set; }
     }
 }
