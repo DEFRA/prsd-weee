@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Domain.Organisation;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Lookup;
 
     public interface IEvidenceDataAccess
     {
@@ -35,6 +36,8 @@
             Guid? submittedById,
             int pageNumber,
             int pageSize);
+
+        Task<List<WeeeCategory>> GetAvailableTransferCategories(Guid recipientOrganisationId, int complianceYear);
 
         Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId, 
             List<Guid> evidenceNotes,

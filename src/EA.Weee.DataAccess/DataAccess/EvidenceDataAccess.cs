@@ -4,6 +4,7 @@
     using Domain.Organisation;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Evidence;
+    using EA.Weee.Domain.Lookup;
     using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
@@ -290,8 +291,6 @@
                 .Take(pageSize)
                 .ToListAsync();
 
-            var sql = notes.ToString();
-
             return new EvidenceNoteResults(pagedNotes, notes.Count());
         }
 
@@ -491,6 +490,31 @@
             }
 
             return note;
+        }
+
+        public async Task<List<WeeeCategory>> GetAvailableTransferCategories(Guid recipientOrganisationId, int complianceYear)
+        {
+            var filteredNotes = context.Notes.Where(n => n.RecipientId == recipientOrganisationId &&
+                                                         n.NoteType.Value == NoteType.EvidenceNote.Value &&
+                                                         n.WasteType == WasteType.HouseHold &&
+                                                         n.Status.Value == NoteStatus.Approved.Value &&
+                                                         n.ComplianceYear == complianceYear);
+
+            filteredNotes = filteredNotes.Include(n => n.NoteTonnage);
+
+            var results = await filteredNotes.ToListAsync();
+
+            var noteTonnages = results.Select(t => t.NoteTonnage).ToList();
+
+            var categoriesAvailable = new List<WeeeCategory>();
+            foreach (var tonnage in noteTonnages)
+            {
+                var categories = tonnage.Where(nt => (nt.Received != null && nt.Received > 0)
+                    || (nt.Reused != null && nt.Reused > 0)).Select(nt => nt.CategoryId);
+                categoriesAvailable.AddRange(categories);
+            }
+
+            return categoriesAvailable;
         }
     }
 }

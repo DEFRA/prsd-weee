@@ -13,6 +13,8 @@
     using Core.Helpers;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Web.ViewModels.Shared;
@@ -60,27 +62,36 @@
         [NoCacheFilter]
         public async Task<ActionResult> TransferEvidenceNote(Guid pcsId, int complianceYear)
         {
-            await SetBreadcrumb(pcsId);
-
-            var model = new TransferEvidenceNoteCategoriesViewModel
+            using (var client = apiClient())
             {
-                OrganisationId = pcsId,
-                SchemasToDisplay = await GetApprovedSchemes(pcsId),
-                ComplianceYear = complianceYear
-            };
+                await SetBreadcrumb(pcsId);
+                
+                var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey);
 
-            var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey);
+                var availableCategories = 
+                    await client.SendAsync(User.GetAccessToken(),
+                    new GetTransferEvidenceNoteAvailableCategoriesRequest(pcsId, complianceYear));
+                
+                var model = new TransferEvidenceNoteCategoriesViewModel(availableCategories)
+                {
+                    OrganisationId = pcsId,
+                    SchemasToDisplay = await GetApprovedSchemes(pcsId),
+                    ComplianceYear = complianceYear
+                };
+                
+                model.ShowSelectAllButton = availableCategories.Count() > 1;
 
-            if (transferRequest != null)
-            {
-                var categoryIds = transferRequest.CategoryIds;
-                model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
-                    .ForEach(c => c.Selected = true);
-                model.SelectedSchema = transferRequest.RecipientId;
-                model.SelectAllCheckboxes = transferRequest.SelectAllCheckBoxes;
+                if (transferRequest != null)
+                {
+                    var categoryIds = transferRequest.CategoryIds;
+                    model.CategoryBooleanViewModels.Where(c => categoryIds.Contains(c.CategoryId)).ToList()
+                        .ForEach(c => c.Selected = true);
+                    model.SelectedSchema = transferRequest.RecipientId;
+                    model.SelectAllCheckboxes = transferRequest.SelectAllCheckBoxes;
+                }
+
+                return View("TransferEvidenceNote", model);
             }
-
-            return View("TransferEvidenceNote", model);
         }
 
         [HttpPost]
@@ -106,7 +117,7 @@
 
             await SetBreadcrumb(model.OrganisationId);
 
-            model.AddCategoryValues();
+            model.AddDefaultCategoryValues();
             CheckedCategoryIds(model, selectedCategoryIds);
             model.SchemasToDisplay = await GetApprovedSchemes(model.OrganisationId);
 
@@ -442,8 +453,8 @@
         private async Task<List<SelectListItem>> GetSubmittedByList(Guid pcsId, List<int> categoryIds, List<Guid> evidenceNoteIds, 
             int selectedComplianceYear, IWeeeClient client)
         {
-            var res = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, categoryIds, selectedComplianceYear, evidenceNoteIds, null, null, 1, int.MaxValue));
+                var res = await client.SendAsync(User.GetAccessToken(),
+                    new GetEvidenceNotesForTransferRequest(pcsId, categoryIds, selectedComplianceYear, evidenceNoteIds, null, null, 1, int.MaxValue));
 
             var submittedByFilterList = new List<SelectListItem>();
             foreach (var evidenceNoteResult in res.Results)

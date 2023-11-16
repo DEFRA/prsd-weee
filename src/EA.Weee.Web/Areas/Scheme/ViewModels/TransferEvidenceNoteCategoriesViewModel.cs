@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared;
     using System;
@@ -26,10 +27,20 @@
 
         public TransferEvidenceNoteCategoriesViewModel()
         {
-            AddCategoryValues();
+            AddDefaultCategoryValues();
         }
 
-        public void AddCategoryValues()
+        public TransferEvidenceNoteCategoriesViewModel(List<WeeeCategory> availableCategories)
+        {
+            AddCategoryValues(availableCategories);
+        }
+
+        public void AddCategoryValues(List<WeeeCategory> availableCategories)
+        {
+            CategoryBooleanViewModels = new CategoryValues<CategoryBooleanViewModel>(availableCategories);
+        }
+
+        internal void AddDefaultCategoryValues()
         {
             CategoryBooleanViewModels = new CategoryValues<CategoryBooleanViewModel>();
         }
@@ -46,5 +57,7 @@
                 return new List<int>();
             }
         }
+
+        public bool ShowSelectAllButton { get; internal set; }
     }
 }

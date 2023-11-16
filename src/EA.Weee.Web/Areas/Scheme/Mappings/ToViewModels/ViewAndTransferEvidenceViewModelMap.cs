@@ -18,7 +18,7 @@
 
             model.OrganisationId = source.OrganisationId;
             model.DisplayTransferButton = model.CanSchemeManageEvidence && source.NoteData.HasApprovedEvidenceNotes;
-                                          
+
             return model;
         }
     }
