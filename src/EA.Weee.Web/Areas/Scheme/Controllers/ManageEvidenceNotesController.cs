@@ -2,10 +2,12 @@
 {
     using Attributes;
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.Constants;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.AatfEvidence;
@@ -20,6 +22,7 @@
     using EA.Weee.Web.Services.Caching;
     using Extensions;
     using Filters;
+    using Microsoft.Ajax.Utilities;
     using Prsd.Core.Extensions;
     using System;
     using System.Collections.Generic;
@@ -226,6 +229,24 @@
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, noteViewModel?.FilterViewModel, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate));
+
+                //Getting Total amount
+                var categoryIds = EnumHelper.GetValues(typeof(WeeeCategory)).Select(x => x.Key).ToList();
+                var evidenceNoteIds = new List<Guid>();
+                var availableNotes = await client.SendAsync(User.GetAccessToken(), new GetEvidenceNotesForTransferRequest(organisationId,
+                                                                                                                          categoryIds,
+                                                                                                                          selectedComplianceYear,
+                                                                                                                          evidenceNoteIds,
+                                                                                                                          null,
+                                                                                                                          null,
+                                                                                                                          1,
+                                                                                                                          int.MaxValue));
+
+                var approvedEvidenceNotesRemainingTransferTotal = availableNotes.Results.Select(x => x.TotalReceivedAvailable).Sum().Value;
+                if (approvedEvidenceNotesRemainingTransferTotal == 0)
+                {
+                    model.DisplayTransferButton = false;
+                }
 
                 return View("ViewAndTransferEvidence", model);
             }
