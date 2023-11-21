@@ -65,20 +65,18 @@
             using (var client = apiClient())
             {
                 await SetBreadcrumb(pcsId);
-                
+
                 var transferRequest = SessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey);
 
-                var availableCategories = 
-                    await client.SendAsync(User.GetAccessToken(),
-                    new GetTransferEvidenceNoteAvailableCategoriesRequest(pcsId, complianceYear));
-                
+                var availableCategories = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteAvailableCategoriesRequest(pcsId, complianceYear));
+
                 var model = new TransferEvidenceNoteCategoriesViewModel(availableCategories)
                 {
                     OrganisationId = pcsId,
                     SchemasToDisplay = await GetApprovedSchemes(pcsId),
                     ComplianceYear = complianceYear
                 };
-                
+
                 model.ShowSelectAllButton = availableCategories.Count() > 1;
 
                 if (transferRequest != null)
@@ -115,9 +113,20 @@
                     new { area = "Scheme", pcsId = model.OrganisationId, complianceYear = model.ComplianceYear });
             }
 
-            await SetBreadcrumb(model.OrganisationId);
+            //await SetBreadcrumb(model.OrganisationId);
+            //model.AddDefaultCategoryValues();
 
-            model.AddDefaultCategoryValues();
+            using (var client = apiClient())
+            {
+                await SetBreadcrumb(model.OrganisationId);
+
+                var availableCategories = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteAvailableCategoriesRequest(model.PcsId, model.ComplianceYear));
+
+                model.CategoryBooleanViewModels = new CategoryValues<CategoryBooleanViewModel>(availableCategories);
+
+                model.ShowSelectAllButton = availableCategories.Count() > 1;
+            }
+
             CheckedCategoryIds(model, selectedCategoryIds);
             model.SchemasToDisplay = await GetApprovedSchemes(model.OrganisationId);
 
@@ -157,7 +166,7 @@
             }
 
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, searchRef, 
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, searchRef,
                     submittedBy, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
             //Call the query to get the submittedby list and assign that.
@@ -177,7 +186,7 @@
 
             model.SubmittedBy = submittedBy;
             model.SubmittedByList = submittedByFilterList;
-            
+
             return model;
         }
 
@@ -204,7 +213,9 @@
             return RedirectToAction("TransferTonnage", "TransferEvidence",
                 new
                 {
-                    area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear,
+                    area = "Scheme",
+                    pcsId = model.PcsId,
+                    complianceYear = model.ComplianceYear,
                     transferAllTonnage = false
                 });
         }
@@ -312,15 +323,15 @@
                 SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
 
                 var token = User.GetAccessToken();
-                
+
                 await client.SendAsync(token, request);
 
                 TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
                 return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
                 {
-                    pcsId = schemeId, 
-                    evidenceNoteId, 
+                    pcsId = schemeId,
+                    evidenceNoteId,
                     redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
                 });
             }
@@ -340,7 +351,7 @@
                     {
                         IsPrintable = true
                     });
-                
+
                 var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadTransferEvidenceNote", model);
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
@@ -387,7 +398,7 @@
             await SetBreadcrumb(model.PcsId);
 
             var transferRequest = SelectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
-         
+
             if (ModelState.IsValid)
             {
                 return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, page = model.NewPage });
@@ -441,20 +452,20 @@
 
         private ActionResult RedirectToManageEvidence(Guid pcsId, int complianceYear)
         {
-            return RedirectToAction("Index", "ManageEvidenceNotes", new 
-            { 
-                pcsId, 
-                area = "Scheme", 
+            return RedirectToAction("Index", "ManageEvidenceNotes", new
+            {
+                pcsId,
+                area = "Scheme",
                 tab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence),
                 selectedComplianceYear = complianceYear
             });
         }
 
-        private async Task<List<SelectListItem>> GetSubmittedByList(Guid pcsId, List<int> categoryIds, List<Guid> evidenceNoteIds, 
+        private async Task<List<SelectListItem>> GetSubmittedByList(Guid pcsId, List<int> categoryIds, List<Guid> evidenceNoteIds,
             int selectedComplianceYear, IWeeeClient client)
         {
-                var res = await client.SendAsync(User.GetAccessToken(),
-                    new GetEvidenceNotesForTransferRequest(pcsId, categoryIds, selectedComplianceYear, evidenceNoteIds, null, null, 1, int.MaxValue));
+            var res = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, categoryIds, selectedComplianceYear, evidenceNoteIds, null, null, 1, int.MaxValue));
 
             var submittedByFilterList = new List<SelectListItem>();
             foreach (var evidenceNoteResult in res.Results)
