@@ -417,7 +417,7 @@
 
         [HttpGet]
         public async Task<ActionResult> DownloadAatfAePublicRegisterCsv(int complianceYear,
-            ReportFacilityType facilityType, Guid authorityId)
+            ReportFacilityType facilityType, Guid? authorityId)
         {
             CSVFileData fileData;
 
@@ -430,6 +430,7 @@
             var data = new UTF8Encoding().GetBytes(fileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
+
         private async Task PopulateFilters(AatfSentOnDataViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
@@ -440,6 +441,7 @@
                 model.PanAreaList = new SelectList(await client.SendAsync(User.GetAccessToken(), new GetPanAreas()), "Id", "Name");
             }
         }
+
         private async Task PopulateFilters(AatfReuseSitesViewModel model)
         {
             model.ComplianceYears = new SelectList(await FetchComplianceYearsForAatfReturns());
