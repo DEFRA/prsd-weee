@@ -359,13 +359,11 @@
             using (var client = this.apiClient())
             {
                 var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Cancelled);
-
                 TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
                 try
                 {
                     var result = await client.SendAsync(User.GetAccessToken(), request);
-
                     return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
                 }
                 catch (ApiException ex)
@@ -379,7 +377,6 @@
                         throw;
                     }
                 }
-                //await client.SendAsync(User.GetAccessToken(), request);
 
                 return RedirectToAction("ViewDraftEvidenceNote", new { organisationId = organisationId, evidenceNoteId = request.NoteId });
             }
@@ -440,12 +437,9 @@
                     break;
 
                 default:
+                    routeName = AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
                     break;
             }
-
-            //var routeName = status == NoteStatus.Draft
-            //    ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName
-            //    : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
 
             return RedirectToRoute(routeName, new
             {
@@ -475,7 +469,7 @@
         {
             EvidenceNoteSearchDataResult resultAllNotes = new EvidenceNoteSearchDataResult();
 
-            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
+            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected, NoteStatus.Cancelled };
             var defaultWasteTypeList = new List<WasteType>() { WasteType.Household, WasteType.NonHousehold };
             var defaultNoteTypes = new List<NoteType>() { NoteType.Evidence };
 
