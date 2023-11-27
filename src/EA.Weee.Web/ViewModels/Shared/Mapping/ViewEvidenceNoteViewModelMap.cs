@@ -90,7 +90,7 @@
                 RecipientAddress = recipientAddress,
                 SchemeId = source.SchemeId, 
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
-                DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft || source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
+                DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
                 EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteRowViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
                 CanVoid = !source.PrintableVersion &&
@@ -104,6 +104,7 @@
                 OpenedInNewTab = source.OpenedInNewTab,
                 QueryString = source.QueryString,
                 ReturnToView = source.ReturnToView,
+                DisplayCancelButton = (source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
@@ -219,6 +220,9 @@
                             break;
                         case NoteUpdatedStatusEnum.Void:
                             model.SuccessMessage = $"You have successfully voided the evidence note with reference ID E{note.Reference}";
+                            break;
+                        case NoteUpdatedStatusEnum.Cancelled:
+                            model.SuccessMessage = $"You have successfully cancelled the evidence note with reference ID E{note.Reference}";
                             break;
                     }
                 }

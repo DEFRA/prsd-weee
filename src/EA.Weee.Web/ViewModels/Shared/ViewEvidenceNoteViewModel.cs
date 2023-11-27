@@ -31,6 +31,8 @@
 
         public bool DisplayEditButton { get; set; }
 
+        public bool DisplayCancelButton { get; set; }
+
         public bool HasSubmittedDate => !string.IsNullOrWhiteSpace(SubmittedDate);
 
         public bool HasApprovedDate => !string.IsNullOrWhiteSpace(ApprovedDate);

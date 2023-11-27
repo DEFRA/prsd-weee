@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
-    using System.ComponentModel.DataAnnotations;
-
     public enum NoteUpdatedStatusEnum
     {
         Draft = 1,
@@ -10,7 +8,8 @@
         Rejected = 4,
         Void = 5,
         Returned = 6,
-        ReturnedSaved = 7,
-        ReturnedSubmitted = 8
+        Cancelled = 7,
+        ReturnedSaved = 8,
+        ReturnedSubmitted = 9
     }
 }
