@@ -15,6 +15,7 @@
     using EA.Prsd.Core.Mapper;
     using FakeItEasy;
     using FluentAssertions;
+    using Microsoft.SqlServer.Server;
     using Security;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Web.ViewModels.Shared;
@@ -152,7 +153,7 @@
                 .With(e => e.RecipientOrganisationData, organisation)
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
-            
+
             const string recipientAddress = "recipientAddress";
 
             A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
@@ -267,9 +268,9 @@
         {
             //arrange
             var source = new ViewEvidenceNoteMapTransfer(TestFixture.Create<EvidenceNoteData>(), NoteUpdatedStatusEnum.Draft, TestFixture.Create<bool>())
-                {
-                    IncludeAllCategories = true,
-                    EvidenceNoteData =
+            {
+                IncludeAllCategories = true,
+                EvidenceNoteData =
                     {
                         EvidenceTonnageData = new List<EvidenceTonnageData>()
                         {
@@ -277,7 +278,7 @@
                             new EvidenceTonnageData(Guid.NewGuid(), WeeeCategory.ElectricalAndElectronicTools, 2, null, null, null)
                         }
                     }
-                };
+            };
 
             A.CallTo(() =>
                     tonnageUtilities.CheckIfTonnageIsNull(source.EvidenceNoteData.EvidenceTonnageData.ElementAt(0).Received))
@@ -404,9 +405,9 @@
             //assert
             result.SuccessMessage.Should()
                 .Be(
-                    $"You have approved the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+                    $"You have approved the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
-         }
+        }
 
         [Fact]
         public void Map_GivenNoteStatusRejected_SuccessMessageShouldBeShown()
@@ -420,7 +421,7 @@
             //assert
             result.SuccessMessage.Should()
                 .Be(
-                    $"You have rejected the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+                    $"You have rejected the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
         }
 
@@ -436,7 +437,7 @@
             //assert
             result.SuccessMessage.Should()
                 .Be(
-                    $"You have returned the evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+                    $"You have returned the evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
         }
 
@@ -451,7 +452,7 @@
 
             //assert
             result.SuccessMessage.Should()
-                .Be($"You have successfully saved the returned evidence note with reference ID E{ source.EvidenceNoteData.Reference}");
+                .Be($"You have successfully saved the returned evidence note with reference ID E{source.EvidenceNoteData.Reference}");
             result.DisplayMessage.Should().BeTrue();
         }
 
@@ -685,6 +686,24 @@
             result.DisplayEditButton.Should().BeTrue();
         }
 
+        [Fact]
+        public void Map_GivenSourceWhereNoteStatusIsCancelledAndAatfCanEditEvidenceNotes_DisplayCancelButtonShouldBeTrue()
+        {
+            var evidenceNoteData = TestFixture.Build<EvidenceNoteData>()
+                .With(e => e.Status, NoteStatus.Returned)
+                .With(e => e.AatfData,
+                    TestFixture.Build<AatfData>().With(a => a.CanCreateEditEvidence, true)
+                        .Create()).Create();
+            //arrange
+            var source = new ViewEvidenceNoteMapTransfer(evidenceNoteData, null, TestFixture.Create<bool>());
+
+            //act
+            var result = map.Map(source);
+
+            //assert
+            result.DisplayCancelButton.Should().BeTrue();
+        }
+
         [Theory]
         [ClassData(typeof(NoteStatusCoreData))]
         public void Map_GivenSourceWhereNoteStatusIsDraftOrReturnedAndAatfCannotEditEvidenceNotes_DisplayEditButtonShouldBeFalse(NoteStatus status)
@@ -759,7 +778,7 @@
 
             //arrange
             var user = new GenericPrincipal(A.Fake<IIdentity>(), new[] { Claims.InternalAdmin });
-            
+
             var evidenceNote = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.Status, status).Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceNote, null, false, user);
