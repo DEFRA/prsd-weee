@@ -101,7 +101,7 @@
                 RecipientAddress = recipientAddress,
                 TransferredByAddress = transferredByFormattedAddress,
                 Summary = GenerateNotesModel(source),
-                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned)
+                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft)
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
                                     && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime),

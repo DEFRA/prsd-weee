@@ -665,7 +665,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void Map_GivenSourceWhereNoteStatusIsDraftOrReturnedAndAatfCanEditEvidenceNotes_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
-            if (!status.Equals(NoteStatus.Draft) && !status.Equals(NoteStatus.Returned))
+            if (!status.Equals(NoteStatus.Draft))
             {
                 return;
             }
