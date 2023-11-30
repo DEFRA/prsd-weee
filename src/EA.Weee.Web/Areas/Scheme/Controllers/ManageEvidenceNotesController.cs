@@ -221,7 +221,7 @@
                 var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(new SubmittedDateFilterBase(noteViewModel?.SubmittedDatesFilterViewModel.StartDate, noteViewModel?.SubmittedDatesFilterViewModel.EndDate));
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(new RecipientWasteStatusFilterBase(null, null, noteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
                                                                                                                                        noteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, noteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
-                                                                                                                                       submittedByFilterList, noteViewModel?.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, true, true));
+                                                                                                                                       submittedByFilterList, noteViewModel?.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, true, true, noteStatusQueryFilterList));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
