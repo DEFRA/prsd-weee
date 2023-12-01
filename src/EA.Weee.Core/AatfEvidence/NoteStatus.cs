@@ -17,6 +17,8 @@
         [Display(Name = "Void")]
         Void = 5,
         [Display(Name = "Returned")]
-        Returned = 6
+        Returned = 6,
+        [Display(Name = "Cancelled")]
+        Cancelled = 7
     }
 }

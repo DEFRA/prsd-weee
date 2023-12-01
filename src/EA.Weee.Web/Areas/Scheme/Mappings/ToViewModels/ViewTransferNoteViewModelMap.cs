@@ -101,7 +101,7 @@
                 RecipientAddress = recipientAddress,
                 TransferredByAddress = transferredByFormattedAddress,
                 Summary = GenerateNotesModel(source),
-                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned)
+                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft)
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
                                     && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime),
@@ -156,6 +156,9 @@
                         break;
                     case NoteUpdatedStatusEnum.Void:
                         model.SuccessMessage = $"You have successfully voided the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.Cancelled:
+                        model.SuccessMessage = $"You have successfully cancelled the evidence note with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                         break;
                 }
             }

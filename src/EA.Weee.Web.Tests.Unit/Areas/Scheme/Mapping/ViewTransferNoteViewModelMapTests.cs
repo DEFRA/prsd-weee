@@ -809,7 +809,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedAndOrganisationIsTransferOrganisationAndSchemeIsValid_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
-            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            if (status != NoteStatus.Draft)
             {
                 return;
             }
@@ -979,7 +979,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationButOrganisationIsBalancingScheme_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
-            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            if (status != NoteStatus.Draft)
             {
                 return;
             }

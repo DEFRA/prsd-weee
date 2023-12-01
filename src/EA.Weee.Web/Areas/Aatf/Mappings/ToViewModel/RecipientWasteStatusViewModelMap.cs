@@ -34,6 +34,7 @@
                     new KeyValuePair<int, string>((int)NoteStatus.Approved, NoteStatus.Approved.ToString()),
                     new KeyValuePair<int, string>((int)NoteStatus.Rejected, NoteStatus.Rejected.ToString()),
                     new KeyValuePair<int, string>((int)NoteStatus.Void, NoteStatus.Void.ToString()),
+                    new KeyValuePair<int, string>((int)NoteStatus.Cancelled, NoteStatus.Cancelled.ToString())
                 };
 
                 if (source.Internal)

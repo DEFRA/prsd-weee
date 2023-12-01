@@ -505,6 +505,7 @@
                     TestFixture.Build<TransferEvidenceNoteTonnageData>().With(e => e.OriginalNoteId, evidenceNoteId2)
                         .Create(),
                 }).Create();
+            transferEvidence.Status = NoteStatus.Returned;
 
             var sessionCategories = new List<int>()
             {
@@ -559,6 +560,7 @@
                     TestFixture.Build<TransferEvidenceNoteTonnageData>()
                         .With(e => e.OriginalNoteId, removedEvidenceNoteId).Create()
                 }).Create();
+            transferEvidence.Status = NoteStatus.Returned;
 
             var sessionCategories = new List<int>()
             {
@@ -591,8 +593,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndNullSessionTransferRequest_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndNullSessionTransferRequest_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var evidenceNoteId = TestFixture.Create<Guid>();
@@ -603,16 +604,13 @@
                     TestFixture.Build<TransferEvidenceNoteTonnageData>()
                         .With(e => e.OriginalNoteId, evidenceNoteId).Create()
                 }).Create();
+            transferEvidence.Status = NoteStatus.Returned;
 
-            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                A<string>._)).Returns(null);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(null);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<bool?>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
