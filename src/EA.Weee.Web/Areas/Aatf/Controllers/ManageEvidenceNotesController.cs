@@ -354,6 +354,35 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> CancelEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
+        {
+            using (var client = this.apiClient())
+            {
+                var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Cancelled);
+                TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
+
+                try
+                {
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                    return RedirectAfterNoteAction(organisationId, aatfId, request.Status, result);
+                }
+                catch (ApiException ex)
+                {
+                    if (ex.ErrorData.ExceptionType == typeof(InvalidOperationException).FullName)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return RedirectToAction("ViewDraftEvidenceNote", new { organisationId = organisationId, evidenceNoteId = request.NoteId });
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> DownloadEvidenceSummaryReport(Guid aatfId, int complianceYear)
         {
             using (var client = apiClient())
@@ -392,9 +421,25 @@
 
         private ActionResult RedirectAfterNoteAction(Guid organisationId, Guid aatfId, NoteStatus status, Guid result)
         {
-            var routeName = status == NoteStatus.Draft
-                ? AatfEvidenceRedirect.ViewDraftEvidenceRouteName
-                : AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+            var routeName = string.Empty;
+            switch (status)
+            {
+                case NoteStatus.Draft:
+                    routeName = AatfEvidenceRedirect.ViewDraftEvidenceRouteName;
+                    break;
+
+                case NoteStatus.Submitted:
+                    routeName = AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    break;
+
+                case NoteStatus.Cancelled:
+                    routeName = AatfEvidenceRedirect.ViewCancelEvidenceRouteName;
+                    break;
+
+                default:
+                    routeName = AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName;
+                    break;
+            }
 
             return RedirectToRoute(routeName, new
             {
@@ -424,7 +469,7 @@
         {
             EvidenceNoteSearchDataResult resultAllNotes = new EvidenceNoteSearchDataResult();
 
-            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected };
+            var allowedStatus = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Rejected, NoteStatus.Cancelled };
             var defaultWasteTypeList = new List<WasteType>() { WasteType.Household, WasteType.NonHousehold };
             var defaultNoteTypes = new List<NoteType>() { NoteType.Evidence };
 

@@ -109,10 +109,15 @@
 
                                             <td class="govuk-table__cell">@note.Status.ToString() </td>
                                             <td class="govuk-table__cell">
-                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)<br />
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
                                                 @if (Model.ManageEvidenceNoteViewModel.CanCreateEdit)
                                                 {
                                                     @Html.NavigationRouteLink("Edit", "Edit evidence note with reference ID " + @note.ReferenceDisplay, AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
+                                                }
+
+                                                @if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
+                                                {                                                    
+                                                    @Html.NavigationRouteLink("Cancel", "Cancel evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
                                                 }
                                             </td>
                                         </tr>
@@ -150,8 +155,8 @@
                                         submittedBy = Model.ManageEvidenceNoteViewModel.RecipientWasteStatusFilterViewModel.SubmittedBy,
                                     }
                                 }
-                            });
-                        }                        
+                });
+                        }
                     </div>
 
                 </div>
