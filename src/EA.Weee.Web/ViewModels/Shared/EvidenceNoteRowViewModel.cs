@@ -39,6 +39,8 @@
 
         public bool DisplayEditLink { get; set; }
 
+        public bool DisplayCancelLink { get; set; }
+
         [DisplayName("Reference ID")]
         public string ReferenceDisplay => $"{Type.ToDisplayString()}{ReferenceId}";
 
