@@ -82,7 +82,7 @@
                                 <th class="govuk-table__header govuk-!-text-align-left" scope="col">
                                     Status
                                 </th>
-                                <th class="govuk-table__header" style="width: 5%">
+                                <th class="govuk-table__header" style="width: 15%">
                                     @Html.Gds().VisuallyHidden("actions")
                                 </th>
                             </tr>
@@ -102,6 +102,10 @@
                                             @if (note.DisplayEditLink)
                                             {
                                                 @Html.NavigationRouteLink("Edit", "Edit transfer note with reference " + @note.ReferenceId, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                            }
+                                            @if (note.DisplayCancelLink)
+                                            {
+                                                @Html.NavigationRouteLink("Cancel", "Cancel transfer note with reference " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                             }
                                         </td>
                                     </tr>
@@ -127,7 +131,7 @@
                     @using (Html.BeginForm("Index", "ManageEvidenceNotes", FormMethod.Post))
                     {
                         Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary()
-                                {
+                                        {
                                 {
                                     "pagerRouteValues", new
                                     {
