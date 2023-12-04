@@ -24,7 +24,7 @@
                                                            evidenceNoteRowViewModel.Status == NoteStatus.Returned) && 
                                                            model.CanSchemeManageEvidence;
 
-                evidenceNoteRowViewModel.DisplayCancelLink = evidenceNoteRowViewModel.Status == NoteStatus.Returned;
+                evidenceNoteRowViewModel.DisplayCancelLink = evidenceNoteRowViewModel.Status == NoteStatus.Returned && model.CanSchemeManageEvidence;
             }
 
             return model;
