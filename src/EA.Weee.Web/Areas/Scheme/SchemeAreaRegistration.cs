@@ -59,6 +59,12 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/view-cancelled-transfer/{evidenceNoteId}",
+                defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "Scheme_edit_transfer_categories",
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/edit-categories/{evidenceNoteId}",
                 defaults: new { action = "EditCategories", controller = "OutgoingTransfers", area = "Scheme" },

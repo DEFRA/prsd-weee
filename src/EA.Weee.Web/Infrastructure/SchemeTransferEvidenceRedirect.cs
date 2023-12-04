@@ -12,7 +12,7 @@
         public static string ViewReturnedTransferEvidenceRouteName = "Scheme_returned_transfer";
         public static string ViewRejectedTransferEvidenceRouteName = "Scheme_rejected_transfer";
         public static string ViewVoidedTransferEvidenceRouteName = "Scheme_voided_transfer";
-        public static string ViewCancelledEvidenceNoteRouteName = "Scheme_cancelled_transfer";
+        public static string ViewCancelledTransferEvidenceNoteRouteName = "Scheme_cancelled_transfer";
 
         public static string ViewApprovedEvidenceNoteRouteName = "Scheme_approved_evidence_note";
         public static string ViewRejectedEvidenceNoteRouteName = "Scheme_rejected_evidence_note";
@@ -39,7 +39,7 @@
                     case NoteStatus.Void:
                         return ViewVoidedTransferEvidenceRouteName;
                     case NoteStatus.Cancelled:
-                        return ViewCancelledEvidenceNoteRouteName;
+                        return ViewCancelledTransferEvidenceNoteRouteName;
                 }
             }
 
