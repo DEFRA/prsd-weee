@@ -36,7 +36,14 @@
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
-            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString = Model.QueryString}, new { @class = "govuk-button" })
+            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString = Model.QueryString }, new { @class = "govuk-button" })
+        </div>
+    }
+
+    @if (Model.DisplayCancelButton)
+    {
+        <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
+            @Html.ActionLink("Cancel evidence note transfer", "CancelTransferEvidenceNote", "TransferEvidence", new { area = "Scheme", pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString = Model.QueryString }, new { @class = "govuk-button" })
         </div>
     }
 
