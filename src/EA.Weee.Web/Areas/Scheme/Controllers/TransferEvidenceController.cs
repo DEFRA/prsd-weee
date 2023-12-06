@@ -404,7 +404,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CancelTransferEvidenceNote(Guid pcsId, Guid evidenceNoteId, bool? returnToView, string redirectTab = null, int page = 1, string queryString = null)
+        public async Task<ActionResult> CancelTransferEvidenceNote(Guid pcsId, Guid evidenceNoteId)
         {
             await SetBreadcrumb(pcsId);
 
@@ -418,7 +418,7 @@
 
                 TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
-                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
+                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceNoteRouteName, new
                 {
                     pcsId,
                     evidenceNoteId,
