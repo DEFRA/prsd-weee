@@ -246,7 +246,7 @@
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact] 
+        [Fact]
         public async Task TransferEvidenceNoteGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
@@ -438,7 +438,7 @@
 
             A.CallTo(() =>
              sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey)).Returns(request);
-           
+
             // act
             var result = await transferEvidenceController.TransferEvidenceNote(organisationId, complianceYear) as ViewResult;
             var model = result.Model as TransferEvidenceNoteCategoriesViewModel;
@@ -461,7 +461,7 @@
             A.CallTo(() => cache.FetchSchemePublicInfo(model.PcsId)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact] 
+        [Fact]
         public async Task TransferEvidenceNotePost_GivenInvalidModelAndSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
             // arrange 
@@ -583,7 +583,7 @@
             var model = GetValidModel(Guid.NewGuid(), Guid.NewGuid());
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(transferEvidenceController);
-           
+
             A.CallTo(() =>
             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey)).Returns(null);
 
@@ -671,7 +671,7 @@
 
             A.CallTo(() =>
             sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey)).Returns(null);
-            
+
             A.CallTo(() => transferNoteRequestCreator.SelectCategoriesToRequest(A<TransferEvidenceNoteCategoriesViewModel>._, A<TransferEvidenceNoteRequest>._)).Returns(transferRequest);
 
             //act
@@ -738,11 +738,11 @@
         {
             // arrange 
             var organisationName = "OrganisationName";
-            
+
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
-            
+
             // act
             await transferEvidenceController.TransferFrom(organisationId, TestFixture.Create<int>());
 
@@ -901,12 +901,12 @@
         public async Task TransferFromGet_GivenNotes_ModelMapperShouldBeCalled(int page, string searchRef)
         {
             //arrange
-           var availableEvidenceNoteData =
-                new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
+            var availableEvidenceNoteData =
+                 new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
 
             var selectedEvidenceNoteData =
                 new EvidenceNoteSearchDataResult(TestFixture.CreateMany<EvidenceNoteData>(3).ToList(), 3);
-            
+
             var complianceYear = TestFixture.Create<int>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -969,7 +969,7 @@
                 .With(t => t.PageNumber, (int?)null)
                 .With(t => t.Action, ActionEnum.Continue)
                 .Create();
-            
+
             AddModelError();
 
             // act
@@ -1064,7 +1064,7 @@
                 .With(t => t.Action, ActionEnum.Continue)
                 .With(t => t.PageNumber, (int?)null)
                 .Create();
-          
+
             // act
             var result = await transferEvidenceController.TransferFrom(model) as RedirectToRouteResult;
 
@@ -1431,7 +1431,7 @@
             // assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
                     A<GetEvidenceNotesSelectedForTransferRequest>.That.Matches(g =>
-                        g.Categories.Equals(request.CategoryIds) && 
+                        g.Categories.Equals(request.CategoryIds) &&
                         g.OrganisationId.Equals(organisationId) &&
                         g.EvidenceNotes.SequenceEqual(request.EvidenceNoteIds))))
                 .MustHaveHappenedOnceExactly();
@@ -1935,7 +1935,7 @@
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
-                    t => t.OrganisationId.Equals(organisationId) && 
+                    t => t.OrganisationId.Equals(organisationId) &&
                          t.TransferEvidenceNoteData.Equals(noteData) &&
                          t.DisplayNotification == null &&
                          t.RedirectTab == redirectTab &&
@@ -1993,7 +1993,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(noteData);
             transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = displayNotification;
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
-            
+
             // act
             await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab, page, openedInNewTab);
 
@@ -2123,7 +2123,7 @@
             var date = new DateTime(2022, 09, 2, 13, 22, 0);
             SystemTime.Freeze(date);
             var pdf = TestFixture.Create<byte[]>();
-            
+
             var data = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(t => t.ComplianceYear, 2022).Create();
             var model = TestFixture.Build<ViewTransferNoteViewModel>()
@@ -2590,6 +2590,52 @@
             breadcrumb.OrganisationId.Should().Be(model.PcsId);
         }
 
+        [Fact]
+        public async void CancelledTransferNote_GivenReturnedStatuses_ShouldRedirectedToRoute()
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            var result = await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId) as RedirectToRouteResult;
+
+            //assert
+            result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceNoteRouteName);
+            result.RouteValues["pcsId"].Should().Be(schemeId);
+            result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
+            result.RouteValues["redirectTab"].Should().Be("outgoing-transfers");
+        }
+
+        [Fact]
+        public async void CancelledTransferNote_GivenReturnedStatuse_TempDataShouldHaveCorrectStatus()
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId);
+
+            //assert
+            transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(NoteUpdatedStatusEnum.Cancelled);
+        }
+
+        [Fact]
+        public async void CancelledTransferNote_GivenReturnedStatuse_SetNoteStatusRequestShouldBeCalled()
+        {
+            //arrange
+            var schemeId = TestFixture.Create<Guid>();
+            var evidenceNoteId = TestFixture.Create<Guid>();
+
+            //act
+            await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId);
+
+            //assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<SetNoteStatusRequest>.That
+                .Matches(s => s.NoteId == evidenceNoteId && s.Status == NoteStatus.Cancelled))).MustHaveHappenedOnceExactly();
+        }
+
         private void AddModelError()
         {
             transferEvidenceController.ModelState.AddModelError("error", "error");
@@ -2608,7 +2654,7 @@
             {
                 evidenceIds = TestFixture.CreateMany<Guid>().ToList();
             }
-           
+
             return new TransferEvidenceNoteRequest(Guid.NewGuid(), Guid.NewGuid(), categoryIds)
             {
                 EvidenceNoteIds = evidenceIds

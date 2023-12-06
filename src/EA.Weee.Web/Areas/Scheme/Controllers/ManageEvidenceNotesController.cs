@@ -342,7 +342,8 @@
                         NoteStatus.Rejected,
                         NoteStatus.Submitted,
                         NoteStatus.Void,
-                        NoteStatus.Returned
+                        NoteStatus.Returned,
+                        NoteStatus.Cancelled
                     });
                 }
                 else
