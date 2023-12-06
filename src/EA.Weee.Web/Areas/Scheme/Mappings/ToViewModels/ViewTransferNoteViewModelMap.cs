@@ -109,7 +109,8 @@
                 Page = source.Page,
                 OpenedInNewTab = source.OpenedInNewTab,
                 IsPrintable = source.IsPrintable,
-                QueryString = source.QueryString
+                QueryString = source.QueryString,
+                DisplayCancelButton = source.TransferEvidenceNoteData.Status == NoteStatus.Returned
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
