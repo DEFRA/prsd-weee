@@ -290,7 +290,7 @@
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
-            
+
             //act
             attribute.Validate(target.StartDate, context);
 
@@ -426,7 +426,7 @@
             {
                 return;
             }
-                //arrange
+            //arrange
             var organisationId = TestFixture.Create<Guid>();
             var aatfId = TestFixture.Create<Guid>();
             var groupedAatfId = TestFixture.Create<Guid>();
@@ -497,9 +497,30 @@
             A.CallTo(() => configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public void EvidenceNoteStartDateAndEndDatesAreInTwoDifferentComplianceYear_Then_ItShould_Throw_ValidationException()
+        {
+            //arrange
+            var currentDate = new DateTime(2020, 2, 1);
+            SystemTime.Freeze(currentDate);
+
+            var target = GetValidationDefaultTarget(currentDate.AddDays(-1), currentDate.AddYears(1));
+            var context = new ValidationContext(target);
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
+
+            //act
+            var result = Record.Exception(() => attribute.Validate(target.StartDate, context)) as ValidationException;
+
+            //assert
+            result.ValidationResult.ErrorMessage.Should().Be("Ensure the start date is in the same compliance year as the end date");
+
+            SystemTime.Unfreeze();
+        }
+
         private ValidationTarget GetValidationDefaultTarget(DateTime startDate, DateTime? endDateTime)
         {
-           return new ValidationTarget() { StartDate = startDate, EndDate = endDateTime, AatfId = aatfId, OrganisationId = organisationId };
+            return new ValidationTarget() { StartDate = startDate, EndDate = endDateTime, AatfId = aatfId, OrganisationId = organisationId };
         }
 
         private class ValidationTarget : EvidenceNoteViewModel
