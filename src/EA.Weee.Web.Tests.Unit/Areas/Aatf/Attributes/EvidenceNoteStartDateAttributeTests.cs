@@ -112,7 +112,7 @@
             {
                 new object[] { new DateTime(2020, 1, 31), new DateTime(2020, 1, 31) },
                 new object[] { new DateTime(2020, 1, 31), new DateTime(2020, 1, 1) },
-                new object[] { new DateTime(2020, 1, 1), new DateTime(2019, 12, 31) },
+                new object[] { new DateTime(2020, 1, 1), new DateTime(2020, 1, 1) },
             };
 
         [Theory]
@@ -225,9 +225,10 @@
         {
             //arrange
             var currentDate = new DateTime(2020, 2, 1);
+            var endDate = new DateTime(2020, 3, 1);
             SystemTime.Freeze(currentDate);
 
-            var target = GetValidationDefaultTarget(currentDate, DateTime.MinValue);
+            var target = GetValidationDefaultTarget(currentDate, endDate);
             var context = new ValidationContext(target);
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
