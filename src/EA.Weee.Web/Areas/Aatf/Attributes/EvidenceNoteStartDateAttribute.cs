@@ -50,6 +50,12 @@
                 return startDateValid;
             }
 
+            startDateValid = ValidateStartDateIsInTheSameComplianceYearOfEndDate(thisDate, currentDate);
+            if (startDateValid != ValidationResult.Success)
+            {
+                return startDateValid;
+            }
+
             return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
         }
     }

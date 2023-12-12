@@ -45,7 +45,13 @@
             }
 
             var endDateValid = ValidateEndDate(otherDate, thisDate);
+            
+            if (endDateValid != ValidationResult.Success)
+            {
+                return endDateValid;
+            }
 
+            endDateValid = ValidateEndDateIsInTheSameComplianceYearOfStartDate(thisDate, otherDate.Value);
             if (endDateValid != ValidationResult.Success)
             {
                 return endDateValid;
