@@ -8,7 +8,7 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteStartDateAttribute : EvidenceDateValidationBase
     {
-        public EvidenceNoteStartDateAttribute(string compareDatePropertyName, 
+        public EvidenceNoteStartDateAttribute(string compareDatePropertyName,
             string approvalDateValidationMessage, string aatfStatusValidationMessage) : base(compareDatePropertyName, approvalDateValidationMessage, aatfStatusValidationMessage)
         {
         }
@@ -42,7 +42,7 @@
             {
                 return new ValidationResult("The start date must be within an open compliance year");
             }
-            
+
             var startDateValid = ValidateStartDate(thisDate, otherDate, currentDate);
 
             if (startDateValid != ValidationResult.Success)
@@ -50,10 +50,13 @@
                 return startDateValid;
             }
 
-            startDateValid = ValidateStartDateIsInTheSameComplianceYearOfEndDate(thisDate, currentDate);
-            if (startDateValid != ValidationResult.Success)
+            if (otherDate.HasValue)
             {
-                return startDateValid;
+                startDateValid = ValidateStartDateIsInTheSameComplianceYearOfEndDate(thisDate, otherDate.Value);
+                if (startDateValid != ValidationResult.Success)
+                {
+                    return startDateValid;
+                }
             }
 
             return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);

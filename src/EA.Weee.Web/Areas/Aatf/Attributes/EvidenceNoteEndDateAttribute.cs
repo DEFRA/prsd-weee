@@ -8,8 +8,8 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class EvidenceNoteEndDateAttribute : EvidenceDateValidationBase
     {
-        public EvidenceNoteEndDateAttribute(string compareDatePropertyName, 
-            string approvalDateValidationMessage, string aatfStatusValidationMessage) : 
+        public EvidenceNoteEndDateAttribute(string compareDatePropertyName,
+            string approvalDateValidationMessage, string aatfStatusValidationMessage) :
             base(compareDatePropertyName, approvalDateValidationMessage, aatfStatusValidationMessage)
         {
         }
@@ -45,16 +45,19 @@
             }
 
             var endDateValid = ValidateEndDate(otherDate, thisDate);
-            
+
             if (endDateValid != ValidationResult.Success)
             {
                 return endDateValid;
             }
 
-            endDateValid = ValidateEndDateIsInTheSameComplianceYearOfStartDate(thisDate, otherDate.Value);
-            if (endDateValid != ValidationResult.Success)
+            if (otherDate.HasValue)
             {
-                return endDateValid;
+                endDateValid = ValidateEndDateIsInTheSameComplianceYearOfStartDate(thisDate, otherDate.Value);
+                if (endDateValid != ValidationResult.Success)
+                {
+                    return endDateValid;
+                }
             }
 
             return ValidateDateAgainstAatfApprovalDate(thisDate, evidenceNoteModel.OrganisationId, evidenceNoteModel.AatfId);
