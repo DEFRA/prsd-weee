@@ -196,7 +196,7 @@
 
         private async Task<ActionResult> CreateAndPopulateViewAndTransferEvidenceViewModel(Guid organisationId, SchemePublicInfo scheme, DateTime currentDate, ManageEvidenceNoteViewModel noteViewModel, int pageNumber, int selectedComplianceYear)
         {
-            var defaultNoteStatusList = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void, NoteStatus.Returned };
+            var defaultNoteStatusList = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Void, NoteStatus.Returned, NoteStatus.Cancelled };
             var defaultNoteTypeList = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
             var defaultWasteTypeList = new List<WasteType>() { WasteType.Household, WasteType.NonHousehold };
 
@@ -342,8 +342,7 @@
                         NoteStatus.Rejected,
                         NoteStatus.Submitted,
                         NoteStatus.Void,
-                        NoteStatus.Returned,
-                        NoteStatus.Cancelled
+                        NoteStatus.Returned
                     });
                 }
                 else
@@ -420,7 +419,7 @@
                 }
 
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(new RecipientWasteStatusFilterBase(recipientData, noteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, null,
-                                                                                                                                       noteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, null, null, false, true));
+                                                                                                                                       noteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, null, null, false, false, defaultStatusList));
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, noteViewModel?.FilterViewModel, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate));
 
