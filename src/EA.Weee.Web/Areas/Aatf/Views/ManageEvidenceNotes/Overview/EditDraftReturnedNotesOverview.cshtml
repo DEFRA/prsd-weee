@@ -108,7 +108,7 @@
                                             }
 
                                             <td class="govuk-table__cell">@note.Status.ToString() </td>
-                                            <td class="govuk-table__cell">
+                                            <td class="govuk-table__cell" style="white-space: nowrap;">
                                                 @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
                                                 @if (Model.ManageEvidenceNoteViewModel.CanCreateEdit)
                                                 {

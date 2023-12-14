@@ -82,7 +82,7 @@
                                 <th class="govuk-table__header govuk-!-text-align-left" scope="col">
                                     Status
                                 </th>
-                                <th class="govuk-table__header" style="width: 15%">
+                                <th class="govuk-table__header">
                                     @Html.Gds().VisuallyHidden("actions")
                                 </th>
                             </tr>
@@ -97,7 +97,7 @@
                                         <td class="govuk-table__cell">@note.SubmittedDateDisplay</td>
                                         <td class="govuk-table__cell">@note.Recipient</td>
                                         <td class="govuk-table__cell">@note.Status</td>
-                                        <td class="govuk-table__cell">
+                                        <td class="govuk-table__cell" style="white-space: nowrap;">
                                             @Html.NavigationRouteLink("View", "View transfer note with reference " + @note.ReferenceId, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers), page = Model.EvidenceNotesDataList.PageNumber, queryString = ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
                                             @if (note.DisplayEditLink)
                                             {
