@@ -654,7 +654,8 @@
                 NoteStatus.Approved,
                 NoteStatus.Rejected,
                 NoteStatus.Void,
-                NoteStatus.Returned
+                NoteStatus.Returned,
+                NoteStatus.Cancelled
             };
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
@@ -708,7 +709,8 @@
                 NoteStatus.Approved,
                 NoteStatus.Rejected,
                 NoteStatus.Void,
-                NoteStatus.Returned
+                NoteStatus.Returned,
+                NoteStatus.Cancelled
             };
             var complianceYear = TestFixture.Create<short>();
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
@@ -1349,8 +1351,7 @@
                 NoteStatus.Rejected,
                 NoteStatus.Submitted,
                 NoteStatus.Void,
-                NoteStatus.Returned,
-                NoteStatus.Cancelled
+                NoteStatus.Returned                
             };
         }
     }
