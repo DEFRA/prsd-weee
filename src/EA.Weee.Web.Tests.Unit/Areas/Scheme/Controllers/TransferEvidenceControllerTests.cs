@@ -2601,7 +2601,7 @@
             var result = await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId) as RedirectToRouteResult;
 
             //assert
-            result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceNoteRouteName);
+            result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceRouteName);
             result.RouteValues["pcsId"].Should().Be(schemeId);
             result.RouteValues["evidenceNoteId"].Should().Be(evidenceNoteId);
             result.RouteValues["redirectTab"].Should().Be("outgoing-transfers");
