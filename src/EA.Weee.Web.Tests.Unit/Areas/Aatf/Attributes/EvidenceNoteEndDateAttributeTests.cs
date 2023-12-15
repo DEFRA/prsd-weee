@@ -212,7 +212,7 @@
         {
             //arrange
             var currentDate = new DateTime(2020, 1, 1);
-            var startDate = new DateTime(2020, 3, 1);
+            var startDate = new DateTime(2020, 1, 1);
             A.CallTo(() => client.SendAsync(A<string>._, A<GetApiDate>._)).Returns(currentDate);
             var target = GetValidationDefaultTarget(startDate, currentDate);
             var context = new ValidationContext(target);
