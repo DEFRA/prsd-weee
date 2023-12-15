@@ -36,7 +36,7 @@
 
             var evidenceNote = await EvidenceNote(message.NoteId);
 
-            Authorization.EnsureOrganisationAccess(message.Status == NoteStatus.Submitted
+            Authorization.EnsureOrganisationAccess((message.Status == NoteStatus.Submitted || message.Status == NoteStatus.Cancelled)
                 ? evidenceNote.Organisation.Id
                 : evidenceNote.Recipient.Id);
 
