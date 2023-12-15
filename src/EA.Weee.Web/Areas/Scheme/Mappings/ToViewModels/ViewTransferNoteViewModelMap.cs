@@ -110,7 +110,7 @@
                 OpenedInNewTab = source.OpenedInNewTab,
                 IsPrintable = source.IsPrintable,
                 QueryString = source.QueryString,
-                DisplayCancelButton = source.TransferEvidenceNoteData.Status == NoteStatus.Returned
+                DisplayCancelButton = source.TransferEvidenceNoteData.Status == NoteStatus.Returned && source.RedirectTab != "view-and-transfer-evidence"
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
