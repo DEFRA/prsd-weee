@@ -148,5 +148,25 @@
            
             return ValidationResult.Success;
         }
+
+        protected ValidationResult ValidateStartDateIsInTheSameComplianceYearOfEndDate(DateTime startDate, DateTime endDate)
+        {
+            if (startDate.Date.Year != endDate.Date.Year)
+            {
+                return new ValidationResult("Ensure the start date is in the same compliance year as the end date");
+            }
+
+            return ValidationResult.Success;
+        }
+
+        protected ValidationResult ValidateEndDateIsInTheSameComplianceYearOfStartDate(DateTime startDate, DateTime endDate)
+        {
+            if (startDate.Date.Year != endDate.Date.Year)
+            {
+                return new ValidationResult("Ensure the end date is in the same compliance year as the start date");
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }
