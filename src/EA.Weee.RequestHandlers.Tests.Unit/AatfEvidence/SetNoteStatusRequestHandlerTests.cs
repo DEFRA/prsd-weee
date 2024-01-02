@@ -197,7 +197,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public async Task HandleAsync_GivenRequestThatIsNotBeingSubmitted_ShouldCheckRecipientOrganisationAccess(Core.AatfEvidence.NoteStatus status)
         {
-            if (status == Core.AatfEvidence.NoteStatus.Submitted)
+            if (status == Core.AatfEvidence.NoteStatus.Submitted || status == Core.AatfEvidence.NoteStatus.Cancelled)
             {
                 return;
             }
