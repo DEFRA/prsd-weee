@@ -418,7 +418,7 @@
 
                 TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
-                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewCancelledEvidenceNoteRouteName, new
+                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceRouteName, new
                 {
                     pcsId,
                     evidenceNoteId,
