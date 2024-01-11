@@ -76,7 +76,7 @@
             {
                 RedirectTab = source.RedirectTab,
                 //ReturnToView = source.ReturnToView ?? false,
-                ReturnToView = (source.ReturnToView == null ? (source.TransferEvidenceNoteData.Status == NoteStatus.Draft ? true : false) : false),
+                ReturnToView = (source.ReturnToView == null ? (source.TransferEvidenceNoteData.Status == NoteStatus.Draft ? true : false) : source.ReturnToView.Value),
                 EditMode = source.Edit,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
