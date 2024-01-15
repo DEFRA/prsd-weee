@@ -49,7 +49,7 @@
         </div>
         
         <div class="govuk-!-margin-top-5 govuk-!-padding-bottom-5">
-            @Html.ActionLink("Cancel evidence note", "CancelEvidenceNote", "ManageEvidenceNotes", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id, queryString = Model.QueryString, returnToView = true }, new { @class = "govuk-button govuk-button--primary" })
+            @Html.ActionLink("Cancel evidence note", "CancelEvidenceNote", "ManageEvidenceNotes", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id, returnedReason = Model.ReturnedReason, queryString = Model.QueryString, returnToView = true }, new { @class = "govuk-button govuk-button--primary" })
         </div>
     }
 

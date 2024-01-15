@@ -49,6 +49,10 @@ else
         @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
     </div>
 
+    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break">
+        @Html.Partial("_DisplayCancelledReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+    </div>
+
     @if (Model.HasVoidReason)
     {
         <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break">

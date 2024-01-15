@@ -70,6 +70,7 @@
                 RejectedReason = source.EvidenceNoteData.RejectedReason,
                 ReturnedReason = source.EvidenceNoteData.ReturnedReason, 
                 VoidedReason = source.EvidenceNoteData.VoidedReason,
+                CancelledReason = source.EvidenceNoteData.CancelledReason,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
                 SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty, 
