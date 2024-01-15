@@ -2596,9 +2596,10 @@
             //arrange
             var schemeId = TestFixture.Create<Guid>();
             var evidenceNoteId = TestFixture.Create<Guid>();
+            var returnedReason = TestFixture.Create<string>();
 
             //act
-            var result = await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId) as RedirectToRouteResult;
+            var result = await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId, returnedReason) as RedirectToRouteResult;
 
             //assert
             result.RouteName.Should().Be(SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceRouteName);
@@ -2613,9 +2614,10 @@
             //arrange
             var schemeId = TestFixture.Create<Guid>();
             var evidenceNoteId = TestFixture.Create<Guid>();
+            var returnedReason = TestFixture.Create<string>();
 
             //act
-            await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId);
+            await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId, returnedReason);
 
             //assert
             transferEvidenceController.TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification].Should().Be(NoteUpdatedStatusEnum.Cancelled);
@@ -2627,9 +2629,10 @@
             //arrange
             var schemeId = TestFixture.Create<Guid>();
             var evidenceNoteId = TestFixture.Create<Guid>();
+            var returnedReason = TestFixture.Create<string>();
 
             //act
-            await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId);
+            await transferEvidenceController.CancelTransferEvidenceNote(schemeId, evidenceNoteId, returnedReason);
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<SetNoteStatusRequest>.That

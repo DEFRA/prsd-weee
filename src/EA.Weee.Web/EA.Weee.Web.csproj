@@ -921,6 +921,7 @@
     <Content Include="Views\Shared\EditorTemplates\SubmittedByRecipientFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedByFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EvidenceNoteTypeFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
