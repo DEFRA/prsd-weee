@@ -342,7 +342,8 @@
                         NoteStatus.Rejected,
                         NoteStatus.Submitted,
                         NoteStatus.Void,
-                        NoteStatus.Returned
+                        NoteStatus.Returned,
+                        NoteStatus.Cancelled
                     });
                 }
                 else
@@ -395,7 +396,7 @@
 
                 var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(new SubmittedDateFilterBase(noteViewModel?.SubmittedDatesFilterViewModel.StartDate, noteViewModel?.SubmittedDatesFilterViewModel.EndDate));
 
-                var defaultStatusList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Returned };
+                var defaultStatusList = new List<NoteStatus>() { NoteStatus.Draft, NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Void, NoteStatus.Returned, NoteStatus.Cancelled };
                 var defaultNoteTypeList = new List<NoteType>() { NoteType.Transfer };
                 var defaultWasteTypeList = new List<WasteType>() { WasteType.Household, WasteType.NonHousehold };
 
