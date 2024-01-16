@@ -21,42 +21,48 @@
                 ApprovedTransfererDetails = note.ApprovedTransfererAddress,
                 WasteType = note.WasteType.HasValue ? (Core.AatfEvidence.WasteType?)note.WasteType.Value : null,
                 ComplianceYear = note.ComplianceYear,
-                ReturnedReason = note.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned)
+                ReturnedReason = note.Status.Equals(Domain.Evidence.NoteStatus.Returned)
                     ? (note.NoteStatusHistory
-                        .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
+                        .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Returned))
                         .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
                     ?.Reason
                     : null,
-                RejectedReason = note.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected)
+                RejectedReason = note.Status.Equals(Domain.Evidence.NoteStatus.Rejected)
                     ? (note.NoteStatusHistory
-                        .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected))
+                        .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Rejected))
                         .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
                     ?.Reason
                     : null, // Note: do not change the order of update between Returned and Rejected as the last update wins
-                VoidedReason = note.Status.Equals(EA.Weee.Domain.Evidence.NoteStatus.Void)
+                VoidedReason = note.Status.Equals(Domain.Evidence.NoteStatus.Void)
                     ? (note.NoteStatusHistory
-                        .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Void))
+                        .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Void))
+                        .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
+                    ?.Reason
+                    : null,
+                CancelledReason = note.Status.Equals(Domain.Evidence.NoteStatus.Cancelled)
+                    ? (note.NoteStatusHistory
+                        .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Cancelled))
                         .OrderByDescending(n => n.ChangedDate).FirstOrDefault())
                     ?.Reason
                     : null,
                 SubmittedDate = note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Submitted))
+                    .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Submitted))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate,
                 ApprovedDate = note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Approved))
+                    .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Approved))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate,
                 ReturnedDate = note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Returned))
+                    .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Returned))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate,
                 RejectedDate = note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Rejected))
+                    .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Rejected))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate,
                 VoidedDate = note.NoteStatusHistory
-                    .Where(n => n.ToStatus.Equals(EA.Weee.Domain.Evidence.NoteStatus.Void))
+                    .Where(n => n.ToStatus.Equals(Domain.Evidence.NoteStatus.Void))
                     .OrderByDescending(n => n.ChangedDate).FirstOrDefault()
                     ?.ChangedDate
             };
