@@ -354,11 +354,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CancelEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId)
+        public async Task<ActionResult> CancelEvidenceNote(Guid organisationId, Guid aatfId, Guid evidenceNoteId, string returnedReason)
         {
             using (var client = this.apiClient())
             {
-                var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Cancelled);
+                var request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Cancelled, returnedReason);
                 TempData[ViewDataConstant.EvidenceNoteStatus] = (NoteUpdatedStatusEnum)request.Status;
 
                 try
