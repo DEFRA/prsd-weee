@@ -91,6 +91,7 @@
                 RejectedReason = source.TransferEvidenceNoteData.RejectedReason,
                 ReturnedReason = source.TransferEvidenceNoteData.ReturnedReason,
                 VoidedReason = source.TransferEvidenceNoteData.VoidedReason,
+                CancelledReason = source.TransferEvidenceNoteData.CancelledReason,
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>

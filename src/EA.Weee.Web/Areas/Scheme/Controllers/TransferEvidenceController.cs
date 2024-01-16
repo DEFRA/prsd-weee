@@ -404,14 +404,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CancelTransferEvidenceNote(Guid pcsId, Guid evidenceNoteId)
+        public async Task<ActionResult> CancelTransferEvidenceNote(Guid pcsId, Guid evidenceNoteId, string returnedReason)
         {
             await SetBreadcrumb(pcsId);
 
             using (var client = this.apiClient())
             {
                 NoteUpdatedStatusEnum updateStatus = NoteUpdatedStatusEnum.Cancelled;
-                SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Cancelled);
+                SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Cancelled, returnedReason);
 
                 var token = User.GetAccessToken();
                 await client.SendAsync(token, request);

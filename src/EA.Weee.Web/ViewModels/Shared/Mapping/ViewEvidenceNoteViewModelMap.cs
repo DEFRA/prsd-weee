@@ -39,9 +39,9 @@
 
             var allowVoidStatus = new List<NoteStatus>() { NoteStatus.Void, NoteStatus.Rejected };
 
-            var recipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme 
-                ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName 
-                : (string.IsNullOrEmpty(source.EvidenceNoteData.ApprovedRecipientDetails) 
+            var recipientAddress = source.EvidenceNoteData.RecipientOrganisationData.IsBalancingScheme
+                ? source.EvidenceNoteData.RecipientOrganisationData.OrganisationName
+                : (string.IsNullOrEmpty(source.EvidenceNoteData.ApprovedRecipientDetails)
                     ? addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
                         source.EvidenceNoteData.RecipientOrganisationData.OrganisationName,
                         organisationAddress.Address1,
@@ -59,20 +59,21 @@
                 AatfId = source.EvidenceNoteData.AatfData.Id,
                 Reference = source.EvidenceNoteData.Reference,
                 Status = source.EvidenceNoteData.Status,
-                Type = source.EvidenceNoteData.Type, 
+                Type = source.EvidenceNoteData.Type,
                 StartDate = source.EvidenceNoteData.StartDate,
                 EndDate = source.EvidenceNoteData.EndDate,
                 SubmittedDate = source.EvidenceNoteData.SubmittedDate.ToDisplayGMTDateTimeString(),
                 ApprovedDate = source.EvidenceNoteData.ApprovedDate.ToDisplayGMTDateTimeString(),
                 ReturnedDate = source.EvidenceNoteData.ReturnedDate.ToDisplayGMTDateTimeString(),
-                RejectedDate = source.EvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(), 
+                RejectedDate = source.EvidenceNoteData.RejectedDate.ToDisplayGMTDateTimeString(),
                 VoidedDate = source.EvidenceNoteData.VoidedDate.ToDisplayGMTDateTimeString(),
                 RejectedReason = source.EvidenceNoteData.RejectedReason,
-                ReturnedReason = source.EvidenceNoteData.ReturnedReason, 
+                ReturnedReason = source.EvidenceNoteData.ReturnedReason,
                 VoidedReason = source.EvidenceNoteData.VoidedReason,
+                CancelledReason = source.EvidenceNoteData.CancelledReason,
                 ProtocolValue = source.EvidenceNoteData.Protocol,
                 WasteTypeValue = source.EvidenceNoteData.WasteType,
-                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty, 
+                SubmittedBy = source.EvidenceNoteData.SubmittedDate.HasValue ? source.EvidenceNoteData.AatfData.Name : string.Empty,
                 ComplianceYear = source.EvidenceNoteData.ComplianceYear,
                 OperatorAddress = addressUtilities.FormattedAddress(source.EvidenceNoteData.OrganisationData.OrganisationName,
                     source.EvidenceNoteData.OrganisationData.BusinessAddress.Address1,
@@ -88,14 +89,14 @@
                     source.EvidenceNoteData.AatfData.SiteAddress.Postcode,
                     source.EvidenceNoteData.AatfData.ApprovalNumber),
                 RecipientAddress = recipientAddress,
-                SchemeId = source.SchemeId, 
+                SchemeId = source.SchemeId,
                 AatfApprovalNumber = source.EvidenceNoteData.AatfData.ApprovalNumber,
                 DisplayEditButton = (source.EvidenceNoteData.Status == NoteStatus.Draft) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
                 RedirectTab = source.RedirectTab,
                 EvidenceNoteHistoryData = mapper.Map<IList<EvidenceNoteRowViewModel>>(source.EvidenceNoteData.EvidenceNoteHistoryData),
                 CanVoid = !source.PrintableVersion &&
-                          HasClaim(source.User, Claims.InternalAdmin) && 
-                          source.EvidenceNoteData.Status == NoteStatus.Approved && 
+                          HasClaim(source.User, Claims.InternalAdmin) &&
+                          source.EvidenceNoteData.Status == NoteStatus.Approved &&
                           source.EvidenceNoteData.EvidenceNoteHistoryData.All(e => allowVoidStatus.Contains(e.Status)),
                 CanDisplayNotesMessage = source.EvidenceNoteData.EvidenceNoteHistoryData.Any(e => !allowVoidStatus.Contains(e.Status)),
                 IsPrintable = source.PrintableVersion,
@@ -104,7 +105,7 @@
                 OpenedInNewTab = source.OpenedInNewTab,
                 QueryString = source.QueryString,
                 ReturnToView = source.ReturnToView,
-                DisplayCancelButton = (source.EvidenceNoteData.Status == NoteStatus.Returned) && source.EvidenceNoteData.AatfData.CanCreateEditEvidence,
+                DisplayCancelButton = (source.EvidenceNoteData.Status == NoteStatus.Returned)
             };
 
             for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
