@@ -7,7 +7,7 @@
 
     public abstract class EvidenceNoteDataMapBase<T> where T : EvidenceNoteDataBase, new()
     {
-        protected List<Domain.Evidence.NoteStatus> excludedStatus = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Rejected, Domain.Evidence.NoteStatus.Void };
+        protected List<Domain.Evidence.NoteStatus> excludedStatus = new List<Domain.Evidence.NoteStatus>() { Domain.Evidence.NoteStatus.Rejected, Domain.Evidence.NoteStatus.Void, Domain.Evidence.NoteStatus.Cancelled };
 
         public T MapCommonProperties(Note note)
         {
