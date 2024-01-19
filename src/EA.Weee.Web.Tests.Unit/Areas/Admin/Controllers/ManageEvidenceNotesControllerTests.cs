@@ -362,7 +362,7 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTab_AllTransferNoteShouldBeRetrieved()
         {
             // Arrange
-            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var types = new List<NoteType>() { NoteType.Transfer };
 
             //act
@@ -543,7 +543,7 @@
             var transfers = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {
@@ -587,7 +587,7 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTab_GetComplianceYearsFilterShouldBeCalled()
         {
             // Arrange
-            var status = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var status = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
@@ -638,7 +638,7 @@
               .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {
@@ -695,7 +695,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {
@@ -749,7 +749,7 @@
                 .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {
