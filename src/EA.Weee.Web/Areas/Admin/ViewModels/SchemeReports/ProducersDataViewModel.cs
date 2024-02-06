@@ -9,7 +9,7 @@
 
     public class ProducersDataViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Select a compliance year")]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 
@@ -20,7 +20,7 @@
 
         public IEnumerable<SelectListItem> Schemes { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Select an obligation type")]
         [Display(Name = "Obligation type")]
         public ObligationType SelectedObligationType { get; set; }
 
