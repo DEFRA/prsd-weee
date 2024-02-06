@@ -10,13 +10,13 @@
 
     public class AatfAeReturnDataViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Select a compliance year")]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Select a quarter")]
         [DisplayName("Quarter")]
         public int Quarter { get; set; }
 
@@ -31,7 +31,7 @@
             }
         }
 
-        [Required]
+        [Required(ErrorMessage = "Select to include or exclude resubmissions")]
         [DisplayName("Include resubmissions?")]
         public bool? IncludeResubmissions { get; set; }
 
@@ -44,7 +44,7 @@
             }
         }
 
-        [Required(ErrorMessage = "Enter AATF or AE")]
+        [Required(ErrorMessage = "Select AATF or AE")]
         [Display(Name = "AATF or AE")]
         public string SelectedFacilityType { get; set; }
 
