@@ -349,7 +349,7 @@
 
         [Theory]
         [MemberData(nameof(ClosedComplianceDates))]
-        public void Map_GivenOutOfComplianceYear_ComplianceYearClosedShouldBeFalse(int complianceYear, DateTime currentDate)
+        public void Map_GivenOutOfComplianceYear_ComplianceYearClosedShouldBeTrue(int complianceYear, DateTime currentDate)
         {
             //arrange
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, new List<AatfData>(), null, null, null, complianceYear, currentDate);
@@ -358,7 +358,7 @@
             var result = map.Map(source);
 
             //assert
-            result.ComplianceYearClosed.Should().BeFalse();
+            result.ComplianceYearClosed.Should().BeTrue();
         }
 
         public static IEnumerable<object[]> OpenComplianceDates =>
@@ -371,7 +371,7 @@
 
         [Theory]
         [MemberData(nameof(OpenComplianceDates))]
-        public void Map_GivenInComplianceYear_ComplianceYearClosedShouldBeTrue(int complianceYear, DateTime currentDate)
+        public void Map_GivenInComplianceYear_ComplianceYearClosedShouldBeFalse(int complianceYear, DateTime currentDate)
         {
             //arrange
             var source = new ManageEvidenceNoteTransfer(organisationId, aatfId, aatfData, new List<AatfData>(), null, null, null, complianceYear, currentDate);
@@ -380,7 +380,7 @@
             var result = map.Map(source);
 
             //assert
-            result.ComplianceYearClosed.Should().BeTrue();
+            result.ComplianceYearClosed.Should().BeFalse();
         }
 
         [Fact]
