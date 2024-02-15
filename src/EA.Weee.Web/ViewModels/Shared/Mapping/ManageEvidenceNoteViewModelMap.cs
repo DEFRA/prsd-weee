@@ -23,12 +23,14 @@
         {
             Condition.Requires(source).IsNotNull();
 
+            var isComplianceYearClosed = WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate);
             var model = new ManageEvidenceNoteViewModel()
             {
                 OrganisationId = source.OrganisationId,
                 ComplianceYearList = source.ComplianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
-                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate),
-                AatfId = source.AatfId
+                ComplianceYearClosed = isComplianceYearClosed,
+                AatfId = source.AatfId,
+                CanDisplayCancelButton = isComplianceYearClosed
             };
 
             if (source.Aatfs != null)
