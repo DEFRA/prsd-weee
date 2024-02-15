@@ -218,7 +218,7 @@
         }
 
         [Fact]
-        public void Map_GivenSourceWithSelectedComplianceYear_ComplianceYearClosedShouldBeMappedAndFalse()
+        public void Map_GivenSourceWithSelectedComplianceYear_ComplianceYearClosedShouldBeMappedAndTrue()
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
@@ -232,11 +232,11 @@
             var model = mapper.Map(source);
 
             // assert 
-            model.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().Be(false);
+            model.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().Be(true);
         }
 
         [Fact]
-        public void Map_GivenSourceWithSelectedComplianceYear_ComplianceYearClosedShouldBeMappedAndTrue()
+        public void Map_GivenSourceWithSelectedComplianceYear_ComplianceYearClosedShouldBeMappedAndFalse()
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
@@ -250,7 +250,7 @@
             var model = mapper.Map(source);
 
             // assert 
-            model.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().Be(true);
+            model.ManageEvidenceNoteViewModel.ComplianceYearClosed.Should().Be(false);
         }
 
         [Fact]
