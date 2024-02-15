@@ -21,8 +21,8 @@
 
             if (systemDate.Date.Month == 1)
             {
-                complianceYear = systemDate.Year - 1;
-                if (complianceYear == systemDate.Year)
+                var currentSystemDate = systemDate.Year - 1;
+                if (complianceYear == currentSystemDate)
                 {
                     return true;
                 }
