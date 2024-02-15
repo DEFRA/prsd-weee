@@ -30,7 +30,7 @@
                 ComplianceYearList = source.ComplianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
                 ComplianceYearClosed = isComplianceYearClosed,
                 AatfId = source.AatfId,
-                CanDisplayCancelButton = isComplianceYearClosed
+                CanDisplayCancelButton = !isComplianceYearClosed
             };
 
             if (source.Aatfs != null)
