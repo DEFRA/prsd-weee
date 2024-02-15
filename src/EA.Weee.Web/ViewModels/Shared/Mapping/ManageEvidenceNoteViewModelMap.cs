@@ -23,7 +23,7 @@
         {
             Condition.Requires(source).IsNotNull();
 
-            var isComplianceYearClosed = WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate);
+            var isComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate);
             var model = new ManageEvidenceNoteViewModel()
             {
                 OrganisationId = source.OrganisationId,
