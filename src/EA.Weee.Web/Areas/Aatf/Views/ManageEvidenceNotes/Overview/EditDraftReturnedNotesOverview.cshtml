@@ -109,14 +109,14 @@
 
                                             <td class="govuk-table__cell">@note.Status.ToString() </td>
                                             <td class="govuk-table__cell" style="white-space: nowrap;">
-                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, linkType = "View", Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
                                                 @if (Model.ManageEvidenceNoteViewModel.CanCreateEdit)
                                                 {
                                                     @Html.NavigationRouteLink("Edit", "Edit evidence note with reference ID " + @note.ReferenceDisplay, AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
                                                 }
-
-                                                @if (note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
-                                                {                                                    
+                                                
+                                                @if (Model.ManageEvidenceNoteViewModel.CanDisplayCancelButton && note.Status == EA.Weee.Core.AatfEvidence.NoteStatus.Returned)
+                                                {
                                                     @Html.NavigationRouteLink("Cancel", "Cancel evidence note with reference ID " + @note.ReferenceDisplay, @note.AatfViewRouteName, new { organisationId = Model.ManageEvidenceNoteViewModel.OrganisationId, aatfId = Model.ManageEvidenceNoteViewModel.AatfId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString) }, null)
                                                 }
                                             </td>

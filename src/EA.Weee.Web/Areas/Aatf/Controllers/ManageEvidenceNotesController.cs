@@ -227,7 +227,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId, int page = 1, string queryString = null)
+        public async Task<ActionResult> ViewDraftEvidenceNote(Guid organisationId, Guid evidenceNoteId, string linkType = "", int page = 1, string queryString = null)
         {
             using (var client = apiClient())
             {
@@ -241,6 +241,11 @@
                 {
                     QueryString = queryString
                 });
+
+                if (!string.IsNullOrEmpty(linkType) && linkType == "View")
+                {
+                    model.DisplayCancelButton = false;
+                }
 
                 ViewBag.Page = page;
 

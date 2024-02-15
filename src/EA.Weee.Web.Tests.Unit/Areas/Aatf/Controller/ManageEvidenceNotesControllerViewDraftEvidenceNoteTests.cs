@@ -142,7 +142,7 @@
             var pageNumber = 3;
 
             //act
-            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, pageNumber) as ViewResult;
+            var result = await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, string.Empty, pageNumber) as ViewResult;
 
             //assert
             Assert.Equal(pageNumber, result.ViewBag.Page);
@@ -158,7 +158,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
 
             // act
-            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, 1, queryString);
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, string.Empty, 1, queryString);
 
             // asset
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(
@@ -174,7 +174,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNoteForAatfRequest>._)).Returns(data);
 
             // act
-            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, 1, null);
+            await ManageEvidenceController.ViewDraftEvidenceNote(OrganisationId, EvidenceNoteId, string.Empty, 1, null);
 
             // asset
             A.CallTo(() => Mapper.Map<ViewEvidenceNoteViewModel>(A<ViewEvidenceNoteMapTransfer>.That.Matches(

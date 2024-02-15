@@ -1995,7 +1995,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab, page, openedInNewTab);
+            await transferEvidenceController.TransferredEvidence(organisationId, TestFixture.Create<Guid>(), redirectTab, string.Empty, page, openedInNewTab);
 
             // assert
             A.CallTo(() => mapper.Map<ViewTransferNoteViewModel>(A<ViewTransferNoteViewModelMapTransfer>.That.Matches(
@@ -2022,6 +2022,7 @@
             // act
             await transferEvidenceController.TransferredEvidence(TestFixture.Create<Guid>(),
                 TestFixture.Create<Guid>(),
+                TestFixture.Create<string>(),
                 TestFixture.Create<string>(),
                 TestFixture.Create<int>(),
                 TestFixture.Create<bool>(),
