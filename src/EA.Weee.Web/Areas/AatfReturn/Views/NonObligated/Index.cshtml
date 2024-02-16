@@ -38,7 +38,6 @@
         </div>
     </header>
     <br />
-    <p class="govuk-body">Provide tonnage to 3 decimal places. For example 1.238</p>
 
     @using (Html.BeginRouteForm(formName, FormMethod.Post))
     {
@@ -49,9 +48,12 @@
         @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="govuk-table govuk-!-margin-bottom-0">
-            <div class="govuk-grid-column-one-half">&nbsp;</div>
+            <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                <p class="govuk-body">
+                    Provide tonnage to 3 decimal places. For example 1.238
+                </p>
+            </div>
             <div class="govuk-body govuk-!-font-size-19 govuk-!-text-align-right">
-
                 @(this.WeeeGds().ActionLinkWithEventTracking("Use copy and paste to populate the table",
                 "Use copy and paste to populate the table",
                 Url.RouteUrl(AatfRedirect.Default, new { returnId = Model.ReturnId, dcf = Model.Dcf, action = "Index", controller = "NonObligatedValuesCopyPaste" }),
