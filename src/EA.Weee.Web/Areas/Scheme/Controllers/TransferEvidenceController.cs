@@ -257,7 +257,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1,
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, string linkType = "", int page = 1,
             bool openedInNewTab = false, string queryString = null)
         {
             await SetBreadcrumb(pcsId);
@@ -278,6 +278,11 @@
                     OpenedInNewTab = openedInNewTab,
                     QueryString = queryString
                 });
+
+                if (!string.IsNullOrEmpty(linkType) && linkType == "View")
+                {
+                    model.DisplayCancelButton = false;
+                }
 
                 return View("TransferredEvidence", model);
             }
