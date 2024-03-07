@@ -31,6 +31,11 @@
         {
             @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = Model.Page }), "Back"))
         }
+        else
+        {
+            @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
+        }
     }
 
     @Html.HiddenFor(m => m.QueryString)
