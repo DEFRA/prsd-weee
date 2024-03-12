@@ -14,98 +14,190 @@ else
 
 <style type="text/css">
 
-    .category-column
-    {
+    .category-column {
         width: 40%;
     }
 
-    .transfer-column
-    {
+    .transfer-column {
         width: 18.75%;
     }
 
-    .received-column
-    {
+    .received-column {
         width: 20%;
     }
 
+    .govuk-summary-list__row {
+        border-bottom: none !important;
+    }
+
+    .govuk-summary-list__key {
+        margin-bottom: 0px !important;
+    }
+
+    .govuk-summary-list__value, .govuk-summary-list__key {
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+    }
 </style>
 
 <div class="govuk-!-margin-top-3">
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1">
-        @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
-    </div>
-
-    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-        @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
-    </div>
-
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break">
-        @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-    </div>
-
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break">
-        @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-    </div>
-
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break">
-        @Html.Partial("_DisplayCancelledReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-    </div>
-
-    @if (Model.HasVoidReason)
-    {
-        <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break">
-            @Html.Partial("_DisplayVoidedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.ReferenceDisplay)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ReferenceDisplay
+            </dd>
         </div>
-    }
-
-    @if (Model.HasSubmittedDate)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.Status)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Status.ToDisplayString()
+            </dd>
         </div>
-    }
 
-    @if (Model.HasApprovedDate)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
+        @if (Model.DisplayRejectedReason)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.RejectedReason)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.RejectedReason)
+                </dd>
+            </div>
+        }
+
+        @if (Model.DisplayReturnedReason)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.ReturnedReason)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.ReturnedReason)
+                </dd>
+            </div>
+        }
+
+        @if (Model.DisplayCancelledReason)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.CancelledReason)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.CancelledReason)
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasVoidReason)
+        {
+            if (Model.DisplayVoidedReason)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @Html.DisplayNameFor(m => m.VoidedReason)
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Html.DisplayTextFor(m => m.VoidedReason)
+                    </dd>
+                </div>
+            }
+        }
+
+        @if (Model.HasSubmittedDate)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.SubmittedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.SubmittedDate)
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasApprovedDate)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.ApprovedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.ApprovedDate)
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasRejectedDate)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.RejectedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.RejectedDate)
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasBeenReturned)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.ReturnedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.ReturnedDate)
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasBeenVoided)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.VoidedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.VoidedDate)
+                </dd>
+            </div>
+        }
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.ComplianceYearDisplay)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Html.DisplayTextFor(m => m.ComplianceYearDisplay)
+            </dd>
         </div>
-    }
 
-    @if (Model.HasRejectedDate)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.WasteDisplay)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Html.DisplayTextFor(m => m.WasteDisplay)
+            </dd>
         </div>
-    }
 
-    @if (Model.HasBeenReturned)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.ProtocolDisplay)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Html.DisplayTextFor(m => m.ProtocolDisplay)
+            </dd>
         </div>
-    }
-
-    @if (Model.HasBeenVoided)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
-        </div>
-    }
-
-    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-        @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
-    </div>
-
-    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-        @Html.Gds().DisplayFor(m => m.WasteDisplay, Model.WasteDisplay, "govuk-grid-column-one-quarter")
-    </div>
-
-    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-!-padding-bottom-6 govuk-full-printable-width">
-        @Html.Gds().DisplayFor(m => m.ProtocolDisplay, Model.ProtocolDisplay, "govuk-grid-column-one-quarter")
-    </div>
+    </dl>
 
     @if (Model.DisplayEvidenceNoteHistoryData && !Model.IsPrintable)
     {
@@ -126,20 +218,35 @@ else
     }
 }
 
-<div class="govuk-full-printable-width govuk-!-padding-left-0 printable-padding-top">
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="site" class="govuk-label--s">Site</span><br />
-        <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.SiteAddress)</p>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="operator" class="govuk-label--s">Operator</span><br />
-        <p aria-labelledby="operator" class="govuk-body weee-word-break">@Html.Raw(Model.OperatorAddress)</p>
-    </div>
-    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-        <span id="recipient" class="govuk-label--s">Recipient</span><br />
-        <p aria-labelledby="recipient" class="govuk-body weee-word-break">@Html.Raw(Model.RecipientAddress)</p>
-    </div>
-</div>
+<table class="govuk-table prsd-table-small-collapse aatf-task-list-table">
+    <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+        <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
+            <th class="govuk-table__header prsd-table-small-collapse" scope="col" width="33%">Site</th>
+            <th class="govuk-table__header prsd-table-small-collapse" scope="col" width="33%">Operator</th>
+            <th class="govuk-table__header prsd-table-small-collapse" scope="col" width="33%">Recipient</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body prsd-table-small-collapse">
+        <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
+            <td data-label="Site" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                <span class="prsd-long-address">
+                    @Html.Raw(Model.SiteAddress)
+                </span>
+            </td>
+            <td data-label="Operator" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                <span class="prsd-long-address">
+                    @Html.Raw(Model.OperatorAddress)
+                </span>
+            </td>
+            <td data-label="Recipient" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                <span class="prsd-long-address">
+                    @Html.Raw(Model.RecipientAddress)
+                </span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 <div class="ui-helper-clearfix"></div>
 <div class="govuk-!-padding-top-7">
     <p>
@@ -162,17 +269,17 @@ else
 
             @if (Model.DisplayTransferEvidenceColumns)
             {
-                <col style="width: 20%; max-width: 20%;"/>
-                <col style="width: 20%; max-width: 20%;"/>
-                <col style="width: 20%; max-width: 20%;"/>
-                <col style="width: 20%; max-width: 20%;"/>
-                <col style="width: 20%; max-width: 20%;"/>
+                <col style="width: 20%; max-width: 20%;" />
+                <col style="width: 20%; max-width: 20%;" />
+                <col style="width: 20%; max-width: 20%;" />
+                <col style="width: 20%; max-width: 20%;" />
+                <col style="width: 20%; max-width: 20%;" />
             }
             else
             {
-                <col style="width: 30%; max-width: 30%;"/>
-                <col style="width: 30%; max-width: 30%;"/>
-                <col style="width: 30%; max-width: 30%;"/>
+                <col style="width: 30%; max-width: 30%;" />
+                <col style="width: 30%; max-width: 30%;" />
+                <col style="width: 30%; max-width: 30%;" />
             }
         </colgroup>
     }
