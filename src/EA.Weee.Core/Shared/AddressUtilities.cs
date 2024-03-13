@@ -151,10 +151,19 @@
                 var stringBuilder = new StringBuilder();
                 const string spanTag = "span";
 
-                for (int count = 0; count < recipientDetails.Count(); count++)
+                if (recipientDetails.Length > 0)
+                {
+                    for (int count = 0; count < recipientDetails.Count(); count++)
+                    {
+                        var span = new TagBuilder(spanTag);
+                        span.SetInnerText($"{recipientDetails[count].Trim()}");
+                        stringBuilder.Append(span);
+                    }
+                }
+                else
                 {
                     var span = new TagBuilder(spanTag);
-                    span.SetInnerText($"{recipientDetails[count].Trim()}");
+                    span.SetInnerText($"{approvedRecipientDetails}");
                     stringBuilder.Append(span);
                 }
 
