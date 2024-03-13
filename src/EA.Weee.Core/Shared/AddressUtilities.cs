@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Core.Shared
 {
     using System;
+    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Web.Mvc;
 
     public class AddressUtilities : IAddressUtilities
     {
@@ -67,34 +69,52 @@
             string postCode,
             string approvalNumber = null)
         {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append(name);
+            var addressStringBuilder = new StringBuilder();
+            const string spanTagName = "span";
+
+            var address1Span = new TagBuilder(spanTagName);
+
+            var nameSpan = new TagBuilder(spanTagName);
+            nameSpan.SetInnerText($"{name}");
+            addressStringBuilder.Append(nameSpan);
 
             if (approvalNumber != null)
             {
-                stringBuilder.Append($"<br/><strong>{approvalNumber}</strong>");
+                var approvalNumberSpan = new TagBuilder(spanTagName);
+                approvalNumberSpan.SetInnerText(approvalNumber);
+                addressStringBuilder.Append($"<strong>{approvalNumberSpan}</strong>");
             }
 
-            stringBuilder.Append($"<br/>{address1}");
+            address1Span.SetInnerText($"{address1}");
+            addressStringBuilder.Append(address1Span);
 
             if (address2 != null)
             {
-                stringBuilder.Append($"<br/>{address2}");
+                var address2Span = new TagBuilder(spanTagName);
+                address2Span.SetInnerText($"{address2}");
+
+                addressStringBuilder.Append(address2Span);
             }
 
-            stringBuilder.Append($"<br/>{town}");
+            var townOrCitySpan = new TagBuilder(spanTagName);
+            townOrCitySpan.SetInnerText($"{town}");
+            addressStringBuilder.Append(townOrCitySpan);
 
             if (county != null)
             {
-                stringBuilder.Append($"<br/>{county}");
+                var countySpan = new TagBuilder(spanTagName);
+                countySpan.SetInnerText($"{county}");
+                addressStringBuilder.Append(countySpan);
             }
 
             if (postCode != null)
             {
-                stringBuilder.Append($"<br/>{postCode}");
+                var postCodeSpan = new TagBuilder(spanTagName);
+                postCodeSpan.SetInnerText($"{postCode}");
+                addressStringBuilder.Append(postCodeSpan);
             }
 
-            return stringBuilder.ToString();
+            return addressStringBuilder.ToString();
         }
 
         public string FormattedCompanyPcsAddress(string companyName,
@@ -109,20 +129,45 @@
             if (AreStringsEqual(companyName, name))
             {
                 return FormattedAddress(name, address1, address2, town, county, postCode, approvalNumber);
-            } 
+            }
             else
             {
                 var stringBuilder = new StringBuilder();
-                stringBuilder.Append($"{companyName}<br/>");
+                const string spanTagName = "span";
+                var companyNameSpan = new TagBuilder(spanTagName);
+                companyNameSpan.SetInnerText($"{companyName}");
+                stringBuilder.Append(companyNameSpan);
+
                 stringBuilder.Append(FormattedAddress(name, address1, address2, town, county, postCode, approvalNumber));
                 return stringBuilder.ToString();
             }
         }
 
+        public string FormattedApprovedRecipientDetails(string approvedRecipientDetails)
+        {
+            if (!string.IsNullOrEmpty(approvedRecipientDetails))
+            {
+                var recipientDetails = approvedRecipientDetails.Split(new string[] { "<br/>" }, StringSplitOptions.None);
+                var stringBuilder = new StringBuilder();
+                const string spanTag = "span";
+
+                for (int count = 0; count < recipientDetails.Count(); count++)
+                {
+                    var span = new TagBuilder(spanTag);
+                    span.SetInnerText($"{recipientDetails[count].Trim()}");
+                    stringBuilder.Append(span);
+                }
+
+                return stringBuilder.ToString();
+            }
+
+            return string.Empty;
+        }
+
         private bool AreStringsEqual(string s1, string s2)
         {
             var regex = @"[^aA-zZ]|[\^\[\]_\\`]";
-            
+
             var compareString1 = Regex.Replace(s1, regex, string.Empty);
             var compareString2 = Regex.Replace(s2, regex, string.Empty);
 

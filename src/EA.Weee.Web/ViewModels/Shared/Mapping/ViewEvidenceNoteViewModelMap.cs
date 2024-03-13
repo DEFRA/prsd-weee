@@ -50,7 +50,7 @@
                         organisationAddress.CountyOrRegion,
                         organisationAddress.Postcode,
                         null)
-                    : source.EvidenceNoteData.ApprovedRecipientDetails);
+                    : addressUtilities.FormattedApprovedRecipientDetails(source.EvidenceNoteData.ApprovedRecipientDetails));
 
             var model = new ViewEvidenceNoteViewModel
             {
