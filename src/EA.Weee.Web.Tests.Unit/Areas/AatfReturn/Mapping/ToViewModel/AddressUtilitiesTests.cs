@@ -131,7 +131,7 @@
             var result = addressUtilities.FormattedAddress(name, address1, address2, town,
                 county, postcode, approval);
 
-            result.Should().Be($@"{name}<br/><strong>{approval}</strong><br/>{address1}<br/>{address2}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
 
         [Fact]
@@ -147,7 +147,7 @@
             var result = addressUtilities.FormattedAddress(name, address1, address2, town,
                 county, postcode);
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{address2}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{name}</span><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
 
         [Fact]
@@ -163,7 +163,7 @@
             var result = addressUtilities.FormattedAddress(name, address1, null, town,
                 county, postcode, approval);
 
-            result.Should().Be($@"{name}<br/><strong>{approval}</strong><br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
 
         [Fact]
@@ -178,14 +178,14 @@
             var result = addressUtilities.FormattedAddress(name, address1, null, town,
                 county, postcode);
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
 
         [Theory]
         [InlineData("test", "test", "test")]
         [InlineData("TEST", "test", "test")]
         [InlineData(" Test ", "test", "test")]
-        [InlineData("No", "Match", "No<br/>Match")]
+        [InlineData("No", "Match", "No</span><span>Match")]
         public void FormattedAddress3_ShouldIgnoreSpacesAndSpecialSymbolsAndCase(string companyName, string name, string expectedNameString)
         {
             var address1 = Faker.Address.StreetName();
@@ -196,14 +196,14 @@
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
                 county, postcode, null);
 
-            result.Should().Be($@"{expectedNameString}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{expectedNameString}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
 
         [Fact]
         public void FormattedAddress3_ShouldIgnoreSpecialChars()
         {
             var companyName = @"""!£$%^&*()_+-=`¬TEST";
-            var name = @"|\[]{}:;@#~<,>.?/test";
+            var name = @"|\[]{}:;@#~.?/test";
 
             var address1 = Faker.Address.StreetName();
             var town = Faker.Address.City();
@@ -213,7 +213,7 @@
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
                 county, postcode, null);
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
 
         [Fact]
@@ -229,7 +229,7 @@
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
                 county, postcode, null);
 
-            result.Should().Be($@"{companyName}<br/>{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{companyName}</span><span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
 
         [Fact]
@@ -245,7 +245,7 @@
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
                 county, postcode, null);
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            result.Should().Be($@"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>");
         }
     }
 }
