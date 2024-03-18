@@ -70,7 +70,7 @@
                         recipientOrganisationAddress.CountyOrRegion,
                         recipientOrganisationAddress.Postcode,
                         null)
-                    : source.TransferEvidenceNoteData.ApprovedRecipientDetails);
+                    : addressUtilities.FormattedApprovedRecipientDetails(source.TransferEvidenceNoteData.ApprovedRecipientDetails));
 
             var model = new ViewTransferNoteViewModel
             {
