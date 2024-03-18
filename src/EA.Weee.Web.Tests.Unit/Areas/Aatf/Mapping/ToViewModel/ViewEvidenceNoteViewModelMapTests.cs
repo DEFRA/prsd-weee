@@ -154,16 +154,9 @@
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
 
-            const string recipientAddress = "recipientAddress";
+            string recipientAddress = evidenceData.ApprovedRecipientDetails;
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
-                organisation.OrganisationName,
-                organisation.BusinessAddress.Address1,
-                organisation.BusinessAddress.Address2,
-                organisation.BusinessAddress.TownOrCity,
-                organisation.BusinessAddress.CountyOrRegion,
-                organisation.BusinessAddress.Postcode,
-                null)).Returns(recipientAddress);
+            A.CallTo(() => addressUtilities.FormattedApprovedRecipientDetails(evidenceData.ApprovedRecipientDetails)).Returns(recipientAddress);
 
             //act
             var result = map.Map(source);
@@ -217,14 +210,8 @@
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
-                organisation.OrganisationName,
-                organisation.NotificationAddress.Address1,
-                organisation.NotificationAddress.Address2,
-                organisation.NotificationAddress.TownOrCity,
-                organisation.NotificationAddress.CountyOrRegion,
-                organisation.NotificationAddress.Postcode,
-                null)).Returns("recipientAddress");
+            string recipientAddress = evidenceData.ApprovedRecipientDetails;
+            A.CallTo(() => addressUtilities.FormattedApprovedRecipientDetails(evidenceData.ApprovedRecipientDetails)).Returns(recipientAddress);
 
             //act
             var result = map.Map(source);
@@ -247,14 +234,8 @@
                 .Create();
             var source = new ViewEvidenceNoteMapTransfer(evidenceData, null, TestFixture.Create<bool>());
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.EvidenceNoteData.RecipientSchemeData.SchemeName,
-                organisation.OrganisationName,
-                organisation.NotificationAddress.Address1,
-                organisation.NotificationAddress.Address2,
-                organisation.NotificationAddress.TownOrCity,
-                organisation.NotificationAddress.CountyOrRegion,
-                organisation.NotificationAddress.Postcode,
-                null)).Returns("recipientAddress");
+            string recipientAddress = evidenceData.ApprovedRecipientDetails;
+            A.CallTo(() => addressUtilities.FormattedApprovedRecipientDetails(evidenceData.ApprovedRecipientDetails)).Returns(recipientAddress);
 
             //act
             var result = map.Map(source);

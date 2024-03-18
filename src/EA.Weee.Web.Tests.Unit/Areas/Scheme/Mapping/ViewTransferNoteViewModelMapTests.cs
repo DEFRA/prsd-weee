@@ -678,14 +678,7 @@
                 .Create();
             var source = new ViewTransferNoteViewModelMapTransfer(organisation.Id, evidenceData, null);
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
-                organisation.OrganisationName,
-                organisation.NotificationAddress.Address1,
-                organisation.NotificationAddress.Address2,
-                organisation.NotificationAddress.TownOrCity,
-                organisation.NotificationAddress.CountyOrRegion,
-                organisation.NotificationAddress.Postcode,
-                null)).Returns("recipientAddress");
+            A.CallTo(() => addressUtilities.FormattedApprovedRecipientDetails(evidenceData.ApprovedRecipientDetails)).Returns("approved recipient details");
 
             //act
             var result = map.Map(source);
