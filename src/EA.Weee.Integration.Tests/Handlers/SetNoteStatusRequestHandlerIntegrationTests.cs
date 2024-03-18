@@ -71,7 +71,7 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                note.ApprovedRecipientAddress.Should().Be($"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>");
                 
                 note.ApprovedTransfererAddress.Should().BeNull();    
                 note.ApprovedTransfererSchemeName.Should().BeNull();
@@ -132,10 +132,10 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                note.ApprovedRecipientAddress.Should().Be($"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>");
 
                 note.ApprovedTransfererSchemeName.Should().Be(note.Organisation.Scheme.SchemeName);
-                note.ApprovedTransfererAddress.Should().Be($"{note.Organisation.Scheme.SchemeName}<br/>{note.Organisation.OrganisationName}<br/>{note.Organisation.BusinessAddress.Address1}<br/>{note.Organisation.BusinessAddress.Address2}<br/>{note.Organisation.BusinessAddress.TownOrCity}<br/>{note.Organisation.BusinessAddress.CountyOrRegion}<br/>{note.Organisation.BusinessAddress.Postcode}");
+                note.ApprovedTransfererAddress.Should().Be($"<span>{note.Organisation.Scheme.SchemeName}</span><span>{note.Organisation.OrganisationName}</span><span>{note.Organisation.BusinessAddress.Address1}</span><span>{note.Organisation.BusinessAddress.Address2}</span><span>{note.Organisation.BusinessAddress.TownOrCity}</span><span>{note.Organisation.BusinessAddress.CountyOrRegion}</span><span>{note.Organisation.BusinessAddress.Postcode}</span>");
             };
         }
 
@@ -302,7 +302,7 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                note.ApprovedRecipientAddress.Should().Be($"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>");
 
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
@@ -363,10 +363,10 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                note.ApprovedRecipientAddress.Should().Be($"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span> {note.Recipient.BusinessAddress.Address1} </span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>");
 
                 note.ApprovedTransfererSchemeName.Should().Be(note.Organisation.Scheme.SchemeName);
-                note.ApprovedTransfererAddress.Should().Be($"{note.Organisation.Scheme.SchemeName}<br/>{note.Organisation.OrganisationName}<br/>{note.Organisation.BusinessAddress.Address1}<br/>{note.Organisation.BusinessAddress.Address2}<br/>{note.Organisation.BusinessAddress.TownOrCity}<br/>{note.Organisation.BusinessAddress.CountyOrRegion}<br/>{note.Organisation.BusinessAddress.Postcode}");
+                note.ApprovedTransfererAddress.Should().Be($"<span>{note.Organisation.Scheme.SchemeName}</span><span>{note.Organisation.OrganisationName}</span><span>{note.Organisation.BusinessAddress.Address1}</span><span>{note.Organisation.BusinessAddress.Address2}</span><span>{note.Organisation.BusinessAddress.TownOrCity}</span><span>{note.Organisation.BusinessAddress.CountyOrRegion}</span><span>{note.Organisation.BusinessAddress.Postcode}</span>");
             };
         }
 
