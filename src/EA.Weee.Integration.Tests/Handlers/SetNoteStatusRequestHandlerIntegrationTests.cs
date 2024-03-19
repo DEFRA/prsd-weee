@@ -72,7 +72,7 @@
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
                 var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
-                if (approvedRecipientAddressText.Contains(""))
+                if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText.Replace("&#39;", "'");
                 }
@@ -138,7 +138,7 @@
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
                 var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
-                if (approvedRecipientAddressText.Contains(""))
+                if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText.Replace("&#39;", "'");
                 }
@@ -146,7 +146,7 @@
 
                 note.ApprovedTransfererSchemeName.Should().Be(note.Organisation.Scheme.SchemeName);
                 var approvedTransfererAddressText = $"<span>{note.Organisation.Scheme.SchemeName}</span><span>{note.Organisation.OrganisationName}</span><span>{note.Organisation.BusinessAddress.Address1}</span><span>{note.Organisation.BusinessAddress.Address2}</span><span>{note.Organisation.BusinessAddress.TownOrCity}</span><span>{note.Organisation.BusinessAddress.CountyOrRegion}</span><span>{note.Organisation.BusinessAddress.Postcode}</span>";
-                if (approvedTransfererAddressText.Contains(""))
+                if (approvedTransfererAddressText.Contains("&#39;"))
                 {
                     approvedTransfererAddressText.Replace("&#39;", "'");
                 }
@@ -318,7 +318,7 @@
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
                 var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
-                if (approvedRecipientAddressText.Contains(""))
+                if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText.Replace("&#39;", "'");
                 }
@@ -384,7 +384,7 @@
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
                 var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
-                if (approvedRecipientAddressText.Contains(""))
+                if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText.Replace("&#39;", "'");
                 }
@@ -392,7 +392,7 @@
 
                 note.ApprovedTransfererSchemeName.Should().Be(note.Organisation.Scheme.SchemeName);
                 var approvedTransfererAddressText = $"<span>{note.Organisation.Scheme.SchemeName}</span><span>{note.Organisation.OrganisationName}</span><span>{note.Organisation.BusinessAddress.Address1}</span><span>{note.Organisation.BusinessAddress.Address2}</span><span>{note.Organisation.BusinessAddress.TownOrCity}</span><span>{note.Organisation.BusinessAddress.CountyOrRegion}</span><span>{note.Organisation.BusinessAddress.Postcode}</span>";
-                if (approvedTransfererAddressText.Contains(""))
+                if (approvedTransfererAddressText.Contains("&#39;"))
                 {
                     approvedTransfererAddressText.Replace("&#39;", "'");
                 }
