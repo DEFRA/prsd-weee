@@ -132,7 +132,7 @@
             var addressText = $"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
             result.Should().Be(addressText);
         }
@@ -151,7 +151,7 @@
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
             result.Should().Be(addressText);
         }
@@ -170,7 +170,7 @@
             var addressText = $"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
             result.Should().Be(addressText);
         }
@@ -188,7 +188,7 @@
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
             result.Should().Be(addressText);
         }
@@ -209,7 +209,7 @@
             var addressText = $"<span>{expectedNameString}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
             result.Should().Be(addressText);
         }
@@ -229,7 +229,7 @@
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
 
             result.Should().Be(addressText);
@@ -249,7 +249,7 @@
             var addressText = $"<span>{companyName}</span><span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
             result.Should().Be(addressText);
         }
@@ -268,7 +268,7 @@
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
-                addressText.Replace("&#39;", "'");
+                addressText = addressText.Replace("&#39;", "'");
             }
 
             result.Should().Be(addressText);
