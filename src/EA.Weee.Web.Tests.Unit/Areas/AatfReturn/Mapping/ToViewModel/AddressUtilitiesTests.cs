@@ -129,6 +129,11 @@
             var approval = Faker.Name.Suffix();
 
             var result = addressUtilities.FormattedAddress(name, address1, address2, town, county, postcode, approval);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
@@ -148,6 +153,11 @@
             var postcode = Faker.Address.UkPostCode();
 
             var result = addressUtilities.FormattedAddress(name, address1, address2, town, county, postcode);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
@@ -167,6 +177,11 @@
             var approval = Faker.Name.Suffix();
 
             var result = addressUtilities.FormattedAddress(name, address1, null, town, county, postcode, approval);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
@@ -185,6 +200,11 @@
             var postcode = Faker.Address.UkPostCode();
 
             var result = addressUtilities.FormattedAddress(name, address1, null, town, county, postcode);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
@@ -206,6 +226,11 @@
             var postcode = Faker.Address.UkPostCode();
 
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{expectedNameString}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
@@ -226,6 +251,11 @@
             var postcode = Faker.Address.UkPostCode();
 
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
@@ -246,6 +276,11 @@
             var postcode = Faker.Address.UkPostCode();
 
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{companyName}</span><span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
@@ -265,6 +300,11 @@
             var postcode = Faker.Address.UkPostCode();
 
             var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
+
             var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
             if (addressText.Contains("&#39;"))
             {
