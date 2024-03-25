@@ -71,7 +71,8 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                //var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                var approvedRecipientAddressText = $"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}";
                 if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
@@ -137,7 +138,8 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                //var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                var approvedRecipientAddressText = $"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}";
                 if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
@@ -317,7 +319,8 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                //var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                var approvedRecipientAddressText = $"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}";
                 if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
@@ -383,7 +386,8 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                //var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                var approvedRecipientAddressText = $"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}";
                 if (approvedRecipientAddressText.Contains("&#39;"))
                 {
                     approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
