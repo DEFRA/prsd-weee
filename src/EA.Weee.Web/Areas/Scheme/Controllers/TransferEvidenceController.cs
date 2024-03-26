@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IdentityModel.Protocols.WSTrust;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using Attributes;
     using Constant;
@@ -116,7 +118,7 @@
         [HttpGet]
         [CheckCanCreateTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferFrom(Guid pcsId, int complianceYear, int page = 1, string searchRef = null)
+        public async Task<ActionResult> TransferFrom(Guid pcsId, int complianceYear, int page = 1, string searchRef = null, Guid? submittedBy = null)
         {
             using (var client = apiClient())
             {
@@ -129,14 +131,14 @@
                     return RedirectToManageEvidence(pcsId, complianceYear);
                 }
 
-                var model = await TransferFromViewModel(pcsId, complianceYear, client, page, transferRequest, searchRef);
+                var model = await TransferFromViewModel(pcsId, complianceYear, client, page, transferRequest, searchRef, submittedBy);
 
                 return View("TransferFrom", model);
             }
         }
 
         private async Task<TransferEvidenceNotesViewModel> TransferFromViewModel(Guid pcsId, int complianceYear,
-            IWeeeClient client, int pageNumber, TransferEvidenceNoteRequest transferRequest, string searchRef)
+            IWeeeClient client, int pageNumber, TransferEvidenceNoteRequest transferRequest, string searchRef, Guid? submittedBy)
         {
             var currentSelectedNotes = new EvidenceNoteSearchDataResult();
             if (transferRequest.EvidenceNoteIds.Any())
@@ -146,8 +148,11 @@
             }
 
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, searchRef, pageNumber,
-                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, complianceYear, transferRequest.EvidenceNoteIds, searchRef,
+                    submittedBy, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
+
+            //Call the query to get the submittedby list and assign that.
+            var submittedByFilterList = await GetSubmittedByList(pcsId, transferRequest.CategoryIds, new List<Guid>(), complianceYear, client);
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(complianceYear,
                 currentSelectedNotes,
@@ -160,6 +165,9 @@
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+
+            model.SubmittedBy = submittedBy;
+            model.SubmittedByList = submittedByFilterList;
 
             return model;
         }
@@ -178,7 +186,7 @@
             {
                 using (var client = apiClient())
                 {
-                    model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, model.PageNumber, transferRequest, null);
+                    model = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, model.PageNumber, transferRequest, null, null);
                 }
 
                 return View("TransferFrom", model);
@@ -187,7 +195,9 @@
             return RedirectToAction("TransferTonnage", "TransferEvidence",
                 new
                 {
-                    area = "Scheme", pcsId = model.PcsId, complianceYear = model.ComplianceYear,
+                    area = "Scheme",
+                    pcsId = model.PcsId,
+                    complianceYear = model.ComplianceYear,
                     transferAllTonnage = false
                 });
         }
@@ -247,7 +257,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, int page = 1,
+        public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, string linkType = "", int page = 1,
             bool openedInNewTab = false, string queryString = null)
         {
             await SetBreadcrumb(pcsId);
@@ -268,6 +278,11 @@
                     OpenedInNewTab = openedInNewTab,
                     QueryString = queryString
                 });
+
+                if (!string.IsNullOrEmpty(linkType) && linkType == "View")
+                {
+                    model.DisplayCancelButton = false;
+                }
 
                 return View("TransferredEvidence", model);
             }
@@ -295,15 +310,15 @@
                 SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Submitted);
 
                 var token = User.GetAccessToken();
-                
+
                 await client.SendAsync(token, request);
 
                 TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
 
                 return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewSubmittedTransferEvidenceRouteName, new
                 {
-                    pcsId = schemeId, 
-                    evidenceNoteId, 
+                    pcsId = schemeId,
+                    evidenceNoteId,
                     redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
                 });
             }
@@ -323,7 +338,7 @@
                     {
                         IsPrintable = true
                     });
-                
+
                 var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadTransferEvidenceNote", model);
 
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
@@ -365,12 +380,12 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null)
+        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null, Guid? submittedById = null)
         {
             await SetBreadcrumb(model.PcsId);
 
             var transferRequest = SelectEvidenceNote(model.SelectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
-         
+
             if (ModelState.IsValid)
             {
                 return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, page = model.NewPage });
@@ -378,7 +393,7 @@
 
             using (var client = apiClient())
             {
-                var newModel = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, model.Page, transferRequest, searchRef);
+                var newModel = await TransferFromViewModel(model.PcsId, model.ComplianceYear, client, model.Page, transferRequest, searchRef, model.SubmittedBy);
 
                 return View("TransferFrom", newModel);
             }
@@ -391,6 +406,30 @@
             DeselectEvidenceNote(model.DeselectedEvidenceNoteId, SessionKeyConstant.TransferNoteKey);
 
             return RedirectToAction("TransferFrom", new { pcsId = model.PcsId, model.ComplianceYear, model.Page });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CancelTransferEvidenceNote(Guid pcsId, Guid evidenceNoteId, string returnedReason)
+        {
+            await SetBreadcrumb(pcsId);
+
+            using (var client = this.apiClient())
+            {
+                NoteUpdatedStatusEnum updateStatus = NoteUpdatedStatusEnum.Cancelled;
+                SetNoteStatusRequest request = new SetNoteStatusRequest(evidenceNoteId, NoteStatus.Cancelled, returnedReason);
+
+                var token = User.GetAccessToken();
+                await client.SendAsync(token, request);
+
+                TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification] = updateStatus;
+
+                return RedirectToRoute(SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceRouteName, new
+                {
+                    pcsId,
+                    evidenceNoteId,
+                    redirectTab = Web.Extensions.DisplayExtensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.OutgoingTransfers)
+                });
+            }
         }
 
         private void CheckedCategoryIds(TransferEvidenceNoteCategoriesViewModel model, List<int> ids)
@@ -424,13 +463,59 @@
 
         private ActionResult RedirectToManageEvidence(Guid pcsId, int complianceYear)
         {
-            return RedirectToAction("Index", "ManageEvidenceNotes", new 
-            { 
-                pcsId, 
-                area = "Scheme", 
+            return RedirectToAction("Index", "ManageEvidenceNotes", new
+            {
+                pcsId,
+                area = "Scheme",
                 tab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence),
                 selectedComplianceYear = complianceYear
             });
+        }
+
+        private async Task<List<SelectListItem>> GetSubmittedByList(Guid pcsId, List<int> categoryIds, List<Guid> evidenceNoteIds,
+            int selectedComplianceYear, IWeeeClient client)
+        {
+            var res = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, categoryIds, selectedComplianceYear, evidenceNoteIds, null, null, 1, int.MaxValue));
+
+            var submittedByFilterList = new List<SelectListItem>();
+            foreach (var evidenceNoteResult in res.Results)
+            {
+                (Guid Id, string Name) submittedBy = GetSubmittedBy(evidenceNoteResult);
+                if (!submittedByFilterList.Any(x => x.Text == submittedBy.Name) && !string.IsNullOrWhiteSpace(submittedBy.Name))
+                {
+                    submittedByFilterList.Add(new SelectListItem()
+                    {
+                        Value = submittedBy.Id.ToString(),
+                        Text = submittedBy.Name
+                    });
+                }
+            }
+
+            return submittedByFilterList.OrderBy(x => x.Text).ToList();
+        }
+
+        private static (Guid, string) GetSubmittedBy(EvidenceNoteData evidenceNoteResult)
+        {
+            if (evidenceNoteResult.Type == NoteType.Transfer)
+            {
+                if (evidenceNoteResult.OrganisationSchemaData != null)
+                {
+                    return (evidenceNoteResult.OrganisationSchemaData.Id, evidenceNoteResult.OrganisationSchemaData.SchemeName);
+                }
+                else
+                {
+                    return (evidenceNoteResult.OrganisationData.Id, evidenceNoteResult.OrganisationData.OrganisationName);
+                }
+            }
+            else if (evidenceNoteResult.SubmittedDate.HasValue)
+            {
+                return (evidenceNoteResult.AatfData.Id, evidenceNoteResult.AatfData.Name);
+            }
+            else
+            {
+                return (Guid.Empty, null);
+            }
         }
     }
 }

@@ -70,12 +70,13 @@
                         recipientOrganisationAddress.CountyOrRegion,
                         recipientOrganisationAddress.Postcode,
                         null)
-                    : source.TransferEvidenceNoteData.ApprovedRecipientDetails);
+                    : addressUtilities.FormattedApprovedRecipientDetails(source.TransferEvidenceNoteData.ApprovedRecipientDetails));
 
             var model = new ViewTransferNoteViewModel
             {
                 RedirectTab = source.RedirectTab,
-                ReturnToView = source.ReturnToView ?? false,
+                //ReturnToView = source.ReturnToView ?? false,
+                ReturnToView = (source.ReturnToView == null ? (source.TransferEvidenceNoteData.Status == NoteStatus.Draft ? true : false) : source.ReturnToView.Value),
                 EditMode = source.Edit,
                 Reference = source.TransferEvidenceNoteData.Reference,
                 Type = source.TransferEvidenceNoteData.Type,
@@ -90,6 +91,7 @@
                 RejectedReason = source.TransferEvidenceNoteData.RejectedReason,
                 ReturnedReason = source.TransferEvidenceNoteData.ReturnedReason,
                 VoidedReason = source.TransferEvidenceNoteData.VoidedReason,
+                CancelledReason = source.TransferEvidenceNoteData.CancelledReason,
                 ComplianceYear = source.TransferEvidenceNoteData.ComplianceYear,
                 TotalCategoryValues = source.TransferEvidenceNoteData.TransferEvidenceNoteTonnageData.GroupBy(n => n.EvidenceTonnageData.CategoryId)
                 .Select(n =>
@@ -101,7 +103,7 @@
                 RecipientAddress = recipientAddress,
                 TransferredByAddress = transferredByFormattedAddress,
                 Summary = GenerateNotesModel(source),
-                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft || source.TransferEvidenceNoteData.Status == NoteStatus.Returned)
+                DisplayEditButton = (source.TransferEvidenceNoteData.Status == NoteStatus.Draft)
                                     && source.TransferEvidenceNoteData.TransferredOrganisationData.Id == source.OrganisationId
                                     && (source.TransferEvidenceNoteData.TransferredOrganisationData.IsBalancingScheme || source.TransferEvidenceNoteData.TransferredSchemeData.SchemeStatus != SchemeStatus.Withdrawn)
                                     && WindowHelper.IsDateInComplianceYear(source.TransferEvidenceNoteData.ComplianceYear, source.SystemDateTime),
@@ -109,7 +111,8 @@
                 Page = source.Page,
                 OpenedInNewTab = source.OpenedInNewTab,
                 IsPrintable = source.IsPrintable,
-                QueryString = source.QueryString
+                QueryString = source.QueryString,
+                DisplayCancelButton = source.TransferEvidenceNoteData.Status == NoteStatus.Returned && source.RedirectTab != "view-and-transfer-evidence"
             };
 
             SetSuccessMessage(source.TransferEvidenceNoteData, source.DisplayNotification, model);
@@ -156,6 +159,9 @@
                         break;
                     case NoteUpdatedStatusEnum.Void:
                         model.SuccessMessage = $"You have successfully voided the evidence note transfer with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
+                        break;
+                    case NoteUpdatedStatusEnum.Cancelled:
+                        model.SuccessMessage = $"You have successfully cancelled the evidence note with reference ID {DisplayExtensions.ToDisplayString(note.Type)}{note.Reference}";
                         break;
                 }
             }

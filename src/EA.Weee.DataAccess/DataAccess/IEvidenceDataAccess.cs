@@ -15,7 +15,7 @@
             Organisation recipient, 
             DateTime startDate, 
             DateTime endDate, 
-            WasteType? wasteType, 
+            WasteType wasteType, 
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
             NoteStatus status,
@@ -32,6 +32,7 @@
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
             string searchRef,
+            Guid? submittedById,
             int pageNumber,
             int pageSize);
 
@@ -63,5 +64,9 @@
         Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear, List<NoteStatus> allowedStatus);
 
         Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type);
+
+        Task<EvidenceNoteResults> GetAllEvidenceNotes(NoteFilter filter);
+
+        Task<List<Organisation>> GetRecipientLists(Guid organisationId, Guid aatfId, int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes);
     }
 }

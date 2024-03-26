@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="AatfEvidence\EditEvidenceNoteRequest.cs" />
     <Compile Include="AatfEvidence\EvidenceEntityIdDisplayNameDataBase.cs" />
+    <Compile Include="AatfEvidence\GetEvidenceNotesByRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNotesSelectedForTransferRequest.cs" />
     <Compile Include="AatfEvidence\GetSchemeDataForFilterRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteBaseRequest.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="AatfEvidence\Reports\GetSchemeObligationAndEvidenceTotalsReportRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceReportBaseRequest.cs" />
     <Compile Include="AatfEvidence\Reports\GetEvidenceNoteReportRequest.cs" />
+    <Compile Include="AatfReturn\GetEvidenceNotesRecipientList.cs" />
     <Compile Include="Aatf\GetAatfById.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />

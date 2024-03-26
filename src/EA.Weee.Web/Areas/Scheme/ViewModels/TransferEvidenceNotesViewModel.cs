@@ -17,7 +17,12 @@
         [Display(Name = "Search by reference ID")]
         public string SearchRef { get; set; }
 
-        public bool SearchPerformed => !string.IsNullOrWhiteSpace(SearchRef);
+        [Display(Name = "Submitted by")]
+        public Guid? SubmittedBy { get; set; }
+
+        public IEnumerable<SelectListItem> SubmittedByList { get; set; }
+
+        public bool SearchPerformed => !string.IsNullOrWhiteSpace(SearchRef) || SubmittedBy.HasValue;
 
         public ActionEnum Action { get; set; }
 

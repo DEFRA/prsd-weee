@@ -12,6 +12,7 @@
         public static string ViewApprovedEvidenceRouteName = "AATF_ApprovedViewEvidence";
         public static string ViewVoidedEvidenceRouteName = "AATF_VoidedViewEvidence";
         public static string EditEvidenceRouteName = "AATF_EditEvidence";
+        public static string ViewCancelEvidenceRouteName = "AATF_CancelViewEvidence";
 
         public static string AatfViewRouteName(NoteStatus noteStatus)
         {
@@ -29,6 +30,8 @@
                     return ViewSubmittedEvidenceRouteName;
                 case NoteStatus.Void:
                     return ViewVoidedEvidenceRouteName;
+                case NoteStatus.Cancelled:
+                    return ViewCancelEvidenceRouteName;
             }
 
             return string.Empty;

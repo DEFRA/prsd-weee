@@ -5,12 +5,10 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Helpers;
 
     public class AatfAeDetailsViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Select a compliance year")]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 
