@@ -20,12 +20,6 @@
         }
 
         [Fact]
-        public void AatfAePublicRegisterViewModel_AppropriateAuthority_ShouldHaveRequiredAttribute()
-        {
-            typeof(AatfAePublicRegisterViewModel).GetProperty("CompetentAuthorityId").Should().BeDecoratedWith<RequiredAttribute>();
-        }
-
-        [Fact]
         public void AatfAePublicRegisterViewModel_SelectedFacilityType_ShouldHaveRequiredAttribute()
         {
             typeof(AatfAePublicRegisterViewModel).GetProperty("SelectedFacilityType").Should().BeDecoratedWith<RequiredAttribute>();

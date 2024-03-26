@@ -11,7 +11,6 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-
             @Html.Partial("~/Areas/Admin/Views/ManageEvidenceNotes/_ManageEvidenceNotesHeader.cshtml", Model)
 
             <div class="govuk-tabs">
@@ -31,11 +30,12 @@
                             View all evidence notes
                         </h2>
 
-                        Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model, new ViewDataDictionary()
-                                                    {
-                                new KeyValuePair<string, object>("tab",
-                                    Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes))
-                            });
+                        Html.RenderPartial("~/Areas/Admin/Views/ManageEvidenceNotes/_internalFiltersPartial.cshtml", Model, 
+                            new ViewDataDictionary()
+                            {
+                                new KeyValuePair<string, object>("tab",Extensions.ToDisplayString(ManageEvidenceNotesTabDisplayOptions.ViewAllEvidenceNotes))
+                            }
+                        );
 
                     }
                     <div class="govuk-!-padding-top-6">
@@ -105,7 +105,8 @@
                     </div>
                     <br />
                     @{
-                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, new ViewDataDictionary() {
+                        Html.RenderPartial("~/Views/Shared/_EvidenceNotesPagerPartial.cshtml", Model.EvidenceNotesDataList, 
+                            new ViewDataDictionary() {
                                 {
                                     "pagerRouteValues", new
                                     {
@@ -122,7 +123,6 @@
                             });
                     }
                 </div>
-
             </div>
         </div>
     </div>
