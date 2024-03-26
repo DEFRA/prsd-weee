@@ -10,7 +10,7 @@
 
     public class AatfObligatedDataViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Select a compliance year")]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 

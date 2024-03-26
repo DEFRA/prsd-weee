@@ -289,7 +289,7 @@
 
         private async Task<ActionResult> ViewAllEvidenceNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber)
         {
-            var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
 
             var complianceYearsList = (await ComplianceYearsList(client, allowedStatuses)).ToList();
 
@@ -322,7 +322,7 @@
                         new RecipientWasteStatusFilterBase(schemeData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                         null,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, true, false));
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, aatfData, null, true, false));
 
             var model = mapper.Map<ViewAllEvidenceNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize,
@@ -340,7 +340,7 @@
 
         private async Task<ActionResult> ViewAllTransferNotes(IWeeeClient client, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, DateTime currentDate, int pageNumber)
         {
-            var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var allowedStatuses = new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var allowedNotes = new List<NoteType> { NoteType.Transfer };
 
             var complianceYearsList = (await ComplianceYearsList(client, allowedStatuses)).ToList();
@@ -372,7 +372,7 @@
                         new RecipientWasteStatusFilterBase(recipientData, manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId,
                         null,
                         manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue,
-                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, transferData, true, false));
+                        manageEvidenceNoteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy, transferData, null, true, false));
 
             var model = mapper.Map<ViewAllTransferNotesViewModel>(
                 new ViewEvidenceNotesMapTransfer(notes, manageEvidenceNoteViewModel, currentDate, pageNumber, configurationService.CurrentConfiguration.DefaultInternalPagingPageSize, complianceYearsList));

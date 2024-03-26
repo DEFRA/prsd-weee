@@ -2,6 +2,7 @@
 {
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.Aatf.Helpers;
     using EA.Weee.Web.Extensions;
@@ -23,12 +24,15 @@
         {
             Condition.Requires(source).IsNotNull();
 
+            var isComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate);            
+
             var model = new ManageEvidenceNoteViewModel()
             {
                 OrganisationId = source.OrganisationId,
                 ComplianceYearList = source.ComplianceYearList ?? ComplianceYearHelper.FetchCurrentComplianceYearsForEvidence(configurationService.CurrentConfiguration.EvidenceNotesSiteSelectionDateFrom, source.CurrentDate),
-                ComplianceYearClosed = !WindowHelper.IsDateInComplianceYear(source.ComplianceYear, source.CurrentDate),
-                AatfId = source.AatfId
+                ComplianceYearClosed = isComplianceYearClosed,
+                AatfId = source.AatfId,
+                CanDisplayCancelButton = !isComplianceYearClosed
             };
 
             if (source.Aatfs != null)
@@ -43,6 +47,9 @@
             if (source.AatfData != null)
             {
                 model.AatfName = source.AatfData.Name;
+                var aatfStatus = source.AatfData.AatfStatus;
+
+                model.CanDisplayCancelButton = !isComplianceYearClosed && aatfStatus != AatfStatus.Cancelled;
             }
 
             if (source.FilterViewModel != null)

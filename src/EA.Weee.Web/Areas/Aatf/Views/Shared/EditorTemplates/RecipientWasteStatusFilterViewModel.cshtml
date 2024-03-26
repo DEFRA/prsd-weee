@@ -14,7 +14,7 @@
         <label class="govuk-label form-label govuk-label--s" for="ManageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue" id="ManageEvidenceNoteViewModel_RecipientWasteStatusFilterViewModel_WasteTypeValue-label">Obligation <span>type</span> </label>
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.WasteTypeValue, Model.RecipientWasteStatusFilterViewModel.WasteTypeList,
-        string.Empty, new { @class = "full-width-important" })
+        string.Empty, new { @class = "use-overlay" }, useHalfWidth: true, withLookAhead: true)
     </div>
 </div>
 <div class="govuk-grid-column-one-quarter">
@@ -22,7 +22,7 @@
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
-        string.Empty, new { @class = "full-width-important" })
+        string.Empty, new { @class = "use-overlay" }, useHalfWidth: true, withLookAhead: true)
 
     </div>
 </div>
