@@ -147,6 +147,11 @@
         {
             if (!string.IsNullOrEmpty(approvedRecipientDetails))
             {
+                if (approvedRecipientDetails.Length > 0 && approvedRecipientDetails.Contains("<span>"))
+                {
+                    return approvedRecipientDetails;
+                }
+
                 var recipientDetails = approvedRecipientDetails.Split(new string[] { "<br/>" }, StringSplitOptions.None);
                 var stringBuilder = new StringBuilder();
                 const string spanTag = "span";
