@@ -9,5 +9,6 @@
             string postCode, string approvalNumber = null);
         string FormattedCompanyPcsAddress(string companyName, string name, string address1, string address2, string town, string county,
             string postCode, string approvalNumber = null);
+        string FormattedApprovedRecipientDetails(string approvedRecipientDetails);
     }
 }

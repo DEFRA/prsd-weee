@@ -53,6 +53,12 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewCancelledTransferEvidenceRouteName,
+                url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/view-cancelled-transfer/{evidenceNoteId}",
+                defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: SchemeTransferEvidenceRedirect.ViewDraftTransferEvidenceRouteName,
                 url: "Scheme/{pcsId}/transfer-evidence/outgoing-transfers/draft-transfer/{evidenceNoteId}",
                 defaults: new { action = "TransferredEvidence", controller = "TransferEvidence", area = "Scheme" },
@@ -85,6 +91,12 @@
             context.MapLowercaseDashedRoute(
                 name: SchemeTransferEvidenceRedirect.ViewApprovedEvidenceNoteRouteName,
                 url: "Scheme/{pcsId}/manage-evidence-notes/view-approved-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ViewCancelledEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/manage-evidence-notes/view-cancelled-evidence-note/{evidenceNoteId}",
                 defaults: new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 

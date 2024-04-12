@@ -10,8 +10,8 @@
             @Html.Gds().TextBoxFor(m => m.SubmittedDatesFilterViewModel.StartDate, new { @maxlength = CommonMaxFieldLengths.DefaultString, @class = "jquery-datepicker", @autocomplete = "off", @placeholder = "dd/mm/yyyy" }, false, "{0:dd/MM/yyyy}")
             <span class="govuk-body">to&nbsp;  </span>
         </div>
-        </div>
     </div>
+</div>
 
 <div class="govuk-grid-column-one-half">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SubmittedDatesFilterViewModel.EndDate)">
@@ -26,21 +26,20 @@
         display: flex;
     }
 
-    .weee-submitted-date-to > span {
-        position: relative;
-        left: 20px;
-        top: 10px;
-    }
+        .weee-submitted-date-to > span {
+            position: relative;
+            left: 20px;
+            top: 10px;
+        }
 
     @@media only screen and (max-width: 640px) {
-        .weee-submitted-date-to{
+        .weee-submitted-date-to {
             display: inline-block;
             width: 100%;
-
         }
 
-        .weee-submitted-date-to > span {
-            top: 0px;
-        }
+            .weee-submitted-date-to > span {
+                top: 0px;
+            }
     }
 </style>

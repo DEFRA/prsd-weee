@@ -35,5 +35,7 @@
         public string ApprovedTransfererDetails { get; set; }
 
         public string ApprovedRecipientDetails { get; set; }
+
+        public string CancelledReason { get; set; }
     }
 }

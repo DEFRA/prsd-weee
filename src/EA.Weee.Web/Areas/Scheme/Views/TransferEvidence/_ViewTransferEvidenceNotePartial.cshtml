@@ -31,6 +31,18 @@
         width: 22.5%;
     }
 
+    .govuk-summary-list__row {
+        border-bottom: none !important;
+    }
+
+    .govuk-summary-list__key {
+        margin-bottom: 0px !important;
+    }
+
+    .govuk-summary-list__value, .govuk-summary-list__key {
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+    }
 </style>
 
 
@@ -38,70 +50,147 @@
 
 <div class="govuk-!-margin-top-3">
 
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-full-printable-width govuk-!-margin-bottom-1">
-        @Html.Gds().DisplayFor(m => m.ReferenceDisplay, Model.ReferenceDisplay, "govuk-grid-column-one-quarter")
-    </div>
-
-    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-        @Html.Gds().DisplayFor(m => m.Status, Model.Status.ToDisplayString(), "govuk-grid-column-one-quarter")
-    </div>
-
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break ">
-        @Html.Partial("_DisplayRejectedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-    </div>
-
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break ">
-        @Html.Partial("_DisplayReturnedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-    </div>
-
-    <div class="govuk-grid-row govuk-!-width-one-full govuk-!-margin-bottom-1 govuk-full-printable-width printable-word-break ">
-        @Html.Partial("_DisplayVoidedReasonPartial", Model, new ViewDataDictionary() { { "widthCss", "govuk-grid-column-one-quarter" } })
-    </div>
-
-    @if (Model.HasSubmittedDate)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.SubmittedDate, Model.SubmittedDate, "govuk-grid-column-one-quarter")
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.ReferenceDisplay)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ReferenceDisplay
+            </dd>
         </div>
-    }
-
-    @if (Model.HasApprovedDate)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.ApprovedDate, Model.ApprovedDate, "govuk-grid-column-one-quarter")
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.Status)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Status
+            </dd>
         </div>
-    }
 
-    @if (Model.HasRejectedDate)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.RejectedDate, Model.RejectedDate, "govuk-grid-column-one-quarter")
+        @if (Model.DisplayRejectedReason)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.RejectedReason)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.RejectedReason)
+                </dd>
+            </div>
+        }
+
+        @if (Model.DisplayReturnedReason)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.ReturnedReason)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.ReturnedReason)
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasVoidReason)
+        {
+            if (Model.DisplayVoidedReason)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @Html.DisplayNameFor(m => m.VoidedReason)
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Html.DisplayTextFor(m => m.VoidedReason)
+                    </dd>
+                </div>
+            }
+        }
+
+        @if (Model.DisplayCancelledReason)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.CancelledReason)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Html.DisplayTextFor(m => m.CancelledReason)
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasSubmittedDate)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.SubmittedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.SubmittedDate
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasApprovedDate)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.ApprovedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ApprovedDate
+                </dd>
+            </div>
+        }
+
+        @if (Model.HasRejectedDate)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.RejectedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.RejectedDate
+                </dd>
+            </div>
+
+        }
+
+        @if (Model.HasBeenReturned)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.ReturnedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ReturnedDate
+                </dd>
+            </div>
+
+        }
+
+        @if (Model.HasBeenVoided)
+        {
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    @Html.DisplayNameFor(m => m.VoidedDate)
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.VoidedDate
+                </dd>
+            </div>
+        }
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @Html.DisplayNameFor(m => m.ComplianceYearDisplay)
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ComplianceYearDisplay
+            </dd>
         </div>
-    }
-
-    @if (Model.HasBeenReturned)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.ReturnedDate, Model.ReturnedDate, "govuk-grid-column-one-quarter")
-        </div>
-    }
-
-    @if (Model.HasBeenVoided)
-    {
-        <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-            @Html.Gds().DisplayFor(m => m.VoidedDate, Model.VoidedDate, "govuk-grid-column-one-quarter")
-        </div>
-    }
-
-    <div class="govuk-grid-row govuk-!-margin-bottom-1 govuk-full-printable-width">
-        @Html.Gds().DisplayFor(m => m.ComplianceYearDisplay, Model.ComplianceYearDisplay, "govuk-grid-column-one-quarter")
-    </div>
+    </dl>
 </div>
-
-@if (Model.EditMode)
-{
-    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-}
 
 <!-- screen 6.07a -->
 @if (Model.Status.Equals(NoteStatus.Approved) && Model.CanVoid)
@@ -112,31 +201,43 @@
         @(this.WeeeGds().Submit("Void evidence note transfer", new { id = "voidTransferNoteButton", @class = "govuk-button", style = "margin-top: 20px" }, false))
     }
 }
+
 <!-- screen 6.07a -->
+<div class="govuk-full-printable-width govuk-!-padding-top-3 govuk-!-padding-left-0 printable-padding-top-3">
+    <table class="govuk-table prsd-table-small-collapse aatf-task-list-table">
+        <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+            <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
+                <th class="govuk-table__header prsd-table-small-collapse" scope="col" width="50%">Transferred by</th>
+                <th class="govuk-table__header prsd-table-small-collapse" scope="col" width="50%">Recipient</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body prsd-table-small-collapse">
+            <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse">
+                <td data-label="Site" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                    <span class="prsd-long-address">
+                        @Html.Raw(Model.TransferredByAddress)
+                    </span>
+                </td>
+                <td data-label="Operator" class="govuk-table__cell prsd-table-small-collapse prsd-table-small-collapse-cell">
+                    <span class="prsd-long-address">
+                        @Html.Raw(Model.RecipientAddress)
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-
-    <div class="govuk-full-printable-width govuk-!-padding-top-3 govuk-!-padding-left-0 printable-padding-top-3">
-
-        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-            <span id="site" class="govuk-label--s">Transferred by</span><br />
-            <p aria-labelledby="site" class="govuk-body weee-word-break"> @Html.Raw(Model.TransferredByAddress)</p>
-        </div>
-        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
-            <span id="recipient" class="govuk-label--s">Recipient</span><br />
-            <p aria-labelledby="recipient" class="govuk-body weee-word-break"> @Html.Raw(Model.RecipientAddress)</p>
-        </div>
-
-        @if (Model.EditMode && !Model.HasBeenReturned)
-        {
+    @if (Model.EditMode && !Model.HasBeenReturned)
+    {
         <div class="govuk-grid-column-one-third govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
             @Html.NavigationRouteLink("Edit recipient and categories", "Edit recipient and categories for transfer note " + Model.Reference, "Scheme_edit_transfer_categories", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
         </div>
-        }
-        else
-        {
+    }
+    else
+    {
         <div class="govuk-grid-column-one-third">&nbsp;</div>
-        }
-    </div>
+    }
+</div>
 <div class="ui-helper-clearfix"></div>
 @{
     var transferredTitle = "Total transferred (tonnes)";
@@ -165,9 +266,9 @@ else
         if (Model.IsPrintable)
         {
             <colgroup>
-                <col style="width: 45%; max-width: 45%;"/>
-                <col style="width: 27.5%; max-width: 27.5%;"/>
-                <col style="width: 27.5%; max-width: 27.5%;"/>
+                <col style="width: 45%; max-width: 45%;" />
+                <col style="width: 27.5%; max-width: 27.5%;" />
+                <col style="width: 27.5%; max-width: 27.5%;" />
             </colgroup>
 
             printableTonnageColumnPadding = "printable-tonnage-column-padding";
@@ -178,38 +279,37 @@ else
             summaryTonnageWidthCss = "summary-tonnage-column";
         }
     }
-    
 
     <caption class="govuk-table__caption govuk-visually-hidden">Summary of total evidence transferred</caption>
     <thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-        <th class="govuk-table__header govuk-!-text-align-left @summaryCategoryWidthCss">
-            Category
-        </th>
-        <th class="govuk-table__header govuk-table__header--numeric @summaryTonnageWidthCss @printableTonnageColumnPadding">
-            Total transferred (tonnes)
-        </th>
-        <th class="govuk-table__header govuk-table__header--numeric govuk-!-padding-right-1 @summaryTonnageWidthCss">
-            Total reuse transferred (tonnes)
-        </th>
-    </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header govuk-!-text-align-left @summaryCategoryWidthCss">
+                Category
+            </th>
+            <th class="govuk-table__header govuk-table__header--numeric @summaryTonnageWidthCss @printableTonnageColumnPadding">
+                Total transferred (tonnes)
+            </th>
+            <th class="govuk-table__header govuk-table__header--numeric govuk-!-padding-right-1 @summaryTonnageWidthCss">
+                Total reuse transferred (tonnes)
+            </th>
+        </tr>
     </thead>
     <tbody class="govuk-table__body">
 
-    @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
-    {
-        var item = @Model.TotalCategoryValues[categoryCount];
+        @for (var categoryCount = 0; categoryCount < Model.TotalCategoryValues.Count; categoryCount++)
+        {
+            var item = @Model.TotalCategoryValues[categoryCount];
 
-        <tr class="govuk-table__row govuk-panel-grey-background">
-            <td class="govuk-table__cell govuk-!-padding-left-2">
-                <div class="category">
-                    <span class="category-id" id="summary-@item.CategoryId-label">@(item.CategoryId).&nbsp;</span><span class="category-description">@item.CategoryDisplay</span>
-                </div>
-            </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric @printableTonnageColumnPadding">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
-            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">@Model.TotalCategoryValues[categoryCount].TotalReused</td>
-        </tr>
-    }
+            <tr class="govuk-table__row govuk-panel-grey-background">
+                <td class="govuk-table__cell govuk-!-padding-left-2">
+                    <div class="category">
+                        <span class="category-id" id="summary-@item.CategoryId-label">@(item.CategoryId).&nbsp;</span><span class="category-description">@item.CategoryDisplay</span>
+                    </div>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric @printableTonnageColumnPadding">@Model.TotalCategoryValues[categoryCount].TotalReceived</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-1">@Model.TotalCategoryValues[categoryCount].TotalReused</td>
+            </tr>
+        }
     </tbody>
 </table>
 
@@ -225,13 +325,13 @@ else
 
     @if (Model.EditMode)
     {
-    <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
-        @Html.NavigationRouteLink("Edit tonnages", "Edit tonnages for transfer note" + Model.Reference, "Scheme_edit_transfer_tonnages", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
-    </div>
+        <div class="govuk-grid-column-one-half govuk-body govuk-!-font-size-19" style="text-align:right; padding-right:0">
+            @Html.NavigationRouteLink("Edit tonnages", "Edit tonnages for transfer note" + Model.Reference, "Scheme_edit_transfer_tonnages", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId }, null)<br />
+        </div>
     }
     else
     {
-    <div class="govuk-grid-column-one-half govuk-printable-half-column">&nbsp;</div>
+        <div class="govuk-grid-column-one-half govuk-printable-half-column">&nbsp;</div>
     }
 </div>
 
@@ -248,7 +348,7 @@ else
     </div>
 
     <table id="transfer-notes-tonnage-@aatfCount.ToString()" class="govuk-table category-row-no-break">
-        
+
         @{
             var breakdownReferenceWidthCss = string.Empty;
             var breakdownCategoryWidthCss = string.Empty;
@@ -273,52 +373,52 @@ else
 
         <caption class="govuk-table__caption govuk-visually-hidden">Transfer tonnages for @aatf.AatfName</caption>
         <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-            <th class="govuk-table__header govuk-!-text-align-left @breakdownReferenceWidthCss">
-                Reference ID
-            </th>
-            <th class="govuk-table__header govuk-!-text-align-left @breakdownCategoryWidthCss">
-                Category
-            </th>
-            <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss @printableTonnageColumnPadding">
-                Total transferred (tonnes)
-            </th>
-            <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss">
-                Total reuse transferred (tonnes)
-            </th>
-        </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header govuk-!-text-align-left @breakdownReferenceWidthCss">
+                    Reference ID
+                </th>
+                <th class="govuk-table__header govuk-!-text-align-left @breakdownCategoryWidthCss">
+                    Category
+                </th>
+                <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss @printableTonnageColumnPadding">
+                    Total transferred (tonnes)
+                </th>
+                <th class="govuk-table__header govuk-table__header--numeric @breakdownTonnageWidthCss">
+                    Total reuse transferred (tonnes)
+                </th>
+            </tr>
         </thead>
         <tbody class="govuk-table__body">
-        @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
-        {
-            var note = aatf.Notes.ElementAt(noteCount);
-
-            for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
+            @for (var noteCount = 0; noteCount < aatf.Notes.Count; noteCount++)
             {
-                var category = note.CategoryValues.ElementAt(categoryCount);
+                var note = aatf.Notes.ElementAt(noteCount);
 
-                <tr class="govuk-table__row">
-                    @if (categoryCount == 0)
-                    {
-                        <td class="govuk-table__cell govuk-table__cell-top-align" rowspan="@(note.CategoryValues.Count)">
-                            @note.ReferenceDisplay
+                for (var categoryCount = 0; categoryCount < note.CategoryValues.Count; categoryCount++)
+                {
+                    var category = note.CategoryValues.ElementAt(categoryCount);
+
+                    <tr class="govuk-table__row">
+                        @if (categoryCount == 0)
+                        {
+                            <td class="govuk-table__cell govuk-table__cell-top-align" rowspan="@(note.CategoryValues.Count)">
+                                @note.ReferenceDisplay
+                            </td>
+                        }
+
+                        <td class="govuk-table__cell govuk-!-text-align-left">
+                            <div class="category">
+                                <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                            </div>
                         </td>
-                    }
-
-                    <td class="govuk-table__cell govuk-!-text-align-left">
-                        <div class="category">
-                            <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
-                        </div>
-                    </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric @printableTonnageColumnPadding">
-                        @category.Received
-                    </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        @category.Reused
-                    </td>
-                </tr>
+                        <td class="govuk-table__cell govuk-table__cell--numeric @printableTonnageColumnPadding">
+                            @category.Received
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            @category.Reused
+                        </td>
+                    </tr>
+                }
             }
-        }
         </tbody>
     </table>
 }

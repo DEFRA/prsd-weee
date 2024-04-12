@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfEvidence
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using AutoFixture;
     using Core.AatfEvidence;
     using DataAccess.DataAccess;
@@ -16,6 +11,11 @@
     using Prsd.Core.Mapper;
     using RequestHandlers.AatfEvidence;
     using RequestHandlers.Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Requests.AatfEvidence;
     using Weee.Tests.Core;
     using Xunit;
@@ -46,8 +46,9 @@
             request = new GetEvidenceNotesForTransferRequest(organisationId, TestFixture.CreateMany<int>().ToList(), TestFixture.Create<int>(),
                 TestFixture.CreateMany<Guid>().ToList(),
                 TestFixture.Create<string>(),
+                TestFixture.Create<Guid?>(),
                 TestFixture.Create<int>(),
-                TestFixture.Create<int>(), 
+                TestFixture.Create<int>(),
                 TestFixture.Create<Guid>());
 
             handler = new GetEvidenceNotesForTransferRequestHandler(weeeAuthorization, evidenceDataAccess, mapper, organisationDataAccess);
@@ -73,7 +74,7 @@
         {
             //arrange
             var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
-           
+
             handler = new GetEvidenceNotesForTransferRequestHandler(authorization, evidenceDataAccess, mapper, organisationDataAccess);
 
             //act
@@ -125,12 +126,13 @@
 
             //assert
             A.CallTo(() =>
-                    evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()), 
+                    evidenceDataAccess.GetNotesToTransfer(organisationId,
+                        A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => (int)w).ToList()),
                         A<List<Guid>>._,
                         request.ComplianceYear,
-                        A<string>._, 
-                        request.PageNumber, 
+                        A<string>._,
+                        A<Guid?>._,
+                        request.PageNumber,
                         request.PageSize))
                 .MustHaveHappenedOnceExactly();
         }
@@ -151,10 +153,10 @@
             await handler.HandleAsync(request);
 
             //assert
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId, 
-                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()), 
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(organisationId,
+                A<List<int>>.That.IsSameSequenceAs(request.Categories.Select(w => w).ToList()),
                 A<List<Guid>>.That.IsSameSequenceAs(request.ExcludeEvidenceNotes),
-                request.ComplianceYear, request.SearchReference, request.PageNumber, request.PageSize)).MustHaveHappenedOnceExactly();
+                request.ComplianceYear, request.SearchReference, request.SubmittedById, request.PageNumber, request.PageSize)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -181,11 +183,12 @@
 
             var evidenceNoteResults = new EvidenceNoteResults(noteList, 3);
 
-            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._, 
-                A<List<int>>._, 
+            A.CallTo(() => evidenceDataAccess.GetNotesToTransfer(A<Guid>._,
+                A<List<int>>._,
                 A<List<Guid>>._,
-                A<int>._, 
+                A<int>._,
                 A<string>._,
+                A<Guid>._,
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
@@ -226,6 +229,7 @@
                 A<List<Guid>>._,
                 A<int>._,
                 A<string>._,
+                A<Guid>._,
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 
@@ -256,6 +260,7 @@
                 A<List<Guid>>._,
                 A<int>._,
                 A<string>._,
+                A<Guid?>._,
                 A<int>._,
                 A<int>._)).Returns(evidenceNoteResults);
 

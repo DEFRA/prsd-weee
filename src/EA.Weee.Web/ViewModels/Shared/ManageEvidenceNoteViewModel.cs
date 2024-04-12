@@ -36,6 +36,8 @@
 
         public bool CanCreateEdit { get; set; }
 
+        public bool CanDisplayCancelButton { get; set; }
+
         public bool ComplianceYearClosed { get; set; }
 
         public bool SearchPerformed =>

@@ -23,7 +23,7 @@
 
         public GetEvidenceNotesByOrganisationRequestHandler(IWeeeAuthorization authorization,
             IEvidenceDataAccess noteDataAccess,
-            IMapper mapper, 
+            IMapper mapper,
             IOrganisationDataAccess organisationDataAccess)
         {
             this.authorization = authorization;
@@ -47,12 +47,17 @@
             if (request.TransferredOut)
             {
                 organisationId = request.OrganisationId;
-                recipientId = null;
+                recipientId = request.ReceivedId;
             }
             else
             {
-                hasApprovedEvidenceNotes =
-                    await noteDataAccess.HasApprovedWasteHouseHoldEvidence(recipientId.Value, request.ComplianceYear);
+                hasApprovedEvidenceNotes = await noteDataAccess.HasApprovedWasteHouseHoldEvidence(recipientId.Value, request.ComplianceYear);
+            }
+
+            var wasteTypeFilter = new List<Domain.Evidence.WasteType>();
+            foreach (var wasteType in request.ObligationTypeFilterList)
+            {
+                wasteTypeFilter.Add((Domain.Evidence.WasteType)wasteType);
             }
 
             var filter = new NoteFilter(request.ComplianceYear, request.PageSize, request.PageNumber)
@@ -62,13 +67,16 @@
                 OrganisationId = organisationId,
                 AllowedStatuses = request.AllowedStatuses.Select(a => a.ToDomainEnumeration<Domain.Evidence.NoteStatus>()).ToList(),
                 NoteStatusId = (int?)request.NoteStatusFilter,
-                SearchRef = request.SearchRef
+                SearchRef = request.SearchRef,
+                SubmittedById = request.SubmittedById,
+                StartDateSubmitted = request.StartDateSubmittedFilter,
+                EndDateSubmitted = request.EndDateSubmittedFilter,
+                WasteTypeFilter = wasteTypeFilter,
             };
 
             var noteData = await noteDataAccess.GetAllNotes(filter);
 
-            var mappedNotes = mapper.Map<List<Note>, List<EvidenceNoteData>>(noteData.Notes
-                .OrderByDescending(n => n.CreatedDate).ToList());
+            var mappedNotes = mapper.Map<List<Note>, List<EvidenceNoteData>>(noteData.Notes.OrderByDescending(n => n.CreatedDate).ToList());
 
             return new EvidenceNoteSearchDataResult(mappedNotes, noteData.NumberOfResults, hasApprovedEvidenceNotes);
         }

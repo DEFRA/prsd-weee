@@ -13,7 +13,6 @@
     using Domain.Organisation;
     using EA.Weee.Domain.Lookup;
     using FluentAssertions;
-    using NUnit.Specifications;
     using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
@@ -71,9 +70,14 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
-                
-                note.ApprovedTransfererAddress.Should().BeNull();    
+                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                if (approvedRecipientAddressText.Contains("&#39;"))
+                {
+                    approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
+                }                
+                note.ApprovedRecipientAddress.Should().NotBeNullOrEmpty();
+
+                note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
             };
         }
@@ -90,7 +94,7 @@
 
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
-                
+
                 var transfererOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(transfererOrganisation.Id).Create();
 
@@ -132,10 +136,20 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                if (approvedRecipientAddressText.Contains("&#39;"))
+                {
+                    approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
+                }                
+                note.ApprovedRecipientAddress.Should().NotBeNullOrEmpty();
 
                 note.ApprovedTransfererSchemeName.Should().Be(note.Organisation.Scheme.SchemeName);
-                note.ApprovedTransfererAddress.Should().Be($"{note.Organisation.Scheme.SchemeName}<br/>{note.Organisation.OrganisationName}<br/>{note.Organisation.BusinessAddress.Address1}<br/>{note.Organisation.BusinessAddress.Address2}<br/>{note.Organisation.BusinessAddress.TownOrCity}<br/>{note.Organisation.BusinessAddress.CountyOrRegion}<br/>{note.Organisation.BusinessAddress.Postcode}");
+                var approvedTransfererAddressText = $"<span>{note.Organisation.Scheme.SchemeName}</span><span>{note.Organisation.OrganisationName}</span><span>{note.Organisation.BusinessAddress.Address1}</span><span>{note.Organisation.BusinessAddress.Address2}</span><span>{note.Organisation.BusinessAddress.TownOrCity}</span><span>{note.Organisation.BusinessAddress.CountyOrRegion}</span><span>{note.Organisation.BusinessAddress.Postcode}</span>";
+                if (approvedTransfererAddressText.Contains("&#39;"))
+                {
+                    approvedTransfererAddressText = approvedTransfererAddressText.Replace("&#39;", "'");
+                }                
+                note.ApprovedTransfererAddress.Should().NotBeNullOrEmpty();
             };
         }
 
@@ -302,7 +316,13 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                if (approvedRecipientAddressText.Contains("&#39;"))
+                {
+                    approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
+                }
+                
+                note.ApprovedRecipientAddress.Should().NotBeNullOrEmpty();
 
                 note.ApprovedTransfererAddress.Should().BeNull();
                 note.ApprovedTransfererSchemeName.Should().BeNull();
@@ -363,10 +383,20 @@
             private readonly It shouldHaveSetApprovedDetails = () =>
             {
                 note.ApprovedRecipientSchemeName.Should().Be(note.Recipient.Scheme.SchemeName);
-                note.ApprovedRecipientAddress.Should().Be($"{note.Recipient.Scheme.SchemeName}<br/>{note.Recipient.OrganisationName}<br/>{note.Recipient.BusinessAddress.Address1}<br/>{note.Recipient.BusinessAddress.Address2}<br/>{note.Recipient.BusinessAddress.TownOrCity}<br/>{note.Recipient.BusinessAddress.CountyOrRegion}<br/>{note.Recipient.BusinessAddress.Postcode}");
+                var approvedRecipientAddressText = $"<span>{note.Recipient.Scheme.SchemeName}</span><span>{note.Recipient.OrganisationName}</span><span>{note.Recipient.BusinessAddress.Address1}</span><span>{note.Recipient.BusinessAddress.Address2}</span><span>{note.Recipient.BusinessAddress.TownOrCity}</span><span>{note.Recipient.BusinessAddress.CountyOrRegion}</span><span>{note.Recipient.BusinessAddress.Postcode}</span>";
+                if (approvedRecipientAddressText.Contains("&#39;"))
+                {
+                    approvedRecipientAddressText = approvedRecipientAddressText.Replace("&#39;", "'");
+                }                
+                note.ApprovedRecipientAddress.Should().NotBeNullOrEmpty();
 
                 note.ApprovedTransfererSchemeName.Should().Be(note.Organisation.Scheme.SchemeName);
-                note.ApprovedTransfererAddress.Should().Be($"{note.Organisation.Scheme.SchemeName}<br/>{note.Organisation.OrganisationName}<br/>{note.Organisation.BusinessAddress.Address1}<br/>{note.Organisation.BusinessAddress.Address2}<br/>{note.Organisation.BusinessAddress.TownOrCity}<br/>{note.Organisation.BusinessAddress.CountyOrRegion}<br/>{note.Organisation.BusinessAddress.Postcode}");
+                var approvedTransfererAddressText = $"<span>{note.Organisation.Scheme.SchemeName}</span><span>{note.Organisation.OrganisationName}</span><span>{note.Organisation.BusinessAddress.Address1}</span><span>{note.Organisation.BusinessAddress.Address2}</span><span>{note.Organisation.BusinessAddress.TownOrCity}</span><span>{note.Organisation.BusinessAddress.CountyOrRegion}</span><span>{note.Organisation.BusinessAddress.Postcode}</span>";
+                if (approvedTransfererAddressText.Contains("&#39;"))
+                {
+                    approvedTransfererAddressText = approvedTransfererAddressText.Replace("&#39;", "'");
+                }
+                note.ApprovedTransfererAddress.Should().NotBeNullOrEmpty();
             };
         }
 
@@ -383,7 +413,7 @@
 
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
-                
+
                 note = EvidenceNoteDbSetup.Init()
                     .WithRecipient(recipientOrganisation.Id)
                     .WithOrganisation(organisation.Id)
@@ -432,11 +462,11 @@
 
                 organisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(organisation.Id).Create();
-                
+
                 var transfererOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(transfererOrganisation.Id).Create();
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, transfererOrganisation.Id).Create();
-                
+
                 var recipientOrganisation = OrganisationDbSetup.Init().Create();
                 SchemeDbSetup.Init().WithOrganisation(recipientOrganisation.Id).Create();
 

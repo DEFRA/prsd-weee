@@ -2,6 +2,7 @@
 {
     using Api.Client;
     using AutoFixture;
+    using AutoFixture.Kernel;
     using Constant;
     using Core.AatfEvidence;
     using Core.Helpers;
@@ -21,7 +22,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using AutoFixture.Kernel;
     using Web.Areas.Scheme.Attributes;
     using Web.Areas.Scheme.Mappings.ToViewModels;
     using Web.Areas.Scheme.Requests;
@@ -108,7 +108,7 @@
         public void EditTransferFromGet_ShouldHaveHttpGetAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) })
+                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string), typeof(Guid?) })
                 .Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -117,7 +117,7 @@
         public void EditTransferFromGet_ShouldHaveNoCacheFilterAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) })
+                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string), typeof(Guid?) })
                 .Should()
                 .BeDecoratedWith<NoCacheFilterAttribute>();
         }
@@ -126,7 +126,7 @@
         public void EditTransferFromGet_ShouldHaveCheckCanEditTransferNoteAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string) })
+                .GetMethod("EditTransferFrom", new[] { typeof(Guid), typeof(Guid), typeof(int), typeof(string), typeof(Guid?) })
                 .Should()
                 .BeDecoratedWith<CheckCanEditTransferNoteAttribute>();
         }
@@ -279,7 +279,7 @@
         public void SelectEvidenceNotePost_ShouldHaveHttpPostAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
+                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string), typeof(Guid?) }).Should()
                 .BeDecoratedWith<HttpPostAttribute>();
         }
 
@@ -287,7 +287,7 @@
         public void SelectEvidenceNotePost_ShouldHaveAntiForgeryAttribute()
         {
             typeof(OutgoingTransfersController)
-                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string) }).Should()
+                .GetMethod("SelectEvidenceNote", new[] { typeof(TransferSelectEvidenceNoteModel), typeof(string), typeof(Guid?) }).Should()
                 .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
@@ -321,7 +321,7 @@
         [Fact]
         public async Task EditTonnagesGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
@@ -340,7 +340,7 @@
         [Fact]
         public async Task EditTonnagesGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
@@ -370,7 +370,7 @@
         [Fact]
         public async Task EditDraftTransfer_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
@@ -389,7 +389,7 @@
         [Fact]
         public async Task EditDraftTransfer_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => cache.FetchSchemePublicInfo(organisationId)).Returns(schemeInfo);
@@ -505,6 +505,7 @@
                     TestFixture.Build<TransferEvidenceNoteTonnageData>().With(e => e.OriginalNoteId, evidenceNoteId2)
                         .Create(),
                 }).Create();
+            transferEvidence.Status = NoteStatus.Returned;
 
             var sessionCategories = new List<int>()
             {
@@ -559,6 +560,7 @@
                     TestFixture.Build<TransferEvidenceNoteTonnageData>()
                         .With(e => e.OriginalNoteId, removedEvidenceNoteId).Create()
                 }).Create();
+            transferEvidence.Status = NoteStatus.Returned;
 
             var sessionCategories = new List<int>()
             {
@@ -591,8 +593,7 @@
         }
 
         [Fact]
-        public async Task
-            EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndNullSessionTransferRequest_TransferNotesShouldBeRetrieved()
+        public async Task EditTonnagesGet_GivenExistingSelectedEvidenceNotesThatHaveBeenDeselectedAndNullSessionTransferRequest_TransferNotesShouldBeRetrieved()
         {
             //arrange
             var evidenceNoteId = TestFixture.Create<Guid>();
@@ -603,16 +604,13 @@
                     TestFixture.Build<TransferEvidenceNoteTonnageData>()
                         .With(e => e.OriginalNoteId, evidenceNoteId).Create()
                 }).Create();
+            transferEvidence.Status = NoteStatus.Returned;
 
-            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(
-                A<string>._)).Returns(null);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-                A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(A<string>._)).Returns(null);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._)).Returns(transferEvidence);
 
             //act
-            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(),
-                TestFixture.Create<bool?>());
+            await outgoingTransferEvidenceController.EditTonnages(organisationId, TestFixture.Create<Guid>(), TestFixture.Create<bool?>());
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._,
@@ -1027,7 +1025,7 @@
         [Fact]
         public async Task SubmittedTransferGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -1048,7 +1046,7 @@
         [Fact]
         public async Task SubmittedTransferGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -1382,7 +1380,7 @@
         [Fact]
         public async Task EditTransferFromGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -1400,7 +1398,7 @@
         [Fact]
         public async Task EditTransferFromGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -1589,7 +1587,7 @@
                 .Create();
 
             var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
-        
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetTransferEvidenceNoteForSchemeRequest>._))
                 .Returns(transferEvidenceNoteData);
 
@@ -1972,7 +1970,7 @@
             //arrange
             var model = TestFixture.Create<TransferEvidenceNotesViewModel>();
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
-           
+
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(t => t.EvidenceNoteIds, evidenceNoteIds)
                 .Create();
@@ -1989,7 +1987,7 @@
 
             //assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetEvidenceNotesForTransferRequest>.That.Matches(g =>
-                g.TransferNoteId == transferEvidenceNoteData.Id))).MustHaveHappenedOnceExactly();
+                g.TransferNoteId == transferEvidenceNoteData.Id))).MustHaveHappenedTwiceExactly();
         }
 
         [Fact]
@@ -2186,7 +2184,7 @@
         [Fact]
         public async Task EditCategoriesGet_GivenSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -2204,7 +2202,7 @@
         [Fact]
         public async Task EditCategoriesGet_GivenSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => cache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -2736,7 +2734,7 @@
         [Fact]
         public async Task EditTonnagesPost_GivenModelAndSchemeIsNotBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(m => m.PcsId, organisationId).Create();
@@ -2757,7 +2755,7 @@
         [Fact]
         public async Task EditTonnagesPost_GivenModelAndSchemeIsBalancingScheme_BreadcrumbShouldBeSet()
         {
-            // arrange 
+            // arrange
             var organisationName = "OrganisationName";
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
                 .With(m => m.PcsId, organisationId).Create();
@@ -3273,7 +3271,7 @@
         [Fact]
         public async Task EditTonnagesPost_GivenModelActionIsBack_ShouldSetTransferSessionObjectWithGivenProperties()
         {
-            // arrange 
+            // arrange
             var complianceYear = TestFixture.Create<int>();
             var recipientId = TestFixture.Create<Guid>();
             var pcsIds = TestFixture.Create<Guid>();
@@ -3308,7 +3306,7 @@
         public async Task
             EditTonnagesPost_GivenModelActionIsBackAndReturnToEditDraftTransferIsTrue_ShouldRedirectToEditDraftTransfer()
         {
-            // arrange 
+            // arrange
             var pcsIds = TestFixture.Create<Guid>();
 
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
@@ -3334,7 +3332,7 @@
         public async Task
             EditTonnagesPost_GivenModelActionIsBackAndReturnToEditDraftTransferIsFalse_ShouldRedirectToEditDraftTransfer()
         {
-            // arrange 
+            // arrange
             var pcsIds = TestFixture.Create<Guid>();
 
             var model = TestFixture.Build<TransferEvidenceTonnageViewModel>()
@@ -3601,7 +3599,7 @@
             //arrange
             var model = TestFixture.Create<TransferSelectEvidenceNoteModel>();
             var evidenceNoteIds = TestFixture.CreateMany<Guid>().ToList();
-         
+
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(t => t.EvidenceNoteIds, evidenceNoteIds)
                 .Create();
