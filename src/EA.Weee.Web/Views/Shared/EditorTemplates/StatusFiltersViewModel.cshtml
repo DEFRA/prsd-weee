@@ -1,12 +1,10 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
+﻿@model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
-<div class="govuk-grid-column-full">
+<div class="govuk-grid-column-one-quarter weee-evidence-padding-right">
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)">
         @Html.Gds().LabelFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, new { @class = "govuk-label--s" }, false)
         @Html.Gds().ValidationMessageFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue)
         @Html.Gds().DropDownListFor(m => m.RecipientWasteStatusFilterViewModel.NoteStatusValue, Model.RecipientWasteStatusFilterViewModel.NoteStatusList,
-        string.Empty, new { @class = "full-width-important" })
+                                    string.Empty, new { @class = "use-overlay" }, useHalfWidth: false, withLookAhead: true)
     </div>
 </div>
- 

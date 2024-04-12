@@ -18,7 +18,7 @@
         @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.SelectedRegistrationNumber);
-        
+
         <p id="introJavaScriptEnabled" style="display:none;">
             Start typing the name or producer registration number to find a match.
         </p>
@@ -30,11 +30,11 @@
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "govuk-visually-hidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", maxlength = EnvironmentAgencyMaxFieldLengths.ProducerSearchTerm })
+            <button class="govuk-button weee-search-button">
+                <span class="fa fa-search" aria-hidden="true" title="search by reference"></span>
+                <span class="sr-only">Search by producer name or registration number</span>
+            </button>
         </div>
-        
-        <p>
-            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Continue</button>
-        </p>
     }
 
     <p>

@@ -21,7 +21,6 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
             @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
-            @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
             @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, Model.CompetentAuthoritiesList, string.Empty, new { autocomplete = "false" })
         </div>
 

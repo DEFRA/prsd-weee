@@ -350,7 +350,6 @@
     <Compile Include="Areas\Aatf\Controller\ContactDetailsControllerTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceNotesReportTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceSummaryReportTests.cs" />
-    <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerIndexTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerEditEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerDownloadEvidenceNoteTests.cs" />
     <Compile Include="Areas\Aatf\Controller\ManageEvidenceNotesControllerViewDraftEvidenceNoteTests.cs" />
