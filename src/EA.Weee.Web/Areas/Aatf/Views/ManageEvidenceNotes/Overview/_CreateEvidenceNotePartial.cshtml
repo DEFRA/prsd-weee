@@ -5,7 +5,7 @@
 @using HomeController = EA.Weee.Web.Areas.Scheme.Controllers.HomeController
 @model EA.Weee.Web.ViewModels.Shared.ManageEvidenceNoteViewModel
 
-@using (Html.BeginForm(actionName: "Index", controllerName: "ManageEvidenceNotes", method: FormMethod.Post))
+@using (Html.BeginForm("CreateNewEvidenceNote", "ManageEvidenceNotes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.OrganisationId)
@@ -24,7 +24,7 @@
         }
         else
         {
-<p class="govuk-details__text">You cannot create evidence because your site approval has been cancelled or suspended or your site is not approved for the selected compliance year</p>
+            <p class="govuk-details__text">You cannot create evidence because your site approval has been cancelled or suspended or your site is not approved for the selected compliance year</p>
         }
     }
 }

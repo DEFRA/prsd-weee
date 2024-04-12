@@ -169,21 +169,19 @@
             var notes = TestFixture.CreateMany<EvidenceNoteData>(1).ToList();
             notes[0].ApprovedDate = DateTime.Now;
             notes[0].Status = NoteStatus.Approved;
-            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
-                .With(e => e.Results, notes).Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();
 
             var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
                  TestFixture.Create<EvidenceNoteRowViewModel>()
             };
+            returnedNotes[0].Status = NoteStatus.Approved;
 
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
-                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e => e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -199,22 +197,20 @@
             var notes = TestFixture.CreateMany<EvidenceNoteData>(1).ToList();
             notes[0].SubmittedDate = DateTime.Now;
             notes[0].Status = NoteStatus.Submitted;
-            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
-                .With(e => e.Results, notes).Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();
 
             var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
                  TestFixture.Create<EvidenceNoteRowViewModel>()
             };
+            returnedNotes[0].Status = NoteStatus.Submitted;
 
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
 
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
-                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e => e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);
@@ -230,21 +226,19 @@
             var notes = TestFixture.CreateMany<EvidenceNoteData>(1).ToList();
             notes[0].RejectedDate = DateTime.Now;
             notes[0].Status = NoteStatus.Rejected;
-            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
-                .With(e => e.Results, notes).Create();
+            var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().With(e => e.Results, notes).Create();
 
             var returnedNotes = new List<EvidenceNoteRowViewModel>
             {
                  TestFixture.Create<EvidenceNoteRowViewModel>()
             };
-
+            returnedNotes[0].Status = NoteStatus.Rejected;
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
             var transfer = new EvidenceNotesViewModelTransfer(organisationId, aatfId, noteData, currentDate, model, 1, 2);
-            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e =>
-                e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
+
+            A.CallTo(() => mapper.Map<List<EvidenceNoteRowViewModel>>(A<List<EvidenceNoteData>>.That.Matches(e => e.SequenceEqual(noteData.Results.ToList())))).Returns(returnedNotes);
 
             //act
             var result = allOtherNotesViewModelMap.Map(transfer);

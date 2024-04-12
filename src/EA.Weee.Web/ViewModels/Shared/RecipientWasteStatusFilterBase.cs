@@ -17,14 +17,18 @@
 
         public NoteStatus? NoteStatus { get; set; }
 
+        public EvidenceNoteType? EvidenceNoteType { get; set; }
+
         public Guid? SubmittedBy { get; set; }
 
         public List<EntityIdDisplayNameData> SubmittedByList { get; set; }
 
         public bool AllStatuses { get; set; }
 
+        public List<NoteStatus> NoteStatuseList { get; set; }
+
         public RecipientWasteStatusFilterBase(List<EntityIdDisplayNameData> recipientList, Guid? receivedId, WasteType? wasteType, NoteStatus? noteStatus, 
-            Guid? submittedBy, List<EntityIdDisplayNameData> submittedByList, bool internalUser, bool allStatuses)
+            Guid? submittedBy, List<EntityIdDisplayNameData> submittedByList, EvidenceNoteType? evidenceNoteType, bool internalUser, bool allStatuses, List<NoteStatus> noteStatuseList = null)
         {
             RecipientList = recipientList;
             ReceivedId = receivedId;
@@ -32,8 +36,10 @@
             NoteStatus = noteStatus;
             SubmittedBy = submittedBy;
             SubmittedByList = submittedByList;
+            EvidenceNoteType = evidenceNoteType;
             Internal = internalUser;
             AllStatuses = allStatuses;
+            NoteStatuseList = noteStatuseList;
         }
     }
 }

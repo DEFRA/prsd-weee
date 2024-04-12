@@ -15,6 +15,8 @@
 
         public Guid? RecipientId { get; set; }
 
+        public Guid? SubmittedById { get; set; }
+
         public List<NoteStatus> AllowedStatuses { get; set; }
 
         public string SearchRef { get; set; }
@@ -28,6 +30,8 @@
         public DateTime? EndDateSubmitted { get; set; }
 
         public List<NoteType> NoteTypeFilter { get; set; }
+
+        public List<WasteType> WasteTypeFilter { get; set; }
 
         public string FormattedSearchRef
         {

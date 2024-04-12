@@ -11,9 +11,7 @@
     {
         public Guid AatfId { get; set; }
 
-        public Guid? RecipientId { get; set; }
-
-        public WasteType? WasteTypeId { get; set; }
+        public Guid? RecipientId { get; set; }        
 
         public NoteStatus? NoteStatusFilter { get; set; }
 
@@ -22,7 +20,7 @@
         public DateTime? EndDateSubmitted { get; set; }
 
         public GetAatfNotesRequest(Guid organisationId, Guid aatfId, List<NoteStatus> allowedStatuses, string searchRef, int complianceYear, 
-            Guid? recipient, WasteType? wasteType, NoteStatus? noteStatusFilter,
+            Guid? recipient, List<WasteType> wasteTypeList, NoteStatus? noteStatusFilter,
             DateTime? startDateSubmitted, DateTime? endDateSubmitted, int pageNumber, int pageSize)
         {
             Guard.ArgumentNotDefaultValue(() => organisationId, organisationId);
@@ -38,7 +36,7 @@
             SearchRef = searchRef;
             AllowedStatuses = allowedStatuses;
             RecipientId = recipient;
-            WasteTypeId = wasteType;
+            ObligationTypeFilterList = wasteTypeList;
             NoteStatusFilter = noteStatusFilter;
             StartDateSubmitted = startDateSubmitted;
             EndDateSubmitted = endDateSubmitted;

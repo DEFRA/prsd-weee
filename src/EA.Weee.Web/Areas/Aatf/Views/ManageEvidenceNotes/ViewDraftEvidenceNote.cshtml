@@ -40,6 +40,19 @@
         </div>
     }
 
+    @if (Model.DisplayCancelButton)
+    {
+        <div class="govuk-!-padding-top-5">
+            <p>
+                By cancelling an evidence note, you can no longer submit it. This action cannot be reversed.
+            </p>
+        </div>
+        
+        <div class="govuk-!-margin-top-5 govuk-!-padding-bottom-5">
+            @Html.ActionLink("Cancel evidence note", "CancelEvidenceNote", "ManageEvidenceNotes", new { organisationId = Model.OrganisationId, aatfId = Model.AatfId, evidenceNoteId = Model.Id, returnedReason = Model.ReturnedReason, queryString = Model.QueryString, returnToView = true }, new { @class = "govuk-button govuk-button--primary" })
+        </div>
+    }
+
     <p class="govuk-body">
         @Html.ActionLink("Download as PDF", "DownloadEvidenceNote", "ManageEvidenceNotes", new { area = "Aatf", evidenceNoteId = @Model.Id }, new { @class = "govuk-link" })
     </p>

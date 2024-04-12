@@ -269,7 +269,7 @@
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTabAndComplianceYearsList_AllEvidenceNoteShouldBeRetrieved(string tab)
         {
             // Arrange
-            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var types = new List<NoteType>() { NoteType.Evidence };
 
             var complianceYears = new List<int>() { 1, 2, 3 };
@@ -295,7 +295,7 @@
             // Arrange
             var dateTime = new DateTime(2017, 1, 1);
             SystemTime.Freeze(dateTime);
-            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var types = new List<NoteType>() { NoteType.Evidence };
 
             var complianceYears = new List<int>();
@@ -320,7 +320,7 @@
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTabAndExistingManageEvidenceNoteModel_AllEvidenceNoteShouldBeRetrieved(string tab)
         {
             // Arrange
-            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var types = new List<NoteType>() { NoteType.Evidence };
 
             var manageEvidenceNoteModel = TestFixture.Build<ManageEvidenceNoteViewModel>()
@@ -346,7 +346,7 @@
         public async Task IndexGet_GivenDefaultAndViewAllEvidenceNotesTab_GetComplianceYearsFilterShouldBeCalled(string tab)
         {
             // Arrange
-            var status = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var status = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
@@ -362,7 +362,7 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTab_AllTransferNoteShouldBeRetrieved()
         {
             // Arrange
-            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var statuses = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var types = new List<NoteType>() { NoteType.Transfer };
 
             //act
@@ -543,7 +543,7 @@
             var transfers = TestFixture.CreateMany<EntityIdDisplayNameData>().ToList();
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {
@@ -587,7 +587,7 @@
         public async Task IndexGet_GivenViewAllEvidenceTransfersTab_GetComplianceYearsFilterShouldBeCalled()
         {
             // Arrange
-            var status = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void };
+            var status = new List<NoteStatus>() { NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled };
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetAllNotesInternal>._)).Returns(noteData);
@@ -603,7 +603,6 @@
         [Theory]
         [InlineData(null, NoteType.Evidence)]
         [InlineData("view-all-evidence-notes", NoteType.Evidence)]
-        [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
         public async void IndexGet_GivenManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
@@ -611,7 +610,35 @@
               .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                noteType
+            };
+
+            // act
+            await ManageEvidenceController.Index(tab, model);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == model.SelectedComplianceYear &&
+                     g.AatfId == null &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                     g.AllowedStatuses.SequenceEqual(allowedStatus) &&
+                     g.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
+        public async void IndexGet_GivenTransferManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
+        {
+            // arrange
+            var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
+              .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {
@@ -633,7 +660,6 @@
         [Theory]
         [InlineData(null, NoteType.Evidence)]
         [InlineData("view-all-evidence-notes", NoteType.Evidence)]
-        [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
         public async void IndexGet_GivenManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
@@ -641,7 +667,35 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
+            };
+            var allowedNoteTypes = new List<NoteType>()
+            {
+                noteType
+            };
+
+            // act
+            await ManageEvidenceController.Index(tab);
+
+            // assert
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetSchemeDataForFilterRequest>.That.Matches(
+                g => g.ComplianceYear == complianceYears[0] &&
+                     g.AatfId == null &&
+                     g.RecipientOrTransfer == RecipientOrTransfer.Recipient &&
+                     g.AllowedStatuses.SequenceEqual(allowedStatus) &&
+                     g.AllowedNoteTypes.SequenceEqual(allowedNoteTypes)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
+        public async void IndexGet_GivenTransferManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
+        {
+            // arrange
+            var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
+            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetComplianceYearsFilter>._)).Returns(complianceYears);
+            var allowedStatus = new List<NoteStatus>
+            {
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {
@@ -695,7 +749,7 @@
                 .With(e => e.SelectedComplianceYear, TestFixture.Create<int>()).Create();
             var allowedStatus = new List<NoteStatus>
             {
-                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void
+                NoteStatus.Approved, NoteStatus.Rejected, NoteStatus.Submitted, NoteStatus.Returned, NoteStatus.Void, NoteStatus.Cancelled
             };
             var allowedNoteTypes = new List<NoteType>()
             {

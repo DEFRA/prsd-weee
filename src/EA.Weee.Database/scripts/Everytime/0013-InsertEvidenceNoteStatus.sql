@@ -11,7 +11,8 @@ VALUES
 (3, 'Approved'),
 (4, 'Rejected'),
 (5, 'Void'),
-(6, 'Returned')
+(6, 'Returned'),
+(7, 'Cancelled')
 
 INSERT INTO [Lookup].[EvidenceNoteStatus] (Id , [Name])
 SELECT tmp.[Id], tmp.[NAME]
