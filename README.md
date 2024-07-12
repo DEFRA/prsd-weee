@@ -78,8 +78,8 @@ GO
 
 <!-- End of list -->
 
-    USE master;
-    GRANT CREATE ANY DATABASE TO ***REMOVED***;
+USE master;
+GRANT CREATE ANY DATABASE TO ***REMOVED***;
 
 
 #### Setup the API certificate
