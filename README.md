@@ -78,8 +78,8 @@ GO
 
 <!-- End of list -->
 
-    USE master;
-    GRANT CREATE ANY DATABASE TO weeedeveloper;
+USE master;
+GRANT CREATE ANY DATABASE TO weeedeveloper;
 
 
 #### Setup the API certificate
