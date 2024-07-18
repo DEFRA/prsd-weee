@@ -62,6 +62,7 @@ namespace EA.Weee.Web
 
             FluentValidationModelValidatorProvider.Configure();
 
+            ServicePointManager.Expect100Continue = true;
             System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
     }

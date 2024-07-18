@@ -4,18 +4,25 @@
     using Api.Client.Entities;
     using Authorization;
     using EA.Weee.Core.Routing;
+    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.Web.Controllers.Base;
     using Extensions;
     using Infrastructure;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Prsd.Core.Web.OAuth;
     using Services;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Prsd.Core.Web.OAuth;
     using ViewModels.Account;
 
     [Authorize]
@@ -51,6 +58,68 @@
             {
                 ReturnUrl = returnUrl
             });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> Companies(string registration)
+        {
+            try
+            {
+                string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
+
+                X509Certificate2 certificate = new X509Certificate2(filePath, "kN2S6!p6F*LH");
+                HttpClientHandler handler = new HttpClientHandler
+                {
+                    // If you need to configure a proxy
+                    //Proxy = new WebProxy("http://localhost:18080")
+                    //{
+                    //    UseDefaultCredentials = true
+                    //}
+                    //Proxy = new WebProxy()
+                    //{
+                        
+                    //}
+                    //UseProxy = true
+                };
+
+                // Attach client certificate
+                handler.ClientCertificates.Add(certificate);
+
+                // Create HttpClient instance
+                HttpClient client = new HttpClient(handler);
+
+                // Set request URL
+                string requestUrl = "https://integration-tst.azure.defra.cloud/ws/rest/DEFRA/v2.1/CompaniesHouse/companies/" + registration;
+
+                // Send GET request asynchronously
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
+
+                // Ensure the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read response content as string
+                    string content = await response.Content.ReadAsStringAsync();
+
+                    // Parse JSON response using Newtonsoft.Json (assuming you have Newtonsoft.Json installed)
+                    RootObject rootObject = JsonConvert.DeserializeObject<RootObject>(content);
+
+                    return View(rootObject);
+                }
+                else
+                {
+                    // Handle unsuccessful response
+                    ViewBag.error = response.StatusCode;
+                }
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.error = ex.Message;
+
+                return View();
+            }
         }
 
         [HttpPost]

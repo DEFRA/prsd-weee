@@ -516,9 +516,17 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
     <Compile Include="Constant\ValidationKeyConstants.cs" />
+    <Compile Include="Controllers\Country.cs" />
+    <Compile Include="Controllers\Info.cs" />
+    <Compile Include="Controllers\Meta.cs" />
+    <Compile Include="Controllers\Organisation.cs" />
+    <Compile Include="Controllers\OrganisationData.cs" />
+    <Compile Include="Controllers\RegisteredOffice.cs" />
+    <Compile Include="Controllers\RootObject.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Extensions\ReturnUrlHelper.cs" />
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\IMvcTemplateExecutor.cs" />
     <Compile Include="Infrastructure\PDF\IPdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\MvcTemplateExecutor.cs" />
@@ -922,6 +930,8 @@
     <Content Include="Views\Shared\EditorTemplates\SubmittedByFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EvidenceNoteTypeFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
+    <Content Include="Views\Account\Companies.cshtml" />
+    <Content Include="Cert\Boomi-IWS-TST.pfx" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

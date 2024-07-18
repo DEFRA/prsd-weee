@@ -1,0 +1,41 @@
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Controllers.RootObject
+
+@section main_content {
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            Companies house data
+        </h1>
+    </header>
+
+    @if (ViewBag.error == null)
+    {
+        {
+
+            <ul>
+                <li><b>Organisation Name:</b> @Model.Organisation.Name</li>
+                <li><b>Registration Number:</b> @Model.Organisation.RegistrationNumber</li>
+                <li><b>Created:</b> @Model.Organisation.OrganisationData.DateOfCreation</li>
+                <li><b>Status:</b> @Model.Organisation.OrganisationData.Status</li>
+                <li><b>Type:</b> @Model.Organisation.OrganisationData.Type</li>
+            </ul>
+            <h2><b>Registered Office:</b></h2>
+            <ul>
+                <li>
+                    <b>Address:</b>
+                    @Model.Organisation.RegisteredOffice.BuildingNumber @Model.Organisation.RegisteredOffice.Street,
+                    @Model.Organisation.RegisteredOffice.Locality, @Model.Organisation.RegisteredOffice.Town
+                </li>
+                <li><b>County:</b> @Model.Organisation.RegisteredOffice.County</li>
+                <li><b>Postcode:</b> @Model.Organisation.RegisteredOffice.Postcode</li>
+                <li><b>Country:</b> @Model.Organisation.RegisteredOffice.Country.Name (@Model.Organisation.RegisteredOffice.Country.ISO)</li>
+            </ul>
+        }
+    }
+    else
+    {
+        <p>No organisation data available.</p>
+    }
+}
