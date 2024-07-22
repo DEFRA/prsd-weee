@@ -5,13 +5,18 @@
     using Core.Organisations;
     using Core.Shared;
     using Infrastructure;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Net.Http;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.Organisation;
     using Weee.Requests.Organisations;
+    using static Google.Apis.Requests.BatchRequest;
 
     public class OrganisationController : ExternalSiteController
     {
@@ -163,6 +168,61 @@
                 {
                     yield return organisation;
                 }
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Companies()
+        {
+            return View(new CompaniesHouseModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> Companies(CompaniesHouseModel model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.RegistrationNumber))
+                {
+                    string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
+
+                    X509Certificate2 certificate = new X509Certificate2(filePath, "");
+                    HttpClientHandler handler = new HttpClientHandler();
+
+                    handler.ClientCertificates.Add(certificate);
+
+                    HttpClient client = new HttpClient(handler);
+
+                    string requestUrl = $"https://integration-tst.azure.defra.cloud/ws/rest/DEFRA/v2.1/CompaniesHouse/companies/{model.RegistrationNumber}";
+
+                    HttpResponseMessage response = await client.GetAsync(requestUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string content = await response.Content.ReadAsStringAsync();
+
+                        CompaniesHouseModel companyModel = JsonConvert.DeserializeObject<CompaniesHouseModel>(content);
+                        companyModel.RegistrationNumber = model.RegistrationNumber;
+
+                        return View(companyModel);
+                    }
+                    else
+                    {
+                        model.Error = response.StatusCode.ToString();
+
+                        return View(model);
+                    }
+                }
+              
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                model.Error = ex.Message;
+
+                return View(model);
             }
         }
     }

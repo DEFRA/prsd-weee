@@ -1,0 +1,94 @@
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Controllers.CompaniesHouseModel
+
+@section main_content {
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            Companies house data
+        </h1>
+    </header>
+
+    @using (Html.BeginForm("Companies", "Organisation"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.RegistrationNumber)">
+            @Html.Gds().LabelFor(m => m.RegistrationNumber)
+            @Html.Gds().ValidationMessageFor(m => m.RegistrationNumber)
+            @Html.Gds().TextBoxFor(m => m.RegistrationNumber, new { autocomplete = "off" })
+        </div>
+        @(this.WeeeGds().Submit("Search"))
+    }
+
+    @if (Model.Organisation != null)
+    {
+
+        <h class="govuk-heading-l">Organisation</h>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Name)">
+            @Html.Gds().LabelFor(m => m.Organisation.Name)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Name)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Name, new { @class = "govuk-!-width-one-half" })
+        </div>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegistrationNumber)">
+            @Html.Gds().LabelFor(m => m.Organisation.RegistrationNumber)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegistrationNumber)
+            @Html.Gds().TextBoxFor(m => m.Organisation.RegistrationNumber, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.OrganisationData.Status)">
+            @Html.Gds().LabelFor(m => m.Organisation.OrganisationData.Status)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.OrganisationData.Status)
+            @Html.Gds().TextBoxFor(m => m.Organisation.OrganisationData.Status, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.OrganisationData.Type)">
+            @Html.Gds().LabelFor(m => m.Organisation.OrganisationData.Type)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.OrganisationData.Type)
+            @Html.Gds().TextBoxFor(m => m.Organisation.OrganisationData.Type, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <h2 class="govuk-heading-m">Registered address</h2>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Street)">
+            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Street)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Street)
+            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Street, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Town)">
+            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Town)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Town)
+            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Town, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.County)">
+            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.County)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.County)
+            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.County, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Postcode)">
+            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Postcode)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Postcode)
+            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Postcode, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Country.Name)">
+            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Country.Name)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Country.Name)
+            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Country.Name, new { @class = "govuk-!-width-one-half" })
+        </div>
+    }
+
+    @if (Model != null && !string.IsNullOrWhiteSpace(Model.Error))
+    {
+        <p class="govuk-form-group--error error">
+            @Model.Error
+        </p>
+
+    }
+}

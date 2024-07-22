@@ -60,68 +60,6 @@
             });
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult> Companies(string registration)
-        {
-            try
-            {
-                string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
-
-                X509Certificate2 certificate = new X509Certificate2(filePath, "kN2S6!p6F*LH");
-                HttpClientHandler handler = new HttpClientHandler
-                {
-                    // If you need to configure a proxy
-                    //Proxy = new WebProxy("http://localhost:18080")
-                    //{
-                    //    UseDefaultCredentials = true
-                    //}
-                    //Proxy = new WebProxy()
-                    //{
-                        
-                    //}
-                    //UseProxy = true
-                };
-
-                // Attach client certificate
-                handler.ClientCertificates.Add(certificate);
-
-                // Create HttpClient instance
-                HttpClient client = new HttpClient(handler);
-
-                // Set request URL
-                string requestUrl = "https://integration-tst.azure.defra.cloud/ws/rest/DEFRA/v2.1/CompaniesHouse/companies/" + registration;
-
-                // Send GET request asynchronously
-                HttpResponseMessage response = await client.GetAsync(requestUrl);
-
-                // Ensure the response is successful
-                if (response.IsSuccessStatusCode)
-                {
-                    // Read response content as string
-                    string content = await response.Content.ReadAsStringAsync();
-
-                    // Parse JSON response using Newtonsoft.Json (assuming you have Newtonsoft.Json installed)
-                    RootObject rootObject = JsonConvert.DeserializeObject<RootObject>(content);
-
-                    return View(rootObject);
-                }
-                else
-                {
-                    // Handle unsuccessful response
-                    ViewBag.error = response.StatusCode;
-                }
-
-                return View();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.error = ex.Message;
-
-                return View();
-            }
-        }
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

@@ -29,7 +29,7 @@
                     {
                         OrganisationId = organisationId,
                         UserStatus = UserStatus.Active,
-                        Organisation = new OrganisationData
+                        Organisation = new EA.Weee.Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 1",
                             OrganisationStatus = OrganisationStatus.Complete,
@@ -68,7 +68,7 @@
                     {
                         OrganisationId = organisationId1,
                         UserStatus = UserStatus.Active,
-                        Organisation = new OrganisationData
+                        Organisation = new Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 1",
                             OrganisationStatus = OrganisationStatus.Complete,
@@ -78,7 +78,7 @@
                     {
                         OrganisationId = organisationId2,
                         UserStatus = UserStatus.Pending,
-                        Organisation = new OrganisationData
+                        Organisation = new EA.Weee.Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 2",
                             OrganisationStatus = OrganisationStatus.Complete,
@@ -132,7 +132,7 @@
                     {
                         OrganisationId = organisationId,
                         UserStatus = UserStatus.Pending,
-                        Organisation = new OrganisationData
+                        Organisation = new EA.Weee.Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 1",
                             OrganisationStatus = OrganisationStatus.Complete,
@@ -202,7 +202,7 @@
                     {
                         OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
                         UserStatus = UserStatus.Pending,
-                        Organisation = new OrganisationData
+                        Organisation = new EA.Weee.Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 1",
                             OrganisationStatus = OrganisationStatus.Complete,
@@ -212,7 +212,7 @@
                     {
                         OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
                         UserStatus = UserStatus.Rejected,
-                        Organisation = new OrganisationData
+                        Organisation = new EA.Weee.Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 1",
                             OrganisationStatus = OrganisationStatus.Complete,
@@ -255,7 +255,7 @@
                     {
                         OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
                         UserStatus = UserStatus.Inactive,
-                        Organisation = new OrganisationData
+                        Organisation = new EA.Weee.Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 1",
                             OrganisationStatus = OrganisationStatus.Complete,
@@ -265,7 +265,7 @@
                     {
                         OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
                         UserStatus = UserStatus.Rejected,
-                        Organisation = new OrganisationData
+                        Organisation = new EA.Weee.Core.Organisations.OrganisationData
                         {
                             OrganisationName = "Organisation Name 1",
                             OrganisationStatus = OrganisationStatus.Complete,
