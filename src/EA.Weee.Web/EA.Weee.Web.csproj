@@ -516,6 +516,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
     <Compile Include="Constant\ValidationKeyConstants.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Extensions\ReturnUrlHelper.cs" />
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
@@ -525,6 +526,7 @@
     <Compile Include="Infrastructure\PDF\PdfDocumentProvider.cs" />
     <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
+    <Compile Include="Payment\PayClient.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterBase.cs" />
@@ -922,6 +924,7 @@
     <Content Include="Views\Shared\EditorTemplates\SubmittedByFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EvidenceNoteTypeFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
+    <Content Include="Views\Payment\Payment.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
