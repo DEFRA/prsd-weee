@@ -516,6 +516,7 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
     <Compile Include="Constant\ValidationKeyConstants.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Extensions\ReturnUrlHelper.cs" />
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
@@ -526,6 +527,7 @@
     <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
+    <Compile Include="ViewModels\Payment\PaymentRequest.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterViewModel.cs" />
