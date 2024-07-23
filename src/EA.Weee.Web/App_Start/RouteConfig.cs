@@ -40,6 +40,9 @@
             routes.MapLowercaseDashedRoute("Default", "{controller}/{action}/{id}",
                 defaults: new { action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });
+
+            routes.MapRoute("Payment", "payment",
+                new { controller = "Payment", action = "Index" });
         }
     }
 }

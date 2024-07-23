@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Payment";
+}
+@model EA.Weee.Web.ViewModels.Payment.PaymentRequest
+
+
+<h1>Producer Registration</h1>
+
+<h2>Make a Payment</h2>
+
+<form asp-controller="Payment" asp-action="pay" method="post">
+    <!-- Input and Submit elements
+    <td>
+        @Html.TextBoxFor(m => m.Amount, new { placeholder = "Amount" })
+    </td>
+     -->
+
+    <td>
+        <button type="button" onclick="window.open('https://www.gov.uk/payments/test-weee-service/pay-for-eee-producer-registration')">Pay for EEE Producer Registration</button>
+    </td>
+
+
+
+
+</form>
