@@ -6,14 +6,19 @@
     using Core.Shared;
     using Infrastructure;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using Org.BouncyCastle.Utilities;
+    using RestSharp;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Security.Cryptography.X509Certificates;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.UI.WebControls;
     using ViewModels.Organisation;
     using Weee.Requests.Organisations;
     using static Google.Apis.Requests.BatchRequest;
@@ -186,31 +191,59 @@
             {
                 if (!string.IsNullOrWhiteSpace(model.RegistrationNumber))
                 {
-                    string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
-
-                    X509Certificate2 certificate = new X509Certificate2(filePath, "");
-                    HttpClientHandler handler = new HttpClientHandler();
-
-                    handler.ClientCertificates.Add(certificate);
-
-                    HttpClient client = new HttpClient(handler);
-
-                    string requestUrl = $"https://integration-tst.azure.defra.cloud/ws/rest/DEFRA/v2.1/CompaniesHouse/companies/{model.RegistrationNumber}";
-
-                    HttpResponseMessage response = await client.GetAsync(requestUrl);
-
-                    if (response.IsSuccessStatusCode)
+                    if (model.UseDefra)
                     {
-                        string content = await response.Content.ReadAsStringAsync();
+                        string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
 
-                        CompaniesHouseModel companyModel = JsonConvert.DeserializeObject<CompaniesHouseModel>(content);
-                        companyModel.RegistrationNumber = model.RegistrationNumber;
+                        X509Certificate2 certificate = new X509Certificate2(filePath, "kN2S6!p6F*LH");
+                        HttpClientHandler handler = new HttpClientHandler();
 
-                        return View(companyModel);
+                        handler.ClientCertificates.Add(certificate);
+
+                        HttpClient client = new HttpClient(handler);
+
+                        string requestUrl = $"https://integration-tst.azure.defra.cloud/ws/rest/DEFRA/v2.1/CompaniesHouse/companies/{model.RegistrationNumber}";
+
+                        HttpResponseMessage response = await client.GetAsync(requestUrl);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+
+                            DefraCompaniesHouseApiModel companyModel = JsonConvert.DeserializeObject<DefraCompaniesHouseApiModel>(content);
+                            companyModel.RegistrationNumber = model.RegistrationNumber;
+                            model.Response = JToken.Parse(content).ToString(Newtonsoft.Json.Formatting.Indented);
+                            model.DefraCompaniesHouseApiModel = companyModel;
+
+                            return View(model);
+                        }
+                        else
+                        {
+                            model.Error = response.StatusCode.ToString();
+
+                            return View(model);
+                        }
                     }
                     else
                     {
-                        model.Error = response.StatusCode.ToString();
+                        RestClient client = new RestClient("https://api.company-information.service.gov.uk");
+                        var request = new RestRequest($"/company/{model.RegistrationNumber}", Method.Get);
+                        byte[] uuidBytes = Encoding.UTF8.GetBytes("2356a6d8-8a0a-4acb-9165-68a77cc81755");
+                        string base64Uuid = Convert.ToBase64String(uuidBytes);
+                        request.AddHeader("Authorization", $"Basic {base64Uuid}");
+
+                        var response = await client.ExecuteAsync<String>(request);
+
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            model.Error = response.StatusCode.ToString();
+
+                            return View(model);
+                        }
+
+                        CompaniesHouseApiModel companiesHouseApiModel = JsonConvert.DeserializeObject<CompaniesHouseApiModel>(response.Content);
+                        model.Response = JToken.Parse(response.Content).ToString(Newtonsoft.Json.Formatting.Indented);
+                        model.CompaniesHouseApiModel = companiesHouseApiModel;
 
                         return View(model);
                     }

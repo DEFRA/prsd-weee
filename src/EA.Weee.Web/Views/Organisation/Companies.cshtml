@@ -3,6 +3,16 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Controllers.CompaniesHouseModel
 
+<style>
+    pre {
+        word-wrap: break-word; /* Prevents horizontal scroll */
+        white-space: pre-wrap; /* CSS3 */
+        white-space: -moz-pre-wrap; /* Mozilla, old versions */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+    }
+</style>
+
 @section main_content {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
@@ -20,67 +30,136 @@
             @Html.Gds().ValidationMessageFor(m => m.RegistrationNumber)
             @Html.Gds().TextBoxFor(m => m.RegistrationNumber, new { autocomplete = "off" })
         </div>
-        @(this.WeeeGds().Submit("Search"))
+
+        @(this.WeeeGds().Button("Defra search", new { name = "useDefra", value = true }))
+        <div class="govuk-!-padding-bottom-2"></div>
+        @(this.WeeeGds().Button("Companies house search", new { name = "useDefra", value = false }))
     }
 
-    @if (Model.Organisation != null)
+    @if (!string.IsNullOrWhiteSpace(Model.Response))
     {
+        <h1 class="govuk-heading-l">Response</h1>
+        <pre>@Model.Response</pre>
+    }
 
-        <h class="govuk-heading-l">Organisation</h>
+    @if (Model.DefraCompaniesHouseApiModel != null)
+    {
+        <h1 class="govuk-heading-l">Organisation</h1>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Name)">
-            @Html.Gds().LabelFor(m => m.Organisation.Name)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.Name)
-            @Html.Gds().TextBoxFor(m => m.Organisation.Name, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m .DefraCompaniesHouseApiModel.Organisation.Name)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.Name)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.Name)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.Name, new { @class = "govuk-!-width-one-half" })
         </div>
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegistrationNumber)">
-            @Html.Gds().LabelFor(m => m.Organisation.RegistrationNumber)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegistrationNumber)
-            @Html.Gds().TextBoxFor(m => m.Organisation.RegistrationNumber, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.RegistrationNumber)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegistrationNumber)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegistrationNumber)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegistrationNumber, new { @class = "govuk-!-width-one-half" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.OrganisationData.Status)">
-            @Html.Gds().LabelFor(m => m.Organisation.OrganisationData.Status)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.OrganisationData.Status)
-            @Html.Gds().TextBoxFor(m => m.Organisation.OrganisationData.Status, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Status)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Status)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Status)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Status, new { @class = "govuk-!-width-one-half" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.OrganisationData.Type)">
-            @Html.Gds().LabelFor(m => m.Organisation.OrganisationData.Type)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.OrganisationData.Type)
-            @Html.Gds().TextBoxFor(m => m.Organisation.OrganisationData.Type, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Type)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Type)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Type)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.OrganisationData.Type, new { @class = "govuk-!-width-one-half" })
         </div>
 
         <h2 class="govuk-heading-m">Registered address</h2>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Street)">
-            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Street)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Street)
-            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Street, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street, new { @class = "govuk-!-width-one-half" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Town)">
-            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Town)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Town)
-            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Town, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town, new { @class = "govuk-!-width-one-half" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.County)">
-            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.County)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.County)
-            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.County, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.County)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.County)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.County)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.County, new { @class = "govuk-!-width-one-half" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Postcode)">
-            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Postcode)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Postcode)
-            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Postcode, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode, new { @class = "govuk-!-width-one-half" })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.RegisteredOffice.Country.Name)">
-            @Html.Gds().LabelFor(m => m.Organisation.RegisteredOffice.Country.Name)
-            @Html.Gds().ValidationMessageFor(m => m.Organisation.RegisteredOffice.Country.Name)
-            @Html.Gds().TextBoxFor(m => m.Organisation.RegisteredOffice.Country.Name, new { @class = "govuk-!-width-one-half" })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name)">
+            @Html.Gds().LabelFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name)
+            @Html.Gds().ValidationMessageFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name)
+            @Html.Gds().TextBoxFor(m => m.DefraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name, new { @class = "govuk-!-width-one-half" })
+        </div>
+    }
+
+    @if (Model.CompaniesHouseApiModel != null)
+    {
+
+        <h class="govuk-heading-l">Organisation</h>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m .CompaniesHouseApiModel.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.CompanyName, new { @class = "govuk-!-width-one-half" })
+        </div>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.CompanyNumber)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.CompanyNumber)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.CompanyNumber)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.CompanyNumber, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.CompanyStatus)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.CompanyStatus)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.CompanyStatus)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.CompanyStatus, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.CompanyType)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.CompanyType)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.CompanyType)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.CompanyType, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <h2 class="govuk-heading-m">Registered address</h2>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.AddressLine1)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.AddressLine1)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.AddressLine1)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.AddressLine1, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Locality)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Locality)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Locality)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Locality, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Region)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Region)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Region)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Region, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.PostalCode)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.PostalCode)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.PostalCode)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.PostalCode, new { @class = "govuk-!-width-one-half" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Country)">
+            @Html.Gds().LabelFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Country)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Country)
+            @Html.Gds().TextBoxFor(m => m.CompaniesHouseApiModel.RegisteredOfficeAddress.Country, new { @class = "govuk-!-width-one-half" })
         </div>
     }
 
