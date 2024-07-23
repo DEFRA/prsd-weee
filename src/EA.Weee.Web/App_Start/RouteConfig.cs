@@ -13,6 +13,9 @@
 
             routes.LowercaseUrls = true;
 
+            routes.MapRoute("Payment", "payment/index",
+                new { controller = "Payment", action = "Index" });
+
             routes.MapRoute("Error403", "errors/403",
                 new { controller = "Errors", action = "AccessDenied" });
 
@@ -40,9 +43,6 @@
             routes.MapLowercaseDashedRoute("Default", "{controller}/{action}/{id}",
                 defaults: new { action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });
-
-            routes.MapRoute("Payment", "payment",
-                new { controller = "Payment", action = "Index" });
         }
     }
 }
