@@ -5,22 +5,43 @@
 @model EA.Weee.Web.ViewModels.Payment.PaymentRequest
 
 
-<h1>Producer Registration</h1>
+<h1 class="govuk-heading-l">Submit registration</h1>
+<h2 class="govuk-heading-m">Appropriate signatory</h2>
 
-<h2>Make a Payment</h2>
+<p class="govuk-body">This submission must be made by the appropriate person for your organisation.</p>
+<p class="govuk-body">For companies this means a director or company secretary. For partnerships this means a partner or member of the partnership. For individuals or sole traders this means that individual. For any other type of organisation this means a person who has control or management of that body.</p>
+<p class="govuk-body">It is an offence to deliberately make a statement which is knowingly false or misleading or to recklessly submit false information as part of your application to register. If you do this you may be liable to prosecution.</p>
 
-<form asp-controller="Payment" asp-action="pay" method="post">
-    <!-- Input and Submit elements
-    <td>
-        @Html.TextBoxFor(m => m.Amount, new { placeholder = "Amount" })
-    </td>
-     -->
+<fieldset class="govuk-fieldset">
+    <div class="govuk-form-group">
+        <label class="govuk-label" for="first-name">
+            First name
+        </label>
+        <input class="govuk-input" id="first-name" name="firstname" type="text">
+    </div>
+    <div class="govuk-form-group">
+        <label class="govuk-label" for="last-name">
+            Last name
+        </label>
+        <input class="govuk-input" id="last-name" name="lastname" type="text">
+    </div>
+    <div class="govuk-form-group">
+        <label class="govuk-label" for="position">
+            Position
+        </label>
+        <input class="govuk-input govuk-!-width-two-thirds" id="position" name="position" type="text">
+    </div>
+</fieldset>
 
-    <td>
-        <button type="button" onclick="window.open('https://www.gov.uk/payments/test-weee-service/pay-for-eee-producer-registration')">Pay for EEE Producer Registration</button>
-    </td>
+<h3 class="govuk-heading-m govuk-!-padding-top-7">Now send your application</h3>
 
+<p class="govuk-body">
+    By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are correct.
+</p>
+<p class="govuk-body">
+    Pressing submit will take you to our online payments page. The charge for registering is £30.00.
+</p>
 
-
-
-</form>
+<p class="govuk-body">
+    <button type="button" class="govuk-button" onclick="window.open('https://www.gov.uk/payments/test-weee-service/pay-for-eee-producer-registration')">Pay for EEE Producer Registration</button>
+</p>
