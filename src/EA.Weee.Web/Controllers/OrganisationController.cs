@@ -195,7 +195,7 @@
                     {
                         string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
 
-                        X509Certificate2 certificate = new X509Certificate2(filePath, "kN2S6!p6F*LH");
+                        X509Certificate2 certificate = new X509Certificate2(filePath, string.Empty);
                         HttpClientHandler handler = new HttpClientHandler();
 
                         handler.ClientCertificates.Add(certificate);
@@ -228,7 +228,7 @@
                     {
                         RestClient client = new RestClient("https://api.company-information.service.gov.uk");
                         var request = new RestRequest($"/company/{model.RegistrationNumber}", Method.Get);
-                        byte[] uuidBytes = Encoding.UTF8.GetBytes("2356a6d8-8a0a-4acb-9165-68a77cc81755");
+                        byte[] uuidBytes = Encoding.UTF8.GetBytes(String.Empty);
                         string base64Uuid = Convert.ToBase64String(uuidBytes);
                         request.AddHeader("Authorization", $"Basic {base64Uuid}");
 
