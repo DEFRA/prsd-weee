@@ -13,8 +13,11 @@
 
             routes.LowercaseUrls = true;
 
-            routes.MapRoute("Payment", "payment/index",
+            routes.MapRoute("ListPayment", "payment/index",
                 new { controller = "Payment", action = "Index" });
+
+            routes.MapRoute("CreatePayment", "payment/create",
+                new { controller = "Payment", action = "CreatePayment" });
 
             routes.MapRoute("Error403", "errors/403",
                 new { controller = "Errors", action = "AccessDenied" });

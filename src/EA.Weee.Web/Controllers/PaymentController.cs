@@ -1,16 +1,21 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using EA.Weee.Web.ViewModels.Payment;
+    using IdentityModel;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Web.Mvc;
+
+    using EA.Weee.Web.Payment;
 
     public class PaymentController : Controller
     {
         private string baseUrl = "https://publicapi.payments.service.gov.uk/v1/";
-        private string apiKey = "Bearer api_test_ko7qtjqqa2l8jgmhmin77p1s4qjgmebv2futglsv58b4u9o4blt1b4vnkb";
+        private string apiKey = "api_test_ko7qtjqqa2l8jgmhmin77p1s4qjgmebv2futglsv58b4u9o4blt1b4vnkb";
 
         // GET: Payment
         [AllowAnonymous]
@@ -51,15 +56,38 @@
                 }
             }
             return View(reqs);
-
-            return View("Payment");
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         public ActionResult CreatePayment()
         {
-            return Content("<script>window.location = 'https://www.gov.uk/payments/test-weee-service/pay-for-eee-producer-registration';</script>");
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{apiKey}");
+
+                var payClient = new PayClient(client);
+
+                var paymentRequest = new CreateCardPaymentRequest();
+                paymentRequest.Amount = 30;
+                paymentRequest.Description = "Pay for EEE Producer Registration";
+                paymentRequest.Reference = Guid.NewGuid().ToString();
+                paymentRequest.Return_url = "https://localhost:44300/payment/result";
+
+                var paymentRequestTask = payClient.Create_a_paymentAsync(null, paymentRequest);
+                paymentRequestTask.Wait();
+
+                var result = paymentRequestTask.Result;
+                if (result.State.Status == "created")
+                {
+                    return Redirect(result.Return_url);
+                }
+            }
+
+            ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+
+            return View("Payment");
         }
     }
 }
