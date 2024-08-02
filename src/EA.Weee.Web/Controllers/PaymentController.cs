@@ -59,7 +59,7 @@
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         public ActionResult CreatePayment()
         {
             using (var client = new HttpClient())
@@ -83,11 +83,23 @@
                 {
                     return Redirect(result.Return_url);
                 }
+                Session["paymentResult"] = result;
             }
 
             ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
 
-            return View("Payment");
+            return RedirectToAction("PaymentResult", "Payment");
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult Result()
+        {
+            var model = new PaymentResult();
+
+            var paymentResult = (CreatePaymentResult)Session["paymentResult"];
+
+            return View("PaymentResult", model);
         }
     }
 }
