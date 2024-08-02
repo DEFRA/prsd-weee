@@ -81,14 +81,14 @@
                 var result = paymentRequestTask.Result;
                 if (result.State.Status == "created")
                 {
+                    Session["paymentResult"] = result.Payment_id;
                     return Redirect(result._links.Next_url.Href);
                 }
-                Session["paymentResult"] = result;
             }
 
             ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
 
-            return RedirectToAction("PaymentResult", "Payment");
+            return View("Payment");
         }
 
         [AllowAnonymous]
@@ -97,7 +97,7 @@
         {
             var model = new PaymentResult();
 
-            var paymentResult = (CreatePaymentResult)Session["paymentResult"];
+            var paymentResult = Session["paymentResult"];
 
             return View("PaymentResult", model);
         }
