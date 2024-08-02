@@ -70,7 +70,7 @@
                 var payClient = new PayClient(client);
 
                 var paymentRequest = new CreateCardPaymentRequest();
-                paymentRequest.Amount = 30;
+                paymentRequest.Amount = 3000;
                 paymentRequest.Description = "Pay for EEE Producer Registration";
                 paymentRequest.Reference = Guid.NewGuid().ToString();
                 paymentRequest.Return_url = "https://localhost:44300/payment/result";
@@ -81,7 +81,7 @@
                 var result = paymentRequestTask.Result;
                 if (result.State.Status == "created")
                 {
-                    return Redirect(result.Return_url);
+                    return Redirect(result._links.Next_url.Href);
                 }
                 Session["paymentResult"] = result;
             }
