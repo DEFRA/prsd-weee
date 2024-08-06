@@ -529,6 +529,7 @@
     <Compile Include="Payment\PayClient.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\Payment\PaymentRequest.cs" />
+    <Compile Include="ViewModels\Payment\PaymentResult.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterViewModel.cs" />
@@ -926,6 +927,7 @@
     <Content Include="Views\Shared\EditorTemplates\EvidenceNoteTypeFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
     <Content Include="Views\Payment\Payment.cshtml" />
+    <Content Include="Views\Payment\PaymentResult.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

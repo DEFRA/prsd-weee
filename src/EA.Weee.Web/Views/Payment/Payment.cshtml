@@ -43,5 +43,11 @@
 </p>
 
 <p class="govuk-body">
-    <button type="button" class="govuk-button" onclick="window.open('https://localhost:44300/payment/create')">Submit your application</button>
+    <button type="button" class="govuk-button" onclick="window.open('https://www.gov.uk/payments/test-weee-service/pay-for-eee-producer-registration')">Submit your application</button>
+
+    @using (Html.BeginForm("CreatePayment", "Payment", FormMethod.Post))
+    {
+
+        <button type="submit" class="govuk-button">Submit your application2</button>
+    }
 </p>

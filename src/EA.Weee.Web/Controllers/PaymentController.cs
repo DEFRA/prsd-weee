@@ -59,7 +59,7 @@
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         public ActionResult CreatePayment()
         {
             using (var client = new HttpClient())
@@ -81,6 +81,7 @@
                 var result = paymentRequestTask.Result;
                 if (result.State.Status == "created")
                 {
+                    Session["paymentResult"] = result.Payment_id;
                     return Redirect(result._links.Next_url.Href);
                 }
             }
@@ -88,6 +89,17 @@
             ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
 
             return View("Payment");
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult Result()
+        {
+            var model = new PaymentResult();
+
+            var paymentResult = Session["paymentResult"];
+
+            return View("PaymentResult", model);
         }
     }
 }
