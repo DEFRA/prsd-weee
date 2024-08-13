@@ -51,7 +51,8 @@
 
         private void Dispose(bool disposing)
         {
-            if (disposed) {
+            if (disposed) 
+            {
                 return;
             }
 
