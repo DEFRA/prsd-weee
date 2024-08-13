@@ -67,5 +67,17 @@
         int DefaultInternalPagingPageSize { get; set; }
 
         int DefaultExternalPagingPageSize { get; set; }
+
+        string CompaniesHouseBaseUrl { get; set; }
+
+        string CompaniesHouseReferencePath { get; set; }
+
+        bool ProxyEnabled { get; set; }
+
+        bool ByPassProxyOnLocal { get; set; }
+
+        string ProxyWebAddress { get; set; }
+
+        bool ProxyUseDefaultCredentials { get; set; }
     }
 }

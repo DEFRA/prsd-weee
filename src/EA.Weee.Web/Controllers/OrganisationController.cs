@@ -4,6 +4,7 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Weee.Web.Services;
     using Infrastructure;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -13,6 +14,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
@@ -26,10 +28,14 @@
     public class OrganisationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly Func<ICompaniesHouseClient> companiesHouseClient;
+        private readonly IAppConfiguration appConfiguration;
 
-        public OrganisationController(Func<IWeeeClient> apiClient)
+        public OrganisationController(Func<IWeeeClient> apiClient, Func<ICompaniesHouseClient> companiesHouseClient, IAppConfiguration appConfiguration)
         {
             this.apiClient = apiClient;
+            this.companiesHouseClient = companiesHouseClient;
+            this.appConfiguration = appConfiguration;
         }
 
         [HttpGet]
@@ -193,13 +199,40 @@
                 {
                     if (model.UseDefra)
                     {
+                        using (var client1 = companiesHouseClient())
+                        {
+                            var result = await client1.GetCompanyDetailsAsync<DefraCompaniesHouseApiModel>(appConfiguration.CompaniesHouseReferencePath, model.RegistrationNumber);
+                            var test = 1;
+                        }
+
                         string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
 
                         X509Certificate2 certificate = new X509Certificate2(filePath, "kN2S6!p6F*LH");
-                        HttpClientHandler handler = new HttpClientHandler();
+
+                        var webProxy = new WebProxy { BypassProxyOnLocal = true };
+
+                        if (true)
+                        {
+                            webProxy.Address = new Uri("http://webproxy.civica.com:8080");
+                            webProxy.UseDefaultCredentials = true;
+                        }
+
+                        HttpClientHandler handler = new HttpClientHandler()
+                        {
+                            Proxy = webProxy,
+                        };
+
+                        //WebProxy proxy = new WebProxy()
+                        //{
+
+                        //}
+
+                        //var proxy = new IWebProxy("http://your-proxy-url:your-proxy-port")
+                        //{
+                        //    Credentials = new NetworkCredential("your-username", "your-password")
+                        //};
 
                         handler.ClientCertificates.Add(certificate);
-
                         HttpClient client = new HttpClient(handler);
 
                         string requestUrl = $"https://integration-tst.azure.defra.cloud/ws/rest/DEFRA/v2.1/CompaniesHouse/companies/{model.RegistrationNumber}";

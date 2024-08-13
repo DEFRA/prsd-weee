@@ -95,5 +95,20 @@
 
         [DefaultValue("10")]
         public int DefaultExternalPagingPageSize { get; set; }
+
+        public string CompaniesHouseBaseUrl { get; set; }
+
+        public string CompaniesHouseReferencePath { get; set; }
+
+        [DefaultValue(false)]
+        public bool ProxyEnabled { get; set; }
+
+        [DefaultValue(false)]
+        public bool ByPassProxyOnLocal { get; set; }
+
+        public string ProxyWebAddress { get; set; }
+
+        [DefaultValue(false)]
+        public bool ProxyUseDefaultCredentials { get; set; }
     }
 }

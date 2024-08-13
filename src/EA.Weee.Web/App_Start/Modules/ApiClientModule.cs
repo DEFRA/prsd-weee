@@ -6,6 +6,8 @@
     using Prsd.Core.Web.OpenId;
     using Services;
     using System;
+    using System.IO;
+    using System.Security.Cryptography.X509Certificates;
 
     public class ApiClientModule : Module
     {
@@ -39,6 +41,25 @@
                 var config = cc.Resolve<IAppConfiguration>();
                 return new UserInfoClient(config.ApiUrl);
             }).As<IUserInfoClient>();
+
+            builder.Register(c =>
+            {
+                var cc = c.Resolve<IComponentContext>();
+                var config = cc.Resolve<IAppConfiguration>();
+
+                string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-IWS-TST.pfx";
+
+                X509Certificate2 certificate = new X509Certificate2(filePath, "kN2S6!p6F*LH");
+
+                HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
+                {
+                    ProxyEnabled = config.ProxyEnabled,
+                    ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
+                    ProxyWebAddress = config.ProxyWebAddress,
+                    ByPassProxyOnLocal = config.ByPassProxyOnLocal
+                };
+                return new CompaniesHouseClient(config.CompaniesHouseBaseUrl, httpClientHandlerConfig, certificate);
+            }).As<ICompaniesHouseClient>();
         }
     }
 }
