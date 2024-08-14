@@ -1,31 +1,32 @@
 ﻿namespace EA.Weee.Web
 {
+    using Areas.Aatf.Helpers;
+    using Areas.Aatf.Mappings.Filters;
     using Areas.AatfReturn.Attributes;
+    using Areas.Scheme.Requests;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using Core.Shared;
     using EA.Weee.Core;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
+    using EA.Weee.Web.Hangfire;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
+    using Infrastructure;
+    using Infrastructure.PDF;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;
     using Security;
+    using Serilog;
     using System.Reflection;
-    using Areas.Aatf.Helpers;
-    using Areas.Aatf.Mappings.Filters;
-    using Areas.Scheme.Requests;
-    using Core.Shared;
-    using Infrastructure;
-    using Infrastructure.PDF;
-    using Prsd.Email;
 
     public class AutofacBootstrapper
     {
@@ -110,6 +111,13 @@
 
             builder.RegisterType<MvcTemplateExecutor>().As<IMvcTemplateExecutor>();
             builder.RegisterType<PdfDocumentProvider>().As<IPdfDocumentProvider>();
+
+            builder.RegisterType<MyService>().As<IMyService>().InstancePerLifetimeScope();
+            builder.RegisterType<MyJob>();
+
+            builder.Register(c => Log.Logger)
+                .As<ILogger>()
+                .SingleInstance();
 
             return builder.Build();
         }

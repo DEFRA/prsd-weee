@@ -5,10 +5,11 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Web
 {
-    using System;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using EA.Weee.Web.App_Start;
     using FluentValidation.Mvc;
+    using Hangfire;
     using IdentityModel;
     using Infrastructure;
     using Owin;
@@ -21,6 +22,10 @@ namespace EA.Weee.Web
     using System.Web.Mvc;
     using System.Web.Optimization;
     using System.Web.Routing;
+    using global::Hangfire;
+    using global::Hangfire.SqlServer;
+    using Serilog;
+    using Serilog.Sinks.MSSqlServer;
 
     public partial class Startup
     {
@@ -34,6 +39,17 @@ namespace EA.Weee.Web
             builder.Register(c => configuration).As<ConfigurationService>().SingleInstance();
             builder.Register(c => configuration.CurrentConfiguration).As<IAppConfiguration>().SingleInstance();
             builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
+
+            Log.Logger = new LoggerConfiguration()
+                            .WriteTo.MSSqlServer(
+                            connectionString: System.Configuration.ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ConnectionString,
+                            sinkOptions: new MSSqlServerSinkOptions
+                            {
+                                SchemaName = "Logging",
+                                TableName = "Logs",
+                                AutoCreateSqlTable = true
+                            })
+                            .CreateLogger();
 
             var container = AutofacBootstrapper.Initialize(builder);
 
@@ -63,6 +79,31 @@ namespace EA.Weee.Web
             FluentValidationModelValidatorProvider.Configure();
 
             System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            GlobalConfiguration.Configuration
+                .UseAutofacActivator(container)
+                .UseSqlServerStorage("Weee.DefaultConnection");
+
+            //BackgroundJob.Enqueue<MyJob>(job => job.Execute());
+
+            //Log.Logger = new LoggerConfiguration()
+            //   .WriteTo.Elmah()
+            //   .CreateLogger();
+            //var options = new SqlServerStorageOptions
+            //{
+            //    PrepareSchemaIfNecessary = false
+            //};
+            HangfireBootstrapper.Instance.Start();
+            //GlobalConfiguration.Configuration.UseSqlServerStorage("<name or connection string>", options);
+            var user2 = DependencyResolver.Current.GetService<IMyService>();
+            var user = DependencyResolver.Current.GetService<MyJob>();
+
+            RecurringJob.AddOrUpdate<MyJob>("my-recurring-job", job => user.Execute(), "* * * * *");
+        }
+
+        protected void Application_End()
+        {
+            HangfireBootstrapper.Instance.Stop();
         }
     }
 }
