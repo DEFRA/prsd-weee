@@ -4,6 +4,7 @@
     using Autofac.Core;
     using EA.Weee.Api.Client.Polly;
     using EA.Weee.Api.Client.Serlializer;
+    using Serilog;
 
     public class ApiClientModule : Module
     {
@@ -13,9 +14,12 @@
                .As<IHttpClientWrapper>()
                .InstancePerLifetimeScope();
 
-            builder.Register(c => new RetryPolicyWrapper(PollyPolicies.GetRetryPolicy()))
-                   .As<IRetryPolicyWrapper>()
-                   .SingleInstance();
+            builder.Register(c => 
+            {
+                var cc = c.Resolve<IComponentContext>();
+                var logger = cc.Resolve<ILogger>();
+                return new RetryPolicyWrapper(PollyPolicies.GetRetryPolicy(logger));
+            }).As<IRetryPolicyWrapper>().SingleInstance();
 
             builder.RegisterType<JsonSerializer>()
                    .As<IJsonSerializer>()

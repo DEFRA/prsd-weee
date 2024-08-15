@@ -4,10 +4,11 @@
     using System.Net.Http;
     using global::Polly;
     using global::Polly.Retry;
+    using Serilog;
 
     public static class PollyPolicies
     {
-        public static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
+        public static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger)
         {
             return Policy
                 .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
@@ -18,7 +19,7 @@
                     sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     onRetry: (outcome, timeSpan, retryCount, context) =>
                     {
-                        Console.WriteLine($"Retry {retryCount} after {timeSpan.TotalSeconds} seconds due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
+                        logger.Information($"Retry {retryCount} after {timeSpan.TotalSeconds} seconds due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
                     });
         }
     }

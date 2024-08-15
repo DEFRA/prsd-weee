@@ -3,29 +3,40 @@
     using CuttingEdge.Conditions;
     using EA.Weee.Api.Client.Serlializer;
     using System;
+    using System.Net.Http;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
-        private readonly IHttpClientWrapper httpClient;
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
-        private readonly string baseUrl;
+        private readonly HttpClient httpClient;
         private bool disposed;
 
         public CompaniesHouseClient(
             string baseUrl,
-            IHttpClientWrapper httpClient,
             IRetryPolicyWrapper retryPolicy,
-            IJsonSerializer jsonSerializer)
+            IJsonSerializer jsonSerializer,
+            HttpClientHandlerConfig config,
+            X509Certificate2 certificate)
         {
             Condition.Requires(baseUrl).IsNotNullOrWhiteSpace();
-            Condition.Requires(httpClient).IsNotNull();
             Condition.Requires(retryPolicy).IsNotNull();
             Condition.Requires(jsonSerializer).IsNotNull();
+            Condition.Requires(config).IsNotNull();
+            Condition.Requires(certificate).IsNotNull();
 
-            this.baseUrl = baseUrl;
-            this.httpClient = httpClient;
+            var handler = HttpClientHandlerFactory.Create(config);
+
+            handler.ClientCertificates.Add(certificate);
+            var baseUri = new Uri(baseUrl);
+
+            httpClient = new HttpClient(handler)
+            {
+                BaseAddress = baseUri
+            };
+
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;
         }
@@ -36,7 +47,7 @@
             Condition.Requires(companyReference).IsNotNullOrWhiteSpace("Company reference cannot be null or whitespace.");
 
             var response = await retryPolicy.ExecuteAsync(() =>
-                httpClient.GetAsync($"{baseUrl}{endpoint}{companyReference}")).ConfigureAwait(false);
+                httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
