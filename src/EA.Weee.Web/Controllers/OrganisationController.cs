@@ -16,15 +16,21 @@
     public class OrganisationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly Func<ICompaniesHouseClient> companiesHouseClient;
 
-        public OrganisationController(Func<IWeeeClient> apiClient)
+        public OrganisationController(Func<IWeeeClient> apiClient, Func<ICompaniesHouseClient> companiesHouseClient)
         {
             this.apiClient = apiClient;
+            this.companiesHouseClient = companiesHouseClient;
         }
 
         [HttpGet]
         public async Task<ActionResult> Index()
         {
+            using (var test = companiesHouseClient())
+            {
+                var test2 = await test.GetCompanyDetailsAsync<string>("CompaniesHouse/companies", "04968437");
+            }
             return await ShowOrganisations();
         }
 

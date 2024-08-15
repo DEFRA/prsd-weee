@@ -2,6 +2,7 @@
 {
     using CuttingEdge.Conditions;
     using EA.Weee.Api.Client.Serlializer;
+    using Serilog;
     using System;
     using System.Net.Http;
     using System.Security.Cryptography.X509Certificates;
@@ -11,31 +12,32 @@
     {
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientWrapper httpClient;
+
         private bool disposed;
 
         public CompaniesHouseClient(
             string baseUrl,
+            IHttpClientWrapperFactory httpClientFactory,
             IRetryPolicyWrapper retryPolicy,
             IJsonSerializer jsonSerializer,
             HttpClientHandlerConfig config,
-            X509Certificate2 certificate)
+            X509Certificate2 certificate,
+            ILogger logger)
         {
             Condition.Requires(baseUrl).IsNotNullOrWhiteSpace();
+            Condition.Requires(httpClientFactory).IsNotNull();
             Condition.Requires(retryPolicy).IsNotNull();
             Condition.Requires(jsonSerializer).IsNotNull();
             Condition.Requires(config).IsNotNull();
             Condition.Requires(certificate).IsNotNull();
+            Condition.Requires(logger).IsNotNull();
 
             var handler = HttpClientHandlerFactory.Create(config);
 
             handler.ClientCertificates.Add(certificate);
-            var baseUri = new Uri(baseUrl);
 
-            httpClient = new HttpClient(handler)
-            {
-                BaseAddress = baseUri
-            };
+            this.httpClient = httpClientFactory.CreateHttpClient(baseUrl, config, certificate, logger);
 
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;

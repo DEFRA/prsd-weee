@@ -137,8 +137,10 @@
     <Compile Include="HttpClientHandlerConfig.cs" />
     <Compile Include="HttpClientHandlerFactory.cs" />
     <Compile Include="HttpClientWrapper.cs" />
+    <Compile Include="HttpClientWrapperFactory.cs" />
     <Compile Include="ICompaniesHouseClient.cs" />
     <Compile Include="IHttpClientWrapper.cs" />
+    <Compile Include="IHttpClientWrapperFactory.cs" />
     <Compile Include="Polly\IRetryPolicyWrapper.cs" />
     <Compile Include="IWeeeClient.cs" />
     <Compile Include="Polly\PollyPolicies.cs" />
