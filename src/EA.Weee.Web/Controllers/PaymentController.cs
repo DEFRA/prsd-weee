@@ -81,7 +81,7 @@
                 var result = paymentRequestTask.Result;
                 if (result.State.Status == "created")
                 {
-                    Session["paymentResult"] = result.Payment_id;
+                    Session["paymentId"] = result.Payment_id;
                     return Redirect(result._links.Next_url.Href);
                 }
             }
@@ -93,13 +93,26 @@
 
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult Result()
+        public ActionResult Result(string id)
         {
-            var model = new PaymentResult();
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{apiKey}");
 
-            var paymentResult = Session["paymentResult"];
+                var payClient = new PayClient(client);
 
-            return View("PaymentResult", model);
+                var paymentId = Session["paymentId"].ToString();
+
+                var getPaymentTask = payClient.Get_a_paymentAsync(paymentId);
+                getPaymentTask.Wait();
+
+                var paymentWithAllLinks = getPaymentTask.Result;
+
+                var model = new PaymentResult();
+
+                return View("PaymentResult", model);
+            }
         }
     }
 }
