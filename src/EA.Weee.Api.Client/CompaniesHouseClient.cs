@@ -1,46 +1,48 @@
 ﻿namespace EA.Weee.Api.Client
 {
     using CuttingEdge.Conditions;
-    using EA.Prsd.Core;
-    using Newtonsoft.Json;
+    using EA.Weee.Api.Client.Serlializer;
     using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Text.Json;
     using System.Threading.Tasks;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientWrapper httpClient;
+        private readonly IRetryPolicyWrapper retryPolicy;
+        private readonly IJsonSerializer jsonSerializer;
+        private readonly string baseUrl;
         private bool disposed;
 
-        public CompaniesHouseClient(string baseUrl, HttpClientHandlerConfig config, X509Certificate2 certificate)
+        public CompaniesHouseClient(
+            string baseUrl,
+            IHttpClientWrapper httpClient,
+            IRetryPolicyWrapper retryPolicy,
+            IJsonSerializer jsonSerializer)
         {
-            Condition.Requires(baseUrl).IsNullOrWhiteSpace();
-            Condition.Requires(config).IsNotNull();
-            Condition.Requires(certificate).IsNotNull();
+            Condition.Requires(baseUrl).IsNotNullOrWhiteSpace();
+            Condition.Requires(httpClient).IsNotNull();
+            Condition.Requires(retryPolicy).IsNotNull();
+            Condition.Requires(jsonSerializer).IsNotNull();
 
-            var baseUri = new Uri(baseUrl);
-            var handler = HttpClientHandlerFactory.Create(config);
-
-            handler.ClientCertificates.Add(certificate);
-
-            httpClient = new HttpClient(handler)
-            {
-                BaseAddress = baseUri
-            };
+            this.baseUrl = baseUrl;
+            this.httpClient = httpClient;
+            this.retryPolicy = retryPolicy;
+            this.jsonSerializer = jsonSerializer;
         }
 
         public async Task<T> GetCompanyDetailsAsync<T>(string endpoint, string companyReference)
         {
-            var response = await httpClient.GetAsync($"{endpoint}{companyReference}");
+            Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
+            Condition.Requires(companyReference).IsNotNullOrWhiteSpace("Company reference cannot be null or whitespace.");
+
+            var response = await retryPolicy.ExecuteAsync(() =>
+                httpClient.GetAsync($"{baseUrl}{endpoint}{companyReference}")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return System.Text.Json.JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions());
+            return jsonSerializer.Deserialize<T>(content);
         }
 
         public void Dispose()
@@ -49,18 +51,16 @@
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (disposed) 
+            if (disposed)
             {
                 return;
             }
-
             if (disposing)
             {
-                httpClient?.Dispose();
+                // Dispose of any disposable fields if necessary
             }
-
             disposed = true;
         }
     }
