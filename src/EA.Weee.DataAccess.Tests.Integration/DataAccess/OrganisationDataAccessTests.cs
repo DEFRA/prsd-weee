@@ -182,7 +182,7 @@
         }
 
         [Fact]
-        public async void HasReturns_GivenOrganisationDoesNotHaveReturnsForComplianceYear_FalseShouldBeReturned()
+        public async Task HasReturns_GivenOrganisationDoesNotHaveReturnsForComplianceYear_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
