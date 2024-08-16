@@ -11,7 +11,7 @@
             bundles.Add(new ScriptBundle("~/bundles/jquery-1").Include(
                     "~/Scripts/jquery-1*",
                     "~/Scripts/jquery.unobtrusive-ajax.js",
-                    "~/Scripts/jquery-ui-1.13.3.js",
+                    "~/Scripts/jquery-ui-1-13.3.js",
                     "~/Scripts/jquery.select-to-autocomplete.js",
                     "~/Scripts/jquery.validate*",
                     "~/Scripts/custom-validation.js"));
@@ -21,7 +21,7 @@
                     "~/Scripts/jquery-3.6.0.js",
                     "~/Scripts/jquery-migrate-3.0.0.js",
                     "~/Scripts/jquery.unobtrusive-ajax.js",
-                    "~/Scripts/jquery-ui-1.13.3.js",
+                    "~/Scripts/jquery-ui-1-13.3.js",
                     "~/Scripts/jquery.select-to-autocomplete.js",
                     "~/Scripts/jquery.validate*",
                     "~/Scripts/custom-validation.js"));

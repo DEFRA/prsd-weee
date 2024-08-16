@@ -1519,7 +1519,6 @@
     <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
-    <Content Include="Scripts\jquery-ui-1.13.1.js" />
     <Content Include="Views\Shared\_ReturnsFilter.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_OrganisationRelatedEntities.cshtml" />
     <Content Include="Areas\Admin\Views\AatfReports\ChooseReport.cshtml" />
