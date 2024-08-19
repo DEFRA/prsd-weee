@@ -15,6 +15,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -50,7 +51,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
@@ -66,7 +67,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnAnySubmit_PageRedirectsToCheckYourReturn()
+        public async Task IndexPost_OnAnySubmit_PageRedirectsToCheckYourReturn()
         {
             var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
@@ -78,7 +79,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_AatfTaskListViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_AatfTaskListViewModelShouldBeBuilt()
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
@@ -95,7 +96,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_AatfTaskListViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionAndParameters_AatfTaskListViewModelShouldBeReturned()
         {
             var model = A.Fake<ReturnViewModel>();
             var @return = fixture.Build<ReturnData>()

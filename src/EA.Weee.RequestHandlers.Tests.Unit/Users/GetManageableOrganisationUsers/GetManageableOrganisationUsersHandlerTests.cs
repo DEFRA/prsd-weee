@@ -28,7 +28,7 @@
         }
 
         [Fact]
-        public async void ShouldCheckUserIsAbleToAccessOrganisation()
+        public async Task ShouldCheckUserIsAbleToAccessOrganisation()
         {
             var organisationId = Guid.NewGuid();
 
@@ -39,7 +39,7 @@
         }
 
         [Fact]
-        public async void UserIsUnableToAccessOrganisation_ShouldNotGetManageableOrganisationUsers()
+        public async Task UserIsUnableToAccessOrganisation_ShouldNotGetManageableOrganisationUsers()
         {
             var organisationId = Guid.NewGuid();
 
@@ -56,7 +56,7 @@
         }
 
         [Fact]
-        public async void UserIsAbleToAccessOrganisation_ShouldGetManageableUsers() // By default, an exception is not thrown on authorization check
+        public async Task UserIsAbleToAccessOrganisation_ShouldGetManageableUsers() // By default, an exception is not thrown on authorization check
         {
             var organisationId = Guid.NewGuid();
 

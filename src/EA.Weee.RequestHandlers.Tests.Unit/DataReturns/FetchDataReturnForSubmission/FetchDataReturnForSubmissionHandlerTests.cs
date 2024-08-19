@@ -54,7 +54,7 @@
             DataReturnForSubmission result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(1, result.Errors.Count);
+            Assert.Single(result.Errors);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@
             DataReturnForSubmission result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(1, result.Warnings.Count);
+            Assert.Single(result.Warnings);
         }
 
         private static IFetchDataReturnForSubmissionDataAccess FetchDummyDataReturnWithError(DataReturnUploadError dataReturnsUploadError)
@@ -151,7 +151,7 @@
             DataReturnForSubmission result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(4, result.Errors.Count);
+            Assert.Single(result.Errors);
             Assert.True(result.Errors.ElementAt(0).Description == "Error without line no"
                 && result.Errors.ElementAt(1).Description == "Error on 5 line no"
                 && result.Errors.ElementAt(2).Description == "Error on 55 line no"

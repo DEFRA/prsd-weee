@@ -62,7 +62,7 @@
 
                 // Assert
                 Assert.NotNull(results.Data);
-                Assert.Equal(1, results.Data.Count);
+                Assert.Single(results.Data);
 
                 var result1 = results.Data.SingleOrDefault(r => r.Year == 2006);
                 Assert.NotNull(result1);

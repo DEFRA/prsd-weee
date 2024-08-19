@@ -150,7 +150,7 @@
             var result = await builder.Build();
 
             Assert.NotNull(result.DataReturnVersion.WeeeCollectedReturnVersion);
-            Assert.Equal(1, result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Count);
+            Assert.Single(result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@
             var result = await builder.Build();
 
             Assert.NotNull(result.DataReturnVersion.WeeeDeliveredReturnVersion);
-            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
+            Assert.Single(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@
             var result = await builder.Build();
 
             Assert.NotNull(result.DataReturnVersion.EeeOutputReturnVersion);
-            Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
+            Assert.Single(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts);
         }
 
         /// <summary>
@@ -543,7 +543,7 @@
 
             var result = await builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
+            Assert.Single(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts);
             Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
                 r => Assert.Equal("Approval Number", r.AatfDeliveryLocation.ApprovalNumber));
             Assert.Same(aatfDeliveryLocation, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Single().AatfDeliveryLocation);
@@ -566,7 +566,7 @@
 
             var result = await builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
+            Assert.Single(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts);
             Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
                 r => Assert.Equal("Approval Number", r.AeDeliveryLocation.ApprovalNumber));
             Assert.Same(aeDeliveryLocation, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Single().AeDeliveryLocation);
@@ -586,7 +586,7 @@
 
             var result = await builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Count);
+            Assert.Single(result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts);
 
             Assert.Collection(result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts,
                 r => Assert.Equal(type, r.SourceType));
@@ -610,7 +610,7 @@
 
             var result = await builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
+                Assert.Single(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts);
             Assert.Collection(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
                 r => Assert.Equal("Registration Number", r.RegisteredProducer.ProducerRegistrationNumber));
         }
@@ -633,7 +633,7 @@
 
             var result = await builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
+            Assert.Single(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts);
             Assert.Collection(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
                 r => Assert.Equal("Registration Number", r.RegisteredProducer.ProducerRegistrationNumber));
         }
@@ -670,7 +670,7 @@
 
             var result = await builder.Build();
 
-            Assert.Equal(2, result.ErrorData.Count);
+            Assert.Single(result.ErrorData);
             Assert.Contains(result.ErrorData, r => r.ErrorLevel == ErrorLevel.Warning);
             Assert.Contains(result.ErrorData, r => r.ErrorLevel == ErrorLevel.Error);
         }
@@ -719,7 +719,7 @@
 
             // Assert
             // Only outputs one of each duplicate error/warning
-            Assert.Equal(2, result.ErrorData.Count);
+            Assert.Single(result.ErrorData);
         }
 
         private class DataReturnVersionBuilderHelper

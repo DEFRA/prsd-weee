@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AeReturn.Controller
 {
+    using AutoFixture;
     using Core.DataReturns;
     using Core.Organisations;
     using EA.Prsd.Core.Mapper;
@@ -17,8 +18,8 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using AutoFixture;
     using Web.Areas.AatfReturn.Attributes;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
     using Weee.Tests.Core;
@@ -51,7 +52,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(fixture.Create<Guid>(), fixture.Create<int?>(), fixture.Create<string>()) as ViewResult;
 
@@ -65,7 +66,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenOrganisation_BreadcrumbShouldBeSet()
         {
             await controller.Index(fixture.Create<Guid>(), fixture.Create<int?>(), fixture.Create<string>());
 
@@ -73,7 +74,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_ReturnsShouldBeRetrieved()
+        public async Task IndexGet_GivenOrganisation_ReturnsShouldBeRetrieved()
         {
             await controller.Index(organisationId, fixture.Create<int?>(), fixture.Create<string>());
 
@@ -82,7 +83,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
             var returnsData = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -94,7 +95,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationComplianceYearAndQuarterActionParameters_ReturnsViewModelShouldBeBuiltWithPassedParameters()
+        public async Task IndexGet_GivenOrganisationComplianceYearAndQuarterActionParameters_ReturnsViewModelShouldBeBuiltWithPassedParameters()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -111,7 +112,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturned()
+        public async Task IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturned()
         {
             var model = new ReturnsViewModel();
 
@@ -126,7 +127,7 @@
         }
 
         [Fact]
-        public async void PostIndex_ReturnCreated_RedirectWithReturnIdShouldHappen()
+        public async Task PostIndex_ReturnCreated_RedirectWithReturnIdShouldHappen()
         {
             var returnId = Guid.NewGuid();
             var quarter = QuarterType.Q1;
@@ -153,7 +154,7 @@
         }
 
         [Fact]
-        public async void GetExportedWholeWeee_GivenOrganisation_DefaultViewShouldBeReturned()
+        public async Task GetExportedWholeWeee_GivenOrganisation_DefaultViewShouldBeReturned()
         {
             var result = await controller.ExportedWholeWeee(A.Dummy<Guid>()) as ViewResult;
 
@@ -161,7 +162,7 @@
         }
 
         [Fact]
-        public async void GetExportedWholeWeee_BreadCrumbShouldBeSet()
+        public async Task GetExportedWholeWeee_BreadCrumbShouldBeSet()
         {
             await controller.ExportedWholeWeee(A.Dummy<Guid>());
 
@@ -171,7 +172,7 @@
         [Theory]
         [InlineData(YesNoEnum.No, "Index")]
         [InlineData(YesNoEnum.Yes, "NilReturn")]
-        public async void PostExportedWholeWeee_SelectedValueGiven_CorrectRedirectHappens(YesNoEnum selectedValue, string action)
+        public async Task PostExportedWholeWeee_SelectedValueGiven_CorrectRedirectHappens(YesNoEnum selectedValue, string action)
         {
             var viewModel = new ExportedWholeWeeeViewModel()
             {
@@ -196,7 +197,7 @@
         }
 
         [Fact]
-        public async void IndexPost_RedirectToExportedWholeWeee()
+        public async Task IndexPost_RedirectToExportedWholeWeee()
         {
             var organisationId = Guid.NewGuid();
 
@@ -214,7 +215,7 @@
         }
 
         [Fact]
-        public async void PostExportedWholeWeee_NoValueSelected_ReturnsViewWithViewModelAndBreadCrumbSet()
+        public async Task PostExportedWholeWeee_NoValueSelected_ReturnsViewWithViewModelAndBreadCrumbSet()
         {
             var viewModel = new ExportedWholeWeeeViewModel();
 
@@ -227,7 +228,7 @@
         }
 
         [Fact]
-        public async void GetNilResult_GivenReturnId_BreadCrumbSet()
+        public async Task GetNilResult_GivenReturnId_BreadCrumbSet()
         {
             var returnData = new ReturnData()
             {
@@ -243,7 +244,7 @@
         }
 
         [Fact]
-        public async void GetNilResult_GivenReturnId_ReturnShouldBeRetrieved()
+        public async Task GetNilResult_GivenReturnId_ReturnShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
 
@@ -254,7 +255,7 @@
         }
 
         [Fact]
-        public async void GetNilResult_GivenReturnId_ViewModelShouldBeMapped()
+        public async Task GetNilResult_GivenReturnId_ViewModelShouldBeMapped()
         {
             var returnData = new ReturnData()
             {
@@ -270,7 +271,7 @@
         }
 
         [Fact]
-        public async void GetNilResult_GivenReturnId_MappedViewModelShouldBeReturnedToView()
+        public async Task GetNilResult_GivenReturnId_MappedViewModelShouldBeReturnedToView()
         {
             var viewModel = new SubmittedReturnViewModel();
 
@@ -283,7 +284,7 @@
         }
 
         [Fact]
-        public async void PostNilResult_GivenReturnId_RedirectsToConfirmationScreen()
+        public async Task PostNilResult_GivenReturnId_RedirectsToConfirmationScreen()
         {
             var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
@@ -296,7 +297,7 @@
         }
 
         [Fact]
-        public async void PostNilResult_SubmitReturnShouldBeCalled()
+        public async Task PostNilResult_SubmitReturnShouldBeCalled()
         {
             var model = new SubmittedReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
@@ -307,7 +308,7 @@
         }
 
         [Fact]
-        public async void GetConfirmation__GivenReturnId_BreadCrumbIsSet()
+        public async Task GetConfirmation__GivenReturnId_BreadCrumbIsSet()
         {
             var returnData = new ReturnData()
             {
@@ -326,7 +327,7 @@
         }
 
         [Fact]
-        public async void GetConfirmation_GivenReturnId_ReturnShouldBeRetrieved()
+        public async Task GetConfirmation_GivenReturnId_ReturnShouldBeRetrieved()
         {
             var returnId = Guid.NewGuid();
 
@@ -337,7 +338,7 @@
         }
 
         [Fact]
-        public async void GetConfirmation_GivenReturnId_ViewModelShouldBeMapped()
+        public async Task GetConfirmation_GivenReturnId_ViewModelShouldBeMapped()
         {
             var returnData = new ReturnData()
             {
@@ -353,7 +354,7 @@
         }
 
         [Fact]
-        public async void GetConfirmation_GivenReturnId_MappedViewModelShouldBeReturnedToView()
+        public async Task GetConfirmation_GivenReturnId_MappedViewModelShouldBeReturnedToView()
         {
             var viewModel = new SubmittedReturnViewModel();
 
@@ -365,7 +366,7 @@
         }
 
         [Fact]
-        public async void PostConfirmation_RedirectsToChooseActivity()
+        public async Task PostConfirmation_RedirectsToChooseActivity()
         {
             var viewModel = new SubmittedReturnViewModel()
             {

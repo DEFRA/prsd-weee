@@ -7,6 +7,7 @@
     using Requests.Admin;
     using System;
     using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class IsProducerRegisteredForComplianceYearTests
@@ -21,7 +22,7 @@
         }
 
         [Fact]
-        public async void WhenUserIsUnauthorised_ShouldNotGetProducerRegistrations()
+        public async Task WhenUserIsUnauthorised_ShouldNotGetProducerRegistrations()
         {
             A.CallTo(() => weeeAuthorization.EnsureCanAccessInternalArea())
                 .Throws<SecurityException>();
@@ -35,7 +36,7 @@
         }
 
         [Fact]
-        public async void WhenUserIsAuthorised_ShouldGetProducerRegistrations()
+        public async Task WhenUserIsAuthorised_ShouldGetProducerRegistrations()
         {
             var request = new IsProducerRegisteredForComplianceYear("ABC12345", 2016);
 
