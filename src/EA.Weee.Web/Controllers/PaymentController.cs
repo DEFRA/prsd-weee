@@ -29,7 +29,7 @@
         [HttpGet]
         public ActionResult List()
         {
-            IEnumerable<PaymentRequest> reqs = null;
+            IEnumerable<PaymentRequestViewModel> reqs = null;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(baseUrl);
@@ -41,7 +41,7 @@
                 var result = responseTask.Result;
                 if (result.IsSuccessStatusCode)
                 {
-                    var readTask = result.Content.ReadAsAsync<IList<PaymentRequest>>();
+                    var readTask = result.Content.ReadAsAsync<IList<PaymentRequestViewModel>>();
                     readTask.Wait();
 
                     reqs = readTask.Result;
@@ -50,7 +50,7 @@
                 {
                     //log response status here..
 
-                    reqs = Enumerable.Empty<PaymentRequest>();
+                    reqs = Enumerable.Empty<PaymentRequestViewModel>();
 
                     ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
                 }
@@ -95,11 +95,18 @@
         [HttpGet]
         public ActionResult Result(string id)
         {
-            string paymentId = id;
+            string paymentId = null;
+            if (Session["paymentId"] != null)
+            {
+                paymentId = Session["paymentId"].ToString();
+            }
 
-            //paymentId ??= Session["paymentId"].ToString();
+            if (id != null)
+            {
+                paymentId = id;
+            }
 
-            PaymentWithAllLinks paymentWithAllLinks = null;
+            var paymentResultViewModel = new PaymentResultViewModel();
 
             if (paymentId != null) 
             {
@@ -113,12 +120,20 @@
                     var getPaymentTask = payClient.Get_a_paymentAsync(paymentId);
                     getPaymentTask.Wait();
 
-                    paymentWithAllLinks = getPaymentTask.Result;
+                    var paymentWithAllLinks = getPaymentTask.Result;
+
+                    paymentResultViewModel.Amount = paymentWithAllLinks.Amount / 100;
+                    paymentResultViewModel.Email = paymentWithAllLinks.Email;
+                    paymentResultViewModel.Description = paymentWithAllLinks.Description;
+                    paymentResultViewModel.Reference = paymentWithAllLinks.Reference;
+                    paymentResultViewModel.Status = paymentWithAllLinks.State.Status;
+                    paymentResultViewModel.Created_date = DateTime.Parse(paymentWithAllLinks.Created_date, null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+                    paymentResultViewModel.Card_brand = paymentWithAllLinks.Card_details.Card_brand;
                 }
             }
             
-            //var model = new PaymentResult();
-            return View("PaymentResult", paymentWithAllLinks);
+            return View("PaymentResult", paymentResultViewModel);
         }
     }
 }

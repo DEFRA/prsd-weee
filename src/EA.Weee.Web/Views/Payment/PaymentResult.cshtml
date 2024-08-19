@@ -1,55 +1,65 @@
-﻿
+﻿@model EA.Weee.Web.ViewModels.Payment.PaymentResultViewModel
 @{
-    ViewBag.Title = "Payment";
+    ViewBag.Title = "PaymentResult";
 }
-@model EA.Weee.Web.Payment.PaymentWithAllLinks
 
+@section main_content
+{
+    <header class="hgroup">
+        <h2 class="govuk-heading-l">Payment Result</h2>
+    </header>
+    <p>@Html.DisplayFor(model => model.Description)</p>
 
-
-<h1 class="govuk-heading-l">Payment Result</h1>
-<h2 class="govuk-heading-m">@Html.DisplayFor(model => model.Description)</h2>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <td>
-            @Html.DisplayFor(model => model.Email)
-        </td>
-    </tr>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Reference)
-        </th>
-        <td>
-            @Html.DisplayFor(model => model.Reference)
-        </td>
-    </tr>
-    <tr>
-        <th>
-            Card brand
-        </th>
-        <td>
-            @Html.DisplayFor(model => model.Card_brand)
-        </td>
-    </tr>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Amount)
-        </th>
-        <td>
-            @Html.DisplayFor(model => model.Amount)
-        </td>
-    </tr>
-    <tr>
-        <th>
-            Date of payment
-        </th>
-        <td>
-
-            @Html.DisplayFor(model => model.Created_date)
-        </td>
-    </tr>
-
-</table>
+    <table id="paymentResultsTable" class="govuk-table prsd-table">
+        <tbody class="govuk-table__body">
+            <tr>
+                <th class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayNameFor(model => model.Reference)
+                </th>
+                <td class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Reference)
+                </td>
+            </tr>
+            <tr>
+                <th class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <td class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Email)
+                </td>
+            </tr>
+            <tr>
+                <th class="govuk-table__cell" style="text-align: left;">
+                    Card brand
+                </th>
+                <td class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Card_brand)
+                </td>
+            </tr>
+            <tr>
+                <th class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <td class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Amount)
+                </td>
+            </tr>
+            <tr>
+                <th class="govuk-table__cell" style="text-align: left;">
+                    Date of payment
+                </th>
+                <td class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Created_date)
+                </td>
+            </tr>
+            <tr>
+                <th class="govuk-table__cell" style="text-align: left;">
+                    Payment Status
+                </th>
+                <td class="govuk-table__cell" style="text-align: left;">
+                    @Html.DisplayFor(model => model.Status)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Text.Json.Serialization;
 
-    public class PaymentRequest
+    public class PaymentRequestViewModel
     {
         [Required] 
         public decimal Amount { get; set; }
