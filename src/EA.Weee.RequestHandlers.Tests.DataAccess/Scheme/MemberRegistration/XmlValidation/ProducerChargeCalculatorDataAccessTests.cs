@@ -11,7 +11,7 @@
         /// This test ensures that the charge band amount can be fetched from the database by type.
         /// </summary>
         [Fact]
-        public async void FetchCurrentChargeBandAmount_WithChargeBandTypeA_ReturnsChargeBandAmountWithTypeA()
+        public async Task FetchCurrentChargeBandAmount_WithChargeBandTypeA_ReturnsChargeBandAmountWithTypeA()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {

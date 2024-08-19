@@ -7,7 +7,7 @@
     public class GetSchemeObligationDataCsvHandlerTests
     {
         [Fact]
-        public async void DataAccess_ReturnsOnlyB2CSchemeForProducer_WhenTheyAreRegisteredB2BandB2COverTwoSchemesInCurrentYear()
+        public async Task DataAccess_ReturnsOnlyB2CSchemeForProducer_WhenTheyAreRegisteredB2BandB2COverTwoSchemesInCurrentYear()
         {
             using (var db = new DatabaseWrapper())
             {

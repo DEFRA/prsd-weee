@@ -1,17 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Reports
 {
-    using Core.Shared;
-    using FakeItEasy;
-    using RequestHandlers.Admin;
-    using System.Collections.Generic;
-    using Weee.Tests.Core;
-    using Weee.Tests.Core.Model;
     using Xunit;
+    using FakeItEasy;
+    using Core.Shared;
+    using Weee.Tests.Core;
+    using RequestHandlers.Admin;
+    using Weee.Tests.Core.Model;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
 
     public class GetProducerEeeDataHistoryCsvHandlerTests
     {
         [Fact]
-        public async void CreateResults_EeeHistoryCsvResult_PopulatedWithCorrectValues()
+        public async Task CreateResults_EeeHistoryCsvResult_PopulatedWithCorrectValues()
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();

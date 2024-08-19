@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace EA.Prsd.Core.DataAccess.Tests.Integration
+﻿namespace EA.Prsd.Core.DataAccess.Tests.Integration
 {
     using EA.Prsd.Core.DataAccess.Extensions;
     using EA.Prsd.Core.DataAccess.Tests.Integration.Helpers;
@@ -10,6 +8,7 @@ namespace EA.Prsd.Core.DataAccess.Tests.Integration
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class AuditorExtensionTests

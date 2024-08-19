@@ -1,15 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Shared
 {
-    using RequestHandlers.Shared;
-    using Requests.Shared;
-    using System;
-    using Weee.Tests.Core.Model;
     using Xunit;
+    using System;
+    using Requests.Shared;
+    using Weee.Tests.Core.Model;
+    using RequestHandlers.Shared;
+    using System.Threading.Tasks;
 
     public class GetSubmissionHistoryDataAccessTests
     {
         [Fact]
-        public async void GetSubmissionHistory_WitValidSchemeId_ReturnsAllYearsSubmissionHistoryData()
+        public async Task GetSubmissionHistory_WitValidSchemeId_ReturnsAllYearsSubmissionHistoryData()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -53,7 +54,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_WitValidSchemeIdAndYear2015_ReturnsOnly2015YearSubmissionHistoryData()
+        public async Task GetSubmissionHistory_WitValidSchemeIdAndYear2015_ReturnsOnly2015YearSubmissionHistoryData()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -100,7 +101,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedBySubmissionDateDescending_AsDefaultSort()
+        public async Task GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedBySubmissionDateDescending_AsDefaultSort()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -140,7 +141,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateDescending_WhenOrderBySubmissionDateDescendingSpecified()
+        public async Task GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateDescending_WhenOrderBySubmissionDateDescendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -180,7 +181,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateAscending_WhenOrderBySubmissionDateAscendingSpecified()
+        public async Task GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateAscending_WhenOrderBySubmissionDateAscendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -220,7 +221,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingSubmissionDateDescending_WhenOrderByComplianceYearDescendingSpecified()
+        public async Task GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingSubmissionDateDescending_WhenOrderByComplianceYearDescendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -265,7 +266,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearAscendingSubmissionDateDescending_WhenOrderByComplianceYearAscendingSpecified()
+        public async Task GetSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearAscendingSubmissionDateDescending_WhenOrderByComplianceYearAscendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -310,7 +311,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsSubmissionHistoryDataCount()
+        public async Task GetSubmissionHistory_ReturnsSubmissionHistoryDataCount()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -347,7 +348,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_DoesNotReturnSummaryData_WhenIncludeSummaryDataFalse()
+        public async Task GetSubmissionHistory_DoesNotReturnSummaryData_WhenIncludeSummaryDataFalse()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -375,7 +376,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsProducerAsNew_WhenNoExistingProducerSubmissionForSameYearAndScheme()
+        public async Task GetSubmissionHistory_ReturnsProducerAsNew_WhenNoExistingProducerSubmissionForSameYearAndScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -405,7 +406,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsProducerAsNew_WhenExistingProducerUploadButNoSubmissionForSameYearAndScheme()
+        public async Task GetSubmissionHistory_ReturnsProducerAsNew_WhenExistingProducerUploadButNoSubmissionForSameYearAndScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -441,7 +442,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsProducerAsNew_ProducerRegisteredForDifferentSchemeWithinSameYear_ButFirstSubmissionForCurrentScheme()
+        public async Task GetSubmissionHistory_ReturnsProducerAsNew_ProducerRegisteredForDifferentSchemeWithinSameYear_ButFirstSubmissionForCurrentScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -478,7 +479,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsProducerAsNew_WhenRegisteredForSameSchemeInAnotherYear_ButNoExistingProducerSubmissionForCurrentYear()
+        public async Task GetSubmissionHistory_ReturnsProducerAsNew_WhenRegisteredForSameSchemeInAnotherYear_ButNoExistingProducerSubmissionForCurrentYear()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -518,7 +519,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsProducerAsChanged_WhenSubmissionForSameYearAndScheme()
+        public async Task GetSubmissionHistory_ReturnsProducerAsChanged_WhenSubmissionForSameYearAndScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -578,7 +579,7 @@
         }
 
         [Fact]
-        public async void GetSubmissionHistory_ReturnsProducerAsNew_WhenRemovedPriorToSubmission()
+        public async Task GetSubmissionHistory_ReturnsProducerAsNew_WhenRemovedPriorToSubmission()
         {
             using (var database = new DatabaseWrapper())
             {

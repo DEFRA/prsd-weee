@@ -9,7 +9,7 @@
     public class ProducerListFactoryDataAccessTests
     {
         [Fact]
-        public async void FetchSchemeInfo_WithValidOrganisationId_ReturnsScheme()
+        public async Task FetchSchemeInfo_WithValidOrganisationId_ReturnsScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public async void GetRegistrationNumbers_ReturnsRegistrationNumbers()
+        public async Task GetRegistrationNumbers_ReturnsRegistrationNumbers()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -78,7 +78,7 @@
         }
 
         [Fact]
-        public async void GetRegistrationNumbers_ReturnsSpecifiedNumberOfRegistrationNumbers()
+        public async Task GetRegistrationNumbers_ReturnsSpecifiedNumberOfRegistrationNumbers()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -118,7 +118,7 @@
         }
 
         [Fact]
-        public async void GetRegistrationNumbers_ReturnsRegistrationNumbers_ForSpecifiedOrganisationOnly()
+        public async Task GetRegistrationNumbers_ReturnsRegistrationNumbers_ForSpecifiedOrganisationOnly()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -163,7 +163,7 @@
         }
 
         [Fact]
-        public async void GetRegistrationNumbers_ReturnsRegistrationNumbers_ForSpecifiedComplianceYearOnly()
+        public async Task GetRegistrationNumbers_ReturnsRegistrationNumbers_ForSpecifiedComplianceYearOnly()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -202,7 +202,7 @@
         }
 
         [Fact]
-        public async void GetRegistrationNumbers_ReturnsRegistrationNumbers_ForRegisteredProducerWithNonNullCurrentSubmissionOnly()
+        public async Task GetRegistrationNumbers_ReturnsRegistrationNumbers_ForRegisteredProducerWithNonNullCurrentSubmissionOnly()
         {
             using (var database = new DatabaseWrapper())
             {

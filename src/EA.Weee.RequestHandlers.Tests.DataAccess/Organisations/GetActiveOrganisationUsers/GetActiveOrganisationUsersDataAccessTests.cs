@@ -1,13 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Organisations.GetActiveOrganisationUsers
 {
-    using EA.Weee.DataAccess;
-    using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
+    using Xunit;
     using FakeItEasy;
     using FluentAssertions;
-    using Xunit;
-    using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
+    using EA.Weee.DataAccess;
+    using System.Threading.Tasks;
     using DomainHelper = Weee.Tests.Core.DomainHelper;
     using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
+    using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
+    using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
 
     public class GetActiveOrganisationUsersDataAccessTests
     {
@@ -19,7 +20,7 @@
         }
 
         [Fact]
-        public async void FetchActiveOrganisationUsers_GivenOrganisationId_ReturnsActiveUsersLinkedToOrganisations()
+        public async Task FetchActiveOrganisationUsers_GivenOrganisationId_ReturnsActiveUsersLinkedToOrganisations()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -48,7 +49,7 @@
         }
 
         [Fact]
-        public async void FetchActiveOrganisationUsers_GivenOrganisationId_UsersShouldBeOrganisedByEmails()
+        public async Task FetchActiveOrganisationUsers_GivenOrganisationId_UsersShouldBeOrganisedByEmails()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {

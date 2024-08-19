@@ -9,7 +9,7 @@
     public class GetDataReturnsActiveComplianceYearsDataAccessTests
     {
         [Fact]
-        public async void Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
+        public async Task Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
         {
             using (var database = new DatabaseWrapper())
             {
