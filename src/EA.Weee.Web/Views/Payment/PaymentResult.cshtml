@@ -8,7 +8,7 @@
     <header class="hgroup">
         <h2 class="govuk-heading-l">Payment Result</h2>
     </header>
-    <p>@Html.DisplayFor(model => model.Description)</p>
+    <p id="payment-description" class="govuk-body">@Html.DisplayFor(model => model.Description)</p>
 
     <table id="paymentResultsTable" class="govuk-table prsd-table">
         <tbody class="govuk-table__body">
@@ -38,10 +38,10 @@
             </tr>
             <tr>
                 <th class="govuk-table__cell" style="text-align: left;">
-                    @Html.DisplayNameFor(model => model.Amount)
+                    Total Amount
                 </th>
                 <td class="govuk-table__cell" style="text-align: left;">
-                    @Html.DisplayFor(model => model.Amount)
+                    <span id="amount" class="amount" data-amount="30.00">£@Html.DisplayFor(model => model.Amount)</span>
                 </td>
             </tr>
             <tr>

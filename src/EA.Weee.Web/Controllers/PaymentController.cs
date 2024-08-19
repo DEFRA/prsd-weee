@@ -18,7 +18,6 @@
         private string apiKey = "api_test_ko7qtjqqa2l8jgmhmin77p1s4qjgmebv2futglsv58b4u9o4blt1b4vnkb";
 
         // GET: Payment
-        [AllowAnonymous]
         [HttpGet]
         public ActionResult Index()
         {
@@ -58,7 +57,6 @@
             return View(reqs);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public ActionResult CreatePayment()
         {
