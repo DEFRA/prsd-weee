@@ -267,7 +267,7 @@
         }
 
         [Fact(Skip = "Tests desired behaviour, but not actual behaviour. Currently fails, but full audits can be constructed by OriginalValues and current data instead")]
-        public async void AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedNewForeignKeyJson()
+        public async Task AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedNewForeignKeyJson()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -305,7 +305,7 @@
         }
 
             [Fact]
-        public async void AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedOriginalForeignKeyJson()
+        public async Task AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedOriginalForeignKeyJson()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {

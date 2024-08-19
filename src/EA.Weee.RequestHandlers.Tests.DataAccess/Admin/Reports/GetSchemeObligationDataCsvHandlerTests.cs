@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Reports
 {
     using RequestHandlers.Admin.Reports.GetSchemeObligationDataCsv;
+    using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
+
     public class GetSchemeObligationDataCsvHandlerTests
     {
         [Fact]

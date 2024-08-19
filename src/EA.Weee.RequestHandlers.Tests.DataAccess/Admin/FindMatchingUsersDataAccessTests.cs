@@ -1,17 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin
 {
-    using Xunit;
-    using System;
     using AutoFixture;
-    using Domain.User;
-    using System.Linq;
     using Core.Helpers;
-    using EA.Weee.Core.User;
+    using Domain.User;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.User;
     using RequestHandlers.Admin;
-    using Weee.Tests.Core.Model;
-    using System.Threading.Tasks;
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Weee.Tests.Core.Model;
+    using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 
     public class FindMatchingUsersDataAccessTests

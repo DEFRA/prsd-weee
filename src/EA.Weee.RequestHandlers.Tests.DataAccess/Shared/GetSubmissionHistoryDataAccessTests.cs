@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Shared
 {
-    using Xunit;
-    using System;
-    using Requests.Shared;
-    using Weee.Tests.Core.Model;
     using RequestHandlers.Shared;
+    using Requests.Shared;
+    using System;
     using System.Threading.Tasks;
+    using Weee.Tests.Core.Model;
+    using Xunit;
 
     public class GetSubmissionHistoryDataAccessTests
     {

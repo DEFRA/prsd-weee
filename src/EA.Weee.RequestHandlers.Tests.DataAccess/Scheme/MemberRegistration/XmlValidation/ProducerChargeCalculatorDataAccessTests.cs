@@ -2,6 +2,7 @@
 {
     using Domain.Lookup;
     using EA.Weee.Tests.Core.Model;
+    using System.Threading.Tasks;
     using Weee.DataAccess.DataAccess;
     using Xunit;
 

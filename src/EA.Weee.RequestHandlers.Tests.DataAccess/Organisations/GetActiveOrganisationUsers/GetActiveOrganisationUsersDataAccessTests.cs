@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Organisations.GetActiveOrganisationUsers
 {
-    using Xunit;
+    using EA.Weee.DataAccess;
+    using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
     using FakeItEasy;
     using FluentAssertions;
-    using EA.Weee.DataAccess;
     using System.Threading.Tasks;
+    using Xunit;
+    using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using DomainHelper = Weee.Tests.Core.DomainHelper;
     using ModelHelper = Weee.Tests.Core.Model.ModelHelper;
-    using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
-    using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
 
     public class GetActiveOrganisationUsersDataAccessTests
     {

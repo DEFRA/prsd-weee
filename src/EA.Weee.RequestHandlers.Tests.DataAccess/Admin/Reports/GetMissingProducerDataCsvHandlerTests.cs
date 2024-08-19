@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Reports
 {
-    using Xunit;
-    using System;
     using Core.Shared;
-    using Weee.Tests.Core.Model;
-    using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using Weee.DataAccess.StoredProcedure;
     using RequestHandlers.Admin.Reports.GetMissingProducerDataCsv;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Weee.DataAccess.StoredProcedure;
+    using Weee.Tests.Core.Model;
+    using Xunit;
 
     public class GetMissingProducerDataCsvHandlerTests
     {

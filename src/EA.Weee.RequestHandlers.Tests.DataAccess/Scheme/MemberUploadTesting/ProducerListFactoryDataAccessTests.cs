@@ -3,6 +3,7 @@
     using RequestHandlers.Scheme.MemberUploadTesting;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core.Model;
     using Xunit;
 

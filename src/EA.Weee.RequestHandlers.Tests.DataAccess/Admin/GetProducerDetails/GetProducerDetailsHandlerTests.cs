@@ -10,6 +10,7 @@
     using Security;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading.Tasks;
     using Weee.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;

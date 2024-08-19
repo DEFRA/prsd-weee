@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
-    using Xunit;
-    using FakeItEasy;
-    using Domain.Lookup;
     using DataAccess.DataAccess;
-    using EA.Weee.Domain.Scheme;
-    using System.Threading.Tasks;
+    using Domain.Lookup;
     using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.Scheme;
     using EA.Weee.Xml.MemberRegistration;
+    using FakeItEasy;
+    using System.Threading.Tasks;
+    using Xunit;
 
     public class EnvironmentAgencyProducerChargeBandCalculatorTests
     {
