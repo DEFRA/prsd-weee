@@ -4,6 +4,7 @@
     using System;
     using System.Diagnostics;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class HttpClientWrapper : IHttpClientWrapper
@@ -13,33 +14,39 @@
 
         public HttpClientWrapper(HttpClient httpClient, ILogger logger)
         {
-            this.httpClient = httpClient;
-            this.logger = logger;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<HttpResponseMessage> GetAsync(string requestUri)
         {
-            var stopwatch = Stopwatch.StartNew();
+            return await SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri));
+        }
 
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+        {
+            var stopwatch = Stopwatch.StartNew();
             try
             {
-                logger.Information("Starting GET request to {RequestUri}", requestUri);
+                var fullUrl = GetFullUrl(request.RequestUri);
+                logger.Information("Starting {Method} request to {FullUrl}", request.Method, fullUrl);
 
-                var response = await httpClient.GetAsync(requestUri);
-
+                var response = await httpClient.SendAsync(request, cancellationToken);
                 stopwatch.Stop();
 
                 logger.Information(
-                    "Completed GET request to {RequestUri} with status code {StatusCode} in {ElapsedMilliseconds} ms",
-                    requestUri,
+                    "Completed {Method} request to {FullUrl} with status code {StatusCode} in {ElapsedMilliseconds} ms",
+                    request.Method,
+                    fullUrl,
                     (int)response.StatusCode,
                     stopwatch.ElapsedMilliseconds);
 
                 if (!response.IsSuccessStatusCode)
                 {
                     logger.Warning(
-                        "GET request to {RequestUri} returned non-success status code {StatusCode}",
-                        requestUri,
+                        "{Method} request to {FullUrl} returned non-success status code {StatusCode}",
+                        request.Method,
+                        fullUrl,
                         (int)response.StatusCode);
                 }
 
@@ -47,42 +54,48 @@
             }
             catch (HttpRequestException ex)
             {
-                stopwatch.Stop();
-
-                logger.Error(
-                    ex,
-                    "HTTP request exception occurred while making GET request to {RequestUri} after {ElapsedMilliseconds} ms: {ErrorMessage}",
-                    requestUri,
-                    stopwatch.ElapsedMilliseconds,
-                    ex.Message);
-
+                LogError(ex, "HTTP request exception", request, stopwatch);
                 throw;
             }
             catch (TaskCanceledException ex)
             {
-                stopwatch.Stop();
-
-                logger.Error(
-                    ex,
-                    "Request timed out while making GET request to {RequestUri} after {ElapsedMilliseconds} ms",
-                    requestUri,
-                    stopwatch.ElapsedMilliseconds);
-
+                LogError(ex, "Request timed out", request, stopwatch);
                 throw;
             }
             catch (Exception ex)
             {
-                stopwatch.Stop();
-
-                logger.Error(
-                    ex,
-                    "Unexpected error occurred while making GET request to {RequestUri} after {ElapsedMilliseconds} ms: {ErrorMessage}",
-                    requestUri,
-                    stopwatch.ElapsedMilliseconds,
-                    ex.Message);
-
+                LogError(ex, "Unexpected error", request, stopwatch);
                 throw;
             }
+        }
+
+        private string GetFullUrl(Uri requestUri)
+        {
+            if (requestUri.IsAbsoluteUri)
+            {
+                return requestUri.ToString();
+            }
+
+            if (httpClient.BaseAddress == null)
+            {
+                return requestUri.ToString();
+            }
+
+            return new Uri(httpClient.BaseAddress, requestUri).ToString();
+        }
+
+        private void LogError(Exception ex, string errorType, HttpRequestMessage request, Stopwatch stopwatch)
+        {
+            stopwatch.Stop();
+            var fullUrl = GetFullUrl(request.RequestUri);
+            logger.Error(
+                ex,
+                "{ErrorType} occurred while making {Method} request to {FullUrl} after {ElapsedMilliseconds} ms: {ErrorMessage}",
+                errorType,
+                request.Method,
+                fullUrl,
+                stopwatch.ElapsedMilliseconds,
+                ex.Message);
         }
 
         public void Dispose()

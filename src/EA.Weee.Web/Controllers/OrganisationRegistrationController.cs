@@ -22,20 +22,29 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
+        private readonly Func<IAddressLookupClient> addressLookupClient;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService,
+            Func<IAddressLookupClient> addressLookupClient)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
+            this.addressLookupClient = addressLookupClient;
         }
 
         [HttpGet]
         public async Task<ActionResult> Search()
         {
+            using (var address = addressLookupClient())
+            {
+                var test = await address.GetAddressLookup("api/address-lookup/v2.0/addresses", "GU213JY");
+                var test2 = 10;
+            }
+
             IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
             SearchViewModel model = new SearchViewModel
             {

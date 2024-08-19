@@ -11,10 +11,10 @@
 
     public class HttpClientWrapperFactory : IHttpClientWrapperFactory
     {
-        public IHttpClientWrapper CreateHttpClient(string baseUrl, HttpClientHandlerConfig config, X509Certificate2 certificate, ILogger logger)
+        public IHttpClientWrapper CreateHttpClient(string baseUrl, HttpClientHandlerConfig config, ILogger logger)
         {
             var handler = HttpClientHandlerFactory.Create(config);
-            handler.ClientCertificates.Add(certificate);
+
             var baseUri = new Uri(baseUrl);
             var httpClient = new HttpClient(handler)
             {

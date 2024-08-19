@@ -5,6 +5,6 @@
 
     public interface IHttpClientWrapperFactory
     {
-        IHttpClientWrapper CreateHttpClient(string baseUrl, HttpClientHandlerConfig config, X509Certificate2 certificate, ILogger logger);
+        IHttpClientWrapper CreateHttpClient(string baseUrl, HttpClientHandlerConfig config, ILogger logger);
     }
 }

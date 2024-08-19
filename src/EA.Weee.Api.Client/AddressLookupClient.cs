@@ -1,28 +1,29 @@
 ﻿namespace EA.Weee.Api.Client
 {
     using CuttingEdge.Conditions;
+    using EA.Weee.Api.Client.Entities.AddressLookup;
     using EA.Weee.Api.Client.Serlializer;
     using Serilog;
     using System;
+    using System.Collections.Generic;
     using System.Net.Http;
-    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
-    public class CompaniesHouseClient : ICompaniesHouseClient
+    public class AddressLookupClient : IAddressLookupClient
     {
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
         private readonly IHttpClientWrapper httpClient;
+        private readonly Dictionary<string, string> customHeaders;
 
         private bool disposed;
 
-        public CompaniesHouseClient(
+        public AddressLookupClient(
             string baseUrl,
             IHttpClientWrapperFactory httpClientFactory,
             IRetryPolicyWrapper retryPolicy,
             IJsonSerializer jsonSerializer,
             HttpClientHandlerConfig config,
-            X509Certificate2 certificate,
             ILogger logger)
         {
             Condition.Requires(baseUrl).IsNotNullOrWhiteSpace();
@@ -30,32 +31,39 @@
             Condition.Requires(retryPolicy).IsNotNull();
             Condition.Requires(jsonSerializer).IsNotNull();
             Condition.Requires(config).IsNotNull();
-            Condition.Requires(certificate).IsNotNull();
             Condition.Requires(logger).IsNotNull();
 
             var handler = HttpClientHandlerFactory.Create(config);
 
-            handler.ClientCertificates.Add(certificate);
-
             this.httpClient = httpClientFactory.CreateHttpClient(baseUrl, config, logger);
-
+            
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;
+            this.customHeaders = new Dictionary<string, string>();
+            this.customHeaders.Add("Ocp-Apim-Subscription-Key", "e1cf75efc665494a8d1d792fe30f2319");
         }
 
-        public async Task<T> GetCompanyDetailsAsync<T>(string endpoint, string companyReference)
+        public async Task<AddressLookupResponse> GetAddressLookup(string endpoint, string postCode)
         {
             Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
-            Condition.Requires(companyReference).IsNotNullOrWhiteSpace("Company reference cannot be null or whitespace.");
+            Condition.Requires(postCode).IsNotNullOrWhiteSpace("Postcode cannot be null or whitespace.");
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{endpoint}?postcode={postCode}");
+
+            // Add custom headers to the request
+            foreach (var header in customHeaders)
+            {
+                request.Headers.Add(header.Key, header.Value);
+            }
 
             var response = await retryPolicy.ExecuteAsync(() =>
-                httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
+                httpClient.SendAsync(request)).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return jsonSerializer.Deserialize<T>(content);
+            return jsonSerializer.Deserialize<AddressLookupResponse>(content);
         }
 
         public void Dispose()
