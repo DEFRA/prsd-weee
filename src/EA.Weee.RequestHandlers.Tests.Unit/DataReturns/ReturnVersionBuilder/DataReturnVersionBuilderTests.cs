@@ -670,7 +670,7 @@
 
             var result = await builder.Build();
 
-            Assert.Single(result.ErrorData);
+            Assert.Equal(2, result.ErrorData.Count);
             Assert.Contains(result.ErrorData, r => r.ErrorLevel == ErrorLevel.Warning);
             Assert.Contains(result.ErrorData, r => r.ErrorLevel == ErrorLevel.Error);
         }
@@ -719,7 +719,7 @@
 
             // Assert
             // Only outputs one of each duplicate error/warning
-            Assert.Single(result.ErrorData);
+            Assert.Equal(2, result.ErrorData.Count);
         }
 
         private class DataReturnVersionBuilderHelper

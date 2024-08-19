@@ -228,7 +228,7 @@
             Assert.Equal(300, invoice.TransactionTotal);
 
             Assert.NotNull(invoice.LineItems);
-                Assert.Single(invoice.LineItems);
+            Assert.Equal(2, invoice.LineItems.Count);
 
             InvoiceLineItem lineItem1 = invoice.LineItems[0];
             Assert.NotNull(lineItem1);
@@ -309,7 +309,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Single(transactionFile.Invoices);
+            Assert.Equal(2, transactionFile.Invoices.Count);
 
             Invoice invoice1 = transactionFile.Invoices[0];
             Assert.NotNull(invoice1);

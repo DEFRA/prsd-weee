@@ -221,7 +221,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Single(transactionFile.Invoices);
+            Assert.Equal(2, transactionFile.Invoices.Count);
 
             Invoice invoice1 = transactionFile.Invoices[0];
             Assert.NotNull(invoice1);

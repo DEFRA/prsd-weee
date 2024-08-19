@@ -151,7 +151,7 @@
             DataReturnForSubmission result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Single(result.Errors);
+            Assert.Equal(4, result.Errors.Count);
             Assert.True(result.Errors.ElementAt(0).Description == "Error without line no"
                 && result.Errors.ElementAt(1).Description == "Error on 5 line no"
                 && result.Errors.ElementAt(2).Description == "Error on 55 line no"

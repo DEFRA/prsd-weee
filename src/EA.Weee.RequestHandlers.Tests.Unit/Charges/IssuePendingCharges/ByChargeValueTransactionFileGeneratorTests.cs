@@ -144,7 +144,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Single(transactionFile.Invoices);
+            Assert.Equal(0, transactionFile.Invoices.Count);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Single(transactionFile.Invoices);
+            Assert.Equal(0, transactionFile.Invoices.Count);
         }
 
         /// <summary>
