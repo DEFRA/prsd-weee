@@ -95,24 +95,30 @@
         [HttpGet]
         public ActionResult Result(string id)
         {
-            using (var client = new HttpClient())
+            string paymentId = id;
+
+            //paymentId ??= Session["paymentId"].ToString();
+
+            PaymentWithAllLinks paymentWithAllLinks = null;
+
+            if (paymentId != null) 
             {
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{apiKey}");
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", $"{apiKey}");
 
-                var payClient = new PayClient(client);
+                    var payClient = new PayClient(client);
 
-                var paymentId = Session["paymentId"].ToString();
+                    var getPaymentTask = payClient.Get_a_paymentAsync(paymentId);
+                    getPaymentTask.Wait();
 
-                var getPaymentTask = payClient.Get_a_paymentAsync(paymentId);
-                getPaymentTask.Wait();
-
-                var paymentWithAllLinks = getPaymentTask.Result;
-
-                var model = new PaymentResult();
-
-                return View("PaymentResult", model);
+                    paymentWithAllLinks = getPaymentTask.Result;
+                }
             }
+            
+            //var model = new PaymentResult();
+            return View("PaymentResult", paymentWithAllLinks);
         }
     }
 }

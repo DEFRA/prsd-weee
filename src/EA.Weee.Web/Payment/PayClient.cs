@@ -2832,7 +2832,7 @@ namespace EA.Weee.Web.Payment
         /// <summary>
         /// The digital wallet type that the user paid with
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("wallet_type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("wallet_type", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public CardDetailsWallet_type Wallet_type { get; set; }
 

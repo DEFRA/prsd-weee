@@ -2,9 +2,54 @@
 @{
     ViewBag.Title = "Payment";
 }
-@model EA.Weee.Web.ViewModels.Payment.PaymentResult
+@model EA.Weee.Web.Payment.PaymentWithAllLinks
+
 
 
 <h1 class="govuk-heading-l">Payment Result</h1>
-<h2 class="govuk-heading-m">Appropriate signatory</h2>
+<h2 class="govuk-heading-m">@Html.DisplayFor(model => model.Description)</h2>
 
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <td>
+            @Html.DisplayFor(model => model.Email)
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Reference)
+        </th>
+        <td>
+            @Html.DisplayFor(model => model.Reference)
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Card brand
+        </th>
+        <td>
+            @Html.DisplayFor(model => model.Card_brand)
+        </td>
+    </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <td>
+            @Html.DisplayFor(model => model.Amount)
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Date of payment
+        </th>
+        <td>
+
+            @Html.DisplayFor(model => model.Created_date)
+        </td>
+    </tr>
+
+</table>
