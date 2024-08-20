@@ -607,7 +607,7 @@
             };
 
             // Act
-            var result = await controller.TonnageType(searchText);
+            var result = await controller.TonnageType(viewModel) as ViewResult;
 
             // Assert
             var resultViewModel = result.Model as TonnageTypeViewModel;
