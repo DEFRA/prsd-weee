@@ -80,7 +80,11 @@
             <li>your organisation has not yet been created in our service</li>
             <li>you entered something other than the organisation name</li>
         </ul>
-
+        <p class="govuk-body">
+            If you are a small producer of Electrical and Electronic Equipment (EEE) who hasn't previously been registered,
+            you will need to create an account.
+            <a href="@Url.Action("TonnageType", "OrganisationRegistration", new {searchTerm = Model.SearchTerm})">Register for a small producer account</a>.
+        </p>
         <p>
             @Html.ActionLink("Start another search", "Search", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
         </p>

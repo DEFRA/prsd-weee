@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -9,6 +10,7 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Weee.Core.Search;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
@@ -554,6 +556,96 @@
 
             Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
             Assert.Equal(redirectResult.RouteValues["OrganisationId"], new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+        }
+
+        [Fact]
+        public async void TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
+        {
+            // Arrange
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService);
+
+            const string searchText = "company";
+            var viewModel = new TonnageTypeViewModel()
+            {
+                SearchedText = searchText,
+            };
+
+            // Act
+            var result = await controller.TonnageType(searchText);
+
+            // Assert
+            var resultViewModel = result.Model as TonnageTypeViewModel;
+            Assert.NotNull(result);
+            Assert.Equal(searchText, resultViewModel.SearchedText);
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Tonnage");
+        }
+
+        [Fact]
+        public async void TonnageTypePost_ModelNotValid_ReturnsView()
+        {
+            // Arrange
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService);
+
+            controller.ModelState.AddModelError("error", "error");
+
+            const string searchText = "company";
+            var viewModel = new TonnageTypeViewModel()
+            {
+                SearchedText = searchText
+            };
+
+            // Act
+            var result = await controller.TonnageType(searchText);
+
+            // Assert
+            var resultViewModel = result.Model as TonnageTypeViewModel;
+            Assert.NotNull(result);
+            Assert.Equal(searchText, resultViewModel.SearchedText);
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Tonnage");
+        }
+
+        [Theory]
+        [InlineData("5 tonnes or more")]
+        [InlineData("Less than 5 tonnes")]
+        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue)
+        {
+            // Arrange
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService);
+
+            const string searchText = "company";
+            var viewModel = new TonnageTypeViewModel()
+            {
+                SearchedText = searchText,
+                SelectedValue = selectedValue
+            };
+
+            // Act
+            var result = await controller.TonnageType(viewModel);
+
+            // Assert
+            var redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            redirectResult.RouteValues["controller"].Should().Be("Holding");
         }
     }
 }

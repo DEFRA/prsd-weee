@@ -148,6 +148,7 @@
     <Compile Include="Constants\DateTimeConstants.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Organisations\TonnageType.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
     <Compile Include="Shared\EntityIdDisplayNameData.cs" />
     <Compile Include="Shared\AddressUtilities.cs" />
