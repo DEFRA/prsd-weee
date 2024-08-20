@@ -6,28 +6,31 @@
 }
 
 
-@using (Html.BeginForm())
-{
+@section full_main_content{
+
     @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Controllers.OrganisationRegistrationController>(a => a.SearchResults(Model.SearchedText))))
 
-    @Html.Gds().ValidationSummary()
-    @Html.HiddenFor(m => m.SearchedText)
+    @using (Html.BeginForm())
+    {
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.SearchedText)
 
-    @Html.AntiForgeryToken()
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">
-            How many tonnes of Electrical or Electronic Equipment (EEE) do you produce a year?
-        </h1>
-    </header>
+        @Html.AntiForgeryToken()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                How many tonnes of Electrical or Electronic Equipment (EEE) do you produce a year?
+            </h1>
+        </header>
 
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
-        @this.WeeeGds().RadioButtonsFor(
-            m => m.SelectedValue,
-            Model.PossibleValues,
-            "Tonnage Type",
-            RadioButtonLegend.VisuallyHidden,
-            RadioButtonLayout.Stacked)
-    </div>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Tonnage Type",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
 
-    @(this.WeeeGds().Submit("Continue"))
+        @(this.WeeeGds().Submit("Continue"))
+    }
 }
