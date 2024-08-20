@@ -92,14 +92,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=7.18.5.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.7.18.5\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=8.103.2.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.8.103.2\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Z.EntityFramework.Plus.EF6, Version=7.18.5.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.7.18.5\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=8.103.2.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.8.103.2\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="Z.Expressions.Eval, Version=5.0.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.Expressions.Eval.5.0.1\lib\net45\Z.Expressions.Eval.dll</HintPath>
+    <Reference Include="Z.Expressions.Eval, Version=6.1.9.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.Expressions.Eval.6.1.9\lib\net45\Z.Expressions.Eval.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
