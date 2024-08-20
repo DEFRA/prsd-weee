@@ -163,6 +163,8 @@
     <Compile Include="Mappings\AatfSimpleMap.cs" />
     <Compile Include="Mappings\EvidenceNoteWitheCriteriaMapperBase.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
+    <Compile Include="Organisations\DirectRegistrants\AddUpdateOrganisationTransactionHandler.cs" />
+    <Compile Include="Organisations\DirectRegistrants\GetUserOrganisationTransactionHandler.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />

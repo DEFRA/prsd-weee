@@ -22,15 +22,18 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
+        private readonly IOrganisationTransactionService organisationTransactionService;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService,
+            IOrganisationTransactionService organisationTransactionService)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
+            this.organisationTransactionService = organisationTransactionService;
         }
 
         [HttpGet]
@@ -49,6 +52,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Search(SearchViewModel viewModel)
         {
+            await organisationTransactionService.CaptureViewModel(this.User.GetAccessToken(), viewModel);
+
             if (!ModelState.IsValid)
             {
                 IEnumerable<OrganisationUserData> organisations = await GetOrganisations();

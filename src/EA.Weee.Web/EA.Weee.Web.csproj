@@ -526,6 +526,8 @@
     <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
+    <Compile Include="Services\IOrganisationTransactionService.cs" />
+    <Compile Include="Services\OrganisationTransactionService.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterViewModel.cs" />
