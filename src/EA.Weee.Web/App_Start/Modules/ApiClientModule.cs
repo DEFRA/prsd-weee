@@ -69,26 +69,26 @@
             //}).As<ICompaniesHouseClient>();
 
             // example registraction of external service
-            builder.Register(c =>
-            {
-                var cc = c.Resolve<IComponentContext>();
-                var config = cc.Resolve<IAppConfiguration>();
-                var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
-                var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
-                var jsonSerializer = cc.Resolve<IJsonSerializer>();
-                var logger = cc.Resolve<ILogger>();
+            //builder.Register(c =>
+            //{
+            //    var cc = c.Resolve<IComponentContext>();
+            //    var config = cc.Resolve<IAppConfiguration>();
+            //    var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
+            //    var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
+            //    var jsonSerializer = cc.Resolve<IJsonSerializer>();
+            //    var logger = cc.Resolve<ILogger>();
 
-                HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
-                {
-                    ProxyEnabled = config.ProxyEnabled,
-                    ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
-                    ProxyWebAddress = config.ProxyWebAddress,
-                    ByPassProxyOnLocal = config.ByPassProxyOnLocal
-                };
+            //    HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
+            //    {
+            //        ProxyEnabled = config.ProxyEnabled,
+            //        ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
+            //        ProxyWebAddress = config.ProxyWebAddress,
+            //        ByPassProxyOnLocal = config.ByPassProxyOnLocal
+            //    };
 
-                return new AddressLookupClient("https://dev-api-gateway.azure.defra.cloud/", httpClient, retryPolicy,
-                    jsonSerializer, httpClientHandlerConfig, logger);
-            }).As<IAddressLookupClient>();
+            //    return new AddressLookupClient("https://dev-api-gateway.azure.defra.cloud/", httpClient, retryPolicy,
+            //        jsonSerializer, httpClientHandlerConfig, logger);
+            //}).As<IAddressLookupClient>();
         }
     }
 }

@@ -33,12 +33,8 @@
             Condition.Requires(certificate).IsNotNull();
             Condition.Requires(logger).IsNotNull();
 
-            var handler = HttpClientHandlerFactory.Create(config);
-
-            handler.ClientCertificates.Add(certificate);
-
-            this.httpClient = httpClientFactory.CreateHttpClient(baseUrl, config, logger);
-
+            this.httpClient = httpClientFactory.CreateHttpClientWithCertificate(baseUrl, config, logger, certificate);
+            
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;
         }

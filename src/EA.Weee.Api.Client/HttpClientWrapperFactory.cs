@@ -1,25 +1,36 @@
 ﻿namespace EA.Weee.Api.Client
 {
-    using Serilog;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Http;
     using System.Security.Cryptography.X509Certificates;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Serilog;
 
     public class HttpClientWrapperFactory : IHttpClientWrapperFactory
     {
         public IHttpClientWrapper CreateHttpClient(string baseUrl, HttpClientHandlerConfig config, ILogger logger)
         {
+            return CreateHttpClientInternal(baseUrl, config, logger);
+        }
+
+        public IHttpClientWrapper CreateHttpClientWithCertificate(string baseUrl, HttpClientHandlerConfig config, ILogger logger, X509Certificate2 certificate)
+        {
+            return CreateHttpClientInternal(baseUrl, config, logger, certificate);
+        }
+
+        private static IHttpClientWrapper CreateHttpClientInternal(string baseUrl, HttpClientHandlerConfig config, ILogger logger, X509Certificate2 certificate = null)
+        {
             var handler = HttpClientHandlerFactory.Create(config);
 
-            var baseUri = new Uri(baseUrl);
+            if (certificate != null)
+            {
+                handler.ClientCertificates.Add(certificate);
+            }
+
             var httpClient = new HttpClient(handler)
             {
-                BaseAddress = baseUri
+                BaseAddress = new Uri(baseUrl)
             };
+
             return new HttpClientWrapper(httpClient, logger);
         }
     }
