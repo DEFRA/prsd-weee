@@ -113,6 +113,9 @@
     <Reference Include="itext.forms, Version=7.2.5.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext7.7.2.5\lib\net461\itext.forms.dll</HintPath>
     </Reference>
+    <Reference Include="itext.html2pdf, Version=4.0.5.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itext7.pdfhtml.4.0.5\lib\net461\itext.html2pdf.dll</HintPath>
+    </Reference>
     <Reference Include="itext.io, Version=7.2.5.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext7.7.2.5\lib\net461\itext.io.dll</HintPath>
     </Reference>
