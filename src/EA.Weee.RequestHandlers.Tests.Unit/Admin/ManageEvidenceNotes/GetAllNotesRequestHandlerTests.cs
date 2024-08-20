@@ -76,7 +76,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_NoteDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequest_NoteDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(message);
@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithEmptyNoteType_NoteDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithEmptyNoteType_NoteDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(messageWithEmptyNoteInternalTypeList);
@@ -116,7 +116,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithFiltersSet_NoteDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithFiltersSet_NoteDataAccessShouldBeCalledOnce()
         {
             // act
             var startDate = TestFixture.Create<DateTime?>();
@@ -146,7 +146,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
+        public async Task HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
             var note1 = A.Fake<Note>();
@@ -179,7 +179,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
+        public async Task HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
             var noteList = TestFixture.CreateMany<Note>(2).ToList();

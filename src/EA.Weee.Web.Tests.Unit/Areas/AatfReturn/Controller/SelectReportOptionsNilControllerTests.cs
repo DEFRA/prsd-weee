@@ -17,6 +17,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Weee.Tests.Core;
     using Xunit;
@@ -60,7 +61,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
@@ -68,7 +69,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -89,7 +90,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_MapperIsCalled()
+        public async Task IndexGet_GivenValidViewModel_MapperIsCalled()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -110,7 +111,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenReturn_SubmitReturnRequestShouldBeMade()
+        public async Task IndexPost_GivenReturn_SubmitReturnRequestShouldBeMade()
         {
             var model = new SelectReportOptionsNilViewModel() { ReturnId = Guid.NewGuid(), OrganisationId = Guid.NewGuid() };
 
@@ -121,7 +122,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenSubmittedReturn_ShouldRedirectToSubmittedReturnScreen()
+        public async Task IndexPost_GivenSubmittedReturn_ShouldRedirectToSubmittedReturnScreen()
         {
             var model = new SelectReportOptionsNilViewModel() { ReturnId = Guid.NewGuid(), OrganisationId = Guid.NewGuid() };
 

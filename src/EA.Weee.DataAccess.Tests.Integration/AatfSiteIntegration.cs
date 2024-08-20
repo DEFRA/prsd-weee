@@ -2,7 +2,6 @@
 {
     using Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
-    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
@@ -39,7 +38,7 @@
         }
 
         [Fact]
-        public async void UpdateAddress_GivenAddressToUpdate_ContextShouldContainUpdatedAddress()
+        public async Task UpdateAddress_GivenAddressToUpdate_ContextShouldContainUpdatedAddress()
         {
             using (var database = new DatabaseWrapper())
             {

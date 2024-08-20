@@ -10,6 +10,7 @@
     using Security;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading.Tasks;
     using Weee.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -27,7 +28,7 @@
 
         [Theory(Skip = "Should only be run manually to check the performance of this handler with a populated database")]
         [InlineData(3000, "WEE/MM0004AA")]
-        public async void PerformanceTest(int expectedUnderMilliseconds, string producerRegistrationNumber)
+        public async Task PerformanceTest(int expectedUnderMilliseconds, string producerRegistrationNumber)
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {

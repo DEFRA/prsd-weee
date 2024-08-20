@@ -149,7 +149,7 @@
         /// when the current user is not allowed to edit pcs details.
         /// </summary>
         [Fact]
-        public async void GetEditScheme_ReturnsHttpForbiddenResult_WhenCanEditPcsIsFalse()
+        public async Task GetEditScheme_ReturnsHttpForbiddenResult_WhenCanEditPcsIsFalse()
         {
             // Arrange
             var schemeId = Guid.NewGuid();
@@ -170,7 +170,7 @@
         }
 
         [Fact]
-        public async void GetEditScheme_ReturnsView_WithManageSchemeModel()
+        public async Task GetEditScheme_ReturnsView_WithManageSchemeModel()
         {
             var schemeId = Guid.NewGuid();
 
@@ -197,7 +197,7 @@
         }
 
         [Fact]
-        public async void GetEditScheme_NullSchemeId_RedirectsToManageSchemes()
+        public async Task GetEditScheme_NullSchemeId_RedirectsToManageSchemes()
         {
             var controller = SchemeController();
 
@@ -213,7 +213,7 @@
         [Theory]
         [InlineData(SchemeStatus.Withdrawn)]
         [InlineData(SchemeStatus.Rejected)]
-        public async void GetEditScheme_StatusIsRejectedOrWithdrawn_IsChangeableStatusIsFalse(SchemeStatus status)
+        public async Task GetEditScheme_StatusIsRejectedOrWithdrawn_IsChangeableStatusIsFalse(SchemeStatus status)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
@@ -229,7 +229,7 @@
         }
 
         [Fact]
-        public async void GetEditScheme_StatusIsApproved_AvailableStatusToChangeIsWithdrawn()
+        public async Task GetEditScheme_StatusIsApproved_AvailableStatusToChangeIsWithdrawn()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
@@ -250,7 +250,7 @@
         }
 
         [Fact]
-        public async void GetEditScheme_StatusIsPending_DoesNotProvideWithdrawnStatus()
+        public async Task GetEditScheme_StatusIsPending_DoesNotProvideWithdrawnStatus()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
@@ -268,7 +268,7 @@
         }
 
         [Fact]
-        public async void GetProducerCSV_ReturnsCSVFile()
+        public async Task GetProducerCSV_ReturnsCSVFile()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
                .Returns(new ProducerCSVFileData
@@ -286,7 +286,7 @@
         }
 
         [Fact]
-        public async void PostEditScheme_ModelWithError_AndCurrentSchemeStatusIsPending_ExecuteGetSchemeByIdReturnsViewWithApprovedRejectedAndPendingStatuses()
+        public async Task PostEditScheme_ModelWithError_AndCurrentSchemeStatusIsPending_ExecuteGetSchemeByIdReturnsViewWithApprovedRejectedAndPendingStatuses()
         {
             var status = SchemeStatus.Pending;
             var controller = SchemeController();
@@ -320,7 +320,7 @@
         }
 
         [Fact]
-        public async void PostEditScheme_ModelWithError_AndCurrentSchemeStatusIsApproved_ExecuteGetSchemeByIdReturnsViewWithApprovedAndWithdrawnStatuses()
+        public async Task PostEditScheme_ModelWithError_AndCurrentSchemeStatusIsApproved_ExecuteGetSchemeByIdReturnsViewWithApprovedAndWithdrawnStatuses()
         {
             var status = SchemeStatus.Approved;
             var controller = SchemeController();
@@ -353,7 +353,7 @@
         }
 
         [Fact]
-        public async void PostEditScheme_ModelWithError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
+        public async Task PostEditScheme_ModelWithError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
         {
             var controller = SchemeController();
             var schemeId = Guid.NewGuid();
@@ -372,7 +372,7 @@
         }
 
         [Fact]
-        public async void PostEditScheme_ModelWithNoError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
+        public async Task PostEditScheme_ModelWithNoError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
         {
             var controller = SchemeController();
             var schemeId = Guid.NewGuid();
@@ -509,7 +509,7 @@
         }
 
         [Fact]
-        public async void GetAddScheme_ReturnsView_WithManageSchemeModel()
+        public async Task GetAddScheme_ReturnsView_WithManageSchemeModel()
         {
             Guid organisationId = Guid.NewGuid();
 
@@ -527,7 +527,7 @@
         }
 
         [Fact]
-        public async void PostAddScheme_ModelWithError_ReturnModel()
+        public async Task PostAddScheme_ModelWithError_ReturnModel()
         {
             var status = SchemeStatus.Pending;
             var controller = SchemeController();
@@ -800,7 +800,7 @@
         }
 
         [Fact]
-        public async void GetAddScheme_BreadcrumbShouldBeSet()
+        public async Task GetAddScheme_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
     
@@ -810,7 +810,7 @@
         }
 
         [Fact]
-        public async void GetAddScheme_GivenOrganisation_ViewModelPropertiesShouldBeSet()
+        public async Task GetAddScheme_GivenOrganisation_ViewModelPropertiesShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var competentAuthority = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
@@ -835,7 +835,7 @@
         [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure)]
         [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceMandatoryForEAFailure)]
         [InlineData(CreateOrUpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure)]
-        public async void PostAddScheme__BreadcrumbShouldBeSet(CreateOrUpdateSchemeInformationResult.ResultType resultType)
+        public async Task PostAddScheme__BreadcrumbShouldBeSet(CreateOrUpdateSchemeInformationResult.ResultType resultType)
         {
             // Arrange
             List<CountryData> countries = new List<CountryData>();
@@ -875,7 +875,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ConfirmRejectionWithYesOption_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToOverview()
+        public async Task HttpPost_ConfirmRejectionWithYesOption_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToOverview()
         {
             var status = SchemeStatus.Pending;
 
@@ -903,7 +903,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ConfirmRejectionWithNoOption_AndRedirectsToEditScheme()
+        public async Task HttpPost_ConfirmRejectionWithNoOption_AndRedirectsToEditScheme()
         {
             var result = await SchemeController().ConfirmRejection(Guid.Empty, new ConfirmRejectionViewModel
             {
@@ -919,7 +919,7 @@
         }
 
         [Fact]
-        public async void PostEditScheme_SchemeIsWithdrawn_RedirectsToWithdrawnConfirmation_WithSchemeId()
+        public async Task PostEditScheme_SchemeIsWithdrawn_RedirectsToWithdrawnConfirmation_WithSchemeId()
         {
             var controller = SchemeController();
             var schemeId = Guid.NewGuid();
@@ -937,7 +937,7 @@
         }
 
         [Fact]
-        public async void PostEditScheme_ConfirmWithdrawnWithYesOption_SendsSetStatusRequest_WithWithdrawnStatus_AndRedirectsToManageSchemes()
+        public async Task PostEditScheme_ConfirmWithdrawnWithYesOption_SendsSetStatusRequest_WithWithdrawnStatus_AndRedirectsToManageSchemes()
         {
             var status = SchemeStatus.Approved;
 
@@ -965,7 +965,7 @@
         }
 
         [Fact]
-        public async void PostEditScheme_ConfirmWithdrawnWithNoOption_AndRedirectsToEditScheme()
+        public async Task PostEditScheme_ConfirmWithdrawnWithNoOption_AndRedirectsToEditScheme()
         {
             var result = await SchemeController().ConfirmWithdrawn(Guid.Empty, new ConfirmWithdrawnViewModel
             {
@@ -985,7 +985,7 @@
         /// when the current user is not allowed to edit pcs contact details.
         /// </summary>
         [Fact]
-        public async void GetManageContactDetails_ReturnsHttpForbiddenResult_WhenCanEditIsFalse()
+        public async Task GetManageContactDetails_ReturnsHttpForbiddenResult_WhenCanEditIsFalse()
         {
             // Arrange
             var organisationData = new OrganisationData
@@ -1139,7 +1139,7 @@
         }
 
         [Fact]
-        public async void GetViewOrganisationDetails_ReturnsView()
+        public async Task GetViewOrganisationDetails_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -1154,7 +1154,7 @@
         }
 
         [Fact]
-        public async void HttpGet_Overview_WithNullOverviewDisplayOption_ShouldDefaultToPcsDetailsViewModel()
+        public async Task HttpGet_Overview_WithNullOverviewDisplayOption_ShouldDefaultToPcsDetailsViewModel()
         {
             var result = await SchemeController().Overview(Guid.NewGuid());
 
@@ -1167,7 +1167,7 @@
         }
 
         [Fact]
-        public async void HttpGet_Overview_BreadcrumbShouldBeSet()
+        public async Task HttpGet_Overview_BreadcrumbShouldBeSet()
         {
             var schemeName = "schemeName";
             var schemeId = Guid.NewGuid();
@@ -1181,7 +1181,7 @@
         }
 
         [Fact]
-        public async void HttpGet_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
+        public async Task HttpGet_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
         {
             var schemeId = Guid.NewGuid();
             var schemeName = "schemeName";
@@ -1203,7 +1203,7 @@
         }
 
         [Fact]
-        public async void HttpPost_EditScheme_ModelWithError_BreadcrumbIsSet()
+        public async Task HttpPost_EditScheme_ModelWithError_BreadcrumbIsSet()
         {
             var schemeId = Guid.NewGuid();
             var schemeName = "schemeName";
@@ -1230,7 +1230,7 @@
         }
 
         [Fact]
-        public async void HttpPost_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
+        public async Task HttpPost_EditScheme_CanEditIsTrueBreadcrumbShouldBeSet()
         {
             var schemeId = Guid.NewGuid();
             var schemeName = "schemeName";
@@ -1252,7 +1252,7 @@
         }
 
         [Fact]
-        public async void HttpPost_EditScheme_UpdateSchemeInformationResultFailures_BreadcrumbShouldBeSet()
+        public async Task HttpPost_EditScheme_UpdateSchemeInformationResultFailures_BreadcrumbShouldBeSet()
         {
             var schemeId = Guid.NewGuid();
             var schemeName = "schemeName";
@@ -1281,7 +1281,7 @@
         [InlineData(OverviewDisplayOption.ContactDetails, typeof(ContactDetailsOverviewViewModel), "Overview/ContactDetailsOverview")]
         [InlineData(OverviewDisplayOption.MembersData, typeof(MembersDataOverviewViewModel), "Overview/MembersDataOverview")]
         [InlineData(OverviewDisplayOption.OrganisationDetails, typeof(RegisteredCompanyDetailsOverviewViewModel), "Overview/RegisteredCompanyDetailsOverview") /* This is the expected default organisation type */]
-        public async void HttpGet_Overview_WithSetDisplayOption_ShouldDirectToCorrectViewAndModel(OverviewDisplayOption displayOption, Type expectedViewModelType, string expectedViewName)
+        public async Task HttpGet_Overview_WithSetDisplayOption_ShouldDirectToCorrectViewAndModel(OverviewDisplayOption displayOption, Type expectedViewModelType, string expectedViewName)
         {
             var result = await SchemeController().Overview(Guid.NewGuid(), displayOption);
 
@@ -1297,7 +1297,7 @@
         [InlineData(OrganisationType.RegisteredCompany, typeof(RegisteredCompanyDetailsOverviewViewModel), "Overview/RegisteredCompanyDetailsOverview")]
         [InlineData(OrganisationType.Partnership, typeof(PartnershipDetailsOverviewViewModel), "Overview/PartnershipDetailsOverview")]
         [InlineData(OrganisationType.SoleTraderOrIndividual, typeof(SoleTraderDetailsOverviewViewModel), "Overview/SoleTraderDetailsOverview")]
-        public async void HttpGet_Overview_WithOrganisationDetailsDisplayOption_ShouldDirectToCorrectOrganisationViewAndModel(OrganisationType organisationType, Type expectedViewModelType, string expectedViewName)
+        public async Task HttpGet_Overview_WithOrganisationDetailsDisplayOption_ShouldDirectToCorrectOrganisationViewAndModel(OrganisationType organisationType, Type expectedViewModelType, string expectedViewName)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
                 .Returns(new OrganisationData
@@ -1332,7 +1332,7 @@
         [InlineData(OrganisationType.RegisteredCompany)]
         [InlineData(OrganisationType.Partnership)]
         [InlineData(OrganisationType.SoleTraderOrIndividual)]
-        public async void HttpGet_Overview_WithOrganisationDetailsDisplayOption_AssociatedEntitiesShouldBeMapped(OrganisationType organisationType)
+        public async Task HttpGet_Overview_WithOrganisationDetailsDisplayOption_AssociatedEntitiesShouldBeMapped(OrganisationType organisationType)
         {
             var organisationId = fixture.Create<Guid>();
             var schemeId = fixture.Create<Guid>();

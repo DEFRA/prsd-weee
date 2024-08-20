@@ -10,7 +10,7 @@
     public class GetSchemePublicInfoDataAccessTests
     {
         [Fact]
-        public async void FetchSchemeByOrganisationId_WitValidOrganisationId_ReturnsScheme()
+        public async Task FetchSchemeByOrganisationId_WitValidOrganisationId_ReturnsScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -35,7 +35,7 @@
         }
 
         [Fact]
-        public async void FetchSchemeByOrganisationId_WithUnknownOrganisationId_ThrowsException()
+        public async Task FetchSchemeByOrganisationId_WithUnknownOrganisationId_ThrowsException()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -59,7 +59,7 @@
         }
 
         [Fact]
-        public async void FetchSchemeByOrganisationId_WhenTwoSchemesHaveTheSameOrganisationId_ThrowsException()
+        public async Task FetchSchemeByOrganisationId_WhenTwoSchemesHaveTheSameOrganisationId_ThrowsException()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -86,7 +86,7 @@
         }
 
         [Fact]
-        public async void FetchSchemeBySchemeId_WitValidSchemeId_ReturnsScheme()
+        public async Task FetchSchemeBySchemeId_WitValidSchemeId_ReturnsScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -111,7 +111,7 @@
         }
 
         [Fact]
-        public async void FetchSchemeBySchemeId_WithUnknownSchemeId_ThrowsException()
+        public async Task FetchSchemeBySchemeId_WithUnknownSchemeId_ThrowsException()
         {
             using (var database = new DatabaseWrapper())
             {

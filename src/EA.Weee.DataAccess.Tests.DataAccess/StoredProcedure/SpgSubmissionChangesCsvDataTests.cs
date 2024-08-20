@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
     using System;
+    using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -8,7 +9,7 @@
     public class SpgSubmissionChangesCsvDataTests
     {
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenNoExistingProducerSubmissionForSameYearAndScheme()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenNoExistingProducerSubmissionForSameYearAndScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -36,7 +37,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenExistingProducerUploadButNoSubmissionForSameYearAndScheme()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenExistingProducerUploadButNoSubmissionForSameYearAndScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -70,7 +71,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsNew_ProducerRegisteredForDifferentSchemeWithinSameYear_ButFirstSubmissionForCurrentScheme()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsNew_ProducerRegisteredForDifferentSchemeWithinSameYear_ButFirstSubmissionForCurrentScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -105,7 +106,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenRegisteredForSameSchemeInAnotherYear_ButNoExistingProducerSubmissionForCurrentYear()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenRegisteredForSameSchemeInAnotherYear_ButNoExistingProducerSubmissionForCurrentYear()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -138,7 +139,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_WhenSubmissionForSameYearAndScheme()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_WhenSubmissionForSameYearAndScheme()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -185,7 +186,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenRemovedPriorToSubmission()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsNew_WhenRemovedPriorToSubmission()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -222,7 +223,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_WhenRemovedButReaddedPriorToSubmission()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_WhenRemovedButReaddedPriorToSubmission()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -270,7 +271,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUpload()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUpload()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -325,7 +326,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUpload_ForEachProducer()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUpload_ForEachProducer()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -392,7 +393,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUploadAffectingProducer_ForEachProducer()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousAndMostRecentSubmittedUploadAffectingProducer_ForEachProducer()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -459,7 +460,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousSubmittedUpload_AndIgnoresUnsubmittedUpload()
+        public async Task SpgSubmissionChangesCsvData_ReturnsProducerAsChanged_AndDetailsOfPreviousSubmittedUpload_AndIgnoresUnsubmittedUpload()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -515,7 +516,7 @@
         }
 
         [Fact]
-        public async void SpgSubmissionChangesCsvData_ReturnsRecordsSortedByProducerRegistrationNumberAndSubmissionDateDescending()
+        public async Task SpgSubmissionChangesCsvData_ReturnsRecordsSortedByProducerRegistrationNumberAndSubmissionDateDescending()
         {
             using (var database = new DatabaseWrapper())
             {

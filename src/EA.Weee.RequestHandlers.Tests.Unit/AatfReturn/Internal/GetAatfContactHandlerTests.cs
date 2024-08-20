@@ -44,7 +44,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_DataAccessShouldBeCalled()
+        public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled()
         {
             var id = Guid.NewGuid();
 
@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfId_MapperIsCalled()
+        public async Task HandleAsync_GivenAatfId_MapperIsCalled()
         {
             var aatfContact = A.Fake<AatfContact>();
 
@@ -80,7 +80,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void HandleAsync_GivenAatfId_CanEditContactDetailsSet(bool selectedValue)
+        public async Task HandleAsync_GivenAatfId_CanEditContactDetailsSet(bool selectedValue)
         {
             var aatfContact = A.Fake<AatfContact>();
 
@@ -93,7 +93,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfId_MappedObjectShouldBeReturned()
+        public async Task HandleAsync_GivenAatfId_MappedObjectShouldBeReturned()
         {
             var aatfContactData = new AatfContactData();
 

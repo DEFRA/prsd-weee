@@ -15,7 +15,7 @@
         [InlineData(2017, ObligationType.B2C)]
         [InlineData(2016, ObligationType.B2B)]
         [InlineData(2016, ObligationType.B2C)]
-        public async void GivenVariousDifferingParameters_RunningTimeIsUnderTenSeconds(int complianceYear, ObligationType obligationType)
+        public async System.Threading.Tasks.Task GivenVariousDifferingParameters_RunningTimeIsUnderTenSeconds(int complianceYear, ObligationType obligationType)
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {

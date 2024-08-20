@@ -346,7 +346,7 @@
         }
 
         [Fact]
-        public async void PostAatfAeReturnData_OnDownload_SetsURL()
+        public async Task PostAatfAeReturnData_OnDownload_SetsURL()
         {
             var file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
 
@@ -372,7 +372,7 @@
         }
 
         [Fact]
-        public async void PostAatfAeReturnData_OnDownload_SetsURLWithVirtualDirectory()
+        public async Task PostAatfAeReturnData_OnDownload_SetsURLWithVirtualDirectory()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -598,7 +598,7 @@
         }
 
         [Fact]
-        public async void Get_UkNonObligatedWeeeReceived_ShouldReturnsUkNonObligatedWeeeReceivedView()
+        public async Task Get_UkNonObligatedWeeeReceived_ShouldReturnsUkNonObligatedWeeeReceivedView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfReturnsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
@@ -623,7 +623,7 @@
         }
 
         [Fact]
-        public async void Post_UkNonObligatedWeeeReceived_ModelIsInvalid_ShouldRedirectViewWithError()
+        public async Task Post_UkNonObligatedWeeeReceived_ModelIsInvalid_ShouldRedirectViewWithError()
         {
             controller.ModelState.AddModelError("Key", "Any error");
 
