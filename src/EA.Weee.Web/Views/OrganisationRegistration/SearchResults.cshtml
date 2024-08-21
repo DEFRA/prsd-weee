@@ -83,7 +83,7 @@
         <p class="govuk-body">
             If you are a small producer of Electrical and Electronic Equipment (EEE) who hasn't previously been registered,
             you will need to create an account.
-            <a href="@Url.Action("TonnageType", "OrganisationRegistration", new {searchTerm = Model.SearchTerm})">Register for a small producer account</a>.
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("TonnageType", "OrganisationRegistration", new {searchTerm = Model.SearchTerm})">Register for a small producer account</a>.
         </p>
         <p>
             @Html.ActionLink("Start another search", "Search", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
