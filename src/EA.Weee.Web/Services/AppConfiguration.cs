@@ -95,5 +95,16 @@
 
         [DefaultValue("10")]
         public int DefaultExternalPagingPageSize { get; set; }
+
+        [DefaultValue(false)]
+        public bool ProxyEnabled { get; set; }
+
+        [DefaultValue(false)]
+        public bool ByPassProxyOnLocal { get; set; }
+
+        public string ProxyWebAddress { get; set; }
+
+        [DefaultValue(false)]
+        public bool ProxyUseDefaultCredentials { get; set; }
     }
 }

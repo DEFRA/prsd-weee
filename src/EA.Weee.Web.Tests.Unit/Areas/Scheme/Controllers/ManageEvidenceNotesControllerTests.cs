@@ -233,7 +233,7 @@
         [InlineData("view-and-transfer-evidence")]
         [InlineData("review-submitted-evidence")]
         [InlineData("outgoing-transfers")]
-        public async void IndexGet_GivenManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
+        public async Task IndexGet_GivenManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
         {
             //arrange
             var complianceYear = TestFixture.Create<short>();
@@ -258,7 +258,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenManageEvidenceNotesViewModelForOutgoingTransferTab_ModelMapperShouldBeCalledWithCorrectValues()
+        public async Task IndexGet_GivenManageEvidenceNotesViewModelForOutgoingTransferTab_ModelMapperShouldBeCalledWithCorrectValues()
         {
             //arrange
             var complianceYear = TestFixture.Create<short>();
@@ -286,7 +286,7 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
-        public async void IndexGet_GivenMappedManageEvidenceNotesViewModel_MappedModelShouldBeReturned(string tab)
+        public async Task IndexGet_GivenMappedManageEvidenceNotesViewModel_MappedModelShouldBeReturned(string tab)
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
@@ -310,7 +310,7 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
-        public async void IndexGet_GivenNullManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
+        public async Task IndexGet_GivenNullManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
@@ -784,7 +784,7 @@
         [InlineData("review-submitted-evidence", "ReviewSubmittedEvidence")]
         [InlineData("evidence-summary", "SummaryEvidence")]
         [InlineData("outgoing-transfers", "OutgoingTransfers")]
-        public async void Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
+        public async Task Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
         {
             var pcs = Guid.NewGuid();
 
@@ -948,9 +948,8 @@
                 new object[] { new ManageEvidenceNoteViewModel() },
             };
 
-        [Theory]
-        [MemberData(nameof(ManageEvidenceModelData))]
-        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt()
         {
             // Arrange
             var scheme = TestFixture.Create<SchemePublicInfo>();

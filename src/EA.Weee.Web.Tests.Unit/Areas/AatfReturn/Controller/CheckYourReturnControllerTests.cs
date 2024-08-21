@@ -15,6 +15,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -49,7 +50,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var @return = A.Fake<ReturnData>();
             A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
@@ -60,7 +61,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
+        public async Task IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
             var returnId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -73,7 +74,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_CheckYourReturnViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_CheckYourReturnViewModelShouldBeBuilt()
         {
             var @return = A.Fake<ReturnData>();
             A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
@@ -86,7 +87,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -98,7 +99,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_CheckYourReturnViewModelShouldBeReturned()
+        public async Task IndexGet_GivenReturn_CheckYourReturnViewModelShouldBeReturned()
         {
             var model = A.Fake<ReturnViewModel>();
             var @return = A.Fake<ReturnData>();
@@ -112,7 +113,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenReturn_SubmitReturnRequestShouldBeMade()
+        public async Task IndexPost_GivenReturn_SubmitReturnRequestShouldBeMade()
         {
             var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 
@@ -123,7 +124,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenSubmittedReturn_ShouldRedirectToSubmittedReturnScreen()
+        public async Task IndexPost_GivenSubmittedReturn_ShouldRedirectToSubmittedReturnScreen()
         {
             var model = new ReturnViewModel(new ReturnData() { Id = Guid.NewGuid(), Quarter = new Quarter(2019, QuarterType.Q1), QuarterWindow = QuarterWindowTestHelper.GetDefaultQuarterWindow() });
 

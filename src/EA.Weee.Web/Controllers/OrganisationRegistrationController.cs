@@ -16,6 +16,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Type;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Services;
@@ -313,6 +314,29 @@
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> TonnageType(string searchTerm)
+        {
+            var viewModel = new TonnageTypeViewModel
+            {
+                SearchedText = searchTerm,
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> TonnageType(TonnageTypeViewModel tonnageTypeViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(tonnageTypeViewModel);
+            }
+
+            return RedirectToAction("Index", "Holding");
         }
 
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()

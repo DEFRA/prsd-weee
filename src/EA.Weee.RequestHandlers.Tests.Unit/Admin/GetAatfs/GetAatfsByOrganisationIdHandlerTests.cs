@@ -73,7 +73,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenMappedAatfData_AatfDataShouldBeReturn()
+        public async Task HandleAsync_GivenMappedAatfData_AatfDataShouldBeReturn()
         {
             var aatfs = new List<Aatf>()
             {
@@ -101,7 +101,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenOrganisationId_OnlyAatfWithMatchingOrganisationShouldBeReturned()
+        public async Task HandleAsync_GivenOrganisationId_OnlyAatfWithMatchingOrganisationShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var matchingOrg = A.Fake<Organisation>();

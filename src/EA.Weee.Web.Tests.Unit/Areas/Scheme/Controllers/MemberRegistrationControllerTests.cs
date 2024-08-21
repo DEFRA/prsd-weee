@@ -87,7 +87,7 @@
         }
 
         [Fact]
-        public async void GetAuthorisationRequired_ChecksStatusOfScheme()
+        public async Task GetAuthorisationRequired_ChecksStatusOfScheme()
         {
             await MemberRegistrationController().AuthorisationRequired(A.Dummy<Guid>());
 
@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsPendingApproval_ReturnsViewWithPendingStatus()
+        public async Task GetAuthorizationRequired_SchemeIsPendingApproval_ReturnsViewWithPendingStatus()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Pending);
@@ -111,7 +111,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsRejected_ReturnsViewWithRejectedStatus()
+        public async Task GetAuthorizationRequired_SchemeIsRejected_ReturnsViewWithRejectedStatus()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Rejected);
@@ -126,7 +126,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToPcsMemberSummary()
+        public async Task GetAuthorizationRequired_SchemeIsApproved_RedirectsToPcsMemberSummary()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
@@ -142,7 +142,7 @@
         }
 
         [Fact]
-        public async void GetAddOrAmendMembers_ChecksForValidityOfOrganisation()
+        public async Task GetAddOrAmendMembers_ChecksForValidityOfOrganisation()
         {
             try
             {
@@ -157,7 +157,7 @@
         }
 
         [Fact]
-        public async void GetAddOrAmendMembers_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async Task GetAddOrAmendMembers_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
@@ -166,7 +166,7 @@
         }
 
         [Fact]
-        public async void GetAddOrAmendMembers_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async Task GetAddOrAmendMembers_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -177,7 +177,7 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_NotAjaxRequest_ModelIsInvalid_ReturnsView()
+        public async Task PostAddOrAmendMembers_NotAjaxRequest_ModelIsInvalid_ReturnsView()
         {
             var controller = GetRealMemberRegistrationControllerWithFakeContext();
 
@@ -189,7 +189,7 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_AjaxRequest_ModelIsInvalid_ReturnsError()
+        public async Task PostAddOrAmendMembers_AjaxRequest_ModelIsInvalid_ReturnsError()
         {
             var controller = GetRealMemberRegistrationControllerWithAjaxRequest();
 
@@ -201,7 +201,7 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_FileIsMappedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
+        public async Task PostAddOrAmendMembers_FileIsMappedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
         {
             var request = new ProcessXmlFile(A.Dummy<Guid>(), A.Dummy<byte[]>(), A.Dummy<string>());
 
@@ -221,7 +221,7 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_NotAjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
+        public async Task PostAddOrAmendMembers_NotAjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var validationId = Guid.NewGuid();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXmlFile>._))
@@ -239,7 +239,7 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
+        public async Task PostAddOrAmendMembers_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var validationId = Guid.NewGuid();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXmlFile>._))
@@ -253,7 +253,7 @@
         }
 
         [Fact]
-        public async void GetSummary_GetsSummaryOfLatestMemberUpload()
+        public async Task GetSummary_GetsSummaryOfLatestMemberUpload()
         {
             await MemberRegistrationController().Summary(A.Dummy<Guid>());
 
@@ -262,7 +262,7 @@
         }
 
         [Fact]
-        public async void GetSummary_Always_ReturnsViewWithSummaryModel()
+        public async Task GetSummary_Always_ReturnsViewWithSummaryModel()
         {
             var result = await MemberRegistrationController().Summary(A.Dummy<Guid>());
 
@@ -337,7 +337,7 @@
         }
 
         [Fact]
-        public async void GetProducerCSV_ValidComplianceYear_ReturnsCSVFile()
+        public async Task GetProducerCSV_ValidComplianceYear_ReturnsCSVFile()
         {
             var testCSVData = new ProducerCSVFileData { FileContent = "Test, Test, Test", FileName = "test.csv" };
 
@@ -350,7 +350,7 @@
         }
 
         [Fact]
-        public async void PostSubmitXml_ValidMemberUploadId_ReturnsSuccessfulSubmissionView()
+        public async Task PostSubmitXml_ValidMemberUploadId_ReturnsSuccessfulSubmissionView()
         {
             var memberUploadId = Guid.NewGuid();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<MemberUploadSubmission>._))
@@ -368,7 +368,7 @@
         }
 
         [Fact]
-        public async void PostSubmitXml_PrivacyPolicyNotChecked_ReturnsValidationError()
+        public async Task PostSubmitXml_PrivacyPolicyNotChecked_ReturnsValidationError()
         {
             var memberUploadId = Guid.NewGuid();
 

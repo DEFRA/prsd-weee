@@ -51,7 +51,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_DataAccessShouldBeCalled()
+        public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
 
@@ -61,7 +61,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfData_ContactDataShouldBeMapped()
+        public async Task HandleAsync_GivenAatfData_ContactDataShouldBeMapped()
         {
             var aatf = A.Fake<Aatf>();
 
@@ -73,7 +73,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenMappedAatfData_AatfDataExternalShouldBeReturn()
+        public async Task HandleAsync_GivenMappedAatfData_AatfDataExternalShouldBeReturn()
         {
             var aatf = A.Fake<Aatf>();
             var aatfData = A.Fake<AatfData>();

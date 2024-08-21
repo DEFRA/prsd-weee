@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.AatfReturn
 {
     using Core.AatfReturn;
+    using DataAccess.DataAccess;
     using Domain.AatfReturn;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Lookup;
@@ -14,7 +15,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DataAccess.DataAccess;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetAatfByOrganisationFacilityTypeHandlerTests
@@ -31,7 +32,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_DataAccessShouldBeCalled()
+        public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled()
         {
             var id = Guid.NewGuid();
             var type = Core.AatfReturn.FacilityType.Aatf;
@@ -42,7 +43,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfData_AatfDataShouldBeMapped()
+        public async Task HandleAsync_GivenAatfData_AatfDataShouldBeMapped()
         {
             var aatfs = new List<Aatf>()
             {
@@ -61,7 +62,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfAeData_AatfDataShouldBeReturn()
+        public async Task HandleAsync_GivenAatfAeData_AatfDataShouldBeReturn()
         {
             var facilityType = Weee.Core.AatfReturn.FacilityType.Aatf;
             DateTime date = DateTime.Now;
