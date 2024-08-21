@@ -19,7 +19,7 @@
         [Theory]
         [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
         [InlineData(AuthorizationBuilder.UserType.External)]
-        public async void HandleAsync_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
+        public async Task HandleAsync_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrange
             var authorization = AuthorizationBuilder.CreateFromUserType(userType);
@@ -35,7 +35,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_SendEmailToSpecifiedAddress()
+        public async Task HandleAsync_SendEmailToSpecifiedAddress()
         {
             // Arrange
             var authorization = A.Fake<IWeeeAuthorization>();

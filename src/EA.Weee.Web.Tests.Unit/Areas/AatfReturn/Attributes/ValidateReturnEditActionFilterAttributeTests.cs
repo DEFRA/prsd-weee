@@ -7,6 +7,7 @@
     using FluentAssertions;
     using Services;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Web.Areas.AatfReturn.Attributes;
@@ -32,7 +33,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenAnotherReturnIsInProgress_ShouldBeRedirectedToTaskList()
+        public async Task OnActionExecuting_GivenAnotherReturnIsInProgress_ShouldBeRedirectedToTaskList()
         {
             var returnData = new ReturnStatusData()
             {
@@ -55,7 +56,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenNoOtherReturnIsInProgress_ContextResultShouldBeNull()
+        public async Task OnActionExecuting_GivenNoOtherReturnIsInProgress_ContextResultShouldBeNull()
         {
             var returnData = new ReturnStatusData()
             {

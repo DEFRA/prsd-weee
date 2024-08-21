@@ -33,7 +33,7 @@
         [Trait("Authorization", "Internal")]
         [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
         [InlineData(AuthorizationBuilder.UserType.External)]
-        public async void GetUserDataHandler_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
+        public async Task GetUserDataHandler_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrange
             IGetManageUserDataAccess dataAccess = A.Fake<IGetManageUserDataAccess>();
@@ -54,7 +54,7 @@
         }
 
         [Fact]
-        public async void GetUserDataHandler_RequestingUserData_ReturnsCorrectUser()
+        public async Task GetUserDataHandler_RequestingUserData_ReturnsCorrectUser()
         {
             // Arrange
             IGetManageUserDataAccess dataAccess = CreateFakeDataAccess();
@@ -74,7 +74,7 @@
         }
 
         [Fact]
-        public async void OrganisationUserExists_AndDoesNotMatchCurrentUserId_DoesNotChangeManageUserData()
+        public async Task OrganisationUserExists_AndDoesNotMatchCurrentUserId_DoesNotChangeManageUserData()
         {
             var existingUserId = Guid.NewGuid();
             var currentUserId = Guid.NewGuid();
@@ -97,7 +97,7 @@
         }
 
         [Fact]
-        public async void OrganisationUserExists_AndMatchesCurrentUserId_ChangesManageUserDataToNotAllowRoleAndStatusChange()
+        public async Task OrganisationUserExists_AndMatchesCurrentUserId_ChangesManageUserDataToNotAllowRoleAndStatusChange()
         {
             var userId = Guid.NewGuid();
             var organisationUserId = Guid.NewGuid();
