@@ -21,5 +21,13 @@ GRANT EXECUTE, SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Charging] TO [weee_app
 GRANT EXECUTE, SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Producer] TO [weee_application]
 GRANT SELECT, UPDATE, INSERT, DELETE ON OBJECT::dbo.[Sessions] TO [weee_application]
 GRANT EXECUTE, SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Evidence] TO [weee_application]
-GRANT SELECT, INSERT ON SCHEMA::[Logging] TO [weee_application]
+GRANT SELECT, INSERT, UPDATE, EXECUTE, DELETE ON SCHEMA::[Logging] TO [weee_application]
+GRANT EXECUTE ON OBJECT::ELMAH_GetErrorsXml
+    TO weee_application;
+GO 
+GRANT EXECUTE ON OBJECT::ELMAH_GetErrorXml
+    TO weee_application;
+GO  
+GRANT EXECUTE ON OBJECT::ELMAH_LogError
+    TO weee_application;
 GO

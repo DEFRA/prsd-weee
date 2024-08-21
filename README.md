@@ -112,8 +112,8 @@ The website uses the API to access the database and to generate emails.
 #### Run the project
 
 1. On the Visual Studio menu click 'Tools' -> 'Options'.  In the options window select 'Projects and Solutions' -> 'Web Projects' and make sure the 'Use the 64 bit version of IIS Express...' is ticked.
-2. Set the EA.Weee.Web project as the start-up project. Build and run the solution.
-3. The website will now be available at https://localhost:44300/
+2. Set the EA.Weee.Web and EA.Weee.API projects as start-up projects (set multiple start up projects). Build and run the solution.
+3. The website will now be available at https://localhost:44300/ and the API available on https://localhost:44502/
 
 <!-- End of list -->
 
