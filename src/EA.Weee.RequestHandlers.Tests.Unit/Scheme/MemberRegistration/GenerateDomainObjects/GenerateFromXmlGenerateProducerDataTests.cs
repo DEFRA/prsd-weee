@@ -22,7 +22,7 @@
     public class GenerateFromXmlGenerateProducerDataTests
     {
         [Fact]
-        public async void GenerateProducerData_InsertProducer_WithScheme_ReturnsRegisteredProducerWithMatchingSchemeId()
+        public async Task GenerateProducerData_InsertProducer_WithScheme_ReturnsRegisteredProducerWithMatchingSchemeId()
         {
             var schemeId = Guid.NewGuid();
 
@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithMemberUpload_ReturnsProducerWithMatchingMemberUpload()
+        public async Task GenerateProducerData_WithMemberUpload_ReturnsProducerWithMatchingMemberUpload()
         {
             var builder = new GenerateProducerDataTestsBuilder();
 
@@ -54,7 +54,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithNullProducerCharges_ThrowsApplicationException()
+        public async Task GenerateProducerData_WithNullProducerCharges_ThrowsApplicationException()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.ProducerCharges = null;
@@ -63,7 +63,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithNoProducerChargesForProducer_ThrowsApplicationException()
+        public async Task GenerateProducerData_WithNoProducerChargesForProducer_ThrowsApplicationException()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.ProducerCharges = new Dictionary<string, ProducerCharge>();
@@ -72,7 +72,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithProducerCharges_ReturnsProducerWithMatchingProducerCharges()
+        public async Task GenerateProducerData_WithProducerCharges_ReturnsProducerWithMatchingProducerCharges()
         {
             var builder = new GenerateProducerDataTestsBuilder();
 
@@ -91,7 +91,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithBrandNames_ReturnsProducerWithMatchingBrandNames()
+        public async Task GenerateProducerData_WithBrandNames_ReturnsProducerWithMatchingBrandNames()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.BrandNames = new[] { "BrandName1", "BrandName2" };
@@ -104,7 +104,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithSICCodes_ReturnsProducerWithMatchingSICCodes()
+        public async Task GenerateProducerData_WithSICCodes_ReturnsProducerWithMatchingSICCodes()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.SicCodes = new[] { "SicCode1", "SicCode2" };
@@ -117,7 +117,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithProducerBusiness_ReturnsProducerWithMatchingProducerBusiness()
+        public async Task GenerateProducerData_WithProducerBusiness_ReturnsProducerWithMatchingProducerBusiness()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.ProducerBusiness = new producerBusinessType()
@@ -148,7 +148,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithAuthorisedRepresentative_ReturnsProducerWithMatchingAuthorisedRepresentative()
+        public async Task GenerateProducerData_WithAuthorisedRepresentative_ReturnsProducerWithMatchingAuthorisedRepresentative()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.AuthorisedRepresentative = new authorisedRepresentativeType()
@@ -165,7 +165,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithEEEPlacedOnMarketBand_ReturnsProducerWithMatchingEEEPlacedOnMarketBand()
+        public async Task GenerateProducerData_WithEEEPlacedOnMarketBand_ReturnsProducerWithMatchingEEEPlacedOnMarketBand()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.EEEPlacedOnMarketBandType = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
@@ -176,7 +176,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithSellingTechnique_ReturnsProducerWithMatchingSellingTechnique()
+        public async Task GenerateProducerData_WithSellingTechnique_ReturnsProducerWithMatchingSellingTechnique()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.SellingTechnique = sellingTechniqueType.Both;
@@ -187,7 +187,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithObligationType_ReturnsProducerWithMatchingObligationType()
+        public async Task GenerateProducerData_WithObligationType_ReturnsProducerWithMatchingObligationType()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.ObligationType = obligationTypeType.B2B;
@@ -198,7 +198,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithAnnualTurnOverBandType_ReturnsProducerWithMatchingAnnualTurnOverBandType()
+        public async Task GenerateProducerData_WithAnnualTurnOverBandType_ReturnsProducerWithMatchingAnnualTurnOverBandType()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.AnnualTurnoverBandType = annualTurnoverBandType.Greaterthanonemillionpounds;
@@ -209,7 +209,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithCeaseDate_ReturnsProducerWithMatchingCeaseDate()
+        public async Task GenerateProducerData_WithCeaseDate_ReturnsProducerWithMatchingCeaseDate()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.CeaseDate = new DateTime(2015, 10, 1);
@@ -220,7 +220,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithRegistrationNumberForAmendment_ReturnsProducerWithMatchingRegistrationNumber()
+        public async Task GenerateProducerData_WithRegistrationNumberForAmendment_ReturnsProducerWithMatchingRegistrationNumber()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
@@ -242,7 +242,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithGeneratedRegistrationNumberForInsertion_ReturnsProducerWithMatchingRegistrationNumber()
+        public async Task GenerateProducerData_WithGeneratedRegistrationNumberForInsertion_ReturnsProducerWithMatchingRegistrationNumber()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.I;
@@ -255,7 +255,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithAnnualTurnover_ReturnsProducerWithMatchingAnnualTurnover()
+        public async Task GenerateProducerData_WithAnnualTurnover_ReturnsProducerWithMatchingAnnualTurnover()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.AnnualTurnover = 11100;
@@ -268,7 +268,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void GenerateProducerData_WithVatRegistered_ReturnsProducerWithMatchingVatRegistered(bool vatRegistered)
+        public async Task GenerateProducerData_WithVatRegistered_ReturnsProducerWithMatchingVatRegistered(bool vatRegistered)
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.VatRegistered = vatRegistered;
@@ -279,7 +279,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithTradingName_ReturnsProducerWithMatchingTradingName()
+        public async Task GenerateProducerData_WithTradingName_ReturnsProducerWithMatchingTradingName()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.TradingName = "Test producer trading name";
@@ -291,7 +291,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_WithManyProducers_AllInserts_ReturnsSameNumberOfProducers()
+        public async Task GenerateProducerData_WithManyProducers_AllInserts_ReturnsSameNumberOfProducers()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.I;
@@ -302,7 +302,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_AmendProducer_WithMatchingExistingProducer_AndDetailsNotEqual_ReturnsNewProducer()
+        public async Task GenerateProducerData_AmendProducer_WithMatchingExistingProducer_AndDetailsNotEqual_ReturnsNewProducer()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
@@ -327,7 +327,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_AmendProducer_WithMatchingExistingProducer_AndDetailsEqual_DoesNotReturnNewProducer()
+        public async Task GenerateProducerData_AmendProducer_WithMatchingExistingProducer_AndDetailsEqual_DoesNotReturnNewProducer()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
@@ -351,7 +351,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_AmendProducer_WithMatchingMigratedProducer_ReturnsNewProducer()
+        public async Task GenerateProducerData_AmendProducer_WithMatchingMigratedProducer_ReturnsNewProducer()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
@@ -375,7 +375,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_AmendProducer_WithMatchingExistingProducerFromAnotherScheme_ReturnsNewProducer()
+        public async Task GenerateProducerData_AmendProducer_WithMatchingExistingProducerFromAnotherScheme_ReturnsNewProducer()
         {
             var schemeId = Guid.NewGuid();
 
@@ -397,7 +397,7 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_AmendProducer_WithNoMatchingExistingProducer_AndMigratedProducer_ThrowsInvalidOperationException()
+        public async Task GenerateProducerData_AmendProducer_WithNoMatchingExistingProducer_AndMigratedProducer_ThrowsInvalidOperationException()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;

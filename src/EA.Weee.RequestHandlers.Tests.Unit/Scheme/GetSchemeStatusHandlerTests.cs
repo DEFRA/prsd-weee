@@ -10,6 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;
@@ -35,7 +36,7 @@
         }
 
         [Fact]
-        public async void NotOrganisationUser_ThrowsSecurityException()
+        public async Task NotOrganisationUser_ThrowsSecurityException()
         {
             var handler = new GetSchemeStatusHandler(context, denyingAuthorization, mapper);
 
@@ -45,7 +46,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_SchemeDoesNotExist_ThrowsInvalidOperationException()
+        public async Task HandleAsync_SchemeDoesNotExist_ThrowsInvalidOperationException()
         {
             var schemeId = Guid.NewGuid();
 
@@ -57,7 +58,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_SchemeExists_MapsStatus()
+        public async Task HandleAsync_SchemeExists_MapsStatus()
         {
             var schemeId = Guid.NewGuid();
 

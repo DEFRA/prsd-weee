@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using AutoFixture;
     using Core.Scheme;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
@@ -23,8 +24,8 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using AutoFixture;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -69,7 +70,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var viewModel = CreateInitialViewModel();
             A.CallTo(() => mapper.Map(A<ReportOptionsToSelectReportOptionsViewModelMapTransfer>._)).Returns(viewModel);
@@ -80,7 +81,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -98,7 +99,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithPcsOptionSelectedAndNoPreviousPcsSelection_PageRedirectsToPcsSelect()
+        public async Task IndexPost_OnSubmitWithPcsOptionSelectedAndNoPreviousPcsSelection_PageRedirectsToPcsSelect()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -130,7 +131,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithPcsOptionSelectedAndPreviousPcsSelection_PageRedirectsToAatfTaskList()
+        public async Task IndexPost_OnSubmitWithPcsOptionSelectedAndPreviousPcsSelection_PageRedirectsToAatfTaskList()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -160,7 +161,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = CreateSubmittedViewModel();
             model.ReportOnQuestions.First().Selected = true;
@@ -175,7 +176,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiSendShouldNotBeCalled()
+        public async Task IndexPost_GivenInvalidViewModel_ApiSendShouldNotBeCalled()
         {
             var model = CreateSubmittedViewModel();
             var request = new AddReturnReportOn();
@@ -190,7 +191,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
             var model = CreateSubmittedViewModel();
             var organisationId = Guid.NewGuid();
@@ -211,7 +212,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithDeselectedOptionAndSelectedOption_PageRedirectsToSelectReportOptionsDeselect()
+        public async Task IndexPost_OnSubmitWithDeselectedOptionAndSelectedOption_PageRedirectsToSelectReportOptionsDeselect()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -247,7 +248,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithDeselectedOptionAndNoSelectedOption_PageRedirectsToSelectReportOptionsNil()
+        public async Task IndexPost_OnSubmitWithDeselectedOptionAndNoSelectedOption_PageRedirectsToSelectReportOptionsNil()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -282,7 +283,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenNonObligatedQuestionIsNotSelectedAndModelIsNotValid_DcfSelectedValueShouldBeRemovedFromModelState()
+        public async Task IndexPost_GivenNonObligatedQuestionIsNotSelectedAndModelIsNotValid_DcfSelectedValueShouldBeRemovedFromModelState()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);

@@ -1,15 +1,16 @@
 ﻿namespace EA.Prsd.Core.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using EA.Prsd.Core.DataAccess.Extensions;
     using EA.Prsd.Core.DataAccess.Tests.Integration.Helpers;
     using EA.Prsd.Core.DataAccess.Tests.Integration.Model.Domain;
     using EA.Prsd.Core.Domain.Auditing;
     using Model;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
-    
+
     public class AuditorExtensionTests
     {
         public AuditorExtensionTests()
@@ -205,7 +206,7 @@
         }
 
         [Fact]
-        public async void AuditChanges_InsertEntityWithForeignId_AddsAuditLogWithExpectedForeignKeyJson()
+        public async Task AuditChanges_InsertEntityWithForeignId_AddsAuditLogWithExpectedForeignKeyJson()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -236,7 +237,7 @@
         }
 
         [Fact(Skip = "Tests desired behaviour, but not actual behaviour. Currently fails, but full audits can be constructed by OriginalValues and current data instead")]
-        public async void AuditChanges_InsertEntityWithChildrenAndAddChildren_AddsAuditLogWithExpectedForeignKeyJson()
+        public async Task AuditChanges_InsertEntityWithChildrenAndAddChildren_AddsAuditLogWithExpectedForeignKeyJson()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -266,7 +267,7 @@
         }
 
         [Fact(Skip = "Tests desired behaviour, but not actual behaviour. Currently fails, but full audits can be constructed by OriginalValues and current data instead")]
-        public async void AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedNewForeignKeyJson()
+        public async Task AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedNewForeignKeyJson()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -304,7 +305,7 @@
         }
 
             [Fact]
-        public async void AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedOriginalForeignKeyJson()
+        public async Task AuditChanges_InsertEntityWithChildrenAndUpdateChildren_AddsAuditLogWithExpectedOriginalForeignKeyJson()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {

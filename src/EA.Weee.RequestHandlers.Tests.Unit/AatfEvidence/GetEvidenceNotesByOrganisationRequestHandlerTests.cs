@@ -107,7 +107,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             var organisation = A.Fake<Organisation>();
@@ -132,7 +132,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenTransferredOutRequest_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenTransferredOutRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             var organisation = A.Fake<Organisation>();
@@ -160,7 +160,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenTransferredOutRequest_EvidenceDataAccessHasApprovedEvidenceShouldNotBeCalled()
+        public async Task HandleAsync_GivenTransferredOutRequest_EvidenceDataAccessHasApprovedEvidenceShouldNotBeCalled()
         {
             //arrange
             var organisation = A.Fake<Organisation>();
@@ -178,7 +178,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNotTransferredOutRequest_EvidenceDataAccessHasApprovedEvidenceShouldBeCalled()
+        public async Task HandleAsync_GivenNotTransferredOutRequest_EvidenceDataAccessHasApprovedEvidenceShouldBeCalled()
         {
             //arrange
             var organisation = A.Fake<Organisation>();
@@ -200,7 +200,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void HandleAsync_GivenNotTransferredOutRequest_EvidenceDataAccessHasApprovedEvidence_ResultShouldBeSet(bool hasApprovedEvidence)
+        public async Task HandleAsync_GivenNotTransferredOutRequest_EvidenceDataAccessHasApprovedEvidence_ResultShouldBeSet(bool hasApprovedEvidence)
         {
             //arrange
             var organisation = A.Fake<Organisation>();
@@ -219,7 +219,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_OrganisationDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequest_OrganisationDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
@@ -229,7 +229,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
+        public async Task HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
             var note1 = A.Fake<Note>();
@@ -263,7 +263,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
+        public async Task HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
             var noteList = TestFixture.CreateMany<Note>(2).ToList();
@@ -288,7 +288,7 @@
         }
 
         [Fact]
-        public async void HandlerAsync_GivenSearchRef_AddsSearchRefToFilter()
+        public async Task HandlerAsync_GivenSearchRef_AddsSearchRefToFilter()
         {
             // arrange
             var searchRef = TestFixture.Create<string>();

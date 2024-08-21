@@ -44,7 +44,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_DataAccessShouldBeCalled()
+        public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled()
         {
             var id = Guid.NewGuid();
 
@@ -78,7 +78,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAddressesAndWeeReusedAmounts_SummaryDataShouldBeMapped()
+        public async Task HandleAsync_GivenAddressesAndWeeReusedAmounts_SummaryDataShouldBeMapped()
         {
             var aatfAddresses = AatfAddresses();
             var weeeReusedAmounts = WeeeReusedAmounts();

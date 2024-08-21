@@ -46,7 +46,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenCalculatorIsFound_ChargeBandFromCalculatorShouldBeReturned()
+        public async Task GetProducerChargeBand_GivenCalculatorIsFound_ChargeBandFromCalculatorShouldBeReturned()
         {
             var producerType = A.Fake<producerType>();
             var schemeType = A.Fake<schemeType>();
@@ -61,7 +61,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenNoCalculatorFound_ApplicationExceptionExpected()
+        public async Task GetProducerChargeBand_GivenNoCalculatorFound_ApplicationExceptionExpected()
         {
             var producerType = A.Fake<producerType>();
             var schemeType = A.Fake<schemeType>();
