@@ -8,7 +8,7 @@
     public class GetOrganisationOverviewDataAccessTests
     {
         [Fact]
-        public async void HasMemberSubmissions_ForOganisationWithNoAssociatedScheme_ReturnsFalse()
+        public async Task HasMemberSubmissions_ForOganisationWithNoAssociatedScheme_ReturnsFalse()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -40,7 +40,7 @@
         }
 
         [Fact]
-        public async void HasMemberSubmissions_ForOganisationWithAssociatedScheme_AndSubmissions_ReturnsTrue()
+        public async Task HasMemberSubmissions_ForOganisationWithAssociatedScheme_AndSubmissions_ReturnsTrue()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -70,7 +70,7 @@
         }
 
         [Fact]
-        public async void HasMemberSubmissions_ForOganisationWithAssociatedScheme_AndNoSubmission_ReturnsFalse()
+        public async Task HasMemberSubmissions_ForOganisationWithAssociatedScheme_AndNoSubmission_ReturnsFalse()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -100,7 +100,7 @@
         }
 
         [Fact]
-        public async void HasMultipleOrganisationUsers_ForOrganisationWithNoUser_ReturnsFalse()
+        public async Task HasMultipleOrganisationUsers_ForOrganisationWithNoUser_ReturnsFalse()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -122,7 +122,7 @@
         }
 
         [Fact]
-        public async void HasMultipleManageableOrganisationUsers_ForOrganisationWithOneManageableUser_ReturnsFalse()
+        public async Task HasMultipleManageableOrganisationUsers_ForOrganisationWithOneManageableUser_ReturnsFalse()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -148,7 +148,7 @@
         }
 
         [Fact]
-        public async void HasMultipleManageableOrganisationUsers_ForOrganisationWithMoreThanOneManageableUser_ReturnsTrue()
+        public async Task HasMultipleManageableOrganisationUsers_ForOrganisationWithMoreThanOneManageableUser_ReturnsTrue()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -172,7 +172,7 @@
         }
 
         [Fact]
-        public async void HasMultipleManageableOrganisationUsers_ForOrganisationWithMoreThanOneUser_AllRejectedStatuses_ReturnsFalse()
+        public async Task HasMultipleManageableOrganisationUsers_ForOrganisationWithMoreThanOneUser_AllRejectedStatuses_ReturnsFalse()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {

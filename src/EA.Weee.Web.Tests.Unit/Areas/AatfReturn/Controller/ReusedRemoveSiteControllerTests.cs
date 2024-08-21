@@ -16,6 +16,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -52,7 +53,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var siteId = Guid.NewGuid();
@@ -98,7 +99,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             const string orgName = "orgName";
@@ -119,7 +120,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenSelectedValueIsYes_RemoveAatfSiteIsCalled()
+        public async Task IndexPost_GivenSelectedValueIsYes_RemoveAatfSiteIsCalled()
         {
             var viewModel = new ReusedRemoveSiteViewModel()
             {
@@ -133,7 +134,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_MapperIsCalled()
+        public async Task IndexGet_GivenValidViewModel_MapperIsCalled()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -159,7 +160,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_ViewResultIsReturnedCorrectly()
+        public async Task IndexGet_GivenValidViewModel_ViewResultIsReturnedCorrectly()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -194,7 +195,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenSelectedValueIsNo_RedirectToActionIsCalled()
+        public async Task IndexPost_GivenSelectedValueIsNo_RedirectToActionIsCalled()
         {
             var returnId = new Guid();
             var organisationId = new Guid();
@@ -242,7 +243,7 @@
         }
 
         [Fact]
-        public async void IndexGet_NoSitesReturned_RedirectsToSummaryList()
+        public async Task IndexGet_NoSitesReturned_RedirectsToSummaryList()
         {
             Guid returnId = Guid.NewGuid();
             Guid organisationId = Guid.NewGuid();
@@ -266,7 +267,7 @@
         }
 
         [Fact]
-        public async void IndexGet_SiteNotInReturnedList_RedirectsToSummaryList()
+        public async Task IndexGet_SiteNotInReturnedList_RedirectsToSummaryList()
         {
             Guid returnId = Guid.NewGuid();
             Guid organisationId = Guid.NewGuid();

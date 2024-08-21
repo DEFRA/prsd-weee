@@ -67,5 +67,13 @@
         int DefaultInternalPagingPageSize { get; set; }
 
         int DefaultExternalPagingPageSize { get; set; }
+
+        bool ProxyEnabled { get; set; }
+
+        bool ByPassProxyOnLocal { get; set; }
+
+        string ProxyWebAddress { get; set; }
+
+        bool ProxyUseDefaultCredentials { get; set; }
     }
 }

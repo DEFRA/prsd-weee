@@ -89,7 +89,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionsHistoryResultHandler_ReturnsSubmissionDataCount()
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_ReturnsSubmissionDataCount()
         {
             // Arrange
             IGetDataReturnSubmissionsHistoryResultsDataAccess resultsDataAccess = CreateFakeResultsDataAccess();
@@ -112,7 +112,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionsHistoryResultHandler_MapsPropertiesToDataReturnSubmissionsHistoryResultObject()
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_MapsPropertiesToDataReturnSubmissionsHistoryResultObject()
         {
             // Arrange
             var resultsDataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();
@@ -196,7 +196,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionsHistoryResultHandler_DoesNotRetrievePreviousSubmissions_WhenEeeDataComparisonNotRequired()
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_DoesNotRetrievePreviousSubmissions_WhenEeeDataComparisonNotRequired()
         {
             // Arrange
             var resultsDataAccess = CreateFakeResultsDataAccess();
@@ -227,7 +227,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionsHistoryResultHandler_RetrievesPreviousSubmissionsAndComparesEeeData_WhenEeeDataComparisonRequired()
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_RetrievesPreviousSubmissionsAndComparesEeeData_WhenEeeDataComparisonRequired()
         {
             // Arrange
             var resultsDataAccess = CreateFakeResultsDataAccess();
@@ -258,7 +258,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionsHistoryResultHandler_ReturnsPreviousSubmissionDataReturnVersionId_WhenEeeDataChanged()
+        public async Task GetDataReturnSubmissionsHistoryResultHandler_ReturnsPreviousSubmissionDataReturnVersionId_WhenEeeDataChanged()
         {
             // Arrange
             var resultsDataAccess = A.Fake<IGetDataReturnSubmissionsHistoryResultsDataAccess>();

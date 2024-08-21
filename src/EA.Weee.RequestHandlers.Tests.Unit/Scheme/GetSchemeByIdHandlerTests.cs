@@ -21,7 +21,7 @@
         /// if they provide a valid scheme ID.
         /// </summary>
         [Fact]
-        public async void GetSchemeByIdHandler_HappyPath_ReturnsSchemeData()
+        public async Task GetSchemeByIdHandler_HappyPath_ReturnsSchemeData()
         {
             // Arrage
             Guid schemeId = new Guid("AC9116BC-5732-4F80-9AED-A6E2A0C4C1F1");
@@ -57,7 +57,7 @@
         [Trait("Authorization", "Internal")]
         [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
         [InlineData(AuthorizationBuilder.UserType.External)]
-        public async void GetSchemeByIdHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
+        public async Task GetSchemeByIdHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrage
             Guid schemeId = new Guid("AC9116BC-5732-4F80-9AED-A6E2A0C4C1F1");
@@ -89,7 +89,7 @@
         /// supplied cannot be found.
         /// </summary>
         [Fact]
-        public async void GetSchemeByIdHandler_WithUnknownId_ThrowsArgumentException()
+        public async Task GetSchemeByIdHandler_WithUnknownId_ThrowsArgumentException()
         {
             // Arrage
             Guid badSchemeId = new Guid("88C60FAC-1172-43F2-9AA5-7E79A8877F92");

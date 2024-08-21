@@ -1,9 +1,14 @@
 ﻿namespace EA.Weee.Web
 {
+    using Areas.Aatf.Helpers;
+    using Areas.Aatf.Mappings.Filters;
     using Areas.AatfReturn.Attributes;
+    using Areas.Scheme.Requests;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using Core.Shared;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
@@ -14,18 +19,13 @@
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
+    using Infrastructure;
+    using Infrastructure.PDF;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;
     using Security;
     using System.Reflection;
-    using Areas.Aatf.Helpers;
-    using Areas.Aatf.Mappings.Filters;
-    using Areas.Scheme.Requests;
-    using Core.Shared;
-    using Infrastructure;
-    using Infrastructure.PDF;
-    using Prsd.Email;
 
     public class AutofacBootstrapper
     {
@@ -66,6 +66,8 @@
 
             // Register security module
             builder.RegisterModule(new SecurityModule());
+
+            builder.RegisterModule(new ApiClientModule());
 
             // Register caching
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();

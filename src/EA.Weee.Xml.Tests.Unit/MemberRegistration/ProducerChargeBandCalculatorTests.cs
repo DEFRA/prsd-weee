@@ -4,6 +4,7 @@
     using Domain.Lookup;
     using EA.Weee.Xml.MemberRegistration;
     using FakeItEasy;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class ProducerChargeBandCalculatorTests
@@ -25,7 +26,7 @@
         /// is at least 5 Tonnes, the annual turnover is greater than £1,000,000 and the company is VAT registered.
         /// </summary>
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ProducerChargeBandAShouldBeRetrieved()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ProducerChargeBandAShouldBeRetrieved()
         {
             // Arrange
             var producer = new producerType
@@ -43,7 +44,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             // Arrange
             var producer = new producerType
@@ -68,7 +69,7 @@
         /// is at least 5 Tonnes, the annual turnover is at most £1,000,000 and the company is VAT registered.
         /// </summary>
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered_ProducerChargeBandBShouldBeRetrieved()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered_ProducerChargeBandBShouldBeRetrieved()
         {
             // Arrange
             var producer = new producerType
@@ -86,7 +87,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             // Arrange
             var producer = new producerType
@@ -111,7 +112,7 @@
         /// is at least 5 Tonnes, the annual turnover is at most £1,000,000 and the company is not VAT registered.
         /// </summary>
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ProducerChargeBandCShouldBeRetrieved()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ProducerChargeBandCShouldBeRetrieved()
         {
             // Arrange
             var producer = new producerType
@@ -129,7 +130,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ProducerChargeForChargeBandShouldBeReturned()
         {
             // Arrange
             var producer = new producerType
@@ -154,7 +155,7 @@
         /// is at least 5 Tonnes, the annual turnover is greater than £1,000,000 and the company is not VAT registered.
         /// </summary>
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ProducerChargeBandDShouldBeRetrieved()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ProducerChargeBandDShouldBeRetrieved()
         {
             // Arrange
             var producer = new producerType
@@ -172,7 +173,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandDShouldBeReturned()
+        public async Task GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandDShouldBeReturned()
         {
             // Arrange
             var producer = new producerType
@@ -197,7 +198,7 @@
         /// is less than 5 Tonnes.
         /// </summary>
         [Fact]
-        public async void GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ProducerChargeBandEShouldBeRetrieved()
+        public async Task GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ProducerChargeBandEShouldBeRetrieved()
         {
             //arrange
             var producer = new producerType
@@ -215,7 +216,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ProducerChargeForChargeBandShouldBeReturned()
         {
             //arrange
             var producer = new producerType

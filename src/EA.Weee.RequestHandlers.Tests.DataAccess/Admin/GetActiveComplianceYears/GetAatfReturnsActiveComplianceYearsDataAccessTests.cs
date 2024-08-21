@@ -1,15 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.GetActiveComplianceYears
 {
-    using Core.DataReturns;
-    using RequestHandlers.Admin.GetActiveComplianceYears;
-    using System.Linq;
-    using Weee.Tests.Core.Model;
     using Xunit;
+    using System.Linq;
+    using Core.DataReturns;
+    using Weee.Tests.Core.Model;
+    using System.Threading.Tasks;
+    using RequestHandlers.Admin.GetActiveComplianceYears;
 
     public class GetAatfReturnsActiveComplianceYearsDataAccessTests
     {
         [Fact]
-        public async void Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
+        public async Task Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
         {
             using (var database = new DatabaseWrapper())
             {

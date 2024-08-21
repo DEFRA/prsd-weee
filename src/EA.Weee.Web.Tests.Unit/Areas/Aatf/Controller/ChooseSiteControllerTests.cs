@@ -2,6 +2,7 @@
 {
     using Api.Client;
     using AutoFixture;
+    using Constant;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Requests.AatfReturn;
@@ -15,8 +16,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Constant;
     using Web.Areas.Aatf.Controllers;
     using Web.Areas.AatfEvidence.Controllers;
     using Weee.Requests.Shared;
@@ -52,7 +53,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationName = "Organisation";
             var model = new SelectYourAatfViewModel()
@@ -70,7 +71,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var model = new SelectYourAatfViewModel()
             {
@@ -85,7 +86,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationId_AatfsForOrganisationShouldBeRetrievedFromCache()
+        public async Task IndexGet_GivenOrganisationId_AatfsForOrganisationShouldBeRetrievedFromCache()
         {
             var organisationId = Guid.NewGuid();
             var model = new SelectYourAatfViewModel()
@@ -101,7 +102,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenNoAatfsInTheList_PageRedirectsToIndexNoAatf()
+        public async Task IndexGet_GivenNoAatfsInTheList_PageRedirectsToIndexNoAatf()
         {
             var organisationId = Guid.NewGuid();
             var aatfList = new List<AatfData>();
@@ -121,7 +122,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenNoAatfsInTheList_BreadcrumShouldBeSet()
+        public async Task IndexGet_GivenNoAatfsInTheList_BreadcrumShouldBeSet()
         {
             var organisationName = "Organisation";
             var model = new SelectYourAatfViewModel()
@@ -139,7 +140,7 @@
         }
 
         [Fact]
-        public async void IndexGet_OnSingleAatf_PageRedirectsToManageEvidence()
+        public async Task IndexGet_OnSingleAatf_PageRedirectsToManageEvidence()
         {
             var organisationId = Guid.NewGuid();
             var aatfList = new List<AatfData>();
@@ -171,7 +172,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeBuiltAsync()
+        public async Task IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeBuiltAsync()
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
@@ -195,7 +196,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionParameters_SelectYourAatfViewModelShouldBeReturned()
         {
             //arrange
             var model = TestFixture.Create<SelectYourAatfViewModel>();
@@ -231,7 +232,7 @@
         }
 
         [Fact]
-        public async void IndexPost_ValidViewModel_PageRedirectsManageEvidence()
+        public async Task IndexPost_ValidViewModel_PageRedirectsManageEvidence()
         {
             var model = new SelectYourAatfViewModel()
             {
@@ -248,7 +249,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_SelectYourAatfViewModelShouldBeBuiltAsync()
+        public async Task IndexPost_GivenInvalidViewModel_SelectYourAatfViewModelShouldBeBuiltAsync()
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
@@ -273,7 +274,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenInvalidViewModel_SelectYourAatfViewModelShouldBeReturned()
+        public async Task IndexGet_GivenInvalidViewModel_SelectYourAatfViewModelShouldBeReturned()
         {
             //arrange
             var model = TestFixture.Create<SelectYourAatfViewModel>();
@@ -291,7 +292,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidModel_ApiShouldBeCalled()
+        public async Task IndexPost_GivenInvalidModel_ApiShouldBeCalled()
         {
             //arrange
             var organisationId = Guid.NewGuid();
@@ -304,7 +305,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexPost_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             //arrange
             var organisationName = "Organisation";
