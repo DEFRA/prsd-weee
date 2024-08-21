@@ -61,7 +61,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
@@ -77,7 +77,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNotesWithComplianceYear_ShouldReturnOrderedListOfComplianceYears()
+        public async Task HandleAsync_GivenNotesWithComplianceYear_ShouldReturnOrderedListOfComplianceYears()
         {
             // arrange
             var note1 = A.Fake<Note>();
@@ -124,7 +124,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNoComplianceYears_ShouldReturnEmptyList()
+        public async Task HandleAsync_GivenNoComplianceYears_ShouldReturnEmptyList()
         {
             // arrange
             var newRequest = new GetComplianceYearsFilter(new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Returned});

@@ -27,7 +27,7 @@
         }
 
         [Fact]
-        public async void IfAUserDoesNotHaveAccessToEitherSchemeOrInternalArea_ASecurityExceptionIsThrown_AndNoDataIsRetrieved()
+        public async Task IfAUserDoesNotHaveAccessToEitherSchemeOrInternalArea_ASecurityExceptionIsThrown_AndNoDataIsRetrieved()
         {
             var message = new OrganisationBySchemeId(Guid.NewGuid());
 

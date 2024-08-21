@@ -10,13 +10,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
 
     public class OrganisationControllerTests
     {
         [Fact]
-        public async void GetIndex_OneActiveOrg_RedirectsToSchemeChooseActivity()
+        public async Task GetIndex_OneActiveOrg_RedirectsToSchemeChooseActivity()
         {
             // Arrange
             Guid organisationId = new Guid("433DB128-12A1-44FB-B26A-8128F8E36598");
@@ -54,7 +55,7 @@
         }
 
         [Fact]
-        public async void GetIndex_OneActiveOrg_And_OneInactiveOrg_ShowsYourOrganisationsView()
+        public async Task GetIndex_OneActiveOrg_And_OneInactiveOrg_ShowsYourOrganisationsView()
         {
             // Arrange
             Guid organisationId1 = new Guid("433DB128-12A1-44FB-B26A-8128F8E36598");
@@ -102,7 +103,7 @@
 
             YourOrganisationsViewModel model = viewResult.Model as YourOrganisationsViewModel;
 
-            Assert.Equal(1, model.Organisations.Count);
+            Assert.Single(model.Organisations);
 
             Assert.Equal(organisationId1, model.Organisations[0].OrganisationId);
             Assert.Equal("Organisation Name 1", model.Organisations[0].Organisation.OrganisationName);
@@ -119,7 +120,7 @@
         }
 
         [Fact]
-        public async void GetIndex_OneInactiveOrg_ShowsPendingView()
+        public async Task GetIndex_OneInactiveOrg_ShowsPendingView()
         {
             // Arrange
             Guid organisationId = new Guid("433DB128-12A1-44FB-B26A-8128F8E36598");
@@ -163,7 +164,7 @@
         }
 
         [Fact]
-        public async void GetIndex_NoOrganisations_RedirectsToCreateJoinOrganisation()
+        public async Task GetIndex_NoOrganisations_RedirectsToCreateJoinOrganisation()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
@@ -191,7 +192,7 @@
         /// with statues of "Pending" and "Rejected", only the pending association should be shown.
         /// </summary>
         [Fact]
-        public async void GetIndex_WithPendingAndRejectedAssociation_ShowsOnlyPendingAssociation()
+        public async Task GetIndex_WithPendingAndRejectedAssociation_ShowsOnlyPendingAssociation()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
@@ -244,7 +245,7 @@
         /// with statues of "Inactive" and "Rejected", only the inactive association should be shown.
         /// </summary>
         [Fact]
-        public async void GetIndex_WithInactiveAndRejectedAssociation_ShowsOnlyInactiveAssociation()
+        public async Task GetIndex_WithInactiveAndRejectedAssociation_ShowsOnlyInactiveAssociation()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();

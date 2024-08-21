@@ -232,7 +232,7 @@
         }
 
         [Fact]
-        public async void CopyAatfDetailsGet_CanNotEdit_ReturnsForbiddenResult()
+        public async Task CopyAatfDetailsGet_CanNotEdit_ReturnsForbiddenResult()
         {
             var id = fixture.Create<Guid>();
             var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, false).Create();
@@ -381,7 +381,7 @@
         }
 
         [Fact]
-        public async void CopyAatfDetailsPost_InvalidViewModel_ApiShouldBeCalled()
+        public async Task CopyAatfDetailsPost_InvalidViewModel_ApiShouldBeCalled()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();

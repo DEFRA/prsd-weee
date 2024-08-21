@@ -362,7 +362,7 @@
         }
 
         [Fact]
-        public async void HttpGet_DownloadProducerAmendmentsCsv_ShouldReturnFileContentType()
+        public async Task HttpGet_DownloadProducerAmendmentsCsv_ShouldReturnFileContentType()
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
@@ -395,7 +395,7 @@
         /// when the current user is allowed to remove producers.
         /// </summary>
         [Fact]
-        public async void GetConfirmRemoval_ReturnsConfirmRemovalView_WhenCanRemoveProducerIsTrue()
+        public async Task GetConfirmRemoval_ReturnsConfirmRemovalView_WhenCanRemoveProducerIsTrue()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
@@ -430,7 +430,7 @@
         /// are used to populate the view model.
         /// </summary>
         [Fact]
-        public async void GetConfirmRemoval_CallsApiForSpecifiedRegisteredProducer_AndPopulatesViewModel()
+        public async Task GetConfirmRemoval_CallsApiForSpecifiedRegisteredProducer_AndPopulatesViewModel()
         {
             // Arrange
             Guid registeredProducerId = new Guid("9F253FE4-B644-4EA1-B58E-19C735512449");
@@ -470,7 +470,7 @@
         /// when the current user is not allowed to remove producers.
         /// </summary>
         [Fact]
-        public async void GetConfirmRemoval_ReturnsHttpForbiddenResult_WhenCanRemoveProducerIsFalse()
+        public async Task GetConfirmRemoval_ReturnsHttpForbiddenResult_WhenCanRemoveProducerIsFalse()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
@@ -639,7 +639,7 @@
         }
 
         [Fact]
-        public async void HttpGet_RemovedProducer_ShouldReturnRemovedProducerModel()
+        public async Task HttpGet_RemovedProducer_ShouldReturnRemovedProducerModel()
         {
             // Act
             var result = await ProducersController().Removed("WEE/MM0001AA", 2016, "SchemeName");
@@ -650,7 +650,7 @@
         }
 
         [Fact]
-        public async void HttpPost_RemovedProducer_ProducerIsAssociatedWithOtherScheme_ShouldRedirectToDetailsAction()
+        public async Task HttpPost_RemovedProducer_ProducerIsAssociatedWithOtherScheme_ShouldRedirectToDetailsAction()
         {
             // Arrange
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerRegisteredForComplianceYear>._))
@@ -676,7 +676,7 @@
         }
 
         [Fact]
-        public async void HttpPost_RemovedProducer_ProducerNotAssociatedWithOtherScheme_ShouldRedirectToSearchAction()
+        public async Task HttpPost_RemovedProducer_ProducerNotAssociatedWithOtherScheme_ShouldRedirectToSearchAction()
         {
             // Arrange
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerRegisteredForComplianceYear>._))
@@ -702,7 +702,7 @@
         }
 
         [Fact]
-        public async void HttpGet_DownloadProducerEeeHistoryCsv_ShouldReturnFileContentType()
+        public async Task HttpGet_DownloadProducerEeeHistoryCsv_ShouldReturnFileContentType()
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();

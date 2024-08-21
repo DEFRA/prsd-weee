@@ -14,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -48,7 +49,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_ApiShouldBeCalled()
+        public async Task IndexGet_GivenActionExecutes_ApiShouldBeCalled()
         {
             var returnId = Guid.NewGuid();
 
@@ -59,7 +60,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_ViewModelShouldBeBuilt()
         {
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -78,7 +79,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -106,7 +107,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToNonObligated()
+        public async Task IndexPost_OnSubmit_PageRedirectsToNonObligated()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -125,7 +126,7 @@
         }
 
         [Fact]
-        public async void SetsHeaderTitle_For_NonObligatedCopyPaste()
+        public async Task SetsHeaderTitle_For_NonObligatedCopyPaste()
         {
             var typeheading = "Non-obligated WEEE";
 
@@ -135,7 +136,7 @@
         }
 
         [Fact]
-        public async void SetsHeaderTitle_For_DcfObligatedCopyPaste()
+        public async Task SetsHeaderTitle_For_DcfObligatedCopyPaste()
         {
             var typeheading = "Non-obligated WEEE kept / retained by a DCF";
 
@@ -145,7 +146,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitDcf_PageRedirectsToNonObligatedDcf()
+        public async Task IndexPost_OnSubmitDcf_PageRedirectsToNonObligatedDcf()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -164,7 +165,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithPastedValues_TempDataShouldBeAttached()
+        public async Task IndexPost_OnSubmitWithPastedValues_TempDataShouldBeAttached()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -180,7 +181,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
+        public async Task IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
