@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using Core.Aatf;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -15,8 +16,8 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.Aatf;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -50,7 +51,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_ApiShouldBeCalled()
+        public async Task IndexGet_GivenActionExecutes_ApiShouldBeCalled()
         {
             var returnId = Guid.NewGuid();
 
@@ -61,7 +62,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_ViewModelShouldBeBuilt()
         {
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -92,7 +93,7 @@
         }
 
         [Fact]
-        public async void IndexGet_FromReuse_GivenReturn_ViewModelShouldBeBuilt()
+        public async Task IndexGet_FromReuse_GivenReturn_ViewModelShouldBeBuilt()
         {
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -118,7 +119,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -156,7 +157,7 @@
         }
 
         [Fact]
-        public async void IndexPost_FromReceived_OnSubmit_PageRedirectsToObligatedReceived()
+        public async Task IndexPost_FromReceived_OnSubmit_PageRedirectsToObligatedReceived()
         {
             HttpContextMocker httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -189,7 +190,7 @@
         }
 
         [Fact]
-        public async void IndexPost_FromReused_OnSubmit_PageRedirectsToObligatedReused()
+        public async Task IndexPost_FromReused_OnSubmit_PageRedirectsToObligatedReused()
         {
             HttpContextMocker httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -218,7 +219,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithBothPastedValues_TempDataShouldBeAttached()
+        public async Task IndexPost_OnSubmitWithBothPastedValues_TempDataShouldBeAttached()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -243,7 +244,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithOnePastedValues_TempDataShouldBeAttached()
+        public async Task IndexPost_OnSubmitWithOnePastedValues_TempDataShouldBeAttached()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -267,7 +268,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
+        public async Task IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);

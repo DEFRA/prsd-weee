@@ -6,6 +6,7 @@
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -21,7 +22,7 @@
         }
 
         [Fact]
-        public async void GetCompetentAuthorityUser_WhenUserDoesExist_ReturnsUser()
+        public async Task GetCompetentAuthorityUser_WhenUserDoesExist_ReturnsUser()
         {
             var competentAuthorityUserId = Guid.Empty; // Id cannot be set for existing user so will match
 
@@ -34,7 +35,7 @@
         }
 
         [Fact]
-        public async void GetCompetentAuthorityUser_WhenUserDoesNotExist_ReturnsNull()
+        public async Task GetCompetentAuthorityUser_WhenUserDoesNotExist_ReturnsNull()
         {
             var competentAuthorityUserId = Guid.NewGuid(); // Id cannot be set for existing user so will not match
 

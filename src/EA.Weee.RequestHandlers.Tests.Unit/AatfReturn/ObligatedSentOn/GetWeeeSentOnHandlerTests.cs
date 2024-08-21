@@ -62,7 +62,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenWeeeSentOnId_ReturnedListShouldContainOnly1Element()
+        public async Task HandleAsync_GivenWeeeSentOnId_ReturnedListShouldContainOnly1Element()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -85,7 +85,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenGetSentOnAatfSiteRequest_AddressDataShouldBeMapped()
+        public async Task HandleAsync_GivenGetSentOnAatfSiteRequest_AddressDataShouldBeMapped()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();

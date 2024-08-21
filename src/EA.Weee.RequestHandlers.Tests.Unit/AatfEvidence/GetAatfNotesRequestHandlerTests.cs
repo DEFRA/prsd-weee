@@ -113,7 +113,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
@@ -130,7 +130,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithSearchRef_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithSearchRef_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             var searchRef = TestFixture.Create<string>();
@@ -152,7 +152,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithRecipientFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithRecipientFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             Guid? recipientId = Guid.NewGuid();
@@ -174,7 +174,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithWasteTypeFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithWasteTypeFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange            
             var wasteTypeList = TestFixture.CreateMany<WasteType>((int)WasteType.Household).ToList();
@@ -197,7 +197,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithNoteStatusFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithNoteStatusFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             NoteStatus? noteStatus = TestFixture.Create<NoteStatus?>();
@@ -222,7 +222,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithStartDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithStartDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             var startDate = TestFixture.Create<DateTime?>();
@@ -248,7 +248,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithEndDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithEndDateFilterSet_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             var endDate = TestFixture.Create<DateTime?>();
@@ -275,7 +275,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
+        public async Task HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
             var note1 = A.Fake<Note>();
@@ -308,7 +308,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
+        public async Task HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
             var noteList = TestFixture.CreateMany<Note>().ToList();

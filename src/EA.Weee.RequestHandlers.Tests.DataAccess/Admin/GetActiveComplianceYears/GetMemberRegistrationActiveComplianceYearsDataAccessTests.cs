@@ -1,15 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.GetActiveComplianceYears
 {
-    using RequestHandlers.Admin.GetActiveComplianceYears;
+    using Xunit;
     using System;
     using System.Linq;
     using Weee.Tests.Core.Model;
-    using Xunit;
+    using System.Threading.Tasks;
+    using RequestHandlers.Admin.GetActiveComplianceYears;
 
     public class GetMemberRegistrationActiveComplianceYearsDataAccessTests
     {
         [Fact]
-        public async void Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
+        public async Task Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
         {
             using (var database = new DatabaseWrapper())
             {

@@ -122,7 +122,7 @@
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
         [InlineData("view-all-evidence-transfers")]
-        public async void IndexGet_GivenMappedManageEvidenceNotesViewModel_MappedEvidenceNotesViewModelShouldBeReturned(string tab)
+        public async Task IndexGet_GivenMappedManageEvidenceNotesViewModel_MappedEvidenceNotesViewModelShouldBeReturned(string tab)
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
@@ -141,7 +141,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenManageEvidenceNotesViewModelAndViewAllEvidenceTransfersWithFilterModel_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues()
+        public async Task IndexGet_GivenManageEvidenceNotesViewModelAndViewAllEvidenceTransfersWithFilterModel_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues()
         {
             //arrange
             var complianceYear = TestFixture.Create<short>();
@@ -162,7 +162,7 @@
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
         [InlineData("view-all-evidence-transfers")]
-        public async void IndexGet_GivenManageEvidenceNotesViewModel_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
+        public async Task IndexGet_GivenManageEvidenceNotesViewModel_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
         {
             //arrange
             var complianceYear = TestFixture.Create<short>();
@@ -196,7 +196,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        public async void IndexGet_GivenNullManageEvidenceNotesViewModelAndViewAllEvidenceNotesOrNullTabs_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
+        public async Task IndexGet_GivenNullManageEvidenceNotesViewModelAndViewAllEvidenceNotesOrNullTabs_ManageEvidenceNoteViewModelMapperShouldBeCalledWithCorrectValues(string tab)
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
@@ -603,7 +603,7 @@
         [Theory]
         [InlineData(null, NoteType.Evidence)]
         [InlineData("view-all-evidence-notes", NoteType.Evidence)]
-        public async void IndexGet_GivenManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
+        public async Task IndexGet_GivenManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
@@ -631,7 +631,7 @@
 
         [Theory]
         [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
-        public async void IndexGet_GivenTransferManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
+        public async Task IndexGet_GivenTransferManageEvidenceNoteViewModel_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
@@ -660,7 +660,7 @@
         [Theory]
         [InlineData(null, NoteType.Evidence)]
         [InlineData("view-all-evidence-notes", NoteType.Evidence)]
-        public async void IndexGet_GivenManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
+        public async Task IndexGet_GivenManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
             var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
@@ -688,7 +688,7 @@
 
         [Theory]
         [InlineData("view-all-evidence-transfers", NoteType.Transfer)]
-        public async void IndexGet_GivenTransferManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
+        public async Task IndexGet_GivenTransferManageEvidenceNoteViewModelIsNull_OrganisationSchemeDataShouldBeRetrieved(string tab, NoteType noteType)
         {
             // arrange
             var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
@@ -717,7 +717,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        public async void IndexGet_GivenManageEvidenceNoteViewModel_GetAllAatfsForComplianceYearRequest(string tab)
+        public async Task IndexGet_GivenManageEvidenceNoteViewModel_GetAllAatfsForComplianceYearRequest(string tab)
         {
             // arrange
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
@@ -742,7 +742,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenTransferEvidenceAndManageEvidenceNoteViewModel_GetSchemeDataForFilterRequestByTransferShouldBeCalled()
+        public async Task IndexGet_GivenTransferEvidenceAndManageEvidenceNoteViewModel_GetSchemeDataForFilterRequestByTransferShouldBeCalled()
         {
             // arrange
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
@@ -770,7 +770,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("view-all-evidence-notes")]
-        public async void IndexGet_GivenManageEvidenceNoteViewModelIsNull_GetAllAatfsForComplianceYearRequest(string tab)
+        public async Task IndexGet_GivenManageEvidenceNoteViewModelIsNull_GetAllAatfsForComplianceYearRequest(string tab)
         {
             // arrange
             var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
@@ -795,7 +795,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenTransferEvidenceAndManageEvidenceNoteViewModelIsNull_GetSchemeDataForFilterRequestByTransferShouldBeCalled()
+        public async Task IndexGet_GivenTransferEvidenceAndManageEvidenceNoteViewModelIsNull_GetSchemeDataForFilterRequestByTransferShouldBeCalled()
         {
             // arrange
             var complianceYears = new List<int>() { TestFixture.Create<int>(), TestFixture.Create<int>(), TestFixture.Create<int>() };
@@ -1069,7 +1069,7 @@
         [Theory]
         [InlineData("view-all-evidence-notes", "ViewAllEvidenceNotes")]
         [InlineData("view-all-evidence-transfers", "ViewAllTransferNotes")]
-        public async void Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
+        public async Task Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
         {
             var result = await ManageEvidenceController.Index(tab) as ViewResult;
 

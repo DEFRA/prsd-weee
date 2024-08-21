@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -23,7 +24,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_SameUserRejectedMultipleTimesForOneOrganisation_OnlyReturnsOneRejection()
+        public async Task GetOrganisationUsers_SameUserRejectedMultipleTimesForOneOrganisation_OnlyReturnsOneRejection()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -69,7 +70,7 @@
         [InlineData(Core.Shared.UserStatus.Active)]
         [InlineData(Core.Shared.UserStatus.Inactive)]
         [InlineData(Core.Shared.UserStatus.Pending)]
-        public async void GetOrganisationUsers_SameUserRejectedMultipleTimesForOneOrganisation_ButAlsoHasAnotherStatus_ReturnsTheOtherStatus(Core.Shared.UserStatus status)
+        public async Task GetOrganisationUsers_SameUserRejectedMultipleTimesForOneOrganisation_ButAlsoHasAnotherStatus_ReturnsTheOtherStatus(Core.Shared.UserStatus status)
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -120,7 +121,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithFirstNameFilter_ReturnsFilteredResults()
+        public async Task GetOrganisationUsers_WithFirstNameFilter_ReturnsFilteredResults()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -164,7 +165,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithSurnameFilter_ReturnsFilteredResults()
+        public async Task GetOrganisationUsers_WithSurnameFilter_ReturnsFilteredResults()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -208,7 +209,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithFullNameFilter_ReturnsFilteredResults()
+        public async Task GetOrganisationUsers_WithFullNameFilter_ReturnsFilteredResults()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -252,7 +253,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithFullNameFilter_ReturnsMultipleFilteredResults()
+        public async Task GetOrganisationUsers_WithFullNameFilter_ReturnsMultipleFilteredResults()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -295,7 +296,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithOrganisationNameFilter_ReturnsFilteredResults()
+        public async Task GetOrganisationUsers_WithOrganisationNameFilter_ReturnsFilteredResults()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -344,7 +345,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithOrganisationNameFilter_ReturnsMultipleFilteredResults()
+        public async Task GetOrganisationUsers_WithOrganisationNameFilter_ReturnsMultipleFilteredResults()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -393,7 +394,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithOrganisationNameFilterAndMatchingTradingName_DoesNotReturnWhenOrganisationNameDoesNotMatch()
+        public async Task GetOrganisationUsers_WithOrganisationNameFilterAndMatchingTradingName_DoesNotReturnWhenOrganisationNameDoesNotMatch()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -434,7 +435,7 @@
         [InlineData(Core.Shared.UserStatus.Inactive)]
         [InlineData(Core.Shared.UserStatus.Pending)]
         [InlineData(Core.Shared.UserStatus.Rejected)]
-        public async void GetOrganisationUsers_WithStatusFilter_ReturnsFilteredResults(Core.Shared.UserStatus status)
+        public async Task GetOrganisationUsers_WithStatusFilter_ReturnsFilteredResults(Core.Shared.UserStatus status)
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
@@ -488,7 +489,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUsers_WithStatusFilter_ReturnsMultipleFilteredResults()
+        public async Task GetOrganisationUsers_WithStatusFilter_ReturnsMultipleFilteredResults()
         {
             using (var dbWrapper = new DatabaseWrapper())
             {
