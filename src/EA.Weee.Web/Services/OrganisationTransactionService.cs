@@ -23,9 +23,9 @@ namespace EA.Weee.Web.Services
             {
                 var transaction = await client.SendAsync(accessToken,  new GetUserOrganisationTransaction());
 
-                if (model is OrganisationDetails)
+                if (model is OrganisationDetails details)
                 {
-                    transaction.OrganisationDetails = model as OrganisationDetails;
+                    transaction.OrganisationDetails = details;
                     //_currentSession.Screen1Metadata = metadata;
                 }
             }
