@@ -51,7 +51,7 @@
         }
 
         [Fact]
-        public async void UpdateWithOperatorAddress_GivenOperatorAddress_ContextShouldContainUpdatedWeeeSentOnWithOperatorAddress()
+        public async Task UpdateWithOperatorAddress_GivenOperatorAddress_ContextShouldContainUpdatedWeeeSentOnWithOperatorAddress()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -74,7 +74,7 @@
         }
 
         [Fact]
-        public async void GetWeeeSentOnSiteAddress_GivenWeeeSentOnId_CorrectAatfAddressShouldBeReturned()
+        public async Task GetWeeeSentOnSiteAddress_GivenWeeeSentOnId_CorrectAatfAddressShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public async void GetWeeeSentOnOperatorAddress_GivenWeeeSentOnId_CorrectAatfAddressShouldBeReturned()
+        public async Task GetWeeeSentOnOperatorAddress_GivenWeeeSentOnId_CorrectAatfAddressShouldBeReturned()
         {
             using (var database = new DatabaseWrapper())
             {

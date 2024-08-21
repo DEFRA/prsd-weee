@@ -10,13 +10,14 @@
     using RequestHandlers.Scheme.GetSchemePublicInfo;
     using Requests.Scheme;
     using System;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
     public class GetSchemePublicInfoHandlerTests : SimpleUnitTestBase
     {
         [Fact]
-        public async void HandleAsync_OrganisationIsNotBalancingScheme_ReturnsSchemeData()
+        public async Task HandleAsync_OrganisationIsNotBalancingScheme_ReturnsSchemeData()
         {
             // Arrange
             var dataAccess = A.Fake<IGetSchemePublicInfoDataAccess>();
@@ -51,7 +52,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_OrganisationIsBalancingScheme_ReturnsSchemeData()
+        public async Task HandleAsync_OrganisationIsBalancingScheme_ReturnsSchemeData()
         {
             // Arrange
             var dataAccess = A.Fake<IGetSchemePublicInfoDataAccess>();

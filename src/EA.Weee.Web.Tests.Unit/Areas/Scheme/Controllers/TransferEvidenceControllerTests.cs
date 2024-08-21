@@ -2168,7 +2168,7 @@
         [Theory]
         [InlineData(NoteStatus.Draft)]
         [InlineData(NoteStatus.Returned)]
-        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_ShouldRedirectedToRoute(NoteStatus status)
+        public async Task SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_ShouldRedirectedToRoute(NoteStatus status)
         {
             //arrange
             var schemeId = TestFixture.Create<Guid>();
@@ -2187,7 +2187,7 @@
         [Theory]
         [InlineData(NoteStatus.Draft)]
         [InlineData(NoteStatus.Returned)]
-        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_SetNoteStatusRequestShouldBeCalled(NoteStatus status)
+        public async Task SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_SetNoteStatusRequestShouldBeCalled(NoteStatus status)
         {
             //arrange
             var schemeId = TestFixture.Create<Guid>();
@@ -2204,7 +2204,7 @@
         [Theory]
         [InlineData(NoteStatus.Draft, NoteUpdatedStatusEnum.Submitted)]
         [InlineData(NoteStatus.Returned, NoteUpdatedStatusEnum.ReturnedSubmitted)]
-        public async void SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_TempDataShouldHaveCorrectStatus(NoteStatus status, NoteUpdatedStatusEnum tempDataStatus)
+        public async Task SubmittedTransferNotePost_GivenDraftAndReturnedStatuses_TempDataShouldHaveCorrectStatus(NoteStatus status, NoteUpdatedStatusEnum tempDataStatus)
         {
             //arrange
             var schemeId = TestFixture.Create<Guid>();
@@ -2592,7 +2592,7 @@
         }
 
         [Fact]
-        public async void CancelledTransferNote_GivenReturnedStatuses_ShouldRedirectedToRoute()
+        public async Task CancelledTransferNote_GivenReturnedStatuses_ShouldRedirectedToRoute()
         {
             //arrange
             var schemeId = TestFixture.Create<Guid>();
@@ -2610,7 +2610,7 @@
         }
 
         [Fact]
-        public async void CancelledTransferNote_GivenReturnedStatuse_TempDataShouldHaveCorrectStatus()
+        public async Task CancelledTransferNote_GivenReturnedStatuse_TempDataShouldHaveCorrectStatus()
         {
             //arrange
             var schemeId = TestFixture.Create<Guid>();
@@ -2625,7 +2625,7 @@
         }
 
         [Fact]
-        public async void CancelledTransferNote_GivenReturnedStatuse_SetNoteStatusRequestShouldBeCalled()
+        public async Task CancelledTransferNote_GivenReturnedStatuse_SetNoteStatusRequestShouldBeCalled()
         {
             //arrange
             var schemeId = TestFixture.Create<Guid>();

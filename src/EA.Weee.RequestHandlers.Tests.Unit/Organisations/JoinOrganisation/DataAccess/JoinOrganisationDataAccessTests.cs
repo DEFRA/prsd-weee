@@ -7,6 +7,7 @@
     using RequestHandlers.Organisations.JoinOrganisation.DataAccess;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
@@ -34,7 +35,7 @@
         }
 
         [Fact]
-        public async void DoesUserExist_WhenUserExists_ReturnsTrue()
+        public async Task DoesUserExist_WhenUserExists_ReturnsTrue()
         {
             A.CallTo(() => context.Users)
                 .Returns(contextHelper.GetAsyncEnabledDbSet(new List<User>
@@ -47,7 +48,7 @@
         }
 
         [Fact]
-        public async void DoesUserExist_WhenUserDoesNotExist_ReturnsFalse()
+        public async Task DoesUserExist_WhenUserDoesNotExist_ReturnsFalse()
         {
             A.CallTo(() => context.Users)
                 .Returns(contextHelper.GetAsyncEnabledDbSet(new List<User>
@@ -59,7 +60,7 @@
         }
 
         [Fact]
-        public async void DoesOrganisationExist_WhenOrganisationExists_ReturnsTrue()
+        public async Task DoesOrganisationExist_WhenOrganisationExists_ReturnsTrue()
         {
             A.CallTo(() => context.Organisations)
                 .Returns(contextHelper.GetAsyncEnabledDbSet(new List<Organisation>
@@ -72,7 +73,7 @@
         }
 
         [Fact]
-        public async void DoesOrganisationExist_WhenOrganisationDoesNotExist_ReturnsFalse()
+        public async Task DoesOrganisationExist_WhenOrganisationDoesNotExist_ReturnsFalse()
         {
             A.CallTo(() => context.Organisations)
                 .Returns(contextHelper.GetAsyncEnabledDbSet(new List<Organisation>
@@ -87,7 +88,7 @@
         [InlineData(Core.Shared.UserStatus.Active)]
         [InlineData(Core.Shared.UserStatus.Pending)]
         [InlineData(Core.Shared.UserStatus.Inactive)]
-        public async void JoinOrganisation_OrganisationUserExistsWithNonRejectedStatus_ReturnsFailure_AndDoesNotSaveAnyChanges(Core.Shared.UserStatus userStatus)
+        public async Task JoinOrganisation_OrganisationUserExistsWithNonRejectedStatus_ReturnsFailure_AndDoesNotSaveAnyChanges(Core.Shared.UserStatus userStatus)
         {
             var organisationId = Guid.NewGuid();
             var userId = Guid.NewGuid();
@@ -109,7 +110,7 @@
         }
 
         [Fact]
-        public async void JoinOrganisation_OrganisationUserExistsWithRejectedStatus_SavesChanges_AndReturnsSuccess()
+        public async Task JoinOrganisation_OrganisationUserExistsWithRejectedStatus_SavesChanges_AndReturnsSuccess()
         {
             var organisationId = Guid.NewGuid();
             var userId = Guid.NewGuid();
@@ -133,7 +134,7 @@
         }
 
         [Fact]
-        public async void JoinOrganisation_OrganisationUserDoesNotExist_SavesChanges_AndReturnsSuccess()
+        public async Task JoinOrganisation_OrganisationUserDoesNotExist_SavesChanges_AndReturnsSuccess()
         {
             var organisationId = Guid.NewGuid();
             var userId = Guid.NewGuid();

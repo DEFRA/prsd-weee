@@ -12,6 +12,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Security.Claims;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.Controllers.Base;
@@ -38,7 +39,7 @@
         [InlineData(UserStatus.Inactive)]
         [InlineData(UserStatus.Pending)]
         [InlineData(UserStatus.Rejected)]
-        public async void HttpGet_Index_IfUserIsNotActive_ShouldRedirectToInternalUserAuthorizationRequired(
+        public async Task HttpGet_Index_IfUserIsNotActive_ShouldRedirectToInternalUserAuthorizationRequired(
             UserStatus userStatus)
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._))
@@ -56,7 +57,7 @@
         }
 
         [Fact]
-        public async void HttpGet_Index_IfUserIsActive_ShouldRedirectToChooseActivity()
+        public async Task HttpGet_Index_IfUserIsActive_ShouldRedirectToChooseActivity()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._))
                 .Returns(UserStatus.Active);
