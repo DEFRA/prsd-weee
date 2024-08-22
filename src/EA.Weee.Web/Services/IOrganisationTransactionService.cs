@@ -8,5 +8,7 @@
         Task CaptureData<T>(string accessToken, T viewModel) where T : class;
 
         Task<OrganisationTransactionData> GetOrganisationTransactionData(string accessToken);
+
+        Task DeleteOrganisationTransactionData(string accessToken);
     }
 }

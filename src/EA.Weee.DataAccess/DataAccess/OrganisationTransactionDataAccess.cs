@@ -26,6 +26,18 @@
                 .FirstOrDefaultAsync();
         }
 
+        public async Task DeleteAsync()
+        {
+            var transaction = await FindIncompleteTransactionForCurrentUserAsync();
+
+            if (transaction != null)
+            {
+                context.OrganisationTransactions.Remove(transaction);
+            }
+
+            await context.SaveChangesAsync();
+        }
+
         public async Task<OrganisationTransaction> UpdateOrCreateTransactionAsync(string organisationJson)
         {
             var transaction = await FindIncompleteTransactionForCurrentUserAsync();

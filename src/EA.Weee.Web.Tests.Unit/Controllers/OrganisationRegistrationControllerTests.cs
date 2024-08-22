@@ -23,16 +23,27 @@
 
     public class OrganisationRegistrationControllerTests
     {
+        private readonly Func<IWeeeClient> weeeClient;
+        private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly ConfigurationService configurationService;
         private readonly IOrganisationTransactionService transactionService;
-        private readonly Fixture fixture;
+        private readonly OrganisationRegistrationController controller;
 
         public OrganisationRegistrationControllerTests()
         {
-            fixture = new Fixture();
-
             configurationService = A.Fake<ConfigurationService>();
             transactionService = A.Fake<IOrganisationTransactionService>();
+
+            weeeClient = A.Fake<Func<IWeeeClient>>();
+            organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
+            configurationService = A.Fake<ConfigurationService>();
+            transactionService = A.Fake<IOrganisationTransactionService>();
+
+            controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService);
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -571,7 +582,7 @@
         }
 
         [Fact]
-        public void TypeGet_ReturnsViewWithViewModel_WithSearchText()
+        public void TypeGet_ReturnsViewWithViewModel()
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
@@ -580,15 +591,15 @@
             var controller = new OrganisationRegistrationController(
                weeeClient,
                organisationSearcher,
-               configurationService);
-
-            var entityType = fixture.Create<EntityType>();
+               configurationService,
+               transactionService);
 
             var result = controller.Type() as ViewResult;
 
             var resultViewModel = result.Model as ExternalOrganisationTypeViewModel;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Type");
+            Assert.NotNull(resultViewModel);
         }
 
         [Theory]
@@ -604,7 +615,8 @@
             var controller = new OrganisationRegistrationController(
                weeeClient,
                organisationSearcher,
-               configurationService);
+               configurationService,
+               transactionService);
 
             var viewModel = new ExternalOrganisationTypeViewModel()
             {
@@ -628,11 +640,11 @@
             var controller = new OrganisationRegistrationController(
                weeeClient,
                organisationSearcher,
-               configurationService);
+               configurationService,
+               transactionService);
 
             const string searchText = "Company";
             const string organisationType = "Sole trader";
-            var entityType = fixture.Create<EntityType>();
 
             var result = await controller.SoleTraderDetails(organisationType, searchText) as ViewResult;
 
@@ -646,7 +658,7 @@
         }
 
         [Fact]
-        public async void TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
+        public void TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -659,13 +671,9 @@
                 transactionService);
 
             const string searchText = "company";
-            var viewModel = new TonnageTypeViewModel()
-            {
-                SearchedText = searchText,
-            };
 
             // Act
-            var result = await controller.TonnageType(searchText);
+            var result = controller.TonnageType(searchText);
 
             // Assert
             var resultViewModel = result.Model as TonnageTypeViewModel;
@@ -736,6 +744,24 @@
             Assert.NotNull(redirectResult);
 
             redirectResult.RouteValues["controller"].Should().Be("Holding");
+        }
+
+        [Fact]
+        public async Task RegisterSmallProducer_ClearsTransactionDataAndRedirectsToTonnageType()
+        {
+            // Arrange
+            const string searchTerm = "Test Company";
+
+            // Act
+            var result = await controller.RegisterSmallProducer(searchTerm) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TonnageType");
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
         }
     }
 }

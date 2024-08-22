@@ -5,6 +5,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Web.ViewModels.OrganisationRegistration;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using System;
     using System.Threading.Tasks;
 
@@ -28,6 +29,10 @@
                     case OrganisationDetails details:
                         transaction.OrganisationDetails = details;
                         break;
+                    case TonnageTypeViewModel tonnageTypeViewModel:
+                        transaction.TonnageType = tonnageTypeViewModel.SelectedValue;
+                        transaction.SearchTerm = tonnageTypeViewModel.SearchedText;
+                        break;
                     case PreviousRegistrationViewModel previousRegistrationModel:
                         transaction.PreviousRegistration = previousRegistrationModel.SelectedValue;
                         break;
@@ -44,6 +49,14 @@
                 var transaction = await client.SendAsync(accessToken, new GetUserOrganisationTransaction()) ?? new OrganisationTransactionData();
 
                 return transaction;
+            }
+        }
+
+        public async Task DeleteOrganisationTransactionData(string accessToken)
+        {
+            using (var client = weeeClient())
+            {
+                await client.SendAsync(accessToken, new DeleteUserOrganisationTransaction());
             }
         }
     }

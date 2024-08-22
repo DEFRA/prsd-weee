@@ -6,6 +6,10 @@
     {
         public Guid? Id {get; set; }
 
+        public string SearchTerm { get; set; }
+
+        public string TonnageType { get; set; }
+
         public string PreviousRegistration { get; set; }
 
         // each screen view model

@@ -235,6 +235,16 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> RegisterSmallProducer(string searchTerm)
+        {
+            // temporary clear down any existing Organisation transactions for the user before we know about
+            // continuing a partially completed registration
+            await transactionService.DeleteOrganisationTransactionData(User.GetAccessToken());
+
+            return RedirectToAction(nameof(TonnageType), new { searchTerm });
+        }
+
+        [HttpGet]
         public ActionResult Type()
         {
             return View(new ExternalOrganisationTypeViewModel());
@@ -319,9 +329,14 @@
         [HttpGet]
         public async Task<ViewResult> TonnageType(string searchTerm)
         {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = existingTransaction?.TonnageType ?? string.Empty;
+
             var viewModel = new TonnageTypeViewModel
             {
                 SearchedText = searchTerm,
+                SelectedValue = selectedValue
             };
 
             return View(viewModel);
@@ -336,7 +351,9 @@
                 return View(tonnageTypeViewModel);
             }
 
-            return RedirectToAction("Index", "Holding");
+            await transactionService.CaptureData(User.GetAccessToken(), tonnageTypeViewModel);
+
+            return RedirectToAction(nameof(PreviousRegistration));
         }
 
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
@@ -361,7 +378,8 @@
             var selectedValue = existingTransaction.PreviousRegistration;
             var viewModel = new PreviousRegistrationViewModel
             {
-                SelectedValue = selectedValue
+                SelectedValue = selectedValue,
+                SearchText = existingTransaction.SearchTerm
             };
 
             return View(viewModel);

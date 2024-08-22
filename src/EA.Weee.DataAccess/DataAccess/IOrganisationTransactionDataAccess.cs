@@ -8,5 +8,6 @@
         Task<OrganisationTransaction> FindIncompleteTransactionForCurrentUserAsync();
         Task<OrganisationTransaction> UpdateOrCreateTransactionAsync(string organisationJson);
         Task<OrganisationTransaction> CompleteTransactionAsync(string organisationJson);
+        Task DeleteAsync();
     }
 }

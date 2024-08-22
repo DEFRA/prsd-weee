@@ -5,6 +5,7 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.OrganisationRegistration;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -21,6 +22,28 @@
             weeeClient = A.Fake<IWeeeClient>();
             IWeeeClient WeeeClientFactory() => weeeClient;
             organisationService = new OrganisationTransactionService(WeeeClientFactory);
+        }
+
+        [Fact]
+        public async Task CaptureData_WithTonnageTypeViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var tonnageTypeViewModel = new TonnageTypeViewModel() { SelectedValue = "Yes", SearchedText = "search" };
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, tonnageTypeViewModel);
+
+            // Assert
+            transaction.PreviousRegistration.Should().Be(tonnageTypeViewModel.SelectedValue);
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.TonnageType.Equals(tonnageTypeViewModel.SelectedValue) &&
+                                                x.OrganisationTransactionData.SearchTerm.Equals(tonnageTypeViewModel.SearchedText)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -41,7 +64,7 @@
             transaction.PreviousRegistration.Should().Be(previousRegistrationModel.SelectedValue);
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
-                x => x.OrganisationTransactionData.PreviousRegistration == previousRegistrationModel.SelectedValue))).MustHaveHappenedOnceExactly();
+                x => x.OrganisationTransactionData.PreviousRegistration.Equals(previousRegistrationModel.SelectedValue)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
