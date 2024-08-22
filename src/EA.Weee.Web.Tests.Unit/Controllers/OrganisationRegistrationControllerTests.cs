@@ -572,14 +572,12 @@
                organisationSearcher,
                configurationService);
 
-            const string searchText = "Company";
             var entityType = fixture.Create<EntityType>();
 
-            var result = controller.Type(searchText) as ViewResult;
+            var result = controller.Type() as ViewResult;
 
             var resultViewModel = result.Model as ExternalOrganisationTypeViewModel;
 
-            Assert.Equal(searchText, resultViewModel.SearchedText);
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Type");
         }
 
@@ -600,7 +598,6 @@
 
             var viewModel = new ExternalOrganisationTypeViewModel()
             {
-                SearchedText = "Company",
                 SelectedValue = selectedValue,
             };
 
@@ -609,7 +606,6 @@
             result.RouteValues["action"].Should().Be(action);
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             result.RouteValues["organisationType"].Should().Be(viewModel.SelectedValue);
-            result.RouteValues["searchedText"].Should().Be(viewModel.SearchedText);
         }
 
         [Fact]

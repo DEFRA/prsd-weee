@@ -235,9 +235,9 @@
         }
 
         [HttpGet]
-        public ActionResult Type(string searchedText)
+        public ActionResult Type()
         {
-            return View(new ExternalOrganisationTypeViewModel(searchedText));
+            return View(new ExternalOrganisationTypeViewModel());
         }
 
         [HttpPost]
@@ -247,7 +247,7 @@
             if (ModelState.IsValid)
             {
                 var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
-                var routeValues = new { organisationType = model.SelectedValue, searchedText = model.SearchedText };
+                var routeValues = new { organisationType = model.SelectedValue };
 
                 switch (organisationType)
                 {
