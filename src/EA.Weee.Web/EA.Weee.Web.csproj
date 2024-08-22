@@ -1020,6 +1020,7 @@
     <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
     <Content Include="Views\OrganisationRegistration\TonnageType.cshtml" />
     <Content Include="Views\Holding\Index.cshtml" />
+    <Content Include="Views\OrganisationRegistration\FiveTonnesOrMore.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

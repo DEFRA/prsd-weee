@@ -9,6 +9,7 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Search;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using Infrastructure;
@@ -249,7 +250,20 @@
                 return View(tonnageTypeViewModel);
             }
 
+            var tonnageType = tonnageTypeViewModel.SelectedValue.GetValueFromDisplayName<TonnageType>();
+
+            if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
+            {
+                return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
+            }
+
             return RedirectToAction("Index", "Holding");
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> FiveTonnesOrMore()
+        {
+            return View();
         }
 
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()

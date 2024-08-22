@@ -617,9 +617,9 @@
         }
 
         [Theory]
-        [InlineData("5 tonnes or more")]
-        [InlineData("Less than 5 tonnes")]
-        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue)
+        [InlineData("5 tonnes or more", "FiveTonnesOrMore", "OrganisationRegistration")]
+        [InlineData("Less than 5 tonnes", "Index", "Holding")]
+        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action, string correctController)
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -639,13 +639,31 @@
             };
 
             // Act
-            var result = await controller.TonnageType(viewModel);
+            var result = await controller.TonnageType(viewModel) as RedirectToRouteResult;
 
             // Assert
-            var redirectResult = result as RedirectToRouteResult;
-            Assert.NotNull(redirectResult);
+            Assert.NotNull(result);
+            result.RouteValues["action"].Should().Be(action);
+            result.RouteValues["controller"].Should().Be(correctController);
+        }
 
-            redirectResult.RouteValues["controller"].Should().Be("Holding");
+        [Fact]
+        public async void FiveTonnesOrMoreGet_ReturnsView()
+        {
+            // Arrange
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService);
+
+            // Act
+            var result = await controller.FiveTonnesOrMore();
+
+            // Assert
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
         }
     }
 }
