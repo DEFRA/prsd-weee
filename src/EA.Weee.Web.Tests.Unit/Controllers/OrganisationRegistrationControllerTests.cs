@@ -10,6 +10,8 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Weee.Core.Search;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
@@ -556,6 +558,81 @@
 
             Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
             Assert.Equal(redirectResult.RouteValues["OrganisationId"], new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+        }
+
+        [Fact]
+        public void TypeGet_ReturnsViewWithViewModel_WithSearchText()
+        {
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+               weeeClient,
+               organisationSearcher,
+               configurationService);
+
+            var entityType = fixture.Create<EntityType>();
+
+            var result = controller.Type() as ViewResult;
+
+            var resultViewModel = result.Model as ExternalOrganisationTypeViewModel;
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Type");
+        }
+
+        [Theory]
+        [InlineData("Sole trader", "SoleTraderDetails")]
+        [InlineData("Partnership", "PartnershipDetails")]
+        [InlineData("Registered company", "RegisteredCompanyDetails")]
+        public void TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
+        {
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+               weeeClient,
+               organisationSearcher,
+               configurationService);
+
+            var viewModel = new ExternalOrganisationTypeViewModel()
+            {
+                SelectedValue = selectedValue,
+            };
+
+            var result = controller.Type(viewModel) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be(action);
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["organisationType"].Should().Be(viewModel.SelectedValue);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetailsGet_ReturnsViewWithViewModelPopulated()
+        {
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+               weeeClient,
+               organisationSearcher,
+               configurationService);
+
+            const string searchText = "Company";
+            const string organisationType = "Sole trader";
+            var entityType = fixture.Create<EntityType>();
+
+            var result = await controller.SoleTraderDetails(organisationType, searchText) as ViewResult;
+
+            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
+
+            Assert.Equal(searchText, resultViewModel.CompanyName);
+            Assert.Equal(organisationType, resultViewModel.OrganisationType);
+            //Assert.Equal(countries, resultViewModel.Address.Countries);
+
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
         }
 
         [Fact]

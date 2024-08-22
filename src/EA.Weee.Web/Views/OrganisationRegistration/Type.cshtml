@@ -1,0 +1,44 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Core.Organisations
+@using EA.Weee.Web.Controllers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.ExternalOrganisationTypeViewModel
+@{
+    ViewBag.Title = "Create new organisation";
+}
+
+
+@section full_main_content
+{
+	@(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.SearchResults(""))))
+	
+	@using (Html.BeginForm())
+	{
+		@Html.AntiForgeryToken()
+		<header class="hgroup">
+			<h1 class="govuk-heading-l">
+				Organisation type
+			</h1>
+
+			<p>
+				Indicate legal status of the applicant.
+			</p>
+		</header>
+
+		@Html.Gds().ValidationSummary()
+
+		<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+			@this.WeeeGds().RadioButtonsFor(
+				m => m.SelectedValue,
+				Model.PossibleValues,
+				"Organisation type",
+				RadioButtonLegend.VisuallyHidden,
+				RadioButtonLayout.Stacked)
+		</div>
+
+		<div class="govuk-form-group">
+			@(this.WeeeGds().Submit("Continue"))
+		</div>
+	}
+}

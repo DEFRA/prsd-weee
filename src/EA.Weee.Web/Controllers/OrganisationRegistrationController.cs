@@ -9,7 +9,13 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Search;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
+    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Type;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
@@ -23,7 +29,6 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
-
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
             ConfigurationService configurationService)
@@ -227,6 +232,88 @@
 
                 return View(model);
             }
+        }
+
+        [HttpGet]
+        public ActionResult Type()
+        {
+            return View(new ExternalOrganisationTypeViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Type(ExternalOrganisationTypeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
+                var routeValues = new { organisationType = model.SelectedValue };
+
+                switch (organisationType)
+                {
+                    case ExternalOrganisationType.SoleTrader:
+                        return RedirectToAction(nameof(SoleTraderDetails), "OrganisationRegistration", routeValues);
+                    case ExternalOrganisationType.Partnership:
+                        return RedirectToAction(nameof(PartnershipDetails), "OrganisationRegistration", routeValues);
+                    case ExternalOrganisationType.RegisteredCompany:
+                        return RedirectToAction(nameof(RegisteredCompanyDetails), "OrganisationRegistration", routeValues);
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
+        {
+            var countries = await GetCountries();
+
+            var model = new RegisteredCompanyDetailsViewModel
+            {
+                CompanyName = searchedText,
+                OrganisationType = organisationType,
+                Address = { Countries = countries }
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PartnershipDetails(string organisationType, string searchedText = null)
+        {
+            var countries = await GetCountries();
+
+            var model = new PartnershipDetailsViewModel
+            {
+                BusinessTradingName = searchedText,
+                OrganisationType = organisationType,
+                Address = { Countries = countries }
+            };
+
+            return View(model);
+        }
+
+        private async Task<IList<CountryData>> GetCountries()
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SoleTraderDetails(string organisationType, string searchedText = null)
+        {
+            var countries = await GetCountries();
+
+            var model = new SoleTraderDetailsViewModel
+            {
+                CompanyName = searchedText,
+                OrganisationType = organisationType,
+                Address = { Countries = countries }
+            };
+
+            return View(model);
         }
 
         [HttpGet]
