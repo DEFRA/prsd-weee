@@ -8,35 +8,37 @@
     ViewBag.Title = "Create new organisation";
 }
 
-@using (Html.BeginForm())
+
+@section full_main_content
 {
-	<p class="govuk-!-padding-top-2">
-		@(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.SearchResults(""))))
-    </p>
+	@(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.SearchResults(""))))
+	
+	@using (Html.BeginForm())
+	{
+		@Html.AntiForgeryToken()
+		<header class="hgroup">
+			<h1 class="govuk-heading-l">
+				Organisation type
+			</h1>
 
-    @Html.AntiForgeryToken()
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">
-            Organisation type
-        </h1>
+			<p>
+				Indicate legal status of the applicant.
+			</p>
+		</header>
 
-		<p>
-            Indicate legal status of the applicant.
-        </p>
-    </header>
+		@Html.Gds().ValidationSummary()
 
-    @Html.Gds().ValidationSummary()
+		<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+			@this.WeeeGds().RadioButtonsFor(
+				m => m.SelectedValue,
+				Model.PossibleValues,
+				"Organisation type",
+				RadioButtonLegend.VisuallyHidden,
+				RadioButtonLayout.Stacked)
+		</div>
 
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
-        @this.WeeeGds().RadioButtonsFor(
-            m => m.SelectedValue,
-            Model.PossibleValues,
-            "Organisation type",
-            RadioButtonLegend.VisuallyHidden,
-            RadioButtonLayout.Stacked)
-    </div>
-
-    <div class="govuk-form-group">
-		@(this.WeeeGds().Submit("Continue"))
-    </div>
+		<div class="govuk-form-group">
+			@(this.WeeeGds().Submit("Continue"))
+		</div>
+	}
 }
