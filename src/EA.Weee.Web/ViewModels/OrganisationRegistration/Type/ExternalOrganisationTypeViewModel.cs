@@ -8,19 +8,12 @@
 
     public class ExternalOrganisationTypeViewModel : RadioButtonStringCollectionViewModel
     {
-        public string SearchedText { get; set; }
-
         [Required(ErrorMessage = "Select organisation type")]
         public override string SelectedValue { get; set; }
 
         public ExternalOrganisationTypeViewModel()
             : base(CreateFromEnum<ExternalOrganisationType>().PossibleValues)
         {
-        }
-
-        public ExternalOrganisationTypeViewModel(string searchText) : this()
-        {
-            SearchedText = searchText;
         }
     }
 }
