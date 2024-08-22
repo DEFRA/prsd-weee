@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
@@ -13,13 +8,15 @@
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Type;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
 
