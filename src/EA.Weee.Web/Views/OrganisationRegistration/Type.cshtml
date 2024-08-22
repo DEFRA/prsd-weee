@@ -10,8 +10,8 @@
 
 @using (Html.BeginForm())
 {
-	<p class="govuk-!-padding-top-2 govuk-!-font-size-16">
-        <a href="@(Url.UrlFor<OrganisationRegistrationController>(u => u.SearchResults(Model.SearchedText)))">Back</a>
+	<p class="govuk-!-padding-top-2">
+		@(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.SearchResults(Model.SearchedText))))
     </p>
 
     @Html.AntiForgeryToken()
@@ -38,6 +38,6 @@
     </div>
 
     <div class="govuk-form-group">
-        <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Continue</button>
+		@(this.WeeeGds().Submit("Continue"))
     </div>
 }
