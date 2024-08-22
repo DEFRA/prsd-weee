@@ -658,7 +658,7 @@
         }
 
         [Fact]
-        public void TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
+        public async Task TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -673,7 +673,7 @@
             const string searchText = "company";
 
             // Act
-            var result = controller.TonnageType(searchText);
+            var result = await controller.TonnageType(searchText);
 
             // Assert
             var resultViewModel = result.Model as TonnageTypeViewModel;
@@ -743,7 +743,8 @@
             var redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
-            redirectResult.RouteValues["controller"].Should().Be("Holding");
+            redirectResult.RouteValues["controller"].Should().BeNull();
+            redirectResult.RouteValues["action"].Should().Be("PreviousRegistration");
         }
 
         [Fact]
