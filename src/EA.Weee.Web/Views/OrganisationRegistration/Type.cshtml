@@ -11,11 +11,10 @@
 @using (Html.BeginForm())
 {
 	<p class="govuk-!-padding-top-2">
-		@(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.SearchResults(Model.SearchedText))))
+		@(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.SearchResults(""))))
     </p>
 
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.SearchedText)
     <header class="hgroup">
         <h1 class="govuk-heading-l">
             Organisation type
