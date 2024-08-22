@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using Azure.Core;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration;
     using System;
     using System.Threading.Tasks;
 
@@ -20,13 +21,29 @@
         {
             using (var client = weeeClient())
             {
-                var transaction = await client.SendAsync(accessToken,  new GetUserOrganisationTransaction());
+                var transaction = await client.SendAsync(accessToken,  new GetUserOrganisationTransaction()) ?? new OrganisationTransactionData();
 
-                if (model is OrganisationDetails details)
+                switch (model)
                 {
-                    transaction.OrganisationDetails = details;
-                    //_currentSession.Screen1Metadata = metadata;
+                    case OrganisationDetails details:
+                        transaction.OrganisationDetails = details;
+                        break;
+                    case PreviousRegistrationViewModel previousRegistrationModel:
+                        transaction.PreviousRegistration = previousRegistrationModel.SelectedValue;
+                        break;
                 }
+
+                await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));
+            }
+        }
+
+        public async Task<OrganisationTransactionData> GetOrganisationTransactionData(string accessToken)
+        {
+            using (var client = weeeClient())
+            {
+                var transaction = await client.SendAsync(accessToken, new GetUserOrganisationTransaction()) ?? new OrganisationTransactionData();
+
+                return transaction;
             }
         }
     }

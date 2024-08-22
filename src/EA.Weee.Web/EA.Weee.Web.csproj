@@ -619,6 +619,7 @@
     <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\PreviousRegistrationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\TonnageTypeViewModel.cs" />
     <Compile Include="Services\IOrganisationTransactionService.cs" />
     <Compile Include="Services\OrganisationTransactionService.cs" />
@@ -1022,6 +1023,7 @@
     <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
     <Content Include="Views\OrganisationRegistration\TonnageType.cshtml" />
     <Content Include="Views\Holding\Index.cshtml" />
+    <Content Include="Views\OrganisationRegistration\PreviousRegistration.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

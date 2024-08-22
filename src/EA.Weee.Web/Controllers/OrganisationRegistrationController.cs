@@ -23,13 +23,15 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
+        private readonly IOrganisationTransactionService transactionService;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService, IOrganisationTransactionService transactionService)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
+            this.transactionService = transactionService;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
@@ -264,6 +266,34 @@
                      new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
             }
             return organisations;
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> PreviousRegistration()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = existingTransaction.PreviousRegistration;
+            var viewModel = new PreviousRegistrationViewModel
+            {
+                SelectedValue = selectedValue
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PreviousRegistration(PreviousRegistrationViewModel previousRegistrationViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(previousRegistrationViewModel);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
+
+            return RedirectToAction("Index", "Holding");
         }
     }
 }

@@ -1,0 +1,35 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.PreviousRegistrationViewModel
+@{
+    ViewBag.Title = "Have you previously had an account with NPWD?";
+}
+
+
+@section full_main_content{
+
+    @(this.WeeeGds().BackLink(""))
+
+    @using (Html.BeginForm())
+    {
+        @Html.Gds().ValidationSummary()
+
+        @Html.AntiForgeryToken()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                @ViewBag.Title
+            </h1>
+        </header>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Tonnage Type",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+}

@@ -22,6 +22,7 @@
     public class OrganisationRegistrationControllerTests
     {
         private readonly ConfigurationService configurationService;
+        private readonly IOrganisationTransactionService transactionService;
         private readonly Fixture fixture;
 
         public OrganisationRegistrationControllerTests()
@@ -29,6 +30,7 @@
             fixture = new Fixture();
 
             configurationService = A.Fake<ConfigurationService>();
+            transactionService = A.Fake<IOrganisationTransactionService>();
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -52,7 +54,8 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
@@ -85,7 +88,8 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
@@ -111,7 +115,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -136,7 +140,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var activeUsers = new List<OrganisationUserData>()
             {
@@ -169,7 +173,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var activeUsers = new List<OrganisationUserData>();
 
@@ -224,7 +228,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
@@ -254,7 +258,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
@@ -280,7 +284,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
@@ -306,7 +310,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             var result = await controller.Search();
@@ -335,7 +339,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             var result = await controller.Search();
@@ -357,7 +361,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             var result = await controller.Search();
@@ -379,7 +384,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -404,7 +410,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
@@ -429,7 +436,7 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var viewModel = new SearchViewModel
             {
@@ -470,7 +477,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -509,7 +517,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -540,7 +549,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchResultsViewModel()
             {
@@ -568,7 +578,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()
@@ -596,7 +607,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -629,7 +641,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()

@@ -6,7 +6,7 @@
     {
         public Guid? Id {get; set; }
 
-        public bool? PreviousNpwdAccount { get; set; }
+        public string PreviousRegistration { get; set; }
 
         // each screen view model
         public OrganisationDetails OrganisationDetails { get; set; }
