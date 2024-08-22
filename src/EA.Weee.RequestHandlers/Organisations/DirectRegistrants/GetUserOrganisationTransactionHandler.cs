@@ -1,31 +1,33 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
-    using System.Threading.Tasks;
-    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using System.Threading.Tasks;
 
     internal class GetUserOrganisationTransactionHandler : IRequestHandler<GetUserOrganisationTransaction, OrganisationTransactionData>
     {
-        private readonly WeeeContext context;
-        private readonly IUserContext userContext;
         private readonly IWeeeAuthorization authorization;
+        private readonly IJsonSerializer serializer;
+        private readonly IOrganisationTransactionDataAccess transactionDataAccess;
 
-        public GetUserOrganisationTransactionHandler(WeeeContext context, IUserContext userContext, IWeeeAuthorization authorization)
+        public GetUserOrganisationTransactionHandler(IWeeeAuthorization authorization, IOrganisationTransactionDataAccess transactionDataAccess, IJsonSerializer serializer)
         {
-            this.context = context;
-            this.userContext = userContext;
             this.authorization = authorization;
+            this.transactionDataAccess = transactionDataAccess;
+            this.serializer = serializer;
         }
 
         public async Task<OrganisationTransactionData> HandleAsync(GetUserOrganisationTransaction query)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            return new OrganisationTransactionData();
+            var transaction = await transactionDataAccess.FindIncompleteTransactionForCurrentUserAsync();
+
+            return transaction == null ? null : serializer.Deserialize<OrganisationTransactionData>(transaction.OrganisationJson);
         }
     }
 }

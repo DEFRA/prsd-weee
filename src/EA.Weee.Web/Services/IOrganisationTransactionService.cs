@@ -4,6 +4,6 @@
 
     public interface IOrganisationTransactionService
     {
-        Task CaptureViewModel<T>(string accessToken, T viewModel) where T : class;
+        Task CaptureData<T>(string accessToken, T viewModel) where T : class;
     }
 }
