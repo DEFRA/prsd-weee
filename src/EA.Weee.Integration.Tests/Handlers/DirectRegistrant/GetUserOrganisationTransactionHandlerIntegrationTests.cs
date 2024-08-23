@@ -57,8 +57,6 @@
             {
                 LocalSetup();
 
-                Query.DeleteAllOrganisationTransactions();
-
                 request = new GetUserOrganisationTransaction();
             };
 
