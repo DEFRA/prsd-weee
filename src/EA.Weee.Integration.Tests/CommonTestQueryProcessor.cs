@@ -1,21 +1,20 @@
 ﻿namespace EA.Weee.Integration.Tests
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Reflection.Emit;
     using Autofac;
     using Builders;
     using Core.Helpers;
     using Core.Shared;
     using DataAccess;
     using Domain;
-    using Domain.Admin;
     using Domain.Evidence;
     using Domain.Obligation;
     using Domain.Scheme;
     using Domain.Security;
+    using EA.Weee.Domain.Organisation;
     using Prsd.Core.Autofac;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
     using UserStatus = Domain.User.UserStatus;
 
     public class CommonTestQueryProcessor
@@ -110,6 +109,25 @@
         public Guid GetBalancingSchemeId()
         {
             return dbContext.ProducerBalancingSchemes.First(c => c.Organisation != null).Organisation.Id;
+        }
+
+        public OrganisationTransaction GetOrganisationTransactionForUser(string userId)
+        {
+            return dbContext.OrganisationTransactions.FirstOrDefault(c => c.UserId.Equals(userId));
+        }
+
+        public int GetOrganisationTransactionCountForUser(string userId)
+        {
+            return dbContext.OrganisationTransactions.Count(c => c.UserId.Equals(userId));
+        }
+
+        public void DeleteAllOrganisationTransactions()
+        {
+            var organisationTransactions = dbContext.OrganisationTransactions.ToList();
+
+            dbContext.OrganisationTransactions.RemoveRange(organisationTransactions);
+
+            dbContext.SaveChangesAsync();
         }
 
         public void SetupUserWithRole(string userId, string role, CompetentAuthority authority)
