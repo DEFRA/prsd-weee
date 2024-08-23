@@ -619,7 +619,10 @@
     <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\PreviousRegistrationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\TonnageTypeViewModel.cs" />
+    <Compile Include="Services\IOrganisationTransactionService.cs" />
+    <Compile Include="Services\OrganisationTransactionService.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\ExternalOrganisationTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterBase.cs" />
@@ -1021,6 +1024,7 @@
     <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
     <Content Include="Views\OrganisationRegistration\TonnageType.cshtml" />
     <Content Include="Views\Holding\Index.cshtml" />
+    <Content Include="Views\OrganisationRegistration\PreviousRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />

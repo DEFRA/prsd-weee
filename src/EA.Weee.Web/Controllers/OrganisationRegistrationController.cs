@@ -5,6 +5,7 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
@@ -26,12 +27,15 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
+        private readonly IOrganisationTransactionService transactionService;
+
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService, IOrganisationTransactionService transactionService)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
+            this.transactionService = transactionService;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
@@ -232,6 +236,16 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> RegisterSmallProducer(string searchTerm)
+        {
+            // temporary clear down any existing Organisation transactions for the user before we know about
+            // continuing a partially completed registration
+            await transactionService.DeleteOrganisationTransactionData(User.GetAccessToken());
+
+            return RedirectToAction(nameof(TonnageType), new { searchTerm });
+        }
+
+        [HttpGet]
         public ActionResult Type()
         {
             return View(new ExternalOrganisationTypeViewModel());
@@ -316,9 +330,14 @@
         [HttpGet]
         public async Task<ViewResult> TonnageType(string searchTerm)
         {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = existingTransaction?.TonnageType ?? string.Empty;
+
             var viewModel = new TonnageTypeViewModel
             {
                 SearchedText = searchTerm,
+                SelectedValue = selectedValue
             };
 
             return View(viewModel);
@@ -340,7 +359,9 @@
                 return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
             }
 
-            return RedirectToAction("Index", "Holding");
+            await transactionService.CaptureData(User.GetAccessToken(), tonnageTypeViewModel);
+
+            return RedirectToAction(nameof(PreviousRegistration), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
@@ -361,6 +382,35 @@
                      new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
             }
             return organisations;
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> PreviousRegistration()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = existingTransaction.PreviousRegistration;
+            var viewModel = new PreviousRegistrationViewModel
+            {
+                SelectedValue = selectedValue,
+                SearchText = existingTransaction.SearchTerm
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PreviousRegistration(PreviousRegistrationViewModel previousRegistrationViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(previousRegistrationViewModel);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
+
+            return RedirectToAction("Index", "Holding");
         }
     }
 }
