@@ -3,6 +3,7 @@
     using Api.Client;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Search;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
@@ -712,7 +713,7 @@
 
         [Theory]
         [InlineData("5 tonnes or more", "FiveTonnesOrMore", "OrganisationRegistration")]
-        [InlineData("Less than 5 tonnes", "Index", "Holding")]
+        [InlineData("Less than 5 tonnes", "PreviousRegistration", "OrganisationRegistration")]
         public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action, string correctController)
         {
             // Arrange
@@ -740,6 +741,19 @@
             Assert.NotNull(result);
             result.RouteValues["action"].Should().Be(action);
             result.RouteValues["controller"].Should().Be(correctController);
+
+            var tonnageType = selectedValue.GetValueFromDisplayName<TonnageType>();
+
+            if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
+            {
+                A.CallTo(() => transactionService.CaptureData(A<string>._, A<object>._)).MustNotHaveHappened();
+            }
+            else
+            {
+                A.CallTo(() =>
+                        transactionService.CaptureData(A<string>._, A<TonnageTypeViewModel>.That.IsSameAs(viewModel)))
+                    .MustHaveHappenedOnceExactly();
+            }
         }
 
         [Fact]
@@ -752,13 +766,14 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             var result = await controller.FiveTonnesOrMore();
 
-            redirectResult.RouteValues["controller"].Should().BeNull();
-            redirectResult.RouteValues["action"].Should().Be("PreviousRegistration");
+            // Assert
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
         }
 
         [Fact]
@@ -777,8 +792,6 @@
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("TonnageType");
             result.RouteValues["searchTerm"].Should().Be(searchTerm);
-            // Assert
-            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
         }
     }
 }

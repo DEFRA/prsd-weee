@@ -302,6 +302,7 @@
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\IJsonSerialiser.cs" />
     <Compile Include="Helpers\JsonSerializer.cs" />
+    <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Organisations\TonnageType.cs" />
     <Compile Include="Organisations\ExternalOrganisationType.cs" />

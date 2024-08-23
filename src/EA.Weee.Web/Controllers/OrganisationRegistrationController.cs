@@ -5,6 +5,7 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
@@ -360,7 +361,7 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), tonnageTypeViewModel);
 
-            return RedirectToAction(nameof(PreviousRegistration));
+            return RedirectToAction(nameof(PreviousRegistration), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
