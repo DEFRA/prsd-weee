@@ -601,10 +601,10 @@
         }
 
         [Theory]
-        [InlineData("Sole trader", "SoleTraderDetails")]
-        [InlineData("Partnership", "PartnershipDetails")]
-        [InlineData("Registered company", "RegisteredCompanyDetails")]
-        public void TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
+        [InlineData("Sole trader", "Index")]
+        [InlineData("Partnership", "Index")]
+        [InlineData("Registered company", "Index")]
+        public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
@@ -621,10 +621,10 @@
                 SelectedValue = selectedValue,
             };
 
-            var result = controller.Type(viewModel) as RedirectToRouteResult;
+            var result = await controller.Type(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be(action);
-            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["controller"].Should().Be("Holding");
             result.RouteValues["organisationType"].Should().Be(viewModel.SelectedValue);
         }
 
@@ -777,6 +777,47 @@
         }
 
         [Fact]
+        public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType()
+        {
+            // Arrange
+            var model = new PreviousRegistrationViewModel { SelectedValue = "No" };
+
+            // Act
+            var result = await controller.PreviousRegistration(model) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model))
+                .MustHaveHappenedOnceExactly();
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task PreviousRegistration_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                PreviousRegistration = YesNoType.Yes,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.PreviousRegistration() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as PreviousRegistrationViewModel;
+            model.Should().NotBeNull();
+            model.SelectedValue.Should().Be("Yes");
+            model.SearchText.Should().Be("Test Company");
+        }
+
+        [Fact]
         public async Task RegisterSmallProducer_ClearsTransactionDataAndRedirectsToTonnageType()
         {
             // Arrange
@@ -792,6 +833,7 @@
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("TonnageType");
             result.RouteValues["searchTerm"].Should().Be(searchTerm);
+            result.RouteValues["controller"].Should().BeNull();
         }
     }
 }
