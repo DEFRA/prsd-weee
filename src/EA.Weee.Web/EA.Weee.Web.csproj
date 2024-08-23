@@ -619,8 +619,8 @@
     <Compile Include="Infrastructure\Paging\PageEvidenceNoteSelection.cs" />
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\ExternalAddressData.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\TonnageTypeViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Type\ExternalOrganisationTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\EvidenceNoteStatusUpdateEnum.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterBase.cs" />
     <Compile Include="ViewModels\Shared\RecipientWasteStatusFilterViewModel.cs" />
