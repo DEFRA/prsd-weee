@@ -290,6 +290,21 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> RepresentingCompanyDetails(string organisationType, string searchedText = null)
+        {
+            var countries = await GetCountries();
+
+            var model = new RepresentingCompanyDetailsViewModel
+            {
+                CompanyName = searchedText,
+                OrganisationType = organisationType,
+                Address = { Countries = countries }
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> PartnershipDetails(string organisationType, string searchedText = null)
         {
             var countries = await GetCountries();
