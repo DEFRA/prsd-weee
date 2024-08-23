@@ -6,11 +6,11 @@
 
     public class DirectRegistrant : Entity
     {
-        public Guid OrganisationId { get; set; }
-        public Guid ContactId { get; set; }
-        public Guid? SICCodeId { get; set; }
-        public Guid? BrandNameId { get; set; }
-        public Guid? RepresentingCompanyId { get; set; }
+        public virtual Guid OrganisationId { get; set; }
+        public virtual Guid ContactId { get; set; }
+        public virtual Guid? SICCodeId { get; set; }
+        public virtual Guid? BrandNameId { get; set; }
+        public virtual Guid? RepresentingCompanyId { get; set; }
 
         public virtual Organisation Organisation { get; set; }
         public virtual Contact Contact { get; set; }

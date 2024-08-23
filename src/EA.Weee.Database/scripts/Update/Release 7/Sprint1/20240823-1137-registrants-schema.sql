@@ -3,8 +3,8 @@ ALTER TABLE [Producer].[BrandName] ALTER COLUMN [ProducerSubmissionId] [uniqueid
 ALTER TABLE [Producer].[SICCode] ALTER COLUMN [ProducerSubmissionId] [uniqueidentifier] NULL;
 ALTER TABLE [Producer].[RegisteredProducer] ALTER COLUMN [SchemeId] [uniqueidentifier] NULL;
 ALTER TABLE [Organisation].[Address] ALTER COLUMN [Telephone] [nvarchar](20) NULL;
-ALTER TABLE [Organisation].[Address] ALTER COLUMN [Email] [nvarchar](20) NULL;
-ALTER TABLE [Organisation].[Address] ADD [WebAddress] [nvarchar](50) NULL;
+ALTER TABLE [Organisation].[Address] ALTER COLUMN [Email] [nvarchar](256) NULL;
+ALTER TABLE [Organisation].[Address] ADD [WebAddress] [nvarchar](256) NULL;
 ALTER TABLE [Organisation].[OrganisationTransaction] ADD [OrganisationId] [uniqueidentifier] NULL;
 ALTER TABLE [Organisation].[OrganisationTransaction] WITH CHECK ADD CONSTRAINT [FK_OrganisationTransaction_Organisation] 
     FOREIGN KEY([OrganisationId]) REFERENCES [Organisation].[Organisation] ([Id]);
