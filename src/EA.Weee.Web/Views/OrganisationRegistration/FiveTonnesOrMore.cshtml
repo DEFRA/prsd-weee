@@ -1,0 +1,33 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.TonnageTypeViewModel
+@{
+    ViewBag.Title = "You've selected that you produce 5 tonnes or more of Electrical and Electronic Equipment (EEE)";
+}
+
+
+@section full_main_content{
+
+    @(this.WeeeGds().BackLink(Url.Action("TonnageType", "OrganisationRegistration")))
+
+    @using (Html.BeginForm())
+    {
+        @Html.Gds().ValidationSummary()
+
+        @Html.AntiForgeryToken()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                You've selected that you produce 5 tonnes or more of Electrical and Electronic Equipment (EEE)
+            </h1>
+        </header>
+
+        <p class="govuk-body">
+            You have indicated that you place 5 tonnes or more of EEE on the UK market.
+            You don't fit the definition of a 'Small Producer' and the option to register here is not available to you and you need to join a Producer Compliance Scheme.
+        </p>
+
+        <p class="govuk-body">
+             You can find further information on joining a producer compliance scheme on the gov.uk website
+        </p>
+    }
+}
