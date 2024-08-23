@@ -12,10 +12,7 @@
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Type;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
@@ -237,12 +234,12 @@
         [HttpGet]
         public ActionResult Type()
         {
-            return View(new ExternalOrganisationTypeViewModel());
+            return View(new OrganisationTypeViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Type(ExternalOrganisationTypeViewModel model)
+        public ActionResult Type(OrganisationTypeViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -263,12 +260,29 @@
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisteredCompanyDetails(
+            ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+
+            return View(model);
+        }
+
         [HttpGet]
         public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
         {
             var countries = await GetCountries();
 
-            var model = new RegisteredCompanyDetailsViewModel
+            var model = new ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel
             {
                 CompanyName = searchedText,
                 OrganisationType = organisationType,
