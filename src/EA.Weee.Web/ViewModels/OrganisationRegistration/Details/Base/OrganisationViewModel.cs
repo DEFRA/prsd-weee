@@ -7,14 +7,23 @@
 
     public abstract class OrganisationViewModel
     {
-        public Guid? OrganisationId { get; set; }
+        public string OrganisationType { get; set; }
 
-        public Guid? ContactId { get; set; }
-
-        public Guid? AddressId { get; set; }
-
-        [DisplayName("Business trading name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [DisplayName("Business trading name")]
         public virtual string BusinessTradingName { get; set; }
+
+        [Required]
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        public string EEEBrandNames { get; set; }
+
+        public ExternalAddressData Address { get; set; }
+
+        public Core.Shared.EntityType EntityType { get; set; }
+
+        public OrganisationViewModel()
+        {
+            Address = new ExternalAddressData();
+        }
     }
 }

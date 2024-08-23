@@ -12,7 +12,7 @@
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public string CompanyName { get; set; }
 
-        [DisplayName("Business trading name, if different to company name")]
+        [DisplayName("Trading name")]
         public override string BusinessTradingName { get; set; }
 
         [Required(ErrorMessage = "Enter company registration number (CRN)")]

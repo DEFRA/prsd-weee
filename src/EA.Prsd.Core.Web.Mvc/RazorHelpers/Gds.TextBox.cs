@@ -16,6 +16,11 @@
             return TextBoxFor(expression, new RouteValueDictionary(), useHalfWidth, displayFormat);
         }
 
+        public MvcHtmlString TextAreaFor<TValue>(Expression<Func<TModel, TValue>> expression, bool useHalfWidth = true, string displayFormat = null)
+        {
+            return TextAreaFor(expression, new RouteValueDictionary(), useHalfWidth, displayFormat);
+        }
+
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool useHalfWidth = true, string displayFormat = null)
         {
             var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
@@ -26,7 +31,7 @@
             IDictionary<string, object> htmlAttributes, bool useHalfWidth, string displayFormat)
         {
             GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
-    /* SG */
+            /* SG */
             GdsExtensions.AddClass(htmlAttributes, CssTextClass);
 
             if (!string.IsNullOrWhiteSpace(displayFormat))
@@ -34,6 +39,21 @@
                 return htmlHelper.TextBoxFor(expression, displayFormat, htmlAttributes);
             }
             return htmlHelper.TextBoxFor(expression, htmlAttributes);
+        }
+
+        public MvcHtmlString TextAreaFor<TValue>(Expression<Func<TModel, TValue>> expression,
+         IDictionary<string, object> htmlAttributes, bool useHalfWidth, string displayFormat)
+        {
+            GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
+            /* SG */
+            GdsExtensions.AddClass(htmlAttributes, CssTextClass);
+
+            if (!string.IsNullOrWhiteSpace(displayFormat))
+            {
+                return htmlHelper.TextAreaFor(expression, htmlAttributes);
+            }
+
+            return htmlHelper.TextAreaFor(expression, htmlAttributes);
         }
     }
 }
