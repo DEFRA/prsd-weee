@@ -693,6 +693,28 @@
         }
 
         [Fact]
+        public async Task TonnageTypeGet_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                TonnageType = TonnageType.FiveTonnesOrMore,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+            // Act
+            var result = await controller.TonnageType(organisationTransactionData.SearchTerm);
+
+            // Assert
+            var resultViewModel = result.Model as TonnageTypeViewModel;
+            Assert.NotNull(result);
+            Assert.Equal(organisationTransactionData.SearchTerm, resultViewModel.SearchedText);
+            Assert.Equal("5 tonnes or more", resultViewModel.SelectedValue);
+        }
+
+        [Fact]
         public async void TonnageTypePost_ModelNotValid_ReturnsView()
         {
             // Arrange
