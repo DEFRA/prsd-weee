@@ -351,9 +351,22 @@
                 return View(tonnageTypeViewModel);
             }
 
+            var tonnageType = tonnageTypeViewModel.SelectedValue.GetValueFromDisplayName<TonnageType>();
+
+            if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
+            {
+                return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
+            }
+
             await transactionService.CaptureData(User.GetAccessToken(), tonnageTypeViewModel);
 
             return RedirectToAction(nameof(PreviousRegistration));
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> FiveTonnesOrMore()
+        {
+            return View();
         }
 
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
