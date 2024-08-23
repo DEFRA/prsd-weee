@@ -629,6 +629,18 @@
         }
 
         [Fact]
+        public async Task TypePost_InvalidValidViewModel_ReturnsView()
+        {
+            var viewModel = new ExternalOrganisationTypeViewModel();
+            
+            controller.ModelState.AddModelError("SelectedValue", "Invalid");
+
+            var result = await controller.Type(viewModel) as ViewResult;
+
+            result.ViewName.Should().BeOneOf("Type", string.Empty);
+        }
+
+        [Fact]
         public async Task SoleTraderDetailsGet_ReturnsViewWithViewModelPopulated()
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
