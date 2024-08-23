@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Address";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">Address Input Demo</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        <div class="govuk-form-group">
+            <div id="context"></div>
+            <br />
+            <label class="govuk-label form-label" for="line_1">Address Line 1</label>
+            <input class="govuk-!-width-one-half form-control govuk-input" type="text" id="line_1" />
+            <label class="govuk-label form-label" for="line_2">Address Line 2 (optional)</label>
+            <input class="govuk-!-width-one-half form-control govuk-input" type="text" id="line_2" />
+            <label class="govuk-label form-label" for="post_town">Town</label>
+            <input class="govuk-!-width-one-half form-control govuk-input" type="text" id="post_town" />
+            <label class="govuk-label form-label" for="line_3">County (optional)</label>
+            <input class="govuk-!-width-one-half form-control govuk-input" type="text" id="county" />
+            <label class="govuk-label form-label" for="postcode">Postcode</label>
+            <input class="govuk-!-width-one-half form-control govuk-input" type="text" id="postcode" />
+        </div>
+    }
+}
+
+@section scripts {
+    <script type="text/javascript">
+        IdealPostcodes.PostcodeLookup.setup({
+            apiKey: "ak_m028wqedUC107231eDvnDhKSdSZR0",
+            context: "#context",
+            inputClass:"govuk-form-group govuk-!-width-one-half form-control govuk-input",
+            buttonClass:"govuk-button",
+            selectClass:"govuk-!-width-one-half form-control govuk-input",
+            outputFields: {
+                line_1: "#line_1",
+                line_2: "#line_2",
+                line_3: "#line_3",
+                post_town: "#post_town",
+                postcode: "#postcode",
+            },
+        });
+    </script>
+
+}
+

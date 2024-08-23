@@ -919,6 +919,7 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
+    <Content Include="Scripts\postcode-lookup.js" />
     <Content Include="Views\Shared\EditorTemplates\RecipientFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ObligationTypeFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
@@ -928,6 +929,7 @@
     <Content Include="Views\Shared\_DisplayCancelledReasonPartial.cshtml" />
     <Content Include="Views\Payment\Payment.cshtml" />
     <Content Include="Views\Payment\PaymentResult.cshtml" />
+    <Content Include="Views\Payment\Address.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -2026,6 +2028,7 @@
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
     <Folder Include="ViewModels\Shared\Utilities\" />
+    <Folder Include="Views\Address\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Areas\AatfReturn\Views\App_LocalResources\ReturnsResources.resx">

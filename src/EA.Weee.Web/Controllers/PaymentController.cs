@@ -26,6 +26,13 @@
 
         [AllowAnonymous]
         [HttpGet]
+        public ActionResult AddressIndex()
+        {
+            return View("Address");
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
         public ActionResult List()
         {
             IEnumerable<PaymentRequestViewModel> reqs = null;

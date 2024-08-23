@@ -22,10 +22,12 @@
     <![endif]-->
 
     <meta property="og:image" content="@Url.Content("~/Content/govuk_frontend/assets/images/govuk-opengraph-image.png")" />
+    <script src="@Url.Content("~/Scripts/postcode-lookup.js")"></script>
     @RenderSection("head", required: false)
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=@System.Web.Configuration.WebConfigurationManager.AppSettings["Weee.GA4DataLayerId"].ToString()"></script>
+
 </head>
 
 <body class="govuk-template__body @Html.Raw(ViewBag.BodyClasses ?? string.Empty)">

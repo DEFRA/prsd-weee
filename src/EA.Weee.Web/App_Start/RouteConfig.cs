@@ -16,8 +16,8 @@
             routes.MapRoute("ListPayment", "payment/index",
                 new { controller = "Payment", action = "Index" });
 
-            routes.MapRoute("CreatePayment", "payment/create",
-                new { controller = "Payment", action = "CreatePayment" });
+            routes.MapRoute("Address", "address",
+                new { controller = "Payment", action = "AddressIndex" });
 
             routes.MapRoute("Error403", "errors/403",
                 new { controller = "Errors", action = "AccessDenied" });
