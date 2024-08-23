@@ -39,7 +39,7 @@
             await organisationService.CaptureData(accessToken, tonnageTypeViewModel);
 
             // Assert
-            transaction.PreviousRegistration.Should().Be(tonnageTypeViewModel.SelectedValue);
+            transaction.TonnageType.Should().Be(tonnageTypeViewModel.SelectedValue);
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.TonnageType.Equals(tonnageTypeViewModel.SelectedValue) &&

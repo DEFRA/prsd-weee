@@ -1,21 +1,18 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
-    using AutoFixture;
     using Core.Organisations;
     using Core.Shared;
     using EA.Weee.Core.Search;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
