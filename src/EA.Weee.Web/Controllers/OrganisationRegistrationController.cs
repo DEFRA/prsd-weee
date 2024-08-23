@@ -338,7 +338,7 @@
             var selectedValue = string.Empty;
             if (existingTransaction?.TonnageType != null)
             {
-                selectedValue = EnumHelper.GetDisplayName(existingTransaction.TonnageType);
+                selectedValue = existingTransaction.TonnageType.GetDisplayName();
             }
 
             var viewModel = new TonnageTypeViewModel
@@ -400,7 +400,7 @@
             var searchTerm = string.Empty;
             if (existingTransaction?.PreviousRegistration != null)
             {
-                selectedValue = EnumHelper.GetDisplayName(existingTransaction.PreviousRegistration);
+                selectedValue = existingTransaction.PreviousRegistration.GetDisplayName();
                 searchTerm = existingTransaction.SearchTerm;
             }
 
