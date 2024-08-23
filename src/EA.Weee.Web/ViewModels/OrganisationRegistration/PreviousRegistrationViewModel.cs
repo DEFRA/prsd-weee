@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
+    using EA.Weee.Core.Organisations;
     using Shared;
     using System.ComponentModel.DataAnnotations;
 
@@ -9,5 +10,10 @@
         public override string SelectedValue { get; set; }
 
         public string SearchText {get; set; }
+
+        public PreviousRegistrationViewModel()
+            : base(CreateFromEnum<YesNoType>().PossibleValues)
+        {
+        }
     }
 }

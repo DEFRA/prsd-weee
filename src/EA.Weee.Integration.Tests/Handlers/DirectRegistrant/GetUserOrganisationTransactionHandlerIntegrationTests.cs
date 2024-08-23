@@ -57,8 +57,6 @@
             {
                 LocalSetup();
 
-                Query.DeleteAllOrganisationTransactions();
-
                 request = new GetUserOrganisationTransaction();
             };
 
@@ -109,6 +107,8 @@
                     .WithIoC()
                     .WithTestData()
                     .WithExternalUserAccess();
+
+                Query.DeleteAllOrganisationTransactions();
 
                 date = DateTime.UtcNow;
                 fixture = new Fixture();
