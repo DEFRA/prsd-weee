@@ -8,9 +8,11 @@
 
         public string SearchTerm { get; set; }
 
-        public string TonnageType { get; set; }
+        public TonnageType? TonnageType { get; set; }
 
-        public string PreviousRegistration { get; set; }
+        public ExternalOrganisationType? OrganisationType { get; set; }
+
+        public YesNoType? PreviousRegistration { get; set; }
 
         // each screen view model
         public OrganisationDetails OrganisationDetails { get; set; }
