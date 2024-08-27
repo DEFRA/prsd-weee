@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Service
 {
+    using AutoFixture;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
@@ -16,12 +17,14 @@
     {
         private readonly IWeeeClient weeeClient;
         private readonly OrganisationTransactionService organisationService;
+        private readonly Fixture fixture;
 
         public OrganisationTransactionServiceTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             IWeeeClient WeeeClientFactory() => weeeClient;
             organisationService = new OrganisationTransactionService(WeeeClientFactory);
+            fixture = new Fixture();
         }
 
         [Fact]
@@ -86,6 +89,75 @@
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.PreviousRegistration.Equals(previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>())))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CaptureData_WithSoleTraderViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var soleTraderDetailsViewModel = fixture.Create<SoleTraderDetailsViewModel>();
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, soleTraderDetailsViewModel);
+
+            // Assert
+            transaction.SoleTraderDetailsViewModel.Should().Be(soleTraderDetailsViewModel);
+            transaction.RegisteredCompanyDetailsViewModel.Should().BeNull();
+            transaction.PartnershipDetailsViewModel.Should().BeNull();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.SoleTraderDetailsViewModel.Equals(soleTraderDetailsViewModel)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CaptureData_WithRegisteredCompanyViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var registeredCompanyDetailsViewModel = fixture.Create<RegisteredCompanyDetailsViewModel>();
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, registeredCompanyDetailsViewModel);
+
+            // Assert
+            transaction.RegisteredCompanyDetailsViewModel.Should().Be(registeredCompanyDetailsViewModel);
+            transaction.SoleTraderDetailsViewModel.Should().BeNull();
+            transaction.PartnershipDetailsViewModel.Should().BeNull();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.Equals(registeredCompanyDetailsViewModel)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CaptureData_WitPartnerShipViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var partnershipDetailsViewModel = fixture.Create<PartnershipDetailsViewModel>();
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, partnershipDetailsViewModel);
+
+            // Assert
+            transaction.RegisteredCompanyDetailsViewModel.Should().BeNull();
+            transaction.SoleTraderDetailsViewModel.Should().BeNull();
+            transaction.PartnershipDetailsViewModel.Should().Be(partnershipDetailsViewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.PartnershipDetailsViewModel.Equals(partnershipDetailsViewModel)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

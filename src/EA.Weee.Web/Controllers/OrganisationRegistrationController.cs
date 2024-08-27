@@ -289,7 +289,7 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
-            return View(model);
+            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
 
         [HttpGet]
@@ -299,7 +299,7 @@
 
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (existingTransaction != null)
+            if (existingTransaction?.RegisteredCompanyDetailsViewModel != null)
             {
                 model = existingTransaction.RegisteredCompanyDetailsViewModel;
             }
@@ -307,7 +307,8 @@
             {
                 model = new RegisteredCompanyDetailsViewModel
                 {
-                    OrganisationType = organisationType
+                    OrganisationType = organisationType,
+                    CompanyName = searchedText
                 };
             }
 
@@ -320,16 +321,45 @@
         [HttpGet]
         public async Task<ActionResult> PartnershipDetails(string organisationType, string searchedText = null)
         {
-            var countries = await GetCountries();
+            PartnershipDetailsViewModel model = null;
 
-            var model = new PartnershipDetailsViewModel()
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.PartnershipDetailsViewModel != null)
             {
-                BusinessTradingName = searchedText,
-                OrganisationType = organisationType,
-                Address = { Countries = countries }
-            };
+                model = existingTransaction.PartnershipDetailsViewModel;
+            }
+            else
+            {
+                model = new PartnershipDetailsViewModel
+                {
+                    BusinessTradingName = searchedText,
+                    OrganisationType = organisationType
+                };
+            }
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PartnershipDetails(PartnershipDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -343,16 +373,45 @@
         [HttpGet]
         public async Task<ActionResult> SoleTraderDetails(string organisationType, string searchedText = null)
         {
-            var countries = await GetCountries();
+            SoleTraderDetailsViewModel model = null;
 
-            var model = new SoleTraderDetailsViewModel()
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.SoleTraderDetailsViewModel != null)
             {
-                CompanyName = searchedText,
-                OrganisationType = organisationType,
-                Address = { Countries = countries }
-            };
+                model = existingTransaction.SoleTraderDetailsViewModel;
+            }
+            else
+            {
+                model = new SoleTraderDetailsViewModel
+                {
+                    CompanyName = searchedText,
+                    OrganisationType = organisationType
+                };
+            }
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SoleTraderDetails(SoleTraderDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
 
         [HttpGet]

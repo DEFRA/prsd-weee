@@ -7,7 +7,6 @@
     [AuthorizeClaims(Claims.CanAccessExternalArea)]
     public class HoldingController : Controller
     {
-        // GET: AatfReturn/Holding
         public ActionResult Index()
         {
             return View();
