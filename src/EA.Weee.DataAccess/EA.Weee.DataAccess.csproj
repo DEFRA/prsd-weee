@@ -104,6 +104,7 @@
     <Compile Include="DataAccess\IEvidenceDataAccess.cs" />
     <Compile Include="DataAccess\IGenericDataAccess.cs" />
     <Compile Include="DataAccess\IObligationDataAccess.cs" />
+    <Compile Include="DataAccess\IOrganisationTransactionDataAccess.cs" />
     <Compile Include="DataAccess\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="DataAccess\ISchemeDataAccess.cs" />
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
     <Compile Include="DataAccess\ObligationDataAccess.cs" />
+    <Compile Include="DataAccess\OrganisationTransactionDataAccess.cs" />
     <Compile Include="DataAccess\ProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\ProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
@@ -151,6 +153,8 @@
     <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
+    <Compile Include="Mappings\OrganisationCompletionMapping.cs" />
+    <Compile Include="Mappings\OrganisationTransactionMapping.cs" />
     <Compile Include="Mappings\ProducerBalancingSchemeMapping.cs" />
     <Compile Include="Mappings\PanAreaMapping.cs" />
     <Compile Include="Mappings\LocalAreaMapping.cs" />

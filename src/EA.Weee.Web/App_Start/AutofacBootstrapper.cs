@@ -112,6 +112,7 @@
 
             builder.RegisterType<MvcTemplateExecutor>().As<IMvcTemplateExecutor>();
             builder.RegisterType<PdfDocumentProvider>().As<IPdfDocumentProvider>();
+            builder.RegisterType<OrganisationTransactionService>().As<IOrganisationTransactionService>();
 
             return builder.Build();
         }
