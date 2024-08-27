@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Organisations.DirectRegistrants;
     using EA.Weee.RequestHandlers.Security;
@@ -19,17 +20,26 @@
         private readonly IOrganisationTransactionDataAccess dataAccess;
         private readonly IJsonSerializer serializer;
         private readonly CompleteOrganisationTransactionHandler handler;
+        private readonly IWeeeTransactionAdapter transactionAdapter;
+        private readonly IGenericDataAccess genericDataAccess;
+        private readonly WeeeContext weeeContext;
 
         public CompleteOrganisationTransactionHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
             dataAccess = A.Fake<IOrganisationTransactionDataAccess>();
             serializer = A.Fake<IJsonSerializer>();
+            transactionAdapter = A.Fake<IWeeeTransactionAdapter>();
+            genericDataAccess = A.Fake<IGenericDataAccess>();
+            weeeContext = A.Fake<WeeeContext>();
 
             handler = new CompleteOrganisationTransactionHandler(
                 authorization,
                 dataAccess,
-                serializer);
+                serializer,
+                transactionAdapter,
+                genericDataAccess,
+                weeeContext);
         }
 
         [Fact]
@@ -53,9 +63,12 @@
             var request = new CompleteOrganisationTransaction(new OrganisationTransactionData());
 
             var authHandler = new CompleteOrganisationTransactionHandler(
-                denyAuthorization,
+                authorization,
                 dataAccess,
-                serializer);
+                serializer,
+                transactionAdapter,
+                genericDataAccess,
+                weeeContext);
 
             // Act & Assert
             await
