@@ -1,12 +1,15 @@
 ﻿@using EA.Weee.Core.DataStandards
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Core.Organisations.RegisteredCompanyDetailsViewModel
 @{
     ViewBag.Title = "Registered company";
 }
-@section main_content
+@section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">Organisation details</h1>
     </header>
@@ -17,12 +20,7 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationType)
 
-        <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Address.CountryId)" id="operator-country-dropdown-list">
-            <p class="govuk-heading-s">Enter the country your organisation is based in.</p>
-            @Html.Gds().LabelFor(m => m.Address.CountryId, new { id = "country-dropdown-list" })
-            @Html.Gds().ValidationMessageFor(m => m.Address.CountryId)
-            @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-third govuk-input", aria_labelledby = "country-dropdown-list" })
-        </div>
+        @Html.Partial("_OrganisationAddressCountryPartial", Model)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
             @Html.Gds().LabelFor(m => m.CompanyName)
@@ -41,63 +39,14 @@
             @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
         </div>
 
-        <div>
-            <h2 class="govuk-heading-s">Registered office address</h2>
-        </div>
+        <h2 class="govuk-heading-s">Registered office address</h2>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
-            @Html.Gds().LabelFor(m => m.Address.Address1)
-            @Html.Gds().ValidationMessageFor(m => m.Address.Address1)
-            @Html.Gds().TextBoxFor(m => m.Address.Address1)
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address2)">
-            @Html.Gds().LabelFor(m => m.Address.Address2)
-            @Html.Gds().ValidationMessageFor(m => m.Address.Address2)
-            @Html.Gds().TextBoxFor(m => m.Address.Address2)
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.TownOrCity)">
-            @Html.Gds().LabelFor(m => m.Address.TownOrCity)
-            @Html.Gds().ValidationMessageFor(m => m.Address.TownOrCity)
-            @Html.Gds().TextBoxFor(m => m.Address.TownOrCity)
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.CountyOrRegion)">
-            @Html.Gds().LabelFor(m => m.Address.CountyOrRegion)
-            @Html.Gds().ValidationMessageFor(m => m.Address.CountyOrRegion)
-            @Html.Gds().TextBoxFor(m => m.Address.CountyOrRegion)
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Postcode)">
-            @Html.Gds().LabelFor(m => m.Address.Postcode)
-            @Html.Gds().ValidationMessageFor(m => m.Address.Postcode)
-            @Html.Gds().TextBoxFor(m => m.Address.Postcode)
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Telephone)">
-            @Html.Gds().LabelFor(m => m.Address.Telephone)
-            @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
-            @Html.Gds().TextBoxFor(m => m.Address.Telephone)
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EEEBrandNames)">
-            <p>
-                <span class="govuk-heading-s">Enter EEE brand names that you place on the UK market..</span>
-                If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.
-            </p>
-            @Html.Gds().LabelFor(m => m.EEEBrandNames)
-            @Html.Gds().ValidationMessageFor(m => m.EEEBrandNames)
-            @Html.Gds().TextAreaFor(m => m.EEEBrandNames)
-        </div>
-
+        @Html.Partial("_OrganisationAddressPartial", Model)
 
         <div class="govuk-form-group">
-            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Continue</button>
+            @(this.WeeeGds().Submit("Continue"))
         </div>
-        <p>
-            <a href="@(Url.UrlFor<OrganisationRegistrationController>(u => u.Type()))">Back</a>
-        </p>
 
+        @(this.WeeeGds().BackToTopLink())
     }
 }

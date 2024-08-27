@@ -14,15 +14,11 @@
 
         [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
 
-        public ExternalAddressData Address { get; set; }
+        public ExternalAddressData Address { get; set; } = new ExternalAddressData();
 
         public Core.Shared.EntityType EntityType { get; set; }
-
-        public OrganisationViewModel()
-        {
-            Address = new ExternalAddressData();
-        }
     }
 }

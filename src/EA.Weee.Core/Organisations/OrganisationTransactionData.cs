@@ -15,5 +15,9 @@
         public YesNoType? PreviousRegistration { get; set; }
 
         public RegisteredCompanyDetailsViewModel RegisteredCompanyDetailsViewModel { get; set; }
+
+        public PartnershipDetailsViewModel PartnershipDetailsViewModel { get; set; }
+
+        public SoleTraderDetailsViewModel SoleTraderDetailsViewModel { get; set; }
     }
 }
