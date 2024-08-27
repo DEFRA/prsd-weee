@@ -103,7 +103,8 @@
             await organisationService.CaptureData(accessToken, nonMatchingModel);
 
             // Assert
-            transaction.OrganisationDetails.Should().BeNull();
+            transaction.RegisteredCompanyDetailsViewModel.Should().BeNull();
+            transaction.OrganisationType.Should().BeNull();
             transaction.PreviousRegistration.Should().BeNull();
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.Equals(transaction)))).MustHaveHappenedOnceExactly();

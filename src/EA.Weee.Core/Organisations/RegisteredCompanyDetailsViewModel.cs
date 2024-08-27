@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details
+﻿namespace EA.Weee.Core.Organisations
 {
-    using Core.DataStandards;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details.Base;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.Organisations.Base;
 
     public class RegisteredCompanyDetailsViewModel : OrganisationViewModel
     {

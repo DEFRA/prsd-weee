@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details
+﻿namespace EA.Weee.Core.Organisations
 {
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Core.Validation;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Core.Validation;
 
     [Serializable]
     public class ExternalAddressData : IValidatableObject

@@ -36,6 +36,9 @@
                     case PreviousRegistrationViewModel previousRegistrationModel:
                         transaction.PreviousRegistration = previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
+                    case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
+                        transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
+                        break;
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));
