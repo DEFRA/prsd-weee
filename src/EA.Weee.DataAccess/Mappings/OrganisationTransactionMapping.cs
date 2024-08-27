@@ -12,6 +12,8 @@
             Property(o => o.UserId).IsRequired();
             Property(o => o.CreatedDateTime).IsRequired();
             Property(o => o.CompletedDateTime).IsOptional();
+
+            HasOptional(e => e.Organisation).WithMany().HasForeignKey(e => e.OrganisationId);
         }
     }
 }

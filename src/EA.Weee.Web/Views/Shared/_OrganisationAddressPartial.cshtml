@@ -1,6 +1,12 @@
 ﻿@using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.Organisations.Base.OrganisationViewModel
 
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.WebsiteAddress)">
+    @Html.Gds().LabelFor(m => m.Address.WebsiteAddress)
+    @Html.Gds().ValidationMessageFor(m => m.Address.WebsiteAddress)
+    @Html.Gds().TextBoxFor(m => m.Address.WebsiteAddress, new { @maxlength = CommonMaxFieldLengths.WebsiteAddress })
+</div>
+
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
     @Html.Gds().LabelFor(m => m.Address.Address1)
     @Html.Gds().ValidationMessageFor(m => m.Address.Address1)

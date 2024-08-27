@@ -69,6 +69,15 @@ namespace EA.Weee.Web
             FluentValidationModelValidatorProvider.Configure();
 
             System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            var diagnosticsLib = Assembly.Load("System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51");
+            var diagnosticSourceEventSourceType = diagnosticsLib.GetType("System.Diagnostics.DiagnosticSourceEventSource");
+            object diagnosticSourceEventSource = diagnosticSourceEventSourceType.InvokeMember("Log", BindingFlags.Static | BindingFlags.GetField | BindingFlags.Public, null, null, null);
+
+            if (diagnosticSourceEventSource is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }

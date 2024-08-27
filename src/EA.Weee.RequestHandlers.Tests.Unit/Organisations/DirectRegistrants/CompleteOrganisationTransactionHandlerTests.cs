@@ -9,6 +9,7 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using FluentAssertions;
     using System;
     using System.Security;
     using System.Threading.Tasks;
@@ -92,7 +93,7 @@
             // Assert
             A.CallTo(() => serializer.Serialize(transactionData)).MustHaveHappenedOnceExactly();
             A.CallTo(() => dataAccess.CompleteTransactionAsync(serializedData)).MustHaveHappenedOnceExactly();
-            Assert.True(result);
+            result.Should().NotBeEmpty();
         }
 
         [Fact]

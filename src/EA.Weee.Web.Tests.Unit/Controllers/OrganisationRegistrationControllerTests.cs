@@ -5,6 +5,7 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
@@ -581,7 +582,7 @@
         }
 
         [Fact]
-        public void TypeGet_ReturnsViewWithViewModel_WithSearchText()
+        public async Task TypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
@@ -593,13 +594,37 @@
                configurationService,
                transactionService);
 
-            var result = controller.Type() as ViewResult;
+            var result = await controller.Type() as ViewResult;
 
             var resultViewModel = result.Model as OrganisationTypeViewModel;
 
             resultViewModel.Should().NotBeNull();
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Type");
+        }
+
+        [Fact]
+        public async Task Type_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                OrganisationType = fixture.Create<ExternalOrganisationType>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.Type() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeNullOrWhiteSpace();
+
+            var model = result.Model as OrganisationTypeViewModel;
+            model.Should().NotBeNull();
+            model.SelectedValue.Should().Be(organisationTransactionData.OrganisationType.GetDisplayName());
         }
 
         [Theory]
@@ -673,6 +698,28 @@
             Assert.NotNull(result);
             Assert.Equal(searchText, resultViewModel.SearchedText);
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Tonnage");
+        }
+
+        [Fact]
+        public async Task TonnageType_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                TonnageType = TonnageType.FiveTonnesOrMore,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+            // Act
+            var result = await controller.TonnageType(organisationTransactionData.SearchTerm);
+
+            // Assert
+            var resultViewModel = result.Model as TonnageTypeViewModel;
+            Assert.NotNull(result);
+            Assert.Equal(organisationTransactionData.SearchTerm, resultViewModel.SearchedText);
+            Assert.Equal("5 tonnes or more", resultViewModel.SelectedValue);
         }
 
         [Fact]
@@ -771,11 +818,13 @@
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
         }
 
-        [Fact]
-        public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType()
+        [Theory]
+        [InlineData("Yes", "Search")]
+        [InlineData("No", "AuthorisedRepresentative")]
+        public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType(string selectedValue, string action)
         {
             // Arrange
-            var model = new PreviousRegistrationViewModel { SelectedValue = "No" };
+            var model = new PreviousRegistrationViewModel { SelectedValue = selectedValue };
 
             // Act
             var result = await controller.PreviousRegistration(model) as RedirectToRouteResult;
@@ -784,7 +833,7 @@
             A.CallTo(() => transactionService.CaptureData(A<string>._, model))
                 .MustHaveHappenedOnceExactly();
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["action"].Should().Be(action);
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
         }
 
@@ -806,6 +855,7 @@
 
             // Assert
             result.Should().NotBeNull();
+            result.ViewName.Should().BeNullOrWhiteSpace();
             var model = result.Model as PreviousRegistrationViewModel;
             model.Should().NotBeNull();
             model.SelectedValue.Should().Be("Yes");
@@ -1095,6 +1145,51 @@
                 .Returns(countries);
 
             return countries;
+        }
+
+        [Fact]
+        public async Task AuthorisedRepresentative_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                AuthorisedRepresentative = YesNoType.Yes,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.AuthorisedRepresentative() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeNullOrWhiteSpace();
+
+            var model = result.Model as AuthorisedRepresentativeViewModel;
+            model.Should().NotBeNull();
+            model.SelectedValue.Should().Be("Yes");
+            model.SearchText.Should().Be("Test Company");
+        }
+
+        [Theory]
+        [InlineData("Yes")]
+        [InlineData("No")]
+        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToHolding(string selectedValue)
+        {
+            // Arrange
+            var model = new AuthorisedRepresentativeViewModel { SelectedValue = selectedValue };
+
+            // Act
+            var result = await controller.AuthorisedRepresentative(model) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model))
+                .MustHaveHappenedOnceExactly();
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
         }
     }
 }
