@@ -620,7 +620,6 @@
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\PreviousRegistrationViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Details\ExternalAddressData.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\TonnageTypeViewModel.cs" />
     <Compile Include="Services\IOrganisationTransactionService.cs" />
     <Compile Include="Services\OrganisationTransactionService.cs" />
@@ -837,7 +836,6 @@
     <Compile Include="RazorHelpers\WeeeGds.BackLink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.EventTracking.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Panel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Details\Base\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ITonnageUtilities.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnToReturnsViewModelTransfer.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\TonnageUtilities.cs" />
@@ -2000,9 +1998,6 @@
     <Compile Include="ViewModels\NewUser\FeedbackOptions.cs" />
     <Compile Include="ViewModels\NewUser\FeedbackViewModel.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Details\PartnershipDetailsViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\Shared\ContactPersonViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationConfirmationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\SearchResultsViewModel.cs" />

@@ -14,7 +14,6 @@
 
         public YesNoType? PreviousRegistration { get; set; }
 
-        // each screen view model
-        public OrganisationDetails OrganisationDetails { get; set; }
+        public RegisteredCompanyDetailsViewModel RegisteredCompanyDetailsViewModel { get; set; }
     }
 }

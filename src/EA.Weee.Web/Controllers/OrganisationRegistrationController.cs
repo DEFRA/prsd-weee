@@ -2,14 +2,13 @@
 {
     using Api.Client;
     using Base;
+    using Core.Helpers;
     using Core.Organisations;
+    using Core.Search;
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
-    using EA.Weee.Core.Helpers;
-    using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Services;
@@ -19,6 +18,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.Type;
     using Weee.Requests.Organisations;
 
     [Authorize]
@@ -276,8 +276,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredCompanyDetails(
-            ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel model)
+        public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -288,20 +287,32 @@
                 return View(model);
             }
 
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
             return View(model);
         }
 
         [HttpGet]
         public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
         {
-            var countries = await GetCountries();
+            RegisteredCompanyDetailsViewModel model = null;
 
-            var model = new ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction != null)
             {
-                CompanyName = searchedText,
-                OrganisationType = organisationType,
-                Address = { Countries = countries }
-            };
+                model = existingTransaction.RegisteredCompanyDetailsViewModel;
+            }
+            else
+            {
+                model = new RegisteredCompanyDetailsViewModel
+                {
+                    OrganisationType = organisationType
+                };
+            }
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
 
             return View(model);
         }
@@ -311,7 +322,7 @@
         {
             var countries = await GetCountries();
 
-            var model = new ViewModels.OrganisationRegistration.Details.PartnershipDetailsViewModel
+            var model = new PartnershipDetailsViewModel()
             {
                 BusinessTradingName = searchedText,
                 OrganisationType = organisationType,
@@ -334,7 +345,7 @@
         {
             var countries = await GetCountries();
 
-            var model = new ViewModels.OrganisationRegistration.Details.SoleTraderDetailsViewModel
+            var model = new SoleTraderDetailsViewModel()
             {
                 CompanyName = searchedText,
                 OrganisationType = organisationType,
