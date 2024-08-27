@@ -193,7 +193,7 @@
             await organisationService.CaptureData(accessToken, authorisedRepresentativeViewModel);
 
             // Assert
-            transaction.PreviousRegistration.Should().Be(YesNoType.Yes);
+            transaction.AuthorisedRepresentative.Should().Be(YesNoType.Yes);
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.AuthorisedRepresentative.Equals(authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>())))).MustHaveHappenedOnceExactly();
