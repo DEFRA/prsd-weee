@@ -14,6 +14,8 @@
 
         public YesNoType? PreviousRegistration { get; set; }
 
+        public YesNoType? AuthorisedRepresentative { get; set; }
+
         // each screen view model
         public OrganisationDetails OrganisationDetails { get; set; }
     }
