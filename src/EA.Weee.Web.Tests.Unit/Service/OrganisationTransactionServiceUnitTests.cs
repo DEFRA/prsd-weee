@@ -177,5 +177,26 @@
             result.Should().BeOfType<OrganisationTransactionData>();
             A.CallTo(() => weeeClient.Dispose()).MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public async Task CaptureData_WithAuthorisedRepresentativeViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var authorisedRepresentativeViewModel = new AuthorisedRepresentativeViewModel { SelectedValue = "Yes" };
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, authorisedRepresentativeViewModel);
+
+            // Assert
+            transaction.PreviousRegistration.Should().Be(YesNoType.Yes);
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.AuthorisedRepresentative.Equals(authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>())))).MustHaveHappenedOnceExactly();
+        }
     }
 }
