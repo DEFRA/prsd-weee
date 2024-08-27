@@ -147,7 +147,7 @@
             {
                 if (value != null && value.Length > 50)
                 {
-                    throw new InvalidOperationException(string.Format(("Web address cannot be greater than 50 characters")));
+                    throw new InvalidOperationException(string.Format(("Website address cannot be greater than 50 characters")));
                 }
                 webAddress = value;
             }
