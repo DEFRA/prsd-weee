@@ -30,6 +30,12 @@
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+            @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
+        </div>
+
         <h2 class="govuk-heading-s">Principle place of business address</h2>
 
         @Html.Partial("_OrganisationAddressPartial", Model)

@@ -28,6 +28,18 @@
                 address.Email);
         }
 
+        public static Address CreateAddress(ExternalAddressData address, Country country)
+        {
+            return new Address(address.Address1,
+                address.Address2,
+                address.TownOrCity,
+                address.CountyOrRegion,
+                address.Postcode,
+                country,
+                address.Telephone,
+                null);
+        }
+
         public static AddressType GetAddressType(Core.Shared.AddressType addressType)
         {
             switch (addressType)

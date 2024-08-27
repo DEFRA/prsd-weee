@@ -456,7 +456,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> FiveTonnesOrMore()
+        public ViewResult FiveTonnesOrMore()
         {
             return View();
         }

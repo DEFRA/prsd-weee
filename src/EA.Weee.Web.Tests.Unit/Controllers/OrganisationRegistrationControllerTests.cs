@@ -752,7 +752,7 @@
         }
 
         [Fact]
-        public async void FiveTonnesOrMoreGet_ReturnsView()
+        public void FiveTonnesOrMoreGet_ReturnsView()
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -765,7 +765,7 @@
                 transactionService);
 
             // Act
-            var result = await controller.FiveTonnesOrMore();
+            var result = controller.FiveTonnesOrMore();
 
             // Assert
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
