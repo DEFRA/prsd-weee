@@ -198,6 +198,8 @@
 
         public virtual DbSet<ObligationSchemeAmount> ObligationSchemeAmounts { get; set; }
 
+        public virtual DbSet<OrganisationTransaction> OrganisationTransactions { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public virtual IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
