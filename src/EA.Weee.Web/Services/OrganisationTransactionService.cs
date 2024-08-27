@@ -36,6 +36,9 @@
                     case PreviousRegistrationViewModel previousRegistrationModel:
                         transaction.PreviousRegistration = previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
+                    case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
+                        transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
+                        break;
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));
