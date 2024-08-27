@@ -198,6 +198,12 @@
 
         public virtual DbSet<ObligationSchemeAmount> ObligationSchemeAmounts { get; set; }
 
+        public virtual DbSet<DirectProducerSubmission> DirectProducerSubmissions { get; set; }
+
+        public virtual DbSet<AdditionalCompanyDetails> AdditionalCompanyDetails { get; set; }
+
+        public virtual DbSet<DirectRegistrant> DirectRegistrant { get; set; }
+
         public virtual DbSet<OrganisationTransaction> OrganisationTransactions { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
