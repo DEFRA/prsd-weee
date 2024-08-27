@@ -3,10 +3,6 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using Scheme;
 
     public partial class OrganisationTransaction : Entity
     {
@@ -33,6 +29,10 @@
         public virtual DateTime CreatedDateTime { get; private set; }
 
         public virtual DateTime? CompletedDateTime { get; private set; }
+
+        public virtual Guid? OrganisationId { get; set; }
+
+        public virtual Organisation Organisation { get; set; }
 
         public void CompleteRegistration()
         {
