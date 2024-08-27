@@ -15,6 +15,11 @@
         public byte[] RowVersion { get; set; }
 
         [Required]
+        [StringLength(CommonMaxFieldLengths.WebsiteAddress)]
+        [Display(Name = "Website address")]
+        public string WebsiteAddress { get; set; }
+
+        [Required]
         [StringLength(CommonMaxFieldLengths.AddressLine)]
         [Display(Name = "Address line 1")]
         public string Address1 { get; set; }

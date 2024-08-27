@@ -5,6 +5,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
@@ -13,7 +14,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
 
-    internal class CompleteOrganisationTransactionHandler : IRequestHandler<CompleteOrganisationTransaction, bool>
+    internal class CompleteOrganisationTransactionHandler : IRequestHandler<CompleteOrganisationTransaction, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IOrganisationTransactionDataAccess organisationTransactionDataAccess;
@@ -38,7 +39,7 @@
             this.weeeContext = weeeContext;
         }
 
-        public async Task<bool> HandleAsync(CompleteOrganisationTransaction request)
+        public async Task<Guid> HandleAsync(CompleteOrganisationTransaction request)
         {
             authorization.EnsureCanAccessExternalArea();
 
@@ -50,7 +51,7 @@
             {
                 Organisation organisation = null;
                 ExternalAddressData addressData = null;
-
+                
                 try
                 {
                     switch (request.OrganisationTransactionData.OrganisationType)
@@ -64,11 +65,9 @@
                                 request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber, request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName);
                             addressData = request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.Address;
                             break;
-                        case Core.Organisations.ExternalOrganisationType.SoleTrader:
-                            organisation = Organisation.CreateSoleTrader(request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName, request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName);
+                        case ExternalOrganisationType.SoleTrader:
+                            organisation = Organisation.CreateSoleTrader(request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName, request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName, request.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
                             addressData = request.OrganisationTransactionData.SoleTraderDetailsViewModel.Address;
-                            break;
-                        default:
                             break;
                     }
 
@@ -79,13 +78,15 @@
 
                     var country = await weeeContext.Countries.SingleAsync(c => c.Id == addressData.CountryId);
 
-                    Address address = ValueObjectInitializer.CreateAddress(addressData, country);
+                    var address = ValueObjectInitializer.CreateAddress(addressData, country);
 
-                    //await dataAccess.Add<Address>(address);
+                    await genericDataAccess.Add(address);
 
-                    //organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
+                    organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
 
-                    //var result = await dataAccess.Add<Organisation>(organisation);
+                    organisation = await genericDataAccess.Add<Organisation>(organisation);
+
+                    // ADD BRANDS
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(organisationJson);
 
@@ -97,10 +98,8 @@
                     throw;
                 }
 
-                //return note.Id;
+                return organisation.Id;
             }
-
-            return true;
         }
     }
 }

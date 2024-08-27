@@ -246,9 +246,17 @@
         }
 
         [HttpGet]
-        public ActionResult Type()
+        public async Task<ActionResult> Type()
         {
-            return View(new OrganisationTypeViewModel());
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = string.Empty;
+            if (existingTransaction?.OrganisationType != null)
+            {
+                selectedValue = existingTransaction.OrganisationType.GetDisplayName();
+            }
+
+            return View(new OrganisationTypeViewModel() { SelectedValue = selectedValue });
         }
 
         [HttpPost]
@@ -422,7 +430,7 @@
             var selectedValue = string.Empty;
             if (existingTransaction?.TonnageType != null)
             {
-                selectedValue = EnumHelper.GetDisplayName(existingTransaction.TonnageType);
+                selectedValue = existingTransaction.TonnageType.GetDisplayName();
             }
 
             var viewModel = new TonnageTypeViewModel
@@ -484,7 +492,7 @@
             var searchTerm = string.Empty;
             if (existingTransaction?.PreviousRegistration != null)
             {
-                selectedValue = EnumHelper.GetDisplayName(existingTransaction.PreviousRegistration);
+                selectedValue = existingTransaction.PreviousRegistration.GetDisplayName();
                 searchTerm = existingTransaction.SearchTerm;
             }
 
@@ -508,7 +516,49 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
 
-            return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
+            if (previousRegistration == YesNoType.Yes)
+            {
+                return RedirectToAction("Search", "OrganisationRegistration");
+            }
+
+            return RedirectToAction(nameof(AuthorisedRepresentative), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> AuthorisedRepresentative()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = string.Empty;
+            var searchTerm = string.Empty;
+            if (existingTransaction?.AuthorisedRepresentative != null)
+            {
+                selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
+                searchTerm = existingTransaction.SearchTerm;
+            }
+
+            var viewModel = new AuthorisedRepresentativeViewModel
+            {
+                SelectedValue = selectedValue,
+                SearchText = searchTerm
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AuthorisedRepresentative(AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(authorisedRepresentativeViewModel);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
+
+            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
         }
     }
 }

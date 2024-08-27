@@ -51,6 +51,9 @@
                         transaction.RegisteredCompanyDetailsViewModel = null;
                         transaction.SoleTraderDetailsViewModel = null;
                         break;
+                    case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
+                        transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
+                        break;
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));
