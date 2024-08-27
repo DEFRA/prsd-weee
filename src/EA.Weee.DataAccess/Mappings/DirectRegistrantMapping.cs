@@ -14,7 +14,6 @@
             Property(e => e.RowVersion).IsRowVersion();
 
             HasRequired(e => e.Organisation).WithMany().HasForeignKey(e => e.OrganisationId);
-            HasRequired(e => e.Contact).WithMany().HasForeignKey(e => e.ContactId);
             HasOptional(e => e.SICCode).WithMany().HasForeignKey(e => e.SICCodeId);
             HasOptional(e => e.BrandName).WithMany().HasForeignKey(e => e.BrandNameId);
             HasOptional(e => e.RepresentingCompany).WithMany().HasForeignKey(e => e.RepresentingCompanyId);
