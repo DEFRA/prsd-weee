@@ -649,7 +649,7 @@
 
             var result = await controller.SoleTraderDetails(organisationType, searchText) as ViewResult;
 
-            var resultViewModel = result.Model as Web.ViewModels.OrganisationRegistration.Details.SoleTraderDetailsViewModel;
+            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.CompanyName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
