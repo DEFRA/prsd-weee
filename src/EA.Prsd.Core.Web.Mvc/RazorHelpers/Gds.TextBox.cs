@@ -10,6 +10,7 @@
     public partial class Gds<TModel>
     {
         private static readonly string CssTextClass = "govuk-input";
+        private static readonly string CssTextAreaClass = "govuk-textarea";
 
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, bool useHalfWidth = true, string displayFormat = null)
         {
@@ -46,7 +47,7 @@
         {
             GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
             /* SG */
-            GdsExtensions.AddClass(htmlAttributes, CssTextClass);
+            GdsExtensions.AddClass(htmlAttributes, CssTextAreaClass);
 
             if (!string.IsNullOrWhiteSpace(displayFormat))
             {

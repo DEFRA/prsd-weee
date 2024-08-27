@@ -38,6 +38,18 @@
                         break;
                     case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
                         transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
+                        transaction.PartnershipDetailsViewModel = null;
+                        transaction.SoleTraderDetailsViewModel = null;
+                        break;
+                    case SoleTraderDetailsViewModel soleTraderDetailsViewModel:
+                        transaction.SoleTraderDetailsViewModel = soleTraderDetailsViewModel;
+                        transaction.PartnershipDetailsViewModel = null;
+                        transaction.RegisteredCompanyDetailsViewModel = null;
+                        break;
+                    case PartnershipDetailsViewModel partnershipDetailsViewModel:
+                        transaction.PartnershipDetailsViewModel = partnershipDetailsViewModel;
+                        transaction.RegisteredCompanyDetailsViewModel = null;
+                        transaction.SoleTraderDetailsViewModel = null;
                         break;
                 }
 
