@@ -14,6 +14,8 @@
 
         public YesNoType? PreviousRegistration { get; set; }
 
+        public YesNoType? AuthorisedRepresentative { get; set; }
+
         public RegisteredCompanyDetailsViewModel RegisteredCompanyDetailsViewModel { get; set; }
 
         public PartnershipDetailsViewModel PartnershipDetailsViewModel { get; set; }

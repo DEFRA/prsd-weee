@@ -39,15 +39,15 @@
             return Equals(obj as ProducerBusiness);
         }
 
-        public Guid? CorrespondentForNoticesContactId { get; private set; }
+        public virtual Guid? CorrespondentForNoticesContactId { get; private set; }
 
         public virtual ProducerContact CorrespondentForNoticesContact { get; private set; }
 
-        public Guid? CompanyId { get; private set; }
+        public virtual Guid? CompanyId { get; private set; }
 
         public virtual Company CompanyDetails { get; private set; }
 
-        public Guid? PartnershipId { get; private set; }
+        public virtual Guid? PartnershipId { get; private set; }
 
         public virtual Partnership Partnership { get; private set; }
     }
