@@ -424,7 +424,49 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
 
-            return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
+            if (previousRegistration == YesNoType.Yes)
+            {
+                return RedirectToAction("Search", "OrganisationRegistration");
+            }
+
+            return RedirectToAction(nameof(AuthorisedRepresentative), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> AuthorisedRepresentative()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = string.Empty;
+            var searchTerm = string.Empty;
+            if (existingTransaction?.AuthorisedRepresentative != null)
+            {
+                selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
+                searchTerm = existingTransaction.SearchTerm;
+            }
+
+            var viewModel = new AuthorisedRepresentativeViewModel
+            {
+                SelectedValue = selectedValue,
+                SearchText = searchTerm
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AuthorisedRepresentative(AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(authorisedRepresentativeViewModel);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
+
+            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
         }
     }
 }
