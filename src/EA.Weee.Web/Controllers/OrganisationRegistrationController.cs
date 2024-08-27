@@ -1,22 +1,23 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
 
@@ -26,12 +27,15 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
+        private readonly IOrganisationTransactionService transactionService;
+
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService, IOrganisationTransactionService transactionService)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
+            this.transactionService = transactionService;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
@@ -232,6 +236,16 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> RegisterSmallProducer(string searchTerm)
+        {
+            // temporary clear down any existing Organisation transactions for the user before we know about
+            // continuing a partially completed registration
+            await transactionService.DeleteOrganisationTransactionData(User.GetAccessToken());
+
+            return RedirectToAction(nameof(TonnageType), new { searchTerm });
+        }
+
+        [HttpGet]
         public ActionResult Type()
         {
             return View(new OrganisationTypeViewModel());
@@ -297,7 +311,7 @@
         {
             var countries = await GetCountries();
 
-            var model = new PartnershipDetailsViewModel
+            var model = new ViewModels.OrganisationRegistration.Details.PartnershipDetailsViewModel
             {
                 BusinessTradingName = searchedText,
                 OrganisationType = organisationType,
@@ -320,7 +334,7 @@
         {
             var countries = await GetCountries();
 
-            var model = new SoleTraderDetailsViewModel
+            var model = new ViewModels.OrganisationRegistration.Details.SoleTraderDetailsViewModel
             {
                 CompanyName = searchedText,
                 OrganisationType = organisationType,
@@ -333,9 +347,18 @@
         [HttpGet]
         public async Task<ViewResult> TonnageType(string searchTerm)
         {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = string.Empty;
+            if (existingTransaction?.TonnageType != null)
+            {
+                selectedValue = EnumHelper.GetDisplayName(existingTransaction.TonnageType);
+            }
+
             var viewModel = new TonnageTypeViewModel
             {
                 SearchedText = searchTerm,
+                SelectedValue = selectedValue
             };
 
             return View(viewModel);
@@ -350,7 +373,22 @@
                 return View(tonnageTypeViewModel);
             }
 
-            return RedirectToAction("Index", "Holding");
+            var tonnageType = tonnageTypeViewModel.SelectedValue.GetValueFromDisplayName<TonnageType>();
+
+            if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
+            {
+                return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), tonnageTypeViewModel);
+
+            return RedirectToAction(nameof(PreviousRegistration), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> FiveTonnesOrMore()
+        {
+            return View();
         }
 
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
@@ -365,6 +403,42 @@
                      new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
             }
             return organisations;
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> PreviousRegistration()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = string.Empty;
+            var searchTerm = string.Empty;
+            if (existingTransaction?.PreviousRegistration != null)
+            {
+                selectedValue = EnumHelper.GetDisplayName(existingTransaction.PreviousRegistration);
+                searchTerm = existingTransaction.SearchTerm;
+            }
+
+            var viewModel = new PreviousRegistrationViewModel
+            {
+                SelectedValue = selectedValue,
+                SearchText = searchTerm
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PreviousRegistration(PreviousRegistrationViewModel previousRegistrationViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(previousRegistrationViewModel);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
+
+            return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
         }
     }
 }

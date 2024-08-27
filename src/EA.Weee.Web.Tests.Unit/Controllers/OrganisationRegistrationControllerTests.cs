@@ -1,21 +1,19 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using AutoFixture;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Core.Search;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
@@ -23,14 +21,30 @@
 
     public class OrganisationRegistrationControllerTests
     {
+        private readonly Func<IWeeeClient> weeeClient;
+        private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly ConfigurationService configurationService;
+        private readonly IOrganisationTransactionService transactionService;
+        private readonly OrganisationRegistrationController controller;
         private readonly Fixture fixture;
 
         public OrganisationRegistrationControllerTests()
         {
+            configurationService = A.Fake<ConfigurationService>();
+            transactionService = A.Fake<IOrganisationTransactionService>();
+
+            weeeClient = A.Fake<Func<IWeeeClient>>();
+            organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
+            configurationService = A.Fake<ConfigurationService>();
+            transactionService = A.Fake<IOrganisationTransactionService>();
+
             fixture = new Fixture();
 
-            configurationService = A.Fake<ConfigurationService>();
+            controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService);
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -54,7 +68,8 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
@@ -87,7 +102,8 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
@@ -113,7 +129,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -138,7 +154,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var activeUsers = new List<OrganisationUserData>()
             {
@@ -171,7 +187,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var activeUsers = new List<OrganisationUserData>();
 
@@ -226,7 +242,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
@@ -256,7 +272,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
@@ -282,7 +298,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
@@ -308,7 +324,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             var result = await controller.Search();
@@ -337,7 +353,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             // Act
             var result = await controller.Search();
@@ -359,7 +375,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             var result = await controller.Search();
@@ -381,7 +398,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -406,7 +424,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
@@ -431,7 +450,7 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService, transactionService);
 
             var viewModel = new SearchViewModel
             {
@@ -472,7 +491,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -511,7 +531,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -542,7 +563,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             var viewModel = new SearchResultsViewModel()
             {
@@ -570,7 +592,8 @@
             var controller = new OrganisationRegistrationController(
                weeeClient,
                organisationSearcher,
-               configurationService);
+               configurationService,
+               transactionService);
 
             var entityType = fixture.Create<EntityType>();
 
@@ -594,9 +617,10 @@
             var controller = new OrganisationRegistrationController(
                weeeClient,
                organisationSearcher,
-               configurationService);
+               configurationService,
+               transactionService);
 
-            var viewModel = new ExternalOrganisationTypeViewModel()
+            var viewModel = new OrganisationTypeViewModel()
             {
                 SelectedValue = selectedValue,
             };
@@ -618,15 +642,14 @@
             var controller = new OrganisationRegistrationController(
                weeeClient,
                organisationSearcher,
-               configurationService);
+               configurationService, transactionService);
 
             const string searchText = "Company";
             const string organisationType = "Sole trader";
-            var entityType = fixture.Create<EntityType>();
 
             var result = await controller.SoleTraderDetails(organisationType, searchText) as ViewResult;
 
-            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
+            var resultViewModel = result.Model as Web.ViewModels.OrganisationRegistration.Details.SoleTraderDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.CompanyName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
@@ -645,13 +668,10 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             const string searchText = "company";
-            var viewModel = new TonnageTypeViewModel()
-            {
-                SearchedText = searchText,
-            };
 
             // Act
             var result = await controller.TonnageType(searchText);
@@ -673,7 +693,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -694,9 +715,9 @@
         }
 
         [Theory]
-        [InlineData("5 tonnes or more")]
-        [InlineData("Less than 5 tonnes")]
-        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue)
+        [InlineData("5 tonnes or more", "FiveTonnesOrMore", "OrganisationRegistration")]
+        [InlineData("Less than 5 tonnes", "PreviousRegistration", "OrganisationRegistration")]
+        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action, string correctController)
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -706,7 +727,8 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService);
+                configurationService,
+                transactionService);
 
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()
@@ -716,13 +738,105 @@
             };
 
             // Act
-            var result = await controller.TonnageType(viewModel);
+            var result = await controller.TonnageType(viewModel) as RedirectToRouteResult;
 
             // Assert
-            var redirectResult = result as RedirectToRouteResult;
-            Assert.NotNull(redirectResult);
+            Assert.NotNull(result);
+            result.RouteValues["action"].Should().Be(action);
+            result.RouteValues["controller"].Should().Be(correctController);
 
-            redirectResult.RouteValues["controller"].Should().Be("Holding");
+            var tonnageType = selectedValue.GetValueFromDisplayName<TonnageType>();
+
+            if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
+            {
+                A.CallTo(() => transactionService.CaptureData(A<string>._, A<object>._)).MustNotHaveHappened();
+            }
+            else
+            {
+                A.CallTo(() =>
+                        transactionService.CaptureData(A<string>._, A<TonnageTypeViewModel>.That.IsSameAs(viewModel)))
+                    .MustHaveHappenedOnceExactly();
+            }
+        }
+
+        [Fact]
+        public async void FiveTonnesOrMoreGet_ReturnsView()
+        {
+            // Arrange
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService);
+
+            // Act
+            var result = await controller.FiveTonnesOrMore();
+
+            // Assert
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
+        }
+
+        [Fact]
+        public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType()
+        {
+            // Arrange
+            var model = new PreviousRegistrationViewModel { SelectedValue = "No" };
+
+            // Act
+            var result = await controller.PreviousRegistration(model) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model))
+                .MustHaveHappenedOnceExactly();
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task PreviousRegistration_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                PreviousRegistration = YesNoType.Yes,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.PreviousRegistration() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as PreviousRegistrationViewModel;
+            model.Should().NotBeNull();
+            model.SelectedValue.Should().Be("Yes");
+            model.SearchText.Should().Be("Test Company");
+        }
+
+        [Fact]
+        public async Task RegisterSmallProducer_ClearsTransactionDataAndRedirectsToTonnageType()
+        {
+            // Arrange
+            const string searchTerm = "Test Company";
+
+            // Act
+            var result = await controller.RegisterSmallProducer(searchTerm) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TonnageType");
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
+            result.RouteValues["controller"].Should().BeNull();
         }
     }
 }

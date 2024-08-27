@@ -127,6 +127,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=4.0.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.4.1.0\lib\net462\nunit.framework.dll</HintPath>
     </Reference>
@@ -219,6 +222,7 @@
     <Compile Include="Base\WeeeContextSpecification.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
+    <Compile Include="Builders\OrganisationTransactionDbSetup.cs" />
     <Compile Include="Builders\CompetentAuthorityUserDbSetup.cs" />
     <Compile Include="Base\DatabaseDeleter.cs" />
     <Compile Include="Builders\ObligationSchemeDbSetup.cs" />
@@ -239,6 +243,9 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\DirectRegistrant\CompleteOrganisationTransactionHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\DirectRegistrant\GetUserOrganisationTransactionHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\DirectRegistrant\AddUpdateOrganisationTransactionHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\EditTransferEvidenceNoteHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetAatfSummaryReportHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\GetSchemeDataForFilterRequestHandlerIntegrationTests.cs" />
