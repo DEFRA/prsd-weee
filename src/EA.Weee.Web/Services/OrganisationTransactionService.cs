@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using Azure.Core;
+    using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -26,15 +26,18 @@
 
                 switch (model)
                 {
-                    case OrganisationDetails details:
-                        transaction.OrganisationDetails = details;
+                    case ExternalOrganisationTypeViewModel externalOrganisationTypeViewModel:
+                        transaction.OrganisationType = externalOrganisationTypeViewModel.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                         break;
                     case TonnageTypeViewModel tonnageTypeViewModel:
-                        transaction.TonnageType = tonnageTypeViewModel.SelectedValue;
+                        transaction.TonnageType = tonnageTypeViewModel.SelectedValue.GetValueFromDisplayName<TonnageType>();
                         transaction.SearchTerm = tonnageTypeViewModel.SearchedText;
                         break;
                     case PreviousRegistrationViewModel previousRegistrationModel:
-                        transaction.PreviousRegistration = previousRegistrationModel.SelectedValue;
+                        transaction.PreviousRegistration = previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
+                        break;
+                    case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
+                        transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
                 }
 
