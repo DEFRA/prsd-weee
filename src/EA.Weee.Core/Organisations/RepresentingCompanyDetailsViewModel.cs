@@ -3,19 +3,23 @@ namespace EA.Weee.Core.Organisations
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Core.Validation;
 
     public class RepresentingCompanyDetailsViewModel
     {
+        public string OrganisationType { get; set; }
+
         [Required]
         [DisplayName("Producer name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public string CompanyName { get; set; }
 
+        [Required]
         [DisplayName("Trading name")]
         public string BusinessTradingName { get; set; }
 
-        public ExternalAddressData Address { get; set; } = new ExternalAddressData();
+        public AddressData Address { get; set; } = new AddressData();
 
         [StringLength(CommonMaxFieldLengths.Telephone)]
         [Display(Name = "Telephone number")]
@@ -25,6 +29,5 @@ namespace EA.Weee.Core.Organisations
         [Display(Name = "Email address")]
         [EmailAddress]
         public string Email { get; set; }
-
     }
 }
