@@ -3,9 +3,7 @@
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Core.Organisations.RegisteredCompanyDetailsViewModel
-@{
-    ViewBag.Title = "GOV.UK - Registered company";
-}
+
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
@@ -18,9 +16,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationType)
 
-        @Html.Partial("_OrganisationAddressCountryPartial", Model)
+        @Html.Partial("_OrganisationHeadingAndCountryPartial", Model)
+
+        @Html.Partial("_OrganisationDetailsHeader", Model)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
             @Html.Gds().LabelFor(m => m.CompanyName)
@@ -32,14 +31,6 @@
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
-            @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
-        </div>
-
-        <h2 class="govuk-heading-s">Registered office address</h2>
 
         @Html.Partial("_OrganisationAddressPartial", Model)
 

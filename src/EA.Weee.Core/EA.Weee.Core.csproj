@@ -312,7 +312,6 @@
     <Compile Include="Organisations\YesNoType.cs" />
     <Compile Include="Organisations\TonnageType.cs" />
     <Compile Include="Organisations\ExternalOrganisationType.cs" />
-    <Compile Include="Organisations\OrganisationDetails.cs" />
     <Compile Include="Organisations\OrganisationTransactionData.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
     <Compile Include="Shared\EntityIdDisplayNameData.cs" />

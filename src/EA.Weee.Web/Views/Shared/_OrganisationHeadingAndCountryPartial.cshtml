@@ -1,7 +1,7 @@
 ﻿@model EA.Weee.Core.Organisations.Base.OrganisationViewModel
 
+<h2 class="govuk-heading-s">Enter the country your organisation is based in.</h2>
 <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Address.CountryId)" id="operator-country-dropdown-list">
-    <p class="govuk-heading-s">Enter the country your organisation is based in.</p>
     @Html.Gds().LabelFor(m => m.Address.CountryId, new { id = "country-dropdown-list" })
     @Html.Gds().ValidationMessageFor(m => m.Address.CountryId)
     @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })

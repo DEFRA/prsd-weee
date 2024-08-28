@@ -10,7 +10,7 @@
         [Required]
         [DisplayName("Company name / Business name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        public string CompanyName { get; set; }
+        public override string CompanyName { get; set; }
 
         [DisplayName("Trading name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]

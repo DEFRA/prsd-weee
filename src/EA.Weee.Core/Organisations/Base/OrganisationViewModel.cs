@@ -9,6 +9,9 @@
         public string OrganisationType { get; set; }
 
         [StringLength(CommonMaxFieldLengths.DefaultString)]
+        public abstract string CompanyName { get; set; }
+
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("Business trading name")]
         public virtual string BusinessTradingName { get; set; }
 

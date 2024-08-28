@@ -1034,8 +1034,8 @@
     <Content Include="Views\OrganisationRegistration\FiveTonnesOrMore.cshtml" />
     <Content Include="Views\OrganisationRegistration\AuthorisedRepresentative.cshtml" />
     <Content Include="Views\Shared\_AuthorisedRepresentativeGuidance.cshtml" />
-    <Content Include="Views\Shared\_OrganisationAddressPartial.cshtml" />
-    <Content Include="Views\Shared\_OrganisationAddressCountryPartial.cshtml" />
+    <Content Include="Views\Shared\_OrganisationDetailsPartial.cshtml" />
+    <Content Include="Views\Shared\_OrganisationHeadingAndCountryPartial.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -1861,6 +1861,8 @@
     <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\_OrganisationAddressPartial.cshtml" />
+    <Content Include="Views\Shared\_OrganisationDetailsHeader.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

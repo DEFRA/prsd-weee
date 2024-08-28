@@ -1,0 +1,5 @@
+﻿@model EA.Weee.Core.Organisations.Base.OrganisationViewModel
+
+@Html.HiddenFor(m => m.OrganisationType)
+<h2 class="govuk-heading-s">Enter the details of the organisation applying to register.</h2>
+@Html.Gds().HintParagraph("If you don't have a Company Registration Number, leave this field blank")

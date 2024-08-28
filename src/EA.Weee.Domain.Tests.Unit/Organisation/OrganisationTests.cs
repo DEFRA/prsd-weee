@@ -85,7 +85,7 @@
         {
             const string companyName = "test company name";
             const string tradingName = "test trading name";
-            const string companyRegistrationNumber = "1";
+            const string companyRegistrationNumber = "12345678";
 
             var result = Organisation.CreateDirectRegistrantCompany(OrganisationType.DirectRegistrantPartnership, companyName, tradingName, companyRegistrationNumber);
 
