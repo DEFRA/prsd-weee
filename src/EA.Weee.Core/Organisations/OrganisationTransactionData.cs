@@ -16,7 +16,10 @@
 
         public YesNoType? AuthorisedRepresentative { get; set; }
 
-        // each screen view model
-        public OrganisationDetails OrganisationDetails { get; set; }
+        public RegisteredCompanyDetailsViewModel RegisteredCompanyDetailsViewModel { get; set; }
+
+        public PartnershipDetailsViewModel PartnershipDetailsViewModel { get; set; }
+
+        public SoleTraderDetailsViewModel SoleTraderDetailsViewModel { get; set; }
     }
 }

@@ -304,6 +304,11 @@
     <Compile Include="Helpers\JsonSerializer.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Organisations\Base\OrganisationViewModel.cs" />
+    <Compile Include="Organisations\ExternalAddressData.cs" />
+    <Compile Include="Organisations\PartnershipDetailsViewModel.cs" />
+    <Compile Include="Organisations\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="Organisations\SoleTraderDetailsViewModel.cs" />
     <Compile Include="Organisations\YesNoType.cs" />
     <Compile Include="Organisations\TonnageType.cs" />
     <Compile Include="Organisations\ExternalOrganisationType.cs" />

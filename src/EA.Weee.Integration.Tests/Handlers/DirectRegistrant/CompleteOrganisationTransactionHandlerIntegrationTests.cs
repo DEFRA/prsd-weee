@@ -49,7 +49,7 @@
 
             private readonly It shouldHaveReturnedTrue = () =>
             {
-                result.Should().BeTrue();
+                result.Should().NotBeEmpty();
             };
         }
 
@@ -94,11 +94,11 @@
 
         public class CompleteOrganisationTransactionIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<CompleteOrganisationTransaction, bool> handler;
+            protected static IRequestHandler<CompleteOrganisationTransaction, Guid> handler;
             protected static Fixture fixture;
             protected static OrganisationTransactionData organisationTransactionData;
             protected static CompleteOrganisationTransaction request;
-            protected static bool result;
+            protected static Guid result;
             protected static DateTime date;
 
             public static IntegrationTestSetupBuilder LocalSetup()
@@ -112,7 +112,7 @@
 
                 date = DateTime.UtcNow;
                 fixture = new Fixture();
-                handler = Container.Resolve<IRequestHandler<CompleteOrganisationTransaction, bool>>();
+                handler = Container.Resolve<IRequestHandler<CompleteOrganisationTransaction, Guid>>();
 
                 organisationTransactionData = fixture.Create<OrganisationTransactionData>();
 
