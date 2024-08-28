@@ -2,7 +2,7 @@
 @using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
-@model EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details.RepresentingCompanyDetailsViewModel
+@model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
 @{
     ViewBag.Title = "Producer details";
 }
@@ -11,6 +11,9 @@
     <header class="hgroup">
         <h1 class="govuk-heading-l">Producer details</h1>
     </header>
+
+    <p>Provide the address of the non-UK established Small EEE producer you are registering on behalf of.</p>
+    <p>If the producer has previously registered in the UK under the WEEE Regulations through being a member of a Producer Compliance Scheme, include their Producer Registration Number.</p>
 
     @using (Html.BeginForm())
     {
@@ -29,14 +32,8 @@
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
-            @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
-        </div>
-
         <div>
-            <h2 class="govuk-heading-s">Registered office address</h2>
+            <h2 class="govuk-heading-s">Contact address</h2>
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
