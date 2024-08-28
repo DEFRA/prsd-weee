@@ -559,7 +559,6 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTransfer.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewEvidenceNotesMapTransfer.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AddOrganisation\Details\RepresentingCompanyDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\EvidenceReports\ChooseEvidenceReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\EvidenceReports\EvidenceReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\EvidenceReports\EvidenceTransfersReportViewModel.cs" />
