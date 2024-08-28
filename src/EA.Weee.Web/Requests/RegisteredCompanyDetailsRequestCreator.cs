@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Requests
 {
+    using EA.Weee.Core.Organisations;
     using Requests.Base;
-    using ViewModels.OrganisationRegistration.Details;
     using Weee.Requests.Organisations.Create;
 
     public class RegisteredCompanyDetailsRequestCreator : RequestCreator<RegisteredCompanyDetailsViewModel, CreateRegisteredCompanyRequest>, IRegisteredCompanyDetailsRequestCreator

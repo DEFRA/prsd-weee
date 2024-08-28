@@ -1,0 +1,54 @@
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Core.Organisations.Base.OrganisationViewModel
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.WebsiteAddress)">
+    @Html.Gds().LabelFor(m => m.Address.WebsiteAddress)
+    @Html.Gds().ValidationMessageFor(m => m.Address.WebsiteAddress)
+    @Html.Gds().TextBoxFor(m => m.Address.WebsiteAddress, new { @maxlength = CommonMaxFieldLengths.WebsiteAddress })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
+    @Html.Gds().LabelFor(m => m.Address.Address1)
+    @Html.Gds().ValidationMessageFor(m => m.Address.Address1)
+    @Html.Gds().TextBoxFor(m => m.Address.Address2, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address2)">
+    @Html.Gds().LabelFor(m => m.Address.Address2)
+    @Html.Gds().ValidationMessageFor(m => m.Address.Address2)
+    @Html.Gds().TextBoxFor(m => m.Address.Address2, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.TownOrCity)">
+    @Html.Gds().LabelFor(m => m.Address.TownOrCity)
+    @Html.Gds().ValidationMessageFor(m => m.Address.TownOrCity)
+    @Html.Gds().TextBoxFor(m => m.Address.TownOrCity, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.CountyOrRegion)">
+    @Html.Gds().LabelFor(m => m.Address.CountyOrRegion)
+    @Html.Gds().ValidationMessageFor(m => m.Address.CountyOrRegion)
+    @Html.Gds().TextBoxFor(m => m.Address.CountyOrRegion, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Postcode)">
+    @Html.Gds().LabelFor(m => m.Address.Postcode)
+    @Html.Gds().ValidationMessageFor(m => m.Address.Postcode)
+    @Html.Gds().TextBoxFor(m => m.Address.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Telephone)">
+    @Html.Gds().LabelFor(m => m.Address.Telephone)
+    @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
+    @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EEEBrandNames)">
+    <p>
+        <span class="govuk-heading-s">Enter EEE brand names that you place on the UK market.</span>
+        If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.
+    </p>
+    @Html.Gds().LabelFor(m => m.EEEBrandNames)
+    @Html.Gds().ValidationMessageFor(m => m.EEEBrandNames)
+    @Html.Gds().TextAreaFor(m => m.EEEBrandNames)
+</div>
