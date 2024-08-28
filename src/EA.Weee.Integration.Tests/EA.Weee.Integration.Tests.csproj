@@ -218,6 +218,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncHelper.cs" />
     <Compile Include="Base\IntegrationTestBase.cs" />
     <Compile Include="Base\WeeeContextSpecification.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />

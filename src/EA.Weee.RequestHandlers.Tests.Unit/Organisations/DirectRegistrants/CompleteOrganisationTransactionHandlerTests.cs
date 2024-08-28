@@ -17,8 +17,7 @@
     using FluentAssertions.Execution;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq.Expressions;
+    using System.Security;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -30,6 +29,7 @@
         private readonly CompleteOrganisationTransactionHandler handler;
         private readonly IWeeeTransactionAdapter transactionAdapter;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly WeeeContext weeeContext;
         private readonly Guid countryId = Guid.NewGuid();
         private const string CompanyName = "Company name";
         private const string TradingName = "Trading name";
@@ -42,7 +42,7 @@
             serializer = A.Fake<IJsonSerializer>();
             transactionAdapter = A.Fake<IWeeeTransactionAdapter>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
-            var weeeContext = A.Fake<WeeeContext>();
+            weeeContext = A.Fake<WeeeContext>();
 
             var dbContextHelper = new DbContextHelper();
 
@@ -75,7 +75,26 @@
         }
 
         [Fact]
-        public async Task HandleAsync_NoIncompleteTransaction_ThrowsInvalidOperationException()
+        public async Task HandleAsync_AuthorizationCheck_NotAuthorized_ThrowsSecurityException()
+        {
+            // Arrange
+            var denyAuthorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
+            var request = new CompleteOrganisationTransaction();
+            var authHandler = new CompleteOrganisationTransactionHandler(
+                denyAuthorization,
+                dataAccess,
+                serializer,
+                transactionAdapter,
+                genericDataAccess,
+                weeeContext);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<SecurityException>(
+                async () => await authHandler.HandleAsync(request));
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenNoIncompleteTransaction_ThrowsInvalidOperationException()
         {
             // Arrange
             var request = new CompleteOrganisationTransaction();
@@ -86,7 +105,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_ShouldThrowInvalidOperationException_WhenNoIncompleteTransactionExists()
+        public async Task HandleAsync_WhenNoIncompleteTransactionExists_ShouldThrowInvalidOperationException()
         {
             // Arrange
             A.CallTo(() => dataAccess.FindIncompleteTransactionForCurrentUserAsync())
@@ -96,11 +115,11 @@
             Func<Task> act = async () => await handler.HandleAsync(A.Dummy<CompleteOrganisationTransaction>());
 
             // Assert
-            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("CompleteOrganisationTransactionHandler address null");
+            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage("Organisation transaction not found.");
         }
 
         [Fact]
-        public async Task HandleAsync_ShouldThrowInvalidOperationException_WhenAddressDataIsNull()
+        public async Task HandleAsync__WhenAddressDataIsNull_ShouldThrowInvalidOperationException()
         {
             // Arrange
             var organisationTransaction = A.Fake<OrganisationTransaction>();
@@ -131,10 +150,10 @@
         public static IEnumerable<object[]> OrganisationValues()
         {
             yield return new object[] { ExternalOrganisationType.RegisteredCompany, Domain.Organisation.OrganisationType.RegisteredCompany, BrandNames };
-            yield return new object[] { ExternalOrganisationType.Partnership, Domain.Organisation.OrganisationType.Partnership, BrandNames };
+            yield return new object[] { ExternalOrganisationType.Partnership, Domain.Organisation.OrganisationType.DirectRegistrantPartnership, BrandNames };
             yield return new object[] { ExternalOrganisationType.SoleTrader, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, BrandNames };
             yield return new object[] { ExternalOrganisationType.RegisteredCompany, Domain.Organisation.OrganisationType.RegisteredCompany, null };
-            yield return new object[] { ExternalOrganisationType.Partnership, Domain.Organisation.OrganisationType.Partnership, null };
+            yield return new object[] { ExternalOrganisationType.Partnership, Domain.Organisation.OrganisationType.DirectRegistrantPartnership, null };
             yield return new object[] { ExternalOrganisationType.SoleTrader, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, null };
         }
 
@@ -145,15 +164,26 @@
         {
             // Arrange
             var organisationId = Guid.NewGuid();
+            var hasBrandName = !string.IsNullOrWhiteSpace(brandNames);
 
             SetupValidOrganisationTransaction(externalOrganisationType, brandNames);
 
             var newAddress = A.Fake<Address>();
+            var directRegistrant = A.Fake<DirectRegistrant>();
             var newOrganisation = A.Fake<Organisation>();
             A.CallTo(() => newOrganisation.Id).Returns(organisationId);
+            A.CallTo(() => directRegistrant.Organisation).Returns(newOrganisation);
+
+            BrandName brandName = null;
+
+            if (hasBrandName)
+            {
+                brandName = A.Fake<BrandName>();
+            }
 
             A.CallTo(() => genericDataAccess.Add(A<Address>._)).Returns(Task.FromResult(newAddress));
-            A.CallTo(() => genericDataAccess.Add(A<Organisation>._)).Returns(Task.FromResult(newOrganisation));
+            A.CallTo(() => genericDataAccess.Add(A<BrandName>._)).Returns(Task.FromResult(brandName));
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).Returns(Task.FromResult(directRegistrant));
 
             // Act
             var result = await handler.HandleAsync(A.Dummy<CompleteOrganisationTransaction>());
@@ -164,26 +194,34 @@
                 result.Should().Be(organisationId);
 
                 var callConfig = A.CallTo(() => transactionAdapter.BeginTransaction()).MustHaveHappenedOnceExactly()
-                    .Then(A.CallTo(() => genericDataAccess.Add(A<Address>._)).MustHaveHappenedOnceExactly())
-                    .Then(A.CallTo(() => genericDataAccess.Add(A<Organisation>._)).MustHaveHappenedOnceExactly())
-                    .Then(A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).MustHaveHappenedOnceExactly());
+                    .Then(A.CallTo(() => genericDataAccess.Add(A<Address>._)).MustHaveHappenedOnceExactly());
 
-                callConfig.Then(A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>._)).MustHaveHappenedOnceExactly())
+                if (hasBrandName)
+                {
+                    callConfig.Then(A.CallTo(() => genericDataAccess.Add(A<BrandName>._))
+                        .MustHaveHappenedOnceExactly());
+                }
+
+                callConfig.Then(A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).MustHaveHappenedOnceExactly())
+                    .Then(A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>._)).MustHaveHappenedOnceExactly())
                     .Then(A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly());
 
                 A.CallTo(() => genericDataAccess.Add(A<Address>.That.Matches(a => a.Country.Id == countryId)))
                     .MustHaveHappenedOnceExactly();
 
-                A.CallTo(() => genericDataAccess.Add(A<Organisation>.That.Matches(o =>
-                    o.OrganisationType == domainOrganisationType &&
-                    o.Name == CompanyName &&
-                    o.TradingName == TradingName &&
-                    o.BusinessAddress == newAddress)))
-                .MustHaveHappenedOnceExactly();
+                if (hasBrandName)
+                {
+                    A.CallTo(() => genericDataAccess.Add(A<BrandName>.That.Matches(d =>
+                            d.Name == brandNames)))
+                        .MustHaveHappenedOnceExactly();
+                }
 
-                A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
-                    d.Organisation == newOrganisation)))
-                .MustHaveHappenedOnceExactly();
+                A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d => 
+                    d.Organisation.OrganisationType == domainOrganisationType &&
+                    d.Organisation.TradingName == TradingName &&
+                    d.Organisation.Name == CompanyName &&
+                    d.Organisation.BusinessAddress == newAddress &&
+                    d.BrandName == brandName))).MustHaveHappenedOnceExactly();
 
                 A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>.That.Matches(o =>
                     o == newOrganisation)))
@@ -192,84 +230,13 @@
         }
 
         [Fact]
-        public async Task HandleAsync_AddsAddressToOrganisation()
-        {
-            // Arrange
-            var request = new CompleteOrganisationTransaction();
-            SetupValidOrganisationTransaction();
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => genericDataAccess.Add(A<Address>._)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_CreatesBrandNameIfProvided()
-        {
-            // Arrange
-            var request = new CompleteOrganisationTransaction();
-            SetupValidOrganisationTransaction(brandNames: "TestBrand");
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => genericDataAccess.Add(A<BrandName>._)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_CreatesDirectRegistrant()
-        {
-            // Arrange
-            var request = new CompleteOrganisationTransaction();
-            SetupValidOrganisationTransaction();
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_CompletesTransaction()
-        {
-            // Arrange
-            var request = new CompleteOrganisationTransaction();
-            SetupValidOrganisationTransaction();
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>._)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task HandleAsync_CommitsTransaction()
-        {
-            // Arrange
-            var request = new CompleteOrganisationTransaction();
-            SetupValidOrganisationTransaction();
-            
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => transactionAdapter.BeginTransaction()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task HandleAsync_RollsBackTransactionOnError()
         {
             // Arrange
             var request = new CompleteOrganisationTransaction();
             SetupValidOrganisationTransaction();
-            
-            A.CallTo(() => genericDataAccess.Add(A<Organisation>._)).Throws<Exception>();
+
+            A.CallTo(() => genericDataAccess.Add<Address>(A<Address>._)).Throws<Exception>();
 
             // Act & Assert
             await Assert.ThrowsAsync<Exception>(() => handler.HandleAsync(request));

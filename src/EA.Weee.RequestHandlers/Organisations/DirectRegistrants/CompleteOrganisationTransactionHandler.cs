@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
@@ -11,9 +14,6 @@
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     internal class CompleteOrganisationTransactionHandler : IRequestHandler<CompleteOrganisationTransaction, Guid>
     {
@@ -27,9 +27,9 @@
         public CompleteOrganisationTransactionHandler(
             IWeeeAuthorization authorization,
             IOrganisationTransactionDataAccess organisationTransactionDataAccess,
-            IJsonSerializer jsonSerializer, 
-            IWeeeTransactionAdapter transactionAdapter, 
-            IGenericDataAccess genericDataAccess, 
+            IJsonSerializer jsonSerializer,
+            IWeeeTransactionAdapter transactionAdapter,
+            IGenericDataAccess genericDataAccess,
             WeeeContext weeeContext)
         {
             this.authorization = authorization;
@@ -44,93 +44,99 @@
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var organisationTransaction =
-                await organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync();
+            var organisationTransaction = await organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync();
 
             if (organisationTransaction == null)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Organisation transaction not found.");
             }
 
-            var organisationTransactionData =
-                jsonSerializer.Deserialize<OrganisationTransactionData>(organisationTransaction.OrganisationJson);
-            // validate the request
-
+            var organisationTransactionData = jsonSerializer.Deserialize<OrganisationTransactionData>(organisationTransaction.OrganisationJson);
             using (var transaction = transactionAdapter.BeginTransaction())
             {
-                Organisation organisation = null;
-                ExternalAddressData addressData = null;
-
                 try
                 {
-                    string brandNames = null;
-                    switch (organisationTransactionData.OrganisationType)
-                    {
-                        case Core.Organisations.ExternalOrganisationType.Partnership:
-                            organisation = Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.DirectRegistrantPartnership, organisationTransactionData.PartnershipDetailsViewModel.CompanyName,
-                                organisationTransactionData.PartnershipDetailsViewModel.BusinessTradingName, organisationTransactionData.PartnershipDetailsViewModel.CompaniesRegistrationNumber);
-                            addressData = organisationTransactionData.PartnershipDetailsViewModel.Address;
-                            brandNames = organisationTransactionData.PartnershipDetailsViewModel.EEEBrandNames;
-                            break;
-                        case Core.Organisations.ExternalOrganisationType.RegisteredCompany:
-                            organisation = Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.RegisteredCompany, organisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName,
-                                organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName, organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
-                            addressData = organisationTransactionData.RegisteredCompanyDetailsViewModel.Address;
-                            brandNames = organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames;
-                            break;
-                        case ExternalOrganisationType.SoleTrader:
-                            organisation = Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.SoleTraderOrIndividual, organisationTransactionData.SoleTraderDetailsViewModel.CompanyName,
-                                organisationTransactionData.SoleTraderDetailsViewModel.BusinessTradingName, organisationTransactionData.SoleTraderDetailsViewModel.CompaniesRegistrationNumber);
-                            addressData = organisationTransactionData.SoleTraderDetailsViewModel.Address;
-                            brandNames = organisationTransactionData.SoleTraderDetailsViewModel.EEEBrandNames;
-                            break;
-                        case null:
-                            throw new InvalidOperationException();
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    var organisation = CreateOrganisation(organisationTransactionData);
+                    var address = await CreateAndAddAddress(organisationTransactionData, organisation);
 
-                    if (addressData == null)
-                    {
-                        throw new InvalidOperationException("CompleteOrganisationTransactionHandler address null");
-                    }
-
-                    var country = await weeeContext.Countries.SingleAsync(c => c.Id == addressData.CountryId);
-
-                    var address = ValueObjectInitializer.CreateAddress(addressData, country);
-
-                    var updatedAddress = await genericDataAccess.Add(address);
-
-                    organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, updatedAddress);
-
+                    organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
                     organisation.CompleteRegistration();
 
-                    organisation = await genericDataAccess.Add<Organisation>(organisation);
+                    var brandName = await CreateAndAddBrandName(organisationTransactionData);
 
-                    BrandName brandName = null;
-                    if (!string.IsNullOrWhiteSpace(brandNames))
-                    {
-                        brandName = new BrandName(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
-
-                        brandName = await genericDataAccess.Add(brandName);
-                    }
-                    
                     var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName);
+                    directRegistrant = await genericDataAccess.Add(directRegistrant);
 
-                    await genericDataAccess.Add(directRegistrant);
-
-                    await organisationTransactionDataAccess.CompleteTransactionAsync(organisation);
-
+                    await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
                     transactionAdapter.Commit(transaction);
+
+                    return directRegistrant.Organisation.Id;
                 }
                 catch
                 {
                     transactionAdapter.Rollback(transaction);
                     throw;
                 }
-
-                return organisation.Id;
             }
+        }
+
+        private Organisation CreateOrganisation(OrganisationTransactionData organisationTransactionData)
+        {
+            switch (organisationTransactionData.OrganisationType)
+            {
+                case ExternalOrganisationType.Partnership:
+                    return Organisation.CreateDirectRegistrantCompany(
+                        EA.Weee.Domain.Organisation.OrganisationType.DirectRegistrantPartnership,
+                        organisationTransactionData.PartnershipDetailsViewModel.CompanyName,
+                        organisationTransactionData.PartnershipDetailsViewModel.BusinessTradingName,
+                        organisationTransactionData.PartnershipDetailsViewModel.CompaniesRegistrationNumber);
+                case ExternalOrganisationType.RegisteredCompany:
+                    return Organisation.CreateDirectRegistrantCompany(
+                        EA.Weee.Domain.Organisation.OrganisationType.RegisteredCompany,
+                        organisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName,
+                        organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName,
+                        organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
+                case ExternalOrganisationType.SoleTrader:
+                    return Organisation.CreateDirectRegistrantCompany(
+                        EA.Weee.Domain.Organisation.OrganisationType.SoleTraderOrIndividual,
+                        organisationTransactionData.SoleTraderDetailsViewModel.CompanyName,
+                        organisationTransactionData.SoleTraderDetailsViewModel.BusinessTradingName,
+                        organisationTransactionData.SoleTraderDetailsViewModel.CompaniesRegistrationNumber);
+
+                case null:
+                    throw new InvalidOperationException("Organisation type is null.");
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private async Task<Address> CreateAndAddAddress(OrganisationTransactionData organisationTransactionData, Organisation organisation)
+        {
+            var addressData = organisationTransactionData.GetAddressData();
+            if (addressData == null)
+            {
+                throw new InvalidOperationException("Address data is null.");
+            }
+
+            var country = await weeeContext.Countries.SingleAsync(c => c.Id == addressData.CountryId);
+            var address = ValueObjectInitializer.CreateAddress(addressData, country);
+
+            var updatedAddress = await genericDataAccess.Add(address);
+
+            return updatedAddress;
+        }
+
+        private async Task<BrandName> CreateAndAddBrandName(OrganisationTransactionData organisationTransactionData)
+        {
+            var brandNames = organisationTransactionData.GetBrandNames();
+            if (string.IsNullOrWhiteSpace(brandNames))
+            {
+                return null;
+            }
+
+            var brandName = new BrandName(brandNames);
+            return await genericDataAccess.Add(brandName);
         }
     }
 }
