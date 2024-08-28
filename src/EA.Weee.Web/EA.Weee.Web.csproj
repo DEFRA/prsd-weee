@@ -621,6 +621,7 @@
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\RepresentingCompanyDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\AuthorisedRepresentativeViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\PreviousRegistrationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\TonnageTypeViewModel.cs" />
     <Compile Include="Services\IOrganisationTransactionService.cs" />
@@ -1033,6 +1034,8 @@
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\FiveTonnesOrMore.cshtml" />
     <Content Include="Views\OrganisationRegistration\RepresentingCompanyDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\AuthorisedRepresentative.cshtml" />
+    <Content Include="Views\Shared\_AuthorisedRepresentativeGuidance.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

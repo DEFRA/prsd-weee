@@ -5,6 +5,7 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
@@ -253,21 +254,23 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Type(ExternalOrganisationTypeViewModel model)
+        public async Task<ActionResult> Type(ExternalOrganisationTypeViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
-                var routeValues = new { organisationType = model.SelectedValue };
+                var routeValues = new { organisationType = model.SelectedValue, };
+
+                await transactionService.CaptureData(User.GetAccessToken(), model);
 
                 switch (organisationType)
                 {
                     case ExternalOrganisationType.SoleTrader:
-                        return RedirectToAction(nameof(SoleTraderDetails), "OrganisationRegistration", routeValues);
+                        return RedirectToAction("Index", "Holding", routeValues);
                     case ExternalOrganisationType.Partnership:
-                        return RedirectToAction(nameof(PartnershipDetails), "OrganisationRegistration", routeValues);
+                        return RedirectToAction("Index", "Holding", routeValues);
                     case ExternalOrganisationType.RegisteredCompany:
-                        return RedirectToAction(nameof(RegisteredCompanyDetails), "OrganisationRegistration", routeValues);
+                        return RedirectToAction("Index", "Holding", routeValues);
                 }
             }
 
@@ -347,7 +350,11 @@
         {
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            var selectedValue = existingTransaction?.TonnageType ?? string.Empty;
+            var selectedValue = string.Empty;
+            if (existingTransaction?.TonnageType != null)
+            {
+                selectedValue = existingTransaction.TonnageType.GetDisplayName();
+            }
 
             var viewModel = new TonnageTypeViewModel
             {
@@ -404,11 +411,18 @@
         {
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            var selectedValue = existingTransaction.PreviousRegistration;
+            var selectedValue = string.Empty;
+            var searchTerm = string.Empty;
+            if (existingTransaction?.PreviousRegistration != null)
+            {
+                selectedValue = existingTransaction.PreviousRegistration.GetDisplayName();
+                searchTerm = existingTransaction.SearchTerm;
+            }
+
             var viewModel = new PreviousRegistrationViewModel
             {
                 SelectedValue = selectedValue,
-                SearchText = existingTransaction.SearchTerm
+                SearchText = searchTerm
             };
 
             return View(viewModel);
@@ -425,7 +439,49 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
 
-            return RedirectToAction("Index", "Holding");
+            var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
+            if (previousRegistration == YesNoType.Yes)
+            {
+                return RedirectToAction("Search", "OrganisationRegistration");
+            }
+
+            return RedirectToAction(nameof(AuthorisedRepresentative), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> AuthorisedRepresentative()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = string.Empty;
+            var searchTerm = string.Empty;
+            if (existingTransaction?.AuthorisedRepresentative != null)
+            {
+                selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
+                searchTerm = existingTransaction.SearchTerm;
+            }
+
+            var viewModel = new AuthorisedRepresentativeViewModel
+            {
+                SelectedValue = selectedValue,
+                SearchText = searchTerm
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AuthorisedRepresentative(AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(authorisedRepresentativeViewModel);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
+
+            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
         }
     }
 }

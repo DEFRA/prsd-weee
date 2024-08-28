@@ -4,14 +4,14 @@
     using Shared;
     using System.ComponentModel.DataAnnotations;
 
-    public class PreviousRegistrationViewModel : YesNoChoiceViewModel
+    public class AuthorisedRepresentativeViewModel : YesNoChoiceViewModel
     {
-        [Required(ErrorMessage = "Have you previously been registered as a small producer?")]
+        [Required(ErrorMessage = "Please indicate whether or not you are applying as an authorised representative of a non-UK established company")]
         public override string SelectedValue { get; set; }
 
         public string SearchText {get; set; }
 
-        public PreviousRegistrationViewModel()
+        public AuthorisedRepresentativeViewModel()
             : base(CreateFromEnum<YesNoType>().PossibleValues)
         {
         }

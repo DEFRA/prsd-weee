@@ -601,10 +601,10 @@
         }
 
         [Theory]
-        [InlineData("Sole trader", "SoleTraderDetails")]
-        [InlineData("Partnership", "PartnershipDetails")]
-        [InlineData("Registered company", "RegisteredCompanyDetails")]
-        public void TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
+        [InlineData("Sole trader", "Index")]
+        [InlineData("Partnership", "Index")]
+        [InlineData("Registered company", "Index")]
+        public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
@@ -621,11 +621,23 @@
                 SelectedValue = selectedValue,
             };
 
-            var result = controller.Type(viewModel) as RedirectToRouteResult;
+            var result = await controller.Type(viewModel) as RedirectToRouteResult;
 
             result.RouteValues["action"].Should().Be(action);
-            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["controller"].Should().Be("Holding");
             result.RouteValues["organisationType"].Should().Be(viewModel.SelectedValue);
+        }
+
+        [Fact]
+        public async Task TypePost_InvalidValidViewModel_ReturnsView()
+        {
+            var viewModel = new ExternalOrganisationTypeViewModel();
+            
+            controller.ModelState.AddModelError("SelectedValue", "Invalid");
+
+            var result = await controller.Type(viewModel) as ViewResult;
+
+            result.ViewName.Should().BeOneOf("Type", string.Empty);
         }
 
         [Fact]
@@ -678,6 +690,28 @@
             Assert.NotNull(result);
             Assert.Equal(searchText, resultViewModel.SearchedText);
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Tonnage");
+        }
+
+        [Fact]
+        public async Task TonnageTypeGet_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                TonnageType = TonnageType.FiveTonnesOrMore,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+            // Act
+            var result = await controller.TonnageType(organisationTransactionData.SearchTerm);
+
+            // Assert
+            var resultViewModel = result.Model as TonnageTypeViewModel;
+            Assert.NotNull(result);
+            Assert.Equal(organisationTransactionData.SearchTerm, resultViewModel.SearchedText);
+            Assert.Equal("5 tonnes or more", resultViewModel.SelectedValue);
         }
 
         [Fact]
@@ -776,6 +810,49 @@
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
         }
 
+        [Theory]
+        [InlineData("Yes", "Search")]
+        [InlineData("No", "AuthorisedRepresentative")]
+        public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType(string selectedValue, string action)
+        {
+            // Arrange
+            var model = new PreviousRegistrationViewModel { SelectedValue = selectedValue };
+
+            // Act
+            var result = await controller.PreviousRegistration(model) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model))
+                .MustHaveHappenedOnceExactly();
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(action);
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task PreviousRegistration_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                PreviousRegistration = YesNoType.Yes,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.PreviousRegistration() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as PreviousRegistrationViewModel;
+            model.Should().NotBeNull();
+            model.SelectedValue.Should().Be("Yes");
+            model.SearchText.Should().Be("Test Company");
+        }
+
         [Fact]
         public async Task RegisterSmallProducer_ClearsTransactionDataAndRedirectsToTonnageType()
         {
@@ -792,6 +869,50 @@
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("TonnageType");
             result.RouteValues["searchTerm"].Should().Be(searchTerm);
+            result.RouteValues["controller"].Should().BeNull();
+        }
+
+        [Fact]
+        public async Task AuthorisedRepresentative_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                AuthorisedRepresentative = YesNoType.Yes,
+                SearchTerm = "Test Company"
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.AuthorisedRepresentative() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as AuthorisedRepresentativeViewModel;
+            model.Should().NotBeNull();
+            model.SelectedValue.Should().Be("Yes");
+            model.SearchText.Should().Be("Test Company");
+        }
+
+        [Theory]
+        [InlineData("Yes")]
+        [InlineData("No")]
+        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToHolding(string selectedValue)
+        {
+            // Arrange
+            var model = new AuthorisedRepresentativeViewModel { SelectedValue = selectedValue };
+
+            // Act
+            var result = await controller.AuthorisedRepresentative(model) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model))
+                .MustHaveHappenedOnceExactly();
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
         }
     }
 }
