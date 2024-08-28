@@ -132,6 +132,8 @@
                     .WithTestData()
                     .WithExternalUserAccess();
 
+                Query.DeleteAllOrganisationTransactions();
+
                 date = DateTime.UtcNow;
                 fixture = new Fixture();
                 handler = Container.Resolve<IRequestHandler<AddUpdateOrganisationTransaction, OrganisationTransactionData>>();
