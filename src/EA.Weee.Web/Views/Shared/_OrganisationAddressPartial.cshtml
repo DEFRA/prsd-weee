@@ -10,7 +10,7 @@
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
     @Html.Gds().LabelFor(m => m.Address.Address1)
     @Html.Gds().ValidationMessageFor(m => m.Address.Address1)
-    @Html.Gds().TextBoxFor(m => m.Address.Address2, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+    @Html.Gds().TextBoxFor(m => m.Address.Address1, new { @maxlength = CommonMaxFieldLengths.AddressLine })
 </div>
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address2)">

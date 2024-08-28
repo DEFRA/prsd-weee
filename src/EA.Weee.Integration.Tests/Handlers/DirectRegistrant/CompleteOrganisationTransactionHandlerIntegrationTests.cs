@@ -28,7 +28,7 @@
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
-                request = new CompleteOrganisationTransaction(organisationTransactionData);
+                request = new CompleteOrganisationTransaction();
             };
 
             private readonly Because of = () =>
@@ -60,7 +60,7 @@
             {
                 LocalSetup();
 
-                request = new CompleteOrganisationTransaction(organisationTransactionData);
+                request = new CompleteOrganisationTransaction();
             };
 
             private readonly Because of = () =>

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using Azure.Core;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
@@ -26,7 +27,7 @@
 
                 switch (model)
                 {
-                    case ExternalOrganisationTypeViewModel externalOrganisationTypeViewModel:
+                    case OrganisationTypeViewModel externalOrganisationTypeViewModel:
                         transaction.OrganisationType = externalOrganisationTypeViewModel.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                         break;
                     case TonnageTypeViewModel tonnageTypeViewModel:
@@ -57,6 +58,14 @@
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));
+            }
+        }
+
+        public async Task CompleteTransaction(string accessToken)
+        {
+            using (var client = weeeClient())
+            {
+                await client.SendAsync(accessToken, new CompleteOrganisationTransaction());
             }
         }
 

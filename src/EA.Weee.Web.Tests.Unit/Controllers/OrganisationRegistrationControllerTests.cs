@@ -8,6 +8,7 @@
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
@@ -21,14 +22,13 @@
     using Weee.Requests.Organisations;
     using Xunit;
 
-    public class OrganisationRegistrationControllerTests
+    public class OrganisationRegistrationControllerTests : SimpleUnitTestBase
     {
         private readonly IWeeeClient weeeClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly ConfigurationService configurationService;
         private readonly IOrganisationTransactionService transactionService;
         private readonly OrganisationRegistrationController controller;
-        private readonly Fixture fixture;
 
         public OrganisationRegistrationControllerTests()
         {
@@ -37,8 +37,6 @@
             weeeClient = A.Fake<IWeeeClient>();
             organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             
-            fixture = new Fixture();
-
             controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
@@ -609,7 +607,7 @@
             // Arrange
             var organisationTransactionData = new OrganisationTransactionData()
             {
-                OrganisationType = fixture.Create<ExternalOrganisationType>()
+                OrganisationType = TestFixture.Create<ExternalOrganisationType>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -631,7 +629,7 @@
         [InlineData("Sole trader", "SoleTraderDetails")]
         [InlineData("Partnership", "PartnershipDetails")]
         [InlineData("Registered company", "RegisteredCompanyDetails")]
-        public void TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
+        public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
@@ -648,7 +646,9 @@
                 SelectedValue = selectedValue,
             };
 
-            var result = controller.Type(viewModel) as RedirectToRouteResult;
+            var result = await controller.Type(viewModel) as RedirectToRouteResult;
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, viewModel)).MustHaveHappenedOnceExactly();
 
             result.RouteValues["action"].Should().Be(action);
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
@@ -905,27 +905,42 @@
             model.Address.Countries.Should().BeEquivalentTo(countries);
         }
 
-        [Fact]
-        public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToHoldingController()
+        [Theory]
+        [InlineData(YesNoType.No, "Type", "OrganisationRegistration")]
+        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
-            var model = fixture.Create<RegisteredCompanyDetailsViewModel>();
+            var model = TestFixture.Build<RegisteredCompanyDetailsViewModel>().Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
 
             // Act
             var result = await controller.RegisteredCompanyDetails(model) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be(index);
+            result.RouteValues["controller"].Should().Be(controllerName);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            if (authorisedRep == YesNoType.No)
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            }
         }
 
         [Fact]
         public async Task RegisteredCompanyDetails_Post_InValidModel_ReturnsView()
         {
             // Arrange
-            var model = fixture.Create<RegisteredCompanyDetailsViewModel>();
+            var model = TestFixture.Create<RegisteredCompanyDetailsViewModel>();
             controller.ModelState.AddModelError("error", "error");
 
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
@@ -970,27 +985,42 @@
             model.Address.Countries.Should().BeEquivalentTo(countries);
         }
 
-        [Fact]
-        public async Task PartnershipDetails_Post_ValidModel_RedirectsToHoldingController()
+        [Theory]
+        [InlineData(YesNoType.No, "Type", "OrganisationRegistration")]
+        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        public async Task PartnershipDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
-            var model = fixture.Create<PartnershipDetailsViewModel>();
+            var model = TestFixture.Create<PartnershipDetailsViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
 
             // Act
             var result = await controller.PartnershipDetails(model) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be(index);
+            result.RouteValues["controller"].Should().Be(controllerName);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            if (authorisedRep == YesNoType.No)
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            }
         }
 
         [Fact]
         public async Task PartnershipDetails_Post_InValidModel_RedirectsToHoldingController()
         {
             // Arrange
-            var model = fixture.Create<PartnershipDetailsViewModel>();
+            var model = TestFixture.Create<PartnershipDetailsViewModel>();
             controller.ModelState.AddModelError("error", "error");
 
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
@@ -1052,7 +1082,7 @@
 
             var existingTransaction = new OrganisationTransactionData
             {
-                PartnershipDetailsViewModel = fixture.Create<PartnershipDetailsViewModel>()
+                PartnershipDetailsViewModel = TestFixture.Create<PartnershipDetailsViewModel>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -1079,7 +1109,7 @@
 
             var existingTransaction = new OrganisationTransactionData
             {
-                SoleTraderDetailsViewModel = fixture.Create<SoleTraderDetailsViewModel>()
+                SoleTraderDetailsViewModel = TestFixture.Create<SoleTraderDetailsViewModel>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -1096,27 +1126,43 @@
             model.Address.Countries.Should().BeEquivalentTo(countries);
         }
 
-        [Fact]
-        public async Task SoleTraderDetails_Post_ValidModel_RedirectsToHoldingController()
+        [Theory]
+        [InlineData(YesNoType.No, "Type", "OrganisationRegistration")]
+        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        public async Task SoleTraderDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
-            var model = fixture.Create<SoleTraderDetailsViewModel>();
+            var model = TestFixture.Create<SoleTraderDetailsViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
 
             // Act
             var result = await controller.SoleTraderDetails(model) as RedirectToRouteResult;
 
             // Assert
+            // Assert
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be(index);
+            result.RouteValues["controller"].Should().Be(controllerName);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            if (authorisedRep == YesNoType.No)
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            }
         }
 
         [Fact]
         public async Task SoleTraderDetails_Post_InValidModel_RedirectsToHoldingController()
         {
             // Arrange
-            var model = fixture.Create<SoleTraderDetailsViewModel>();
+            var model = TestFixture.Create<SoleTraderDetailsViewModel>();
             controller.ModelState.AddModelError("error", "error");
 
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
@@ -1176,7 +1222,7 @@
         [Theory]
         [InlineData("Yes")]
         [InlineData("No")]
-        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToHolding(string selectedValue)
+        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToOrganisationType(string selectedValue)
         {
             // Arrange
             var model = new AuthorisedRepresentativeViewModel { SelectedValue = selectedValue };
@@ -1188,8 +1234,8 @@
             A.CallTo(() => transactionService.CaptureData(A<string>._, model))
                 .MustHaveHappenedOnceExactly();
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
         }
     }
 }

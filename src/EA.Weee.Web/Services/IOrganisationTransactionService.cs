@@ -10,5 +10,7 @@
         Task<OrganisationTransactionData> GetOrganisationTransactionData(string accessToken);
 
         Task DeleteOrganisationTransactionData(string accessToken);
+
+        Task CompleteTransaction(string accessToken);
     }
 }

@@ -261,12 +261,14 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Type(OrganisationTypeViewModel model)
+        public async Task<ActionResult> Type(OrganisationTypeViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                 var routeValues = new { organisationType = model.SelectedValue };
+
+                await transactionService.CaptureData(User.GetAccessToken(), model);
 
                 switch (organisationType)
                 {
@@ -297,7 +299,7 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return await CheckAuthorisedRepresentitiveAndRedirect();
         }
 
         [HttpGet]
@@ -367,6 +369,20 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
+            return await CheckAuthorisedRepresentitiveAndRedirect();
+        }
+
+        private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
+        {
+            var organisationTransactionData = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+            if (organisationTransactionData != null &&
+                organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
+            {
+                await transactionService.CompleteTransaction(User.GetAccessToken());
+
+                return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            }
+
             return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
 
@@ -419,7 +435,7 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return await CheckAuthorisedRepresentitiveAndRedirect();
         }
 
         [HttpGet]
@@ -558,7 +574,7 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
 
-            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
         }
     }
 }

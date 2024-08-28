@@ -68,19 +68,24 @@
 
         public virtual ProducerBalancingScheme ProducerBalancingScheme { get; private set; }
 
-        public static Organisation CreateSoleTrader(string companyName, string tradingName = null, string companyRegistrationNumber = null)
+        public static Organisation CreateSoleTrader(string companyName, string tradingName = null)
         {
-            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, companyRegistrationNumber, tradingName);
+            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, null, tradingName);
         }
 
-        public static Organisation CreatePartnership(string tradingName, string companyRegistrationNumber = null)
+        public static Organisation CreatePartnership(string tradingName)
         {
-            return new Organisation(OrganisationType.Partnership, tradingName, companyRegistrationNumber);
+            return new Organisation(OrganisationType.Partnership, tradingName);
         }
 
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)
         {
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
+        }
+
+        public static Organisation CreateDirectRegistrantCompany(OrganisationType organisationType, string companyName, string tradingName, string companyRegistrationNumber = null)
+        {
+            return new Organisation(organisationType, companyName, companyRegistrationNumber, tradingName);
         }
 
         public void UpdateOrganisationTypeDetails(string companyName, string companyRegNumber,
@@ -95,6 +100,10 @@
             else if (organisationType == OrganisationType.Partnership)
             {
                 Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+            }
+            else if (organisationType == OrganisationType.DirectRegistrantPartnership)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
             }
             else if (organisationType == OrganisationType.RegisteredCompany)
             {
@@ -164,7 +173,9 @@
         {
             get
             {
-                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value || OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value)
+                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value 
+                    || OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value 
+                    || OrganisationType.Value == OrganisationType.DirectRegistrantPartnership.Value)
                 {
                     return Name;
                 }

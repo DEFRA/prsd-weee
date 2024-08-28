@@ -24,6 +24,7 @@
         public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode,
             Country country, string telephone, string email, string webAddress) : this(address1, address2, townOrCity, countyOrRegion, postcode, country, telephone, email)
         {
+            WebAddress = webAddress;
         }
 
         protected Address()
@@ -111,7 +112,7 @@
                 postcode = value;
             }
         }
-
+        
         public string Telephone
         {
             get => telephone;
@@ -131,8 +132,7 @@
             get => email;
             private set
             {
-                Guard.ArgumentNotNullOrEmpty(() => value, value);
-                if (value.Length > 256)
+                if (value != null && value.Length > 256)
                 {
                     throw new InvalidOperationException(string.Format(("Email cannot be greater than 256 characters")));
                 }

@@ -13,6 +13,7 @@
         public string CompanyName { get; set; }
 
         [DisplayName("Trading name")]
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
         public override string BusinessTradingName { get; set; }
     }
 }

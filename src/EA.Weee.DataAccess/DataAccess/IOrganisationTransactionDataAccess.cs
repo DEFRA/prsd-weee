@@ -7,7 +7,7 @@
     {
         Task<OrganisationTransaction> FindIncompleteTransactionForCurrentUserAsync();
         Task<OrganisationTransaction> UpdateOrCreateTransactionAsync(string organisationJson);
-        Task<OrganisationTransaction> CompleteTransactionAsync(string organisationJson);
+        Task<OrganisationTransaction> CompleteTransactionAsync(Organisation organisation);
         Task DeleteAsync();
     }
 }

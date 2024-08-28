@@ -54,7 +54,7 @@
         {
             // Arrange
             const string accessToken = "test-token";
-            var externalOrganisationTypeViewModel = new ExternalOrganisationTypeViewModel() { SelectedValue = "Partnership" };
+            var externalOrganisationTypeViewModel = new OrganisationTypeViewModel() { SelectedValue = "Partnership" };
             var transaction = new OrganisationTransactionData();
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
@@ -270,6 +270,20 @@
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.AuthorisedRepresentative.Equals(authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>())))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CompleteTransaction_ShouldCompleteTheTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+
+            // Act
+            await organisationService.CompleteTransaction(accessToken);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(accessToken,
+                A<CompleteOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
         }
     }
 }
