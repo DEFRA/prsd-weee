@@ -336,14 +336,23 @@
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
             var selectedValue = string.Empty;
-            if (existingTransaction?.TonnageType != null)
+            var selectedSearch = searchTerm;
+            if (existingTransaction != null)
             {
-                selectedValue = existingTransaction.TonnageType.GetDisplayName();
-            }
+                if (existingTransaction.TonnageType.HasValue)
+                {
+                    selectedValue = existingTransaction.TonnageType.GetDisplayName();
+                }
 
+                if (string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    selectedSearch = existingTransaction.SearchTerm;
+                }
+            }
+            
             var viewModel = new TonnageTypeViewModel
             {
-                SearchedText = searchTerm,
+                SearchedText = selectedSearch,
                 SelectedValue = selectedValue
             };
 
@@ -361,12 +370,12 @@
 
             var tonnageType = tonnageTypeViewModel.SelectedValue.GetValueFromDisplayName<TonnageType>();
 
+            await transactionService.CaptureData(User.GetAccessToken(), tonnageTypeViewModel);
+
             if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
             {
                 return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
             }
-
-            await transactionService.CaptureData(User.GetAccessToken(), tonnageTypeViewModel);
 
             return RedirectToAction(nameof(PreviousRegistration), typeof(OrganisationRegistrationController).GetControllerName());
         }
