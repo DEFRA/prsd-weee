@@ -334,7 +334,6 @@
             var model = new RepresentingCompanyDetailsViewModel
             {
                 CompanyName = searchedText,
-                OrganisationType = organisationType,
                 Address = { Countries = countries }
             };
 
