@@ -380,10 +380,10 @@
             {
                 await transactionService.CompleteTransaction(User.GetAccessToken());
 
-                return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+                return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
             }
 
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
         }
 
         private async Task<IList<CountryData>> GetCountries()

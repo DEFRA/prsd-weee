@@ -897,7 +897,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "Type", "OrganisationRegistration")]
+        [InlineData(YesNoType.No, "Index", "Holding")]
         [InlineData(YesNoType.Yes, "Index", "Holding")]
         public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
@@ -977,7 +977,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "Type", "OrganisationRegistration")]
+        [InlineData(YesNoType.No, "Index", "Holding")]
         [InlineData(YesNoType.Yes, "Index", "Holding")]
         public async Task PartnershipDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
@@ -1118,7 +1118,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "Type", "OrganisationRegistration")]
+        [InlineData(YesNoType.No, "Index", "Holding")]
         [InlineData(YesNoType.Yes, "Index", "Holding")]
         public async Task SoleTraderDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
