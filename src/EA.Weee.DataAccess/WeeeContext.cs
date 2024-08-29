@@ -202,7 +202,7 @@
 
         public virtual DbSet<AdditionalCompanyDetails> AdditionalCompanyDetails { get; set; }
 
-        public virtual DbSet<DirectRegistrant> DirectRegistrant { get; set; }
+        public virtual DbSet<DirectRegistrant> DirectRegistrants { get; set; }
 
         public virtual DbSet<OrganisationTransaction> OrganisationTransactions { get; set; }
 

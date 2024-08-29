@@ -31,7 +31,7 @@
 
         public virtual Guid? AddressId { get; private set; }
 
-        public virtual Organisation Organisation { get; private set; }
+        public virtual Organisation Organisation { get; set; }
 
         public virtual SICCode SICCode { get; private set; }
 

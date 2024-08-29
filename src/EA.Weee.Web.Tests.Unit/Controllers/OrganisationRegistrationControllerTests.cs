@@ -21,7 +21,6 @@
     using Web.ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
     using Xunit;
-
     public class OrganisationRegistrationControllerTests : SimpleUnitTestBase
     {
         private readonly IWeeeClient weeeClient;
