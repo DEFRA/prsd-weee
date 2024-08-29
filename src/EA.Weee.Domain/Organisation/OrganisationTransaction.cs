@@ -34,9 +34,10 @@
 
         public virtual Organisation Organisation { get; set; }
 
-        public void CompleteRegistration()
+        public void CompleteRegistration(Organisation organisation)
         {
             ToComplete();
+            Organisation = organisation;
         }
 
         private void ToComplete()
