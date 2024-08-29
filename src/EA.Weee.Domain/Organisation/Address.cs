@@ -118,8 +118,7 @@
             get => telephone;
             private set
             {
-                Guard.ArgumentNotNullOrEmpty(() => value, value);
-                if (value.Length > 20)
+                if (value != null && value.Length > 20)
                 {
                     throw new InvalidOperationException(string.Format(("Telephone cannot be greater than 20 characters")));
                 }
