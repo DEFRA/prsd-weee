@@ -26,7 +26,6 @@
         [Display(Name = "Company registration number (CRN)")]
         public string CompaniesRegistrationNumber { get; set; }
 
-        [Required]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
