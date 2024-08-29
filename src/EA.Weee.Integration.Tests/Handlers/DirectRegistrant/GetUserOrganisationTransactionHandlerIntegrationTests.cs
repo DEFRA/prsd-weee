@@ -108,7 +108,7 @@
                     .WithTestData()
                     .WithExternalUserAccess();
 
-                Query.DeleteAllOrganisationTransactions();
+                AsyncHelper.RunSync(() => Query.DeleteAllOrganisationTransactionsAsync());
 
                 date = DateTime.UtcNow;
                 fixture = new Fixture();

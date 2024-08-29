@@ -1,0 +1,21 @@
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Core.Organisations.Base.OrganisationViewModel
+
+<h2 class="govuk-heading-s">Enter the country your organisation is based in.</h2>
+<div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Address.CountryId)" id="operator-country-dropdown-list">
+    @Html.Gds().LabelFor(m => m.Address.CountryId, new { id = "country-dropdown-list" })
+    @Html.Gds().ValidationMessageFor(m => m.Address.CountryId)
+    @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })
+</div>
+
+@Html.HiddenFor(m => m.OrganisationType)
+<h2 class="govuk-heading-s">Enter the details of the organisation applying to register.</h2>
+@Html.Gds().HintParagraph("If you don't have a Company Registration Number, leave this field blank")
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+    @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
+    @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
+    @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
+</div>
+
+
