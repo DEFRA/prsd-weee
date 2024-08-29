@@ -4,11 +4,11 @@
     using AutoFixture;
     using Core.Organisations;
     using Core.Shared;
-    using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
@@ -29,6 +29,7 @@
         private readonly ConfigurationService configurationService;
         private readonly IOrganisationTransactionService transactionService;
         private readonly OrganisationRegistrationController controller;
+        private readonly IWeeeCache weeeCache;
 
         public OrganisationRegistrationControllerTests()
         {
@@ -36,12 +37,14 @@
             transactionService = A.Fake<IOrganisationTransactionService>();
             weeeClient = A.Fake<IWeeeClient>();
             organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
-            
+            weeeCache = A.Fake<IWeeeCache>();
+
             controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -66,7 +69,8 @@
                 () => weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
@@ -100,7 +104,8 @@
                 () => weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
@@ -126,7 +131,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService, 
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -151,7 +158,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var activeUsers = new List<OrganisationUserData>()
             {
@@ -184,7 +193,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var activeUsers = new List<OrganisationUserData>();
 
@@ -239,7 +250,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
@@ -269,7 +282,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
@@ -295,7 +310,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
@@ -321,7 +338,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.Search();
@@ -350,7 +369,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.Search();
@@ -373,7 +394,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.Search();
@@ -396,7 +418,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -422,7 +445,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
@@ -447,7 +471,9 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchViewModel
             {
@@ -489,7 +515,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -529,7 +556,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -561,7 +589,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchResultsViewModel()
             {
@@ -590,7 +619,8 @@
                weeeClient,
                organisationSearcher,
                configurationService,
-               transactionService);
+               transactionService,
+               weeeCache);
 
             var result = await controller.Type() as ViewResult;
 
@@ -639,7 +669,8 @@
                weeeClient,
                organisationSearcher,
                configurationService,
-               transactionService);
+               transactionService,
+               weeeCache);
 
             var viewModel = new OrganisationTypeViewModel()
             {
@@ -686,7 +717,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             const string searchText = "company";
 
@@ -733,7 +765,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -767,7 +800,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()
@@ -800,7 +834,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             var result = controller.FiveTonnesOrMore();
@@ -924,6 +959,12 @@
             if (authorisedRep == YesNoType.No)
             {
                 A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
             }
         }
 
@@ -951,6 +992,7 @@
 
             model.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
         }
 
         [Fact]
@@ -1004,6 +1046,12 @@
             if (authorisedRep == YesNoType.No)
             {
                 A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
             }
         }
 
@@ -1030,6 +1078,7 @@
             resultModel.Should().BeEquivalentTo(model);
             model.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
         }
 
         [Fact]
@@ -1146,6 +1195,12 @@
             if (authorisedRep == YesNoType.No)
             {
                 A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
             }
         }
 
@@ -1172,6 +1227,7 @@
             resultModel.Should().BeEquivalentTo(model);
             model.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
         }
 
         private List<CountryData> SetupCountries()

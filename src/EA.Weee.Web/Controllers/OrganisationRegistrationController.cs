@@ -11,6 +11,7 @@
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Services;
@@ -30,14 +31,16 @@
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
         private readonly IOrganisationTransactionService transactionService;
+        private readonly IWeeeCache cache;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService, IOrganisationTransactionService transactionService)
+            ConfigurationService configurationService, IOrganisationTransactionService transactionService, IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
             this.transactionService = transactionService;
+            this.cache = cache;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
@@ -385,6 +388,7 @@
                 organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
                 await transactionService.CompleteTransaction(User.GetAccessToken());
+                await cache.InvalidateOrganisationSearch();
 
                 return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
             }
