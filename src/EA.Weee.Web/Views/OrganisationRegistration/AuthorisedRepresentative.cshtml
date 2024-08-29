@@ -3,7 +3,8 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.AuthorisedRepresentativeViewModel
 @{
-    ViewBag.Title = "Are you taking on the legal responsibilities of a non-UK organisation under the WEEE regulations?";
+    const string title = "Are you taking on the legal responsibilities of a non-UK organisation under the WEEE regulations?";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 
@@ -18,7 +19,7 @@
         @Html.AntiForgeryToken()
         <header class="hgroup">
             <h1 class="govuk-heading-l">
-                @ViewBag.Title
+                @title
             </h1>
         </header>
 
@@ -26,7 +27,7 @@
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "Tonnage Type",
+                "Select if you are taking on the legal responsibilities of a non-UK organisation under the WEEE regulations",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>
