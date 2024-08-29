@@ -3,13 +3,16 @@
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Core.Organisations.RegisteredCompanyDetailsViewModel
-
+@{
+    const string title = "Organisation details";
+    ViewBag.Title = title + " - GOV.UK";
+}
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
 
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Organisation details</h1>
+        <h1 class="govuk-heading-l">@title</h1>
     </header>
 
     @using (Html.BeginForm())
