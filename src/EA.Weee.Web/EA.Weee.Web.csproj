@@ -1025,9 +1025,7 @@
     <Content Include="Views\OrganisationRegistration\TonnageType.cshtml" />
     <Content Include="Views\Holding\Index.cshtml" />
     <Content Include="Views\OrganisationRegistration\PreviousRegistration.cshtml" />
-    <Content Include="Views\OrganisationRegistration\FiveTonnesOrMore.cshtml" />
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
-    <Content Include="Views\OrganisationRegistration\PreviousRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />

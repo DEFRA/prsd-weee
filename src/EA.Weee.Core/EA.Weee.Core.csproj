@@ -297,6 +297,7 @@
     <Compile Include="Admin\Obligation\SchemeObligationData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationUploadErrorData.cs" />
     <Compile Include="Admin\Obligation\SchemeObligationUploadErrorType.cs" />
+    <Compile Include="Configuration\DiagnosticSourceDisposer.cs" />
     <Compile Include="Configuration\Logging\LoggerConfig.cs" />
     <Compile Include="Constants\DateTimeConstants.cs" />
     <Compile Include="Constants\UkCountryList.cs" />
