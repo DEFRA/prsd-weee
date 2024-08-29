@@ -45,7 +45,7 @@
 
         public DirectRegistrant GetDirectRegistrantByOrganisationId(Guid organisationId)
         {
-            return dbContext.DirectRegistrant.First(c => c.OrganisationId.Equals(organisationId));
+            return dbContext.DirectRegistrants.First(c => c.OrganisationId.Equals(organisationId));
         }
 
         public Note GetEvidenceNoteById(Guid id)
