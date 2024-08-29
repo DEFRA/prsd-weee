@@ -1051,3 +1051,13 @@ input[type='radio']:checked:before {
 .prsd-long-address span {
     display: block;
 }
+
+.back-to-top {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.back-to-top i {
+    margin-right: 5px;
+}

@@ -12,6 +12,8 @@
         private const string CssWeeeIconClass = "weee-icon";
         private const string CssFontAwesomeClass = "fa";
         private const string CssFontAwesomeSizeClass = "fa-2x";
+        private const string CssBackToTopClass = "back-to-top";
+        private const string CssFontAwesomeUpIcon = "fa-arrow-up";
 
         public MvcHtmlString TextBoxWithIconFor<TValue>(Expression<Func<TModel, TValue>> expression,
             object htmlAttributes, string icon)
@@ -31,6 +33,28 @@
             var textBox = HtmlHelper.TextBoxFor(expression, routeValueDictionary);
             divTagBuilder.InnerHtml += textBox.ToHtmlString();
             return new MvcHtmlString(divTagBuilder.InnerHtml);
+        }
+
+        public MvcHtmlString BackToTopLink()
+        {
+            var linkTagBuilder = new TagBuilder("a")
+            {
+                Attributes =
+                {
+                    ["href"] = "#",
+                    ["onclick"] = "window.scrollTo(0, 0); return false;"
+                }
+            };
+            linkTagBuilder.AddCssClass(CssBackToTopClass);
+
+            var iconTagBuilder = new TagBuilder("i");
+            iconTagBuilder.AddCssClass(CssFontAwesomeUpIcon);
+            iconTagBuilder.AddCssClass(CssFontAwesomeClass);
+
+            linkTagBuilder.InnerHtml += iconTagBuilder.ToString(TagRenderMode.Normal);
+            linkTagBuilder.InnerHtml += " Back to Top";
+
+            return new MvcHtmlString(linkTagBuilder.ToString(TagRenderMode.Normal));
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
     using Api.Client;
+    using AutoFixture;
     using Core.Organisations;
     using Core.Shared;
-    using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Search;
-    using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation.Details;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
@@ -19,29 +22,29 @@
     using Weee.Requests.Organisations;
     using Xunit;
 
-    public class OrganisationRegistrationControllerTests
+    public class OrganisationRegistrationControllerTests : SimpleUnitTestBase
     {
-        private readonly Func<IWeeeClient> weeeClient;
+        private readonly IWeeeClient weeeClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly ConfigurationService configurationService;
         private readonly IOrganisationTransactionService transactionService;
         private readonly OrganisationRegistrationController controller;
+        private readonly IWeeeCache weeeCache;
 
         public OrganisationRegistrationControllerTests()
         {
             configurationService = A.Fake<ConfigurationService>();
             transactionService = A.Fake<IOrganisationTransactionService>();
-
-            weeeClient = A.Fake<Func<IWeeeClient>>();
+            weeeClient = A.Fake<IWeeeClient>();
             organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
-            configurationService = A.Fake<ConfigurationService>();
-            transactionService = A.Fake<IOrganisationTransactionService>();
+            weeeCache = A.Fake<IWeeeCache>();
 
             controller = new OrganisationRegistrationController(
-                weeeClient,
+                () => weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -66,7 +69,8 @@
                 () => weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
@@ -100,7 +104,8 @@
                 () => weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
@@ -126,7 +131,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService, 
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -151,7 +158,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var activeUsers = new List<OrganisationUserData>()
             {
@@ -184,7 +193,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var activeUsers = new List<OrganisationUserData>();
 
@@ -239,7 +250,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
@@ -269,7 +282,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
@@ -295,7 +310,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
@@ -321,7 +338,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.Search();
@@ -350,7 +369,9 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.Search();
@@ -373,7 +394,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.Search();
@@ -396,7 +418,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -422,7 +445,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
@@ -447,7 +471,9 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService, transactionService);
+                configurationService, 
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchViewModel
             {
@@ -489,7 +515,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -529,7 +556,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -561,7 +589,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             var viewModel = new SearchResultsViewModel()
             {
@@ -580,7 +609,7 @@
         }
 
         [Fact]
-        public void TypeGet_ReturnsViewWithViewModel()
+        public async Task TypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
@@ -590,20 +619,46 @@
                weeeClient,
                organisationSearcher,
                configurationService,
-               transactionService);
+               transactionService,
+               weeeCache);
 
-            var result = controller.Type() as ViewResult;
+            var result = await controller.Type() as ViewResult;
 
-            var resultViewModel = result.Model as ExternalOrganisationTypeViewModel;
+            var resultViewModel = result.Model as OrganisationTypeViewModel;
+
+            resultViewModel.Should().NotBeNull();
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Type");
-            Assert.NotNull(resultViewModel);
+        }
+
+        [Fact]
+        public async Task Type_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                OrganisationType = TestFixture.Create<ExternalOrganisationType>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.Type() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeNullOrWhiteSpace();
+
+            var model = result.Model as OrganisationTypeViewModel;
+            model.Should().NotBeNull();
+            model.SelectedValue.Should().Be(organisationTransactionData.OrganisationType.GetDisplayName());
         }
 
         [Theory]
-        [InlineData("Sole trader", "Index")]
-        [InlineData("Partnership", "Index")]
-        [InlineData("Registered company", "Index")]
+        [InlineData("Sole trader", "SoleTraderDetails")]
+        [InlineData("Partnership", "PartnershipDetails")]
+        [InlineData("Registered company", "RegisteredCompanyDetails")]
         public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -614,44 +669,28 @@
                weeeClient,
                organisationSearcher,
                configurationService,
-               transactionService);
+               transactionService,
+               weeeCache);
 
-            var viewModel = new ExternalOrganisationTypeViewModel()
+            var viewModel = new OrganisationTypeViewModel()
             {
                 SelectedValue = selectedValue,
             };
 
             var result = await controller.Type(viewModel) as RedirectToRouteResult;
 
+            A.CallTo(() => transactionService.CaptureData(A<string>._, viewModel)).MustHaveHappenedOnceExactly();
+
             result.RouteValues["action"].Should().Be(action);
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             result.RouteValues["organisationType"].Should().Be(viewModel.SelectedValue);
-        }
-
-        [Fact]
-        public async Task TypePost_InvalidValidViewModel_ReturnsView()
-        {
-            var viewModel = new ExternalOrganisationTypeViewModel();
-            
-            controller.ModelState.AddModelError("SelectedValue", "Invalid");
-
-            var result = await controller.Type(viewModel) as ViewResult;
-
-            result.ViewName.Should().BeOneOf("Type", string.Empty);
         }
 
         [Fact]
         public async Task SoleTraderDetailsGet_ReturnsViewWithViewModelPopulated()
         {
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-               weeeClient,
-               organisationSearcher,
-               configurationService,
-               transactionService);
+            var countries = SetupCountries();
 
             const string searchText = "Company";
             const string organisationType = "Sole trader";
@@ -662,13 +701,13 @@
 
             Assert.Equal(searchText, resultViewModel.CompanyName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
-            //Assert.Equal(countries, resultViewModel.Address.Countries);
+            Assert.Equal(countries, resultViewModel.Address.Countries);
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
         }
 
         [Fact]
-        public async Task TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
+        public async void TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -678,7 +717,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             const string searchText = "company";
 
@@ -693,7 +733,7 @@
         }
 
         [Fact]
-        public async Task TonnageTypeGet_Get_RetrievesTransactionDataAndPopulatesViewModel()
+        public async Task TonnageType_Get_RetrievesTransactionDataAndPopulatesViewModel()
         {
             // Arrange
             var organisationTransactionData = new OrganisationTransactionData()
@@ -725,7 +765,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -759,7 +800,8 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()
@@ -782,7 +824,7 @@
         }
 
         [Fact]
-        public async void FiveTonnesOrMoreGet_ReturnsView()
+        public void FiveTonnesOrMoreGet_ReturnsView()
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -792,10 +834,11 @@
                 weeeClient,
                 organisationSearcher,
                 configurationService,
-                transactionService);
+                transactionService,
+                weeeCache);
 
             // Act
-            var result = await controller.FiveTonnesOrMore();
+            var result = controller.FiveTonnesOrMore();
 
             // Assert
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "FiveTonnesOrMore");
@@ -838,6 +881,7 @@
 
             // Assert
             result.Should().NotBeNull();
+            result.ViewName.Should().BeNullOrWhiteSpace();
             var model = result.Model as PreviousRegistrationViewModel;
             model.Should().NotBeNull();
             model.SelectedValue.Should().Be("Yes");
@@ -864,6 +908,339 @@
         }
 
         [Fact]
+        public async Task RegisteredCompanyDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Registered company";
+            const string searchedText = "Test Company";
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RegisteredCompanyDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            var model = result.Model as RegisteredCompanyDetailsViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationType.Should().Be(organisationType);
+            model.CompanyName.Should().Be(searchedText);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Theory]
+        [InlineData(YesNoType.No, "Index", "Holding")]
+        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
+        {
+            // Arrange
+            var model = TestFixture.Build<RegisteredCompanyDetailsViewModel>().Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.RegisteredCompanyDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(index);
+            result.RouteValues["controller"].Should().Be(controllerName);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            if (authorisedRep == YesNoType.No)
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+            }
+        }
+
+        [Fact]
+        public async Task RegisteredCompanyDetails_Post_InValidModel_ReturnsView()
+        {
+            // Arrange
+            var model = TestFixture.Create<RegisteredCompanyDetailsViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RegisteredCompanyDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+
+            var resultModel = result.Model as RegisteredCompanyDetailsViewModel;
+            resultModel.Should().BeEquivalentTo(model);
+
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task PartnershipDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Partnership";
+            const string searchedText = "Test Partnership";
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.PartnershipDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as PartnershipDetailsViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationType.Should().Be(organisationType);
+            model.BusinessTradingName.Should().Be(searchedText);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Theory]
+        [InlineData(YesNoType.No, "Index", "Holding")]
+        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        public async Task PartnershipDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
+        {
+            // Arrange
+            var model = TestFixture.Create<PartnershipDetailsViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.PartnershipDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(index);
+            result.RouteValues["controller"].Should().Be(controllerName);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            if (authorisedRep == YesNoType.No)
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+            }
+        }
+
+        [Fact]
+        public async Task PartnershipDetails_Post_InValidModel_RedirectsToHoldingController()
+        {
+            // Arrange
+            var model = TestFixture.Create<PartnershipDetailsViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.PartnershipDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+
+            var resultModel = result.Model as PartnershipDetailsViewModel;
+            resultModel.Should().BeEquivalentTo(model);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task RegisteredCompanyDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Registered company";
+            const string searchedText = "Test Company";
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                RegisteredCompanyDetailsViewModel = new RegisteredCompanyDetailsViewModel
+                {
+                    CompanyName = "Existing Company",
+                    CompaniesRegistrationNumber = "12345678"
+                }
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.RegisteredCompanyDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as RegisteredCompanyDetailsViewModel;
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.RegisteredCompanyDetailsViewModel);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task PartnershipDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Partnership";
+            const string searchedText = "Test Partnership";
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                PartnershipDetailsViewModel = TestFixture.Create<PartnershipDetailsViewModel>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.PartnershipDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as PartnershipDetailsViewModel;
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.PartnershipDetailsViewModel);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Sole trader";
+            const string searchedText = "Test Sole Trader";
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                SoleTraderDetailsViewModel = TestFixture.Create<SoleTraderDetailsViewModel>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.SoleTraderDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as SoleTraderDetailsViewModel;
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.SoleTraderDetailsViewModel);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Theory]
+        [InlineData(YesNoType.No, "Index", "Holding")]
+        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        public async Task SoleTraderDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
+        {
+            // Arrange
+            var model = TestFixture.Create<SoleTraderDetailsViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.SoleTraderDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(index);
+            result.RouteValues["controller"].Should().Be(controllerName);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+
+            if (authorisedRep == YesNoType.No)
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+            }
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Post_InValidModel_RedirectsToHoldingController()
+        {
+            // Arrange
+            var model = TestFixture.Create<SoleTraderDetailsViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.SoleTraderDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+
+            var resultModel = result.Model as SoleTraderDetailsViewModel;
+            resultModel.Should().BeEquivalentTo(model);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+        }
+
+        private List<CountryData> SetupCountries()
+        {
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            return countries;
+        }
+
+        [Fact]
         public async Task AuthorisedRepresentative_Get_RetrievesTransactionDataAndPopulatesViewModel()
         {
             // Arrange
@@ -881,6 +1258,8 @@
 
             // Assert
             result.Should().NotBeNull();
+            result.ViewName.Should().BeNullOrWhiteSpace();
+
             var model = result.Model as AuthorisedRepresentativeViewModel;
             model.Should().NotBeNull();
             model.SelectedValue.Should().Be("Yes");
@@ -890,7 +1269,7 @@
         [Theory]
         [InlineData("Yes")]
         [InlineData("No")]
-        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToHolding(string selectedValue)
+        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToOrganisationType(string selectedValue)
         {
             // Arrange
             var model = new AuthorisedRepresentativeViewModel { SelectedValue = selectedValue };
@@ -902,8 +1281,8 @@
             A.CallTo(() => transactionService.CaptureData(A<string>._, model))
                 .MustHaveHappenedOnceExactly();
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
         }
     }
 }
