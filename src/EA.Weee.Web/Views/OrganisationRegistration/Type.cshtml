@@ -19,19 +19,18 @@
             <h1 class="govuk-heading-l">
                 @title
             </h1>
-
-            <p>
-                Indicate legal status of the applicant.
-            </p>
         </header>
 
         @Html.Gds().ValidationSummary()
 
+        <p class="govuk-hint">
+            Indicate legal status of the applicant.
+        </p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "Select organisation type",
+                "Select the legal status of the applicant",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>
