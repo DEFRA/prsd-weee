@@ -46,8 +46,7 @@
             "Address.Address2",
             "Address.TownOrCity",
             "Address.CountyOrRegion",
-            "Address.Postcode",
-            nameof(EEEBrandNames)
+            "Address.Postcode"
         };
     }
 }
