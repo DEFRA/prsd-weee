@@ -2,10 +2,11 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.OrganisationTypeViewModel
-@{
-    ViewBag.Title = "Create new organisation";
-}
 
+@{
+    const string title = "Organisation type";
+    ViewBag.Title = title + " - GOV.UK";
+}
 
 @section full_main_content
 {
@@ -16,7 +17,7 @@
 		@Html.AntiForgeryToken()
 		<header class="hgroup">
 			<h1 class="govuk-heading-l">
-				Organisation type
+				@title
 			</h1>
 
 			<p>
