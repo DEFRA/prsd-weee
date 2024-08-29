@@ -138,6 +138,8 @@
     <Compile Include="Organisation\ProducerBalancingScheme.cs" />
     <Compile Include="Producer\Classification\StatusType.cs" />
     <Compile Include="Producer\DirectProducerSubmission.cs" />
+    <Compile Include="Producer\DirectRegistrant.Contact.cs" />
+    <Compile Include="Producer\DirectRegistrant.Address.cs" />
     <Compile Include="Producer\DirectRegistrant.cs" />
     <Compile Include="Producer\ProducerEeeByQuarter.cs" />
     <Compile Include="Producer\RegisteredProducer.cs" />

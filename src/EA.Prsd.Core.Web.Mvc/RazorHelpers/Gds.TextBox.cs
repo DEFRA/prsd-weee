@@ -10,10 +10,16 @@
     public partial class Gds<TModel>
     {
         private static readonly string CssTextClass = "govuk-input";
+        private static readonly string CssTextAreaClass = "govuk-textarea";
 
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, bool useHalfWidth = true, string displayFormat = null)
         {
             return TextBoxFor(expression, new RouteValueDictionary(), useHalfWidth, displayFormat);
+        }
+
+        public MvcHtmlString TextAreaFor<TValue>(Expression<Func<TModel, TValue>> expression, bool useHalfWidth = true, string displayFormat = null)
+        {
+            return TextAreaFor(expression, new RouteValueDictionary(), useHalfWidth, displayFormat);
         }
 
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool useHalfWidth = true, string displayFormat = null)
@@ -26,7 +32,7 @@
             IDictionary<string, object> htmlAttributes, bool useHalfWidth, string displayFormat)
         {
             GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
-    /* SG */
+            /* SG */
             GdsExtensions.AddClass(htmlAttributes, CssTextClass);
 
             if (!string.IsNullOrWhiteSpace(displayFormat))
@@ -34,6 +40,21 @@
                 return htmlHelper.TextBoxFor(expression, displayFormat, htmlAttributes);
             }
             return htmlHelper.TextBoxFor(expression, htmlAttributes);
+        }
+
+        public MvcHtmlString TextAreaFor<TValue>(Expression<Func<TModel, TValue>> expression,
+         IDictionary<string, object> htmlAttributes, bool useHalfWidth, string displayFormat)
+        {
+            GdsExtensions.AddFormControlCssClass(htmlAttributes, useHalfWidth);
+            /* SG */
+            GdsExtensions.AddClass(htmlAttributes, CssTextAreaClass);
+
+            if (!string.IsNullOrWhiteSpace(displayFormat))
+            {
+                return htmlHelper.TextAreaFor(expression, htmlAttributes);
+            }
+
+            return htmlHelper.TextAreaFor(expression, htmlAttributes);
         }
     }
 }
