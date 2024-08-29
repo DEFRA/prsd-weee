@@ -210,6 +210,7 @@
     <Compile Include="AatfReturn\AatfSchemeDataTests.cs" />
     <Compile Include="AatfReturn\AatfObligatedDataTests.cs" />
     <Compile Include="AatfReturn\WeeObligatedTests.cs" />
+    <Compile Include="Constant\UkCountryListTests.cs" />
     <Compile Include="Helpers\CategoryValueTotalCalculatorTests.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatterTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
@@ -280,6 +281,7 @@
     <Analyzer Include="..\packages\xunit.analyzers.1.1.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
     <Analyzer Include="..\packages\xunit.analyzers.1.1.0\analyzers\dotnet\cs\xunit.analyzers.fixes.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
