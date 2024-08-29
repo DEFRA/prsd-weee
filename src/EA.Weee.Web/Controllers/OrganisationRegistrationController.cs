@@ -477,5 +477,27 @@
 
             return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
         }
+
+        [HttpGet]
+        public async Task<ViewResult> ContactDetails()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            var selectedValue = string.Empty;
+            var searchTerm = string.Empty;
+            if (existingTransaction?.AuthorisedRepresentative != null)
+            {
+                selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
+                searchTerm = existingTransaction.SearchTerm;
+            }
+
+            var viewModel = new AuthorisedRepresentativeViewModel
+            {
+                SelectedValue = selectedValue,
+                SearchText = searchTerm
+            };
+
+            return View(viewModel);
+        }
     }
 }

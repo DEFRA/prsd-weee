@@ -16,6 +16,8 @@
 
         public YesNoType? AuthorisedRepresentative { get; set; }
 
+        public ContactDetailsViewModel ContactDetails { get; set; }
+
         // each screen view model
         public OrganisationDetails OrganisationDetails { get; set; }
     }

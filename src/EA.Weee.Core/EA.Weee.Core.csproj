@@ -304,6 +304,7 @@
     <Compile Include="Helpers\JsonSerializer.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Organisations\ContactDetailsViewModel.cs" />
     <Compile Include="Organisations\YesNoType.cs" />
     <Compile Include="Organisations\TonnageType.cs" />
     <Compile Include="Organisations\ExternalOrganisationType.cs" />
