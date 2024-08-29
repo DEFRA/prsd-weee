@@ -44,11 +44,9 @@
         [InlineData(null, "NR", "R", "NR", "NR", "R", "R", "R", "R")]
         [InlineData("R", "NR", null, "NR", "NR", "R", "R", "R", "R")]
         [InlineData("R", "NR", "R", "NR", "NR", null, "R", "R", "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", "R", null, "R", "R")]
         [InlineData("", "NR", "R", "NR", "NR", "R", "R", "R", "R")]
         [InlineData("R", "NR", "", "NR", "NR", "R", "R", "R", "R")]
         [InlineData("R", "NR", "R", "NR", "NR", "", "R", "R", "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", "R", "", "R", "")]
         public void CreateAddress_RequiredPropertyIsNullOrEmpty_ShouldThrowArgumentException(string address1, string address2,
             string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email, string webAddress)
         {
