@@ -784,18 +784,9 @@
             result.RouteValues["action"].Should().Be(action);
             result.RouteValues["controller"].Should().Be(correctController);
 
-            var tonnageType = selectedValue.GetValueFromDisplayName<TonnageType>();
-
-            if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
-            {
-                A.CallTo(() => transactionService.CaptureData(A<string>._, A<object>._)).MustNotHaveHappened();
-            }
-            else
-            {
-                A.CallTo(() =>
+            A.CallTo(() =>
                         transactionService.CaptureData(A<string>._, A<TonnageTypeViewModel>.That.IsSameAs(viewModel)))
                     .MustHaveHappenedOnceExactly();
-            }
         }
 
         [Fact]
