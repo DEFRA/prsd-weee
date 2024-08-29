@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Shared;
     using EA.Weee.Core.Validation;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     [Serializable]
-    public class ExternalAddressData : IValidatableObject
+    public class ExternalAddressData
     {
         public Guid Id { get; set; }
 
@@ -37,8 +37,9 @@
         [Display(Name = "County or region")]
         public string CountyOrRegion { get; set; }
 
-        //made optional due to non-UK adddress for organisation contact details
+        [Required]
         [StringLength(CommonMaxFieldLengths.Postcode)]
+        [Display(Name = "Postcode")]
         public string Postcode { get; set; }
 
         [Required]
@@ -49,19 +50,5 @@
         public string CountryName { get; set; }
 
         public IEnumerable<CountryData> Countries { get; set; }
-
-        [Required]
-        [StringLength(CommonMaxFieldLengths.Telephone)]
-        [Display(Name = "Phone")]
-        [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.")]
-        public string Telephone { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (CountryId == Guid.Empty)
-            {
-                yield return new ValidationResult("Please select a country");
-            }
-        }
     }
 }

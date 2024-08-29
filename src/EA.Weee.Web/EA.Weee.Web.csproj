@@ -1861,8 +1861,6 @@
     <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
-    <Content Include="Views\Shared\_OrganisationAddressPartial.cshtml" />
-    <Content Include="Views\Shared\_OrganisationDetailsHeader.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

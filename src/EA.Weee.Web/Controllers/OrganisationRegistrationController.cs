@@ -8,7 +8,9 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Extensions;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Services;
@@ -294,6 +296,8 @@
 
                 model.Address.Countries = countries;
 
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
                 return View(model);
             }
 
@@ -364,6 +368,8 @@
 
                 model.Address.Countries = countries;
 
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
                 return View(model);
             }
 
@@ -429,6 +435,8 @@
                 var countries = await GetCountries();
 
                 model.Address.Countries = countries;
+
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
 
                 return View(model);
             }

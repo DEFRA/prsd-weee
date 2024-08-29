@@ -1,32 +1,6 @@
 ﻿@using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.Organisations.Base.OrganisationViewModel
 
-<h2 class="govuk-heading-s">Enter the country your organisation is based in.</h2>
-<div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Address.CountryId)" id="operator-country-dropdown-list">
-    @Html.Gds().LabelFor(m => m.Address.CountryId, new { id = "country-dropdown-list" })
-    @Html.Gds().ValidationMessageFor(m => m.Address.CountryId)
-    @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })
-</div>
-
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
-    @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
-    @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-    @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
-</div>
-
-<h2 class="govuk-heading-s">Enter the details of the organisation applying to register.</h2>
-<p class="govuk-hint">If you don't have a Company Registration Number, leave this field blank</p>
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
-    @Html.Gds().LabelFor(m => m.CompanyName)
-    @Html.Gds().ValidationMessageFor(m => m.CompanyName)
-    @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
-</div>
-
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
-    @Html.Gds().LabelFor(m => m.BusinessTradingName)
-    @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
-</div>
-
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.WebsiteAddress)">
     @Html.Gds().LabelFor(m => m.Address.WebsiteAddress)
     @Html.Gds().ValidationMessageFor(m => m.Address.WebsiteAddress)
@@ -61,12 +35,6 @@
     @Html.Gds().LabelFor(m => m.Address.Postcode)
     @Html.Gds().ValidationMessageFor(m => m.Address.Postcode)
     @Html.Gds().TextBoxFor(m => m.Address.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
-</div>
-
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Telephone)">
-    @Html.Gds().LabelFor(m => m.Address.Telephone)
-    @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
-    @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
 </div>
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EEEBrandNames)">

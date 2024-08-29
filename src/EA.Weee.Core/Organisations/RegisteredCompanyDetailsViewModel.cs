@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Core.Validation;
 
     public class RegisteredCompanyDetailsViewModel : OrganisationViewModel
     {

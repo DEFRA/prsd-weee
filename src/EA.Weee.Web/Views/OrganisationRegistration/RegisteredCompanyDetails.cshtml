@@ -19,8 +19,6 @@
 
         @Html.Partial("_OrganisationHeadingAndCountryPartial", Model)
 
-        @Html.Partial("_OrganisationDetailsHeader", Model)
-
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
             @Html.Gds().LabelFor(m => m.CompanyName)
             @Html.Gds().ValidationMessageFor(m => m.CompanyName)
@@ -32,7 +30,7 @@
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
-        @Html.Partial("_OrganisationAddressPartial", Model)
+        @Html.Partial("_OrganisationDetailsPartial", Model)
 
         <div class="govuk-form-group">
             @(this.WeeeGds().Submit("Continue"))
