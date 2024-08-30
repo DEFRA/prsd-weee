@@ -41,25 +41,21 @@
         }
 
         [Theory]
-        [InlineData(null, "NR", "R", "NR", "NR", "R", "R", "R")]
-        [InlineData("R", "NR", null, "NR", "NR", "R", "R", "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", null, "R", "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", "R", null, "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", "R", "R", null)]
-        [InlineData("", "NR", "R", "NR", "NR", "R", "R", "R")]
-        [InlineData("R", "NR", "", "NR", "NR", "R", "R", "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", "", "R", "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", "R", "", "R")]
-        [InlineData("R", "NR", "R", "NR", "NR", "R", "R", "")]
+        [InlineData(null, "NR", "R", "NR", "NR", "R", "R", "R", "R")]
+        [InlineData("R", "NR", null, "NR", "NR", "R", "R", "R", "R")]
+        [InlineData("R", "NR", "R", "NR", "NR", null, "R", "R", "R")]
+        [InlineData("", "NR", "R", "NR", "NR", "R", "R", "R", "R")]
+        [InlineData("R", "NR", "", "NR", "NR", "R", "R", "R", "R")]
+        [InlineData("R", "NR", "R", "NR", "NR", "", "R", "R", "R")]
         public void CreateAddress_RequiredPropertyIsNullOrEmpty_ShouldThrowArgumentException(string address1, string address2,
-            string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
+            string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email, string webAddress)
         {
             var countrydata = GetTestCountry(new Guid(), country);
 
             Assert.ThrowsAny<ArgumentException>(
                 () =>
                     new Address(address1, address2, townOrCity, countyOrRegion, postcode, countrydata, telephone,
-                        email));
+                        email, webAddress));
         }
 
         [Fact]

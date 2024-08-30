@@ -8,7 +8,10 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Extensions;
+    using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Services;
@@ -28,14 +31,16 @@
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
         private readonly IOrganisationTransactionService transactionService;
+        private readonly IWeeeCache cache;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService, IOrganisationTransactionService transactionService)
+            ConfigurationService configurationService, IOrganisationTransactionService transactionService, IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
             this.transactionService = transactionService;
+            this.cache = cache;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
@@ -261,7 +266,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Type(OrganisationTypeViewModel model)
+        public async Task<ActionResult> Type(OrganisationTypeViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -278,50 +283,6 @@
                         return RedirectToAction(nameof(RegisteredCompanyDetails), "OrganisationRegistration", routeValues);
                 }
             }
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                var countries = await GetCountries();
-
-                model.Address.Countries = countries;
-
-                return View(model);
-            }
-
-            await transactionService.CaptureData(User.GetAccessToken(), model);
-
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
-        {
-            RegisteredCompanyDetailsViewModel model = null;
-
-            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
-
-            if (existingTransaction?.RegisteredCompanyDetailsViewModel != null)
-            {
-                model = existingTransaction.RegisteredCompanyDetailsViewModel;
-            }
-            else
-            {
-                model = new RegisteredCompanyDetailsViewModel
-                {
-                    OrganisationType = organisationType,
-                    CompanyName = searchedText
-                };
-            }
-
-            var countries = await GetCountries();
-            model.Address.Countries = countries;
 
             return View(model);
         }
@@ -370,6 +331,52 @@
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return await CheckAuthorisedRepresentitiveAndRedirect();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
+        {
+            RegisteredCompanyDetailsViewModel model = null;
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.RegisteredCompanyDetailsViewModel != null)
+            {
+                model = existingTransaction.RegisteredCompanyDetailsViewModel;
+            }
+            else
+            {
+                model = new RegisteredCompanyDetailsViewModel
+                {
+                    OrganisationType = organisationType,
+                    CompanyName = searchedText
+                };
+            }
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
+
+            return View(model);
+        }
+
         [HttpGet]
         public async Task<ActionResult> PartnershipDetails(string organisationType, string searchedText = null)
         {
@@ -406,12 +413,29 @@
 
                 model.Address.Countries = countries;
 
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
                 return View(model);
             }
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return await CheckAuthorisedRepresentitiveAndRedirect();
+        }
+
+        private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
+        {
+            var organisationTransactionData = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+            if (organisationTransactionData != null &&
+                organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
+            {
+                await transactionService.CompleteTransaction(User.GetAccessToken());
+                await cache.InvalidateOrganisationSearch();
+
+                return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
+            }
+
+            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -458,12 +482,14 @@
 
                 model.Address.Countries = countries;
 
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
                 return View(model);
             }
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return await CheckAuthorisedRepresentitiveAndRedirect();
         }
 
         [HttpGet]
@@ -611,7 +637,7 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
 
-            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
         }
     }
 }

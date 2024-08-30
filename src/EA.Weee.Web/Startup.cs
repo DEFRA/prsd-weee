@@ -7,6 +7,7 @@ namespace EA.Weee.Web
 {
     using Autofac;
     using Autofac.Integration.Mvc;
+    using EA.Weee.Core.Configuration;
     using EA.Weee.Core.Configuration.Logging;
     using FluentValidation.Mvc;
     using IdentityModel;
@@ -70,14 +71,7 @@ namespace EA.Weee.Web
 
             System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-            var diagnosticsLib = Assembly.Load("System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51");
-            var diagnosticSourceEventSourceType = diagnosticsLib.GetType("System.Diagnostics.DiagnosticSourceEventSource");
-            object diagnosticSourceEventSource = diagnosticSourceEventSourceType.InvokeMember("Log", BindingFlags.Static | BindingFlags.GetField | BindingFlags.Public, null, null, null);
-
-            if (diagnosticSourceEventSource is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
+            DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
     }
 }

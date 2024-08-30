@@ -2,7 +2,8 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.TonnageTypeViewModel
 @{
-    ViewBag.Title = "How many tonnes of Electrical or Electronic Equipment (EEE) do you produce a year?";
+    const string title = "How many tonnes of Electrical or Electronic Equipment (EEE) do you produce a year?";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 
@@ -18,7 +19,7 @@
         @Html.AntiForgeryToken()
         <header class="hgroup">
             <h1 class="govuk-heading-l">
-                How many tonnes of Electrical or Electronic Equipment (EEE) do you produce a year?
+                @title
             </h1>
         </header>
 
@@ -26,7 +27,7 @@
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "Tonnage Type",
+                "Select tonnage type",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>

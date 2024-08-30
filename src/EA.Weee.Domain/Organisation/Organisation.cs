@@ -83,6 +83,11 @@
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
         }
 
+        public static Organisation CreateDirectRegistrantCompany(OrganisationType organisationType, string companyName, string tradingName, string companyRegistrationNumber = null)
+        {
+            return new Organisation(organisationType, companyName, companyRegistrationNumber, tradingName);
+        }
+
         public void UpdateOrganisationTypeDetails(string companyName, string companyRegNumber,
             string tradingName, OrganisationType organisationType)
         {
@@ -95,6 +100,10 @@
             else if (organisationType == OrganisationType.Partnership)
             {
                 Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+            }
+            else if (organisationType == OrganisationType.DirectRegistrantPartnership)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
             }
             else if (organisationType == OrganisationType.RegisteredCompany)
             {
@@ -164,7 +173,9 @@
         {
             get
             {
-                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value || OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value)
+                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value 
+                    || OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value 
+                    || OrganisationType.Value == OrganisationType.DirectRegistrantPartnership.Value)
                 {
                     return Name;
                 }

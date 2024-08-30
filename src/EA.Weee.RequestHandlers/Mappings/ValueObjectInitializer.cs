@@ -36,7 +36,7 @@
                 address.CountyOrRegion,
                 address.Postcode,
                 country,
-                address.Telephone,
+                null,
                 null,
                 address.WebsiteAddress);
         }

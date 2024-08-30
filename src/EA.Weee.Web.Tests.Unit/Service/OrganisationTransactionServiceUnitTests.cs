@@ -54,7 +54,7 @@
         {
             // Arrange
             const string accessToken = "test-token";
-            var externalOrganisationTypeViewModel = new ExternalOrganisationTypeViewModel() { SelectedValue = "Partnership" };
+            var externalOrganisationTypeViewModel = new OrganisationTypeViewModel() { SelectedValue = "Partnership" };
             var transaction = new OrganisationTransactionData();
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
@@ -201,23 +201,6 @@
         }
 
         [Fact]
-        public async Task CaptureData_ShouldDisposeWeeeClient()
-        {
-            // Arrange
-            const string accessToken = "test-token";
-            var organisationDetails = new OrganisationDetails();
-
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
-                .Returns(Task.FromResult(new OrganisationTransactionData()));
-
-            // Act
-            await organisationService.CaptureData(accessToken, organisationDetails);
-
-            // Assert
-            A.CallTo(() => weeeClient.Dispose()).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task GetOrganisationTransactionData_WhenTransactionExists_ShouldReturnTransaction()
         {
             // Arrange
@@ -270,6 +253,20 @@
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.AuthorisedRepresentative.Equals(authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>())))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CompleteTransaction_ShouldCompleteTheTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+
+            // Act
+            await organisationService.CompleteTransaction(accessToken);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(accessToken,
+                A<CompleteOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
         }
     }
 }

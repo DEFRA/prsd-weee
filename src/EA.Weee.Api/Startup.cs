@@ -7,6 +7,7 @@ namespace EA.Weee.Api
 {
     using Autofac;
     using Autofac.Integration.WebApi;
+    using EA.Weee.Core.Configuration;
     using Elmah.Contrib.WebApi;
     using IdentityServer3.AccessTokenValidation;
     using IdentityServer3.Core.Configuration;
@@ -77,14 +78,7 @@ namespace EA.Weee.Api
             app.UseClaimsTransformation(ClaimsTransformationOptionsFactory.Create());
             app.UseWebApi(config);
 
-            var diagnosticsLib = Assembly.Load("System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51");
-            var diagnosticSourceEventSourceType = diagnosticsLib.GetType("System.Diagnostics.DiagnosticSourceEventSource");
-            object diagnosticSourceEventSource = diagnosticSourceEventSourceType.InvokeMember("Log", BindingFlags.Static | BindingFlags.GetField | BindingFlags.Public, null, null, null);
-
-            if (diagnosticSourceEventSource is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
+            DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
 
         private static IdentityServerOptions GetIdentityServerOptions(IAppBuilder app, AppConfiguration config)
