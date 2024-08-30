@@ -18,6 +18,8 @@
 
         public RegisteredCompanyDetailsViewModel RegisteredCompanyDetailsViewModel { get; set; }
 
+        public RepresentingCompanyDetailsViewModel RepresentingCompanyDetailsViewModel { get; set; }
+
         public PartnershipDetailsViewModel PartnershipDetailsViewModel { get; set; }
 
         public SoleTraderDetailsViewModel SoleTraderDetailsViewModel { get; set; }
