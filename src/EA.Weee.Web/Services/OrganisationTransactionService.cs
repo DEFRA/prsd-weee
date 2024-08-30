@@ -38,18 +38,28 @@
                         break;
                     case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
                         transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
+                        transaction.RepresentingCompanyDetailsViewModel = null;
                         transaction.PartnershipDetailsViewModel = null;
                         transaction.SoleTraderDetailsViewModel = null;
                         break;
+                    case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
+                        transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
+                        transaction.RegisteredCompanyDetailsViewModel = null;
+                        transaction.PartnershipDetailsViewModel = null;
+                        transaction.SoleTraderDetailsViewModel = null;
+                        break;
+
                     case SoleTraderDetailsViewModel soleTraderDetailsViewModel:
                         transaction.SoleTraderDetailsViewModel = soleTraderDetailsViewModel;
                         transaction.PartnershipDetailsViewModel = null;
                         transaction.RegisteredCompanyDetailsViewModel = null;
+                        transaction.RepresentingCompanyDetailsViewModel = null;
                         break;
                     case PartnershipDetailsViewModel partnershipDetailsViewModel:
                         transaction.PartnershipDetailsViewModel = partnershipDetailsViewModel;
-                        transaction.RegisteredCompanyDetailsViewModel = null;
                         transaction.SoleTraderDetailsViewModel = null;
+                        transaction.RegisteredCompanyDetailsViewModel = null;
+                        transaction.RepresentingCompanyDetailsViewModel = null;
                         break;
                     case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
                         transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
