@@ -37,6 +37,9 @@
                     case PreviousRegistrationViewModel previousRegistrationModel:
                         transaction.PreviousRegistration = previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
+                    case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
+                        transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
+                        break;
                     case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
                         transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
                         transaction.PartnershipDetailsViewModel = null;

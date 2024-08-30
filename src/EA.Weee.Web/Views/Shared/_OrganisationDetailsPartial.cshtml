@@ -37,12 +37,10 @@
     @Html.Gds().TextBoxFor(m => m.Address.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
 </div>
 
+
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EEEBrandNames)">
-    <p>
-        <span class="govuk-heading-s">Enter EEE brand names that you place on the UK market.</span>
-        If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.
-    </p>
-    @Html.Gds().LabelFor(m => m.EEEBrandNames)
+    <h2 class="govuk-heading-s">Enter EEE brand names that you place on the UK market</h2>
+    @Html.Gds().LabelFor(m => m.EEEBrandNames, showOptionalLabel:false)
     @Html.Gds().ValidationMessageFor(m => m.EEEBrandNames)
     @Html.Gds().TextAreaFor(m => m.EEEBrandNames)
 </div>

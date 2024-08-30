@@ -1,0 +1,53 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Organisations
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
+@{
+    const string title = "Producer details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+
+    @this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.RepresentingCompanyRedirect()))
+    
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p>Provide the address of the non-UK established Small EEE producer you are registering on behalf of.</p>
+    <p>If the producer has previously registered in the UK under the WEEE Regulations through being a member of a Producer Compliance Scheme, include their Producer Registration Number.</p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div>
+            <h2 class="govuk-heading-s">Contact address</h2>
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
+            @Html.EditorFor(m => m.Address)
+        </div>
+
+        <div class="govuk-form-group">
+            @(this.WeeeGds().Submit("Continue"))
+        </div>
+
+        @(this.WeeeGds().BackToTopLink())
+    }
+}

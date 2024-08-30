@@ -2,7 +2,7 @@
 {
     using EA.Weee.Core.Shared;
     using System;
-
+    using EA.Weee.Domain.Producer;
     public class OrganisationSearchResult : SearchResult
     {
         public Guid OrganisationId { get; set; }
@@ -16,6 +16,8 @@
         public int AeCount { get; set; }
 
         public int PcsCount { get; set; }
+
+        public int DirectRegistrantCount {get; set; }
 
         public bool IsBalancingScheme { get; set; }
 

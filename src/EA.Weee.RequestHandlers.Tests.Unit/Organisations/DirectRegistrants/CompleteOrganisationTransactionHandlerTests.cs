@@ -216,7 +216,7 @@
                         .MustHaveHappenedOnceExactly();
                 }
 
-                A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d => 
+                A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
                     d.Organisation.OrganisationType == domainOrganisationType &&
                     d.Organisation.TradingName == TradingName &&
                     d.Organisation.Name == CompanyName &&

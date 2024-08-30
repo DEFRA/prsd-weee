@@ -3,7 +3,8 @@
 @using EA.Weee.Web.Controllers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.OrganisationTypeViewModel
 @{
-    ViewBag.Title = "Create new organisation";
+    const string title = "Organisation type";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 
@@ -16,21 +17,20 @@
         @Html.AntiForgeryToken()
         <header class="hgroup">
             <h1 class="govuk-heading-l">
-                Organisation type
+                @title
             </h1>
-
-            <p>
-                Indicate legal status of the applicant.
-            </p>
         </header>
 
         @Html.Gds().ValidationSummary()
 
+        <p class="govuk-hint">
+            Indicate legal status of the applicant.
+        </p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "Organisation type",
+                "Select the legal status of the applicant",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>

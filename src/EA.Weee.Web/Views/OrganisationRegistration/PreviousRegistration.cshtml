@@ -9,8 +9,8 @@
 
 @section full_main_content{
 
-    @(this.WeeeGds().BackLink(@Url.Action("TonnageType", new {searchTerm = Model.SearchText})))
-
+    @(this.WeeeGds().BackLink(@Url.Action("TonnageType")))
+    
     @using (Html.BeginForm())
     {
         @Html.Gds().ValidationSummary()
@@ -26,7 +26,7 @@
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "Tonnage Type",
+                "Select if you have previously registered as a small producer",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>

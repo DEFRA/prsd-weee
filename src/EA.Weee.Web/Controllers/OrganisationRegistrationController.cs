@@ -291,6 +291,42 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RepresentingCompanyDetails(RepresentingCompanyDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            await transactionService.CompleteTransaction(User.GetAccessToken());
+            await cache.InvalidateOrganisationSearch();
+
+            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RepresentingCompanyDetails()
+        {
+            RepresentingCompanyDetailsViewModel model = null;
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            model = existingTransaction?.RepresentingCompanyDetailsViewModel ?? new RepresentingCompanyDetailsViewModel();
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
         {
             if (!ModelState.IsValid)
@@ -310,7 +346,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> RegisteredCompanyDetails()
         {
             RegisteredCompanyDetailsViewModel model = null;
 
@@ -324,8 +360,7 @@
             {
                 model = new RegisteredCompanyDetailsViewModel
                 {
-                    OrganisationType = organisationType,
-                    CompanyName = searchedText
+                    CompanyName = existingTransaction?.SearchTerm
                 };
             }
 
@@ -336,7 +371,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> PartnershipDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> PartnershipDetails()
         {
             PartnershipDetailsViewModel model = null;
 
@@ -350,8 +385,7 @@
             {
                 model = new PartnershipDetailsViewModel
                 {
-                    BusinessTradingName = searchedText,
-                    OrganisationType = organisationType
+                    CompanyName = existingTransaction?.SearchTerm
                 };
             }
 
@@ -359,6 +393,29 @@
             model.Address.Countries = countries;
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RepresentingCompanyRedirect()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.OrganisationType == null)
+            {
+                return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            }
+
+            switch (existingTransaction.OrganisationType)
+            {
+                case ExternalOrganisationType.RegisteredCompany:
+                    return RedirectToAction(nameof(RegisteredCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
+                case ExternalOrganisationType.Partnership:
+                    return RedirectToAction(nameof(PartnershipDetails), typeof(OrganisationRegistrationController).GetControllerName());
+                case ExternalOrganisationType.SoleTrader:
+                    return RedirectToAction(nameof(SoleTraderDetails), typeof(OrganisationRegistrationController).GetControllerName());
+                default:
+                    return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            }
         }
 
         [HttpPost]
@@ -393,7 +450,7 @@
                 return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
             }
 
-            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(RepresentingCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -405,7 +462,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SoleTraderDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> SoleTraderDetails()
         {
             SoleTraderDetailsViewModel model = null;
 
@@ -419,8 +476,7 @@
             {
                 model = new SoleTraderDetailsViewModel
                 {
-                    CompanyName = searchedText,
-                    OrganisationType = organisationType
+                    CompanyName = existingTransaction?.SearchTerm
                 };
             }
 
@@ -530,13 +586,11 @@
             if (existingTransaction?.PreviousRegistration != null)
             {
                 selectedValue = existingTransaction.PreviousRegistration.GetDisplayName();
-                searchTerm = existingTransaction.SearchTerm;
             }
 
             var viewModel = new PreviousRegistrationViewModel
             {
-                SelectedValue = selectedValue,
-                SearchText = searchTerm
+                SelectedValue = selectedValue
             };
 
             return View(viewModel);
@@ -568,17 +622,14 @@
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
             var selectedValue = string.Empty;
-            var searchTerm = string.Empty;
             if (existingTransaction?.AuthorisedRepresentative != null)
             {
                 selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
-                searchTerm = existingTransaction.SearchTerm;
             }
 
             var viewModel = new AuthorisedRepresentativeViewModel
             {
                 SelectedValue = selectedValue,
-                SearchText = searchTerm
             };
 
             return View(viewModel);
