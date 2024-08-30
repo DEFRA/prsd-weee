@@ -20,10 +20,13 @@
                 yield return new ValidationResult("Please select a country",
                     new[] { countryIdName });
             }
-            else if (UkCountryList.ValidCountryIds.Contains(countryId) && !UkPostcodeRegex.IsMatch(postCode))
+            else if (UkCountryList.ValidCountryIds.Contains(countryId) && !string.IsNullOrWhiteSpace(postCode))
             {
-                yield return new ValidationResult("Enter a full UK postcode",
-                    new[] { postcodeName });
+                if (!UkPostcodeRegex.IsMatch(postCode))
+                {
+                    yield return new ValidationResult("Enter a full UK postcode",
+                        new[] { postcodeName });
+                }
             }
         }
     }
