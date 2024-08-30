@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Validation;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     public class ContactDetailsViewModel : IValidatableObject
     {
@@ -21,7 +22,7 @@
         [Display(Name = "Position")]
         public virtual string Position { get; set; }
 
-        public Shared.AddressPostcodeRequiredData AddressData { get; set; } = new Shared.AddressPostcodeRequiredData();
+        public Shared.AddressPostcodeRequiredData AddressData { get; set; } = new Shared.AddressPostcodeRequiredData() { CountryId = UkCountryList.UkCountryId };
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
