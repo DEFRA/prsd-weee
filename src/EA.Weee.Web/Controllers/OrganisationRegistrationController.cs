@@ -308,24 +308,13 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RepresentingCompanyDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> RepresentingCompanyDetails()
         {
             RepresentingCompanyDetailsViewModel model = null;
 
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (existingTransaction?.RepresentingCompanyDetailsViewModel != null)
-            {
-                model = existingTransaction.RepresentingCompanyDetailsViewModel;
-            }
-            else
-            {
-                model = new RepresentingCompanyDetailsViewModel
-                {
-                    OrganisationType = organisationType,
-                    CompanyName = searchedText
-                };
-            }
+            model = existingTransaction?.RepresentingCompanyDetailsViewModel ?? new RepresentingCompanyDetailsViewModel();
 
             var countries = await GetCountries();
             model.Address.Countries = countries;
@@ -354,7 +343,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> RegisteredCompanyDetails()
         {
             RegisteredCompanyDetailsViewModel model = null;
 
@@ -368,8 +357,7 @@
             {
                 model = new RegisteredCompanyDetailsViewModel
                 {
-                    OrganisationType = organisationType,
-                    CompanyName = searchedText
+                    CompanyName = existingTransaction?.SearchTerm
                 };
             }
 
@@ -380,7 +368,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> PartnershipDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> PartnershipDetails()
         {
             PartnershipDetailsViewModel model = null;
 
@@ -394,8 +382,7 @@
             {
                 model = new PartnershipDetailsViewModel
                 {
-                    BusinessTradingName = searchedText,
-                    OrganisationType = organisationType
+                    CompanyName = existingTransaction?.SearchTerm
                 };
             }
 
@@ -403,6 +390,29 @@
             model.Address.Countries = countries;
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RepresentingCompanyRedirect()
+        {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.OrganisationType == null)
+            {
+                return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            }
+
+            switch (existingTransaction.OrganisationType)
+            {
+                case ExternalOrganisationType.RegisteredCompany:
+                    return RedirectToAction(nameof(RegisteredCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
+                case ExternalOrganisationType.Partnership:
+                    return RedirectToAction(nameof(PartnershipDetails), typeof(OrganisationRegistrationController).GetControllerName());
+                case ExternalOrganisationType.SoleTrader:
+                    return RedirectToAction(nameof(SoleTraderDetails), typeof(OrganisationRegistrationController).GetControllerName());
+                default:
+                    return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            }
         }
 
         [HttpPost]
@@ -449,7 +459,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SoleTraderDetails(string organisationType, string searchedText = null)
+        public async Task<ActionResult> SoleTraderDetails()
         {
             SoleTraderDetailsViewModel model = null;
 
@@ -463,8 +473,7 @@
             {
                 model = new SoleTraderDetailsViewModel
                 {
-                    CompanyName = searchedText,
-                    OrganisationType = organisationType
+                    CompanyName = existingTransaction?.SearchTerm
                 };
             }
 
@@ -605,7 +614,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> AuthorisedRepresentative()
+        public async Task<ActionResult> AuthorisedRepresentative()
         {
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
