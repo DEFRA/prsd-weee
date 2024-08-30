@@ -1007,6 +1007,50 @@
         }
 
         [Fact]
+        public async Task RegisteredCompanyDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RegisteredCompanyDetails() as ViewResult;
+
+            // Assert
+            var resultViewModel = result.Model as RegisteredCompanyDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task RegisteredCompanyDetails_Get_WithExistingOrganisationTransaction_ReturnsViewWithViewModelPopulated()
+        {
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                OrganisationType = TestFixture.Create<ExternalOrganisationType>(),
+                SearchTerm = TestFixture.Create<string>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            var result = await controller.RegisteredCompanyDetails() as ViewResult;
+
+            var resultViewModel = result.Model as RegisteredCompanyDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().Be(existingTransaction.SearchTerm);
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+            result.ViewName.Should().BeNullOrWhiteSpace();
+        }
+
+        [Fact]
         public async Task RegisteredCompanyDetails_Post_InValidModel_ReturnsView()
         {
             // Arrange
@@ -1066,6 +1110,36 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("Holding");
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyDetails_Post_InValidModel_ReturnsView()
+        {
+            // Arrange
+            var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RepresentingCompanyDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+
+            var resultModel = result.Model as RepresentingCompanyDetailsViewModel;
+            resultModel.Should().BeEquivalentTo(model);
+
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
         }
 
         [Fact]
@@ -1394,6 +1468,59 @@
             // Assert
             A.CallTo(() => transactionService.CaptureData(A<string>._, model))
                 .MustHaveHappenedOnceExactly();
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("ContactDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Theory]
+        [InlineData(ExternalOrganisationType.RegisteredCompany, "RegisteredCompanyDetails")]
+        [InlineData(ExternalOrganisationType.Partnership, "PartnershipDetails")]
+        [InlineData(ExternalOrganisationType.SoleTrader, "SoleTraderDetails")]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToCorrectAction_WhenOrganisationTypeIsSet(ExternalOrganisationType organisationType, string expectedAction)
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData { OrganisationType = organisationType };
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult(transactionData));
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(expectedAction);
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToType_WhenOrganisationTypeIsNull()
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData { OrganisationType = null };
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult(transactionData));
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToType_WhenTransactionDataIsNull()
+        {
+            // Arrange
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult<OrganisationTransactionData>(null));
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+
+            // Assert
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("Type");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
