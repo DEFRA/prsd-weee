@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using Azure.Core;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
@@ -26,7 +27,7 @@
 
                 switch (model)
                 {
-                    case ExternalOrganisationTypeViewModel externalOrganisationTypeViewModel:
+                    case OrganisationTypeViewModel externalOrganisationTypeViewModel:
                         transaction.OrganisationType = externalOrganisationTypeViewModel.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                         break;
                     case TonnageTypeViewModel tonnageTypeViewModel:
@@ -36,30 +37,26 @@
                     case PreviousRegistrationViewModel previousRegistrationModel:
                         transaction.PreviousRegistration = previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
-                    case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
-                        transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
-                        transaction.RepresentingCompanyDetailsViewModel = null;
-                        transaction.PartnershipDetailsViewModel = null;
-                        transaction.SoleTraderDetailsViewModel = null;
-                        break;
                     case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
                         transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
                         transaction.RegisteredCompanyDetailsViewModel = null;
                         transaction.PartnershipDetailsViewModel = null;
                         transaction.SoleTraderDetailsViewModel = null;
                         break;
-
+                    case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
+                        transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
+                        transaction.PartnershipDetailsViewModel = null;
+                        transaction.SoleTraderDetailsViewModel = null;
+                        break;
                     case SoleTraderDetailsViewModel soleTraderDetailsViewModel:
                         transaction.SoleTraderDetailsViewModel = soleTraderDetailsViewModel;
                         transaction.PartnershipDetailsViewModel = null;
                         transaction.RegisteredCompanyDetailsViewModel = null;
-                        transaction.RepresentingCompanyDetailsViewModel = null;
                         break;
                     case PartnershipDetailsViewModel partnershipDetailsViewModel:
                         transaction.PartnershipDetailsViewModel = partnershipDetailsViewModel;
-                        transaction.SoleTraderDetailsViewModel = null;
                         transaction.RegisteredCompanyDetailsViewModel = null;
-                        transaction.RepresentingCompanyDetailsViewModel = null;
+                        transaction.SoleTraderDetailsViewModel = null;
                         break;
                     case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
                         transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
@@ -67,6 +64,14 @@
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));
+            }
+        }
+
+        public async Task CompleteTransaction(string accessToken)
+        {
+            using (var client = weeeClient())
+            {
+                await client.SendAsync(accessToken, new CompleteOrganisationTransaction());
             }
         }
 
