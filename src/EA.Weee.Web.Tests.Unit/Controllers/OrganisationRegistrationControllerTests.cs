@@ -884,7 +884,6 @@
             var model = result.Model as PreviousRegistrationViewModel;
             model.Should().NotBeNull();
             model.SelectedValue.Should().Be("Yes");
-            model.SearchText.Should().Be("Test Company");
         }
 
         [Fact]
@@ -1327,7 +1326,6 @@
             var model = result.Model as AuthorisedRepresentativeViewModel;
             model.Should().NotBeNull();
             model.SelectedValue.Should().Be("Yes");
-            model.SearchText.Should().Be("Test Company");
         }
 
         [Theory]

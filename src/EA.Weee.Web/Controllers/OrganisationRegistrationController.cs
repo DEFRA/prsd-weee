@@ -437,7 +437,7 @@
                 return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
             }
 
-            return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(RepresentingCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -574,13 +574,11 @@
             if (existingTransaction?.PreviousRegistration != null)
             {
                 selectedValue = existingTransaction.PreviousRegistration.GetDisplayName();
-                searchTerm = existingTransaction.SearchTerm;
             }
 
             var viewModel = new PreviousRegistrationViewModel
             {
-                SelectedValue = selectedValue,
-                SearchText = searchTerm
+                SelectedValue = selectedValue
             };
 
             return View(viewModel);
@@ -612,17 +610,14 @@
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
             var selectedValue = string.Empty;
-            var searchTerm = string.Empty;
             if (existingTransaction?.AuthorisedRepresentative != null)
             {
                 selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
-                searchTerm = existingTransaction.SearchTerm;
             }
 
             var viewModel = new AuthorisedRepresentativeViewModel
             {
                 SelectedValue = selectedValue,
-                SearchText = searchTerm
             };
 
             return View(viewModel);
