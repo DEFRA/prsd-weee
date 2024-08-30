@@ -691,18 +691,38 @@
         {
             var countries = SetupCountries();
 
-            const string searchText = "Company";
-            const string organisationType = "Sole trader";
-
-            var result = await controller.SoleTraderDetails(organisationType, searchText) as ViewResult;
+            var result = await controller.SoleTraderDetails() as ViewResult;
 
             var resultViewModel = result.Model as SoleTraderDetailsViewModel;
 
-            Assert.Equal(searchText, resultViewModel.CompanyName);
-            Assert.Equal(organisationType, resultViewModel.OrganisationType);
-            Assert.Equal(countries, resultViewModel.Address.Countries);
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+            result.ViewName.Should().BeNullOrWhiteSpace();
+        }
 
-            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
+        [Fact]
+        public async Task SoleTraderDetailsGet_WithExistingOrganisationTransaction_ReturnsViewWithViewModelPopulated()
+        {
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                OrganisationType = TestFixture.Create<ExternalOrganisationType>(),
+                SearchTerm = TestFixture.Create<string>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            var result = await controller.SoleTraderDetails() as ViewResult;
+
+            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().Be(existingTransaction.SearchTerm);
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+            result.ViewName.Should().BeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -907,7 +927,7 @@
 
         [Theory]
         [InlineData(YesNoType.No, "Index", "Holding")]
-        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
@@ -946,24 +966,44 @@
         public async Task RegisteredCompanyDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
-            const string organisationType = "Registered company";
-            const string searchedText = "Test Company";
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
-            var result = await controller.RegisteredCompanyDetails(organisationType, searchedText) as ViewResult;
+            var result = await controller.RegisteredCompanyDetails() as ViewResult;
 
             // Assert
-            result.Should().NotBeNull();
-            result.ViewName.Should().BeEmpty();
-            var model = result.Model as RegisteredCompanyDetailsViewModel;
-            model.Should().NotBeNull();
-            model.OrganisationType.Should().Be(organisationType);
-            model.CompanyName.Should().Be(searchedText);
-            model.Address.Countries.Should().BeEquivalentTo(countries);
+            var resultViewModel = result.Model as RegisteredCompanyDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task RegisteredCompanyDetails_Get_WithExistingOrganisationTransaction_ReturnsViewWithViewModelPopulated()
+        {
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                OrganisationType = TestFixture.Create<ExternalOrganisationType>(),
+                SearchTerm = TestFixture.Create<string>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            var result = await controller.RegisteredCompanyDetails() as ViewResult;
+
+            var resultViewModel = result.Model as RegisteredCompanyDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().Be(existingTransaction.SearchTerm);
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+            result.ViewName.Should().BeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -996,24 +1036,20 @@
         public async Task RepresentingCompanyDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
-            const string organisationType = "Representing company";
-            const string searchedText = "Test Company";
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
-            var result = await controller.RepresentingCompanyDetails(organisationType, searchedText) as ViewResult;
+            var result = await controller.RepresentingCompanyDetails() as ViewResult;
 
             // Assert
-            result.Should().NotBeNull();
-            result.ViewName.Should().BeEmpty();
-            var model = result.Model as RepresentingCompanyDetailsViewModel;
-            model.Should().NotBeNull();
-            model.OrganisationType.Should().Be(organisationType);
-            model.CompanyName.Should().Be(searchedText);
-            model.Address.Countries.Should().BeEquivalentTo(countries);
+            var resultViewModel = result.Model as RepresentingCompanyDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
         }
 
         [Fact]
@@ -1062,28 +1098,50 @@
         public async Task PartnershipDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
-            const string organisationType = "Partnership";
-            const string searchedText = "Test Partnership";
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
-            var result = await controller.PartnershipDetails(organisationType, searchedText) as ViewResult;
+            var result = await controller.PartnershipDetails() as ViewResult;
 
             // Assert
-            result.Should().NotBeNull();
-            var model = result.Model as PartnershipDetailsViewModel;
-            model.Should().NotBeNull();
-            model.OrganisationType.Should().Be(organisationType);
-            model.BusinessTradingName.Should().Be(searchedText);
-            model.Address.Countries.Should().BeEquivalentTo(countries);
+            var resultViewModel = result.Model as PartnershipDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task PartnershipDetails_Get_WithExistingOrganisationTransaction_ReturnsViewWithViewModelPopulated()
+        {
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                OrganisationType = TestFixture.Create<ExternalOrganisationType>(),
+                SearchTerm = TestFixture.Create<string>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            var result = await controller.PartnershipDetails() as ViewResult;
+
+            var resultViewModel = result.Model as PartnershipDetailsViewModel;
+
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().Be(existingTransaction.SearchTerm);
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+
+            result.ViewName.Should().BeNullOrWhiteSpace();
         }
 
         [Theory]
         [InlineData(YesNoType.No, "Index", "Holding")]
-        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task PartnershipDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
@@ -1148,8 +1206,6 @@
         public async Task RegisteredCompanyDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
-            const string organisationType = "Registered company";
-            const string searchedText = "Test Company";
             var countries = SetupCountries();
 
             var existingTransaction = new OrganisationTransactionData
@@ -1165,7 +1221,7 @@
                 .Returns(existingTransaction);
 
             // Act
-            var result = await controller.RegisteredCompanyDetails(organisationType, searchedText) as ViewResult;
+            var result = await controller.RegisteredCompanyDetails() as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1179,8 +1235,6 @@
         public async Task PartnershipDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
-            const string organisationType = "Partnership";
-            const string searchedText = "Test Partnership";
             var countries = SetupCountries();
 
             var existingTransaction = new OrganisationTransactionData
@@ -1192,7 +1246,7 @@
                 .Returns(existingTransaction);
 
             // Act
-            var result = await controller.PartnershipDetails(organisationType, searchedText) as ViewResult;
+            var result = await controller.PartnershipDetails() as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1206,8 +1260,6 @@
         public async Task SoleTraderDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
-            const string organisationType = "Sole trader";
-            const string searchedText = "Test Sole Trader";
             var countries = SetupCountries();
 
             var existingTransaction = new OrganisationTransactionData
@@ -1219,7 +1271,7 @@
                 .Returns(existingTransaction);
 
             // Act
-            var result = await controller.SoleTraderDetails(organisationType, searchedText) as ViewResult;
+            var result = await controller.SoleTraderDetails() as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1231,7 +1283,7 @@
 
         [Theory]
         [InlineData(YesNoType.No, "Index", "Holding")]
-        [InlineData(YesNoType.Yes, "Index", "Holding")]
+        [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task SoleTraderDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
@@ -1342,6 +1394,59 @@
             // Assert
             A.CallTo(() => transactionService.CaptureData(A<string>._, model))
                 .MustHaveHappenedOnceExactly();
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Theory]
+        [InlineData(ExternalOrganisationType.RegisteredCompany, "RegisteredCompanyDetails")]
+        [InlineData(ExternalOrganisationType.Partnership, "PartnershipDetails")]
+        [InlineData(ExternalOrganisationType.SoleTrader, "SoleTraderDetails")]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToCorrectAction_WhenOrganisationTypeIsSet(ExternalOrganisationType organisationType, string expectedAction)
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData { OrganisationType = organisationType };
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult(transactionData));
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(expectedAction);
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToType_WhenOrganisationTypeIsNull()
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData { OrganisationType = null };
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult(transactionData));
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToType_WhenTransactionDataIsNull()
+        {
+            // Arrange
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult<OrganisationTransactionData>(null));
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+
+            // Assert
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("Type");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");

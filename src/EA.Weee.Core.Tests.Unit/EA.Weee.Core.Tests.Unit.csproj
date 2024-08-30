@@ -237,6 +237,7 @@
     <Compile Include="Shared\ObligationCsvUploadTests.cs" />
     <Compile Include="Shared\PasteProcessorTests.cs" />
     <Compile Include="Validation\DecimalPlaceHelperTests.cs" />
+    <Compile Include="Validation\ExternalEmailValidatorUnitTests.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttributeTests.cs" />
     <Compile Include="Validation\InternalEmailAddressAttributeTests.cs" />

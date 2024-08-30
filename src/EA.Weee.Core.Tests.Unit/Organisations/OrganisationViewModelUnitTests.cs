@@ -20,20 +20,6 @@
         }
 
         [Fact]
-        public void OrganisationType_ShouldBeSettable()
-        {
-            // Arrange
-            var viewModel = new TestOrganisationViewModel();
-            const string organisationType = "TestType";
-
-            // Act
-            viewModel.OrganisationType = organisationType;
-
-            // Assert
-            viewModel.OrganisationType.Should().Be(organisationType);
-        }
-
-        [Fact]
         public void CompanyName_ShouldBeSettable()
         {
             // Arrange

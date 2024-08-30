@@ -8,8 +8,6 @@
 
     public abstract class OrganisationViewModel : IValidatableObject
     {
-        public string OrganisationType { get; set; }
-
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public abstract string CompanyName { get; set; }
 
