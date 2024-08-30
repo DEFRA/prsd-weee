@@ -15,7 +15,6 @@ namespace EA.Weee.Core.Organisations
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public string CompanyName { get; set; }
 
-        [Required]
         [DisplayName("Trading name")]
         public string BusinessTradingName { get; set; }
 
@@ -26,6 +25,7 @@ namespace EA.Weee.Core.Organisations
         [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.")]
         public string Telephone { get; set; }
 
+        [Required]
         [Display(Name = "Email address")]
         [EmailAddress]
         public string Email { get; set; }

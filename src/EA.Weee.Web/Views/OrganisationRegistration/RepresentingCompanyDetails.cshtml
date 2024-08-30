@@ -1,15 +1,18 @@
 ﻿@using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.Areas.Admin.Controllers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
 @{
-    ViewBag.Title = "Producer details";
+    const string title = "Producer details";
+    ViewBag.Title = title + " - GOV.UK";
 }
-@section main_content
+@section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
+
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Producer details</h1>
+        <h1 class="govuk-heading-l">@title</h1>
     </header>
 
     <p>Provide the address of the non-UK established Small EEE producer you are registering on behalf of.</p>
@@ -41,11 +44,9 @@
         </div>
 
         <div class="govuk-form-group">
-            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Continue</button>
+            @(this.WeeeGds().Submit("Continue"))
         </div>
-        <p>
-            <a href="@(Url.UrlFor<OrganisationRegistrationController>(u => u.Type()))">Back</a>
-        </p>
 
+        @(this.WeeeGds().BackToTopLink())
     }
 }
