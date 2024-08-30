@@ -55,7 +55,7 @@
             return transaction;
         }
 
-        public async Task<OrganisationTransaction> CompleteTransactionAsync(string organisationJson)
+        public async Task<OrganisationTransaction> CompleteTransactionAsync(Organisation organisation)
         {
             var transaction = await FindIncompleteTransactionForCurrentUserAsync();
 
@@ -64,8 +64,7 @@
                 throw new InvalidOperationException("No incomplete transaction found for the current user.");
             }
 
-            transaction.SetOrganisationJson(organisationJson);
-            transaction.CompleteRegistration();
+            transaction.CompleteRegistration(organisation);
 
             await context.SaveChangesAsync();
 

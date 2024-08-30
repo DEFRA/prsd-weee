@@ -1,8 +1,10 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.TonnageTypeViewModel
+
 @{
-    ViewBag.Title = "You've selected that you produce 5 tonnes or more of Electrical and Electronic Equipment (EEE)";
+    const string title = "You've selected that you produce 5 tonnes or more of Electrical and Electronic Equipment (EEE)";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 
@@ -17,7 +19,7 @@
         @Html.AntiForgeryToken()
         <header class="hgroup">
             <h1 class="govuk-heading-l">
-                You've selected that you produce 5 tonnes or more of Electrical and Electronic Equipment (EEE)
+                @title
             </h1>
         </header>
 
@@ -27,7 +29,7 @@
         </p>
 
         <p class="govuk-body">
-             You can find further information on joining a producer compliance scheme on the gov.uk website
+            You can find further information on joining a producer compliance scheme on the gov.uk website
         </p>
     }
 }

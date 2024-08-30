@@ -57,12 +57,14 @@
         {
             // Arrange
             await CreateIncompleteTransactionAsync();
-
+            var organisation = Domain.Organisation.Organisation.CreatePartnership("Trading name");
+            
             // Act
-            var result = await dataAccess.CompleteTransactionAsync(GetTestOrganisationJson("Completed Organisation"));
+            var result = await dataAccess.CompleteTransactionAsync(organisation);
 
             // Assert
-            AssertTransactionDetails(result, CompletionStatus.Complete, GetTestOrganisationJson("Completed Organisation"));
+            AssertTransactionDetails(result, CompletionStatus.Complete);
+            result.Organisation.Should().Be(organisation);
         }
 
         [Fact]
@@ -70,7 +72,7 @@
         {
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                dataAccess.CompleteTransactionAsync(GetTestOrganisationJson()));
+                dataAccess.CompleteTransactionAsync(A.Fake<Domain.Organisation.Organisation>()));
         }
 
         private async Task CreateIncompleteTransactionAsync()
