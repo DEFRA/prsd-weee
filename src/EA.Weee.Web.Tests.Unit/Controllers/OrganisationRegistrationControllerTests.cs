@@ -1100,6 +1100,37 @@
         }
 
         [Fact]
+        public async Task RepresentingCompanyDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Representing company";
+            const string searchedText = "Test Company";
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                RepresentingCompanyDetailsViewModel = new RepresentingCompanyDetailsViewModel
+                {
+                    CompanyName = "Test Company",
+                    BusinessTradingName = "Producer Trading Company"
+                }
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.RepresentingCompanyDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as RepresentingCompanyDetailsViewModel;
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.RepresentingCompanyDetailsViewModel);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
         public async Task PartnershipDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange

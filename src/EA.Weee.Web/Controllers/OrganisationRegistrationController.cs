@@ -347,13 +347,25 @@
         [HttpGet]
         public async Task<ActionResult> RepresentingCompanyDetails(string organisationType, string searchedText = null)
         {
-            var countries = await GetCountries();
+            RepresentingCompanyDetailsViewModel model = null;
 
-            var model = new RepresentingCompanyDetailsViewModel
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.RepresentingCompanyDetailsViewModel != null)
             {
-                CompanyName = searchedText,
-                Address = { Countries = countries }
-            };
+                model = existingTransaction.RepresentingCompanyDetailsViewModel;
+            }
+            else
+            {
+                model = new RepresentingCompanyDetailsViewModel
+                {
+                    OrganisationType = organisationType,
+                    CompanyName = searchedText
+                };
+            }
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
 
             return View(model);
         }
