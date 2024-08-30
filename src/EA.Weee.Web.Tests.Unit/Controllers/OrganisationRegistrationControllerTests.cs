@@ -1399,7 +1399,7 @@
             A.CallTo(() => transactionService.CaptureData(A<string>._, model))
                 .MustHaveHappenedOnceExactly();
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["action"].Should().Be("ContactDetails");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
         }
 
