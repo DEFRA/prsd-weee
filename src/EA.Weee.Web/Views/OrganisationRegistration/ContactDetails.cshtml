@@ -1,14 +1,17 @@
 ﻿@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Controllers
 @model EA.Weee.Core.Organisations.ContactDetailsViewModel
 @{
-    ViewBag.Title = "Contact details";
+    const string title = "Contact details";
+    ViewBag.Title = title + " - GOV.UK";
 }
 
 
 @section full_main_content{
 
-    @(this.WeeeGds().BackLink(@Url.Action("AuthorisedRepresentative", new {searchTerm = Model.SearchText})))
+    @*@(this.WeeeGds().BackLink(@Url.Action("AuthorisedRepresentative", new {searchTerm = Model.SearchText})))*@
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
 
     @using (Html.BeginForm())
     {
@@ -17,7 +20,7 @@
         @Html.AntiForgeryToken()
         <header class="hgroup">
             <h1 class="govuk-heading-l">
-                @ViewBag.Title
+                @title
             </h1>
         </header>
 

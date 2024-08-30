@@ -1,8 +1,4 @@
-﻿using EA.Weee.Core.DataStandards;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-
-namespace EA.Weee.Core.Organisations
+﻿namespace EA.Weee.Core.Organisations
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;

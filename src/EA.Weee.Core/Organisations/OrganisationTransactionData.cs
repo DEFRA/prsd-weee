@@ -91,6 +91,5 @@
             return new List<ValidationResult>();
         }
         public ContactDetailsViewModel ContactDetails { get; set; }
-
     }
 }
