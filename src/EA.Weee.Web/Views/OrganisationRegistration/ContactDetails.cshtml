@@ -11,7 +11,7 @@
 
 @section full_main_content{
 
-    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.AuthorisedRepresentative())))
 
     @using (Html.BeginForm())
     {
@@ -49,16 +49,16 @@
             @Html.Gds().TextBoxFor(m => m.Position, new { @maxlength = CommonMaxFieldLengths.Position })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Email)">
-            @Html.Gds().LabelFor(m => m.Email)
-            @Html.Gds().ValidationMessageFor(m => m.Email)
-            @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Email)">
+            @Html.Gds().LabelFor(m => m.AddressData.Email)
+            @Html.Gds().ValidationMessageFor(m => m.AddressData.Email)
+            @Html.Gds().TextBoxFor(m => m.AddressData.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Telephone)">
-            @Html.Gds().LabelFor(m => m.Telephone)
-            @Html.Gds().ValidationMessageFor(m => m.Telephone)
-            @Html.Gds().TextBoxFor(m => m.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Telephone)">
+            @Html.Gds().LabelFor(m => m.AddressData.Telephone)
+            @Html.Gds().ValidationMessageFor(m => m.AddressData.Telephone)
+            @Html.Gds().TextBoxFor(m => m.AddressData.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
         </div>
 
         // Contact address
@@ -102,7 +102,7 @@
         <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.AddressData.CountryId)" id="operator-country-dropdown-list">
             @Html.Gds().LabelFor(m => m.AddressData.CountryId, new { id = "country-dropdown-list" })
             @Html.Gds().ValidationMessageFor(m => m.AddressData.CountryId)
-            @Html.DropDownListFor(m => m.AddressData.CountryId, new SelectList(Model.AddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })
+            @Html.DropDownListFor(m => m.AddressData.CountryId, new SelectList(Model.AddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-select", aria_labelledby = "country-dropdown-list" })
         </div>
 
         <div class="govuk-form-group">

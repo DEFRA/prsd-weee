@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.Validation;
 
-    public class ContactDetailsViewModel
+    public class ContactDetailsViewModel : IValidatableObject
     {
         [Required]
         [StringLength(CommonMaxFieldLengths.FirstName)]
@@ -19,16 +21,11 @@
         [Display(Name = "Position")]
         public virtual string Position { get; set; }
 
-        [Required]
-        [StringLength(CommonMaxFieldLengths.EmailAddress)]
-        [Display(Name = "Email")]
-        public virtual string Email { get; set; }
+        public Shared.AddressPostcodeRequiredData AddressData { get; set; } = new Shared.AddressPostcodeRequiredData();
 
-        [Required]
-        [StringLength(CommonMaxFieldLengths.Telephone)]
-        [Display(Name = "Telephone")]
-        public virtual string Telephone { get; set; }
-
-        public Shared.AddressData AddressData { get; set; } = new Shared.AddressData();
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return ExternalAddressValidator.Validate(AddressData.CountryId, AddressData.Postcode, "Address.CountryId", "Address.Postcode");
+        }
     }
 }

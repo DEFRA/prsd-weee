@@ -316,6 +316,7 @@
     <Compile Include="Organisations\ExternalOrganisationType.cs" />
     <Compile Include="Organisations\OrganisationTransactionData.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
+    <Compile Include="Shared\AddressPostcodeRequiredData.cs" />
     <Compile Include="Shared\EntityIdDisplayNameData.cs" />
     <Compile Include="Shared\AddressUtilities.cs" />
     <Compile Include="Shared\CategoryValue.cs" />

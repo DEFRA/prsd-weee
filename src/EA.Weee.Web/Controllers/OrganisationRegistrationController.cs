@@ -563,7 +563,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> AuthorisedRepresentative()
+        public async Task<ActionResult> AuthorisedRepresentative()
         {
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
@@ -599,7 +599,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> ContactDetails(string searchedText = null)
+        public async Task<ActionResult> ContactDetails(string searchedText = null)
         {
             ContactDetailsViewModel model = null;
 
@@ -639,7 +639,7 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
-            return await CheckAuthorisedRepresentitiveAndRedirect();
+            return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
         }
     }
 }
