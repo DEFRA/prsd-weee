@@ -68,14 +68,14 @@
 
         public virtual ProducerBalancingScheme ProducerBalancingScheme { get; private set; }
 
-        public static Organisation CreateSoleTrader(string companyName, string tradingName = null, string companyRegistrationNumber = null)
+        public static Organisation CreateSoleTrader(string companyName, string tradingName = null)
         {
-            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, companyRegistrationNumber, tradingName);
+            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, tradingName);
         }
 
-        public static Organisation CreatePartnership(string tradingName, string companyRegistrationNumber = null)
+        public static Organisation CreatePartnership(string tradingName)
         {
-            return new Organisation(OrganisationType.Partnership, tradingName, companyRegistrationNumber);
+            return new Organisation(OrganisationType.Partnership, tradingName);
         }
 
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)

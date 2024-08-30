@@ -628,8 +628,6 @@
 
             resultViewModel.Should().NotBeNull();
 
-            resultViewModel.Should().NotBeNull();
-
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "Type");
         }
 
@@ -1059,6 +1057,29 @@
 
             model.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task PartnershipDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Partnership";
+            const string searchedText = "Test Partnership";
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.PartnershipDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as PartnershipDetailsViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationType.Should().Be(organisationType);
+            model.BusinessTradingName.Should().Be(searchedText);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
         }
 
         [Theory]

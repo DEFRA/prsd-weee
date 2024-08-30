@@ -273,6 +273,8 @@
                 var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                 var routeValues = new { organisationType = model.SelectedValue };
 
+                await transactionService.CaptureData(User.GetAccessToken(), model);
+
                 switch (organisationType)
                 {
                     case ExternalOrganisationType.SoleTrader:
