@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Core.Organisations.Base
 {
+    using EA.Weee.Core.Constants;
+    using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.Validation;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Validation;
 
     public abstract class OrganisationViewModel : IValidatableObject
     {
@@ -15,7 +16,7 @@
         [DisplayName("Business trading name")]
         public abstract string BusinessTradingName { get; set; }
 
-        public ExternalAddressData Address { get; set; } = new ExternalAddressData();
+        public ExternalAddressData Address { get; set; } = new ExternalAddressData() { CountryId = UkCountryList.UkCountryId };
 
         public Core.Shared.EntityType EntityType { get; set; }
 
