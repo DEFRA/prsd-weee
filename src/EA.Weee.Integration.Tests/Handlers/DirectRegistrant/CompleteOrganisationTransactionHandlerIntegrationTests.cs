@@ -29,9 +29,15 @@
                 var registeredCompanyDetails = fixture.Build<RegisteredCompanyDetailsViewModel>()
                     .With(r => r.Address, addressData).Create();
 
+                var representingCompanyDetails = fixture.Build<RepresentingCompanyDetailsViewModel>()
+                    .With(r => r.Address.CountryId, country.Id).Create();
+
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
-                    .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails).Create();
+                    .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails)
+                    .With(o => o.AuthorisedRepresentative, YesNoType.Yes)
+                    .With(o => o.RepresentingCompanyDetailsViewModel, representingCompanyDetails)
+                    .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
@@ -105,6 +111,7 @@
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.SoleTrader)
+                    .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.SoleTraderDetailsViewModel, soleTraderDetails).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -179,6 +186,7 @@
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.Partnership)
+                    .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.PartnershipDetailsViewModel, partnershipDetails).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();

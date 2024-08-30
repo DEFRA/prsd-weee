@@ -128,6 +128,7 @@
     <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsMapping.cs" />
     <Compile Include="Mappings\DirectProducerSubmissionMapping.cs" />
+    <Compile Include="Mappings\RepresentingCompanyMapping.cs" />
     <Compile Include="Mappings\DirectRegistrantMapping.cs" />
     <Compile Include="Mappings\ObligationSchemeAmountMapping.cs" />
     <Compile Include="Mappings\ObligationUploadErrorTypeMapping.cs" />
