@@ -73,9 +73,9 @@
             return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, companyRegistrationNumber, tradingName);
         }
 
-        public static Organisation CreatePartnership(string tradingName, string companyRegistrationNumber = null)
+        public static Organisation CreatePartnership(string tradingName)
         {
-            return new Organisation(OrganisationType.Partnership, tradingName, companyRegistrationNumber);
+            return new Organisation(OrganisationType.Partnership, tradingName);
         }
 
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)
