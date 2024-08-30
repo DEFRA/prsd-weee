@@ -9,8 +9,8 @@
 
 @section full_main_content{
 
-    @(this.WeeeGds().BackLink(@Url.Action("TonnageType", new {searchTerm = Model.SearchText})))
-
+    @(this.WeeeGds().BackLink(@Url.Action("TonnageType")))
+    
     @using (Html.BeginForm())
     {
         @Html.Gds().ValidationSummary()

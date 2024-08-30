@@ -311,6 +311,7 @@
     <Compile Include="Organisations\PartnershipDetailsViewModel.cs" />
     <Compile Include="Organisations\RegisteredCompanyDetailsViewModel.cs" />
     <Compile Include="Organisations\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="Organisations\RepresentingCompanyDetailsViewModel.cs" />
     <Compile Include="Organisations\YesNoType.cs" />
     <Compile Include="Organisations\TonnageType.cs" />
     <Compile Include="Organisations\ExternalOrganisationType.cs" />

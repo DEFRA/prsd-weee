@@ -68,9 +68,9 @@
 
         public virtual ProducerBalancingScheme ProducerBalancingScheme { get; private set; }
 
-        public static Organisation CreateSoleTrader(string companyName, string tradingName = null)
+        public static Organisation CreateSoleTrader(string companyName, string tradingName = null, string companyRegistrationNumber = null)
         {
-            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, null, tradingName);
+            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, companyRegistrationNumber, tradingName);
         }
 
         public static Organisation CreatePartnership(string tradingName)

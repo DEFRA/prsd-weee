@@ -9,8 +9,6 @@
         [Required(ErrorMessage = "Have you previously been registered as a small producer?")]
         public override string SelectedValue { get; set; }
 
-        public string SearchText {get; set; }
-
         public PreviousRegistrationViewModel()
             : base(CreateFromEnum<YesNoType>().PossibleValues)
         {
