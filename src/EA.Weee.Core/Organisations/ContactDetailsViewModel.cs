@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
 
-    public abstract class ContactDetailsViewModel
+    public class ContactDetailsViewModel
     {
-        public string SearchText { get; set; }
-
         [Required]
         [StringLength(CommonMaxFieldLengths.FirstName)]
         [Display(Name = "First name")]

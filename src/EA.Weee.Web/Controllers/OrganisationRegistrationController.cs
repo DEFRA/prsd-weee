@@ -595,29 +595,51 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
 
-            return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+            return RedirectToAction(nameof(ContactDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
-        public async Task<ViewResult> ContactDetails()
+        public async Task<ViewResult> ContactDetails(string searchedText = null)
         {
+            ContactDetailsViewModel model = null;
+
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            var selectedValue = string.Empty;
-            var searchTerm = string.Empty;
-            if (existingTransaction?.AuthorisedRepresentative != null)
+            if (existingTransaction?.ContactDetails != null)
             {
-                selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
-                searchTerm = existingTransaction.SearchTerm;
+                model = existingTransaction.ContactDetails;
+            }
+            else
+            {
+                model = new ContactDetailsViewModel
+                {
+                };
             }
 
-            var viewModel = new AuthorisedRepresentativeViewModel
-            {
-                SelectedValue = selectedValue,
-                SearchText = searchTerm
-            };
+            var countries = await GetCountries();
+            model.AddressData.Countries = countries;
 
-            return View(viewModel);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ContactDetails(ContactDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.AddressData.Countries = countries;
+
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return await CheckAuthorisedRepresentitiveAndRedirect();
         }
     }
 }

@@ -55,6 +55,9 @@
                     case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
                         transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
+                    case ContactDetailsViewModel contactDetailsViewModel:
+                        transaction.ContactDetails = contactDetailsViewModel;
+                        break;
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));

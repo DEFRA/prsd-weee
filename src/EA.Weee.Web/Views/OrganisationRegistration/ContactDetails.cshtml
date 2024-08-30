@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Core.Organisations.ContactDetailsViewModel
 @{
     const string title = "Contact details";
@@ -10,7 +11,6 @@
 
 @section full_main_content{
 
-    @*@(this.WeeeGds().BackLink(@Url.Action("AuthorisedRepresentative", new {searchTerm = Model.SearchText})))*@
     @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
 
     @using (Html.BeginForm())
@@ -63,6 +63,11 @@
 
         // Contact address
 
+        <p class="govuk-heading-s">Contact address</p>
+
+        <div class="govuk-body">
+            For non-UK addresses, enter your details manually.
+        </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Address1)">
             @Html.Gds().LabelFor(m => m.AddressData.Address1)
@@ -94,10 +99,16 @@
             @Html.Gds().TextBoxFor(m => m.AddressData.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
         </div>
 
-        <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Continue"))#
+        <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.AddressData.CountryId)" id="operator-country-dropdown-list">
+            @Html.Gds().LabelFor(m => m.AddressData.CountryId, new { id = "country-dropdown-list" })
+            @Html.Gds().ValidationMessageFor(m => m.AddressData.CountryId)
+            @Html.DropDownListFor(m => m.AddressData.CountryId, new SelectList(Model.AddressData.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })
         </div>
 
-        @*@(this.WeeeGds().BackToTopLink())*@
+        <div class="govuk-form-group">
+            @(this.WeeeGds().Submit("Continue"))
+        </div>
+
+        @(this.WeeeGds().BackToTopLink())
     }
 }
