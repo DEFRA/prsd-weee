@@ -1030,6 +1030,7 @@
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\FiveTonnesOrMore.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RepresentingCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\AuthorisedRepresentative.cshtml" />
     <Content Include="Views\Shared\_AuthorisedRepresentativeGuidance.cshtml" />
     <Content Include="Views\Shared\_OrganisationDetailsPartial.cshtml" />
@@ -1859,6 +1860,7 @@
     <Content Include="Views\Shared\_NoResultsPartial.cshtml" />
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
+    <Content Include="Views\Shared\_OrganisationAddressCountryPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2085,6 +2087,7 @@
     <Folder Include="Areas\Scheme\Views\Shared\EditorTemplates\" />
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
+    <Folder Include="ViewModels\OrganisationRegistration\Details\" />
     <Folder Include="ViewModels\Shared\Utilities\" />
   </ItemGroup>
   <ItemGroup>

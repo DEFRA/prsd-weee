@@ -8,7 +8,6 @@
     @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })
 </div>
 
-@Html.HiddenFor(m => m.OrganisationType)
 <h2 class="govuk-heading-s">Enter the details of the organisation applying to register.</h2>
 @Html.Gds().HintParagraph("If you don't have a Company Registration Number, leave this field blank")
 
