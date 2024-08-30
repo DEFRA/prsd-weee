@@ -39,9 +39,6 @@
                         break;
                     case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
                         transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
-                        transaction.RegisteredCompanyDetailsViewModel = null;
-                        transaction.PartnershipDetailsViewModel = null;
-                        transaction.SoleTraderDetailsViewModel = null;
                         break;
                     case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
                         transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
