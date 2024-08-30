@@ -12,6 +12,14 @@
             RegisteredOfficeContact = registeredOfficeContact;
         }
 
+        public Company(string name, string tradingName, string registrationNumber, ProducerContact registeredOfficeContact)
+        {
+            Name = name;
+            CompanyNumber = registrationNumber;
+            RegisteredOfficeContact = registeredOfficeContact;
+            TradingName = tradingName;
+        }
+
         protected Company()
         {
         }
@@ -41,6 +49,8 @@
         public string Name { get; private set; }
 
         public string CompanyNumber { get; private set; }
+
+        public string TradingName { get; private set; }
 
         public virtual Guid RegisteredOfficeContactId { get; private set; }
         public virtual ProducerContact RegisteredOfficeContact { get; private set; }
