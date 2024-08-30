@@ -647,7 +647,7 @@
 
             // Act
             var result = await controller.Type() as ViewResult;
-
+            
             // Assert
             result.Should().NotBeNull();
             result.ViewName.Should().BeNullOrWhiteSpace();
@@ -691,7 +691,6 @@
         [Fact]
         public async Task SoleTraderDetailsGet_ReturnsViewWithViewModelPopulated()
         {
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
             var countries = SetupCountries();
 
             const string searchText = "Company";
