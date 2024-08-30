@@ -62,6 +62,32 @@
                     organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
                     organisation.CompleteRegistration();
 
+                    var country = await weeeContext.Countries.SingleAsync(c => c.Id == organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountryId);
+                    //ProducerContact producerContact = null;
+                    ProducerAddress producerAddress = new ProducerAddress(
+                        organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address1,
+                        string.Empty,
+                        organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address2 ?? string.Empty,
+                        organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity ?? string.Empty,
+                        organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion ?? string.Empty,
+                        organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity,
+                        country,
+                        contactDetails.address.Item);
+
+                    ProducerContact contact = new ProducerContact(
+                        contactDetails.title,
+                        contactDetails.forename,
+                        contactDetails.surname,
+                        contactDetails.phoneLandLine,
+                        contactDetails.phoneMobile,
+                        contactDetails.fax,
+                        contactDetails.email,
+                        address);
+
+               
+
+                    return new ProducerBusiness(company, partnership, correspondentForNoticeContact);
+
                     var brandName = await CreateAndAddBrandName(organisationTransactionData);
 
                     var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName);
