@@ -1066,6 +1066,8 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("Holding");
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1092,6 +1094,8 @@
 
             model.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
         }
 
         [Fact]
