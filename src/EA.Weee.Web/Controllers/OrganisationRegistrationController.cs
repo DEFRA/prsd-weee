@@ -646,6 +646,50 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
 
+            return RedirectToAction(nameof(ContactDetails), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ContactDetails(string searchedText = null)
+        {
+            ContactDetailsViewModel model = null;
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.ContactDetails != null)
+            {
+                model = existingTransaction.ContactDetails;
+            }
+            else
+            {
+                model = new ContactDetailsViewModel
+                {
+                };
+            }
+
+            var countries = await GetCountries();
+            model.AddressData.Countries = countries;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ContactDetails(ContactDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.AddressData.Countries = countries;
+
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
             return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
         }
     }
