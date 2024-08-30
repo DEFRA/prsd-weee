@@ -149,7 +149,7 @@
 
         public static IEnumerable<object[]> OrganisationValues()
         {
-            yield return new object[] { ExternalOrganisationType.RegisteredCompany, Domain.Organisation.OrganisationType.RegisteredCompany, BrandNames };
+            yield return new object[] { ExternalOrganisationType.RegisteredCompany, Domain.Organisation.OrganisationType.RegisteredCompany, BrandNames,  };
             yield return new object[] { ExternalOrganisationType.Partnership, Domain.Organisation.OrganisationType.DirectRegistrantPartnership, BrandNames };
             yield return new object[] { ExternalOrganisationType.SoleTrader, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, BrandNames };
             yield return new object[] { ExternalOrganisationType.RegisteredCompany, Domain.Organisation.OrganisationType.RegisteredCompany, null };

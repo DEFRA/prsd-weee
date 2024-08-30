@@ -206,6 +206,8 @@
 
         public virtual DbSet<OrganisationTransaction> OrganisationTransactions { get; set; }
 
+        public virtual DbSet<RepresentingCompany> RepresentingCompanies { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public virtual IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
