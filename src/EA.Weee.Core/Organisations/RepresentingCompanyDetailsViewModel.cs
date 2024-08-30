@@ -15,6 +15,6 @@ namespace EA.Weee.Core.Organisations
         [DisplayName("Trading name")]
         public string BusinessTradingName { get; set; }
 
-        public AddressData Address { get; set; } = new AddressData();
+        public RepresentingCompanyAddressData Address { get; set; } = new RepresentingCompanyAddressData();
     }
 }

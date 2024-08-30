@@ -12,5 +12,6 @@
             Guid.Parse("184E1785-26B4-4AE4-80D3-AE319B103ACB"),
             Guid.Parse("7BFB8717-4226-40F3-BC51-B16FDF42550C")
         };
+        public static readonly Guid UkCountryId = Guid.Parse("184E1785-26B4-4AE4-80D3-AE319B103ACB");
     }
 }
