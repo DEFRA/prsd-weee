@@ -476,7 +476,7 @@
             {
                 model = new SoleTraderDetailsViewModel
                 {
-                    CompanyName = existingTransaction?.SearchTerm
+                    CompanyName = existingTransaction?.SearchTerm,
                 };
             }
 
@@ -650,7 +650,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ContactDetails(string searchedText = null)
+        public async Task<ActionResult> ContactDetails()
         {
             ContactDetailsViewModel model = null;
 
@@ -662,9 +662,7 @@
             }
             else
             {
-                model = new ContactDetailsViewModel
-                {
-                };
+                model = new ContactDetailsViewModel();
             }
 
             var countries = await GetCountries();
