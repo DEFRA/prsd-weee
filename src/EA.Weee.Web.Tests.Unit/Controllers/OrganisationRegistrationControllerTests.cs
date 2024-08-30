@@ -939,6 +939,72 @@
         }
 
         [Fact]
+        public async Task RepresentingCompanyDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            const string organisationType = "Representing company";
+            const string searchedText = "Test Company";
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RepresentingCompanyDetails(organisationType, searchedText) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            var model = result.Model as RepresentingCompanyDetailsViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationType.Should().Be(organisationType);
+            model.CompanyName.Should().Be(searchedText);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyDetails_Post_ValidModel_RedirectsToHoldingController()
+        {
+            // Arrange
+            var model = fixture.Create<RepresentingCompanyDetailsViewModel>();
+
+            // Act
+            var result = await controller.RepresentingCompanyDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyDetails_Post_InValidModel_ReturnsView()
+        {
+            // Arrange
+            var model = fixture.Create<RepresentingCompanyDetailsViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RepresentingCompanyDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+
+            var resultModel = result.Model as RepresentingCompanyDetailsViewModel;
+            resultModel.Should().BeEquivalentTo(model);
+
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+        }
+
+        [Fact]
         public async Task PartnershipDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange

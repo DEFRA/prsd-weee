@@ -326,6 +326,24 @@
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RepresentingCompanyDetails(RepresentingCompanyDetailsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+        }
+
         [HttpGet]
         public async Task<ActionResult> RepresentingCompanyDetails(string organisationType, string searchedText = null)
         {
