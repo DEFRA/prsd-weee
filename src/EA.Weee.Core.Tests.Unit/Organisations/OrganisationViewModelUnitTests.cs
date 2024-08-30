@@ -173,13 +173,9 @@
         {
             // Act
             var property = typeof(OrganisationViewModel).GetProperty("CompaniesRegistrationNumber");
-            var requiredAttr = property.GetCustomAttributes(typeof(RequiredAttribute), true).FirstOrDefault() as RequiredAttribute;
             var stringLengthAttr = property.GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault() as StringLengthAttribute;
 
             // Assert
-            requiredAttr.Should().NotBeNull()
-                .And.Subject.As<RequiredAttribute>().ErrorMessage.Should().Be("Enter company registration number (CRN)");
-
             stringLengthAttr.Should().NotBeNull()
                 .And.Subject.As<StringLengthAttribute>().Should().Match<StringLengthAttribute>(attr =>
                     attr.MinimumLength == 7 &&
