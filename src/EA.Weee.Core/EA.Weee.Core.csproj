@@ -306,6 +306,7 @@
     <Compile Include="Helpers\JsonSerializer.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Organisations\RepresentingCompanyAddressData.cs" />
     <Compile Include="Organisations\Base\OrganisationViewModel.cs" />
     <Compile Include="Organisations\ExternalAddressData.cs" />
     <Compile Include="Organisations\PartnershipDetailsViewModel.cs" />

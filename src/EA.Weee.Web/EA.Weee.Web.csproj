@@ -1036,6 +1036,7 @@
     <Content Include="Views\Shared\_OrganisationDetailsPartial.cshtml" />
     <Content Include="Views\Shared\_OrganisationHeadingAndCountryPartial.cshtml" />
     <Content Include="Views\OrganisationRegistration\ContactDetails.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RepresentingCompanyAddressData.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
