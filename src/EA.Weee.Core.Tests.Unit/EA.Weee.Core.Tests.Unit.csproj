@@ -219,6 +219,7 @@
     <Compile Include="Helpers\ExtensionsTests.cs" />
     <Compile Include="Helpers\SimpleObject.cs" />
     <Compile Include="Helpers\WindowHelperTests.cs" />
+    <Compile Include="Organisations\RepresentingCompanyAddressDataTests.cs" />
     <Compile Include="Organisations\OrganisationDataTests.cs" />
     <Compile Include="Organisations\OrganisationTransactionDataUnitTests.cs" />
     <Compile Include="Organisations\OrganisationViewModelUnitTests.cs" />
