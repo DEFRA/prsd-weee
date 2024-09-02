@@ -46,11 +46,13 @@
 
         public IEnumerable<CountryData> Countries { get; set; }
 
+        [Required]
         [StringLength(CommonMaxFieldLengths.Telephone)]
         [Display(Name = "Telephone number")]
         [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.", AllowNull = true)]
         public string Telephone { get; set; }
 
+        [Required]
         [StringLength(CommonMaxFieldLengths.EmailAddress)]
         [EmailAddress]
         [Display(Name = "Email address")]
