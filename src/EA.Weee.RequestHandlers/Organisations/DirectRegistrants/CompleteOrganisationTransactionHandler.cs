@@ -64,7 +64,19 @@
 
                     var brandName = await CreateAndAddBrandName(organisationTransactionData);
 
-                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName);
+                    var contactDetails = new Contact(organisationTransactionData.ContactDetails.FirstName, organisationTransactionData.ContactDetails.LastName, 
+                                                organisationTransactionData.ContactDetails.Position);
+                    var country = new Country(organisationTransactionData.ContactDetails.AddressData.CountryId, organisationTransactionData.ContactDetails.AddressData.CountryName);
+                    var contactAddress = new Address(organisationTransactionData.ContactDetails.AddressData.Address1,
+                                                organisationTransactionData.ContactDetails.AddressData.Address2,
+                                                organisationTransactionData.ContactDetails.AddressData.TownOrCity,
+                                                organisationTransactionData.ContactDetails.AddressData.CountyOrRegion,
+                                                organisationTransactionData.ContactDetails.AddressData.Postcode,
+                                                country,
+                                                organisationTransactionData.ContactDetails.AddressData.Telephone,
+                                                organisationTransactionData.ContactDetails.AddressData.Email);
+
+                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress);
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);

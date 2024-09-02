@@ -25,7 +25,9 @@
         public SoleTraderDetailsViewModel SoleTraderDetailsViewModel { get; set; }
 
         public RepresentingCompanyDetailsViewModel RepresentingCompanyDetailsViewModel { get; set; }
-    
+
+        public ContactDetailsViewModel ContactDetailsViewModel { get; set; }
+
         public ExternalAddressData GetAddressData()
         {
             switch (OrganisationType)

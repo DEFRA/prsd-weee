@@ -4,6 +4,7 @@
     using AutoFixture;
     using Base;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Integration.Tests.Builders;
@@ -31,7 +32,8 @@
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
-                    .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails).Create();
+                    .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails)
+                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
@@ -80,7 +82,7 @@
                     .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName);
                 organisation.CompanyRegistrationNumber.Should()
                     .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
-                organisation.OrganisationStatus.Should().Be(OrganisationStatus.Complete);
+                organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
             };
 
             private readonly It shouldHaveCreatedDirectRegistrant = () =>
@@ -90,6 +92,22 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
+            };
+
+            private readonly It shouldHaveReturnedContactDetails = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                directRegistrant.Contact.FirstName.Should().Be(contactDetailsViewModel.FirstName);
+                directRegistrant.Contact.LastName.Should().Be(contactDetailsViewModel.LastName);
+                directRegistrant.Contact.Position.Should().Be(contactDetailsViewModel.Position);
+                directRegistrant.Address.Address1.Should().Be(contactDetailsViewModel.AddressData.Address1);
+                directRegistrant.Address.Address2.Should().Be(contactDetailsViewModel.AddressData.Address2);
+                directRegistrant.Address.TownOrCity.Should().Be(contactDetailsViewModel.AddressData.TownOrCity);
+                directRegistrant.Address.CountyOrRegion.Should().Be(contactDetailsViewModel.AddressData.CountyOrRegion);
+                directRegistrant.Address.Postcode.Should().Be(contactDetailsViewModel.AddressData.Postcode);
+                directRegistrant.Address.Country.Should().Be(contactDetailsViewModel.AddressData.CountryName);
+                directRegistrant.Address.Email.Should().Be(contactDetailsViewModel.AddressData.Email);
+                directRegistrant.Address.Telephone.Should().Be(contactDetailsViewModel.AddressData.Telephone);
             };
         }
 
@@ -105,7 +123,8 @@
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.SoleTrader)
-                    .With(o => o.SoleTraderDetailsViewModel, soleTraderDetails).Create();
+                    .With(o => o.SoleTraderDetailsViewModel, soleTraderDetails)
+                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
@@ -154,7 +173,7 @@
                     .Be(organisationTransactionData.SoleTraderDetailsViewModel.BusinessTradingName);
                 organisation.CompanyRegistrationNumber.Should()
                     .Be(organisationTransactionData.SoleTraderDetailsViewModel.CompaniesRegistrationNumber);
-                organisation.OrganisationStatus.Should().Be(OrganisationStatus.Complete);
+                organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
             };
 
             private readonly It shouldHaveCreatedDirectRegistrant = () =>
@@ -164,6 +183,22 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.SoleTraderDetailsViewModel.EEEBrandNames);
+            };
+
+            private readonly It shouldHaveReturnedContactDetails = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                directRegistrant.Contact.FirstName.Should().Be(contactDetailsViewModel.FirstName);
+                directRegistrant.Contact.LastName.Should().Be(contactDetailsViewModel.LastName);
+                directRegistrant.Contact.Position.Should().Be(contactDetailsViewModel.Position);
+                directRegistrant.Address.Address1.Should().Be(contactDetailsViewModel.AddressData.Address1);
+                directRegistrant.Address.Address2.Should().Be(contactDetailsViewModel.AddressData.Address2);
+                directRegistrant.Address.TownOrCity.Should().Be(contactDetailsViewModel.AddressData.TownOrCity);
+                directRegistrant.Address.CountyOrRegion.Should().Be(contactDetailsViewModel.AddressData.CountyOrRegion);
+                directRegistrant.Address.Postcode.Should().Be(contactDetailsViewModel.AddressData.Postcode);
+                directRegistrant.Address.Country.Should().Be(contactDetailsViewModel.AddressData.CountryName);
+                directRegistrant.Address.Email.Should().Be(contactDetailsViewModel.AddressData.Email);
+                directRegistrant.Address.Telephone.Should().Be(contactDetailsViewModel.AddressData.Telephone);
             };
         }
 
@@ -179,7 +214,8 @@
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.Partnership)
-                    .With(o => o.PartnershipDetailsViewModel, partnershipDetails).Create();
+                    .With(o => o.PartnershipDetailsViewModel, partnershipDetails)
+                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
@@ -228,7 +264,7 @@
                     .Be(organisationTransactionData.PartnershipDetailsViewModel.BusinessTradingName);
                 organisation.CompanyRegistrationNumber.Should()
                     .Be(organisationTransactionData.PartnershipDetailsViewModel.CompaniesRegistrationNumber);
-                organisation.OrganisationStatus.Should().Be(OrganisationStatus.Complete);
+                organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
             };
 
             private readonly It shouldHaveCreatedDirectRegistrant = () =>
@@ -238,6 +274,22 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.PartnershipDetailsViewModel.EEEBrandNames);
+            };
+
+            private readonly It shouldHaveReturnedContactDetails = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                directRegistrant.Contact.FirstName.Should().Be(contactDetailsViewModel.FirstName);
+                directRegistrant.Contact.LastName.Should().Be(contactDetailsViewModel.LastName);
+                directRegistrant.Contact.Position.Should().Be(contactDetailsViewModel.Position);
+                directRegistrant.Address.Address1.Should().Be(contactDetailsViewModel.AddressData.Address1);
+                directRegistrant.Address.Address2.Should().Be(contactDetailsViewModel.AddressData.Address2);
+                directRegistrant.Address.TownOrCity.Should().Be(contactDetailsViewModel.AddressData.TownOrCity);
+                directRegistrant.Address.CountyOrRegion.Should().Be(contactDetailsViewModel.AddressData.CountyOrRegion);
+                directRegistrant.Address.Postcode.Should().Be(contactDetailsViewModel.AddressData.Postcode);
+                directRegistrant.Address.Country.Should().Be(contactDetailsViewModel.AddressData.CountryName);
+                directRegistrant.Address.Email.Should().Be(contactDetailsViewModel.AddressData.Email);
+                directRegistrant.Address.Telephone.Should().Be(contactDetailsViewModel.AddressData.Telephone);
             };
         }
 
@@ -290,6 +342,7 @@
             protected static Country country;
             protected static Guid result;
             protected static DateTime date;
+            protected static ContactDetailsViewModel contactDetailsViewModel;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -306,6 +359,12 @@
 
                 country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
                 addressData = fixture.Build<ExternalAddressData>().With(e => e.CountryId, country.Id).Create();
+
+                var organisationContactAddress = fixture.Build<AddressPostcodeRequiredData>()
+                    .With(o => o.CountryId, country.Id).Create();
+
+                contactDetailsViewModel = fixture.Build<ContactDetailsViewModel>()
+                    .With(r => r.AddressData, organisationContactAddress).Create();
 
                 return setup;
             }
