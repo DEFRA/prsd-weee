@@ -303,6 +303,8 @@
             }
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
+            await transactionService.CompleteTransaction(User.GetAccessToken());
+            await cache.InvalidateOrganisationSearch();
 
             return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
