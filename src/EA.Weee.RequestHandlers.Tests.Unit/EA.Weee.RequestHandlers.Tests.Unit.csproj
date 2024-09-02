@@ -409,6 +409,7 @@
     <Compile Include="Organisations\DirectRegistrants\AddUpdateOrganisationTransactionHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\CompleteOrganisationTransactionHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetUserOrganisationTransactionHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\OrganisationTestDataGenerator.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\GetActiveOrgnisationUsers\GetActiveOrganisationUsersHandlerTests.cs" />
     <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />

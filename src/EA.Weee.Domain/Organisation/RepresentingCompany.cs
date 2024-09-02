@@ -2,8 +2,8 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using EA.Weee.Domain.Producer;
     using System;
+    using System.ComponentModel.DataAnnotations;
 
     public class RepresentingCompany : Entity
     {
@@ -15,8 +15,12 @@
             Guard.ArgumentNotNull(() => address1, address1);
             Guard.ArgumentNotNull(() => townOrCity, townOrCity);
             Guard.ArgumentNotNull(() => postcode, postcode);
+            Guard.ArgumentNotNull(() => telephone, telephone);
+            Guard.ArgumentNotNull(() => email, email);
             Guard.ArgumentNotNull(() => country, country);
 
+            CompanyName = companyName;
+            TradingName = tradingName;
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
@@ -45,6 +49,7 @@
 
         public virtual Guid CountryId { get; private set; }
 
+        [StringLength(256)]
         public string CompanyName
         {
             get => companyName;
@@ -59,6 +64,7 @@
             }
         }
 
+        [StringLength(256)]
         public string TradingName
         {
             get => tradingName;
@@ -72,6 +78,7 @@
             }
         }
 
+        [StringLength(60)]
         public string Address1
         {
             get => address1;
@@ -86,6 +93,7 @@
             }
         }
 
+        [StringLength(60)]
         public string Address2
         {
             get => address2;
@@ -99,6 +107,7 @@
             }
         }
 
+        [StringLength(35)]
         public string TownOrCity
         {
             get => townOrCity;
@@ -114,6 +123,7 @@
             }
         }
 
+        [StringLength(35)]
         public string CountyOrRegion
         {
             get => countyOrRegion;
@@ -128,6 +138,7 @@
             }
         }
 
+        [StringLength(10)]
         public string Postcode
         {
             get => postcode;
@@ -141,12 +152,13 @@
             }
         }
 
+        [StringLength(20)]
         public string Telephone
         {
             get => telephone;
             private set
             {
-                if (value != null && value.Length > 20)
+                if (value.Length > 20)
                 {
                     throw new InvalidOperationException(string.Format(("Telephone cannot be greater than 20 characters")));
                 }
@@ -154,12 +166,13 @@
             }
         }
 
+        [StringLength(256)]
         public string Email
         {
             get => email;
             private set
             {
-                if (value != null && value.Length > 256)
+                if (value.Length > 256)
                 {
                     throw new InvalidOperationException(string.Format(("Email cannot be greater than 256 characters")));
                 }
