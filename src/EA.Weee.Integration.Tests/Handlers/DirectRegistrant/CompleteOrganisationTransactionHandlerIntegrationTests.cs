@@ -29,14 +29,9 @@
                 var registeredCompanyDetails = fixture.Build<RegisteredCompanyDetailsViewModel>()
                     .With(r => r.Address, addressData).Create();
 
-                var representingCompanyDetails = fixture.Build<RepresentingCompanyDetailsViewModel>()
-                    .With(r => r.Address.CountryId, country.Id).Create();
-
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails)
-                    .With(o => o.AuthorisedRepresentative, YesNoType.Yes)
-                    .With(o => o.RepresentingCompanyDetailsViewModel, representingCompanyDetails)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -96,6 +91,7 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
+                directRegistrant.RepresentingCompany.Should().BeNull();
             };
         }
 
@@ -295,6 +291,7 @@
             protected static OrganisationTransactionData organisationTransactionData;
             protected static CompleteOrganisationTransaction request;
             protected static ExternalAddressData addressData;
+            protected static RepresentingCompanyDetailsViewModel representingCompanyDetails;
             protected static Country country;
             protected static Guid result;
             protected static DateTime date;
@@ -314,6 +311,12 @@
 
                 country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
                 addressData = fixture.Build<ExternalAddressData>().With(e => e.CountryId, country.Id).Create();
+
+                var representingCompanyAddressDetails = fixture.Build<RepresentingCompanyAddressData>()
+                    .With(r => r.CountryId, country.Id).Create();
+
+                representingCompanyDetails = fixture.Build<RepresentingCompanyDetailsViewModel>()
+                    .With(r => r.Address, representingCompanyAddressDetails).Create();
 
                 return setup;
             }
