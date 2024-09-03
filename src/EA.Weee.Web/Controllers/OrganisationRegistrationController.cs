@@ -18,6 +18,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
@@ -307,17 +308,12 @@
 
         private async Task<ActionResult> CheckRepresentingCompanyDetailsAndRedirect(RepresentingCompanyDetailsViewModel model)
         {
-            if (model != null) 
-            { 
-                await transactionService.CaptureData(User.GetAccessToken(), model);
+            await transactionService.CaptureData(User.GetAccessToken(), model);
 
-                await transactionService.CompleteTransaction(User.GetAccessToken());
-                await cache.InvalidateOrganisationSearch();
+            await transactionService.CompleteTransaction(User.GetAccessToken());
+            await cache.InvalidateOrganisationSearch();
 
-                return RegistrationComplete();
-            }
-
-            return RedirectToAction(nameof(RepresentingCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
+            return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
@@ -457,7 +453,7 @@
                 await transactionService.CompleteTransaction(User.GetAccessToken());
                 await cache.InvalidateOrganisationSearch();
 
-                return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
+                return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName());
             }
 
             return RedirectToAction(nameof(RepresentingCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
@@ -709,7 +705,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RegistrationComplete(string searchTerm)
+        public ActionResult CheckAndCompleteApplication()
         {
             return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
