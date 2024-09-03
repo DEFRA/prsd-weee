@@ -11,13 +11,13 @@
         {
         }
 
-        public DirectRegistrant(Organisation organisation, BrandName brandName, RepresentingCompany representingCompany)
+        public DirectRegistrant(Organisation organisation, BrandName brandName, AuthorisedRepresentative authorisedRepresentative)
         {
             Condition.Requires(organisation).IsNotNull();
 
             Organisation = organisation;
             BrandName = brandName;
-            RepresentingCompany = representingCompany;
+            AuthorisedRepresentative = authorisedRepresentative;
         }
 
         public DirectRegistrant(Organisation organisation)
@@ -49,9 +49,9 @@
 
         public virtual Address Address { get; private set; }
 
-        public virtual RepresentingCompany RepresentingCompany { get; private set; }
+        public virtual AuthorisedRepresentative AuthorisedRepresentative { get; private set; }
 
-        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, RepresentingCompany representingCompany)
+        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, AuthorisedRepresentative representingCompany)
         {
             return new DirectRegistrant(organisation, brandName, representingCompany);
         }

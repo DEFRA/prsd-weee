@@ -398,8 +398,7 @@
     <Content Include="scripts\Update\Release 5\Sprint17\20221027-1100-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 6\20230427-1317-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 7\20240820-1300-serilog.sql" />
-    <Content Include="scripts\Update\Release 7\Sprint1\20240932-1131-update-nullable-fields.sql" />
-    <Content Include="scripts\Update\Release 7\Sprint1\20240830-1517-add-representing-company-table.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint1\20240903-0910-add-authorised-rep.sql" />
     <Content Include="scripts\Update\Release 7\Sprint1\20240829-1351-registrants-schema-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint1\20240823-1137-registrants-schema.sql" />
     <Content Include="scripts\Update\Release 7\Sprint1\20240821-1117-organisation-transaction-table.sql" />

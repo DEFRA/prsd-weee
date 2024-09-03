@@ -92,7 +92,7 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
-                directRegistrant.RepresentingCompany.Should().BeNull();
+                directRegistrant.AuthorisedRepresentative.Should().BeNull();
             };
         }
 
@@ -170,7 +170,7 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.SoleTraderDetailsViewModel.EEEBrandNames);
-                directRegistrant.RepresentingCompany.Should().BeNull();
+                directRegistrant.AuthorisedRepresentative.Should().BeNull();
             };
         }
 
@@ -249,7 +249,7 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.PartnershipDetailsViewModel.EEEBrandNames);
-                directRegistrant.RepresentingCompany.Should().BeNull();
+                directRegistrant.AuthorisedRepresentative.Should().BeNull();
             };
         }
 
@@ -329,17 +329,17 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
-                directRegistrant.RepresentingCompany.Should().NotBeNull();
-                directRegistrant.RepresentingCompany.CompanyName.Should().Be(representingCompanyDetails.CompanyName);
-                directRegistrant.RepresentingCompany.TradingName.Should().Be(representingCompanyDetails.BusinessTradingName);
-                directRegistrant.RepresentingCompany.Address1.Should().Be(representingCompanyDetails.Address.Address1);
-                directRegistrant.RepresentingCompany.Address2.Should().Be(representingCompanyDetails.Address.Address2);
-                directRegistrant.RepresentingCompany.TownOrCity.Should().Be(representingCompanyDetails.Address.TownOrCity);
-                directRegistrant.RepresentingCompany.CountyOrRegion.Should().Be(representingCompanyDetails.Address.CountyOrRegion);
-                directRegistrant.RepresentingCompany.CountryId.Should().Be(representingCompanyDetails.Address.CountryId);
-                directRegistrant.RepresentingCompany.Postcode.Should().Be(representingCompanyDetails.Address.Postcode);
-                directRegistrant.RepresentingCompany.Email.Should().Be(representingCompanyDetails.Address.Email);
-                directRegistrant.RepresentingCompany.Telephone.Should().Be(representingCompanyDetails.Address.Telephone);
+                directRegistrant.AuthorisedRepresentative.Should().NotBeNull();
+                directRegistrant.AuthorisedRepresentative.CompanyName.Should().Be(representingCompanyDetails.CompanyName);
+                directRegistrant.AuthorisedRepresentative.TradingName.Should().Be(representingCompanyDetails.BusinessTradingName);
+                directRegistrant.AuthorisedRepresentative.Address1.Should().Be(representingCompanyDetails.Address.Address1);
+                directRegistrant.AuthorisedRepresentative.Address2.Should().Be(representingCompanyDetails.Address.Address2);
+                directRegistrant.AuthorisedRepresentative.TownOrCity.Should().Be(representingCompanyDetails.Address.TownOrCity);
+                directRegistrant.AuthorisedRepresentative.CountyOrRegion.Should().Be(representingCompanyDetails.Address.CountyOrRegion);
+                directRegistrant.AuthorisedRepresentative.CountryId.Should().Be(representingCompanyDetails.Address.CountryId);
+                directRegistrant.AuthorisedRepresentative.Postcode.Should().Be(representingCompanyDetails.Address.Postcode);
+                directRegistrant.AuthorisedRepresentative.Email.Should().Be(representingCompanyDetails.Address.Email);
+                directRegistrant.AuthorisedRepresentative.Telephone.Should().Be(representingCompanyDetails.Address.Telephone);
             };
         }
 
