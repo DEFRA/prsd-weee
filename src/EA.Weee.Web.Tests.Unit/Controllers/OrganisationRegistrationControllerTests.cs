@@ -927,7 +927,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistrationController")]
+        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistration")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToRegistrationComplete(YesNoType authorisedRep, string index, string controllerName)
         {
@@ -1065,7 +1065,7 @@
             // Assert
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("RegistrationComplete");
-            result.RouteValues["controller"].Should().Be("OrganisationRegistrationController");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
@@ -1145,7 +1145,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistrationController")]
+        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistration")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task PartnershipDetails_Post_ValidModel_RedirectsToRegistrationComplete(YesNoType authorisedRep, string index, string controllerName)
         {
@@ -1287,7 +1287,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistrationController")]
+        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistration")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task SoleTraderDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
