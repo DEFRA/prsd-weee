@@ -302,12 +302,22 @@
                 return View(model);
             }
 
-            await transactionService.CaptureData(User.GetAccessToken(), model);
+            return await CheckRepresentingCompanyDetailsAndRedirect(model);
+        }
 
-            await transactionService.CompleteTransaction(User.GetAccessToken());
-            await cache.InvalidateOrganisationSearch();
+        private async Task<ActionResult> CheckRepresentingCompanyDetailsAndRedirect(RepresentingCompanyDetailsViewModel model)
+        {
+            if (model != null) 
+            { 
+                await transactionService.CaptureData(User.GetAccessToken(), model);
 
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+                await transactionService.CompleteTransaction(User.GetAccessToken());
+                await cache.InvalidateOrganisationSearch();
+
+                return RegistrationComplete();
+            }
+
+            return RedirectToAction(nameof(RepresentingCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
