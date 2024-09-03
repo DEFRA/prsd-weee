@@ -35,7 +35,7 @@
         }
 
         [Fact]
-        public async void Fetch_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
+        public async Task Fetch_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
         {
             using (var database = new DatabaseWrapper())
             {

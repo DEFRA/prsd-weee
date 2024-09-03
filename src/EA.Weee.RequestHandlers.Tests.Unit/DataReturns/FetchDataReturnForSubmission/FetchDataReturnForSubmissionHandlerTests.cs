@@ -54,7 +54,7 @@
             DataReturnForSubmission result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(1, result.Errors.Count);
+            Assert.Single(result.Errors);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@
             DataReturnForSubmission result = await handler.HandleAsync(request);
 
             // Assert
-            Assert.Equal(1, result.Warnings.Count);
+            Assert.Single(result.Warnings);
         }
 
         private static IFetchDataReturnForSubmissionDataAccess FetchDummyDataReturnWithError(DataReturnUploadError dataReturnsUploadError)

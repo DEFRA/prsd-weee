@@ -50,6 +50,12 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: AatfEvidenceRedirect.ViewCancelEvidenceRouteName,
+                url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-cancel-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Cancelled },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: AatfEvidenceRedirect.ViewSubmittedEvidenceRouteName,
                 url: "Aatf/{organisationId}/manage-evidence-notes/{aatfId}/view-submitted-evidence-note/{evidenceNoteId}",
                 defaults: new { action = "ViewDraftEvidenceNote", controller = "ManageEvidenceNotes", noteStatus = NoteStatus.Submitted },

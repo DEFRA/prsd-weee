@@ -64,7 +64,6 @@
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(false)]
 
         public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsFalse_PropertiesShouldBeSet(bool? returnToView)
@@ -86,6 +85,27 @@
         }
 
         [Theory]
+        [InlineData(null)]
+
+        public void ViewTransferNoteViewModelMap_GivenSourceWithReturnToViewAsNull_ForDraft_PropertiesShouldBeSetAsTrue(bool? returnToView)
+        {
+            //arrange
+            var orgId = TestFixture.Create<Guid>();
+            var transferEvidenceNoteData = TestFixture.Create<TransferEvidenceNoteData>();
+            var displayNotification = TestFixture.Create<object>();
+            var principal = A.Fake<IPrincipal>();
+
+            var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal);
+            source.ReturnToView = returnToView;
+
+            //act
+            var model = map.Map(source);
+
+            //assert
+            model.ReturnToView.Should().BeTrue();
+        }
+
+        [Theory]
         [InlineData(true)]
         [InlineData(false)]
 
@@ -98,9 +118,9 @@
             var principal = A.Fake<IPrincipal>();
 
             var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, principal)
-                {
-                    OpenedInNewTab = openedInNewTab
-                };
+            {
+                OpenedInNewTab = openedInNewTab
+            };
 
             //act
             var model = map.Map(source);
@@ -182,7 +202,7 @@
             var displayNotification = TestFixture.Create<object>();
             var user = A.Fake<IPrincipal>();
             var source = new ViewTransferNoteViewModelMapTransfer(orgId, transferEvidenceNoteData, displayNotification, user);
-            
+
             source.ReturnToView = true;
 
             //act
@@ -312,7 +332,7 @@
 
             //assert
             model.CanVoid.Should().BeTrue();
-         }
+        }
 
         [Fact]
         public void ViewTransferNoteViewModelMap_WithExternalUser_CanVoidShouldBeFalse()
@@ -616,7 +636,7 @@
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
                     .Create(),
                 false);
-            
+
             //act
             var result = map.Map(source);
 
@@ -635,7 +655,7 @@
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
                     .Create(),
                 false);
-           
+
             //act
             var result = map.Map(source);
 
@@ -658,14 +678,7 @@
                 .Create();
             var source = new ViewTransferNoteViewModelMapTransfer(organisation.Id, evidenceData, null);
 
-            A.CallTo(() => addressUtilities.FormattedCompanyPcsAddress(source.TransferEvidenceNoteData.RecipientSchemeData.SchemeName,
-                organisation.OrganisationName,
-                organisation.NotificationAddress.Address1,
-                organisation.NotificationAddress.Address2,
-                organisation.NotificationAddress.TownOrCity,
-                organisation.NotificationAddress.CountyOrRegion,
-                organisation.NotificationAddress.Postcode,
-                null)).Returns("recipientAddress");
+            A.CallTo(() => addressUtilities.FormattedApprovedRecipientDetails(evidenceData.ApprovedRecipientDetails)).Returns("approved recipient details");
 
             //act
             var result = map.Map(source);
@@ -758,7 +771,7 @@
             //assert
             model.TotalCategoryValues.Should().OnlyContain(x => x.DisplaySummedCategory == false);
         }
-        
+
         [Fact]
         public void ViewTransferNoteViewModelMap_GivenSubmittedTransfer_HasSubmittedDate_WithCorrectFormat()
         {
@@ -809,7 +822,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedAndOrganisationIsTransferOrganisationAndSchemeIsValid_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
-            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            if (status != NoteStatus.Draft)
             {
                 return;
             }
@@ -821,7 +834,7 @@
                     .With(x => x.Status, status)
                     .With(x => x.ComplianceYear, date.Year)
                     .With(x => x.TransferredSchemeData, TestFixture.Build<SchemeData>().With(s => s.SchemeStatus, SchemeStatus.Approved).Create())
-                    .With(x => x.TransferredOrganisationData, 
+                    .With(x => x.TransferredOrganisationData,
                         TestFixture.Build<OrganisationData>()
                             .With(o => o.Id, transferOrganisationId)
                             .With(o => o.IsBalancingScheme, false)
@@ -979,7 +992,7 @@
         [ClassData(typeof(NoteStatusCoreData))]
         public void ViewTransferNoteViewModelMap_GivenNoteStatusIsDraftOrReturnedOrganisationIsTransferOrganisationButOrganisationIsBalancingScheme_DisplayEditButtonShouldBeTrue(NoteStatus status)
         {
-            if (status != NoteStatus.Draft && status != NoteStatus.Returned)
+            if (status != NoteStatus.Draft)
             {
                 return;
             }

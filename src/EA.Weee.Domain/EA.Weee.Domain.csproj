@@ -130,10 +130,17 @@
     <Compile Include="Obligation\ObligationScheme.cs" />
     <Compile Include="Obligation\ObligationUpload.cs" />
     <Compile Include="Obligation\ObligationUploadError.cs" />
+    <Compile Include="Organisation\AdditionalCompanyDetails.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Organisation\CompletionStatus.cs" />
+    <Compile Include="Organisation\OrganisationTransaction.cs" />
     <Compile Include="Organisation\ProducerBalancingScheme.cs" />
     <Compile Include="Producer\Classification\StatusType.cs" />
+    <Compile Include="Producer\DirectProducerSubmission.cs" />
+    <Compile Include="Producer\DirectRegistrant.Contact.cs" />
+    <Compile Include="Producer\DirectRegistrant.Address.cs" />
+    <Compile Include="Producer\DirectRegistrant.cs" />
     <Compile Include="Producer\ProducerEeeByQuarter.cs" />
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />

@@ -30,7 +30,7 @@
         }
 
         [Fact]
-        public async void UpdateAmounts_GivenAmountToUpdate_ContextShouldContainUpdatedAmounts()
+        public async Task UpdateAmounts_GivenAmountToUpdate_ContextShouldContainUpdatedAmounts()
         {
             using (var database = new DatabaseWrapper())
             {

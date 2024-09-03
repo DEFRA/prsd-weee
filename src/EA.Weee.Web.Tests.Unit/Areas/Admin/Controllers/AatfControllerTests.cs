@@ -329,7 +329,7 @@
         [Theory]
         [MemberData(nameof(FacilityTypeEnumValues))]
         [MemberData(nameof(FacilityTypeEnumValues))]
-        public async void DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet(FacilityType type)
+        public async Task DetailsGet_GivenValidAatfId_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData()
@@ -374,7 +374,7 @@
         }
 
         [Fact]
-        public async void DetailsGet_GivenValidAatfId_AatfsByOperatorIdShouldBeCalled()
+        public async Task DetailsGet_GivenValidAatfId_AatfsByOperatorIdShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData
@@ -422,7 +422,7 @@
         }
 
         [Fact]
-        public async void DetailsGet_GivenValidAatfId_MapperShouldBeCalled()
+        public async Task DetailsGet_GivenValidAatfId_MapperShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData
@@ -479,7 +479,7 @@
         }
 
         [Fact]
-        public async void DetailsGet_GivenValidAatfId_SchemesByOrganisationIdShouldBeCalled()
+        public async Task DetailsGet_GivenValidAatfId_SchemesByOrganisationIdShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData
@@ -526,7 +526,7 @@
         }
 
         [Fact]
-        public async void DetailsGet_GivenValidAatfId_AatfComplianceYearsByAatfIdShouldBeCalled()
+        public async Task DetailsGet_GivenValidAatfId_AatfComplianceYearsByAatfIdShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData
@@ -573,7 +573,7 @@
         }
 
         [Fact]
-        public async void DetailsGet_GivenValidAatfId_ApiUtcDateShouldBeCalled()
+        public async Task DetailsGet_GivenValidAatfId_ApiUtcDateShouldBeCalled()
         {
             var aatfId = Guid.NewGuid();
             var organisationData = new OrganisationData
@@ -620,7 +620,7 @@
         }
 
         [Fact]
-        public async void DetailsGet_GivenValidAatfId_ViewModelShouldBeCreatedWithApprovalDate()
+        public async Task DetailsGet_GivenValidAatfId_ViewModelShouldBeCreatedWithApprovalDate()
         {
             var viewModel = A.Fake<AatfDetailsViewModel>();
 
@@ -670,7 +670,7 @@
         }
 
         [Fact]
-        public async void DetailsGet_GivenValidAatfIdButNoApprovalDate_ViewModelShouldBeCreatedWithNullApprovalDate()
+        public async Task DetailsGet_GivenValidAatfIdButNoApprovalDate_ViewModelShouldBeCreatedWithNullApprovalDate()
         {
             var viewModel = A.Fake<AatfDetailsViewModel>();
             viewModel.ApprovalDate = null;
@@ -722,7 +722,7 @@
         }
 
         [Fact]
-        public async void FetchDetailsGet_GivenAatfId_Year_IdShouldBeRetrieved()
+        public async Task FetchDetailsGet_GivenAatfId_Year_IdShouldBeRetrieved()
         {
             var aatfId = Guid.NewGuid();
 
@@ -732,7 +732,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsGet_CanNotEdit_ReturnsForbiddenResult()
+        public async Task ManageAatfDetailsGet_CanNotEdit_ReturnsForbiddenResult()
         {
             var id = fixture.Create<Guid>();
             var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, false).Create();
@@ -747,7 +747,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsGet_CannotEditForCY_ReturnsForbiddenResult()
+        public async Task ManageAatfDetailsGet_CannotEditForCY_ReturnsForbiddenResult()
         {
             var id = fixture.Create<Guid>();
             var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).With(a => a.ComplianceYear, 2019).Create();
@@ -763,7 +763,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsGet_CanEdit_BreadcrumbShouldBeSet()
+        public async Task ManageAatfDetailsGet_CanEdit_BreadcrumbShouldBeSet()
         {
             var id = fixture.Create<Guid>();
             var aatf = fixture.Build<AatfData>().With(a => a.CanEdit, true).With(a => a.ComplianceYear, 2019).Create();
@@ -785,7 +785,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsGet_CanEdit_ViewModelShouldBeReturned()
+        public async Task ManageAatfDetailsGet_CanEdit_ViewModelShouldBeReturned()
         {
             var id = fixture.Create<Guid>();
             var countries = fixture.CreateMany<CountryData>().ToList();
@@ -814,7 +814,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsPost_ValidViewModel_ListsShouldBeSet()
+        public async Task ManageAatfDetailsPost_ValidViewModel_ListsShouldBeSet()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<PanAreaData> panAreas = fixture.CreateMany<PanAreaData>().ToList();
@@ -849,7 +849,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
+        public async Task ManageAatfDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             var viewModel = fixture.Build<AatfEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.ApprovalNumber, "test").Create();
@@ -885,7 +885,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsPost_InvalidViewModel_ApiShouldBeCalled()
+        public async Task ManageAatfDetailsPost_InvalidViewModel_ApiShouldBeCalled()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
@@ -911,7 +911,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsPost_ValidationWrapperMustHaveHappened()
+        public async Task ManageAatfDetailsPost_ValidationWrapperMustHaveHappened()
         {
             var approvalNumber = "test";
             var existingAatf = new AatfData()
@@ -929,7 +929,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsPost_ApprovalNumberIsSameAsSavedData_CheckForUniqueApprovalNumberMustNotHaveHappened()
+        public async Task ManageAatfDetailsPost_ApprovalNumberIsSameAsSavedData_CheckForUniqueApprovalNumberMustNotHaveHappened()
         {
             var approvalNumber = "test";
 
@@ -967,7 +967,7 @@
         }
 
         [Fact]
-        public async void ManageAatfDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
+        public async Task ManageAatfDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
         {
             var viewModel = new AatfEditDetailsViewModel() { Id = Guid.NewGuid() };
             var helper = A.Fake<UrlHelper>();
@@ -994,7 +994,7 @@
         }
 
         [Fact]
-        public async void ManageAeDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
+        public async Task ManageAeDetailsPost_ValidViewModel_ApiSendAndRedirectToDetails()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             var viewModel = fixture.Build<AeEditDetailsViewModel>().With(a => a.CompetentAuthoritiesList, competentAuthorities).With(a => a.ApprovalNumber, "test").Create();
@@ -1030,7 +1030,7 @@
         }
 
         [Fact]
-        public async void ManageAeDetailsPost_InvalidViewModel_ApiShouldBeCalled()
+        public async Task ManageAeDetailsPost_InvalidViewModel_ApiShouldBeCalled()
         {
             IList<UKCompetentAuthorityData> competentAuthorities = fixture.CreateMany<UKCompetentAuthorityData>().ToList();
             IList<CountryData> countries = fixture.CreateMany<CountryData>().ToList();
@@ -1056,7 +1056,7 @@
         }
 
         [Fact]
-        public async void ManageAeDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
+        public async Task ManageAeDetailsPost_ValidViewModel_CacheShouldBeInvalidated()
         {
             var viewModel = new AeEditDetailsViewModel() { Id = Guid.NewGuid() };
             var helper = A.Fake<UrlHelper>();
@@ -1198,7 +1198,7 @@
 
         [Theory]
         [MemberData(nameof(FacilityTypeEnumValues))]
-        public async void ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType type)
+        public async Task ManageContactDetailsGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
             var activity = type == FacilityType.Aatf ? InternalUserActivity.ManageAatfs : InternalUserActivity.ManageAes;
 
@@ -1225,7 +1225,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task ManageContactDetailsGet_GivenAction_DefaultViewShouldBeReturned()
         {
             ContactDataAccessSetup(true);
 
@@ -1240,7 +1240,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsGet_GivenAatf_ContactShouldBeRetrieved()
+        public async Task ManageContactDetailsGet_GivenAatf_ContactShouldBeRetrieved()
         {
             var aatfId = Guid.NewGuid();
 
@@ -1250,7 +1250,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
+        public async Task ManageContactDetailsGet_GivenActionExecutes_CountriesShouldBeRetrieved()
         {
             ContactDataAccessSetup(true);
 
@@ -1265,7 +1265,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsGet_GivenActionExecutes_AatfShouldBeRetrieved()
+        public async Task ManageContactDetailsGet_GivenActionExecutes_AatfShouldBeRetrieved()
         {
             ContactDataAccessSetup(true);
             var aatfId = Guid.NewGuid();
@@ -1275,7 +1275,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
+        public async Task ManageContactDetailsGet_GivenUnauthorizedAccess_HttpForbiddenReturned()
         {
             var result = await controller.ManageContactDetails(A.Dummy<Guid>(), FacilityType.Aatf);
 
@@ -1343,7 +1343,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsPost_OnSubmit_PageRedirectsToSiteList()
+        public async Task ManageContactDetailsPost_OnSubmit_PageRedirectsToSiteList()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -1365,7 +1365,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task ManageContactDetailsPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = this.fixture.Create<AatfEditContactAddressViewModel>();
             var request = new EditAatfContact(this.fixture.Create<Guid>(), this.fixture.Create<AatfContactData>()) { SendNotification = false };
@@ -1380,7 +1380,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsPost_GivenInvalidViewModel_ApiShouldBeCalled()
+        public async Task ManageContactDetailsPost_GivenInvalidViewModel_ApiShouldBeCalled()
         {
             var model = this.fixture.Create<AatfEditContactAddressViewModel>();
             controller.ModelState.AddModelError("error", "error");
@@ -1391,7 +1391,7 @@
         }
 
         [Fact]
-        public async void ManageContactDetailsPost_GivenInvalidViewModel_CountriesShouldBeAttached()
+        public async Task ManageContactDetailsPost_GivenInvalidViewModel_CountriesShouldBeAttached()
         {
             var model = this.fixture.Create<AatfEditContactAddressViewModel>();
             controller.ModelState.AddModelError("error", "error");
@@ -1407,7 +1407,7 @@
 
         [Theory]
         [MemberData(nameof(FacilityTypeEnumValues))]
-        public async void ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type)
+        public async Task ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();
             var model = new AatfEditContactAddressViewModel() { Id = aatfId, ContactData = new AatfContactData(), AatfData = new AatfData() { FacilityType = type }};
@@ -1490,7 +1490,7 @@
         }
 
         [Fact]
-        public async void GetDelete_CheckAatfCanBeDeletedCalled_ViewModelCreatedAndViewReturned_CallToHandlerMustHaveBeenCalled()
+        public async Task GetDelete_CheckAatfCanBeDeletedCalled_ViewModelCreatedAndViewReturned_CallToHandlerMustHaveBeenCalled()
         {
             var aatfDeletionFlags = CanAatfBeDeletedFlags.OrganisationHasActiveUsers | CanAatfBeDeletedFlags.CanDelete;
             var organisationDeletionFlags = CanOrganisationBeDeletedFlags.HasActiveUsers | CanOrganisationBeDeletedFlags.HasReturns;
@@ -1523,7 +1523,7 @@
         }
 
         [Fact]
-        public async void GetDelete_EnsureBreadcrumbIsSet()
+        public async Task GetDelete_EnsureBreadcrumbIsSet()
         {
             const string orgName = "orgName";
             var aatfId = Guid.NewGuid();
@@ -1544,7 +1544,7 @@
         }
 
         [Fact]
-        public async void PostDelete_DeleteAnAatfHandlerIsCalled_ReturnsRedirectToManageAatf()
+        public async Task PostDelete_DeleteAnAatfHandlerIsCalled_ReturnsRedirectToManageAatf()
         {
             var viewModel = new DeleteViewModel()
             {
@@ -1564,7 +1564,7 @@
         }
 
         [Fact]
-        public async void PostDelete_GivenAatfToDelete_CacheShouldBeInvalidated()
+        public async Task PostDelete_GivenAatfToDelete_CacheShouldBeInvalidated()
         {
             var viewModel = new DeleteViewModel()
             {
@@ -1592,7 +1592,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalGET_GivenAatfAndOrganisationId_BreadCrumbShouldBeSet()
+        public async Task UpdateApprovalGET_GivenAatfAndOrganisationId_BreadCrumbShouldBeSet()
         {
             var aatfId = fixture.Create<Guid>();
             var aatfData = fixture.Create<AatfData>();
@@ -1608,7 +1608,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalGET_GivenAatfAndOrganisationId_ApprovalDateFlagsShouldBeRetrieved()
+        public async Task UpdateApprovalGET_GivenAatfAndOrganisationId_ApprovalDateFlagsShouldBeRetrieved()
         {
             var aatfId = fixture.Create<Guid>();
             var aatfData = fixture.Create<AatfData>();
@@ -1624,7 +1624,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalGET_GivenAatfAndOrganisationId_DefaultViewAndModelShouldBeReturned()
+        public async Task UpdateApprovalGET_GivenAatfAndOrganisationId_DefaultViewAndModelShouldBeReturned()
         {
             var aatfId = fixture.Create<Guid>();
             var aatfData = fixture.Create<AatfData>();
@@ -1645,7 +1645,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalPOST_GivenViewModel_BreadcrumbShouldBeSet()
+        public async Task UpdateApprovalPOST_GivenViewModel_BreadcrumbShouldBeSet()
         {
             var model = fixture.Create<UpdateApprovalViewModel>();
 
@@ -1656,7 +1656,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalPOST_GivenViewModelAndModelStateIsNotValid_ViewModelShouldBeReturnedToDefaultView()
+        public async Task UpdateApprovalPOST_GivenViewModelAndModelStateIsNotValid_ViewModelShouldBeReturnedToDefaultView()
         {
             var model = fixture.Create<UpdateApprovalViewModel>();
 
@@ -1669,7 +1669,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsNo_ShouldBeRedirectedToManageAatfDetails()
+        public async Task UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsNo_ShouldBeRedirectedToManageAatfDetails()
         {
             var model = fixture.Build<UpdateApprovalViewModel>()
                 .With(s => s.SelectedValue, "No").Create();
@@ -1681,7 +1681,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_UpdateAatfDetailsRequestShouldBeMade()
+        public async Task UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_UpdateAatfDetailsRequestShouldBeMade()
         {
             var model = fixture.Build<UpdateApprovalViewModel>()
                 .With(s => s.SelectedValue, "Yes").Create();
@@ -1692,7 +1692,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_AatfCacheShouldBeInValidated()
+        public async Task UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_AatfCacheShouldBeInValidated()
         {
             var model = fixture.Build<UpdateApprovalViewModel>()
                 .With(s => s.SelectedValue, "Yes").Create();
@@ -1704,7 +1704,7 @@
         }
 
         [Fact]
-        public async void UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_ShouldBeRedirectedToAatfDetails()
+        public async Task UpdateApprovalPOST_GivenModelStateIsValidAndAnswerIsYes_ShouldBeRedirectedToAatfDetails()
         {
             var model = fixture.Build<UpdateApprovalViewModel>()
                 .With(s => s.SelectedValue, "Yes").Create();
@@ -1721,7 +1721,7 @@
         }
 
         [Fact]
-        public async void AatfReturnData_OnDownload_ReturnsCsv()
+        public async Task AatfReturnData_OnDownload_ReturnsCsv()
         {
             var file = new CSVFileData() { FileContent = "Content", FileName = "test.csv" };
 

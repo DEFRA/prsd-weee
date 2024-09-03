@@ -23,6 +23,8 @@
                 evidenceNoteRowViewModel.DisplayEditLink = (evidenceNoteRowViewModel.Status == NoteStatus.Draft ||
                                                            evidenceNoteRowViewModel.Status == NoteStatus.Returned) && 
                                                            model.CanSchemeManageEvidence;
+
+                evidenceNoteRowViewModel.DisplayCancelLink = evidenceNoteRowViewModel.Status == NoteStatus.Returned && model.CanSchemeManageEvidence;
             }
 
             return model;

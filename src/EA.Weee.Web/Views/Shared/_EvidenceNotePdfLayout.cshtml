@@ -3,7 +3,7 @@
 <head>
 
     <title>GOV.UK - The best place to find government services and information</title>
-    
+
     <style type="text/css">
 
         .govuk-full-printable-width {
@@ -12,11 +12,11 @@
         }
 
             .govuk-full-printable-width span:nth-child(1) {
-                width: 25%;
+                width: 100%;
             }
 
             .govuk-full-printable-width span:nth-child(2) {
-                width: 75%;
+                width: 100%;
             }
 
         .printable-padding-top {
@@ -27,6 +27,7 @@
             width: 100%;
             display: table;
         }
+
         .govuk-grid-column-one-third {
             display: table-cell;
             width: 30% !important;
@@ -137,6 +138,7 @@
             display: flex;
             width: 20%;
         }
+
             .govuk-header__logotype > img {
                 height: 30px;
                 padding: 0;
@@ -201,6 +203,35 @@
             page-break-after: auto
         }
 
+        .govuk-summary-list {
+            font-family: "GDS Transport",arial,sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+            font-size: 16px;
+            font-size: 1rem;
+            line-height: 1.25;
+            color: #0b0c0c;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        .govuk-summary-list__row {
+            display: flex !important;
+        }
+
+        .govuk-summary-list__key {
+            margin-bottom: 5px;
+            font-weight: 700;
+            min-width: 200px !important;
+        }
+
+        .prsd-long-address span::after {
+            display: inline;
+            content: "\a";
+            white-space: pre;
+        }
+
         @@page {
             font-family: arial, sans-serif;
             font-weight: 400;
@@ -215,24 +246,20 @@
 
 <body>
 
-<header class="govuk-header">
-    <div class="govuk-header__container">
-        <div class="govuk-header__logotype">
-            
-            <img alt="GOV.UK crown logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAgCAYAAAB6kdqOAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AgXEBkknAt7fAAAA0VJREFUWMPtl02IjlEUx/93Rs0YFiJSmlkgSU2+ZmGFNGI2PhdvjLJkMdRYiclHyl7U2CiThZKFpiRSksUsKM0GTVhggRnCTJhe08/m/4471/M+3jHjIzl1e57nfPzPueeee+5zpX+JgIp446EwCUEdkrTEnw9CCCcnglc1CYn6LKnVY/BPLtdUP2fzjWbEst+doQLwUdIBScMeHeYVfkmxAtOBqjI6uyhPu8rYVAHT84o/01kIQcA518QI0JwTf7ukokd7ziSbJY1IGgTOhRDGlaHaZMZ3zN8OXATagPnAVGBBpLfAvPnWuQhst+2dBLP2R0FsMkC7v2PqApYnvA3WOxHxTpi3IdFdboxRsl67fW5Kg5mXALQCjUA30FmmZg6a/yrivTLvYFZNAZ3GbLSPmObFAW1OhEfjogMEVAP9lg8DdclyxctWZx1sU52BdzSx25xm6aUFI8CsnJ03x88ArMgIaAUQEt2sEpllXwAvM88eYGbJ2Tg2wPMomKfjsAuxz9FYgBrgoQEvpFkBpgFNP+hXBaCQ11+AJmOl/Av2/RCoEdCRpjwxOGv+op85yT2pRcY4m8jSJT82RdKXBONj8r3Hz0shhGUJYIukmdFfA5LehhCuJU32UoS1N8fXpxJwt3fDkYwZjukdyVI1ZhR1Y0ZtfocRyY7Yd3cKvtTNayPQEBlcN9ZAArTOz7bIX1upMSa6A5Zfj3gN9tUFLB0zCfeNEi0EeiPDeqAI3APOAzvN/wBcAVYDbzxWm/fBOjvssMcY9RFur32VqC5N3W4Lbvo5LTkW0rbfE7E+eZSoJ+P4GT1ejB372l1uRzzxTPBWvg/cjRpYE3Daupc9y2rgKnDD773AZeuctk2p4d71KJhXBJ7kbc9tVqwH9gHro9ST6B+I3vuBd1myKFM7/L4W2G8f2Gdu3ygCfXFHBbbY+HiG/uFoOToy5Mct2xKfAEAfUKykkZ0ywGOgBdgKDEVOXwBnPPoyaqQvkr+I+EPGajE2wKlKAlrF76OVFd3LmOhtr9JLYcZ/7JQyurckrZH0WNIzSa8lPZL0XtJb38We51w0kVQvqUbSXEl1khZLmiOpQdJCSbd/+no80Svyr8D8T38NfQWcfES5EXNkCgAAAABJRU5ErkJggg==" />
-            <span class="govuk-header__logotype-text">
-                GOV.UK
-            </span>
+    <header class="govuk-header">
+        <div class="govuk-header__container">
+            <div class="govuk-header__logotype">
+                <img alt="GOV.UK crown logo" src="data:image/png;base64,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" />
+            </div>
+            <div>
+                <span class="govuk-header__link--service-name">
+                    Waste Electrical and Electronic Equipment (WEEE)
+                </span>
+            </div>
         </div>
-        <div>
-            <span class="govuk-header__link--service-name">
-                Waste Electrical and Electronic Equipment (WEEE)
-            </span>
-        </div>
-    </div>
-</header>
+    </header>
 
-@RenderBody()
+    @RenderBody()
 
 </body>
 

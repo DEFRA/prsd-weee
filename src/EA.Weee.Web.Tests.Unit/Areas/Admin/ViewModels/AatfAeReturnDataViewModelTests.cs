@@ -31,7 +31,7 @@
         [Fact]
         public void AatfAeReturnDataViewModel_SelectedFacilityType_ShouldHaveRequiredAttribute()
         {
-            typeof(AatfAeReturnDataViewModel).GetProperty("SelectedFacilityType").Should().BeDecoratedWith<RequiredAttribute>().Which.ErrorMessage.Should().Be("Enter AATF or AE");
+            typeof(AatfAeReturnDataViewModel).GetProperty("SelectedFacilityType").Should().BeDecoratedWith<RequiredAttribute>().Which.ErrorMessage.Should().Be("Select AATF or AE");
         }
 
         [Fact]

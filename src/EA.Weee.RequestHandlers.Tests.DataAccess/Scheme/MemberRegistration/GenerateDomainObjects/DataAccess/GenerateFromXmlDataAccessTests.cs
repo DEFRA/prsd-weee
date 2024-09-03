@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess
 {
-    using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
+    using Xunit;
     using System;
     using Weee.Tests.Core.Model;
-    using Xunit;
+    using System.Threading.Tasks;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
 
     public class GenerateFromXmlDataAccessTests
     {
@@ -11,7 +12,7 @@
         [InlineData("Australia", "DDC6551C-D9B2-465C-86DD-670B7D2142C2")]
         [InlineData("UK - England", "184E1785-26B4-4AE4-80D3-AE319B103ACB")]
         [InlineData("UK - Northern Ireland", "7BFB8717-4226-40F3-BC51-B16FDF42550C")]
-        public async void GetCountry_ReturnsCorrectCountryForSpecifiedName(string countryName, string countryId)
+        public async Task GetCountry_ReturnsCorrectCountryForSpecifiedName(string countryName, string countryId)
         {
             using (var database = new DatabaseWrapper())
             {
@@ -25,7 +26,7 @@
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public async void GetCountry_WithNullOrEmptyCountryName_ReturnsNull(string countryName)
+        public async Task GetCountry_WithNullOrEmptyCountryName_ReturnsNull(string countryName)
         {
             using (var database = new DatabaseWrapper())
             {
@@ -37,7 +38,7 @@
         }
 
         [Fact]
-        public async void MigratedProducerExists_ForMatchingProducerRegistrationNumber_Returns_True()
+        public async Task MigratedProducerExists_ForMatchingProducerRegistrationNumber_Returns_True()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -60,7 +61,7 @@
         [InlineData(null)]
         [InlineData("")]
         [InlineData("xxxxx")]
-        public async void MigratedProducerExists_ForUnknownOrNullProducerRegistrationNumber_ReturnsFalse(string producerRegistrationNumber)
+        public async Task MigratedProducerExists_ForUnknownOrNullProducerRegistrationNumber_ReturnsFalse(string producerRegistrationNumber)
         {
             using (var database = new DatabaseWrapper())
             {
@@ -72,7 +73,7 @@
         }
 
         [Fact]
-        public async void ProducerRegistrationExists_ForMatchingProducerRegistrationNumber_ReturnsTrue()
+        public async Task ProducerRegistrationExists_ForMatchingProducerRegistrationNumber_ReturnsTrue()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -96,7 +97,7 @@
         }
 
         [Fact]
-        public async void ProducerRegistrationExists_ForMatchingProducerRegistrationNumber_WithoutProducerSubmission_ReturnsFalse()
+        public async Task ProducerRegistrationExists_ForMatchingProducerRegistrationNumber_WithoutProducerSubmission_ReturnsFalse()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -122,7 +123,7 @@
         [InlineData(null)]
         [InlineData("")]
         [InlineData("xxxxx")]
-        public async void ProducerRegistrationExists_ForUnknownOrNullProducerRegistrationNumber_ReturnsFalse(string producerRegistrationNumber)
+        public async Task ProducerRegistrationExists_ForUnknownOrNullProducerRegistrationNumber_ReturnsFalse(string producerRegistrationNumber)
         {
             using (var database = new DatabaseWrapper())
             {
@@ -134,7 +135,7 @@
         }
 
         [Fact]
-        public async void FetchRegisteredProducerOrDefault_ReturnsProducerForSpecifiedComplianceYearOnly()
+        public async Task FetchRegisteredProducerOrDefault_ReturnsProducerForSpecifiedComplianceYearOnly()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -165,7 +166,7 @@
         }
 
         [Fact]
-        public async void FetchRegisteredProducerOrDefault_ReturnsProducerForSpecifiedProducerRegistrationNumberOnly()
+        public async Task FetchRegisteredProducerOrDefault_ReturnsProducerForSpecifiedProducerRegistrationNumberOnly()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -196,7 +197,7 @@
         }
 
         [Fact]
-        public async void FetchRegisteredProducerOrDefault_ReturnsProducerForSpecifiedSchemeOnly()
+        public async Task FetchRegisteredProducerOrDefault_ReturnsProducerForSpecifiedSchemeOnly()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -229,7 +230,7 @@
         }
 
         [Fact]
-        public async void FetchRegisteredProducerOrDefault_WithNoCurrentSubmissionForProducer_ReturnsRegisteredProducerRecord()
+        public async Task FetchRegisteredProducerOrDefault_WithNoCurrentSubmissionForProducer_ReturnsRegisteredProducerRecord()
         {
             using (var database = new DatabaseWrapper())
             {

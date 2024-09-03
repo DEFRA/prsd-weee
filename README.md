@@ -33,9 +33,9 @@ To initialise git flow for the project, you need to run:
 
 #### Local system dependencies
 
-1. Visual Studio 2017+.
-2. SQL Server Express 2014.
-3. .NET 4.5.2 SDK.
+1. Visual Studio 2022.
+2. SQL Server Express 2022 or Visual Studio with local DB
+3. .NET 4.8 SDK.
 
 <!-- End of list -->
 
@@ -54,16 +54,34 @@ To initialise git flow for the project, you need to run:
 The WEEE project uses [AliaSQL](https://github.com/ClearMeasure/AliaSQL) to manage the creation of and updates to the database.
 
 1. Within the solution, find the EA.Weee.Database project.
-2. Open the App.config of this project. In the appSettings, set the value for 'DatabaseServer' as the database server to be used. The local SQL server express database (.\SQLEXPRESS) will be used if this value is not set.
+2. Open the App.config of this project. In the appSettings, set the value for 'DatabaseServer' as the database server to be used. The local SQL server express database (.\SQLEXPRESS or (localdb)\MSSQLLocalDB) will be used if this value is not set.
 3. You can alter the value of 'DatabaseName' if you wish the database to be created with a different name.
 4. Run the database project (this can be in debug mode). You will be shown a list of possible actions. Choose 'Create', which will run the scripts to create the database.
-5. The EA.Weee.Integration.Tests project creates a EA.Weee.Integration database while executing. To enable this, run the following command within SQL Management studio against your .\SQLEXPRESS instance to provide create database access.
+5. Run the following to setup the main WEEE sql account, assumes you have kept the WEEE database as its default name EA.Weee
+
+USE [master]
+GO
+
+CREATE LOGIN [weeedeveloper] WITH PASSWORD = '<weee config password>';
+GO
+
+USE [EA.Weee];
+GO
+
+CREATE USER [weeedeveloper] FOR LOGIN [weeedeveloper];
+GO
+
+ALTER ROLE [db_owner] ADD MEMBER [weeedeveloper];
+GO
+
+6. The EA.Weee.Integration.Tests project creates a EA.Weee.Integration database while executing. To enable this, run the following command within SQL Management studio against your .\SQLEXPRESS or (localdb)\MSSQLLocalDB instance to provide create database access.
 
 <!-- End of list -->
 
-    USE master;
-    GRANT CREATE ANY DATABASE TO weeedeveloper;
-    
+USE master;
+GRANT CREATE ANY DATABASE TO weeedeveloper;
+
+
 #### Setup the API certificate
 
 The EA.Weee.Api project runs over SSL on post 44502 and requires a certificate to be setup.
@@ -94,8 +112,8 @@ The website uses the API to access the database and to generate emails.
 #### Run the project
 
 1. On the Visual Studio menu click 'Tools' -> 'Options'.  In the options window select 'Projects and Solutions' -> 'Web Projects' and make sure the 'Use the 64 bit version of IIS Express...' is ticked.
-2. Set the EA.Weee.Web project as the start-up project. Build and run the solution.
-3. The website will now be available at https://localhost:44300/
+2. Set the EA.Weee.Web and EA.Weee.API projects as start-up projects (set multiple start up projects). Build and run the solution.
+3. The website will now be available at https://localhost:44300/ and the API available on https://localhost:44502/
 
 <!-- End of list -->
 

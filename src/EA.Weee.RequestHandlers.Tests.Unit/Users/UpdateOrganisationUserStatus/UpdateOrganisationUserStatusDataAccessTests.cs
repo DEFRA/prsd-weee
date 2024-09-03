@@ -6,6 +6,7 @@
     using RequestHandlers.Users.UpdateOrganisationUserStatus;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -21,7 +22,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUser_WhenOrganisationUserDoesNotExist_ReturnsNull()
+        public async Task GetOrganisationUser_WhenOrganisationUserDoesNotExist_ReturnsNull()
         {
             var organisationUserId = Guid.Empty; // Id cannot be set for existing user so will match
 
@@ -34,7 +35,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationUser_WhenOrganisationUserDoesExist_ReturnsUser()
+        public async Task GetOrganisationUser_WhenOrganisationUserDoesExist_ReturnsUser()
         {
             var organisationUserId = Guid.NewGuid(); // Id cannot be set for existing user so will not match
 

@@ -17,6 +17,7 @@
     using Prsd.Core.Mapper;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Mappings.ToViewModel;
@@ -59,7 +60,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_ApiShouldBeCalled()
+        public async Task IndexGet_GivenActionExecutes_ApiShouldBeCalled()
         {
             var returnId = Guid.NewGuid();
 
@@ -70,7 +71,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_ViewModelShouldBeBuilt()
         {
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -87,7 +88,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturnAndPastedValues_CategoryValuesShouldNotBeTheSame()
+        public async Task IndexGet_GivenReturnAndPastedValues_CategoryValuesShouldNotBeTheSame()
         {
             var returnId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -107,7 +108,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenBuiltViewModel_ViewModelShouldBeReturned()
+        public async Task IndexGet_GivenBuiltViewModel_ViewModelShouldBeReturned()
         {
             var model = A.Fake<ObligatedViewModel>();
 
@@ -119,7 +120,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ObligatedViewModel(calculator);
             var request = A.Fake<ObligatedBaseRequest>();
@@ -132,7 +133,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
+        public async Task IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
             controller.ModelState.AddModelError("error", "error");
 
@@ -142,7 +143,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -180,7 +181,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToReceivedPcsList()
+        public async Task IndexPost_GivenObligatedReceivedValuesAreSubmitted_PageRedirectsToReceivedPcsList()
         {
             var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid(), AatfId = Guid.NewGuid() };
 
@@ -193,7 +194,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 

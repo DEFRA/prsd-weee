@@ -8,6 +8,7 @@
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedReused;
     using EA.Weee.RequestHandlers.AatfReturn.ObligatedSentOn;
     using EA.Weee.RequestHandlers.AatfReturn.Specification;
+    using EA.Weee.RequestHandlers.Admin.GetAatfs;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Tests.Core.Model;
@@ -114,15 +115,15 @@
 
                 var submittedReturnOptions = context.ReturnReportOns.Where(r => r.ReturnId == @return.Id).ToList();
 
-                var(submittedWeeeReused, submittedWeeeReusedAddresses, submittedWeeeReusedAmounts, submittedWeeeReusedSites) = await RetrieveSubmittedWeeeReusedData(context, @return, dataAccess);
+                var (submittedWeeeReused, submittedWeeeReusedAddresses, submittedWeeeReusedAmounts, submittedWeeeReusedSites) = await RetrieveSubmittedWeeeReusedData(context, @return, dataAccess);
 
-                var(submittedWeeeReceived, submittedWeeeReturnScheme, submittedWeeeReceivedAmounts) = await RetrieveSubmittedWeeeReceivedData(context, @return, dataAccess);
+                var (submittedWeeeReceived, submittedWeeeReturnScheme, submittedWeeeReceivedAmounts) = await RetrieveSubmittedWeeeReceivedData(context, @return, dataAccess);
 
-                var(submittedWeeeSentOn, submittedWeeeSentOnAddresses, submittedWeeeSentOnAmounts) = await RetrieveSubmittedWeeeSentOnData(context, @return, dataAccess);
+                var (submittedWeeeSentOn, submittedWeeeSentOnAddresses, submittedWeeeSentOnAmounts) = await RetrieveSubmittedWeeeSentOnData(context, @return, dataAccess);
 
                 var submittedNonObligatedWeee = context.NonObligatedWeee.Where(w => w.ReturnId == @return.Id).ToList();
 
-                var handler = new AddReturnReportOnHandler(A.Fake<IWeeeAuthorization>(), dataAccess, context);
+                var handler = new AddReturnReportOnHandler(A.Fake<IWeeeAuthorization>(), dataAccess, context, A.Fake<IWeeeSentOnDataAccess>(), A.Fake<IGetAatfsDataAccess>());
 
                 var deselectOptions = new List<int>() { 1, 2, 3, 4, 5 };
                 var coreReportOnQuestions = CreateReportQuestions();
@@ -221,7 +222,7 @@
 
             foreach (var item in submittedWeeeSentOnAddresses)
             {
-                context.AatfAddress.Count(a => a.Id == item.Id).Should().Be(0);
+                context.AatfAddress.Count(a => a.Id == item.Id).Should().Be(1);
             }
         }
 

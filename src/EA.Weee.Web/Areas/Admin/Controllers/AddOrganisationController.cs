@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
@@ -17,7 +12,11 @@
     using Security;
     using Services;
     using Services.Caching;
-    using ViewModels.AddOrganisation.Details;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.AddOrganisation.Type;
     using ViewModels.Home;
     using Weee.Requests.Admin;
@@ -187,7 +186,7 @@
 
             var countries = await GetCountries();
 
-            var model = new PartnershipDetailsViewModel
+            var model = new ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel
             {
                 BusinessTradingName = searchedText,
                 OrganisationType = organisationType,
@@ -200,7 +199,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PartnershipDetails(PartnershipDetailsViewModel model)
+        public async Task<ActionResult> PartnershipDetails(ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel model)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
@@ -234,7 +233,7 @@
 
             var countries = await GetCountries();
 
-            var model = new SoleTraderDetailsViewModel
+            var model = new ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel
             {
                 CompanyName = searchedText,
                 OrganisationType = organisationType,
@@ -247,7 +246,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SoleTraderDetails(SoleTraderDetailsViewModel model)
+        public async Task<ActionResult> SoleTraderDetails(ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel model)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 
@@ -282,7 +281,7 @@
 
             var countries = await GetCountries();
 
-            var model = new RegisteredCompanyDetailsViewModel
+            var model = new ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel
             {
                 CompanyName = searchedText,
                 OrganisationType = organisationType,
@@ -295,7 +294,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
+        public async Task<ActionResult> RegisteredCompanyDetails(ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel model)
         {
             SetBreadcrumb(InternalUserActivity.CreateOrganisation);
 

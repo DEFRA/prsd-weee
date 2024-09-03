@@ -21,6 +21,12 @@
             Email = email;
         }
 
+        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode,
+            Country country, string telephone, string email, string webAddress) : this(address1, address2, townOrCity, countyOrRegion, postcode, country, telephone, email)
+        {
+            WebAddress = webAddress;
+        }
+
         protected Address()
         {
         }
@@ -32,6 +38,7 @@
         private string postcode;
         private string telephone;
         private string email;
+        private string webAddress;
 
         public virtual Country Country { get; protected set; }
 
@@ -105,14 +112,13 @@
                 postcode = value;
             }
         }
-
+        
         public string Telephone
         {
             get => telephone;
             private set
             {
-                Guard.ArgumentNotNullOrEmpty(() => value, value);
-                if (value.Length > 20)
+                if (value != null && value.Length > 20)
                 {
                     throw new InvalidOperationException(string.Format(("Telephone cannot be greater than 20 characters")));
                 }
@@ -125,12 +131,24 @@
             get => email;
             private set
             {
-                Guard.ArgumentNotNullOrEmpty(() => value, value);
-                if (value.Length > 256)
+                if (value != null && value.Length > 256)
                 {
                     throw new InvalidOperationException(string.Format(("Email cannot be greater than 256 characters")));
                 }
                 email = value;
+            }
+        }
+
+        public string WebAddress
+        {
+            get => webAddress;
+            private set
+            {
+                if (value != null && value.Length > 50)
+                {
+                    throw new InvalidOperationException(string.Format(("Website address cannot be greater than 50 characters")));
+                }
+                webAddress = value;
             }
         }
 

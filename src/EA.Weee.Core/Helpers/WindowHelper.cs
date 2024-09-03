@@ -19,7 +19,16 @@
                 return true;
             }
 
-            return complianceYear == systemDate.Year - 1 && systemDate.Date.Month == 1;
+            if (systemDate.Date.Month == 1)
+            {
+                var previousYear = systemDate.Year - 1;
+                if (complianceYear == previousYear)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -15,5 +15,7 @@
         Task<List<Aatf>> GetFilteredAatfs(AatfFilter filter);
 
         Task<List<Aatf>> GetLatestAatfs();
+
+        Task<List<Aatf>> GetAatfsBySiteAddressId(Guid siteAddressId);
     }
 }

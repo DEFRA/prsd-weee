@@ -42,7 +42,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_ChecksForValidityOfOrganisation()
+        public async Task GetChooseActivity_ChecksForValidityOfOrganisation()
         {
             try
             {
@@ -57,7 +57,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async Task GetChooseActivity_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async Task GetChooseActivity_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -579,7 +579,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManagePcsMembersApprovedStatus_RedirectsToMemberRegistrationSummary()
+        public async Task PostChooseActivity_ManagePcsMembersApprovedStatus_RedirectsToMemberRegistrationSummary()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
 
@@ -597,7 +597,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAatfFacilityType()
+        public async Task PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAatfFacilityType()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -614,7 +614,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAeFacilityType()
+        public async Task PostChooseActivity_ViewAATFContactDetails_RedirectsAatfToHomeControllerWithAeFacilityType()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -631,7 +631,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManagePcsMembersPendingStatus_RedirectsToAuthorisationRequired()
+        public async Task PostChooseActivity_ManagePcsMembersPendingStatus_RedirectsToAuthorisationRequired()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Pending);
 
@@ -651,7 +651,7 @@
         [Theory]
         [InlineData(SchemeStatus.Rejected)]
         [InlineData(SchemeStatus.Withdrawn)]
-        public async void PostChooseActivity_ManagePcsMembersRejectedOrWithdrawnStatus_RedirectsToAuthorisationRequired(SchemeStatus status)
+        public async Task PostChooseActivity_ManagePcsMembersRejectedOrWithdrawnStatus_RedirectsToAuthorisationRequired(SchemeStatus status)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(status);
 
@@ -669,7 +669,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageOrganisationUsers_RedirectsToOrganisationUsersManagement()
+        public async Task PostChooseActivity_ManageOrganisationUsers_RedirectsToOrganisationUsersManagement()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -684,7 +684,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ModelIsInvalid_ShouldRedirectViewWithModel()
+        public async Task PostChooseActivity_ModelIsInvalid_ShouldRedirectViewWithModel()
         {
             var controller = HomeController();
             controller.ModelState.AddModelError("Key", "Any error");
@@ -701,7 +701,7 @@
         }
 
         [Fact]
-        public async void GetChooseSubmissionType_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async Task GetChooseSubmissionType_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
@@ -710,7 +710,7 @@
         }
 
         [Fact]
-        public async void GetChooseSubmissionType_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async Task GetChooseSubmissionType_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -721,7 +721,7 @@
         }
 
         [Fact]
-        public async void PostChooseSubmissionType_ModelIsInvalid_ShouldRedirectViewWithModel()
+        public async Task PostChooseSubmissionType_ModelIsInvalid_ShouldRedirectViewWithModel()
         {
             var controller = HomeController();
             controller.ModelState.AddModelError("Key", "Any error");
@@ -738,7 +738,7 @@
         }
 
         [Fact]
-        public async void PostChooseSubmissionType_MemberRegistrationsSelected_RedirectsToMemberRegistrationSubmissionHistory()
+        public async Task PostChooseSubmissionType_MemberRegistrationsSelected_RedirectsToMemberRegistrationSubmissionHistory()
         {
             var result = await HomeController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
             {
@@ -753,7 +753,7 @@
         }
 
         [Fact]
-        public async void PostChooseSubmissionType_DataReturnsSelected_RedirectsToDataReturnsSubmissionHistory()
+        public async Task PostChooseSubmissionType_DataReturnsSelected_RedirectsToDataReturnsSubmissionHistory()
         {
             var result = await HomeController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
             {
@@ -768,7 +768,7 @@
         }
 
         [Fact]
-        public async void GetManageOrganisationUsers_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async Task GetManageOrganisationUsers_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
@@ -777,7 +777,7 @@
         }
 
         [Fact]
-        public async void GetManageOrganisationUsers_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async Task GetManageOrganisationUsers_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -800,7 +800,7 @@
         }
 
         [Fact]
-        public async void GetManageOrganisationUsers_NoUsers_ThrowsException()
+        public async Task GetManageOrganisationUsers_NoUsers_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -815,7 +815,7 @@
         }
 
         [Fact]
-        public async void PostManageOrganisationUsers_ModalStateValid_ReturnsView()
+        public async Task PostManageOrganisationUsers_ModalStateValid_ReturnsView()
         {
             var model = new OrganisationUsersViewModel
             {
@@ -841,7 +841,7 @@
         }
 
         [Fact]
-        public async void GetManageOrganisationUser_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async Task GetManageOrganisationUser_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
@@ -850,7 +850,7 @@
         }
 
         [Fact]
-        public async void GetManageOrganisationUser_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async Task GetManageOrganisationUser_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -870,7 +870,7 @@
         }
 
         [Fact]
-        public async void GetManageOrganisationUser_NullOrganisationUserId_RedirectsToManageOrganisationUsers()
+        public async Task GetManageOrganisationUser_NullOrganisationUserId_RedirectsToManageOrganisationUsers()
         {
             var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), (Guid?)null);
 
@@ -884,7 +884,7 @@
         }
 
         [Fact]
-        public async void PostManageOrganisationUser_DoNotChangeSelected_MustNotHappendUpdateOrganisationUserStatus()
+        public async Task PostManageOrganisationUser_DoNotChangeSelected_MustNotHappendUpdateOrganisationUserStatus()
         {
             const string DoNotChange = "Do not change at this time";
 
@@ -905,7 +905,7 @@
         }
 
         [Fact]
-        public async void PostManageOrganisationUser_ModalStateValid_ReturnsView()
+        public async Task PostManageOrganisationUser_ModalStateValid_ReturnsView()
         {
             const string DoNotChange = "Do not change at this time";
 
@@ -932,7 +932,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ViewOrganisationDetails_RedirectsToViewOrganisationDetails()
+        public async Task PostChooseActivity_ViewOrganisationDetails_RedirectsToViewOrganisationDetails()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -1035,7 +1035,7 @@
         }
 
         [Fact]
-        public async void GetViewOrganisationDetails_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async Task GetViewOrganisationDetails_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
@@ -1044,7 +1044,7 @@
         }
 
         [Fact]
-        public async void GetViewOrganisationDetails_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async Task GetViewOrganisationDetails_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -1161,7 +1161,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageAATFEvidenceNotes_RedirectsToManageAATFEvidenceNotes()
+        public async Task PostChooseActivity_ManageAATFEvidenceNotes_RedirectsToManageAATFEvidenceNotes()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -1432,7 +1432,7 @@
         }
 
         [Fact]
-        public async void GetViewSubmissionHistory_ShouldExecuteGetSubmissionsHistoryResultsAndReturnsView()
+        public async Task GetViewSubmissionHistory_ShouldExecuteGetSubmissionsHistoryResultsAndReturnsView()
         {
             var controller = HomeController();
 
@@ -1448,7 +1448,7 @@
         }
 
         [Fact]
-        public async void GetViewSubmissionHistory_SchemeInfoIsNull_ShouldNotExecuteGetSubmissionsHistoryResultsAndReturnsView()
+        public async Task GetViewSubmissionHistory_SchemeInfoIsNull_ShouldNotExecuteGetSubmissionsHistoryResultsAndReturnsView()
         {
             var controller = HomeController();
 
@@ -1463,7 +1463,7 @@
         }
 
         [Fact]
-        public async void GetViewSubmissionHistory_SortsByComplianceYearDescendingAsDefault()
+        public async Task GetViewSubmissionHistory_SortsByComplianceYearDescendingAsDefault()
         {
             var controller = HomeController();
 
@@ -1480,7 +1480,7 @@
         }
 
         [Fact]
-        public async void GetViewSubmissionHistory_DoesNotRequestForSummaryData()
+        public async Task GetViewSubmissionHistory_DoesNotRequestForSummaryData()
         {
             var controller = HomeController();
 
@@ -1496,7 +1496,7 @@
         [InlineData(SubmissionsHistoryOrderBy.ComplianceYearDescending)]
         [InlineData(SubmissionsHistoryOrderBy.SubmissionDateAscending)]
         [InlineData(SubmissionsHistoryOrderBy.SubmissionDateDescending)]
-        public async void GetViewSubmissionHistory_SortsBySpecifiedValue(SubmissionsHistoryOrderBy orderBy)
+        public async Task GetViewSubmissionHistory_SortsBySpecifiedValue(SubmissionsHistoryOrderBy orderBy)
         {
             var controller = HomeController();
 
@@ -1513,7 +1513,7 @@
         }
 
         [Fact]
-        public async void GetDownloadCsv_ShouldExecuteGetMemberUploadDataAndReturnsCsvFile()
+        public async Task GetDownloadCsv_ShouldExecuteGetMemberUploadDataAndReturnsCsvFile()
         {
             var controller = HomeController();
 
@@ -1526,7 +1526,7 @@
         }
 
         [Fact]
-        public async void GetViewDataReturnSubmissionHistory_ShouldExecuteGetDataReturnSubmissionsHistoryResultsAndReturnsView()
+        public async Task GetViewDataReturnSubmissionHistory_ShouldExecuteGetDataReturnSubmissionsHistoryResultsAndReturnsView()
         {
             var controller = HomeController();
 
@@ -1542,7 +1542,7 @@
         }
 
         [Fact]
-        public async void GetViewDataReturnSubmissionHistory_SchemeInfoIsNull_ShouldNotExecuteGetDataReturnSubmissionsHistoryResultsAndReturnsView()
+        public async Task GetViewDataReturnSubmissionHistory_SchemeInfoIsNull_ShouldNotExecuteGetDataReturnSubmissionsHistoryResultsAndReturnsView()
         {
             var controller = HomeController();
 
@@ -1557,7 +1557,7 @@
         }
 
         [Fact]
-        public async void GetViewDataReturnSubmissionHistory_SortsByComplianceYearDescendingAsDefault()
+        public async Task GetViewDataReturnSubmissionHistory_SortsByComplianceYearDescendingAsDefault()
         {
             var controller = HomeController();
 
@@ -1580,7 +1580,7 @@
         [InlineData(DataReturnSubmissionsHistoryOrderBy.QuarterDescending)]
         [InlineData(DataReturnSubmissionsHistoryOrderBy.SubmissionDateAscending)]
         [InlineData(DataReturnSubmissionsHistoryOrderBy.SubmissionDateDescending)]
-        public async void GetViewDataReturnSubmissionHistory_SortsBySpecifiedValue(DataReturnSubmissionsHistoryOrderBy orderBy)
+        public async Task GetViewDataReturnSubmissionHistory_SortsBySpecifiedValue(DataReturnSubmissionsHistoryOrderBy orderBy)
         {
             var controller = HomeController();
 
@@ -1621,7 +1621,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeData_RedirectsToDataReturnsIndex()
+        public async Task PostChooseActivity_ManageEeeWeeeData_RedirectsToDataReturnsIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
 
@@ -1639,7 +1639,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_MakeAATFReturn_RedirectsToSelectYourPCS()
+        public async Task PostChooseActivity_MakeAATFReturn_RedirectsToSelectYourPCS()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -1654,7 +1654,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManagePBSEvidenceNotes_RedirectsToManageEvidenceNotes()
+        public async Task PostChooseActivity_ManagePBSEvidenceNotes_RedirectsToManageEvidenceNotes()
         {
             var organisationId = Guid.NewGuid();
 
@@ -1674,7 +1674,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasNoAatfs_ViewModelShouldNotContainManageAatfReturns()
+        public async Task ChooseActivityGET_GivenOrganisationHasNoAatfs_ViewModelShouldNotContainManageAatfReturns()
         {
             var organisationData = new OrganisationData() { HasAatfs = false };
 
@@ -1688,7 +1688,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasAatfs_ViewModelShouldContainManageAatfReturns()
+        public async Task ChooseActivityGET_GivenOrganisationHasAatfs_ViewModelShouldContainManageAatfReturns()
         {
             var organisationData = new OrganisationData() { HasAatfs = true };
 
@@ -1702,7 +1702,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasNoAes_ViewModelShouldNotContainManageAesReturns()
+        public async Task ChooseActivityGET_GivenOrganisationHasNoAes_ViewModelShouldNotContainManageAesReturns()
         {
             var organisationData = new OrganisationData() { HasAes = false };
 
@@ -1716,7 +1716,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasAes_ViewModelShouldContainManageAeReturns()
+        public async Task ChooseActivityGET_GivenOrganisationHasAes_ViewModelShouldContainManageAeReturns()
         {
             var organisationData = new OrganisationData() { HasAes = true };
 
@@ -1730,7 +1730,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityPOST_GivenOrganisationHasNoAatfs_ViewModelShouldNotContainManageAatfReturns()
+        public async Task ChooseActivityPOST_GivenOrganisationHasNoAatfs_ViewModelShouldNotContainManageAatfReturns()
         {
             var organisationData = new OrganisationData() { HasAatfs = false };
 
@@ -1744,7 +1744,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityPOST_GivenOrganisationHasAatfs_ViewModelShouldContainManageAatfReturns()
+        public async Task ChooseActivityPOST_GivenOrganisationHasAatfs_ViewModelShouldContainManageAatfReturns()
         {
             var organisationData = new OrganisationData() { HasAatfs = true };
 
@@ -1758,7 +1758,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityPOST_GivenOrganisationHasNoAes_ViewModelShouldNotContainManageAesReturns()
+        public async Task ChooseActivityPOST_GivenOrganisationHasNoAes_ViewModelShouldNotContainManageAesReturns()
         {
             var organisationData = new OrganisationData() { HasAes = false };
 
@@ -1772,7 +1772,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityPOST_GivenOrganisationHasAes_ViewModelShouldContainManageAeReturns()
+        public async Task ChooseActivityPOST_GivenOrganisationHasAes_ViewModelShouldContainManageAeReturns()
         {
             var organisationData = new OrganisationData() { HasAes = true };
 
@@ -1786,7 +1786,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsMembers()
+        public async Task ChooseActivityGET_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsMembers()
         {
             var organisationData = new OrganisationData() { SchemeId = null };
 
@@ -1800,7 +1800,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsMembers()
+        public async Task ChooseActivityGET_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsMembers()
         {
             var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
 
@@ -1814,7 +1814,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityPOST_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsMembers()
+        public async Task ChooseActivityPOST_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsMembers()
         {
             var organisationData = new OrganisationData() { SchemeId = null };
 
@@ -1828,7 +1828,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityPOST_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsMembers()
+        public async Task ChooseActivityPOST_GivenOrganisationHasScheme_ViewModelShouldContainManagePcsMembers()
         {
             var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
 
@@ -1842,7 +1842,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasAesAndAatfsButAatfReturnsIsOff_ViewModelShouldNotContainManageReturns()
+        public async Task ChooseActivityGET_GivenOrganisationHasAesAndAatfsButAatfReturnsIsOff_ViewModelShouldNotContainManageReturns()
         {
             var organisationData = new OrganisationData() { HasAes = true, HasAatfs = true };
 
@@ -1885,7 +1885,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsEvidenceNotes()
+        public async Task ChooseActivityGET_GivenOrganisationHasNoScheme_ViewModelShouldNotContainManagePcsEvidenceNotes()
         {
             var organisationData = new OrganisationData() { SchemeId = null };
 
@@ -1899,7 +1899,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasScheme_ManagePcsEvidenceNotesSetToTrueInconfig_ViewModelShouldContainManagePcsEvidenceNotes()
+        public async Task ChooseActivityGET_GivenOrganisationHasScheme_ManagePcsEvidenceNotesSetToTrueInconfig_ViewModelShouldContainManagePcsEvidenceNotes()
         {
             var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
 
@@ -1913,7 +1913,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenOrganisationHasScheme_ManagePcsEvidenceNotesSetToFalseInconfig_ViewModelShouldNotContainManagePcsEvidenceNotes()
+        public async Task ChooseActivityGET_GivenOrganisationHasScheme_ManagePcsEvidenceNotesSetToFalseInconfig_ViewModelShouldNotContainManagePcsEvidenceNotes()
         {
             var organisationData = new OrganisationData() { SchemeId = Guid.NewGuid() };
 
@@ -1961,7 +1961,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenIsBalancingSchemeIsSetToFalse_ViewModelShouldNotContainManagePbsEvidenceNotes()
+        public async Task ChooseActivityGET_GivenIsBalancingSchemeIsSetToFalse_ViewModelShouldNotContainManagePbsEvidenceNotes()
         {
             var organisationData = new OrganisationData() { SchemeId = null };
 
@@ -1975,7 +1975,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenIsBalancingSchemeIsSetToTrue_ManagePbsEvidenceNotesSetToTrueInconfig_ViewModelShouldContainManagePbsEvidenceNotes()
+        public async Task ChooseActivityGET_GivenIsBalancingSchemeIsSetToTrue_ManagePbsEvidenceNotesSetToTrueInconfig_ViewModelShouldContainManagePbsEvidenceNotes()
         {
             var organisationData = new OrganisationData() { IsBalancingScheme = true };
 
@@ -1989,7 +1989,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenIsBalancingSchemeIsSetToFalse_ManagePbsEvidenceNotesSetToTrueInconfig_ViewModelShouldNotContainManagePbsEvidenceNotes()
+        public async Task ChooseActivityGET_GivenIsBalancingSchemeIsSetToFalse_ManagePbsEvidenceNotesSetToTrueInconfig_ViewModelShouldNotContainManagePbsEvidenceNotes()
         {
             var organisationData = new OrganisationData() { IsBalancingScheme = false };
 
@@ -2003,7 +2003,7 @@
         }
 
         [Fact]
-        public async void ChooseActivityGET_GivenIsBalancingSchemeIsSetToFalse_ManagePbsEvidenceNotesSetToFalseInconfig_ViewModelShouldNotContainManagePbsEvidenceNotes()
+        public async Task ChooseActivityGET_GivenIsBalancingSchemeIsSetToFalse_ManagePbsEvidenceNotesSetToFalseInconfig_ViewModelShouldNotContainManagePbsEvidenceNotes()
         {
             var organisationData = new OrganisationData() { IsBalancingScheme = false };
 
