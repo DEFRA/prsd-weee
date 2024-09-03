@@ -690,5 +690,11 @@
 
             return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
         }
+
+        [HttpGet]
+        public ViewResult RegistrationComplete()
+        {
+            return View();
+        }
     }
 }
