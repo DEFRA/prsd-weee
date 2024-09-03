@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain;
@@ -31,6 +32,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly Guid countryId = Guid.NewGuid();
+        private readonly Country country;
         private const string CompanyName = "Company name";
         private const string TradingName = "Trading name";
         private const string BrandNames = "Brand names";
@@ -46,7 +48,7 @@
 
             var dbContextHelper = new DbContextHelper();
 
-            var country = new Country(countryId, "UK");
+            country = new Country(countryId, "UK");
 
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
@@ -159,14 +161,16 @@
 
         [Theory]
         [MemberData(nameof(OrganisationValues))]
-        public async Task HandleAsync_WhenValidRequestIsProvided_ShouldCreateOrganisationAndReturnItsId(ExternalOrganisationType externalOrganisationType,
-            Domain.Organisation.OrganisationType domainOrganisationType, string brandNames)
+        public async Task HandleAsync_WhenValidRequestIsProvided_ShouldCreateOrganisationAndReturnItsId(
+            ExternalOrganisationType externalOrganisationType,
+            Domain.Organisation.OrganisationType domainOrganisationType,
+            string brandNames)
         {
             // Arrange
             var organisationId = Guid.NewGuid();
             var hasBrandName = !string.IsNullOrWhiteSpace(brandNames);
 
-            SetupValidOrganisationTransaction(externalOrganisationType, brandNames);
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType, brandNames);
 
             var newAddress = A.Fake<Address>();
             var directRegistrant = A.Fake<DirectRegistrant>();
@@ -221,7 +225,18 @@
                     d.Organisation.TradingName == TradingName &&
                     d.Organisation.Name == CompanyName &&
                     d.Organisation.BusinessAddress == newAddress &&
-                    d.BrandName == brandName))).MustHaveHappenedOnceExactly();
+                    d.BrandName == brandName &&
+                    d.Contact.FirstName == transactionData.ContactDetailsViewModel.FirstName &&
+                    d.Contact.LastName == transactionData.ContactDetailsViewModel.LastName &&
+                    d.Contact.Position == transactionData.ContactDetailsViewModel.Position &&
+                    d.Address.Address1 == transactionData.ContactDetailsViewModel.AddressData.Address1 &&
+                    d.Address.Address2 == transactionData.ContactDetailsViewModel.AddressData.Address2 &&
+                    d.Address.TownOrCity == transactionData.ContactDetailsViewModel.AddressData.TownOrCity &&
+                    d.Address.CountyOrRegion == transactionData.ContactDetailsViewModel.AddressData.CountyOrRegion &&
+                    d.Address.Postcode == transactionData.ContactDetailsViewModel.AddressData.Postcode &&
+                    d.Address.Country == country &&
+                    d.Address.Email == transactionData.ContactDetailsViewModel.AddressData.Email &&
+                    d.Address.Telephone == transactionData.ContactDetailsViewModel.AddressData.Telephone))).MustHaveHappenedOnceExactly();
 
                 A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>.That.Matches(o =>
                     o == newOrganisation)))
@@ -287,6 +302,9 @@
                 default:
                     throw new ArgumentOutOfRangeException(nameof(organisationType), organisationType, null);
             }
+
+            var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, country.Id).Create();
+            transactionData.ContactDetailsViewModel = TestFixture.Build<ContactDetailsViewModel>().With(r => r.AddressData, organisationContactAddress).Create();
 
             transactionData.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsView;
             transactionData.PartnershipDetailsViewModel = partnershipDetailsViewModel;
