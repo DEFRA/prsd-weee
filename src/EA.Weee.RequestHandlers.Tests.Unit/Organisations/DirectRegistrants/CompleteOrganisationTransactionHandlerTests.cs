@@ -32,6 +32,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly Guid countryId = Guid.NewGuid();
+        private readonly Country country;
         private const string CompanyName = "Company name";
         private const string TradingName = "Trading name";
         private const string BrandNames = "Brand names";
@@ -47,7 +48,7 @@
 
             var dbContextHelper = new DbContextHelper();
 
-            var country = new Country(countryId, "UK");
+            country = new Country(countryId, "UK");
 
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
@@ -233,7 +234,7 @@
                     d.Address.TownOrCity == transactionData.ContactDetailsViewModel.AddressData.TownOrCity &&
                     d.Address.CountyOrRegion == transactionData.ContactDetailsViewModel.AddressData.CountyOrRegion &&
                     d.Address.Postcode == transactionData.ContactDetailsViewModel.AddressData.Postcode &&
-                    d.Address.CountryId == transactionData.ContactDetailsViewModel.AddressData.CountryId &&
+                    d.Address.Country == country &&
                     d.Address.Email == transactionData.ContactDetailsViewModel.AddressData.Email &&
                     d.Address.Telephone == transactionData.ContactDetailsViewModel.AddressData.Telephone))).MustHaveHappenedOnceExactly();
 
@@ -302,7 +303,7 @@
                     throw new ArgumentOutOfRangeException(nameof(organisationType), organisationType, null);
             }
 
-            var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, countryId).Create();
+            var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, country.Id).Create();
             transactionData.ContactDetailsViewModel = TestFixture.Build<ContactDetailsViewModel>().With(r => r.AddressData, organisationContactAddress).Create();
 
             transactionData.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsView;
