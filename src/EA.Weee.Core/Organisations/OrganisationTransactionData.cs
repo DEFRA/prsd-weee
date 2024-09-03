@@ -22,6 +22,8 @@
 
         public PartnershipDetailsViewModel PartnershipDetailsViewModel { get; set; }
 
+        public PartnerViewModel PartnerViewModel { get; set; }
+
         public SoleTraderDetailsViewModel SoleTraderDetailsViewModel { get; set; }
 
         public RepresentingCompanyDetailsViewModel RepresentingCompanyDetailsViewModel { get; set; }
