@@ -301,7 +301,7 @@
             var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, country.Id).Create();
             transactionData.ContactDetailsViewModel = TestFixture.Build<ContactDetailsViewModel>().With(r => r.AddressData, organisationContactAddress).Create();
 
-            transactionData.OrganisationViewModel = OrganisationViewModel;
+            transactionData.OrganisationViewModel = organisationViewModel;
             transactionData.AuthorisedRepresentative = authorisedRepresentative;
             
             if (authorisedRepresentative == YesNoType.Yes)

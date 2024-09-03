@@ -296,14 +296,14 @@
             {
                 LocalSetup();
 
-                var registeredCompanyDetails = fixture.Build<RegisteredCompanyDetailsViewModel>()
+                var registeredCompanyDetails = fixture.Build<OrganisationViewModel>()
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(r => r.AuthorisedRepresentative, YesNoType.Yes)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
-                    .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails)
+                    .With(o => o.OrganisationViewModel, registeredCompanyDetails)
                     .With(o => o.RepresentingCompanyDetailsViewModel, representingCompanyDetails)
                     .Create();
 
@@ -350,11 +350,11 @@
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
                 organisation.OrganisationName.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
                 organisation.TradingName.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName);
+                    .Be(organisationTransactionData.OrganisationViewModel.BusinessTradingName);
                 organisation.CompanyRegistrationNumber.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
                 entity.Organisation.Should().Be(organisation);
             };
@@ -365,7 +365,7 @@
 
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
+                    .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
                 directRegistrant.AuthorisedRepresentative.Should().NotBeNull();
                 directRegistrant.AuthorisedRepresentative.OverseasProducerName.Should().Be(representingCompanyDetails.CompanyName);
                 directRegistrant.AuthorisedRepresentative.OverseasProducerTradingName.Should().Be(representingCompanyDetails.BusinessTradingName);
