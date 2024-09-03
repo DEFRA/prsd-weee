@@ -1,29 +1,29 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Filters
 {
+    using EA.Weee.Web.Areas.Producer.Filters;
+    using FakeItEasy;
+    using FluentAssertions;
+    using System;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using EA.Weee.Web.Areas.Producer.Filters;
-    using FakeItEasy;
-    using FluentAssertions;
     using Xunit;
 
-    public class AuthorizeDirectRegistrantClaimsAttributeTests
+    public class AuthoriseRouteClaimsAttributeTests
     {
         private readonly System.Web.Mvc.AuthorizationContext context;
-        private readonly HttpContextBase httpContext;
         private readonly HttpRequestBase request;
         private readonly IPrincipal principal;
         private readonly IIdentity identity;
         private readonly RouteData routeData;
-        private readonly AuthorizeDirectRegistrantClaimsAttribute attribute;
+        private readonly AuthorizeRouteClaimsAttribute attribute;
 
-        public AuthorizeDirectRegistrantClaimsAttributeTests()
+        public AuthoriseRouteClaimsAttributeTests()
         {
             context = A.Fake<System.Web.Mvc.AuthorizationContext>();
-            httpContext = A.Fake<HttpContextBase>();
+            var httpContext = A.Fake<HttpContextBase>();
             request = A.Fake<HttpRequestBase>();
             principal = A.Fake<IPrincipal>();
             identity = A.Fake<IIdentity>();
@@ -35,12 +35,15 @@
             A.CallTo(() => principal.Identity).Returns(identity);
             A.CallTo(() => context.RouteData).Returns(routeData);
 
-            attribute = new AuthorizeDirectRegistrantClaimsAttribute("testRouteId", "claim1", "claim2");
+            attribute = new AuthorizeRouteClaimsAttribute("testRouteId", "claim1", "claim2");
         }
 
         [Fact]
         public void OnAuthorization_RouteIdNotFound_SetsBadRequestResult()
         {
+            // Arrange
+            A.CallTo(() => identity.IsAuthenticated).Returns(true);
+
             // Act
             attribute.OnAuthorization(context);
 
@@ -54,15 +57,15 @@
         public void OnAuthorization_UserNotAuthenticated_SetsForbiddenResult()
         {
             // Arrange
-            routeData.Values["testRouteId"] = "123";
+            routeData.Values["testRouteId"] = Guid.NewGuid();
             A.CallTo(() => identity.IsAuthenticated).Returns(false);
 
             // Act
             attribute.OnAuthorization(context);
 
             // Assert
-            context.Result.Should().BeOfType<HttpStatusCodeResult>()
-                .Which.StatusCode.Should().Be(403);
+            context.Result.Should().BeOfType<HttpUnauthorizedResult>()
+                .Which.StatusCode.Should().Be(401);
         }
 
         [Fact]
@@ -105,20 +108,6 @@
 
             // Assert
             context.Result.Should().BeNull();
-        }
-
-        [Fact]
-        public void HandleUnauthorizedRequest_UserAuthenticated_SetsForbiddenResult()
-        {
-            // Arrange
-            A.CallTo(() => request.IsAuthenticated).Returns(true);
-
-            // Act
-            attribute.OnAuthorization(context);
-
-            // Assert
-            context.Result.Should().BeOfType<HttpStatusCodeResult>()
-                .Which.StatusCode.Should().Be(403);
         }
 
         [Fact]
