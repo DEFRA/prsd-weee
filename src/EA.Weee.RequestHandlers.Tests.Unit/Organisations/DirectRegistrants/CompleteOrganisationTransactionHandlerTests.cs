@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain;
@@ -236,7 +237,17 @@
                         d.Organisation.Name == CompanyName &&
                         d.Organisation.BusinessAddress == newAddress &&
                         d.BrandName == brandName &&
-                        d.AuthorisedRepresentative == null))).MustHaveHappenedOnceExactly();
+                        d.Contact.FirstName == transactionData.ContactDetailsViewModel.FirstName &&
+                        d.Contact.LastName == transactionData.ContactDetailsViewModel.LastName &&
+                        d.Contact.Position == transactionData.ContactDetailsViewModel.Position &&
+                        d.Address.Address1 == transactionData.ContactDetailsViewModel.AddressData.Address1 &&
+                        d.Address.Address2 == transactionData.ContactDetailsViewModel.AddressData.Address2 &&
+                        d.Address.TownOrCity == transactionData.ContactDetailsViewModel.AddressData.TownOrCity &&
+                        d.Address.CountyOrRegion == transactionData.ContactDetailsViewModel.AddressData.CountyOrRegion &&
+                        d.Address.Postcode == transactionData.ContactDetailsViewModel.AddressData.Postcode &&
+                        d.Address.Country == country &&
+                        d.Address.Email == transactionData.ContactDetailsViewModel.AddressData.Email &&
+                        d.Address.Telephone == transactionData.ContactDetailsViewModel.AddressData.Telephone))).MustHaveHappenedOnceExactly();
                 }
                 
                 A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>.That.Matches(o =>
@@ -304,6 +315,9 @@
                 default:
                     throw new ArgumentOutOfRangeException(nameof(organisationType), organisationType, null);
             }
+
+            var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, country.Id).Create();
+            transactionData.ContactDetailsViewModel = TestFixture.Build<ContactDetailsViewModel>().With(r => r.AddressData, organisationContactAddress).Create();
 
             transactionData.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsView;
             transactionData.PartnershipDetailsViewModel = partnershipDetailsViewModel;
