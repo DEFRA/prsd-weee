@@ -111,21 +111,21 @@
                 case ExternalOrganisationType.Partnership:
                     return Organisation.CreateDirectRegistrantCompany(
                         EA.Weee.Domain.Organisation.OrganisationType.DirectRegistrantPartnership,
-                        organisationTransactionData.PartnershipDetailsViewModel.CompanyName,
-                        organisationTransactionData.PartnershipDetailsViewModel.BusinessTradingName,
-                        organisationTransactionData.PartnershipDetailsViewModel.CompaniesRegistrationNumber);
+                        organisationTransactionData.OrganisationViewModel.CompanyName,
+                        organisationTransactionData.OrganisationViewModel.BusinessTradingName,
+                        organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 case ExternalOrganisationType.RegisteredCompany:
                     return Organisation.CreateDirectRegistrantCompany(
                         EA.Weee.Domain.Organisation.OrganisationType.RegisteredCompany,
-                        organisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName,
-                        organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName,
-                        organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
+                        organisationTransactionData.OrganisationViewModel.CompanyName,
+                        organisationTransactionData.OrganisationViewModel.BusinessTradingName,
+                        organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 case ExternalOrganisationType.SoleTrader:
                     return Organisation.CreateDirectRegistrantCompany(
                         EA.Weee.Domain.Organisation.OrganisationType.SoleTraderOrIndividual,
-                        organisationTransactionData.SoleTraderDetailsViewModel.CompanyName,
-                        organisationTransactionData.SoleTraderDetailsViewModel.BusinessTradingName,
-                        organisationTransactionData.SoleTraderDetailsViewModel.CompaniesRegistrationNumber);
+                        organisationTransactionData.OrganisationViewModel.CompanyName,
+                        organisationTransactionData.OrganisationViewModel.BusinessTradingName,
+                        organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
 
                 case null:
                     throw new InvalidOperationException("Organisation type is null.");
@@ -137,7 +137,7 @@
 
         private async Task<Address> CreateAndAddAddress(OrganisationTransactionData organisationTransactionData, Organisation organisation)
         {
-            var addressData = organisationTransactionData.GetAddressData();
+            var addressData = organisationTransactionData.OrganisationViewModel.Address;
             if (addressData == null)
             {
                 throw new InvalidOperationException("Address data is null.");
@@ -153,7 +153,7 @@
 
         private async Task<BrandName> CreateAndAddBrandName(OrganisationTransactionData organisationTransactionData)
         {
-            var brandNames = organisationTransactionData.GetBrandNames();
+            var brandNames = organisationTransactionData.OrganisationViewModel.EEEBrandNames;
             if (string.IsNullOrWhiteSpace(brandNames))
             {
                 return null;

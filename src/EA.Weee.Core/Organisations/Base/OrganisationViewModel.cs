@@ -7,18 +7,16 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
-    public abstract class OrganisationViewModel : IValidatableObject
+    public class OrganisationViewModel : IValidatableObject
     {
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        public abstract string CompanyName { get; set; }
+        public virtual string CompanyName { get; set; }
 
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("Business trading name")]
-        public abstract string BusinessTradingName { get; set; }
+        public virtual string BusinessTradingName { get; set; }
 
         public ExternalAddressData Address { get; set; } = new ExternalAddressData() { CountryId = UkCountryList.UkCountryId };
-
-        public Core.Shared.EntityType EntityType { get; set; }
 
         [StringLength(maximumLength: EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, MinimumLength = 7, ErrorMessage = "The Company registration number should be 7 to 15 characters long")]
         [Display(Name = "Company registration number (CRN)")]
@@ -27,6 +25,8 @@
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
+
+        public ExternalOrganisationType? OrganisationType { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
