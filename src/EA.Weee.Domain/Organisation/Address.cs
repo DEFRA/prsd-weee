@@ -176,7 +176,7 @@
             otherAddress.Country = Country;
             otherAddress.Telephone = Telephone;
             otherAddress.Email = Email;
-
+            otherAddress.WebAddress = WebAddress;
             return otherAddress;
         }
 
@@ -195,6 +195,7 @@
             this.Country = otherAddress.Country;
             this.Telephone = otherAddress.Telephone;
             this.Email = otherAddress.Email;
+            this.WebAddress = otherAddress.WebAddress;
         }
 
         public bool Equals(Address other)
@@ -211,6 +212,7 @@
                    Postcode == other.Postcode &&
                    Telephone == other.Telephone &&
                    Email == other.Email &&
+                   WebAddress == other.WebAddress &&
                    Equals(Country, other.Country);
         }
 

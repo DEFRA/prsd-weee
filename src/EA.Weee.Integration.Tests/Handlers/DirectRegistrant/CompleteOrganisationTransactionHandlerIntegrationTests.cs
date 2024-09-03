@@ -61,12 +61,14 @@
                 result.Should().NotBeEmpty();
 
                 var organisation = Query.GetOrganisationById(result);
+                var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
                 organisation.Should().NotBeNull();
                 organisation.BusinessAddress.Address1.Should().Be(addressData.Address1);
                 organisation.BusinessAddress.Address2.Should().Be(addressData.Address2);
                 organisation.BusinessAddress.CountryId.Should().Be(addressData.CountryId);
                 organisation.BusinessAddress.Postcode.Should().Be(addressData.Postcode);
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
+                entity.Organisation.Should().Be(organisation);
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -92,6 +94,7 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
+                directRegistrant.AuthorisedRepresentative.Should().BeNull();
             };
 
             private readonly It shouldHaveReturnedContactDetails = () =>
@@ -123,6 +126,7 @@
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.SoleTrader)
+                    .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.OrganisationViewModel, soleTraderDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
@@ -165,6 +169,7 @@
                 result.Should().NotBeEmpty();
 
                 var organisation = Query.GetOrganisationById(result);
+                var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.SoleTraderOrIndividual);
                 organisation.OrganisationName.Should()
@@ -174,6 +179,7 @@
                 organisation.CompanyRegistrationNumber.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
+                entity.Organisation.Should().Be(organisation);
             };
 
             private readonly It shouldHaveCreatedDirectRegistrant = () =>
@@ -183,6 +189,7 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
+                directRegistrant.AuthorisedRepresentative.Should().BeNull();
             };
 
             private readonly It shouldHaveReturnedContactDetails = () =>
@@ -214,6 +221,7 @@
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.Partnership)
+                    .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.OrganisationViewModel, partnershipDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
@@ -256,6 +264,8 @@
                 result.Should().NotBeEmpty();
 
                 var organisation = Query.GetOrganisationById(result);
+                var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
+
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.DirectRegistrantPartnership);
                 organisation.OrganisationName.Should()
@@ -265,6 +275,7 @@
                 organisation.CompanyRegistrationNumber.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
+                entity.Organisation.Should().Be(organisation);
             };
 
             private readonly It shouldHaveCreatedDirectRegistrant = () =>
@@ -274,6 +285,105 @@
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
+                directRegistrant.AuthorisedRepresentative.Should().BeNull();
+            };
+        }
+
+        [Component]
+        public class WhenICompleteAnOrganisationWithAuthorisedRepresentitiveTransaction : CompleteOrganisationTransactionIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var registeredCompanyDetails = fixture.Build<RegisteredCompanyDetailsViewModel>()
+                    .With(r => r.Address, addressData).Create();
+
+                organisationTransactionData = fixture.Build<OrganisationTransactionData>()
+                    .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
+                    .With(r => r.AuthorisedRepresentative, YesNoType.Yes)
+                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
+                    .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails)
+                    .With(o => o.RepresentingCompanyDetailsViewModel, representingCompanyDetails)
+                    .Create();
+
+                OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
+
+                request = new CompleteOrganisationTransaction();
+            };
+
+            private readonly Because of = () =>
+            {
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldHaveCompletedTheTransaction = () =>
+            {
+                var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
+
+                entity.OrganisationJson.Should().Be(JsonConvert.SerializeObject(organisationTransactionData));
+                entity.UserId.Should().Be(UserId.ToString());
+                entity.CreatedDateTime.Should().BeAfter(date);
+                entity.CompletedDateTime.Should().BeAfter(date);
+                entity.CompletionStatus.Should().Be(CompletionStatus.Complete);
+            };
+
+            private readonly It shouldHaveReturnedOrganisationAddress = () =>
+            {
+                result.Should().NotBeEmpty();
+
+                var organisation = Query.GetOrganisationById(result);
+                organisation.Should().NotBeNull();
+                organisation.BusinessAddress.Address1.Should().Be(addressData.Address1);
+                organisation.BusinessAddress.Address2.Should().Be(addressData.Address2);
+                organisation.BusinessAddress.CountryId.Should().Be(addressData.CountryId);
+                organisation.BusinessAddress.Postcode.Should().Be(addressData.Postcode);
+                organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
+            };
+
+            private readonly It shouldHaveReturnedOrganisationDetails = () =>
+            {
+                result.Should().NotBeEmpty();
+
+                var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
+                var organisation = Query.GetOrganisationById(result);
+                organisation.Should().NotBeNull();
+                organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
+                organisation.OrganisationName.Should()
+                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName);
+                organisation.TradingName.Should()
+                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName);
+                organisation.CompanyRegistrationNumber.Should()
+                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
+                organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
+                entity.Organisation.Should().Be(organisation);
+            };
+
+            private readonly It shouldHaveCreatedDirectRegistrant = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+
+                directRegistrant.Should().NotBeNull();
+                directRegistrant.BrandName.Name.Should()
+                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
+                directRegistrant.AuthorisedRepresentative.Should().NotBeNull();
+                directRegistrant.AuthorisedRepresentative.OverseasProducerName.Should().Be(representingCompanyDetails.CompanyName);
+                directRegistrant.AuthorisedRepresentative.OverseasProducerTradingName.Should().Be(representingCompanyDetails.BusinessTradingName);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.PrimaryName.Should().Be(representingCompanyDetails.Address.Address1);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.Street.Should().Be(representingCompanyDetails.Address.Address2);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.Town.Should().Be(representingCompanyDetails.Address.TownOrCity);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.AdministrativeArea.Should().Be(representingCompanyDetails.Address.CountyOrRegion);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.CountryId.Should().Be(representingCompanyDetails.Address.CountryId);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.PostCode.Should().Be(representingCompanyDetails.Address.Postcode);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Email.Should().Be(representingCompanyDetails.Address.Email);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Telephone.Should().Be(representingCompanyDetails.Address.Telephone);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.SecondaryName.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.Locality.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.SurName.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Fax.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.ForeName.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Mobile.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Title.Should().BeEmpty();
             };
 
             private readonly It shouldHaveReturnedContactDetails = () =>
@@ -339,6 +449,7 @@
             protected static OrganisationTransactionData organisationTransactionData;
             protected static CompleteOrganisationTransaction request;
             protected static ExternalAddressData addressData;
+            protected static RepresentingCompanyDetailsViewModel representingCompanyDetails;
             protected static Country country;
             protected static Guid result;
             protected static DateTime date;
@@ -365,6 +476,12 @@
 
                 contactDetailsViewModel = fixture.Build<ContactDetailsViewModel>()
                     .With(r => r.AddressData, organisationContactAddress).Create();
+
+                var representingCompanyAddressDetails = fixture.Build<RepresentingCompanyAddressData>()
+                    .With(r => r.CountryId, country.Id).Create();
+
+                representingCompanyDetails = fixture.Build<RepresentingCompanyDetailsViewModel>()
+                    .With(r => r.Address, representingCompanyAddressDetails).Create();
 
                 return setup;
             }

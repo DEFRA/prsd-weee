@@ -20,6 +20,13 @@
             }
         }
 
+        public AuthorisedRepresentative(string name, string tradingName, ProducerContact overseasContact = null)
+        {
+            OverseasProducerName = name;
+            OverseasProducerTradingName = tradingName;
+            OverseasContact = overseasContact;
+        }
+
         protected AuthorisedRepresentative()
         {
         }
@@ -46,6 +53,8 @@
         }
 
         public string OverseasProducerName { get; private set; }
+
+        public string OverseasProducerTradingName { get; private set; }
 
         public Guid? OverseasContactId { get; private set; }
 
