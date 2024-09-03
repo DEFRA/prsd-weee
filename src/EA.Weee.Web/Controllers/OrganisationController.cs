@@ -4,6 +4,7 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Weee.Web.Services;
     using Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -16,7 +17,7 @@
     public class OrganisationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-
+        
         public OrganisationController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;

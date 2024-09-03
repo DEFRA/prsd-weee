@@ -44,7 +44,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 Assert.Equal(memberUpload.Id, results[0].Id);
             }
         }
@@ -93,7 +93,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 Assert.Equal(memberUpload.Id, results[0].Id);
             }
         }

@@ -496,7 +496,7 @@
         }
 
         [Fact]
-        public async void HttpGet_UkEeeData_ShouldReturnsUkEeeDataView()
+        public async Task HttpGet_UkEeeData_ShouldReturnsUkEeeDataView()
         {
             A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
@@ -521,7 +521,7 @@
         }
 
         [Fact]
-        public async void HttpPost_UkEeeData_ModelIsInvalid_ShouldRedirectViewWithError()
+        public async Task HttpPost_UkEeeData_ModelIsInvalid_ShouldRedirectViewWithError()
         {
             controller.ModelState.AddModelError("Key", "Any error");
 

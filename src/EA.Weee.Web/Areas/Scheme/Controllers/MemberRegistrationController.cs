@@ -26,7 +26,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly IMapper mapper;
-        private const string ManageMembersActivity = "Manage members";
+        private const string ManageMembersActivity = "Manage PCS members";
 
         public MemberRegistrationController(
             Func<IWeeeClient> apiClient,

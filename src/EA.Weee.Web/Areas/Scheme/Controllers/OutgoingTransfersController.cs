@@ -258,7 +258,7 @@
         [HttpGet]
         [CheckCanEditTransferNote]
         [NoCacheFilter]
-        public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId, int page = 1, string searchRef = null)
+        public async Task<ActionResult> EditTransferFrom(Guid pcsId, Guid evidenceNoteId, int page = 1, string searchRef = null, Guid? submittedBy = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -273,7 +273,7 @@
 
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(evidenceNoteId));
 
-                var model = await TransferEvidenceNotesViewModel(pcsId, page, client, transferRequest, searchRef, noteData);
+                var model = await TransferEvidenceNotesViewModel(pcsId, page, client, transferRequest, searchRef, submittedBy, noteData);
 
                 return this.View("EditTransferFrom", model);
             }
@@ -284,6 +284,7 @@
             IWeeeClient client, 
             TransferEvidenceNoteRequest transferRequest, 
             string searchRef,
+            Guid? submittedBy,
             TransferEvidenceNoteData noteData)
         {
             transferRequest.UpdateSelectedNotes(noteData.CurrentEvidenceNoteIds);
@@ -296,15 +297,65 @@
             }
 
             var availableNotes = await client.SendAsync(User.GetAccessToken(),
-                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, transferRequest.EvidenceNoteIds, searchRef, page,
-                    configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, noteData.Id));
+                new GetEvidenceNotesForTransferRequest(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, transferRequest.EvidenceNoteIds, 
+                searchRef, submittedBy, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize, noteData.Id));
 
             var mapperObject = new TransferEvidenceNotesViewModelMapTransfer(currentSelectedNotes, availableNotes,
                 transferRequest, noteData, pcsId, searchRef, page, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize);
 
             var model =
                 mapper.Map<TransferEvidenceNotesViewModelMapTransfer, TransferEvidenceNotesViewModel>(mapperObject);
+
+            model.SubmittedByList = await GetSubmittedByList(pcsId, transferRequest.CategoryIds, noteData.ComplianceYear, 
+                transferRequest.EvidenceNoteIds, noteData.Id, client);
+
             return model;
+        }
+
+        private async Task<List<SelectListItem>> GetSubmittedByList(Guid pcsId, List<int> categoryIds, int complianceYear, 
+            List<Guid> evidenceNoteIds, Guid id, IWeeeClient client)
+        {
+            var res = await client.SendAsync(User.GetAccessToken(),
+                new GetEvidenceNotesForTransferRequest(pcsId, categoryIds, complianceYear, evidenceNoteIds, null, null, 1, int.MaxValue, id));
+
+            var submittedByFilterList = new List<SelectListItem>();
+            foreach (var evidenceNoteResult in res.Results)
+            {
+                (Guid Id, string Name) submittedBy = GetSubmittedBy(evidenceNoteResult);
+                if (!submittedByFilterList.Any(x => x.Text == submittedBy.Name) && !string.IsNullOrWhiteSpace(submittedBy.Name))
+                {
+                    submittedByFilterList.Add(new SelectListItem()
+                    {
+                        Value = submittedBy.Id.ToString(),
+                        Text = submittedBy.Name
+                    });
+                }
+            }
+
+            return submittedByFilterList.OrderBy(x => x.Text).ToList();
+        }
+
+        private static (Guid, string) GetSubmittedBy(EvidenceNoteData evidenceNoteResult)
+        {
+            if (evidenceNoteResult.Type == NoteType.Transfer)
+            {
+                if (evidenceNoteResult.OrganisationSchemaData != null)
+                {
+                    return (evidenceNoteResult.OrganisationSchemaData.Id, evidenceNoteResult.OrganisationSchemaData.SchemeName);
+                }
+                else
+                {
+                    return (evidenceNoteResult.OrganisationData.Id, evidenceNoteResult.OrganisationData.OrganisationName);
+                }
+            }
+            else if (evidenceNoteResult.SubmittedDate.HasValue)
+            {
+                return (evidenceNoteResult.AatfData.Id, evidenceNoteResult.AatfData.Name);
+            }
+            else
+            {
+                return (Guid.Empty, null);
+            }
         }
 
         [HttpPost]
@@ -328,7 +379,7 @@
                 {
                     var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.ViewTransferNoteViewModel.EvidenceNoteId));
 
-                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.PageNumber, client, outgoingTransfer, null, noteData);
+                    model = await TransferEvidenceNotesViewModel(model.PcsId, model.PageNumber, client, outgoingTransfer, null, null, noteData);
                 }
 
                 return View("EditTransferFrom", model);
@@ -340,7 +391,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null)
+        public override async Task<ActionResult> SelectEvidenceNote(TransferSelectEvidenceNoteModel model, string searchRef = null, Guid? submittedBy = null)
         {
             await SetBreadcrumb(model.PcsId);
 
@@ -355,7 +406,7 @@
             {
                 var noteData = await client.SendAsync(User.GetAccessToken(), new GetTransferEvidenceNoteForSchemeRequest(model.EditEvidenceNoteId));
 
-                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.Page, client, transferRequest, searchRef, noteData);
+                var newModel = await TransferEvidenceNotesViewModel(model.PcsId, model.Page, client, transferRequest, searchRef, submittedBy, noteData);
 
                 return View("EditTransferFrom", newModel);
             }

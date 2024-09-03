@@ -27,6 +27,15 @@
             @(this.WeeeGds().BackLink(
                 string.Format("{0}?{1}", Url.Action("Index", "ManageEvidenceNotes", new { }), Model.QueryString)))
         }
+        else if (Model.ReturnToView)
+        {
+            @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes", new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = Model.Page }), "Back"))
+        }
+        else
+        {
+            @(this.WeeeGds().BackLink(Url.Action("Index", "ManageEvidenceNotes",
+                new { @pcsId = Model.SchemeId, @tab = Model.RedirectTab, @selectedComplianceYear = Model.ComplianceYear, page = ViewBag.Page })))
+        }
     }
 
     @Html.HiddenFor(m => m.QueryString)
@@ -36,7 +45,20 @@
     @if (Model.DisplayEditButton)
     {
         <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
-            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString = Model.QueryString}, new { @class = "govuk-button" })
+            @Html.RouteLink("Edit and submit", "Scheme_edit_transfer", new { pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnToView = true, selectedComplianceYear = Model.ComplianceYear, redirectTab = Model.RedirectTab, queryString = Model.QueryString }, new { @class = "govuk-button" })
+        </div>
+    }
+
+    @if (Model.DisplayCancelButton)
+    {
+        <div class="govuk-!-padding-top-5">
+            <p>
+                By cancelling an evidence note transfer, you can no longer submit it. This action cannot be reversed.
+            </p>
+        </div>
+
+        <div class="govuk-!-margin-top-3 govuk-!-padding-bottom-5">
+            @Html.ActionLink("Cancel evidence note transfer", "CancelTransferEvidenceNote", "TransferEvidence", new { area = "Scheme", pcsId = Model.SchemeId, evidenceNoteId = Model.EvidenceNoteId, returnedReason = Model.ReturnedReason }, new { @class = "govuk-button" })
         </div>
     }
 

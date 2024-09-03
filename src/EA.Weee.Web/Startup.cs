@@ -5,14 +5,18 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Web
 {
-    using System;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using EA.Weee.Core.Configuration;
+    using EA.Weee.Core.Configuration.Logging;
     using FluentValidation.Mvc;
     using IdentityModel;
     using Infrastructure;
     using Owin;
+    using Serilog;
+    using Serilog.Sinks.MSSqlServer;
     using Services;
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Net;
     using System.Reflection;
@@ -34,6 +38,9 @@ namespace EA.Weee.Web
             builder.Register(c => configuration).As<ConfigurationService>().SingleInstance();
             builder.Register(c => configuration.CurrentConfiguration).As<IAppConfiguration>().SingleInstance();
             builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
+
+            LoggerConfig.ConfigureSerilogWithSqlServer();
+            builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
 
             var container = AutofacBootstrapper.Initialize(builder);
 
@@ -63,6 +70,8 @@ namespace EA.Weee.Web
             FluentValidationModelValidatorProvider.Configure();
 
             System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
     }
 }

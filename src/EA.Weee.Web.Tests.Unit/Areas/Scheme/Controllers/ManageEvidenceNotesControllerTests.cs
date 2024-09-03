@@ -21,6 +21,7 @@
     using EA.Weee.Web.ViewModels.Shared.Mapping;
     using FakeItEasy;
     using FluentAssertions;
+    using Org.BouncyCastle.Asn1.Ocsp;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -59,10 +60,18 @@
         {
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
                 {
-                    typeof(Guid), 
+                    typeof(Guid),
                     typeof(string),
-                    typeof(ManageEvidenceNoteViewModel),
-                    typeof(int)
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(DateTime?),
+                    typeof(DateTime?),
+                    typeof(Guid?),
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(string),
+                    typeof(int?),
+                    typeof(Guid?)
                 }).Should()
                 .BeDecoratedWith<HttpGetAttribute>();
         }
@@ -71,13 +80,47 @@
         public void IndexGet_ShouldHaveNoCacheAttribute()
         {
             typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
+               {
+                    typeof(Guid),
+                    typeof(string),
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(DateTime?),
+                    typeof(DateTime?),
+                    typeof(Guid?),
+                    typeof(int?),
+                    typeof(int?),
+                    typeof(string),
+                    typeof(int?),
+                    typeof(Guid?)
+                }).Should()
+                .BeDecoratedWith<NoCacheFilterAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ShouldHaveHttpPostAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
                 {
                     typeof(Guid),
                     typeof(string),
                     typeof(ManageEvidenceNoteViewModel),
                     typeof(int)
                 }).Should()
-                .BeDecoratedWith<NoCacheFilterAttribute>();
+                .BeDecoratedWith<HttpPostAttribute>();
+        }
+
+        [Fact]
+        public void IndexPost_ShouldHaveValidateAntiForgeryTokenAttribute()
+        {
+            typeof(ManageEvidenceNotesController).GetMethod("Index", new[]
+               {
+                    typeof(Guid),
+                    typeof(string),
+                    typeof(ManageEvidenceNoteViewModel),
+                    typeof(int)
+                }).Should()
+                .BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
         }
 
         [Fact]
@@ -113,9 +156,10 @@
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, false).Create();
             A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(schemeName);
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
+            var evidenceNotes = new ManageEvidenceNoteViewModel();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.SchemeManageEvidence);
@@ -136,9 +180,10 @@
             var schemeInfo = TestFixture.Build<SchemePublicInfo>().With(s => s.IsBalancingScheme, true).Create();
             A.CallTo(() => Cache.FetchOrganisationName(OrganisationId)).Returns(schemeName);
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(schemeInfo);
+            var evidenceNotes = new ManageEvidenceNoteViewModel();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             //assert
             Breadcrumb.ExternalActivity.Should().Be(BreadCrumbConstant.PbsManageEvidence);
@@ -154,11 +199,12 @@
         [InlineData("outgoing-transfers")]
         public async Task IndexGet_GivenOrganisationId_SchemeShouldBeRetrievedFromCache(string tab)
         {
-            //arrange 
+            //arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+            var evidenceNotes = new ManageEvidenceNoteViewModel();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             //assert
             A.CallTo(() => Cache.FetchSchemePublicInfo(OrganisationId)).MustHaveHappenedTwiceExactly();
@@ -172,11 +218,12 @@
         [InlineData("outgoing-transfers")]
         public async Task IndexGet_CurrentSystemTimeShouldBeRetrieved(string tab)
         {
-            //arrange 
+            //arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
+            var evidenceNotes = new ManageEvidenceNoteViewModel();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
@@ -186,7 +233,7 @@
         [InlineData("view-and-transfer-evidence")]
         [InlineData("review-submitted-evidence")]
         [InlineData("outgoing-transfers")]
-        public async void IndexGet_GivenManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
+        public async Task IndexGet_GivenManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
         {
             //arrange
             var complianceYear = TestFixture.Create<short>();
@@ -199,7 +246,7 @@
                     .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, model);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>
                     .That.Matches(m =>
@@ -211,7 +258,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenManageEvidenceNotesViewModelForOutgoingTransferTab_ModelMapperShouldBeCalledWithCorrectValues()
+        public async Task IndexGet_GivenManageEvidenceNotesViewModelForOutgoingTransferTab_ModelMapperShouldBeCalledWithCorrectValues()
         {
             //arrange
             var complianceYear = TestFixture.Create<short>();
@@ -226,7 +273,7 @@
                    .With(e => e.SelectedComplianceYear, complianceYear).Create();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, null);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
                 m.RecipientWasteStatusFilterViewModel == recipientWasteStatusViewModel)))
@@ -239,7 +286,7 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
-        public async void IndexGet_GivenMappedManageEvidenceNotesViewModel_MappedModelShouldBeReturned(string tab)
+        public async Task IndexGet_GivenMappedManageEvidenceNotesViewModel_MappedModelShouldBeReturned(string tab)
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
@@ -248,9 +295,9 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>._)).Returns(model);
-            
+
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, tab, model) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, tab, null, null) as ViewResult;
 
             var convertedModel = result.Model as ManageEvidenceNoteSchemeViewModel;
 
@@ -263,21 +310,22 @@
         [InlineData("review-submitted-evidence")]
         [InlineData("evidence-summary")]
         [InlineData("outgoing-transfers")]
-        public async void IndexGet_GivenNullManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
+        public async Task IndexGet_GivenNullManageEvidenceNotesViewModel_ModelMapperShouldBeCalledWithCorrectValues(string tab)
         {
             //arrange
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, null);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             A.CallTo(() => Mapper.Map<ManageEvidenceNoteViewModel>(A<ManageEvidenceNoteTransfer>.That.Matches(m =>
                     m.OrganisationId == OrganisationId &&
                     m.CurrentDate == currentDate &&
-                    m.ComplianceYear == currentDate.Year)))
+                    m.ComplianceYear == expectedComplianceYear)))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -293,6 +341,7 @@
                 .With(e => e.Results, returnList).Create();
 
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
             A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
@@ -301,13 +350,13 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence");
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.OrganisationId.Equals(OrganisationId) && 
+                g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.TransferredOut == false &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes) &&
                      g.PageSize == 10 &&
@@ -366,7 +415,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", model);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", complianceYear, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -389,7 +438,7 @@
         public async Task IndexGet_GivenReviewTab_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus(NoteStatus status, string tab)
         {
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -410,7 +459,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence");
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, null);
 
             //assert
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
@@ -463,12 +512,12 @@
 
             //act
 
-            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", model);
+            await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, null);
 
             //assert
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
                 A<SchemeTabViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(OrganisationId) && 
+                    a => a.OrganisationId.Equals(OrganisationId) &&
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
@@ -489,12 +538,12 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), null, null);
 
             //assert
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                 A<SchemeTabViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(OrganisationId) 
+                    a => a.OrganisationId.Equals(OrganisationId)
                          && a.NoteData.Equals(noteData) &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
@@ -522,7 +571,7 @@
             //assert
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                 A<SchemeTabViewModelMapTransfer>.That.Matches(
-                    a => 
+                    a =>
                          a.PageNumber == pageNumber &&
                          a.PageSize == 10))).MustHaveHappenedOnceExactly();
         }
@@ -535,18 +584,18 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>().Create();
             var currentDate = TestFixture.Create<DateTime>();
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-            
+
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), model);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), null, null);
 
             //assert
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(
                 A<SchemeTabViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(OrganisationId) && 
+                    a => a.OrganisationId.Equals(OrganisationId) &&
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
@@ -563,7 +612,7 @@
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence") as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, "review-submitted-evidence", null, null) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -582,7 +631,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, tab, manageEvidenceNoteViewModel);
+            await ManageEvidenceController.Index(OrganisationId, tab, manageEvidenceNoteViewModel, 1);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -599,12 +648,14 @@
             // Arrange
             var schemeName = Faker.Company.Name();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             var status = new List<NoteStatus>()
             {
                 NoteStatus.Approved,
                 NoteStatus.Rejected,
                 NoteStatus.Void,
-                NoteStatus.Returned
+                NoteStatus.Returned,
+                NoteStatus.Cancelled
             };
             var noteTypes = new List<NoteType>() { NoteType.Evidence, NoteType.Transfer };
 
@@ -612,13 +663,13 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), null, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      status.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.TransferredOut == false &&
                      g.NoteTypeFilterList.SequenceEqual(noteTypes) &&
                      g.PageSize == 10 &&
@@ -658,7 +709,8 @@
                 NoteStatus.Approved,
                 NoteStatus.Rejected,
                 NoteStatus.Void,
-                NoteStatus.Returned
+                NoteStatus.Returned,
+                NoteStatus.Cancelled
             };
             var complianceYear = TestFixture.Create<short>();
             var model = TestFixture.Build<ManageEvidenceNoteViewModel>()
@@ -671,7 +723,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), model);
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), complianceYear, 1);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -688,7 +740,7 @@
         public async Task IndexGet_GivenViewAndTransferEvidenceNotesViewModel_SubmittedEvidenceNoteShouldNotBeRetrievedForInvalidStatus()
         {
             //act
-            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString());
+            await ManageEvidenceController.Index(OrganisationId, ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), null, null);
 
             //asset
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -704,7 +756,7 @@
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, tab, null, null) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -721,7 +773,7 @@
             A.CallTo(() => Mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, tab, manageEvidenceNoteViewModel) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, tab, null, null) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -732,13 +784,13 @@
         [InlineData("review-submitted-evidence", "ReviewSubmittedEvidence")]
         [InlineData("evidence-summary", "SummaryEvidence")]
         [InlineData("outgoing-transfers", "OutgoingTransfers")]
-        public async void Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
+        public async Task Index_GivenATabName_CorrectViewShouldBeReturned(string tab, string view)
         {
             var pcs = Guid.NewGuid();
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = Guid.NewGuid() });
 
-            var result = await ManageEvidenceController.Index(pcs, tab) as ViewResult;
+            var result = await ManageEvidenceController.Index(pcs, tab, null, null) as ViewResult;
 
             result.ViewName.Should().Be(view);
         }
@@ -755,6 +807,7 @@
             var noteData = TestFixture.Build<EvidenceNoteSearchDataResult>()
                 .With(e => e.Results, returnList).Create();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
             const int pageNumber = 1;
             const int pageSize = 10;
 
@@ -763,32 +816,18 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers");
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
                      statuses.SequenceEqual(g.AllowedStatuses) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.TransferredOut == true &&
                      noteTypes.SequenceEqual(g.NoteTypeFilterList) &&
                      g.PageSize == pageSize &&
                      g.PageNumber == pageNumber &&
                      g.SearchRef == null))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task IndexGet_GivenOutgoingTransfersTabWithRecipientStatusFilterModel_EvidenceNoteDataShouldBeRetrieved()
-        {
-            // Arrange
-            var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
-
-            //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
-
-            //assert
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
-                g => g.NoteStatusFilter == model.RecipientWasteStatusFilterViewModel.NoteStatusValue))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -798,7 +837,7 @@
             var model = TestFixture.Create<ManageEvidenceNoteViewModel>();
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers");
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, null);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -861,7 +900,7 @@
             const int pageSize = 10;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", complianceYear, pageNumber);
 
             //assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>.That.Matches(
@@ -878,11 +917,11 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_SessionShouldBeUpdated()
         {
-            // arrange 
+            // arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
 
             // act
-            await ManageEvidenceController.Index(OrganisationId);
+            await ManageEvidenceController.Index(OrganisationId, null, null, null);
 
             // assert
             A.CallTo(() => SessionService.ClearTransferSessionObject(SessionKeyConstant.TransferNoteKey))
@@ -892,11 +931,11 @@
         [Fact]
         public async Task IndexGet_GivenRequestIsCreated_EditTransferTonnageViewModelKeySessionShouldBeUpdated()
         {
-            // arrange 
+            // arrange
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(new SchemePublicInfo() { SchemeId = TestFixture.Create<Guid>() });
 
             // act
-            await ManageEvidenceController.Index(OrganisationId);
+            await ManageEvidenceController.Index(OrganisationId, null, null, null);
 
             // assert
             A.CallTo(() => SessionService.ClearTransferSessionObject(SessionKeyConstant.EditTransferTonnageViewModelKey)).MustHaveHappenedOnceExactly();
@@ -909,9 +948,8 @@
                 new object[] { new ManageEvidenceNoteViewModel() },
             };
 
-        [Theory]
-        [MemberData(nameof(ManageEvidenceModelData))]
-        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt(ManageEvidenceNoteViewModel model)
+        [Fact]
+        public async Task IndexGet_GivenOutgoingTransfersTabWithReturnedData_ViewModelShouldBeBuilt()
         {
             // Arrange
             var scheme = TestFixture.Create<SchemePublicInfo>();
@@ -926,12 +964,12 @@
             const int pageSize = 10;
 
             //act
-            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", model);
+            await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, null);
 
             //assert
             A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(
                 A<SchemeTabViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(OrganisationId) && 
+                    a => a.OrganisationId.Equals(OrganisationId) &&
                          a.NoteData == noteData &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
@@ -974,7 +1012,7 @@
             A.CallTo(() => Mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(A<SchemeTabViewModelMapTransfer>._)).Returns(model);
 
             //act
-            var result = await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers") as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, "outgoing-transfers", null, null) as ViewResult;
 
             //assert
             result.Model.Should().Be(model);
@@ -985,7 +1023,7 @@
         {
             //arrange
             var complianceYear = TestFixture.Create<int>();
-            
+
             //act
             var result = ManageEvidenceController.Transfer(OrganisationId, complianceYear) as RedirectToRouteResult;
 
@@ -1097,18 +1135,19 @@
               .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._)).Returns(obligationSummaryData);
-          
+
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.SchemeId.Equals(schemeId)))).MustHaveHappenedOnceExactly();
         }
 
@@ -1125,18 +1164,19 @@
                 .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._)).Returns(obligationSummaryData);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
                 g => g.OrganisationId.Equals(OrganisationId) &&
-                     g.ComplianceYear.Equals(currentDate.Year) &&
+                     g.ComplianceYear.Equals(expectedComplianceYear) &&
                      g.SchemeId == null))).MustHaveHappenedOnceExactly();
         }
 
@@ -1163,7 +1203,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab, model);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
@@ -1195,7 +1235,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab, model);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             // assert
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>.That.Matches(
@@ -1219,19 +1259,20 @@
               .Create();
             var obligationSummaryData = TestFixture.Create<ObligationEvidenceSummaryData>();
             var currentDate = TestFixture.Create<DateTime>();
+            var expectedComplianceYear = currentDate.Month == 1 ? currentDate.Year - 1 : currentDate.Year;
 
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetObligationSummaryRequest>._)).Returns(obligationSummaryData);
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab);
+            await ManageEvidenceController.Index(OrganisationId, tab, null, null);
 
             // assert
             A.CallTo(() => Mapper.Map<SummaryEvidenceViewModel>(
                 A<ViewEvidenceSummaryViewModelMapTransfer>.That.Matches(
                     a => a.OrganisationId.Equals(OrganisationId) &&
-                         a.ComplianceYear.Equals(currentDate.Year) &&
+                         a.ComplianceYear.Equals(expectedComplianceYear) &&
                          a.Scheme.Equals(scheme) &&
                          a.CurrentDate.Equals(currentDate) &&
                          a.ObligationEvidenceSummaryData.Equals(obligationSummaryData)))).MustHaveHappenedOnceExactly();
@@ -1261,7 +1302,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             // act
-            await ManageEvidenceController.Index(OrganisationId, tab, model);
+            await ManageEvidenceController.Index(OrganisationId, tab, model, 1);
 
             // assert
             A.CallTo(() => Mapper.Map<SummaryEvidenceViewModel>(
@@ -1288,13 +1329,13 @@
               .With(s => s.SchemeId, schemeId)
               .Create();
             A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
-            
+
             var model = TestFixture.Create<SummaryEvidenceViewModel>();
 
             A.CallTo(() => Mapper.Map<SummaryEvidenceViewModel>(A<ViewEvidenceSummaryViewModelMapTransfer>._)).Returns(model);
 
             // act
-            var result = await ManageEvidenceController.Index(OrganisationId, tab) as ViewResult;
+            var result = await ManageEvidenceController.Index(OrganisationId, tab, null, null) as ViewResult;
 
             // assert
             result.Model.Should().Be(model);
@@ -1304,12 +1345,13 @@
         {
             return new List<NoteStatus>
             {
-                        NoteStatus.Draft,
-                        NoteStatus.Approved,
-                        NoteStatus.Rejected,
-                        NoteStatus.Submitted,
-                        NoteStatus.Void,
-                        NoteStatus.Returned
+                NoteStatus.Draft,
+                NoteStatus.Approved,
+                NoteStatus.Rejected,
+                NoteStatus.Submitted,
+                NoteStatus.Void,
+                NoteStatus.Returned,
+                NoteStatus.Cancelled
             };
         }
     }

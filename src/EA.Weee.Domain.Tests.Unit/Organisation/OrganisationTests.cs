@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Organisation
 {
     using Domain.Organisation;
+    using EA.Weee.Tests.Core;
     using System;
     using Xunit;
+
     public class OrganisationTests
     {
         [Fact]
@@ -76,6 +78,22 @@
             const string companyRegistrationNumber = "1234567890ABCDEF";
 
             Assert.Throws<InvalidOperationException>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
+        }
+
+        [Fact]
+        public void CreateDirectRegistrantOrganisation_SetsStatusToIncomplete_AndCompanyNames()
+        {
+            const string companyName = "test company name";
+            const string tradingName = "test trading name";
+            const string companyRegistrationNumber = "12345678";
+
+            var result = Organisation.CreateDirectRegistrantCompany(OrganisationType.DirectRegistrantPartnership, companyName, tradingName, companyRegistrationNumber);
+
+            Assert.Equal(OrganisationType.DirectRegistrantPartnership, result.OrganisationType);
+            Assert.Equal(OrganisationStatus.Incomplete, result.OrganisationStatus);
+            Assert.Equal(companyName, result.Name);
+            Assert.Equal(tradingName, result.TradingName);
+            Assert.Equal(companyRegistrationNumber, result.CompanyRegistrationNumber);
         }
 
         [Fact]

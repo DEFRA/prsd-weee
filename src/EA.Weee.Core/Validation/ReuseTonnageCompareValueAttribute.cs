@@ -65,8 +65,11 @@
                 return ValidationResult.Success;
             }
 
+            decimal.TryParse(availableReusedValue != null ? availableReusedValue.ToString() : "0", NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
+                CultureInfo.InvariantCulture, out var decimalAvailableReusedResult);
             valid = TonnageValueValidator.Validate(availableReusedValue);
-            if (valid != TonnageValidationResult.Success)
+
+            if (valid != TonnageValidationResult.Success || decimalAvailableReusedResult == 0)
             {
                 return ValidationResult.Success;
             }
@@ -81,8 +84,6 @@
                                         CultureInfo.InvariantCulture, out var decimalAvailableReceivedResult);
             decimal.TryParse(transferRecievedValue != null ? transferRecievedValue.ToString() : "0", NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                             CultureInfo.InvariantCulture, out var decimalTransferReceivedResult);
-            decimal.TryParse(availableReusedValue != null ? availableReusedValue.ToString() : "0", NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
-                            CultureInfo.InvariantCulture, out var decimalAvailableReusedResult);
             decimal.TryParse(transferReusedValue != null ? transferReusedValue.ToString() : "0", NumberStyles.Number & ~NumberStyles.AllowTrailingSign,
                             CultureInfo.InvariantCulture, out var decimalTransferReusedResult);
 
