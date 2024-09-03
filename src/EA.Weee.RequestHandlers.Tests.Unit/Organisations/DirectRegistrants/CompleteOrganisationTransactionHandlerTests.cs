@@ -168,9 +168,8 @@
             // Arrange
             var organisationId = Guid.NewGuid();
             var hasBrandName = !string.IsNullOrWhiteSpace(brandNames);
-            var contactDetailsViewModel = new ContactDetailsViewModel();
 
-            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType, brandNames, contactDetailsViewModel);
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType, brandNames);
 
             var newAddress = A.Fake<Address>();
             var directRegistrant = A.Fake<DirectRegistrant>();
@@ -261,8 +260,7 @@
 
         private OrganisationTransactionData SetupValidOrganisationTransaction(
             ExternalOrganisationType organisationType = ExternalOrganisationType.RegisteredCompany,
-            string brandNames = null,
-            ContactDetailsViewModel contactDetailsViewModel = null)
+            string brandNames = null)
         {
             var transaction = new OrganisationTransaction { OrganisationJson = "{}" };
             A.CallTo(() => dataAccess.FindIncompleteTransactionForCurrentUserAsync())
