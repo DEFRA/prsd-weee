@@ -1455,5 +1455,32 @@
             result.RouteValues["action"].Should().Be("Type");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
         }
+
+        [Fact]
+        public void RegistrationComplete_Get_ReturnsView()
+        {
+            // Arrange
+
+            // Act
+            var result = controller.RegistrationComplete() as ViewResult;
+
+            // Assert
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "RegistrationComplete");
+        }
+
+        [Fact]
+        public void RegistrationComplete_Post_Any_RedirectsToHoldingController()
+        {
+            // Arrange
+            var searchTerm = string.Empty;
+
+            // Act
+            var result = controller.RegistrationComplete(searchTerm) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
+        }
     }
 }

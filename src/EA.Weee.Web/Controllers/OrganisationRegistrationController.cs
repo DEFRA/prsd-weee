@@ -696,5 +696,12 @@
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegistrationComplete(string searchTerm)
+        {
+            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+        }
     }
 }
