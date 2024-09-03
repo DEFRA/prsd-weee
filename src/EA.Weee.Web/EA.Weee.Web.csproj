@@ -1037,6 +1037,10 @@
     <Content Include="Views\Shared\_OrganisationHeadingAndCountryPartial.cshtml" />
     <Content Include="Views\OrganisationRegistration\ContactDetails.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RepresentingCompanyAddressData.cshtml" />
+    <Content Include="Views\OrganisationRegistration\OrganisationDetails.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RegisteredCompanyDetailsViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SoleTraderDetailsViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PartnershipDetailsViewModel.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

@@ -4,6 +4,7 @@
     using AutoFixture;
     using Base;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
@@ -16,7 +17,6 @@
     using Prsd.Core.Mediator;
     using System;
     using System.Security;
-    using System.Threading.Tasks;
 
     public class CompleteOrganisationTransactionHandlerIntegrationTests : IntegrationTestBase
     {
@@ -27,12 +27,12 @@
             {
                 LocalSetup();
 
-                var registeredCompanyDetails = fixture.Build<RegisteredCompanyDetailsViewModel>()
+                var registeredCompanyDetails = fixture.Build<OrganisationViewModel>()
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
-                    .With(o => o.RegisteredCompanyDetailsViewModel, registeredCompanyDetails)
+                    .With(o => o.OrganisationViewModel, registeredCompanyDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -77,11 +77,11 @@
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
                 organisation.OrganisationName.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
                 organisation.TradingName.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName);
+                    .Be(organisationTransactionData.OrganisationViewModel.BusinessTradingName);
                 organisation.CompanyRegistrationNumber.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
             };
 
@@ -91,7 +91,7 @@
 
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
-                    .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
+                    .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
             };
 
             private readonly It shouldHaveReturnedContactDetails = () =>
@@ -118,12 +118,12 @@
             {
                 LocalSetup();
 
-                var soleTraderDetails = fixture.Build<SoleTraderDetailsViewModel>()
+                var soleTraderDetails = fixture.Build<OrganisationViewModel>()
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.SoleTrader)
-                    .With(o => o.SoleTraderDetailsViewModel, soleTraderDetails)
+                    .With(o => o.OrganisationViewModel, soleTraderDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -168,11 +168,11 @@
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.SoleTraderOrIndividual);
                 organisation.OrganisationName.Should()
-                    .Be(organisationTransactionData.SoleTraderDetailsViewModel.CompanyName);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
                 organisation.TradingName.Should()
-                    .Be(organisationTransactionData.SoleTraderDetailsViewModel.BusinessTradingName);
+                    .Be(organisationTransactionData.OrganisationViewModel.BusinessTradingName);
                 organisation.CompanyRegistrationNumber.Should()
-                    .Be(organisationTransactionData.SoleTraderDetailsViewModel.CompaniesRegistrationNumber);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
             };
 
@@ -182,7 +182,7 @@
 
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
-                    .Be(organisationTransactionData.SoleTraderDetailsViewModel.EEEBrandNames);
+                    .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
             };
 
             private readonly It shouldHaveReturnedContactDetails = () =>
@@ -209,12 +209,12 @@
             {
                 LocalSetup();
 
-                var partnershipDetails = fixture.Build<PartnershipDetailsViewModel>()
+                var partnershipDetails = fixture.Build<OrganisationViewModel>()
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.Partnership)
-                    .With(o => o.PartnershipDetailsViewModel, partnershipDetails)
+                    .With(o => o.OrganisationViewModel, partnershipDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -259,11 +259,11 @@
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.DirectRegistrantPartnership);
                 organisation.OrganisationName.Should()
-                    .Be(organisationTransactionData.PartnershipDetailsViewModel.CompanyName);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
                 organisation.TradingName.Should()
-                    .Be(organisationTransactionData.PartnershipDetailsViewModel.BusinessTradingName);
+                    .Be(organisationTransactionData.OrganisationViewModel.BusinessTradingName);
                 organisation.CompanyRegistrationNumber.Should()
-                    .Be(organisationTransactionData.PartnershipDetailsViewModel.CompaniesRegistrationNumber);
+                    .Be(organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 organisation.OrganisationStatus.Should().Be(Domain.Organisation.OrganisationStatus.Complete);
             };
 
@@ -273,7 +273,7 @@
 
                 directRegistrant.Should().NotBeNull();
                 directRegistrant.BrandName.Name.Should()
-                    .Be(organisationTransactionData.PartnershipDetailsViewModel.EEEBrandNames);
+                    .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
             };
 
             private readonly It shouldHaveReturnedContactDetails = () =>

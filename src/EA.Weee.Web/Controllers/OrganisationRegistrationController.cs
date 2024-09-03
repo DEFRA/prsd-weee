@@ -18,6 +18,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
@@ -35,7 +36,8 @@
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
-            ConfigurationService configurationService, IOrganisationTransactionService transactionService, IWeeeCache cache)
+            ConfigurationService configurationService, IOrganisationTransactionService transactionService,
+            IWeeeCache cache)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
@@ -99,7 +101,8 @@
         {
             if (!ModelState.IsValid)
             {
-                viewModel.Results = await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
+                viewModel.Results =
+                    await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
 
                 return View(viewModel);
             }
@@ -129,11 +132,12 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
+            IList<OrganisationSearchResult> searchResults =
+                await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpGet]
         public async Task<ViewResult> JoinOrganisation(Guid organisationId)
         {
@@ -144,10 +148,10 @@
                     new GetPublicOrganisationInfo(organisationId));
 
                 var existingAssociations = await client.SendAsync(
-                     User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(
-                         new int[0],
-                         new int[1] { (int)OrganisationStatus.Complete }));
+                    User.GetAccessToken(),
+                    new GetUserOrganisationsByStatus(
+                        new int[0],
+                        new int[1] { (int)OrganisationStatus.Complete }));
 
                 /* There should only ever be a single non-rejected association, but
                  * during development this wasn't enforced. Using FirstOrDefault
@@ -159,17 +163,19 @@
                     .Where(o => o.UserStatus != UserStatus.Rejected)
                     .FirstOrDefault();
 
-                var activeUsers = await client.SendAsync(User.GetAccessToken(), new GetActiveOrganisationUsers(organisationId));
+                var activeUsers = await client.SendAsync(User.GetAccessToken(),
+                    new GetActiveOrganisationUsers(organisationId));
 
                 if (existingAssociation != null)
                 {
-                    UserAlreadyAssociatedWithOrganisationViewModel viewModel = new UserAlreadyAssociatedWithOrganisationViewModel()
-                    {
-                        OrganisationId = organisationId,
-                        OrganisationName = organisationData.DisplayName,
-                        Status = existingAssociation.UserStatus,
-                        AnyActiveUsers = activeUsers.Any()
-                    };
+                    UserAlreadyAssociatedWithOrganisationViewModel viewModel =
+                        new UserAlreadyAssociatedWithOrganisationViewModel()
+                        {
+                            OrganisationId = organisationId,
+                            OrganisationName = organisationData.DisplayName,
+                            Status = existingAssociation.UserStatus,
+                            AnyActiveUsers = activeUsers.Any()
+                        };
 
                     return View("UserAlreadyAssociatedWithOrganisation", viewModel);
                 }
@@ -214,10 +220,12 @@
                         ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
                         return View(viewModel);
                     }
+
                     throw;
                 }
 
-                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId, activeUsers = viewModel.AnyActiveUsers });
+                return RedirectToAction("JoinOrganisationConfirmation",
+                    new { organisationId = viewModel.OrganisationId, activeUsers = viewModel.AnyActiveUsers });
             }
         }
 
@@ -270,20 +278,11 @@
         {
             if (ModelState.IsValid)
             {
-                var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                 var routeValues = new { organisationType = model.SelectedValue };
 
                 await transactionService.CaptureData(User.GetAccessToken(), model);
 
-                switch (organisationType)
-                {
-                    case ExternalOrganisationType.SoleTrader:
-                        return RedirectToAction(nameof(SoleTraderDetails), "OrganisationRegistration", routeValues);
-                    case ExternalOrganisationType.Partnership:
-                        return RedirectToAction(nameof(PartnershipDetails), "OrganisationRegistration", routeValues);
-                    case ExternalOrganisationType.RegisteredCompany:
-                        return RedirectToAction(nameof(RegisteredCompanyDetails), "OrganisationRegistration", routeValues);
-                }
+                return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
             }
 
             return View(model);
@@ -317,7 +316,8 @@
 
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            model = existingTransaction?.RepresentingCompanyDetailsViewModel ?? new RepresentingCompanyDetailsViewModel();
+            model = existingTransaction?.RepresentingCompanyDetailsViewModel ??
+                    new RepresentingCompanyDetailsViewModel();
 
             var countries = await GetCountries();
             model.Address.Countries = countries;
@@ -327,7 +327,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
+        public async Task<ActionResult> OrganisationDetails(OrganisationViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -337,7 +337,7 @@
 
                 ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
 
-                return View(model);
+                return View(CastToSpecificViewModel(model.OrganisationType, model));
             }
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
@@ -346,53 +346,21 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails()
+        public async Task<ActionResult> OrganisationDetails()
         {
-            RegisteredCompanyDetailsViewModel model = null;
-
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (existingTransaction?.RegisteredCompanyDetailsViewModel != null)
+            var model = existingTransaction?.OrganisationViewModel ?? new OrganisationViewModel
             {
-                model = existingTransaction.RegisteredCompanyDetailsViewModel;
-            }
-            else
-            {
-                model = new RegisteredCompanyDetailsViewModel
-                {
-                    CompanyName = existingTransaction?.SearchTerm
-                };
-            }
+                CompanyName = existingTransaction?.SearchTerm,
+                OrganisationType = existingTransaction?.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
+            };
 
-            var countries = await GetCountries();
-            model.Address.Countries = countries;
+            model.Address.Countries = await GetCountries();
 
-            return View(model);
-        }
+            var specificViewModel = CastToSpecificViewModel(model.OrganisationType, model);
 
-        [HttpGet]
-        public async Task<ActionResult> PartnershipDetails()
-        {
-            PartnershipDetailsViewModel model = null;
-
-            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
-
-            if (existingTransaction?.PartnershipDetailsViewModel != null)
-            {
-                model = existingTransaction.PartnershipDetailsViewModel;
-            }
-            else
-            {
-                model = new PartnershipDetailsViewModel
-                {
-                    CompanyName = existingTransaction?.SearchTerm
-                };
-            }
-
-            var countries = await GetCountries();
-            model.Address.Countries = countries;
-
-            return View(model);
+            return View(specificViewModel);
         }
 
         [HttpGet]
@@ -405,42 +373,13 @@
                 return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
             }
 
-            switch (existingTransaction.OrganisationType)
-            {
-                case ExternalOrganisationType.RegisteredCompany:
-                    return RedirectToAction(nameof(RegisteredCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
-                case ExternalOrganisationType.Partnership:
-                    return RedirectToAction(nameof(PartnershipDetails), typeof(OrganisationRegistrationController).GetControllerName());
-                case ExternalOrganisationType.SoleTrader:
-                    return RedirectToAction(nameof(SoleTraderDetails), typeof(OrganisationRegistrationController).GetControllerName());
-                default:
-                    return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PartnershipDetails(PartnershipDetailsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                var countries = await GetCountries();
-
-                model.Address.Countries = countries;
-
-                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
-
-                return View(model);
-            }
-
-            await transactionService.CaptureData(User.GetAccessToken(), model);
-
-            return await CheckAuthorisedRepresentitiveAndRedirect();
+            return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
         {
-            var organisationTransactionData = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+            var organisationTransactionData =
+                await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
             if (organisationTransactionData != null &&
                 organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
@@ -450,7 +389,8 @@
                 return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
             }
 
-            return RedirectToAction(nameof(RepresentingCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName());
+            return RedirectToAction(nameof(RepresentingCompanyDetails),
+                typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -459,51 +399,6 @@
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
             }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> SoleTraderDetails()
-        {
-            SoleTraderDetailsViewModel model = null;
-
-            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
-
-            if (existingTransaction?.SoleTraderDetailsViewModel != null)
-            {
-                model = existingTransaction.SoleTraderDetailsViewModel;
-            }
-            else
-            {
-                model = new SoleTraderDetailsViewModel
-                {
-                    CompanyName = existingTransaction?.SearchTerm,
-                };
-            }
-
-            var countries = await GetCountries();
-            model.Address.Countries = countries;
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SoleTraderDetails(SoleTraderDetailsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                var countries = await GetCountries();
-
-                model.Address.Countries = countries;
-
-                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
-
-                return View(model);
-            }
-
-            await transactionService.CaptureData(User.GetAccessToken(), model);
-
-            return await CheckAuthorisedRepresentitiveAndRedirect();
         }
 
         [HttpGet]
@@ -525,7 +420,7 @@
                     selectedSearch = existingTransaction.SearchTerm;
                 }
             }
-            
+
             var viewModel = new TonnageTypeViewModel
             {
                 SearchedText = selectedSearch,
@@ -553,7 +448,8 @@
                 return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
             }
 
-            return RedirectToAction(nameof(PreviousRegistration), typeof(OrganisationRegistrationController).GetControllerName());
+            return RedirectToAction(nameof(PreviousRegistration),
+                typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
@@ -569,10 +465,11 @@
             using (var client = apiClient())
             {
                 organisations = await
-                 client.SendAsync(
-                     User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
             }
+
             return organisations;
         }
 
@@ -598,7 +495,8 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PreviousRegistration(PreviousRegistrationViewModel previousRegistrationViewModel)
+        public async Task<ActionResult> PreviousRegistration(
+            PreviousRegistrationViewModel previousRegistrationViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -613,7 +511,8 @@
                 return RedirectToAction("Search", "OrganisationRegistration");
             }
 
-            return RedirectToAction(nameof(AuthorisedRepresentative), typeof(OrganisationRegistrationController).GetControllerName());
+            return RedirectToAction(nameof(AuthorisedRepresentative),
+                typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
@@ -637,7 +536,8 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AuthorisedRepresentative(AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel)
+        public async Task<ActionResult> AuthorisedRepresentative(
+            AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -646,7 +546,8 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), authorisedRepresentativeViewModel);
 
-            return RedirectToAction(nameof(ContactDetails), typeof(OrganisationRegistrationController).GetControllerName());
+            return RedirectToAction(nameof(ContactDetails),
+                typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
@@ -689,6 +590,43 @@
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
             return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        private object CastToSpecificViewModel(ExternalOrganisationType? organisationType, OrganisationViewModel model)
+        {
+            switch (organisationType)
+            {
+                case ExternalOrganisationType.RegisteredCompany:
+                    return MapToViewModel<RegisteredCompanyDetailsViewModel>(model);
+                case ExternalOrganisationType.Partnership:
+                    return MapToViewModel<PartnershipDetailsViewModel>(model);
+                case ExternalOrganisationType.SoleTrader:
+                    return MapToViewModel<SoleTraderDetailsViewModel>(model);
+                default:
+                    return MapToViewModel<RegisteredCompanyDetailsViewModel>(model);
+            }
+        }
+
+        private T MapToViewModel<T>(OrganisationViewModel source) where T : OrganisationViewModel, new()
+        {
+            var target = new T();
+
+            var propertiesToIgnore = new HashSet<string>
+            {
+                nameof(OrganisationViewModel.ValidationMessageDisplayOrder),
+            };
+
+            var properties = typeof(OrganisationViewModel)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => !propertiesToIgnore.Contains(p.Name));
+
+            foreach (var prop in properties)
+            {
+                var value = prop.GetValue(source);
+                prop.SetValue(target, value);
+            }
+
+            return target;
         }
     }
 }
