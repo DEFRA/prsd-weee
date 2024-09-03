@@ -65,7 +65,10 @@
                     var brandName = await CreateAndAddBrandName(organisationTransactionData);
                     var representingCompany = await CreateRepresentingCompany(organisationTransactionData);
 
-                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, representingCompany);
+                    var contactDetails = CreateContact(organisationTransactionData);
+                    var contactAddress = await CreateContactAddress(organisationTransactionData);
+
+                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
@@ -114,6 +117,27 @@
             }
 
             return authorisedRepresentative;
+        }
+
+        private Contact CreateContact(OrganisationTransactionData organisationTransactionData)
+        {
+            var contactDetails = new Contact(organisationTransactionData.ContactDetailsViewModel.FirstName, organisationTransactionData.ContactDetailsViewModel.LastName,
+                                                organisationTransactionData.ContactDetailsViewModel.Position);
+            return contactDetails;
+        }
+
+        private async Task<Address> CreateContactAddress(OrganisationTransactionData organisationTransactionData)
+        {
+            var country = await weeeContext.Countries.SingleAsync(c => c.Id == organisationTransactionData.ContactDetailsViewModel.AddressData.CountryId);
+            var contactAddress = new Address(organisationTransactionData.ContactDetailsViewModel.AddressData.Address1,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Address2,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.TownOrCity,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.CountyOrRegion,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Postcode,
+                                        country,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Telephone,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Email);
+            return contactAddress;
         }
 
         private Organisation CreateOrganisation(OrganisationTransactionData organisationTransactionData)

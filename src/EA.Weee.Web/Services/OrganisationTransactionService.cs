@@ -59,7 +59,7 @@
                         transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
                     case ContactDetailsViewModel contactDetailsViewModel:
-                        transaction.ContactDetails = contactDetailsViewModel;
+                        transaction.ContactDetailsViewModel = contactDetailsViewModel;
                         break;
                 }
 
