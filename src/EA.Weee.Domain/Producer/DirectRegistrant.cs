@@ -4,6 +4,7 @@
     using EA.Weee.Domain.Organisation;
     using System;
     using CuttingEdge.Conditions;
+    using EA.Weee.Domain.Events;
 
     public partial class DirectRegistrant : Entity
     {
@@ -11,12 +12,14 @@
         {
         }
 
-        public DirectRegistrant(Organisation organisation, BrandName brandName)
+        public DirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress)
         {
             Condition.Requires(organisation).IsNotNull();
 
             Organisation = organisation;
             BrandName = brandName;
+            Contact = contactDetails;
+            Address = contactAddress;
         }
 
         public virtual Guid OrganisationId { get; private set; }
@@ -43,9 +46,9 @@
 
         public virtual Address Address { get; private set; }
 
-        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName)
+        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress)
         {
-            return new DirectRegistrant(organisation, brandName);
+            return new DirectRegistrant(organisation, brandName, contactDetails, contactAddress);
         }
     }
 }

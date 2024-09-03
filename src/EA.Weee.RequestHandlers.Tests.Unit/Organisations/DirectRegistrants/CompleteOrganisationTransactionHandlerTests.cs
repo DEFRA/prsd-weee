@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain;
@@ -159,14 +160,17 @@
 
         [Theory]
         [MemberData(nameof(OrganisationValues))]
-        public async Task HandleAsync_WhenValidRequestIsProvided_ShouldCreateOrganisationAndReturnItsId(ExternalOrganisationType externalOrganisationType,
-            Domain.Organisation.OrganisationType domainOrganisationType, string brandNames)
+        public async Task HandleAsync_WhenValidRequestIsProvided_ShouldCreateOrganisationAndReturnItsId(
+            ExternalOrganisationType externalOrganisationType,
+            Domain.Organisation.OrganisationType domainOrganisationType,
+            string brandNames)
         {
             // Arrange
             var organisationId = Guid.NewGuid();
             var hasBrandName = !string.IsNullOrWhiteSpace(brandNames);
+            var contactDetailsViewModel = new ContactDetailsViewModel();
 
-            SetupValidOrganisationTransaction(externalOrganisationType, brandNames);
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType, brandNames, contactDetailsViewModel);
 
             var newAddress = A.Fake<Address>();
             var directRegistrant = A.Fake<DirectRegistrant>();
@@ -221,7 +225,18 @@
                     d.Organisation.TradingName == TradingName &&
                     d.Organisation.Name == CompanyName &&
                     d.Organisation.BusinessAddress == newAddress &&
-                    d.BrandName == brandName))).MustHaveHappenedOnceExactly();
+                    d.BrandName == brandName &&
+                    d.Contact.FirstName == transactionData.ContactDetailsViewModel.FirstName &&
+                    d.Contact.LastName == transactionData.ContactDetailsViewModel.LastName &&
+                    d.Contact.Position == transactionData.ContactDetailsViewModel.Position &&
+                    d.Address.Address1 == transactionData.ContactDetailsViewModel.AddressData.Address1 &&
+                    d.Address.Address2 == transactionData.ContactDetailsViewModel.AddressData.Address2 &&
+                    d.Address.TownOrCity == transactionData.ContactDetailsViewModel.AddressData.TownOrCity &&
+                    d.Address.CountyOrRegion == transactionData.ContactDetailsViewModel.AddressData.CountyOrRegion &&
+                    d.Address.Postcode == transactionData.ContactDetailsViewModel.AddressData.Postcode &&
+                    d.Address.CountryId == transactionData.ContactDetailsViewModel.AddressData.CountryId &&
+                    d.Address.Email == transactionData.ContactDetailsViewModel.AddressData.Email &&
+                    d.Address.Telephone == transactionData.ContactDetailsViewModel.AddressData.Telephone))).MustHaveHappenedOnceExactly();
 
                 A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>.That.Matches(o =>
                     o == newOrganisation)))
@@ -246,7 +261,8 @@
 
         private OrganisationTransactionData SetupValidOrganisationTransaction(
             ExternalOrganisationType organisationType = ExternalOrganisationType.RegisteredCompany,
-            string brandNames = null)
+            string brandNames = null,
+            ContactDetailsViewModel contactDetailsViewModel = null)
         {
             var transaction = new OrganisationTransaction { OrganisationJson = "{}" };
             A.CallTo(() => dataAccess.FindIncompleteTransactionForCurrentUserAsync())
@@ -287,6 +303,9 @@
                 default:
                     throw new ArgumentOutOfRangeException(nameof(organisationType), organisationType, null);
             }
+
+            var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, countryId).Create();
+            transactionData.ContactDetailsViewModel = TestFixture.Build<ContactDetailsViewModel>().With(r => r.AddressData, organisationContactAddress).Create();
 
             transactionData.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsView;
             transactionData.PartnershipDetailsViewModel = partnershipDetailsViewModel;

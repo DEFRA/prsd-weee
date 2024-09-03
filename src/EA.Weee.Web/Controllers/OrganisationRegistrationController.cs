@@ -656,9 +656,9 @@
 
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (existingTransaction?.ContactDetails != null)
+            if (existingTransaction?.ContactDetailsViewModel != null)
             {
-                model = existingTransaction.ContactDetails;
+                model = existingTransaction.ContactDetailsViewModel;
             }
             else
             {
