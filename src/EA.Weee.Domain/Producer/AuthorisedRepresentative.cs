@@ -5,10 +5,9 @@
 
     public class AuthorisedRepresentative : Entity, IEquatable<AuthorisedRepresentative>
     {
-        public AuthorisedRepresentative(string name, ProducerContact overseasContact = null, string tradingName = null)
+        public AuthorisedRepresentative(string name, ProducerContact overseasContact = null)
         {
             OverseasProducerName = name;
-            OverseasProducerTradingName = tradingName;
             OverseasContact = overseasContact;
 
             if (overseasContact != null)
@@ -19,6 +18,13 @@
                     throw new ArgumentException(errorMessage);
                 }
             }
+        }
+
+        public AuthorisedRepresentative(string name, string tradingName, ProducerContact overseasContact = null)
+        {
+            OverseasProducerName = name;
+            OverseasProducerTradingName = tradingName;
+            OverseasContact = overseasContact;
         }
 
         protected AuthorisedRepresentative()

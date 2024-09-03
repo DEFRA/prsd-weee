@@ -330,16 +330,23 @@
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.RegisteredCompanyDetailsViewModel.EEEBrandNames);
                 directRegistrant.AuthorisedRepresentative.Should().NotBeNull();
-                directRegistrant.AuthorisedRepresentative.CompanyName.Should().Be(representingCompanyDetails.CompanyName);
-                directRegistrant.AuthorisedRepresentative.TradingName.Should().Be(representingCompanyDetails.BusinessTradingName);
-                directRegistrant.AuthorisedRepresentative.Address1.Should().Be(representingCompanyDetails.Address.Address1);
-                directRegistrant.AuthorisedRepresentative.Address2.Should().Be(representingCompanyDetails.Address.Address2);
-                directRegistrant.AuthorisedRepresentative.TownOrCity.Should().Be(representingCompanyDetails.Address.TownOrCity);
-                directRegistrant.AuthorisedRepresentative.CountyOrRegion.Should().Be(representingCompanyDetails.Address.CountyOrRegion);
-                directRegistrant.AuthorisedRepresentative.CountryId.Should().Be(representingCompanyDetails.Address.CountryId);
-                directRegistrant.AuthorisedRepresentative.Postcode.Should().Be(representingCompanyDetails.Address.Postcode);
-                directRegistrant.AuthorisedRepresentative.Email.Should().Be(representingCompanyDetails.Address.Email);
-                directRegistrant.AuthorisedRepresentative.Telephone.Should().Be(representingCompanyDetails.Address.Telephone);
+                directRegistrant.AuthorisedRepresentative.OverseasProducerName.Should().Be(representingCompanyDetails.CompanyName);
+                directRegistrant.AuthorisedRepresentative.OverseasProducerTradingName.Should().Be(representingCompanyDetails.BusinessTradingName);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.PrimaryName.Should().Be(representingCompanyDetails.Address.Address1);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.Street.Should().Be(representingCompanyDetails.Address.Address2);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.Town.Should().Be(representingCompanyDetails.Address.TownOrCity);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.AdministrativeArea.Should().Be(representingCompanyDetails.Address.CountyOrRegion);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.CountryId.Should().Be(representingCompanyDetails.Address.CountryId);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.PostCode.Should().Be(representingCompanyDetails.Address.Postcode);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Email.Should().Be(representingCompanyDetails.Address.Email);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Telephone.Should().Be(representingCompanyDetails.Address.Telephone);
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.SecondaryName.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Address.Locality.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.SurName.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Fax.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.ForeName.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Mobile.Should().BeEmpty();
+                directRegistrant.AuthorisedRepresentative.OverseasContact.Title.Should().BeEmpty();
             };
         }
 

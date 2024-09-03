@@ -16,7 +16,7 @@
             HasRequired(e => e.Organisation).WithMany().HasForeignKey(e => e.OrganisationId);
             HasOptional(e => e.SICCode).WithMany().HasForeignKey(e => e.SICCodeId);
             HasOptional(e => e.BrandName).WithMany().HasForeignKey(e => e.BrandNameId);
-            HasOptional(e => e.AuthorisedRepresentative).WithMany().HasForeignKey(e => e.RepresentingCompanyId);
+            HasOptional(e => e.AuthorisedRepresentative).WithMany().HasForeignKey(e => e.AuthorisedRepresentativeId);
         }
     }
 }
