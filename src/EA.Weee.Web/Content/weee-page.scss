@@ -1061,3 +1061,7 @@ input[type='radio']:checked:before {
 .back-to-top i {
     margin-right: 5px;
 }
+
+.border-divider {
+    border-bottom: 1px solid $govuk-border-colour;
+}

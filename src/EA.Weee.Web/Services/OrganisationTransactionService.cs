@@ -61,6 +61,9 @@
                     case ContactDetailsViewModel contactDetailsViewModel:
                         transaction.ContactDetails = contactDetailsViewModel;
                         break;
+                    case PartnerViewModel partnerViewModel:
+                        transaction.PartnerViewModel = partnerViewModel;
+                        break;
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));
