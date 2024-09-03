@@ -55,7 +55,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenGetAnAatfBySearchId_ReturnedListShouldContainElements()
+        public async Task HandleAsync_GivenGetAnAatfBySearchId_ReturnedListShouldContainElements()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -80,7 +80,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenGetAnAatfBySearchId_ReturnedListShouldContainsOnly1Element()
+        public async Task HandleAsync_GivenGetAnAatfBySearchId_ReturnedListShouldContainsOnly1Element()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();

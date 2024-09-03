@@ -7,7 +7,7 @@
     using System.Web.Mvc;
     public class AatfReuseSitesViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Select a compliance year")]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 

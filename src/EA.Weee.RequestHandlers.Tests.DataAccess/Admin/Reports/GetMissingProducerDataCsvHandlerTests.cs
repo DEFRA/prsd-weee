@@ -4,6 +4,7 @@
     using RequestHandlers.Admin.Reports.GetMissingProducerDataCsv;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -11,7 +12,7 @@
     public class GetMissingProducerDataCsvHandlerTests
     {
         [Fact]
-        public async void DataProcessor_ReturnsMissingDataOnlyForSpecifiedCompianceYear()
+        public async Task DataProcessor_ReturnsMissingDataOnlyForSpecifiedCompianceYear()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -53,7 +54,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsAllSchemes_WhenSchemeIdIsNull()
+        public async Task DataProcessor_ReturnsAllSchemes_WhenSchemeIdIsNull()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -105,7 +106,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsOnlySpecifiedScheme_WhenSchemeIdGiven()
+        public async Task DataProcessor_ReturnsOnlySpecifiedScheme_WhenSchemeIdGiven()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -149,7 +150,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_DoesNotIncludeRejectedSchemes()
+        public async Task DataProcessor_DoesNotIncludeRejectedSchemes()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -193,7 +194,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsAllQuarters_WhenQuarterIsNull()
+        public async Task DataProcessor_ReturnsAllQuarters_WhenQuarterIsNull()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -231,7 +232,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsOnlySpecifiedQuarter_WhenQuarterGiven()
+        public async Task DataProcessor_ReturnsOnlySpecifiedQuarter_WhenQuarterGiven()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -258,7 +259,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsAllQuartersForProducer_WhenNoDataReturnsUploaded()
+        public async Task DataProcessor_ReturnsAllQuartersForProducer_WhenNoDataReturnsUploaded()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -283,7 +284,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsOnlyQuartersForProducer_ThatHaveNotHadDataReturnsUploaded()
+        public async Task DataProcessor_ReturnsOnlyQuartersForProducer_ThatHaveNotHadDataReturnsUploaded()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -320,7 +321,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsOnlyQuartersForProducer_AssociatedWithCorrectProducer()
+        public async Task DataProcessor_ReturnsOnlyQuartersForProducer_AssociatedWithCorrectProducer()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -368,7 +369,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_DoesNotIncludeProducer_WhenAllDataReturnsUploaded()
+        public async Task DataProcessor_DoesNotIncludeProducer_WhenAllDataReturnsUploaded()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -404,7 +405,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_DoesNotIncludeQuarter_WithExplicitZeroDataSubmission()
+        public async Task DataProcessor_DoesNotIncludeQuarter_WithExplicitZeroDataSubmission()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -433,7 +434,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsMissingB2B_WhenOnlyB2CProvidedForSchemeWithBothObligation()
+        public async Task DataProcessor_ReturnsMissingB2B_WhenOnlyB2CProvidedForSchemeWithBothObligation()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -463,7 +464,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsMissingB2C_WhenOnlyB2BProvidedForSchemeWithBothObligation()
+        public async Task DataProcessor_ReturnsMissingB2C_WhenOnlyB2BProvidedForSchemeWithBothObligation()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -493,7 +494,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_DoesNotIncludeProducerWithBothObligation_WhenB2CSpecifiedAndSubmitted_AndProducerIsMissingB2B()
+        public async Task DataProcessor_DoesNotIncludeProducerWithBothObligation_WhenB2CSpecifiedAndSubmitted_AndProducerIsMissingB2B()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -521,7 +522,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_DoesNotIncludeProducerWithBothObligation_WhenB2BSpecifiedAndSubmitted_AndProducerIsMissingB2C()
+        public async Task DataProcessor_DoesNotIncludeProducerWithBothObligation_WhenB2BSpecifiedAndSubmitted_AndProducerIsMissingB2C()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -550,7 +551,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_DoesNotIncludeB2BOnlyProducer_WhenB2CSpecified()
+        public async Task DataProcessor_DoesNotIncludeB2BOnlyProducer_WhenB2CSpecified()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -575,7 +576,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_DoesNotIncludeB2COnlyProducer_WhenB2BSpecified()
+        public async Task DataProcessor_DoesNotIncludeB2COnlyProducer_WhenB2BSpecified()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -600,7 +601,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_IncludesProducerThatHadSubmittedData_WhereSubmittedDataHasBeenRemovedInLatestSubmission()
+        public async Task DataProcessor_IncludesProducerThatHadSubmittedData_WhereSubmittedDataHasBeenRemovedInLatestSubmission()
         {
             using (var db = new DatabaseWrapper())
             {
@@ -636,7 +637,7 @@
         }
 
         [Fact]
-        public async void DataProcessor_ReturnsCorrectResultsInCorrectOrder()
+        public async Task DataProcessor_ReturnsCorrectResultsInCorrectOrder()
         {
             using (var db = new DatabaseWrapper())
             {

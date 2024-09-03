@@ -6,6 +6,7 @@
     using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Domain.Evidence;
     using System.Linq;
+    using EA.Weee.Core.Helpers;
 
     public class ListOfEvidenceNoteDataMap : IMap<List<Note>, List<EvidenceNoteData>>
     {
@@ -23,7 +24,8 @@
             return source.Select(s =>
                 mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(new EvidenceNoteRowCriteriaMapper(s)
                 {
-                    IncludeTotal = false
+                    IncludeTotal = true,
+                    CategoryFilter = s.NoteTonnage.Select(c => c.CategoryId.ToInt()).ToList()
                 })).ToList();
         }
     }

@@ -10,6 +10,7 @@
     using Services;
     using Services.Caching;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Controllers;
     using Web.ViewModels.Returns;
@@ -41,7 +42,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>()) as ViewResult;
 
@@ -49,7 +50,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
+        public async Task IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
             var returnId = Guid.NewGuid();
 
@@ -60,7 +61,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_CheckReturnViewModelShouldBeBuilt()
         {
             var @return = A.Fake<ReturnData>();
             A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
@@ -73,7 +74,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_CheckReturnViewModelShouldBeReturned()
+        public async Task IndexGet_GivenReturn_CheckReturnViewModelShouldBeReturned()
         {
             var model = A.Fake<SubmittedReturnViewModel>();
 
@@ -85,7 +86,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -107,7 +108,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenModel_RedirectShouldBeCorrect()
+        public async Task IndexPost_GivenModel_RedirectShouldBeCorrect()
         {
             var model = new SubmittedReturnViewModel() { OrganisationId = Guid.NewGuid() };
             var redirect = await controller.Index(model) as RedirectToRouteResult;

@@ -12,6 +12,8 @@
         public const int EmailAddress = 256;
         public const int Postcode = 10;
         public const int Telephone = 20;
+        public const int WebsiteAddress = 256;
+        public const int CompanyNumber = 15;
         public const int Password = 100;
         public const int Year = 4;
         public const int Tonnage = 22;

@@ -59,6 +59,9 @@
         [DisplayName("Reason")]
         public string VoidedReason { get; set; }
 
+        [DisplayName("Reason")]
+        public string CancelledReason { get; set; }
+
         public bool CanVoid { get; set; }
 
         public bool DisplayReturnedReason => Status.Equals(NoteStatus.Returned) && !string.IsNullOrWhiteSpace(ReturnedReason);
@@ -66,6 +69,8 @@
         public bool DisplayRejectedReason => Status.Equals(NoteStatus.Rejected) && !string.IsNullOrWhiteSpace(RejectedReason);
 
         public bool DisplayVoidedReason => Status.Equals(NoteStatus.Void) && !string.IsNullOrWhiteSpace(VoidedReason);
+
+        public bool DisplayCancelledReason => Status.Equals(NoteStatus.Cancelled) && !string.IsNullOrWhiteSpace(CancelledReason);
 
         public EvidenceNoteViewModel()
         {

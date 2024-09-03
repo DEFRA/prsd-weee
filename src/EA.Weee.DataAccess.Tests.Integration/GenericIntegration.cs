@@ -20,7 +20,7 @@
     public class GenericIntegration
     {
         [Fact]
-        public async void RemoveWeeeSentOn_GivenWeeeSentOn_CorrectDatabaseEntriesAreDeleted()
+        public async Task RemoveWeeeSentOn_GivenWeeeSentOn_CorrectDatabaseEntriesAreDeleted()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -62,7 +62,7 @@
         }
 
         [Fact]
-        public async void RemoveWeeeSentOn_GivenMultipleWeeeSentOn_CorrectDatabaseEntriesAreDeleted()
+        public async Task RemoveWeeeSentOn_GivenMultipleWeeeSentOn_CorrectDatabaseEntriesAreDeleted()
         {
             using (var database = new DatabaseWrapper())
             {

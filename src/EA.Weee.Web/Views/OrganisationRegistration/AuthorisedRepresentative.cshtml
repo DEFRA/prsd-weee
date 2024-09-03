@@ -1,0 +1,45 @@
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.AuthorisedRepresentativeViewModel
+@{
+    const string title = "Are you taking on the legal responsibilities of a non-UK organisation under the WEEE regulations?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+
+@section full_main_content{
+
+    @(this.WeeeGds().BackLink(@Url.Action("PreviousRegistration")))
+
+    @using (Html.BeginForm())
+    {
+        @Html.Gds().ValidationSummary()
+
+        @Html.AntiForgeryToken()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                @title
+            </h1>
+        </header>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Select if you are taking on the legal responsibilities of a non-UK organisation under the WEEE regulations",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <div>
+            @this.WeeeGds().CreateProgressiveDisclosure("Authorised representative guidance",
+                @Html.Partial("_AuthorisedRepresentativeGuidance").ToString(),
+                "Hidden content",
+                "Progressive disclosure",
+                "Authorised representative guidance")
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+}

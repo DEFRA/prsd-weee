@@ -25,7 +25,8 @@
                 evidenceNoteRowViewModel.DisplayViewLink = evidenceNoteRowViewModel.Status.Equals(NoteStatus.Approved) ||
                                                            evidenceNoteRowViewModel.Status.Equals(NoteStatus.Submitted) ||
                                                            evidenceNoteRowViewModel.Status.Equals(NoteStatus.Void) ||
-                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Rejected);
+                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Rejected) ||
+                                                           evidenceNoteRowViewModel.Status.Equals(NoteStatus.Cancelled);
             }
 
             return model;

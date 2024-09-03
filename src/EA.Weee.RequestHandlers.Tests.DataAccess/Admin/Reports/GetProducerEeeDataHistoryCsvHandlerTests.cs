@@ -4,6 +4,7 @@
     using FakeItEasy;
     using RequestHandlers.Admin;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -11,7 +12,7 @@
     public class GetProducerEeeDataHistoryCsvHandlerTests
     {
         [Fact]
-        public async void CreateResults_EeeHistoryCsvResult_PopulatedWithCorrectValues()
+        public async Task CreateResults_EeeHistoryCsvResult_PopulatedWithCorrectValues()
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();

@@ -34,6 +34,7 @@
             builder.RegisterTypeByEnvironment<SystemDataDataAccess, ISystemDataDataAccess>(environment);
             builder.RegisterTypeByEnvironment<ObligationDataAccess, IObligationDataAccess>(environment);
             builder.RegisterTypeByEnvironment<OrganisationDataAccess, IOrganisationDataAccess>(environment);
+            builder.RegisterTypeByEnvironment<OrganisationTransactionDataAccess, IOrganisationTransactionDataAccess>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 

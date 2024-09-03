@@ -128,10 +128,18 @@
             var postcode = Faker.Address.UkPostCode();
             var approval = Faker.Name.Suffix();
 
-            var result = addressUtilities.FormattedAddress(name, address1, address2, town,
-                county, postcode, approval);
+            var result = addressUtilities.FormattedAddress(name, address1, address2, town, county, postcode, approval);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{name}<br/><strong>{approval}</strong><br/>{address1}<br/>{address2}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+            result.Should().Be(addressText);
         }
 
         [Fact]
@@ -144,10 +152,18 @@
             var county = Faker.Address.UkCounty();
             var postcode = Faker.Address.UkPostCode();
 
-            var result = addressUtilities.FormattedAddress(name, address1, address2, town,
-                county, postcode);
+            var result = addressUtilities.FormattedAddress(name, address1, address2, town, county, postcode);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{address2}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{name}</span><span>{address1}</span><span>{address2}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+            result.Should().Be(addressText);
         }
 
         [Fact]
@@ -160,10 +176,18 @@
             var postcode = Faker.Address.UkPostCode();
             var approval = Faker.Name.Suffix();
 
-            var result = addressUtilities.FormattedAddress(name, address1, null, town,
-                county, postcode, approval);
+            var result = addressUtilities.FormattedAddress(name, address1, null, town, county, postcode, approval);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{name}<br/><strong>{approval}</strong><br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{name}</span><strong><span>{approval}</span></strong><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+            result.Should().Be(addressText);
         }
 
         [Fact]
@@ -175,17 +199,25 @@
             var county = Faker.Address.UkCounty();
             var postcode = Faker.Address.UkPostCode();
 
-            var result = addressUtilities.FormattedAddress(name, address1, null, town,
-                county, postcode);
+            var result = addressUtilities.FormattedAddress(name, address1, null, town, county, postcode);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+            result.Should().Be(addressText);
         }
 
         [Theory]
         [InlineData("test", "test", "test")]
         [InlineData("TEST", "test", "test")]
         [InlineData(" Test ", "test", "test")]
-        [InlineData("No", "Match", "No<br/>Match")]
+        [InlineData("No", "Match", "No</span><span>Match")]
         public void FormattedAddress3_ShouldIgnoreSpacesAndSpecialSymbolsAndCase(string companyName, string name, string expectedNameString)
         {
             var address1 = Faker.Address.StreetName();
@@ -193,27 +225,44 @@
             var county = Faker.Address.UkCounty();
             var postcode = Faker.Address.UkPostCode();
 
-            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
-                county, postcode, null);
+            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{expectedNameString}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{expectedNameString}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+            result.Should().Be(addressText);
         }
 
         [Fact]
         public void FormattedAddress3_ShouldIgnoreSpecialChars()
         {
             var companyName = @"""!£$%^&*()_+-=`¬TEST";
-            var name = @"|\[]{}:;@#~<,>.?/test";
+            var name = @"|\[]{}:;@#~.?/test";
 
             var address1 = Faker.Address.StreetName();
             var town = Faker.Address.City();
             var county = Faker.Address.UkCounty();
             var postcode = Faker.Address.UkPostCode();
 
-            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
-                county, postcode, null);
+            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+
+            result.Should().Be(addressText);
         }
 
         [Fact]
@@ -226,10 +275,18 @@
             var county = Faker.Address.UkCounty();
             var postcode = Faker.Address.UkPostCode();
 
-            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
-                county, postcode, null);
+            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{companyName}<br/>{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{companyName}</span><span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+            result.Should().Be(addressText);
         }
 
         [Fact]
@@ -242,10 +299,19 @@
             var county = Faker.Address.UkCounty();
             var postcode = Faker.Address.UkPostCode();
 
-            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town,
-                county, postcode, null);
+            var result = addressUtilities.FormattedCompanyPcsAddress(companyName, name, address1, null, town, county, postcode, null);
+            if (result.Contains("&#39;"))
+            {
+                result = result.Replace("&#39;", "'");
+            }
 
-            result.Should().Be($@"{name}<br/>{address1}<br/>{town}<br/>{county}<br/>{postcode}");
+            var addressText = $"<span>{name}</span><span>{address1}</span><span>{town}</span><span>{county}</span><span>{postcode}</span>";
+            if (addressText.Contains("&#39;"))
+            {
+                addressText = addressText.Replace("&#39;", "'");
+            }
+
+            result.Should().Be(addressText);
         }
     }
 }

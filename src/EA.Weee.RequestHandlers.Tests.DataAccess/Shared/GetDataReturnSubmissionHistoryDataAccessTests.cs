@@ -12,7 +12,7 @@
     public class GetDataReturnSubmissionHistoryDataAccessTests
     {
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsAllSubmittedSubmissionHistoryData()
+        public async Task GetDataReturnSubmissionHistory_ReturnsAllSubmittedSubmissionHistoryData()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -62,7 +62,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSpecifiedSchemeSubmissionHistoryData()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSpecifiedSchemeSubmissionHistoryData()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -117,7 +117,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSchemeSubmissionHistoryDataOrderByDescendingSubmissionDateTime_AsDefaultSort()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSchemeSubmissionHistoryDataOrderByDescendingSubmissionDateTime_AsDefaultSort()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -174,7 +174,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSpecifiedSchemeAndComplianceYearSubmissionHistoryData()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSpecifiedSchemeAndComplianceYearSubmissionHistoryData()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -230,7 +230,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateDescending_WhenOrderBySubmissionDateDescendingSpecified()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateDescending_WhenOrderBySubmissionDateDescendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -267,7 +267,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateAscending_WhenOrderBySubmissionDateAscendingSpecified()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByDateAscending_WhenOrderBySubmissionDateAscendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -304,7 +304,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingSubmissionDateDescending_WhenOrderByComplianceYearDescendingSpecified()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingSubmissionDateDescending_WhenOrderByComplianceYearDescendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -346,7 +346,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearAscendingSubmissionDateDescending_WhenOrderByComplianceYearAscendingSpecified()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearAscendingSubmissionDateDescending_WhenOrderByComplianceYearAscendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -388,7 +388,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingQuarterDescendingSubmissionDateDescending_WhenOrderByQuaterDescendingSpecified()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingQuarterDescendingSubmissionDateDescending_WhenOrderByQuaterDescendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -449,7 +449,7 @@
         }
 
         [Fact]
-        public async void GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingQuarterAscendingSubmissionDateDescending_WhenOrderByQuaterAscendingSpecified()
+        public async Task GetDataReturnSubmissionHistory_ReturnsSubmissionHistoryData_SortedByYearDescendingQuarterAscendingSubmissionDateDescending_WhenOrderByQuaterAscendingSpecified()
         {
             using (var database = new DatabaseWrapper())
             {
