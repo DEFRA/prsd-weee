@@ -5,7 +5,7 @@
 }
 @section full_main_content
 {
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("CheckAndCompleteApplication", "OrganisationRegistrationController", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -17,7 +17,7 @@
         </div>
 
         <p>Your organisation has been created.</p>
-        <h3 class="govuk-heading-m">What happens next</h3>
+        <h2 class="govuk-heading-l">What happens next</h2>
         <p>You will need to register your tonnage for this year</p>
 
         <div class="govuk-form-group">
