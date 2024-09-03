@@ -927,9 +927,9 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "Index", "Holding")]
+        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistrationController")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
-        public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
+        public async Task RegisteredCompanyDetails_Post_ValidModel_RedirectsToRegistrationComplete(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
             var model = TestFixture.Build<RegisteredCompanyDetailsViewModel>().Create();
@@ -1054,7 +1054,7 @@
         }
 
         [Fact]
-        public async Task RepresentingCompanyDetails_Post_ValidModel_RedirectsToHoldingController()
+        public async Task RepresentingCompanyDetails_Post_ValidModel_RedirectsToRegistrationComplete()
         {
             // Arrange
             var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
@@ -1064,8 +1064,8 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistrationController");
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
@@ -1145,9 +1145,9 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "Index", "Holding")]
+        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistrationController")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
-        public async Task PartnershipDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
+        public async Task PartnershipDetails_Post_ValidModel_RedirectsToRegistrationComplete(YesNoType authorisedRep, string index, string controllerName)
         {
             // Arrange
             var model = TestFixture.Create<PartnershipDetailsViewModel>();
@@ -1287,7 +1287,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "Index", "Holding")]
+        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistrationController")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task SoleTraderDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
@@ -1539,13 +1539,13 @@
         }
 
         [Fact]
-        public void RegistrationComplete_Post_Any_RedirectsToHoldingController()
+        public void RegistrationComplete_Post_RedirectsToHoldingController()
         {
             // Arrange
-            var searchTerm = string.Empty;
+            FormCollection formCollection = null;
 
             // Act
-            var result = controller.RegistrationComplete(searchTerm) as RedirectToRouteResult;
+            var result = controller.RegistrationComplete(formCollection) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();

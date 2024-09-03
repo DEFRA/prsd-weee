@@ -705,7 +705,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CheckAndCompleteApplication()
+        public ActionResult RegistrationComplete(FormCollection model)
         {
             return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
