@@ -1405,7 +1405,7 @@
 
         [Theory]
         [InlineData(ExternalOrganisationType.RegisteredCompany, "RegisteredCompanyDetails")]
-        [InlineData(ExternalOrganisationType.Partnership, "PartnershipDetails")]
+        [InlineData(ExternalOrganisationType.Partnership, "PartnerDetails")]
         [InlineData(ExternalOrganisationType.SoleTrader, "SoleTraderDetails")]
         public async Task RepresentingCompanyRedirect_ShouldRedirectToCorrectAction_WhenOrganisationTypeIsSet(ExternalOrganisationType organisationType, string expectedAction)
         {
@@ -1454,6 +1454,112 @@
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("Type");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public void PartnerDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+
+            // Act
+            var result = controller.PartnerDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            var model = result.Model as PartnerViewModel;
+            model.Should().NotBeNull();
+
+            model.PartnerModels.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Post_CallsCaptureDataAndRedirectsToPartnershipDetails()
+        {
+            // Arrange
+            var vm = new PartnerViewModel
+            {
+                PartnerModels = new List<PartnerModel>
+                {
+                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                }
+            };
+
+            // Act
+            var result = await controller.PartnerDetails(vm, "actionName") as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, vm)).MustHaveHappenedOnceExactly();
+
+            result.RouteValues["action"].Should().Be("PartnershipDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Post_AddsAnotherPartnerFields()
+        {
+            // Arrange
+            var vm = new PartnerViewModel
+            {
+                PartnerModels = new List<PartnerModel>
+                {
+                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                }
+            };
+
+            // Act
+            var result = await controller.PartnerDetails(vm, "AnotherPartner") as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, vm)).MustNotHaveHappened();
+
+            var model = result.Model as PartnerViewModel;
+
+            model.PartnerModels.Should().HaveCount(2);
+
+            model.PartnerModels[1].FirstName.Should().BeNull();
+            model.PartnerModels[1].LastName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Post_AddErrorIfMoreThanTenPartners()
+        {
+            // Arrange
+            var vm = new PartnerViewModel
+            {
+                PartnerModels = new List<PartnerModel>
+                {
+                    new PartnerModel { FirstName = "xx", LastName = "x" }, 
+                    new PartnerModel { FirstName = "xx", LastName = "x" }, 
+                    new PartnerModel { FirstName = "xx", LastName = "x" }, 
+                    new PartnerModel { FirstName = "xx", LastName = "x" }, 
+                    new PartnerModel { FirstName = "xx", LastName = "x" }, 
+                    new PartnerModel { FirstName = "xx", LastName = "x" }, 
+                    new PartnerModel { FirstName = "xx", LastName = "x" }, 
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                }
+            };
+
+            // Act
+            var result = await controller.PartnerDetails(vm, "AnotherPartner") as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, vm)).MustNotHaveHappened();
+
+            controller.ModelState["PartnerModels"].Errors.Count.Should().Be(1);
+
+            controller.ModelState["PartnerModels"].Errors[0].ErrorMessage.Should().BeEquivalentTo("A maximum of 10 partners are allowed");
+
+            var model = result.Model as PartnerViewModel;
         }
     }
 }
