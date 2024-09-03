@@ -353,7 +353,7 @@
             var model = existingTransaction?.OrganisationViewModel ?? new OrganisationViewModel
             {
                 CompanyName = existingTransaction?.SearchTerm,
-                OrganisationType = existingTransaction?.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
+                OrganisationType = existingTransaction != null ? existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany : ExternalOrganisationType.RegisteredCompany,
             };
 
             model.Address.Countries = await GetCountries();
