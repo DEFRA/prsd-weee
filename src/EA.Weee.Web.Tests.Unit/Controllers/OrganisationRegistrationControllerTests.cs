@@ -12,6 +12,7 @@
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
+    using iText.Commons.Utils;
     using Services;
     using System;
     using System.Collections.Generic;
@@ -1303,7 +1304,6 @@
             var result = await controller.SoleTraderDetails(model) as RedirectToRouteResult;
 
             // Assert
-            // Assert
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be(index);
             result.RouteValues["controller"].Should().Be(controllerName);
@@ -1454,6 +1454,78 @@
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("Type");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task ContactDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                ContactDetailsViewModel = TestFixture.Create<ContactDetailsViewModel>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.ContactDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as ContactDetailsViewModel;
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.ContactDetailsViewModel);
+            model.AddressData.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task ContactDetails_Post_ValidModel_RedirectsToType()
+        {
+            // Arrange
+            var model = TestFixture.Create<ContactDetailsViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.ContactDetailsViewModel, model).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.ContactDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Type");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ContactDetails_Post_InValidModel_RedirectsToHoldingController()
+        {
+            // Arrange
+            var model = TestFixture.Create<ContactDetailsViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.ContactDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+
+            var resultModel = result.Model as ContactDetailsViewModel;
+            resultModel.Should().BeEquivalentTo(model);
+            model.AddressData.Countries.Should().BeEquivalentTo(countries);
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
         }
     }
 }

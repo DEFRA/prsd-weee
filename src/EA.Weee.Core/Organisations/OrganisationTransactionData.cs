@@ -25,6 +25,8 @@
         public SoleTraderDetailsViewModel SoleTraderDetailsViewModel { get; set; }
 
         public RepresentingCompanyDetailsViewModel RepresentingCompanyDetailsViewModel { get; set; }
+
+        public ContactDetailsViewModel ContactDetailsViewModel { get; set; }
     
         public ExternalAddressData GetAddressData()
         {
@@ -92,6 +94,5 @@
 
             return new List<ValidationResult>();
         }
-        public ContactDetailsViewModel ContactDetails { get; set; }
     }
 }
