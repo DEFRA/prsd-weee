@@ -81,27 +81,39 @@
             }
         }
 
-        private async Task<RepresentingCompany> CreateRepresentingCompany(OrganisationTransactionData organisationTransactionData)
+        private async Task<AuthorisedRepresentative> CreateRepresentingCompany(OrganisationTransactionData organisationTransactionData)
         {
-            RepresentingCompany representingCompany = null;
+            AuthorisedRepresentative authorisedRepresentative = null;
             if (organisationTransactionData.AuthorisedRepresentative == YesNoType.Yes)
             {
                 var country = await weeeContext.Countries.SingleAsync(c => c.Id == organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountryId);
 
-                representingCompany = new RepresentingCompany(
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.CompanyName,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName,
+                var producerAddress = new ProducerAddress(
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address1,
+                    string.Empty,
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address2,
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity,
+                    string.Empty,
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Postcode,
                     country,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Postcode);
+
+                var producerContact = new ProducerContact(string.Empty,
+                    string.Empty,
+                    string.Empty,
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Telephone,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Email);
+                    string.Empty,
+                    string.Empty,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Email,
+                    producerAddress);
+
+                authorisedRepresentative = new AuthorisedRepresentative(
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.CompanyName,
+                    producerContact,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName);
             }
 
-            return representingCompany;
+            return authorisedRepresentative;
         }
 
         private Organisation CreateOrganisation(OrganisationTransactionData organisationTransactionData)

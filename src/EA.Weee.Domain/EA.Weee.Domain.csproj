@@ -130,7 +130,6 @@
     <Compile Include="Obligation\ObligationScheme.cs" />
     <Compile Include="Obligation\ObligationUpload.cs" />
     <Compile Include="Obligation\ObligationUploadError.cs" />
-    <Compile Include="Organisation\RepresentingCompany.cs" />
     <Compile Include="Organisation\AdditionalCompanyDetails.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
