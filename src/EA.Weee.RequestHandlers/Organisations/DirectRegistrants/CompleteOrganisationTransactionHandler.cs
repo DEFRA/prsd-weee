@@ -109,8 +109,8 @@
 
                 authorisedRepresentative = new AuthorisedRepresentative(
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.CompanyName,
-                    producerContact,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName);
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName,
+                    producerContact);
             }
 
             return authorisedRepresentative;
