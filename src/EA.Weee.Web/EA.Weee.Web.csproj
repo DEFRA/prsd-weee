@@ -576,7 +576,7 @@
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\EvidenceAndObligationProgressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerController.cs" />
-    <Compile Include="Areas\Producer\Filters\AuthorizeDirectRegistrantClaimsAttribute.cs" />
+    <Compile Include="Areas\Producer\Filters\AuthorizeRouteClaimsAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBase.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttribute.cs" />

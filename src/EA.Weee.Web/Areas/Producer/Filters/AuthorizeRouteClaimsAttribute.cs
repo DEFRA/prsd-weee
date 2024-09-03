@@ -8,12 +8,12 @@
     using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-    public class AuthorizeDirectRegistrantClaimsAttribute : System.Web.Mvc.AuthorizeAttribute
+    public class AuthorizeRouteClaimsAttribute : System.Web.Mvc.AuthorizeAttribute
     {
         private readonly string[] claims;
         private readonly string routeIdParam;
 
-        public AuthorizeDirectRegistrantClaimsAttribute(string routeIdParam, params string[] claims)
+        public AuthorizeRouteClaimsAttribute(string routeIdParam, params string[] claims)
         {
             this.routeIdParam = routeIdParam;
             this.claims = claims;
@@ -40,11 +40,10 @@
 
             if (filterContext.HttpContext.User.Identity is ClaimsIdentity claimsIdentity)
             {
-                if (claims.All(c => claimsIdentity.Claims
-                        .Select(cl => cl.Value)
-                        .Contains(routeId)))
+                if (claims.All(claimType =>
+                        claimsIdentity.HasClaim(c => c.Type == claimType && c.Value == routeId)))
                 {
-                    return; // User claims are authorized
+                    return;
                 }
             }
 
