@@ -731,8 +731,8 @@
 
             List<DirectRegistrant> directRegistrants = new List<DirectRegistrant>()
             {
-                new Domain.Producer.DirectRegistrant(organisationComplete, null),
-                new Domain.Producer.DirectRegistrant(organisationIncomplete, null),
+                new Domain.Producer.DirectRegistrant(organisationComplete, null, null, null),
+                new Domain.Producer.DirectRegistrant(organisationIncomplete, null, null, null),
             };
 
             A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
