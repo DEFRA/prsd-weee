@@ -5,7 +5,7 @@
     using EA.Weee.Web.Controllers.Base;
     using System.Web.Mvc;
 
-    [AuthorizeDirectRegistrantClaims(WeeeClaimTypes.DirectRegistrantAccess)]
+    [AuthorizeRouteClaims(WeeeClaimTypes.DirectRegistrantAccess)]
     public class ProducerController : ExternalSiteController
     {
         public ActionResult Index()
