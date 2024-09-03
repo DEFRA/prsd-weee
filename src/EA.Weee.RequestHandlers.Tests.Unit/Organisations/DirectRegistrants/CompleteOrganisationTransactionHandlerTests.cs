@@ -217,15 +217,15 @@
                         d.Organisation.Name == CompanyName &&
                         d.Organisation.BusinessAddress == newAddress &&
                         d.BrandName == brandName &&
-                        d.RepresentingCompany.TradingName == transactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName &&
-                        d.RepresentingCompany.CompanyName == transactionData.RepresentingCompanyDetailsViewModel.CompanyName &&
-                        d.RepresentingCompany.Address1 == transactionData.RepresentingCompanyDetailsViewModel.Address.Address1 &&
-                        d.RepresentingCompany.Address2 == transactionData.RepresentingCompanyDetailsViewModel.Address.Address2 &&
-                        d.RepresentingCompany.Postcode == transactionData.RepresentingCompanyDetailsViewModel.Address.Postcode &&
-                        d.RepresentingCompany.TownOrCity == transactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity &&
-                        d.RepresentingCompany.Email == transactionData.RepresentingCompanyDetailsViewModel.Address.Email &&
-                        d.RepresentingCompany.Telephone == transactionData.RepresentingCompanyDetailsViewModel.Address.Telephone &&
-                        d.RepresentingCompany.CountyOrRegion == transactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion))).MustHaveHappenedOnceExactly();
+                        d.AuthorisedRepresentative.TradingName == transactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName &&
+                        d.AuthorisedRepresentative.CompanyName == transactionData.RepresentingCompanyDetailsViewModel.CompanyName &&
+                        d.AuthorisedRepresentative.Address1 == transactionData.RepresentingCompanyDetailsViewModel.Address.Address1 &&
+                        d.AuthorisedRepresentative.Address2 == transactionData.RepresentingCompanyDetailsViewModel.Address.Address2 &&
+                        d.AuthorisedRepresentative.Postcode == transactionData.RepresentingCompanyDetailsViewModel.Address.Postcode &&
+                        d.AuthorisedRepresentative.TownOrCity == transactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity &&
+                        d.AuthorisedRepresentative.Email == transactionData.RepresentingCompanyDetailsViewModel.Address.Email &&
+                        d.AuthorisedRepresentative.Telephone == transactionData.RepresentingCompanyDetailsViewModel.Address.Telephone &&
+                        d.AuthorisedRepresentative.CountyOrRegion == transactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion))).MustHaveHappenedOnceExactly();
                 }
                 else
                 {
@@ -235,7 +235,7 @@
                         d.Organisation.Name == CompanyName &&
                         d.Organisation.BusinessAddress == newAddress &&
                         d.BrandName == brandName &&
-                        d.RepresentingCompany == null))).MustHaveHappenedOnceExactly();
+                        d.AuthorisedRepresentative == null))).MustHaveHappenedOnceExactly();
                 }
                 
                 A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>.That.Matches(o =>

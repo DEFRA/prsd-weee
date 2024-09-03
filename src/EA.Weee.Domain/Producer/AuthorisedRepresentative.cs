@@ -5,9 +5,10 @@
 
     public class AuthorisedRepresentative : Entity, IEquatable<AuthorisedRepresentative>
     {
-        public AuthorisedRepresentative(string name, ProducerContact overseasContact = null)
+        public AuthorisedRepresentative(string name, ProducerContact overseasContact = null, string tradingName = null)
         {
             OverseasProducerName = name;
+            OverseasProducerTradingName = tradingName;
             OverseasContact = overseasContact;
 
             if (overseasContact != null)
@@ -46,6 +47,8 @@
         }
 
         public string OverseasProducerName { get; private set; }
+
+        public string OverseasProducerTradingName { get; private set; }
 
         public Guid? OverseasContactId { get; private set; }
 
