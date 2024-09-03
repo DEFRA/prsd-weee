@@ -31,10 +31,10 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly Guid countryId = Guid.NewGuid();
+        private readonly Country country;
         private const string CompanyName = "Company name";
         private const string TradingName = "Trading name";
-        private const string BrandNames = "Brand names";
-
+        
         public CompleteOrganisationTransactionHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
@@ -46,7 +46,7 @@
 
             var dbContextHelper = new DbContextHelper();
 
-            var country = new Country(countryId, "UK");
+            country = new Country(countryId, "UK");
 
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
@@ -217,15 +217,16 @@
                         d.Organisation.Name == CompanyName &&
                         d.Organisation.BusinessAddress == newAddress &&
                         d.BrandName == brandName &&
-                        d.AuthorisedRepresentative.TradingName == transactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName &&
-                        d.AuthorisedRepresentative.CompanyName == transactionData.RepresentingCompanyDetailsViewModel.CompanyName &&
-                        d.AuthorisedRepresentative.Address1 == transactionData.RepresentingCompanyDetailsViewModel.Address.Address1 &&
-                        d.AuthorisedRepresentative.Address2 == transactionData.RepresentingCompanyDetailsViewModel.Address.Address2 &&
-                        d.AuthorisedRepresentative.Postcode == transactionData.RepresentingCompanyDetailsViewModel.Address.Postcode &&
-                        d.AuthorisedRepresentative.TownOrCity == transactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity &&
-                        d.AuthorisedRepresentative.Email == transactionData.RepresentingCompanyDetailsViewModel.Address.Email &&
-                        d.AuthorisedRepresentative.Telephone == transactionData.RepresentingCompanyDetailsViewModel.Address.Telephone &&
-                        d.AuthorisedRepresentative.CountyOrRegion == transactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion))).MustHaveHappenedOnceExactly();
+                        d.AuthorisedRepresentative.OverseasProducerTradingName == transactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName &&
+                        d.AuthorisedRepresentative.OverseasProducerName == transactionData.RepresentingCompanyDetailsViewModel.CompanyName &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.PrimaryName == transactionData.RepresentingCompanyDetailsViewModel.Address.Address1 &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.Street == transactionData.RepresentingCompanyDetailsViewModel.Address.Address2 &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.PostCode == transactionData.RepresentingCompanyDetailsViewModel.Address.Postcode &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.Town == transactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.AdministrativeArea == transactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.Country == country &&
+                        d.AuthorisedRepresentative.OverseasContact.Email == transactionData.RepresentingCompanyDetailsViewModel.Address.Email &&
+                        d.AuthorisedRepresentative.OverseasContact.Telephone == transactionData.RepresentingCompanyDetailsViewModel.Address.Telephone))).MustHaveHappenedOnceExactly();
                 }
                 else
                 {

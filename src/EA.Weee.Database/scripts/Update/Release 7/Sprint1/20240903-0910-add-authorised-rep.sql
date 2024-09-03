@@ -6,6 +6,7 @@ ALTER TABLE [Producer].[DirectRegistrant] ADD [AuthorisedRepresentativeId] [uniq
 ALTER TABLE [Producer].[DirectRegistrant] WITH CHECK ADD CONSTRAINT [FK_DirectRegistrant_AuthorisedRepresentative] 
     FOREIGN KEY([AuthorisedRepresentativeId]) REFERENCES [Producer].[AuthorisedRepresentative] ([Id]);
 
-ALTER TABLE [Producer].[AuthorisedRepresentative] ADD [TradingName] [nvarchar](256) NULL;
+ALTER TABLE [Producer].[AuthorisedRepresentative] ADD [OverseasProducerTradingName] [nvarchar](256) NULL;
+ALTER TABLE [Producer].[Address] ALTER COLUMN [Town] [nvarchar](35) NOT NULL;
 
 CREATE NONCLUSTERED INDEX [IX_DirectRegistrant_AuthorisedRepresentativeId] ON [Producer].[DirectRegistrant] ([AuthorisedRepresentativeId]);

@@ -33,7 +33,7 @@
 
         public virtual Guid? BrandNameId { get; private set; }
 
-        public virtual Guid? RepresentingCompanyId { get; private set; }
+        public virtual Guid? AuthorisedRepresentativeId { get; private set; }
 
         public virtual Guid? ContactId { get; private set; }
 
