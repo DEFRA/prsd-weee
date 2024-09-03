@@ -11,10 +11,11 @@
     public class AuthorizeDirectRegistrantClaimsAttribute : System.Web.Mvc.AuthorizeAttribute
     {
         private readonly string[] claims;
-        private const string RouteId = "directRegistrantId";
+        private readonly string routeIdParam;
 
-        public AuthorizeDirectRegistrantClaimsAttribute(params string[] claims)
+        public AuthorizeDirectRegistrantClaimsAttribute(string routeIdParam, params string[] claims)
         {
+            this.routeIdParam = routeIdParam;
             this.claims = claims;
         }
 
@@ -29,9 +30,9 @@
             }
 
             var routeData = filterContext.RouteData;
-            if (!routeData.Values.TryGetValue(RouteId, out var routeIdValue))
+            if (!routeData.Values.TryGetValue(routeIdParam, out var routeIdValue))
             {
-                filterContext.Result = new HttpStatusCodeResult(400, "Route ID not found");
+                filterContext.Result = new HttpStatusCodeResult(400, $"Route ID '{routeIdParam}' not found");
                 return;
             }
 
