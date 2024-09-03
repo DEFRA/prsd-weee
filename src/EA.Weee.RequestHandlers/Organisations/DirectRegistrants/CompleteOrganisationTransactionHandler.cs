@@ -122,7 +122,7 @@
         private Contact CreateContact(OrganisationTransactionData organisationTransactionData)
         {
             var contactDetails = new Contact(organisationTransactionData.ContactDetailsViewModel.FirstName, organisationTransactionData.ContactDetailsViewModel.LastName,
-                                                organisationTransactionData.ContactDetailsViewModel.Position);
+                                                organisationTransactionData.ContactDetailsViewModel.Position ?? string.Empty);
             return contactDetails;
         }
 
