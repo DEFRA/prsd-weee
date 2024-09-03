@@ -303,7 +303,6 @@
             }
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
-
             await transactionService.CompleteTransaction(User.GetAccessToken());
             await cache.InvalidateOrganisationSearch();
 
@@ -476,7 +475,7 @@
             {
                 model = new SoleTraderDetailsViewModel
                 {
-                    CompanyName = existingTransaction?.SearchTerm,
+                    CompanyName = existingTransaction?.SearchTerm
                 };
             }
 
