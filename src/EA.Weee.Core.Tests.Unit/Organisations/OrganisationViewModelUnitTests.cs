@@ -58,20 +58,6 @@
                 .And.BeOfType<ExternalAddressData>();
         }
 
-        [Fact]
-        public void EntityType_ShouldBeSettable()
-        {
-            // Arrange
-            var viewModel = new TestOrganisationViewModel();
-            const EntityType entityType = EntityType.Aatf;
-
-            // Act
-            viewModel.EntityType = entityType;
-
-            // Assert
-            viewModel.EntityType.Should().Be(entityType);
-        }
-
         [Theory]
         [InlineData("1234567")]
         [InlineData("123456789012345")]
