@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
+    using EA.Weee.Core.Organisations.Base;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -18,82 +19,20 @@
 
         [Required] public YesNoType? AuthorisedRepresentative { get; set; }
 
-        public RegisteredCompanyDetailsViewModel RegisteredCompanyDetailsViewModel { get; set; }
-
-        public PartnershipDetailsViewModel PartnershipDetailsViewModel { get; set; }
-
-        public PartnerViewModel PartnerViewModel { get; set; }
-
-        public SoleTraderDetailsViewModel SoleTraderDetailsViewModel { get; set; }
-
         public RepresentingCompanyDetailsViewModel RepresentingCompanyDetailsViewModel { get; set; }
-    
-        public ExternalAddressData GetAddressData()
-        {
-            switch (OrganisationType)
-            {
-                case ExternalOrganisationType.Partnership:
-                    return PartnershipDetailsViewModel?.Address;
 
-                case ExternalOrganisationType.RegisteredCompany:
-                    return RegisteredCompanyDetailsViewModel?.Address;
+        public OrganisationViewModel OrganisationViewModel { get; set; }
 
-                case ExternalOrganisationType.SoleTrader:
-                    return SoleTraderDetailsViewModel?.Address;
-
-                default:
-                    throw new InvalidOperationException("Invalid organisation type.");
-            }
-        }
-
-        public string GetBrandNames()
-        {
-            switch (OrganisationType)
-            {
-                case ExternalOrganisationType.Partnership:
-                    return PartnershipDetailsViewModel?.EEEBrandNames;
-
-                case ExternalOrganisationType.RegisteredCompany:
-                    return RegisteredCompanyDetailsViewModel?.EEEBrandNames;
-
-                case ExternalOrganisationType.SoleTrader:
-                    return SoleTraderDetailsViewModel?.EEEBrandNames;
-
-                default:
-                    throw new InvalidOperationException("Invalid organisation type.");
-            }
-        }
-
+        public ContactDetailsViewModel ContactDetailsViewModel { get; set; }
+        
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            switch (OrganisationType)
+            if (OrganisationViewModel == null)
             {
-                case ExternalOrganisationType.Partnership:
-                    if (PartnershipDetailsViewModel == null)
-                    {
-                        return new List<ValidationResult>() { new ValidationResult("Partnership details are required") };
-                    }
-                    break;
-                case ExternalOrganisationType.RegisteredCompany:
-                    if (RegisteredCompanyDetailsViewModel == null)
-                    {
-                        return new List<ValidationResult>() { new ValidationResult("Registered company details are required") };
-                    }
-                    break;
-
-                case ExternalOrganisationType.SoleTrader:
-                    if (SoleTraderDetailsViewModel == null)
-                    {
-                        return new List<ValidationResult>() { new ValidationResult("Sole trader details are required") };
-                    }
-                    break;
-
-                default:
-                    throw new InvalidOperationException("Invalid organisation type.");
+                return new List<ValidationResult>() { new ValidationResult("Company details are required") };
             }
 
             return new List<ValidationResult>();
         }
-        public ContactDetailsViewModel ContactDetails { get; set; }
     }
 }

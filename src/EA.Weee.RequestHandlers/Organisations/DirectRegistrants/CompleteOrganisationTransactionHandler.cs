@@ -63,8 +63,12 @@
                     organisation.CompleteRegistration();
 
                     var brandName = await CreateAndAddBrandName(organisationTransactionData);
+                    var representingCompany = await CreateRepresentingCompany(organisationTransactionData);
 
-                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName);
+                    var contactDetails = CreateContact(organisationTransactionData);
+                    var contactAddress = await CreateContactAddress(organisationTransactionData);
+
+                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
@@ -80,6 +84,62 @@
             }
         }
 
+        private async Task<AuthorisedRepresentative> CreateRepresentingCompany(OrganisationTransactionData organisationTransactionData)
+        {
+            AuthorisedRepresentative authorisedRepresentative = null;
+            if (organisationTransactionData.AuthorisedRepresentative == YesNoType.Yes)
+            {
+                var country = await weeeContext.Countries.SingleAsync(c => c.Id == organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountryId);
+
+                var producerAddress = new ProducerAddress(
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address1,
+                    string.Empty,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address2,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity,
+                    string.Empty,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion,
+                    country,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Postcode);
+
+                var producerContact = new ProducerContact(string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Telephone,
+                    string.Empty,
+                    string.Empty,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Email,
+                    producerAddress);
+
+                authorisedRepresentative = new AuthorisedRepresentative(
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.CompanyName,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName,
+                    producerContact);
+            }
+
+            return authorisedRepresentative;
+        }
+
+        private Contact CreateContact(OrganisationTransactionData organisationTransactionData)
+        {
+            var contactDetails = new Contact(organisationTransactionData.ContactDetailsViewModel.FirstName, organisationTransactionData.ContactDetailsViewModel.LastName,
+                                                organisationTransactionData.ContactDetailsViewModel.Position ?? string.Empty);
+            return contactDetails;
+        }
+
+        private async Task<Address> CreateContactAddress(OrganisationTransactionData organisationTransactionData)
+        {
+            var country = await weeeContext.Countries.SingleAsync(c => c.Id == organisationTransactionData.ContactDetailsViewModel.AddressData.CountryId);
+            var contactAddress = new Address(organisationTransactionData.ContactDetailsViewModel.AddressData.Address1,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Address2,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.TownOrCity,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.CountyOrRegion,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Postcode,
+                                        country,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Telephone,
+                                        organisationTransactionData.ContactDetailsViewModel.AddressData.Email);
+            return contactAddress;
+        }
+
         private Organisation CreateOrganisation(OrganisationTransactionData organisationTransactionData)
         {
             switch (organisationTransactionData.OrganisationType)
@@ -87,21 +147,21 @@
                 case ExternalOrganisationType.Partnership:
                     return Organisation.CreateDirectRegistrantCompany(
                         EA.Weee.Domain.Organisation.OrganisationType.DirectRegistrantPartnership,
-                        organisationTransactionData.PartnershipDetailsViewModel.CompanyName,
-                        organisationTransactionData.PartnershipDetailsViewModel.BusinessTradingName,
-                        organisationTransactionData.PartnershipDetailsViewModel.CompaniesRegistrationNumber);
+                        organisationTransactionData.OrganisationViewModel.CompanyName,
+                        organisationTransactionData.OrganisationViewModel.BusinessTradingName,
+                        organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 case ExternalOrganisationType.RegisteredCompany:
                     return Organisation.CreateDirectRegistrantCompany(
                         EA.Weee.Domain.Organisation.OrganisationType.RegisteredCompany,
-                        organisationTransactionData.RegisteredCompanyDetailsViewModel.CompanyName,
-                        organisationTransactionData.RegisteredCompanyDetailsViewModel.BusinessTradingName,
-                        organisationTransactionData.RegisteredCompanyDetailsViewModel.CompaniesRegistrationNumber);
+                        organisationTransactionData.OrganisationViewModel.CompanyName,
+                        organisationTransactionData.OrganisationViewModel.BusinessTradingName,
+                        organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 case ExternalOrganisationType.SoleTrader:
                     return Organisation.CreateDirectRegistrantCompany(
                         EA.Weee.Domain.Organisation.OrganisationType.SoleTraderOrIndividual,
-                        organisationTransactionData.SoleTraderDetailsViewModel.CompanyName,
-                        organisationTransactionData.SoleTraderDetailsViewModel.BusinessTradingName,
-                        organisationTransactionData.SoleTraderDetailsViewModel.CompaniesRegistrationNumber);
+                        organisationTransactionData.OrganisationViewModel.CompanyName,
+                        organisationTransactionData.OrganisationViewModel.BusinessTradingName,
+                        organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
 
                 case null:
                     throw new InvalidOperationException("Organisation type is null.");
@@ -113,7 +173,7 @@
 
         private async Task<Address> CreateAndAddAddress(OrganisationTransactionData organisationTransactionData, Organisation organisation)
         {
-            var addressData = organisationTransactionData.GetAddressData();
+            var addressData = organisationTransactionData.OrganisationViewModel.Address;
             if (addressData == null)
             {
                 throw new InvalidOperationException("Address data is null.");
@@ -129,7 +189,7 @@
 
         private async Task<BrandName> CreateAndAddBrandName(OrganisationTransactionData organisationTransactionData)
         {
-            var brandNames = organisationTransactionData.GetBrandNames();
+            var brandNames = organisationTransactionData.OrganisationViewModel.EEEBrandNames;
             if (string.IsNullOrWhiteSpace(brandNames))
             {
                 return null;
