@@ -9,19 +9,18 @@
         {
             ToTable("DirectProducerSubmission", "Producer");
 
-            HasKey(e => e.Id);
+            Property(e => e.PaymentStatus).IsOptional();
+            Property(e => e.PaymentReference).HasMaxLength(20).IsOptional();
+            Property(e => e.PaymentId).HasMaxLength(20).IsOptional();
+            Property(e => e.ComplianceYear).IsRequired();
 
-            Property(e => e.CreatedDate).IsRequired();
-            Property(e => e.CreatedById).HasMaxLength(128).IsRequired();
-            Property(e => e.UpdatedById).HasMaxLength(128);
-            Property(e => e.PaymentReference).HasMaxLength(20);
-            Property(e => e.PaymentId).HasMaxLength(20);
+            HasRequired(e => e.DirectRegistrant)
+                .WithMany(er => er.DirectProducerSubmissions)
+                .HasForeignKey(e => e.DirectRegistrantId);
 
-            HasRequired(e => e.DirectRegistrant).WithMany().HasForeignKey(e => e.DirectRegistrantId);
-            HasOptional(e => e.ServiceOfNoticeAddress).WithMany().HasForeignKey(e => e.ServiceOfNoticeAddressId);
-            HasOptional(e => e.AppropriateSignatory).WithMany().HasForeignKey(e => e.AppropriateSignatoryId);
-            HasRequired(e => e.CreatedBy).WithMany().HasForeignKey(e => e.CreatedById);
-            HasOptional(e => e.UpdatedBy).WithMany().HasForeignKey(e => e.UpdatedById);
+            HasMany(e => e.SubmissionHistory)
+                .WithRequired()
+                .HasForeignKey(e => e.DirectProducerSubmissionId);
         }
     }
 }
