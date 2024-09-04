@@ -131,7 +131,7 @@
                         activities.Add(PcsAction.ManageAeContactDetails);
                     }
 
-                    if (!isBalancingScheme)
+                    if (!isBalancingScheme && !organisationDetails.HasDirectRegistrant)
                     {
                         activities.Add(PcsAction.ViewOrganisationDetails);
                     }

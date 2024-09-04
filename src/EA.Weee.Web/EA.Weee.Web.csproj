@@ -575,6 +575,8 @@
     <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\EvidenceAndObligationProgressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
+    <Compile Include="Areas\Producer\Controllers\ProducerController.cs" />
+    <Compile Include="Areas\Producer\Filters\AuthorizeRouteClaimsAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBase.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttribute.cs" />
@@ -607,6 +609,8 @@
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceAatfDataViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewTransferEvidenceNoteTonnageDataViewModel.cs" />
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
+    <Compile Include="Areas\Producer\Controllers\ProducerSubmissionController.cs" />
+    <Compile Include="Areas\Producer\ProducerAreaRegistration.cs" />
     <Compile Include="Constant\ValidationKeyConstants.cs" />
     <Compile Include="Controllers\HoldingController.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
@@ -1034,6 +1038,8 @@
     <Content Include="Views\Shared\_OrganisationHeadingAndCountryPartial.cshtml" />
     <Content Include="Views\OrganisationRegistration\ContactDetails.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RepresentingCompanyAddressData.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\Index.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\Index.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegistrationComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationDetails.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RegisteredCompanyDetailsViewModel.cshtml" />

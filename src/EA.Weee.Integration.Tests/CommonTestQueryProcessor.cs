@@ -14,6 +14,7 @@
     using EA.Weee.Domain.Producer;
     using Prsd.Core.Autofac;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -21,12 +22,7 @@
 
     public class CommonTestQueryProcessor
     {
-        private readonly WeeeContext dbContext;
-
-        public CommonTestQueryProcessor()
-        {
-            dbContext = ServiceLocator.Container.Resolve<WeeeContext>();
-        }
+        private readonly WeeeContext dbContext = ServiceLocator.Container.Resolve<WeeeContext>();
 
         public Country GetCountryById(Guid id)
         {
@@ -147,6 +143,10 @@
             await dbContext.SaveChangesAsync();
         }
 
+        public List<OrganisationUser> GetOrganisationForUser(string userId)
+        {
+            return dbContext.OrganisationUsers.Where(ou => ou.UserId == userId).ToList();
+        }
         public void SetupUserWithRole(string userId, string role, CompetentAuthority authority)
         {
             var user = dbContext.CompetentAuthorityUsers.FirstOrDefault(u => u.UserId == userId);

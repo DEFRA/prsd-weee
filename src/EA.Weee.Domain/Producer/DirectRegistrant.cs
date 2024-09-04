@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using CuttingEdge.Conditions;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain.Organisation;
     using System;
-    using CuttingEdge.Conditions;
-    using EA.Weee.Domain.Events;
+    using System.Collections.Generic;
 
     public partial class DirectRegistrant : Entity
     {
@@ -53,6 +53,8 @@
         public virtual Address Address { get; private set; }
 
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; private set; }
+
+        public virtual ICollection<DirectProducerSubmission> DirectProducerSubmissions { get; set; }
 
         public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative representingCompany)
         {
