@@ -9,7 +9,8 @@
         public Guid DirectRegistrantId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Type { get; set; }
+
+        public OrganisationAdditionalDetailsType Type { get; set; }
 
         public virtual DirectRegistrant DirectRegistrant { get; set; }
     }
