@@ -49,7 +49,8 @@
 
             organisationData.HasAatfs = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Aatf.Value);
             organisationData.HasAes = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Ae.Value);
-
+            organisationData.HasDirectRegistrant =
+                await context.DirectRegistrants.AnyAsync(o => o.OrganisationId == query.OrganisationId);
             return organisationData;
         }
     }
