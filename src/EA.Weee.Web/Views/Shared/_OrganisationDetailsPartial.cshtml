@@ -1,6 +1,8 @@
 ﻿@using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.Organisations.Base.OrganisationViewModel
 
+@Html.HiddenFor(m => m.OrganisationType)
+
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.WebsiteAddress)">
     @Html.Gds().LabelFor(m => m.Address.WebsiteAddress)
     @Html.Gds().ValidationMessageFor(m => m.Address.WebsiteAddress)

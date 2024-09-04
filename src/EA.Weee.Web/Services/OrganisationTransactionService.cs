@@ -9,6 +9,7 @@
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using System;
     using System.Threading.Tasks;
+    using EA.Weee.Core.Organisations.Base;
 
     public class OrganisationTransactionService : IOrganisationTransactionService
     {
@@ -27,6 +28,9 @@
 
                 switch (model)
                 {
+                    case OrganisationViewModel organisationViewModel:
+                        transaction.OrganisationViewModel = organisationViewModel;
+                            break;
                     case OrganisationTypeViewModel externalOrganisationTypeViewModel:
                         transaction.OrganisationType = externalOrganisationTypeViewModel.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                         break;
@@ -40,26 +44,11 @@
                     case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
                         transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
                         break;
-                    case RegisteredCompanyDetailsViewModel registeredCompanyDetailsViewModel:
-                        transaction.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsViewModel;
-                        transaction.PartnershipDetailsViewModel = null;
-                        transaction.SoleTraderDetailsViewModel = null;
-                        break;
-                    case SoleTraderDetailsViewModel soleTraderDetailsViewModel:
-                        transaction.SoleTraderDetailsViewModel = soleTraderDetailsViewModel;
-                        transaction.PartnershipDetailsViewModel = null;
-                        transaction.RegisteredCompanyDetailsViewModel = null;
-                        break;
-                    case PartnershipDetailsViewModel partnershipDetailsViewModel:
-                        transaction.PartnershipDetailsViewModel = partnershipDetailsViewModel;
-                        transaction.RegisteredCompanyDetailsViewModel = null;
-                        transaction.SoleTraderDetailsViewModel = null;
-                        break;
                     case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
                         transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
                         break;
                     case ContactDetailsViewModel contactDetailsViewModel:
-                        transaction.ContactDetails = contactDetailsViewModel;
+                        transaction.ContactDetailsViewModel = contactDetailsViewModel;
                         break;
                 }
 
