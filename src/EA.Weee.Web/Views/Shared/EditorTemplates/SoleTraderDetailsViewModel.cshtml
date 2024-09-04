@@ -1,0 +1,13 @@
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Core.Organisations.SoleTraderDetailsViewModel
+    
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+    @Html.Gds().LabelFor(m => m.CompanyName)
+    @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+    @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+    @Html.Gds().LabelFor(m => m.BusinessTradingName)
+    @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+</div>

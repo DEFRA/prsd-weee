@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
@@ -127,7 +128,7 @@
             var organisationTransactionData = new OrganisationTransactionData
             {
                 OrganisationType = ExternalOrganisationType.Partnership,
-                PartnershipDetailsViewModel = new PartnershipDetailsViewModel
+                OrganisationViewModel = new OrganisationViewModel
                 {
                     BusinessTradingName = "Test Partnership",
                     CompanyName = "Company Name",
@@ -285,43 +286,22 @@
                 OrganisationType = organisationType,
             };
 
-            RegisteredCompanyDetailsViewModel registeredCompanyDetailsView = null;
-            PartnershipDetailsViewModel partnershipDetailsViewModel = null;
-            SoleTraderDetailsViewModel soleTraderDetailsViewModel = null;
+            OrganisationViewModel organisationViewModel = null;
+
             var addressData =
                 TestFixture.Build<ExternalAddressData>().With(e => e.CountryId, countryId).Create();
-            switch (organisationType)
-            {
-                case ExternalOrganisationType.RegisteredCompany:
-                    registeredCompanyDetailsView = TestFixture.Build<RegisteredCompanyDetailsViewModel>()
+
+            organisationViewModel = TestFixture.Build<OrganisationViewModel>()
                         .With(m => m.Address, addressData)
                         .With(m => m.EEEBrandNames, brandNames)
                         .With(m => m.CompanyName, CompanyName)
                         .With(m => m.BusinessTradingName, TradingName)
                         .Create();
-                    break;
-                case ExternalOrganisationType.Partnership:
-                    partnershipDetailsViewModel = TestFixture.Build<PartnershipDetailsViewModel>().With(m => m.Address, addressData)
-                        .With(m => m.CompanyName, CompanyName)
-                        .With(m => m.BusinessTradingName, TradingName)
-                        .With(m => m.EEEBrandNames, brandNames).Create();
-                    break;
-                case ExternalOrganisationType.SoleTrader:
-                    soleTraderDetailsViewModel = TestFixture.Build<SoleTraderDetailsViewModel>().With(m => m.Address, addressData)
-                        .With(m => m.CompanyName, CompanyName)
-                        .With(m => m.BusinessTradingName, TradingName)
-                        .With(m => m.EEEBrandNames, brandNames).Create();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(organisationType), organisationType, null);
-            }
 
             var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, country.Id).Create();
             transactionData.ContactDetailsViewModel = TestFixture.Build<ContactDetailsViewModel>().With(r => r.AddressData, organisationContactAddress).Create();
 
-            transactionData.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsView;
-            transactionData.PartnershipDetailsViewModel = partnershipDetailsViewModel;
-            transactionData.SoleTraderDetailsViewModel = soleTraderDetailsViewModel;
+            transactionData.OrganisationViewModel = organisationViewModel;
             transactionData.AuthorisedRepresentative = authorisedRepresentative;
             
             if (authorisedRepresentative == YesNoType.Yes)
