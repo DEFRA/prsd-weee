@@ -94,10 +94,10 @@
                 var producerAddress = new ProducerAddress(
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address1,
                     string.Empty,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address2,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address2 ?? string.Empty,
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity,
                     string.Empty,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion,
+                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion ?? string.Empty,
                     country,
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Postcode);
 
