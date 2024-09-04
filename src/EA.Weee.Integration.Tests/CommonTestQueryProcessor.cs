@@ -12,8 +12,11 @@
     using Domain.Security;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
+    using Newtonsoft.Json.Linq;
     using Prsd.Core.Autofac;
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -46,6 +49,11 @@
         public DirectRegistrant GetDirectRegistrantByOrganisationId(Guid organisationId)
         {
             return dbContext.DirectRegistrants.First(c => c.OrganisationId.Equals(organisationId));
+        }
+
+        public IEnumerable<AdditionalCompanyDetails> GetAdditionalDetailsByRegistrantId(Guid directRegistrantId)
+        {
+            return dbContext.AdditionalCompanyDetails.Where(c => c.DirectRegistrantId.Equals(directRegistrantId));
         }
 
         public Note GetEvidenceNoteById(Guid id)
