@@ -301,11 +301,16 @@
                 return View(model);
             }
 
+            return await CheckRepresentingCompanyDetailsAndRedirect(model);
+        }
+
+        private async Task<ActionResult> CheckRepresentingCompanyDetailsAndRedirect(RepresentingCompanyDetailsViewModel model)
+        {
             await transactionService.CaptureData(User.GetAccessToken(), model);
             await transactionService.CompleteTransaction(User.GetAccessToken());
             await cache.InvalidateOrganisationSearch();
 
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
         [HttpGet]
@@ -385,7 +390,7 @@
                 await transactionService.CompleteTransaction(User.GetAccessToken());
                 await cache.InvalidateOrganisationSearch();
 
-                return RedirectToAction(nameof(HoldingController.Index), typeof(HoldingController).GetControllerName());
+                return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName());
             }
 
             return RedirectToAction(nameof(RepresentingCompanyDetails),
@@ -589,6 +594,19 @@
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
             return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public ViewResult RegistrationComplete()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegistrationComplete(FormCollection model)
+        {
+            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
         }
 
         private object CastToSpecificViewModel(ExternalOrganisationType? organisationType, OrganisationViewModel model)

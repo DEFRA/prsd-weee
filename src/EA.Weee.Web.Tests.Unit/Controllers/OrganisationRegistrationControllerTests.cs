@@ -888,7 +888,7 @@
         }
 
         [Theory]
-        [InlineData(YesNoType.No, "Index", "Holding")]
+        [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistration")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
         public async Task OrganisationDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
         {
@@ -1038,7 +1038,7 @@
         }
 
         [Fact]
-        public async Task RepresentingCompanyDetails_Post_ValidModel_RedirectsToHoldingController()
+        public async Task RepresentingCompanyDetails_Post_ValidModel_RedirectsToRegistrationComplete()
         {
             // Arrange
             var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
@@ -1048,8 +1048,8 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
@@ -1289,6 +1289,31 @@
             resultModel.Should().BeEquivalentTo(model);
             model.AddressData.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void RegistrationComplete_Get_ReturnsView()
+        {
+            // Act
+            var result = controller.RegistrationComplete() as ViewResult;
+
+            // Assert
+            Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "RegistrationComplete");
+        }
+
+        [Fact]
+        public void RegistrationComplete_Post_RedirectsToHoldingController()
+        {
+            // Arrange
+            FormCollection formCollection = null;
+
+            // Act
+            var result = controller.RegistrationComplete(formCollection) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["controller"].Should().Be("Holding");
         }
     }
 }
