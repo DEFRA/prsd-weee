@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
@@ -14,6 +11,11 @@
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class CompleteOrganisationTransactionHandler : IRequestHandler<CompleteOrganisationTransaction, Guid>
     {
@@ -71,6 +73,9 @@
                     var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
+                    var additionalDetails = CreateAdditionalCompanyDetails(organisationTransactionData, directRegistrant);
+                    await genericDataAccess.AddMany(additionalDetails);
+
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
                     transactionAdapter.Commit(transaction);
 
@@ -124,6 +129,24 @@
             var contactDetails = new Contact(organisationTransactionData.ContactDetailsViewModel.FirstName, organisationTransactionData.ContactDetailsViewModel.LastName,
                                                 organisationTransactionData.ContactDetailsViewModel.Position ?? string.Empty);
             return contactDetails;
+        }
+
+        private IEnumerable<AdditionalCompanyDetails> CreateAdditionalCompanyDetails(
+            OrganisationTransactionData organisationTransactionData, 
+            DirectRegistrant directRegistrant)
+        {
+            var additionalCompanyDetails = organisationTransactionData
+                .PartnerViewModel
+                .PartnerModels
+                .Select(x => new AdditionalCompanyDetails
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    DirectRegistrant = directRegistrant,
+                    Type = OrganisationAdditionalDetailsType.RegisteredCompany,
+                });
+
+            return additionalCompanyDetails;
         }
 
         private async Task<Address> CreateContactAddress(OrganisationTransactionData organisationTransactionData)

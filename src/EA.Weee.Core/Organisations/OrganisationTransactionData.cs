@@ -24,7 +24,9 @@
         public OrganisationViewModel OrganisationViewModel { get; set; }
 
         public ContactDetailsViewModel ContactDetailsViewModel { get; set; }
-        
+
+        public PartnerViewModel PartnerViewModel { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (OrganisationViewModel == null)
