@@ -2,9 +2,10 @@
 {
     using Core.Organisations;
     using DataAccess;
+    using Domain;
     using Domain.Lookup;
-    using EA.Weee.Domain;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.Security;
     using FakeItEasy;
     using FluentAssertions;
@@ -40,6 +41,7 @@
 
             A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
             A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+            A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(new List<DirectRegistrant>()));
 
             handler = new OrganisationByIdHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(),
                 context,
@@ -237,6 +239,44 @@
             var result = await handler.HandleAsync(message);
 
             result.Should().Be(expectedReturnValue);
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasNoDirectRegistrant_OrganisationShouldHaveNoDirectRegistrant()
+        {
+            var expectedReturnValue = new OrganisationData();
+
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+            A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(new List<DirectRegistrant>()));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.HasDirectRegistrant.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasDirectRegistrant_OrganisationShouldHaveDirectRegistrant()
+        {
+            var organisation = GetOrganisationWithId(organisationId);
+
+            var expectedReturnValue = new OrganisationData();
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            A.CallTo(() => directRegistrant.Id).Returns(Guid.NewGuid());
+            A.CallTo(() => directRegistrant.OrganisationId).Returns(organisation.Id);
+
+            var directRegistrants = new List<DirectRegistrant> { directRegistrant };
+
+            A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(directRegistrants));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.HasDirectRegistrant.Should().BeTrue();
         }
 
         private Organisation GetOrganisationWithId(Guid id)

@@ -307,10 +307,10 @@
         private async Task<ActionResult> CheckRepresentingCompanyDetailsAndRedirect(RepresentingCompanyDetailsViewModel model)
         {
             await transactionService.CaptureData(User.GetAccessToken(), model);
-            await transactionService.CompleteTransaction(User.GetAccessToken());
+            var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
             await cache.InvalidateOrganisationSearch();
 
-            return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName());
+            return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
         }
 
         [HttpGet]
@@ -387,10 +387,10 @@
             if (organisationTransactionData != null &&
                 organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
-                await transactionService.CompleteTransaction(User.GetAccessToken());
+                var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
                 await cache.InvalidateOrganisationSearch();
 
-                return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName());
+                return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
             }
 
             return RedirectToAction(nameof(RepresentingCompanyDetails),
@@ -597,16 +597,16 @@
         }
 
         [HttpGet]
-        public ViewResult RegistrationComplete()
+        public ViewResult RegistrationComplete(Guid organisationId)
         {
-            return View();
+            return View(organisationId);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RegistrationComplete(FormCollection model)
+        public ActionResult RegistrationCompleteSubmit(Guid organisationId)
         {
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(Areas.Scheme.Controllers.HomeController.ChooseActivity), typeof(Areas.Scheme.Controllers.HomeController).GetControllerName(), new { area = nameof(Areas.Scheme), pcsId = organisationId });
         }
 
         private object CastToSpecificViewModel(ExternalOrganisationType? organisationType, OrganisationViewModel model)
