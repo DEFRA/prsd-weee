@@ -1055,9 +1055,13 @@ input[type='radio']:checked:before {
 .back-to-top {
     display: inline-flex;
     align-items: center;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .back-to-top i {
     margin-right: 5px;
+}
+
+.back-to-top span {
+    text-decoration: underline;
 }
