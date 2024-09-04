@@ -606,7 +606,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult RegistrationComplete(FormCollection model)
         {
-            return RedirectToAction("Index", typeof(HoldingController).GetControllerName());
+            return RedirectToAction(nameof(Areas.Scheme.Controllers.HomeController.ChooseActivity), typeof(Areas.Scheme.Controllers.HomeController).GetControllerName(), new { area = nameof(Areas.Scheme) });
         }
 
         private object CastToSpecificViewModel(ExternalOrganisationType? organisationType, OrganisationViewModel model)
