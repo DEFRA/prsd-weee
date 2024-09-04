@@ -52,7 +52,7 @@
             iconTagBuilder.AddCssClass(CssFontAwesomeClass);
 
             linkTagBuilder.InnerHtml += iconTagBuilder.ToString(TagRenderMode.Normal);
-            linkTagBuilder.InnerHtml += " Back to Top";
+            linkTagBuilder.InnerHtml += "<span>Back to Top</span>";
 
             return new MvcHtmlString(linkTagBuilder.ToString(TagRenderMode.Normal));
         }
