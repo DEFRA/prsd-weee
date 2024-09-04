@@ -1,11 +1,14 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@model Guid?
 @{
     const string title = "Organisation created";
     ViewBag.Title = title + " - GOV.UK";
 }
 @section full_main_content
 {
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("RegistrationCompleteSubmit", typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId = Model }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
