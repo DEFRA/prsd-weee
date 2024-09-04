@@ -56,11 +56,11 @@
             }
         }
 
-        public async Task CompleteTransaction(string accessToken)
+        public async Task<Guid> CompleteTransaction(string accessToken)
         {
             using (var client = weeeClient())
             {
-                await client.SendAsync(accessToken, new CompleteOrganisationTransaction());
+                return await client.SendAsync(accessToken, new CompleteOrganisationTransaction());
             }
         }
 
