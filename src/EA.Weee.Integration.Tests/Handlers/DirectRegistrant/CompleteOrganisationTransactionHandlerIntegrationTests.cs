@@ -43,6 +43,8 @@
             private readonly Because of = () =>
             {
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+
+                organisation = Query.GetOrganisationById(result);
             };
 
             private readonly It shouldHaveCompletedTheTransaction = () =>
@@ -60,7 +62,6 @@
             {
                 result.Should().NotBeEmpty();
 
-                var organisation = Query.GetOrganisationById(result);
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
                 organisation.Should().NotBeNull();
                 organisation.BusinessAddress.Address1.Should().Be(addressData.Address1);
@@ -75,7 +76,6 @@
             {
                 result.Should().NotBeEmpty();
 
-                var organisation = Query.GetOrganisationById(result);
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
                 organisation.OrganisationName.Should()
@@ -112,6 +112,13 @@
                 directRegistrant.Address.Email.Should().Be(contactDetailsViewModel.AddressData.Email);
                 directRegistrant.Address.Telephone.Should().Be(contactDetailsViewModel.AddressData.Telephone);
             };
+
+            private readonly It shouldHaveCreatedOrganisationUser = () =>
+            {
+                var users = Query.GetOrganisationForUser(UserId.ToString());
+
+                users.Should().Contain(o => o.OrganisationId == organisation.Id);
+            };
         }
 
         [Component]
@@ -138,6 +145,8 @@
             private readonly Because of = () =>
             {
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+
+                organisation = Query.GetOrganisationById(result);
             };
 
             private readonly It shouldHaveCompletedTheTransaction = () =>
@@ -155,7 +164,6 @@
             {
                 result.Should().NotBeEmpty();
 
-                var organisation = Query.GetOrganisationById(result);
                 organisation.Should().NotBeNull();
                 organisation.BusinessAddress.Address1.Should().Be(addressData.Address1);
                 organisation.BusinessAddress.Address2.Should().Be(addressData.Address2);
@@ -168,7 +176,6 @@
             {
                 result.Should().NotBeEmpty();
 
-                var organisation = Query.GetOrganisationById(result);
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.SoleTraderOrIndividual);
@@ -207,6 +214,13 @@
                 directRegistrant.Address.Email.Should().Be(contactDetailsViewModel.AddressData.Email);
                 directRegistrant.Address.Telephone.Should().Be(contactDetailsViewModel.AddressData.Telephone);
             };
+
+            private readonly It shouldHaveCreatedOrganisationUser = () =>
+            {
+                var users = Query.GetOrganisationForUser(UserId.ToString());
+
+                users.Should().Contain(o => o.OrganisationId == organisation.Id);
+            };
         }
 
         [Component]
@@ -233,6 +247,8 @@
             private readonly Because of = () =>
             {
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+
+                organisation = Query.GetOrganisationById(result);
             };
 
             private readonly It shouldHaveCompletedTheTransaction = () =>
@@ -250,7 +266,6 @@
             {
                 result.Should().NotBeEmpty();
 
-                var organisation = Query.GetOrganisationById(result);
                 organisation.Should().NotBeNull();
                 organisation.BusinessAddress.Address1.Should().Be(addressData.Address1);
                 organisation.BusinessAddress.Address2.Should().Be(addressData.Address2);
@@ -263,7 +278,6 @@
             {
                 result.Should().NotBeEmpty();
 
-                var organisation = Query.GetOrganisationById(result);
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
 
                 organisation.Should().NotBeNull();
@@ -286,6 +300,13 @@
                 directRegistrant.BrandName.Name.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.EEEBrandNames);
                 directRegistrant.AuthorisedRepresentative.Should().BeNull();
+            };
+
+            private readonly It shouldHaveCreatedOrganisationUser = () =>
+            {
+                var users = Query.GetOrganisationForUser(UserId.ToString());
+
+                users.Should().Contain(o => o.OrganisationId == organisation.Id);
             };
         }
 
@@ -315,6 +336,8 @@
             private readonly Because of = () =>
             {
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+
+                organisation = Query.GetOrganisationById(result);
             };
 
             private readonly It shouldHaveCompletedTheTransaction = () =>
@@ -332,7 +355,6 @@
             {
                 result.Should().NotBeEmpty();
 
-                var organisation = Query.GetOrganisationById(result);
                 organisation.Should().NotBeNull();
                 organisation.BusinessAddress.Address1.Should().Be(addressData.Address1);
                 organisation.BusinessAddress.Address2.Should().Be(addressData.Address2);
@@ -346,7 +368,6 @@
                 result.Should().NotBeEmpty();
 
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
-                var organisation = Query.GetOrganisationById(result);
                 organisation.Should().NotBeNull();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
                 organisation.OrganisationName.Should()
@@ -401,6 +422,13 @@
                 directRegistrant.Address.Email.Should().Be(contactDetailsViewModel.AddressData.Email);
                 directRegistrant.Address.Telephone.Should().Be(contactDetailsViewModel.AddressData.Telephone);
             };
+
+            private readonly It shouldHaveCreatedOrganisationUser = () =>
+            {
+                var users = Query.GetOrganisationForUser(UserId.ToString());
+
+                users.Should().Contain(o => o.OrganisationId == organisation.Id);
+            };
         }
 
         [Component]
@@ -454,6 +482,7 @@
             protected static Guid result;
             protected static DateTime date;
             protected static ContactDetailsViewModel contactDetailsViewModel;
+            protected static Organisation organisation;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
