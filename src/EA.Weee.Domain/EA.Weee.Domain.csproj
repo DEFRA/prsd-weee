@@ -135,6 +135,7 @@
     <Compile Include="AddressType.cs" />
     <Compile Include="Organisation\CompletionStatus.cs" />
     <Compile Include="Organisation\OrganisationTransaction.cs" />
+    <Compile Include="Organisation\OrganisationAdditionalDetailsType.cs" />
     <Compile Include="Organisation\ProducerBalancingScheme.cs" />
     <Compile Include="Producer\Classification\StatusType.cs" />
     <Compile Include="Producer\DirectProducerSubmission.cs" />

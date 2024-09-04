@@ -1030,9 +1030,6 @@
     <Content Include="Views\Holding\Index.cshtml" />
     <Content Include="Views\OrganisationRegistration\PreviousRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
-    <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\FiveTonnesOrMore.cshtml" />
     <Content Include="Views\OrganisationRegistration\RepresentingCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\AuthorisedRepresentative.cshtml" />
@@ -1043,6 +1040,11 @@
     <Content Include="Views\Shared\EditorTemplates\RepresentingCompanyAddressData.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\Index.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\Index.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegistrationComplete.cshtml" />
+    <Content Include="Views\OrganisationRegistration\OrganisationDetails.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RegisteredCompanyDetailsViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SoleTraderDetailsViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PartnershipDetailsViewModel.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

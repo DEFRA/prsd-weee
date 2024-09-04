@@ -1,0 +1,30 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@{
+    const string title = "Organisation created";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(""))
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
+            <h1 class="govuk-panel__title">
+                @title
+            </h1>
+        </div>
+
+        <p>Your organisation has been created.</p>
+        <h2 class="govuk-heading-m">What happens next</h2>
+        <p>You will need to register your tonnage for this year</p>
+
+        <div class="govuk-form-group">
+            @(this.WeeeGds().Submit("Check and complete application"))
+        </div>
+    }
+}
+
+
