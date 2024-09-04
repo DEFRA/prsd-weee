@@ -57,6 +57,7 @@
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Telephone)">
             @Html.Gds().LabelFor(m => m.AddressData.Telephone)
+            <p class="govuk-hint">For international numbers include the country code</p>
             @Html.Gds().ValidationMessageFor(m => m.AddressData.Telephone)
             @Html.Gds().TextBoxFor(m => m.AddressData.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
         </div>
