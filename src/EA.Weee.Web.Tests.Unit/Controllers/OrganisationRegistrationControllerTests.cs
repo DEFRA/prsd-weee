@@ -901,6 +901,10 @@
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
                 .Returns(organisationTransactionData);
 
+            var organisationId = TestFixture.Create<Guid>();
+
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+
             // Act
             var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
 
@@ -916,6 +920,7 @@
             {
                 A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
                 A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+                result.RouteValues["organisationId"].Should().Be(organisationId);
             }
             else
             {
@@ -1042,6 +1047,9 @@
         {
             // Arrange
             var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            var organisationId = TestFixture.Create<Guid>();
+
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
 
             // Act
             var result = await controller.RepresentingCompanyDetails(model) as RedirectToRouteResult;
@@ -1050,6 +1058,7 @@
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("RegistrationComplete");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
@@ -1267,7 +1276,7 @@
         }
 
         [Fact]
-        public async Task ContactDetails_Post_InValidModel_RedirectsToHoldingController()
+        public async Task ContactDetails_Post_InValidModel_ReturnsView()
         {
             // Arrange
             var model = TestFixture.Create<ContactDetailsViewModel>();
@@ -1294,27 +1303,31 @@
         [Fact]
         public void RegistrationComplete_Get_ReturnsView()
         {
+            var organisationId = TestFixture.Create<Guid>();
+
             // Act
-            var result = controller.RegistrationComplete() as ViewResult;
+            var result = controller.RegistrationComplete(organisationId) as ViewResult;
 
             // Assert
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "RegistrationComplete");
+            ((Guid)result.Model).Should().Be(organisationId);
         }
 
         [Fact]
         public void RegistrationComplete_Post_RedirectsToHoldingController()
         {
             // Arrange
-            FormCollection formCollection = null;
+            var organisationId = TestFixture.Create<Guid>();
 
             // Act
-            var result = controller.RegistrationComplete(formCollection) as RedirectToRouteResult;
+            var result = controller.RegistrationCompleteSubmit(organisationId) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("ChooseActivity");
             result.RouteValues["controller"].Should().Be("Home");
             result.RouteValues["area"].Should().Be("Scheme");
+            result.RouteValues["pcsId"].Should().Be(organisationId);
         }
     }
 }
