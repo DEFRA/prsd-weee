@@ -1055,7 +1055,7 @@ input[type='radio']:checked:before {
 .back-to-top {
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 .back-to-top i {
