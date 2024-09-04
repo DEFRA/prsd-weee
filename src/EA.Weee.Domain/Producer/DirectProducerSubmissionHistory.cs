@@ -13,6 +13,8 @@
 
         public virtual Guid? AppropriateSignatoryId { get; set; }
 
+        public virtual Guid? EeeOutputReturnVersionId { get; set; }
+
         public virtual DateTime? SubmittedDate { get; set; }
 
         public virtual string CompanyName { get; set; }

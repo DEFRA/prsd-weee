@@ -29,9 +29,9 @@
                 .WithMany()
                 .HasForeignKey(e => e.AppropriateSignatoryId);
 
-            HasOptional(e => e.EeeOutputReturnVersion)
-                .WithOptionalPrincipal()
-                .Map(m => m.MapKey("EeeOutputReturnVersionId"));
+            //HasOptional(e => e.EeeOutputReturnVersion)
+            //    .WithOptionalPrincipal()
+            //    .Map(m => m.MapKey("EeeOutputReturnVersionId"));
         }
     }
 }
