@@ -29,6 +29,7 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private readonly int maximumSearchResults;
         private readonly IOrganisationTransactionService transactionService;
@@ -333,20 +334,31 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationDetails(OrganisationViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (model.Action == "Lookup")
             {
-                var countries = await GetCountries();
+                var result = new object(); // api call
 
-                model.Address.Countries = countries;
-
-                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+                var orgModel = new OrganisationViewModel();
 
                 return View(CastToSpecificViewModel(model.OrganisationType, model));
             }
+            else
+            {
+                if (!ModelState.IsValid)
+                {
+                    var countries = await GetCountries();
 
-            await transactionService.CaptureData(User.GetAccessToken(), model);
+                    model.Address.Countries = countries;
 
-            return await CheckAuthorisedRepresentitiveAndRedirect();
+                    ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
+                    return View(CastToSpecificViewModel(model.OrganisationType, model));
+                }
+
+                await transactionService.CaptureData(User.GetAccessToken(), model);
+
+                return await CheckAuthorisedRepresentitiveAndRedirect();
+            }
         }
 
         [HttpGet]
