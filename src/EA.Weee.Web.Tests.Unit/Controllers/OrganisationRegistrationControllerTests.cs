@@ -1315,5 +1315,111 @@
             result.RouteValues["action"].Should().Be("Index");
             result.RouteValues["controller"].Should().Be("Holding");
         }
+
+        [Fact]
+        public void PartnerDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+
+            // Act
+            var result = controller.PartnerDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            var model = result.Model as PartnerViewModel;
+            model.Should().NotBeNull();
+
+            model.PartnerModels.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Post_CallsCaptureDataAndRedirectsToOrganisationDetails()
+        {
+            // Arrange
+            var vm = new PartnerViewModel
+            {
+                PartnerModels = new List<PartnerModel>
+                {
+                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                }
+            };
+
+            // Act
+            var result = await controller.PartnerDetails(vm, "actionName") as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, vm)).MustHaveHappenedOnceExactly();
+
+            result.RouteValues["action"].Should().Be("OrganisationDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Post_AddsAnotherPartnerFields()
+        {
+            // Arrange
+            var vm = new PartnerViewModel
+            {
+                PartnerModels = new List<PartnerModel>
+                {
+                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                }
+            };
+
+            // Act
+            var result = await controller.PartnerDetails(vm, "AnotherPartner") as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, vm)).MustNotHaveHappened();
+
+            var model = result.Model as PartnerViewModel;
+
+            model.PartnerModels.Should().HaveCount(2);
+
+            model.PartnerModels[1].FirstName.Should().BeNull();
+            model.PartnerModels[1].LastName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Post_AddErrorIfMoreThanTenPartners()
+        {
+            // Arrange
+            var vm = new PartnerViewModel
+            {
+                PartnerModels = new List<PartnerModel>
+                {
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                }
+            };
+
+            // Act
+            var result = await controller.PartnerDetails(vm, "AnotherPartner") as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, vm)).MustNotHaveHappened();
+
+            controller.ModelState["PartnerModels"].Errors.Count.Should().Be(1);
+
+            controller.ModelState["PartnerModels"].Errors[0].ErrorMessage.Should().BeEquivalentTo("A maximum of 10 partners are allowed");
+
+            var model = result.Model as PartnerViewModel;
+        }
     }
 }
