@@ -4,6 +4,7 @@
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.OrganisationRegistration;
@@ -92,72 +93,24 @@
         }
 
         [Fact]
-        public async Task CaptureData_WithSoleTraderViewModel_ShouldUpdateTransaction()
+        public async Task CaptureData_WithOrganisationViewModel_ShouldUpdateTransaction()
         {
             // Arrange
             const string accessToken = "test-token";
-            var soleTraderDetailsViewModel = fixture.Create<SoleTraderDetailsViewModel>();
+            var organisationViewModel = fixture.Create<OrganisationViewModel>();
             var transaction = new OrganisationTransactionData();
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
                 .Returns(Task.FromResult(transaction));
 
             // Act
-            await organisationService.CaptureData(accessToken, soleTraderDetailsViewModel);
+            await organisationService.CaptureData(accessToken, organisationViewModel);
 
             // Assert
-            transaction.SoleTraderDetailsViewModel.Should().Be(soleTraderDetailsViewModel);
-            transaction.RegisteredCompanyDetailsViewModel.Should().BeNull();
-            transaction.PartnershipDetailsViewModel.Should().BeNull();
-
+            transaction.OrganisationViewModel.Should().Be(organisationViewModel);
+            
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
-                x => x.OrganisationTransactionData.SoleTraderDetailsViewModel.Equals(soleTraderDetailsViewModel)))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task CaptureData_WithRegisteredCompanyViewModel_ShouldUpdateTransaction()
-        {
-            // Arrange
-            const string accessToken = "test-token";
-            var registeredCompanyDetailsViewModel = fixture.Create<RegisteredCompanyDetailsViewModel>();
-            var transaction = new OrganisationTransactionData();
-
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
-                .Returns(Task.FromResult(transaction));
-
-            // Act
-            await organisationService.CaptureData(accessToken, registeredCompanyDetailsViewModel);
-
-            // Assert
-            transaction.RegisteredCompanyDetailsViewModel.Should().Be(registeredCompanyDetailsViewModel);
-            transaction.SoleTraderDetailsViewModel.Should().BeNull();
-            transaction.PartnershipDetailsViewModel.Should().BeNull();
-
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
-                x => x.OrganisationTransactionData.RegisteredCompanyDetailsViewModel.Equals(registeredCompanyDetailsViewModel)))).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task CaptureData_WitPartnerShipViewModel_ShouldUpdateTransaction()
-        {
-            // Arrange
-            const string accessToken = "test-token";
-            var partnershipDetailsViewModel = fixture.Create<PartnershipDetailsViewModel>();
-            var transaction = new OrganisationTransactionData();
-
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
-                .Returns(Task.FromResult(transaction));
-
-            // Act
-            await organisationService.CaptureData(accessToken, partnershipDetailsViewModel);
-
-            // Assert
-            transaction.RegisteredCompanyDetailsViewModel.Should().BeNull();
-            transaction.SoleTraderDetailsViewModel.Should().BeNull();
-            transaction.PartnershipDetailsViewModel.Should().Be(partnershipDetailsViewModel);
-
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
-                x => x.OrganisationTransactionData.PartnershipDetailsViewModel.Equals(partnershipDetailsViewModel)))).MustHaveHappenedOnceExactly();
+                x => x.OrganisationTransactionData.OrganisationViewModel.Equals(organisationViewModel)))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -175,7 +128,7 @@
             await organisationService.CaptureData(accessToken, nonMatchingModel);
 
             // Assert
-            transaction.RegisteredCompanyDetailsViewModel.Should().BeNull();
+            transaction.OrganisationViewModel.Should().BeNull();
             transaction.OrganisationType.Should().BeNull();
             transaction.PreviousRegistration.Should().BeNull();
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
@@ -267,6 +220,27 @@
             // Assert
             A.CallTo(() => weeeClient.SendAsync(accessToken,
                 A<CompleteOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CaptureData_WithContactDetailsViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var contactDetailsViewModel = fixture.Create<ContactDetailsViewModel>();
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, contactDetailsViewModel);
+
+            // Assert
+            transaction.ContactDetailsViewModel.Should().Be(contactDetailsViewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.ContactDetailsViewModel.Equals(contactDetailsViewModel)))).MustHaveHappenedOnceExactly();
         }
     }
 }

@@ -3,6 +3,8 @@
     using AutoFixture;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain;
@@ -31,10 +33,10 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly Guid countryId = Guid.NewGuid();
+        private readonly Country country;
         private const string CompanyName = "Company name";
         private const string TradingName = "Trading name";
-        private const string BrandNames = "Brand names";
-
+        
         public CompleteOrganisationTransactionHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
@@ -46,7 +48,7 @@
 
             var dbContextHelper = new DbContextHelper();
 
-            var country = new Country(countryId, "UK");
+            country = new Country(countryId, "UK");
 
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
@@ -126,7 +128,7 @@
             var organisationTransactionData = new OrganisationTransactionData
             {
                 OrganisationType = ExternalOrganisationType.Partnership,
-                PartnershipDetailsViewModel = new PartnershipDetailsViewModel
+                OrganisationViewModel = new OrganisationViewModel
                 {
                     BusinessTradingName = "Test Partnership",
                     CompanyName = "Company Name",
@@ -147,26 +149,19 @@
             await act.Should().ThrowAsync<InvalidOperationException>();
         }
 
-        public static IEnumerable<object[]> OrganisationValues()
-        {
-            yield return new object[] { ExternalOrganisationType.RegisteredCompany, Domain.Organisation.OrganisationType.RegisteredCompany, BrandNames };
-            yield return new object[] { ExternalOrganisationType.Partnership, Domain.Organisation.OrganisationType.DirectRegistrantPartnership, BrandNames };
-            yield return new object[] { ExternalOrganisationType.SoleTrader, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, BrandNames };
-            yield return new object[] { ExternalOrganisationType.RegisteredCompany, Domain.Organisation.OrganisationType.RegisteredCompany, null };
-            yield return new object[] { ExternalOrganisationType.Partnership, Domain.Organisation.OrganisationType.DirectRegistrantPartnership, null };
-            yield return new object[] { ExternalOrganisationType.SoleTrader, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, null };
-        }
-
         [Theory]
-        [MemberData(nameof(OrganisationValues))]
-        public async Task HandleAsync_WhenValidRequestIsProvided_ShouldCreateOrganisationAndReturnItsId(ExternalOrganisationType externalOrganisationType,
-            Domain.Organisation.OrganisationType domainOrganisationType, string brandNames)
+        [ClassData(typeof(OrganisationTestDataGenerator))]
+        public async Task HandleAsync_WhenValidRequestIsProvided_ShouldCreateOrganisationAndReturnItsId(
+            ExternalOrganisationType externalOrganisationType,
+            Domain.Organisation.OrganisationType domainOrganisationType,
+            string brandNames,
+            YesNoType? authorisedRepresentitive)
         {
             // Arrange
             var organisationId = Guid.NewGuid();
             var hasBrandName = !string.IsNullOrWhiteSpace(brandNames);
 
-            SetupValidOrganisationTransaction(externalOrganisationType, brandNames);
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType, brandNames, authorisedRepresentitive);
 
             var newAddress = A.Fake<Address>();
             var directRegistrant = A.Fake<DirectRegistrant>();
@@ -216,13 +211,46 @@
                         .MustHaveHappenedOnceExactly();
                 }
 
-                A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
-                    d.Organisation.OrganisationType == domainOrganisationType &&
-                    d.Organisation.TradingName == TradingName &&
-                    d.Organisation.Name == CompanyName &&
-                    d.Organisation.BusinessAddress == newAddress &&
-                    d.BrandName == brandName))).MustHaveHappenedOnceExactly();
-
+                if (authorisedRepresentitive == YesNoType.Yes)
+                {
+                    A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
+                        d.Organisation.OrganisationType == domainOrganisationType &&
+                        d.Organisation.TradingName == TradingName &&
+                        d.Organisation.Name == CompanyName &&
+                        d.Organisation.BusinessAddress == newAddress &&
+                        d.BrandName == brandName &&
+                        d.AuthorisedRepresentative.OverseasProducerTradingName == transactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName &&
+                        d.AuthorisedRepresentative.OverseasProducerName == transactionData.RepresentingCompanyDetailsViewModel.CompanyName &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.PrimaryName == transactionData.RepresentingCompanyDetailsViewModel.Address.Address1 &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.Street == transactionData.RepresentingCompanyDetailsViewModel.Address.Address2 &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.PostCode == transactionData.RepresentingCompanyDetailsViewModel.Address.Postcode &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.Town == transactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.AdministrativeArea == transactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion &&
+                        d.AuthorisedRepresentative.OverseasContact.Address.Country == country &&
+                        d.AuthorisedRepresentative.OverseasContact.Email == transactionData.RepresentingCompanyDetailsViewModel.Address.Email &&
+                        d.AuthorisedRepresentative.OverseasContact.Telephone == transactionData.RepresentingCompanyDetailsViewModel.Address.Telephone))).MustHaveHappenedOnceExactly();
+                }
+                else
+                {
+                    A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
+                        d.Organisation.OrganisationType == domainOrganisationType &&
+                        d.Organisation.TradingName == TradingName &&
+                        d.Organisation.Name == CompanyName &&
+                        d.Organisation.BusinessAddress == newAddress &&
+                        d.BrandName == brandName &&
+                        d.Contact.FirstName == transactionData.ContactDetailsViewModel.FirstName &&
+                        d.Contact.LastName == transactionData.ContactDetailsViewModel.LastName &&
+                        d.Contact.Position == transactionData.ContactDetailsViewModel.Position &&
+                        d.Address.Address1 == transactionData.ContactDetailsViewModel.AddressData.Address1 &&
+                        d.Address.Address2 == transactionData.ContactDetailsViewModel.AddressData.Address2 &&
+                        d.Address.TownOrCity == transactionData.ContactDetailsViewModel.AddressData.TownOrCity &&
+                        d.Address.CountyOrRegion == transactionData.ContactDetailsViewModel.AddressData.CountyOrRegion &&
+                        d.Address.Postcode == transactionData.ContactDetailsViewModel.AddressData.Postcode &&
+                        d.Address.Country == country &&
+                        d.Address.Email == transactionData.ContactDetailsViewModel.AddressData.Email &&
+                        d.Address.Telephone == transactionData.ContactDetailsViewModel.AddressData.Telephone))).MustHaveHappenedOnceExactly();
+                }
+                
                 A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>.That.Matches(o =>
                     o == newOrganisation)))
                 .MustHaveHappenedOnceExactly();
@@ -246,7 +274,8 @@
 
         private OrganisationTransactionData SetupValidOrganisationTransaction(
             ExternalOrganisationType organisationType = ExternalOrganisationType.RegisteredCompany,
-            string brandNames = null)
+            string brandNames = null,
+            YesNoType? authorisedRepresentative = null)
         {
             var transaction = new OrganisationTransaction { OrganisationJson = "{}" };
             A.CallTo(() => dataAccess.FindIncompleteTransactionForCurrentUserAsync())
@@ -257,40 +286,37 @@
                 OrganisationType = organisationType,
             };
 
-            RegisteredCompanyDetailsViewModel registeredCompanyDetailsView = null;
-            PartnershipDetailsViewModel partnershipDetailsViewModel = null;
-            SoleTraderDetailsViewModel soleTraderDetailsViewModel = null;
+            OrganisationViewModel organisationViewModel = null;
+
             var addressData =
                 TestFixture.Build<ExternalAddressData>().With(e => e.CountryId, countryId).Create();
-            switch (organisationType)
-            {
-                case ExternalOrganisationType.RegisteredCompany:
-                    registeredCompanyDetailsView = TestFixture.Build<RegisteredCompanyDetailsViewModel>()
+
+            organisationViewModel = TestFixture.Build<OrganisationViewModel>()
                         .With(m => m.Address, addressData)
                         .With(m => m.EEEBrandNames, brandNames)
                         .With(m => m.CompanyName, CompanyName)
                         .With(m => m.BusinessTradingName, TradingName)
                         .Create();
-                    break;
-                case ExternalOrganisationType.Partnership:
-                    partnershipDetailsViewModel = TestFixture.Build<PartnershipDetailsViewModel>().With(m => m.Address, addressData)
-                        .With(m => m.CompanyName, CompanyName)
-                        .With(m => m.BusinessTradingName, TradingName)
-                        .With(m => m.EEEBrandNames, brandNames).Create();
-                    break;
-                case ExternalOrganisationType.SoleTrader:
-                    soleTraderDetailsViewModel = TestFixture.Build<SoleTraderDetailsViewModel>().With(m => m.Address, addressData)
-                        .With(m => m.CompanyName, CompanyName)
-                        .With(m => m.BusinessTradingName, TradingName)
-                        .With(m => m.EEEBrandNames, brandNames).Create();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(organisationType), organisationType, null);
-            }
 
-            transactionData.RegisteredCompanyDetailsViewModel = registeredCompanyDetailsView;
-            transactionData.PartnershipDetailsViewModel = partnershipDetailsViewModel;
-            transactionData.SoleTraderDetailsViewModel = soleTraderDetailsViewModel;
+            var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, country.Id).Create();
+            transactionData.ContactDetailsViewModel = TestFixture.Build<ContactDetailsViewModel>().With(r => r.AddressData, organisationContactAddress).Create();
+
+            transactionData.OrganisationViewModel = organisationViewModel;
+            transactionData.AuthorisedRepresentative = authorisedRepresentative;
+            
+            if (authorisedRepresentative == YesNoType.Yes)
+            {
+                var repAddressData =
+                    TestFixture.Build<RepresentingCompanyAddressData>().With(e => e.CountryId, countryId).Create();
+
+                transactionData.RepresentingCompanyDetailsViewModel = TestFixture.Build<RepresentingCompanyDetailsViewModel>()
+                    .With(m => m.Address, repAddressData)
+                    .Create();
+            }
+            else
+            {
+                transactionData.RepresentingCompanyDetailsViewModel = null;
+            }
 
             A.CallTo(() => serializer.Deserialize<OrganisationTransactionData>(transaction.OrganisationJson))
                 .Returns(transactionData);

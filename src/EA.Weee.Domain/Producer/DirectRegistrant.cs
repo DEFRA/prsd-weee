@@ -4,6 +4,7 @@
     using EA.Weee.Domain.Organisation;
     using System;
     using CuttingEdge.Conditions;
+    using EA.Weee.Domain.Events;
 
     public partial class DirectRegistrant : Entity
     {
@@ -11,12 +12,22 @@
         {
         }
 
-        public DirectRegistrant(Organisation organisation, BrandName brandName)
+        public DirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative authorisedRepresentative)
         {
             Condition.Requires(organisation).IsNotNull();
 
             Organisation = organisation;
             BrandName = brandName;
+            Contact = contactDetails;
+            Address = contactAddress;
+            AuthorisedRepresentative = authorisedRepresentative;
+        }
+
+        public DirectRegistrant(Organisation organisation)
+        {
+            Condition.Requires(organisation).IsNotNull();
+
+            Organisation = organisation;
         }
 
         public virtual Guid OrganisationId { get; private set; }
@@ -25,7 +36,7 @@
 
         public virtual Guid? BrandNameId { get; private set; }
 
-        public virtual Guid? RepresentingCompanyId { get; private set; }
+        public virtual Guid? AuthorisedRepresentativeId { get; private set; }
 
         public virtual Guid? ContactId { get; private set; }
 
@@ -37,15 +48,15 @@
 
         public virtual BrandName BrandName { get; private set; }
 
-        public virtual ProducerBusiness RepresentingCompany { get; private set; }
-
         public virtual Contact Contact { get; private set; }
 
         public virtual Address Address { get; private set; }
 
-        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName)
+        public virtual AuthorisedRepresentative AuthorisedRepresentative { get; private set; }
+
+        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative representingCompany)
         {
-            return new DirectRegistrant(organisation, brandName);
+            return new DirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
         }
     }
 }
