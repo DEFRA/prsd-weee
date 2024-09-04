@@ -157,6 +157,7 @@
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
     <Compile Include="Mappings\OrganisationCompletionMapping.cs" />
+    <Compile Include="Mappings\OrganisationAdditionalDetailsTypeMapping.cs" />
     <Compile Include="Mappings\OrganisationTransactionMapping.cs" />
     <Compile Include="Mappings\ProducerBalancingSchemeMapping.cs" />
     <Compile Include="Mappings\PanAreaMapping.cs" />
