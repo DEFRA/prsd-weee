@@ -1312,8 +1312,9 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("Index");
-            result.RouteValues["controller"].Should().Be("Holding");
+            result.RouteValues["action"].Should().Be("ChooseActivity");
+            result.RouteValues["controller"].Should().Be("Home");
+            result.RouteValues["area"].Should().Be("Scheme");
         }
     }
 }
