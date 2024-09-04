@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
@@ -11,9 +9,13 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.User;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class CompleteOrganisationTransactionHandler : IRequestHandler<CompleteOrganisationTransaction, Guid>
     {
@@ -23,6 +25,7 @@
         private readonly IWeeeTransactionAdapter transactionAdapter;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
+        private readonly IUserContext userContext;
 
         public CompleteOrganisationTransactionHandler(
             IWeeeAuthorization authorization,
@@ -30,7 +33,8 @@
             IJsonSerializer jsonSerializer,
             IWeeeTransactionAdapter transactionAdapter,
             IGenericDataAccess genericDataAccess,
-            WeeeContext weeeContext)
+            WeeeContext weeeContext, 
+            IUserContext userContext)
         {
             this.authorization = authorization;
             this.organisationTransactionDataAccess = organisationTransactionDataAccess;
@@ -38,6 +42,7 @@
             this.transactionAdapter = transactionAdapter;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
+            this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(CompleteOrganisationTransaction request)
@@ -72,6 +77,12 @@
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
+
+                    var organisationUser =
+                        new OrganisationUser(userContext.UserId, directRegistrant.Organisation.Id, UserStatus.Active);
+                    
+                    await genericDataAccess.Add(organisationUser);
+
                     transactionAdapter.Commit(transaction);
 
                     return directRegistrant.Organisation.Id;
