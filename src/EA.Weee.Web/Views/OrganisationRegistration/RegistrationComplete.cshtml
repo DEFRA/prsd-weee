@@ -5,19 +5,20 @@
 }
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(""))
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
 
-        <div class="govuk-panel govuk-panel--confirmation">
+        <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
             <h1 class="govuk-panel__title">
                 @title
             </h1>
         </div>
 
         <p>Your organisation has been created.</p>
-        <h2 class="govuk-heading-l">What happens next</h2>
+        <h2 class="govuk-heading-m">What happens next</h2>
         <p>You will need to register your tonnage for this year</p>
 
         <div class="govuk-form-group">
