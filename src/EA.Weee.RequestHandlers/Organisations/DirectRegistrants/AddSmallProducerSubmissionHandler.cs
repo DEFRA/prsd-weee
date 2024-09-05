@@ -53,10 +53,12 @@
             var year = SystemTime.UtcNow.Year;
             var registeredProducer = new RegisteredProducer(prn, SystemTime.UtcNow.Year);
 
-            var directProducerSubmissionHistory = new DirectProducerSubmissionHistory();
-            var directRegistrantSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, year, directProducerSubmissionHistory);
+            var directRegistrantSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, year);
+            var directProducerSubmissionHistory = new DirectProducerSubmissionHistory(directRegistrantSubmission);
 
-            await genericDataAccess.Add(directRegistrantSubmission);
+            await genericDataAccess.Add(directProducerSubmissionHistory);
+
+            directRegistrantSubmission.SetCurrentSubmission(directProducerSubmissionHistory);
 
             await weeeContext.SaveChangesAsync();
 
