@@ -670,6 +670,7 @@
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, false)
+                .With(o => o.IsBalancingScheme, false)
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
@@ -693,6 +694,7 @@
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, false)
+                .With(o => o.IsBalancingScheme, false)
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)

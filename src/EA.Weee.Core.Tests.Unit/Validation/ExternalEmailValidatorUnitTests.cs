@@ -37,7 +37,7 @@
         public void Validate_WhenUkCountry_ShouldValidatePostcode(string postCode, bool isValid)
         {
             // Arrange
-            var countryId = UkCountryList.ValidCountryIds.First();
+            var countryId = UkCountry.ValidIds.ElementAt(0);
             var countryIdName = "CountryId";
             var postcodeName = "Postcode";
 

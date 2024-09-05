@@ -34,6 +34,8 @@
 
         public bool HasAatfs { get; set; }
 
+        public bool HasDirectRegistrant { get; set; }
+
         public bool HasAes { get; set; }
 
         /// <summary>

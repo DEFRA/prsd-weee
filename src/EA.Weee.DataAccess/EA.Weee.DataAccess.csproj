@@ -127,6 +127,7 @@
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
     <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsMapping.cs" />
+    <Compile Include="Mappings\DirectProducerSubmissionHistoryMapping.cs" />
     <Compile Include="Mappings\DirectProducerSubmissionMapping.cs" />
     <Compile Include="Mappings\DirectRegistrantMapping.cs" />
     <Compile Include="Mappings\ObligationSchemeAmountMapping.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
     <Compile Include="Mappings\OrganisationCompletionMapping.cs" />
     <Compile Include="Mappings\OrganisationAdditionalDetailsTypeMapping.cs" />
+    <Compile Include="Mappings\DirectProducerSubmissionStatusMapping.cs" />
     <Compile Include="Mappings\OrganisationTransactionMapping.cs" />
     <Compile Include="Mappings\ProducerBalancingSchemeMapping.cs" />
     <Compile Include="Mappings\PanAreaMapping.cs" />
