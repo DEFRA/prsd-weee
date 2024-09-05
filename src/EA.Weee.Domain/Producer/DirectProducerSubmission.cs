@@ -31,14 +31,19 @@
 
         public virtual ICollection<DirectProducerSubmissionHistory> SubmissionHistory { get; set; }
 
+        public void SetCurrentSubmission(DirectProducerSubmissionHistory submission)
+        {
+            Condition.Requires(submission).IsNotNull();
+
+            CurrentSubmission = submission;
+        }
+
         public DirectProducerSubmission(DirectRegistrant directRegistrant, 
             RegisteredProducer registeredProducer, 
-            int complianceYear,
-            DirectProducerSubmissionHistory directProducerSubmissionHistory)
+            int complianceYear)
         {
             Condition.Requires(directRegistrant).IsNotNull();
             Condition.Requires(registeredProducer).IsNotNull();
-            Condition.Requires(directProducerSubmissionHistory).IsNotNull();
             Condition.Ensures(complianceYear).IsGreaterThan(0);
 
             DirectRegistrant = directRegistrant;
