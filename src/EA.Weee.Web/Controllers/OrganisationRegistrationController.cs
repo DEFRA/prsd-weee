@@ -8,6 +8,7 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Api.Client.Models;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Extensions;
@@ -33,16 +34,19 @@
         private readonly int maximumSearchResults;
         private readonly IOrganisationTransactionService transactionService;
         private readonly IWeeeCache cache;
+        private readonly Func<ICompaniesHouseClient> companiesHouseClient;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
             ConfigurationService configurationService, IOrganisationTransactionService transactionService,
-            IWeeeCache cache)
+            IWeeeCache cache,
+            Func<ICompaniesHouseClient> companiesHouseClient)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
             this.transactionService = transactionService;
             this.cache = cache;
+            this.companiesHouseClient = companiesHouseClient;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
@@ -333,20 +337,43 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationDetails(OrganisationViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (model.Action == "Lookup")
             {
-                var countries = await GetCountries();
+                var result = new CompaniesHouseApiModel(); // api call
 
-                model.Address.Countries = countries;
-
-                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+                var orgModel = new OrganisationViewModel()
+                {
+                    CompanyName = result.CompanyName,
+                    CompaniesRegistrationNumber = result.CompanyNumber,
+                    Address = new ExternalAddressData
+                    {
+                        Address1 = result.ExternalAddressData.Address1,
+                        Address2 = result.ExternalAddressData.Address2,
+                        TownOrCity = result.ExternalAddressData.TownOrCity,
+                        Postcode = result.ExternalAddressData.Postcode,
+                        CountryId = result.ExternalAddressData.CountryId
+                    },
+                };
 
                 return View(CastToSpecificViewModel(model.OrganisationType, model));
             }
+            else
+            {
+                if (!ModelState.IsValid)
+                {
+                    var countries = await GetCountries();
 
-            await transactionService.CaptureData(User.GetAccessToken(), model);
+                    model.Address.Countries = countries;
 
-            return await CheckAuthorisedRepresentitiveAndRedirect();
+                    ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+
+                    return View(CastToSpecificViewModel(model.OrganisationType, model));
+                }
+
+                await transactionService.CaptureData(User.GetAccessToken(), model);
+
+                return await CheckAuthorisedRepresentitiveAndRedirect();
+            }
         }
 
         [HttpGet]
