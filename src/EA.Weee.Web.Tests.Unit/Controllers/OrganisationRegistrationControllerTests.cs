@@ -1393,10 +1393,10 @@
 
             var model = result.Model as PartnerViewModel;
 
-            model.PartnerModels.Should().HaveCount(2);
+            model.AllParterModels.Should().HaveCount(2);
 
-            model.PartnerModels[1].FirstName.Should().BeNull();
-            model.PartnerModels[1].LastName.Should().BeNull();
+            model.AllParterModels[0].FirstName.Should().BeNull();
+            model.AllParterModels[0].LastName.Should().BeNull();
         }
 
         [Fact]
