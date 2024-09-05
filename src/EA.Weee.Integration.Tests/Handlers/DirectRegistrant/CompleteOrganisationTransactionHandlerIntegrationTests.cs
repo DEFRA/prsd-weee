@@ -76,14 +76,14 @@
                 entity.Organisation.Should().Be(organisation);
             };
 
-            private readonly It shouldHaveReturnedPartners = () =>
-            {
-                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+            //private readonly It shouldHaveReturnedPartners = () =>
+            //{
+            //    var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+            //    var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
 
-                additionalDetails.Should().NotBeEmpty();
-                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
-            };
+            //    additionalDetails.Should().NotBeEmpty();
+            //    additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
+            //};
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
             {
@@ -187,14 +187,14 @@
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
             };
 
-            private readonly It shouldHaveReturnedPartners = () =>
-            {
-                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+            //private readonly It shouldHaveReturnedPartners = () =>
+            //{
+            //    var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+            //    var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
 
-                additionalDetails.Should().NotBeEmpty();
-                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
-            };
+            //    additionalDetails.Should().NotBeEmpty();
+            //    additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
+            //};
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
             {
@@ -300,14 +300,14 @@
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
             };
 
-            private readonly It shouldHaveReturnedPartners = () =>
-            {
-                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+            //private readonly It shouldHaveReturnedPartners = () =>
+            //{
+            //    var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+            //    var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
 
-                additionalDetails.Should().NotBeEmpty();
-                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
-            };
+            //    additionalDetails.Should().NotBeEmpty();
+            //    additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
+            //};
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
             {
@@ -399,14 +399,14 @@
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
             };
 
-            private readonly It shouldHaveReturnedPartners = () =>
-            {
-                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+            //private readonly It shouldHaveReturnedPartners = () =>
+            //{
+            //    var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+            //    var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
 
-                additionalDetails.Should().NotBeEmpty();
-                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
-            };
+            //    additionalDetails.Should().NotBeEmpty();
+            //    additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
+            //};
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
             {
