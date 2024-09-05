@@ -42,14 +42,14 @@
 
             if (currentYearSubmission != null)
             {
-                throw new InvalidOperationException();
+                return new SmallProducerSubmissionData()
+                {
+                    OrganisationData = organisation,
+                    CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                };
             }
 
-            return new SmallProducerSubmissionData()
-            {
-                OrganisationData = organisation,
-                CurrentSubmission = new SmallProducerSubmissionHistoryData()
-            };
+            return null;
         }
     }
 }
