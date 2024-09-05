@@ -32,5 +32,10 @@
         public virtual Contact AppropriateSignatory { get; set; }
 
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
+
+        public DirectProducerSubmissionHistory()
+        {
+            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
+        }
     }
 }

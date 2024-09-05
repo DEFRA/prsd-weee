@@ -104,6 +104,10 @@
     <Compile Include="XmlNamespace.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
+      <Project>{333C65B9-EBB6-4D04-921E-89094F80E2E3}</Project>
+      <Name>EA.Prsd.Core.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
