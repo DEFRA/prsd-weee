@@ -17,6 +17,10 @@
     @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
 </div>
 
+@if (!Model.LookupFound)
+{
+    <p>my message</p>
+}
 <div>
     <input type="submit" value="Find Company" name="action" class="govuk-button govuk-button--secondary"/>
 </div>

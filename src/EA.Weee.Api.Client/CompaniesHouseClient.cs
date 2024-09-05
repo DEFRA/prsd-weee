@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Api.Client
 {
     using CuttingEdge.Conditions;
+    using EA.Weee.Api.Client.Models;
     using EA.Weee.Api.Client.Serlializer;
     using Serilog;
     using System;
-    using System.Net.Http;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
+    using System.Web;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
@@ -39,7 +40,7 @@
             this.jsonSerializer = jsonSerializer;
         }
 
-        public async Task<T> GetCompanyDetailsAsync<T>(string endpoint, string companyReference)
+        public async Task<DefraCompaniesHouseApiModel> GetCompanyDetailsAsync(string endpoint, string companyReference)
         {
             Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
             Condition.Requires(companyReference).IsNotNullOrWhiteSpace("Company reference cannot be null or whitespace.");
@@ -47,11 +48,18 @@
             var response = await retryPolicy.ExecuteAsync(() =>
                 httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
 
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return jsonSerializer.Deserialize<T>(content);
+                return jsonSerializer.Deserialize<DefraCompaniesHouseApiModel>(content);
+            }
+            catch (HttpException)
+            {
+                return null;
+            }
         }
 
         public void Dispose()
