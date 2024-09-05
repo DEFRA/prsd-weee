@@ -36,7 +36,7 @@
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(o => o.OrganisationViewModel, registeredCompanyDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
-                    .With(o => o.PartnerViewModel, partnerViewModel)
+                    //.With(o => o.PartnerModels, partnerViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -142,7 +142,7 @@
                     .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.OrganisationViewModel, soleTraderDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
-                    .With(o => o.PartnerViewModel, partnerViewModel)
+                    //.With(o => o.PartnerViewModel, partnerViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -248,7 +248,7 @@
                     .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.OrganisationViewModel, partnershipDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
-                    .With(o => o.PartnerViewModel, partnerViewModel)
+                    //.With(o => o.PartnerViewModel, partnerViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -340,7 +340,7 @@
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
                     .With(o => o.OrganisationViewModel, registeredCompanyDetails)
                     .With(o => o.RepresentingCompanyDetailsViewModel, representingCompanyDetails)
-                    .With(o => o.PartnerViewModel, partnerViewModel)
+                    //.With(o => o.PartnerViewModel, partnerViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -529,10 +529,10 @@
                     new PartnerModel{ FirstName = "firstname2", LastName = "lastname2"},
                 };
 
-                partnerViewModel = fixture
-                    .Build<PartnerViewModel>()
-                    .With(r => r.PartnerModels, partnerModels)
-                    .Create();
+                //partnerViewModel = fixture
+                //    .Build<PartnerViewModel>()
+                //    .With(r => r.PartnerModels, partnerModels)
+                //    .Create();
 
                 var representingCompanyAddressDetails = fixture.Build<RepresentingCompanyAddressData>()
                     .With(r => r.CountryId, country.Id).Create();

@@ -2,6 +2,7 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
+
 @model EA.Weee.Core.Organisations.PartnerViewModel
 @{
     const string title = "Partner details";
@@ -42,6 +43,31 @@
             </div>
 
             if (i < Model.PartnerModels.Count() - 1)
+            {
+                <div class="border-divider govuk-!-margin-bottom-4 govuk-!-width-two-thirds"></div>
+            }
+        }
+
+        if (Model.NotRequiredPartnerModels.Any())
+        {
+            <div class="border-divider govuk-!-margin-bottom-4 govuk-!-width-two-thirds"></div>
+        }
+
+        for (var i = 0; i < Model.NotRequiredPartnerModels.Count(); i++)
+        {
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.NotRequiredPartnerModels[i].FirstName)">
+                @Html.Gds().LabelFor(m => m.NotRequiredPartnerModels[i].FirstName)
+                @Html.Gds().ValidationMessageFor(m => m.NotRequiredPartnerModels[i].FirstName)
+                @Html.Gds().TextBoxFor(m => m.NotRequiredPartnerModels[i].FirstName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+            </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.NotRequiredPartnerModels[i].LastName)">
+                @Html.Gds().LabelFor(m => m.NotRequiredPartnerModels[i].LastName)
+                @Html.Gds().ValidationMessageFor(m => m.NotRequiredPartnerModels[i].LastName)
+                @Html.Gds().TextBoxFor(m => m.NotRequiredPartnerModels[i].LastName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+            </div>
+
+            if (i < Model.NotRequiredPartnerModels.Count() - 1)
             {
                 <div class="border-divider govuk-!-margin-bottom-4 govuk-!-width-two-thirds"></div>
             }

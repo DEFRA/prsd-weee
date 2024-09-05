@@ -643,10 +643,12 @@
 
             if (action == "AnotherPartner")
             {
-                model.PartnerModels.Add(new PartnerModel() { });
+                model.NotRequiredPartnerModels.Add(new NotRequiredPartnerModel() { });
 
                 return View(model);
             }
+
+            model.NotRequiredPartnerModels = model.NotRequiredPartnerModels.Where(x => x != null).ToList();
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
