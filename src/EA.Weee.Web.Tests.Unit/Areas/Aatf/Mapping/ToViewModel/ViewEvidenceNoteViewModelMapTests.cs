@@ -148,6 +148,7 @@
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, true)
+                .With(o => o.IsBalancingScheme, false)
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
@@ -171,6 +172,7 @@
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, false)
+                .With(o => o.IsBalancingScheme, false)
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
@@ -201,9 +203,12 @@
         public void Map_GivenSourceWithRecipientThatDoesNotHaveApprovedRecipientDetails_RecipientAddressShouldBeSetToNotificationAddress()
         {
             //arrange
+         
             var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, false)
+                .With(o => o.IsBalancingScheme, false)
                 .With(o => o.OrganisationName, "org").Create();
+            
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)
                 .With(f => f.ApprovedRecipientDetails, "approved recipient details")
@@ -226,6 +231,7 @@
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, false)
+                .With(o => o.IsBalancingScheme, false)
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<EvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)

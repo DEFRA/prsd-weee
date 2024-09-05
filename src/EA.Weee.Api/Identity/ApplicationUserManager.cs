@@ -109,6 +109,17 @@
                 claims.Add(new Claim(WeeeClaimTypes.SchemeAccess, schemeId.ToString()));
             }
 
+            // Load WEEE-specific claims representing access to schemes. 
+            List<Guid> directRegistrants = await context.DirectRegistrants
+                .Where(s => organisationIds.Contains(s.OrganisationId))
+                .Select(s => s.Id)
+                .ToListAsync();
+
+            foreach (Guid directRegistrantId in directRegistrants)
+            {
+                claims.Add(new Claim(WeeeClaimTypes.DirectRegistrantAccess, directRegistrantId.ToString()));
+            }
+
             return claims;
         }
 

@@ -48,8 +48,8 @@
 
         [Required]
         [StringLength(CommonMaxFieldLengths.Telephone)]
-        [Display(Name = "Telephone number")]
-        [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.", AllowNull = true)]
+        [Display(Name = "Phone number")]
+        [GenericPhoneNumber(ErrorMessage = "The phone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.", AllowNull = true)]
         public string Telephone { get; set; }
 
         [Required]
