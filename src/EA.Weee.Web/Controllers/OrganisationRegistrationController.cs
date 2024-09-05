@@ -283,6 +283,17 @@
 
                 await transactionService.CaptureData(User.GetAccessToken(), model);
 
+                var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
+                switch (organisationType)
+                {
+                    case ExternalOrganisationType.SoleTrader:
+                        return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                    case ExternalOrganisationType.Partnership:
+                        return RedirectToAction(nameof(PartnerDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                    case ExternalOrganisationType.RegisteredCompany:
+                        return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                }
+
                 return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
             }
 
