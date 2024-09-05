@@ -16,6 +16,8 @@
             return View();
         }
 
+        [SmallProducerSubmissionContext]
+        [HttpGet]
         public ActionResult TaskList()
         {
             return View();

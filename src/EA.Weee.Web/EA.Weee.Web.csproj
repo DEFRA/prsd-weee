@@ -1047,6 +1047,8 @@
     <Content Include="Views\Shared\EditorTemplates\SoleTraderDetailsViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PartnershipDetailsViewModel.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\TaskList.cshtml" />
+    <Content Include="Areas\Producer\Views\web.config" />
+    <Content Include="Areas\Producer\Views\_ViewStart.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

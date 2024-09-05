@@ -7,6 +7,10 @@
 
     public class DirectProducerSubmission : Entity
     {
+        public DirectProducerSubmission()
+        {
+        }
+
         public virtual Guid DirectRegistrantId { get; set; }
 
         public virtual Guid RegisteredProducerId { get; set; }
