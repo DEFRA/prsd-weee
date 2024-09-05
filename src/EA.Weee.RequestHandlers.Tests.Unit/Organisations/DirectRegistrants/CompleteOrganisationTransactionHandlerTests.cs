@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.DirectRegistrants
 {
     using AutoFixture;
+    using EA.Prsd.Core.Domain;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
@@ -31,8 +32,10 @@
         private readonly CompleteOrganisationTransactionHandler handler;
         private readonly IWeeeTransactionAdapter transactionAdapter;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly IUserContext userContext;
         private readonly WeeeContext weeeContext;
         private readonly Guid countryId = Guid.NewGuid();
+        private readonly Guid userId = Guid.NewGuid();
         private readonly Country country;
         private const string CompanyName = "Company name";
         private const string TradingName = "Trading name";
@@ -45,13 +48,14 @@
             transactionAdapter = A.Fake<IWeeeTransactionAdapter>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
-
+            userContext = A.Fake<IUserContext>();
             var dbContextHelper = new DbContextHelper();
 
             country = new Country(countryId, "UK");
 
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
+            A.CallTo(() => userContext.UserId).Returns(userId);
 
             handler = new CompleteOrganisationTransactionHandler(
                 authorization,
@@ -59,7 +63,8 @@
                 serializer,
                 transactionAdapter,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                userContext);
         }
 
         [Fact]
@@ -88,7 +93,8 @@
                 serializer,
                 transactionAdapter,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                userContext);
 
             // Act & Assert
             await Assert.ThrowsAsync<SecurityException>(
@@ -199,6 +205,7 @@
 
                 callConfig.Then(A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).MustHaveHappenedOnceExactly())
                     .Then(A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>._)).MustHaveHappenedOnceExactly())
+                    .Then(A.CallTo(() => genericDataAccess.Add(A<OrganisationUser>._)).MustHaveHappenedOnceExactly())
                     .Then(A.CallTo(() => transactionAdapter.Commit(null)).MustHaveHappenedOnceExactly());
 
                 A.CallTo(() => genericDataAccess.Add(A<Address>.That.Matches(a => a.Country.Id == countryId)))
@@ -250,7 +257,12 @@
                         d.Address.Email == transactionData.ContactDetailsViewModel.AddressData.Email &&
                         d.Address.Telephone == transactionData.ContactDetailsViewModel.AddressData.Telephone))).MustHaveHappenedOnceExactly();
                 }
-                
+
+                A.CallTo(() =>
+                        genericDataAccess.Add(
+                            A<OrganisationUser>.That.Matches(o => o.OrganisationId == organisationId && o.UserId == userId.ToString() && o.UserStatus == EA.Weee.Domain.User.UserStatus.Active)))
+                    .MustHaveHappenedOnceExactly();
+
                 A.CallTo(() => dataAccess.CompleteTransactionAsync(A<Organisation>.That.Matches(o =>
                     o == newOrganisation)))
                 .MustHaveHappenedOnceExactly();

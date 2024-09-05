@@ -411,6 +411,7 @@
     <Compile Include="Areas\Admin\ViewModels\VoidNoteViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidTransferNoteViewModelTests.cs" />
+    <Compile Include="Areas\Producer\Filters\AuthoriseRouteClaimsAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanCreateTransferNoteAttributeTests.cs" />
