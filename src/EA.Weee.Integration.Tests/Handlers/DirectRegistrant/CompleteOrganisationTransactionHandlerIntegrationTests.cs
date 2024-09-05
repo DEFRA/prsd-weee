@@ -9,6 +9,7 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Integration.Tests.Builders;
+    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using FluentAssertions;
     using Newtonsoft.Json;
@@ -16,6 +17,7 @@
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using System;
+    using System.Collections.Generic;
     using System.Security;
 
     public class CompleteOrganisationTransactionHandlerIntegrationTests : IntegrationTestBase
@@ -33,7 +35,9 @@
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(o => o.OrganisationViewModel, registeredCompanyDetails)
-                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
+                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
+                    //.With(o => o.PartnerModels, partnerViewModel)
+                    .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
@@ -70,6 +74,15 @@
                 organisation.BusinessAddress.Postcode.Should().Be(addressData.Postcode);
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
                 entity.Organisation.Should().Be(organisation);
+            };
+
+            private readonly It shouldHaveReturnedPartners = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+
+                additionalDetails.Should().NotBeEmpty();
+                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -135,7 +148,9 @@
                     .With(o => o.OrganisationType, ExternalOrganisationType.SoleTrader)
                     .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.OrganisationViewModel, soleTraderDetails)
-                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
+                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
+                    //.With(o => o.PartnerViewModel, partnerViewModel)
+                    .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
@@ -170,6 +185,15 @@
                 organisation.BusinessAddress.CountryId.Should().Be(addressData.CountryId);
                 organisation.BusinessAddress.Postcode.Should().Be(addressData.Postcode);
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
+            };
+
+            private readonly It shouldHaveReturnedPartners = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+
+                additionalDetails.Should().NotBeEmpty();
+                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -237,7 +261,9 @@
                     .With(o => o.OrganisationType, ExternalOrganisationType.Partnership)
                     .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.OrganisationViewModel, partnershipDetails)
-                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel).Create();
+                    .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
+                    //.With(o => o.PartnerViewModel, partnerViewModel)
+                    .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
 
@@ -272,6 +298,15 @@
                 organisation.BusinessAddress.CountryId.Should().Be(addressData.CountryId);
                 organisation.BusinessAddress.Postcode.Should().Be(addressData.Postcode);
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
+            };
+
+            private readonly It shouldHaveReturnedPartners = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+
+                additionalDetails.Should().NotBeEmpty();
+                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -326,6 +361,7 @@
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
                     .With(o => o.OrganisationViewModel, registeredCompanyDetails)
                     .With(o => o.RepresentingCompanyDetailsViewModel, representingCompanyDetails)
+                    //.With(o => o.PartnerViewModel, partnerViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -361,6 +397,15 @@
                 organisation.BusinessAddress.CountryId.Should().Be(addressData.CountryId);
                 organisation.BusinessAddress.Postcode.Should().Be(addressData.Postcode);
                 organisation.BusinessAddress.TownOrCity.Should().Be(addressData.TownOrCity);
+            };
+
+            private readonly It shouldHaveReturnedPartners = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+
+                additionalDetails.Should().NotBeEmpty();
+                additionalDetails.Should().BeEquivalentTo(partnerViewModel.PartnerModels);
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -613,6 +658,7 @@
             protected static DateTime date;
             protected static ContactDetailsViewModel contactDetailsViewModel;
             protected static Organisation organisation;
+            protected static PartnerViewModel partnerViewModel;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -635,6 +681,17 @@
 
                 contactDetailsViewModel = fixture.Build<ContactDetailsViewModel>()
                     .With(r => r.AddressData, organisationContactAddress).Create();
+
+                var partnerModels = new List<PartnerModel> 
+                {
+                    new PartnerModel{ FirstName = "firstname1", LastName = "lastname1"},
+                    new PartnerModel{ FirstName = "firstname2", LastName = "lastname2"},
+                };
+
+                //partnerViewModel = fixture
+                //    .Build<PartnerViewModel>()
+                //    .With(r => r.PartnerModels, partnerModels)
+                //    .Create();
 
                 var representingCompanyAddressDetails = fixture.Build<RepresentingCompanyAddressData>()
                     .With(r => r.CountryId, country.Id).Create();
