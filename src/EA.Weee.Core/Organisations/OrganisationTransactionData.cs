@@ -25,7 +25,7 @@
 
         public ContactDetailsViewModel ContactDetailsViewModel { get; set; }
 
-        public PartnerViewModel PartnerViewModel { get; set; }
+        public List<PartnerModel> PartnerModels { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

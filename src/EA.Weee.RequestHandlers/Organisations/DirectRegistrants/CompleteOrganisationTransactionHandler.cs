@@ -73,8 +73,8 @@
                     var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
-                    var additionalDetails = CreateAdditionalCompanyDetails(organisationTransactionData, directRegistrant);
-                    await genericDataAccess.AddMany(additionalDetails);
+                    //var additionalDetails = CreateAdditionalCompanyDetails(organisationTransactionData, directRegistrant);
+                    //await genericDataAccess.AddMany(additionalDetails);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
                     transactionAdapter.Commit(transaction);
@@ -135,9 +135,7 @@
             OrganisationTransactionData organisationTransactionData, 
             DirectRegistrant directRegistrant)
         {
-            var additionalCompanyDetails = organisationTransactionData
-                .PartnerViewModel
-                .PartnerModels
+            var additionalCompanyDetails = organisationTransactionData.PartnerModels
                 .Select(x => new AdditionalCompanyDetails
                 {
                     FirstName = x.FirstName,

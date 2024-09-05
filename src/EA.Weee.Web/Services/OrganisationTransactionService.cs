@@ -51,7 +51,7 @@
                         transaction.ContactDetailsViewModel = contactDetailsViewModel;
                         break;
                     case PartnerViewModel partnerViewModel:
-                        transaction.PartnerViewModel = partnerViewModel;
+                        transaction.PartnerModels = partnerViewModel.AllParterModels;
                         break;
                 }
 
