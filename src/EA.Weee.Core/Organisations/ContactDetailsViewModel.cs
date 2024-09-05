@@ -22,7 +22,7 @@
         [Display(Name = "Position")]
         public virtual string Position { get; set; }
 
-        public Shared.AddressPostcodeRequiredData AddressData { get; set; } = new Shared.AddressPostcodeRequiredData() { CountryId = UkCountryList.UkCountryId };
+        public Shared.AddressPostcodeRequiredData AddressData { get; set; } = new Shared.AddressPostcodeRequiredData() { CountryId = UkCountry.Ids.England };
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

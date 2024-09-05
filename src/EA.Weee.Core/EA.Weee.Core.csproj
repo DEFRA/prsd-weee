@@ -300,7 +300,7 @@
     <Compile Include="Configuration\DiagnosticSourceDisposer.cs" />
     <Compile Include="Configuration\Logging\LoggerConfig.cs" />
     <Compile Include="Constants\DateTimeConstants.cs" />
-    <Compile Include="Constants\UkCountryList.cs" />
+    <Compile Include="Constants\UkCountry.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
