@@ -200,6 +200,8 @@
 
         public virtual DbSet<DirectProducerSubmission> DirectProducerSubmissions { get; set; }
 
+        public virtual DbSet<DirectProducerSubmissionHistory> DirectProducerSubmissionHistories { get; set; }
+
         public virtual DbSet<AdditionalCompanyDetails> AdditionalCompanyDetails { get; set; }
 
         public virtual DbSet<DirectRegistrant> DirectRegistrants { get; set; }
