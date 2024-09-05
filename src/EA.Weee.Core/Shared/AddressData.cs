@@ -56,6 +56,8 @@
         [Display(Name = "Email")]
         public string Email { get; set; }
 
+        public string WebAddress { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (CountryId == Guid.Empty)

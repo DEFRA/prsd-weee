@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Services
 {
     using EA.Weee.Core.Organisations;
+    using System;
     using System.Threading.Tasks;
 
     public interface IOrganisationTransactionService
@@ -11,6 +12,6 @@
 
         Task DeleteOrganisationTransactionData(string accessToken);
 
-        Task CompleteTransaction(string accessToken);
+        Task<Guid> CompleteTransaction(string accessToken);
     }
 }
