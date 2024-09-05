@@ -577,6 +577,7 @@
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerController.cs" />
     <Compile Include="Areas\Producer\Filters\AuthorizeRouteClaimsAttribute.cs" />
+    <Compile Include="Areas\Producer\Filters\SmallProducerSubmissionContextAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBase.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttribute.cs" />
@@ -1045,6 +1046,7 @@
     <Content Include="Views\Shared\EditorTemplates\RegisteredCompanyDetailsViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SoleTraderDetailsViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PartnershipDetailsViewModel.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\TaskList.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
