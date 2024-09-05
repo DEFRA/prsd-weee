@@ -179,7 +179,7 @@
             {
                 Address = new ExternalAddressData
                 {
-                    CountryId = UkCountryList.ValidCountryIds.ElementAt(0),
+                    CountryId = UkCountry.ValidIds.ElementAt(0),
                     Postcode = "SW1A 1AA"
                 }
             };
