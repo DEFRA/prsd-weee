@@ -337,23 +337,37 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationDetails(OrganisationViewModel model)
         {
-            if (model.Action == "Lookup")
+            if (model.Action == "Find Company")
             {
-                var result = new CompaniesHouseApiModel(); // api call
-
-                var orgModel = new OrganisationViewModel()
+                using (var client = companiesHouseClient())
                 {
-                    CompanyName = result.CompanyName,
-                    CompaniesRegistrationNumber = result.CompanyNumber,
-                    Address = new ExternalAddressData
+                    var result = await client.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies",
+                        model.CompaniesRegistrationNumber);
+
+                    var countries = await GetCountries();
+
+                    model.Address.Countries = countries;
+
+                    if (result == null)
                     {
-                        Address1 = result.ExternalAddressData.Address1,
-                        Address2 = result.ExternalAddressData.Address2,
-                        TownOrCity = result.ExternalAddressData.TownOrCity,
-                        Postcode = result.ExternalAddressData.Postcode,
-                        CountryId = result.ExternalAddressData.CountryId
-                    },
-                };
+                        model.LookupFound = false;
+                        return View(CastToSpecificViewModel(model.OrganisationType, model));
+                    }
+
+                    var orgModel = new OrganisationViewModel()
+                    {
+                        CompanyName = result.Organisation.Name,
+                        CompaniesRegistrationNumber = result.RegistrationNumber,
+                        Address = new ExternalAddressData
+                        {
+                            //Address1 = result.RegisteredOffice.BuildingNumber,
+                            //Address2 = result.RegisteredOffice.Street,
+                            //TownOrCity = result.RegisteredOffice.Town,
+                            //Postcode = result.RegisteredOffice.Postcode,
+                            CountryId = Guid.NewGuid() //result.RegisteredOffice.Country.Name
+                        },
+                    };
+                }
 
                 return View(CastToSpecificViewModel(model.OrganisationType, model));
             }

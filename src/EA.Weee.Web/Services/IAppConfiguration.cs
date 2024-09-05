@@ -75,5 +75,7 @@
         string ProxyWebAddress { get; set; }
 
         bool ProxyUseDefaultCredentials { get; set; }
+
+        string CompaniesHousePassword { get; set; }
     }
 }
