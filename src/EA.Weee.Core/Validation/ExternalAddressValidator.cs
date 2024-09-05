@@ -20,7 +20,7 @@
                 yield return new ValidationResult("Please select a country",
                     new[] { countryIdName });
             }
-            else if (UkCountryList.ValidCountryIds.Contains(countryId) && !string.IsNullOrWhiteSpace(postCode))
+            else if (UkCountry.ValidIds.Contains(countryId) && !string.IsNullOrWhiteSpace(postCode))
             {
                 if (!UkPostcodeRegex.IsMatch(postCode))
                 {
