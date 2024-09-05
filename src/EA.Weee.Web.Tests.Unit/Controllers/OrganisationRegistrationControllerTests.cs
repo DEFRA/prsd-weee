@@ -31,6 +31,7 @@
         private readonly IOrganisationTransactionService transactionService;
         private readonly OrganisationRegistrationController controller;
         private readonly IWeeeCache weeeCache;
+        private readonly ICompaniesHouseClient companiesHouseClient;
 
         public OrganisationRegistrationControllerTests()
         {
@@ -39,13 +40,15 @@
             weeeClient = A.Fake<IWeeeClient>();
             organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             weeeCache = A.Fake<IWeeeCache>();
+            companiesHouseClient = A.Fake<ICompaniesHouseClient>();
 
             controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -71,7 +74,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
@@ -106,7 +110,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
@@ -134,7 +139,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService, 
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -161,7 +167,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var activeUsers = new List<OrganisationUserData>()
             {
@@ -196,7 +203,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var activeUsers = new List<OrganisationUserData>();
 
@@ -253,7 +261,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
@@ -285,7 +294,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
@@ -313,7 +323,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
@@ -341,7 +352,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -372,7 +384,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -396,7 +409,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -420,7 +434,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -447,7 +462,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
@@ -474,7 +490,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchViewModel
             {
@@ -517,7 +534,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -558,7 +576,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -591,7 +610,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchResultsViewModel()
             {
@@ -621,7 +641,8 @@
                organisationSearcher,
                configurationService,
                transactionService,
-               weeeCache);
+               weeeCache,
+                () => companiesHouseClient);
 
             var result = await controller.Type() as ViewResult;
 
@@ -671,7 +692,8 @@
                organisationSearcher,
                configurationService,
                transactionService,
-               weeeCache);
+               weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new OrganisationTypeViewModel()
             {
@@ -699,7 +721,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             const string searchText = "company";
 
@@ -747,7 +770,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -782,7 +806,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()
@@ -816,7 +841,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = controller.FiveTonnesOrMore();
