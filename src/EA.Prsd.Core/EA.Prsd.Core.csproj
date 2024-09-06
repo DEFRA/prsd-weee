@@ -91,6 +91,7 @@
     <Compile Include="SystemTime.cs" />
     <Compile Include="Validation\HttpPostedFileTypeAttribute.cs" />
     <Compile Include="Validation\MustBeTrueAttribute.cs" />
+    <Compile Include="Validation\RequiredIfOtherValueNotNullAttribute.cs" />
     <Compile Include="Validation\RequiredIfAttribute.cs" />
     <Compile Include="Validation\RequiredIfPropertiesEqualAttribute.cs" />
     <Compile Include="Validation\UkPhoneNumberAttribute.cs" />
