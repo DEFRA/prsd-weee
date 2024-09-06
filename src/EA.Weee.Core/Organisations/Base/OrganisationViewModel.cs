@@ -20,7 +20,7 @@
         [DisplayName("Business trading name")]
         public virtual string BusinessTradingName { get; set; }
 
-        public ExternalAddressData Address { get; set; } = new ExternalAddressData() { CountryId = UkCountryList.UkCountryId };
+        public ExternalAddressData Address { get; set; } = new ExternalAddressData() { CountryId = UkCountry.Ids.England };
 
         [StringLength(maximumLength: EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, MinimumLength = 7, ErrorMessage = "The Company registration number should be 7 to 15 characters long")]
         [Display(Name = "Company registration number (CRN)")]

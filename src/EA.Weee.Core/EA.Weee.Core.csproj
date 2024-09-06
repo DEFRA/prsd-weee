@@ -300,12 +300,15 @@
     <Compile Include="Configuration\DiagnosticSourceDisposer.cs" />
     <Compile Include="Configuration\Logging\LoggerConfig.cs" />
     <Compile Include="Constants\DateTimeConstants.cs" />
-    <Compile Include="Constants\UkCountryList.cs" />
+    <Compile Include="Constants\UkCountry.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\IJsonSerialiser.cs" />
     <Compile Include="Helpers\JsonSerializer.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Organisations\NotRequiredPartnerModel.cs" />
+    <Compile Include="Organisations\PartnerModel.cs" />
+    <Compile Include="Organisations\PartnerViewModel.cs" />
     <Compile Include="Organisations\RepresentingCompanyAddressData.cs" />
     <Compile Include="Organisations\Base\OrganisationViewModel.cs" />
     <Compile Include="Organisations\ExternalAddressData.cs" />
