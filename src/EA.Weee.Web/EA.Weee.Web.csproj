@@ -1045,6 +1045,7 @@
     <Content Include="Views\Shared\EditorTemplates\RegisteredCompanyDetailsViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SoleTraderDetailsViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PartnershipDetailsViewModel.cshtml" />
+    <Content Include="Views\OrganisationRegistration\PartnerDetails.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
