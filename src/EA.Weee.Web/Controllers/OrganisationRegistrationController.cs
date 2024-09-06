@@ -360,11 +360,11 @@
                         CompaniesRegistrationNumber = result.RegistrationNumber,
                         Address = new ExternalAddressData
                         {
-                            //Address1 = result.RegisteredOffice.BuildingNumber,
-                            //Address2 = result.RegisteredOffice.Street,
-                            //TownOrCity = result.RegisteredOffice.Town,
-                            //Postcode = result.RegisteredOffice.Postcode,
-                            CountryId = Guid.NewGuid() //result.RegisteredOffice.Country.Name
+                            Address1 = result.Organisation.RegisteredOffice.BuildingNumber,
+                            Address2 = result.Organisation.RegisteredOffice.Street,
+                            TownOrCity = result.Organisation.RegisteredOffice.Town,
+                            Postcode = result.Organisation.RegisteredOffice.Postcode,
+                            CountryId = Guid.NewGuid() //result.Organisation.RegisteredOffice.Country.Name
                         },
                     };
                 }
