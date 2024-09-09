@@ -57,6 +57,7 @@
                 .With(r => r.Quarter, new Quarter(2019, QuarterType.Q1))
                 .With(r => r.QuarterWindow, QuarterWindowTestHelper.GetDefaultQuarterWindow())
                 .Create();
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>._)).Returns(@return);
 
             SystemTime.Freeze(new DateTime(2019, 04, 01));
