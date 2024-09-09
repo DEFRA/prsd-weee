@@ -9,7 +9,10 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public Guid? DirectRegistrantId { get; set; }
+
         public Guid? SchemeId { get; set; }
+
         public bool ShowLinkToCreateOrJoinOrganisation { get; set; }
 
         [Required(ErrorMessage = "Select the activity you would like to do")]

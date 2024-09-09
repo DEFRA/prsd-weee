@@ -411,7 +411,6 @@
     <Compile Include="Areas\Admin\ViewModels\VoidNoteViewModelBaseTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidEvidenceNoteViewModelTests.cs" />
     <Compile Include="Areas\Admin\ViewModels\VoidTransferNoteViewModelTests.cs" />
-    <Compile Include="Areas\Producer\Controllers\ProducerControllerUnitTests.cs" />
     <Compile Include="Areas\Producer\Filters\AuthoriseRouteClaimsAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttributeTests.cs" />
@@ -431,7 +430,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOptionTests.cs" />
-    <Compile Include="Controllers\ProducerControllerTests.cs" />
+    <Compile Include="Areas\Producer\Controllers\ProducerControllerTests.cs" />
     <Compile Include="Service\OrganisationTransactionServiceUnitTests.cs" />
     <Compile Include="ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBaseTests.cs" />

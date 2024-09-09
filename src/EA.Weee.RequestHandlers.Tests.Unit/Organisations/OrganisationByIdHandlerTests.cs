@@ -254,6 +254,7 @@
             var result = await handler.HandleAsync(message);
 
             result.HasDirectRegistrant.Should().BeFalse();
+            result.DirectRegistrantId.Should().BeNull();
         }
 
         [Fact]
@@ -277,6 +278,7 @@
             var result = await handler.HandleAsync(message);
 
             result.HasDirectRegistrant.Should().BeTrue();
+            result.DirectRegistrantId.Should().Be(directRegistrant.Id);
         }
 
         private Organisation GetOrganisationWithId(Guid id)
