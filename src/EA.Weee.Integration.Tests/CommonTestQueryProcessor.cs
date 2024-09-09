@@ -46,9 +46,9 @@
             return dbContext.DirectRegistrants.First(c => c.OrganisationId.Equals(organisationId));
         }
 
-        public IEnumerable<AdditionalCompanyDetails> GetAdditionalDetailsByRegistrantId(Guid directRegistrantId)
+        public List<AdditionalCompanyDetails> GetAdditionalDetailsByRegistrantId(Guid directRegistrantId)
         {
-            return dbContext.AdditionalCompanyDetails.Where(c => c.DirectRegistrantId.Equals(directRegistrantId));
+            return dbContext.AdditionalCompanyDetails.Where(c => c.DirectRegistrant.Id.Equals(directRegistrantId)).ToList();
         }
 
         public Note GetEvidenceNoteById(Guid id)
