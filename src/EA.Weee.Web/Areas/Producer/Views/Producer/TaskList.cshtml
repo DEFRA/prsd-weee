@@ -1,12 +1,62 @@
-﻿@{
-    var @title = "Task List";
-    ViewBag.Title = @title + " - GOV.UK";
-}
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.TaskListViewModel
 
+@{
+    const string title = "Application for EEE Producer Registration";
+    ViewBag.Title = title + " - GOV.UK";
+}
 @section full_main_content
 {
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>
 
+    <p>
+        There are 5 steps required to complete the registration. <br /><br />
+
+        After completing a step, you can click on the <span class="govuk-!-font-weight-bold">
+            Return to tasklist button
+        </span>,
+        to return to this page. When you have completed all the steps within the application and provided all the documents required,
+        click the submit button below. <br /><br />
+
+        The charge for registering is <span class="govuk-!-font-weight-bold">£30.00.</span>
+    </p>
+
+    <ul class="govuk-task-list">
+        @foreach (var task in Model.ProducerTaskModels)
+        {
+            <li class="govuk-task-list__item govuk-task-list__item--with-link">
+                <div class="govuk-task-list__name-and-hint">
+                    <a class="govuk-link govuk-task-list__link" href="#" aria-describedby="company-details-1-status">
+                        @task.TaskLinkName
+                    </a>
+                </div>
+
+                @if (@task.Complete)
+                {
+                    <div class="govuk-task-list__status" id="company-details-1-status">
+                        Completed
+                    </div>
+                }
+                else
+                {
+                    <div class="govuk-task-list__status" id="company-details-2-status">
+                        <strong class="govuk-tag govuk-tag--blue">
+                            Incomplete
+                        </strong>
+                    </div>
+                }
+
+            </li>
+        }
+    </ul>
+
+    @using (Html.BeginForm("CheckAnswers", "Producer", FormMethod.Get, null))
+    {
+        @Html.AntiForgeryToken()
+        <div class="govuk-form-group">
+            @(this.WeeeGds().Submit("Check your answers"))
+        </div>
+    }
 }
