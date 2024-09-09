@@ -8,7 +8,7 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
-    using EA.Weee.Api.Client.Models;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Extensions;
@@ -35,6 +35,7 @@
         private readonly IOrganisationTransactionService transactionService;
         private readonly IWeeeCache cache;
         private readonly int maxPartnersAllowed = 10;
+        private readonly Func<ICompaniesHouseClient> companiesHouseClient;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
@@ -375,12 +376,12 @@
                             Address2 = result.Organisation.RegisteredOffice.Street,
                             TownOrCity = result.Organisation.RegisteredOffice.Town,
                             Postcode = result.Organisation.RegisteredOffice.Postcode,
-                            CountryId = Guid.NewGuid() //result.Organisation.RegisteredOffice.Country.Name
+                            Countries = countries,
+                            CountryId = UkCountry.GetIdByName(result.Organisation.RegisteredOffice.Country.Name)
                         },
                     };
+                    return View(CastToSpecificViewModel(orgModel.OrganisationType, orgModel));
                 }
-
-                return View(CastToSpecificViewModel(model.OrganisationType, model));
             }
             else
             {
