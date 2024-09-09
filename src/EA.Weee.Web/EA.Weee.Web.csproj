@@ -614,6 +614,7 @@
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerSubmissionController.cs" />
     <Compile Include="Areas\Producer\ProducerAreaRegistration.cs" />
+    <Compile Include="Constant\ProducerSubmissionConstant.cs" />
     <Compile Include="Constant\ValidationKeyConstants.cs" />
     <Compile Include="Controllers\HoldingController.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
@@ -1061,6 +1062,8 @@
     <Content Include="Content\govuk_frontend\components\task-list\_task-list.scss" />
     <Content Include="Areas\Producer\Views\Producer\CheckAnswers.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnerDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

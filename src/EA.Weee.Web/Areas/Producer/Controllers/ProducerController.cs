@@ -69,7 +69,7 @@
                 }
             };
 
-            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, BreadCrumbConstant.AatfReturn);
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
             return View(model);
         }
@@ -85,6 +85,20 @@
         public ActionResult CheckAnswers()
         {
             return View("CheckAnswers");
+        }
+
+        [SmallProducerSubmissionContext]
+        [HttpGet]
+        public ActionResult Submissions()
+        {
+            return View();
+        }
+
+        [SmallProducerSubmissionContext]
+        [HttpGet]
+        public ActionResult OrganisationDetails()
+        {
+            return View();
         }
     }
 }

@@ -4,9 +4,13 @@
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared.Paging;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Areas.Producer.Controllers;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
@@ -17,9 +21,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Routing;
-    using EA.Weee.Core.AatfReturn;
-
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
@@ -62,9 +63,11 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                var activities = await GetActivities(pcsId);
+                var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
 
-                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId };
+                var activities = await GetActivities(pcsId, organisationDetails);
+
+                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId, DirectRegistrantId = organisationDetails.DirectRegistrantId};
 
                 await SetBreadcrumb(pcsId, null, false);
 
@@ -74,76 +77,78 @@
             }
         }
 
-        internal async Task<List<string>> GetActivities(Guid pcsId)
+        internal async Task<List<string>> GetActivities(Guid pcsId, OrganisationData organisationDetails)
         {
-            using (var client = apiClient())
+            var organisationOverview = await GetOrganisationOverview(pcsId);
+
+            var isBalancingScheme = organisationDetails.IsBalancingScheme;
+
+            var activities = new List<string>();
+
+            if (isBalancingScheme && configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
             {
-                var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-
-                var organisationOverview = await GetOrganisationOverview(pcsId);
-
-                var isBalancingScheme = organisationDetails.IsBalancingScheme;
-
-                var activities = new List<string>();
-
-                if (isBalancingScheme && configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
-                {
-                    activities.Add(PcsAction.ManagePBSEvidenceNotes);
-                }
-                else
-                {
-                    if (organisationDetails.SchemeId != null)
-                    {
-                        if (configurationService.CurrentConfiguration.EnablePCSEvidenceNotes)
-                        {
-                            activities.Add(PcsAction.ManagePcsEvidenceNotes);
-                        }
-
-                        activities.Add(PcsAction.ManagePcsMembers);
-
-                        if (configurationService.CurrentConfiguration.EnableDataReturns)
-                        {
-                            activities.Add(PcsAction.ManageEeeWeeeData);
-                        }
-
-                        activities.Add(PcsAction.ManagePcsContactDetails);
-                    }
-
-                    var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
-                    if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
-                    {
-                        activities.Add(PcsAction.ViewSubmissionHistory);
-                    }
-
-                    if (configurationService.CurrentConfiguration.EnableAATFEvidenceNotes && organisationDetails.HasAatfs)
-                    {
-                        activities.Add(PcsAction.ManageAatfEvidenceNotes);
-                    }
-                    if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
-                    {
-                        activities.Add(PcsAction.ManageAatfReturns);
-                        activities.Add(PcsAction.ManageAatfContactDetails);
-                    }
-
-                    if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
-                    {
-                        activities.Add(PcsAction.ManageAeReturns);
-                        activities.Add(PcsAction.ManageAeContactDetails);
-                    }
-
-                    if (!isBalancingScheme && !organisationDetails.HasDirectRegistrant)
-                    {
-                        activities.Add(PcsAction.ViewOrganisationDetails);
-                    }
-                }
-
-                if (organisationOverview.HasMultipleOrganisationUsers)
-                {
-                    activities.Add(PcsAction.ManageOrganisationUsers);
-                }
-
-                return activities;
+                activities.Add(PcsAction.ManagePBSEvidenceNotes);
             }
+            else
+            {
+                if (organisationDetails.SchemeId != null)
+                {
+                    if (configurationService.CurrentConfiguration.EnablePCSEvidenceNotes)
+                    {
+                        activities.Add(PcsAction.ManagePcsEvidenceNotes);
+                    }
+
+                    activities.Add(PcsAction.ManagePcsMembers);
+
+                    if (configurationService.CurrentConfiguration.EnableDataReturns)
+                    {
+                        activities.Add(PcsAction.ManageEeeWeeeData);
+                    }
+
+                    activities.Add(PcsAction.ManagePcsContactDetails);
+                }
+
+                var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
+                {
+                    activities.Add(PcsAction.ViewSubmissionHistory);
+                }
+
+                if (configurationService.CurrentConfiguration.EnableAATFEvidenceNotes && organisationDetails.HasAatfs)
+                {
+                    activities.Add(PcsAction.ManageAatfEvidenceNotes);
+                }
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
+                {
+                    activities.Add(PcsAction.ManageAatfReturns);
+                    activities.Add(PcsAction.ManageAatfContactDetails);
+                }
+
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
+                {
+                    activities.Add(PcsAction.ManageAeReturns);
+                    activities.Add(PcsAction.ManageAeContactDetails);
+                }
+
+                if (!isBalancingScheme && !organisationDetails.HasDirectRegistrant)
+                {
+                    activities.Add(PcsAction.ViewOrganisationDetails);
+                }
+
+                if (organisationDetails.HasDirectRegistrant)
+                {
+                    activities.Add(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+                    activities.Add(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+                    activities.Add(ProducerSubmissionConstant.ViewOrganisation);
+                }
+            }
+
+            if (organisationOverview.HasMultipleOrganisationUsers)
+            {
+                activities.Add(PcsAction.ManageOrganisationUsers);
+            }
+
+            return activities;
         }
 
         private async Task<OrganisationOverview> GetOrganisationOverview(Guid organisationId)
@@ -263,12 +268,32 @@
                 {
                     return this.RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId = viewModel.OrganisationId});
                 }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission)
+                {
+                    return this.RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)
+                {
+                    return this.RedirectToAction(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.ViewOrganisation)
+                {
+                    return this.RedirectToAction(nameof(ProducerController.OrganisationDetails), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                }
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null, false);
-            viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
-            await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
-            return this.View(viewModel);
+            using (var client = apiClient())
+            {
+                var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
+
+                viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId, organisationDetails);
+                await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
+                return this.View(viewModel);
+            }
         }
 
         [HttpGet]
