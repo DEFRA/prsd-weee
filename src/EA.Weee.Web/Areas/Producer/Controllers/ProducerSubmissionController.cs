@@ -36,6 +36,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditOrganisationDetails(EditOrganisationDetailsViewModel model)
         {
             if (ModelState.IsValid)
