@@ -11,10 +11,21 @@
 <h2 class="govuk-heading-s">Enter the details of the organisation applying to register.</h2>
 @Html.Gds().HintParagraph("If you don't have a Company Registration Number, leave this field blank")
 
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+<div class="govuk-form-group @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
     @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
     @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-    @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
+    @if (Model.LookupFound == false && Model.Action == "Find Company")
+    {
+        <div class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Company details could not be found
+        </div>
+    }
+    <div style="display: flex; align-items: center; gap: 10px;">
+        @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, style = "width: 250px;" })
+
+        <input type="submit" value="Find Company" name="action" class="govuk-button govuk-button--secondary" style="margin: 0;" />
+    </div>
 </div>
+
 
 
