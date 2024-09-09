@@ -36,6 +36,7 @@
         private readonly IWeeeCache cache;
         private readonly int maxPartnersAllowed = 10;
         private readonly Func<ICompaniesHouseClient> companiesHouseClient;
+        private readonly ConfigurationService configurationService;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
@@ -45,6 +46,7 @@
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
+            this.configurationService = configurationService;
             this.transactionService = transactionService;
             this.cache = cache;
             this.companiesHouseClient = companiesHouseClient;
@@ -353,7 +355,7 @@
             {
                 using (var client = companiesHouseClient())
                 {
-                    var result = await client.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies",
+                    var result = await client.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
                         model.CompaniesRegistrationNumber);
 
                     var countries = await GetCountries();
@@ -370,6 +372,7 @@
                     {
                         CompanyName = result.Organisation.Name,
                         CompaniesRegistrationNumber = result.RegistrationNumber,
+                        LookupFound = true,
                         Address = new ExternalAddressData
                         {
                             Address1 = result.Organisation.RegisteredOffice.BuildingNumber,
