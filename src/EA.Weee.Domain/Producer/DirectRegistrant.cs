@@ -12,7 +12,7 @@
         {
         }
 
-        public DirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative authorisedRepresentative)
+        public DirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative authorisedRepresentative, List<AdditionalCompanyDetails> additionalCompanyDetails)
         {
             Condition.Requires(organisation).IsNotNull();
 
@@ -21,6 +21,7 @@
             Contact = contactDetails;
             Address = contactAddress;
             AuthorisedRepresentative = authorisedRepresentative;
+            AdditionalCompanyDetails = additionalCompanyDetails;
         }
 
         public DirectRegistrant(Organisation organisation)
@@ -56,9 +57,11 @@
 
         public virtual ICollection<DirectProducerSubmission> DirectProducerSubmissions { get; set; }
 
-        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative representingCompany)
+        public virtual ICollection<AdditionalCompanyDetails> AdditionalCompanyDetails { get; set; }
+
+        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative representingCompany, List<AdditionalCompanyDetails> additionalCompanyDetails)
         {
-            return new DirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
+            return new DirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails);
         }
     }
 }
