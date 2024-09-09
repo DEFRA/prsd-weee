@@ -5,6 +5,8 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Api.Client.Models;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
@@ -31,6 +33,7 @@
         private readonly IOrganisationTransactionService transactionService;
         private readonly OrganisationRegistrationController controller;
         private readonly IWeeeCache weeeCache;
+        private readonly ICompaniesHouseClient companiesHouseClient;
 
         public OrganisationRegistrationControllerTests()
         {
@@ -39,13 +42,15 @@
             weeeClient = A.Fake<IWeeeClient>();
             organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             weeeCache = A.Fake<IWeeeCache>();
+            companiesHouseClient = A.Fake<ICompaniesHouseClient>();
 
             controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -71,7 +76,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
@@ -106,7 +112,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
@@ -134,7 +141,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService, 
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -161,7 +169,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var activeUsers = new List<OrganisationUserData>()
             {
@@ -196,7 +205,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var activeUsers = new List<OrganisationUserData>();
 
@@ -253,7 +263,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
@@ -285,7 +296,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
@@ -313,7 +325,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
@@ -341,7 +354,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -372,7 +386,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -396,7 +411,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -420,7 +436,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -447,7 +464,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
@@ -474,7 +492,8 @@
                 organisationSearcher,
                 configurationService, 
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchViewModel
             {
@@ -517,7 +536,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -558,7 +578,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -591,7 +612,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new SearchResultsViewModel()
             {
@@ -621,7 +643,8 @@
                organisationSearcher,
                configurationService,
                transactionService,
-               weeeCache);
+               weeeCache,
+                () => companiesHouseClient);
 
             var result = await controller.Type() as ViewResult;
 
@@ -671,7 +694,8 @@
                organisationSearcher,
                configurationService,
                transactionService,
-               weeeCache);
+               weeeCache,
+                () => companiesHouseClient);
 
             var viewModel = new OrganisationTypeViewModel()
             {
@@ -699,7 +723,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             const string searchText = "company";
 
@@ -747,7 +772,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             controller.ModelState.AddModelError("error", "error");
 
@@ -782,7 +808,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()
@@ -816,7 +843,8 @@
                 organisationSearcher,
                 configurationService,
                 transactionService,
-                weeeCache);
+                weeeCache,
+                () => companiesHouseClient);
 
             // Act
             var result = controller.FiveTonnesOrMore();
@@ -1020,6 +1048,68 @@
             resultModel.OrganisationType.Should().Be(organisationType);
 
             A.CallTo(() => transactionService.CaptureData(A<string>._, A<OrganisationViewModel>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForInvalidCompaniesHouseApiCall()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.Action = "Find Company";
+
+            var countries = new List<CountryData> { new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" } };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = null;
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber))
+           .Returns(defraCompaniesHouseApiModel);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            var resultViewModel = result.Model as OrganisationViewModel;
+            resultViewModel.LookupFound.Should().BeFalse();
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForValidCompaniesHouseApiCall()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.Action = "Find Company";
+
+            var countries = new List<CountryData> { new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" } };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
+            defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber))
+           .Returns(defraCompaniesHouseApiModel);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            var resultViewModel = result.Model as OrganisationViewModel;
+            var countryName = UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.LookupFound.Should().BeTrue();
+            resultViewModel.CompanyName.Should().Be(defraCompaniesHouseApiModel.Organisation.Name);
+            resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.Organisation.RegistrationNumber);
+            resultViewModel.Address.Address1.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
+            resultViewModel.Address.Address2.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street);
+            resultViewModel.Address.TownOrCity.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
+            resultViewModel.Address.Postcode.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode);
+            resultViewModel.Address.CountryId.Should().Be(countryName);
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
