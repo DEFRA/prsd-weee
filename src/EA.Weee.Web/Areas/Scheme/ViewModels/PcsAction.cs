@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
+    using IdentityServer3.Core.Configuration;
+
     public static class PcsAction
     {
         // PCS menu items
@@ -22,5 +24,14 @@
         // these belong to both PCS and AATF menus
         public static string ManageOrganisationUsers = "Manage organisation users";
         public static string ViewOrganisationDetails = "View organisation details";
+
+        // direct registrant options
+        public static string HistoricProducerRegistrationSubmission = "Historic Producer Registration Submission";
+
+        public static string NewContinueProducerRegistrationSubmission =
+            "New/Continue Producer Registration Submission";
+
+        public static string ManageOrganisation = "Manage Organisation";
+        public static string ManageContactDetails = "Manage Contact Details";
     }
 }
