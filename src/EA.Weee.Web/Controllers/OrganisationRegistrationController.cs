@@ -697,5 +697,26 @@
 
             return target;
         }
+
+        [HttpGet]
+        public ActionResult SoleTraderDetails()
+        {
+            var model = new SoleTraderViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SoleTraderDetails(SoleTraderViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+        }
     }
 }
