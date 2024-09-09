@@ -5,9 +5,11 @@
     using EA.Weee.Api.Client.Serlializer;
     using Serilog;
     using System;
+    using System.IdentityModel;
+    using System.Net;
+    using System.Net.Http;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
-    using System.Web;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
@@ -43,18 +45,22 @@
         public async Task<DefraCompaniesHouseApiModel> GetCompanyDetailsAsync(string endpoint, string companyReference)
         {
             Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
-            Condition.Requires(companyReference).IsNotNullOrWhiteSpace("Company reference cannot be null or whitespace.");
-
-            var response = await retryPolicy.ExecuteAsync(() =>
-                httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
 
             try
             {
-                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var response = await retryPolicy.ExecuteAsync(() =>
+                    httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest || response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    throw new BadRequestException($"Companies house bad request");
+                }
+
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return jsonSerializer.Deserialize<DefraCompaniesHouseApiModel>(content);
             }
-            catch (HttpException)
+            catch (BadRequestException)
             {
                 return null;
             }
