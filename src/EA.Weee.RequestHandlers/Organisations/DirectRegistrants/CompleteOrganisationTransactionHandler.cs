@@ -75,11 +75,11 @@
                     var contactDetails = CreateContact(organisationTransactionData);
                     var contactAddress = await CreateContactAddress(organisationTransactionData);
 
-                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
-                    directRegistrant = await genericDataAccess.Add(directRegistrant);
+                    var additionalCompanyDetails = CreateAdditionalCompanyDetails(organisationTransactionData);
 
-                    //var additionalDetails = CreateAdditionalCompanyDetails(organisationTransactionData, directRegistrant);
-                    //await genericDataAccess.AddMany(additionalDetails);
+                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails);
+                    
+                    directRegistrant = await genericDataAccess.Add(directRegistrant);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
 
@@ -142,18 +142,15 @@
             return contactDetails;
         }
 
-        private IEnumerable<AdditionalCompanyDetails> CreateAdditionalCompanyDetails(
-            OrganisationTransactionData organisationTransactionData, 
-            DirectRegistrant directRegistrant)
+        private List<AdditionalCompanyDetails> CreateAdditionalCompanyDetails(
+            OrganisationTransactionData organisationTransactionData)
         {
-            var additionalCompanyDetails = organisationTransactionData.PartnerModels
-                .Select(x => new AdditionalCompanyDetails
+            var additionalCompanyDetails = organisationTransactionData.PartnerModels?.Select(x => new AdditionalCompanyDetails
                 {
                     FirstName = x.FirstName,
                     LastName = x.LastName,
-                    DirectRegistrant = directRegistrant,
-                    Type = OrganisationAdditionalDetailsType.RegisteredCompany,
-                });
+                    Type = OrganisationAdditionalDetailsType.Partner,
+                }).ToList();
 
             return additionalCompanyDetails;
         }
