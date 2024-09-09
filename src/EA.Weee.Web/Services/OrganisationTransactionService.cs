@@ -50,6 +50,9 @@
                     case ContactDetailsViewModel contactDetailsViewModel:
                         transaction.ContactDetailsViewModel = contactDetailsViewModel;
                         break;
+                    case PartnerViewModel partnerViewModel:
+                        transaction.PartnerModels = partnerViewModel.AllParterModels;
+                        break;
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));

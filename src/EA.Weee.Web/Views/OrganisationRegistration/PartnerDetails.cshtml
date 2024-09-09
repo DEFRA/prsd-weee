@@ -1,0 +1,88 @@
+﻿@using EA.Weee.Core.DataStandards
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Core.Organisations.PartnerViewModel
+@{
+    const string title = "Partner details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.Type())))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p class="govuk-hint">
+        Provide details of all partners.<br />
+
+        If you have a partner that is a company and not an individual, put the contact name in the 'First name' box and the company name in the 'Last name' box
+    </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        for (var i = 0; i < Model.PartnerModels.Count(); i++)
+        {
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PartnerModels[i].FirstName)">
+                @Html.Gds().LabelFor(m => m.PartnerModels[i].FirstName)
+                @Html.Gds().ValidationMessageFor(m => m.PartnerModels[i].FirstName)
+                @Html.Gds().TextBoxFor(m => m.PartnerModels[i].FirstName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+            </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PartnerModels[i].LastName)">
+                @Html.Gds().LabelFor(m => m.PartnerModels[i].LastName)
+                @Html.Gds().ValidationMessageFor(m => m.PartnerModels[i].LastName)
+                @Html.Gds().TextBoxFor(m => m.PartnerModels[i].LastName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+            </div>
+
+            if (i < Model.PartnerModels.Count() - 1)
+            {
+                <div class="border-divider govuk-!-margin-bottom-4 govuk-!-width-two-thirds"></div>
+            }
+        }
+
+        if (Model.NotRequiredPartnerModels.Any())
+        {
+            <div class="border-divider govuk-!-margin-bottom-4 govuk-!-width-two-thirds"></div>
+        }
+
+        for (var i = 0; i < Model.NotRequiredPartnerModels.Count(); i++)
+        {
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.NotRequiredPartnerModels[i].FirstName)">
+                @Html.Gds().LabelFor(m => m.NotRequiredPartnerModels[i].FirstName)
+                @Html.Gds().ValidationMessageFor(m => m.NotRequiredPartnerModels[i].FirstName)
+                @Html.Gds().TextBoxFor(m => m.NotRequiredPartnerModels[i].FirstName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+            </div>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.NotRequiredPartnerModels[i].LastName)">
+                @Html.Gds().LabelFor(m => m.NotRequiredPartnerModels[i].LastName)
+                @Html.Gds().ValidationMessageFor(m => m.NotRequiredPartnerModels[i].LastName)
+                @Html.Gds().TextBoxFor(m => m.NotRequiredPartnerModels[i].LastName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+            </div>
+
+            if (i < Model.NotRequiredPartnerModels.Count() - 1)
+            {
+                <div class="border-divider govuk-!-margin-bottom-4 govuk-!-width-two-thirds"></div>
+            }
+        }
+
+        <div class="govuk-!-margin-top-3">
+            <div class="govuk-button-group">
+                @(this.WeeeGds().Submit("Continue", new { name = "Action", value = "Submit", @class = "govuk-!-width-one-quarter" }))
+
+                <div>
+                    @(this.WeeeGds().Button("Add another partner", new { name = "Action", value = "AnotherPartner", @class = "govuk-!-width-one-quarter" }, secondaryButton: true))
+                </div>
+            </div>
+        </div>
+
+        @(this.WeeeGds().BackToTopLink())
+    }
+}
