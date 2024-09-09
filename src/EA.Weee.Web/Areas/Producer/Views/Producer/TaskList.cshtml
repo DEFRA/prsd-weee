@@ -1,11 +1,12 @@
 ﻿@{
-    ViewBag.Title = "Task List - GOV.UK";
+    var @title = "Task List";
+    ViewBag.Title = @title + " - GOV.UK";
 }
 
 @section full_main_content
 {
     <header class="hgroup">
-        <h1 class="govuk-heading-l">Application for EEE Producer Registration</h1>
+        <h1 class="govuk-heading-l">@title</h1>
     </header>
 
 }
