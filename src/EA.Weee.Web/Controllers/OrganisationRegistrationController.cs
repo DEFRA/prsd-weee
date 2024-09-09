@@ -287,7 +287,7 @@
                 switch (organisationType)
                 {
                     case ExternalOrganisationType.SoleTrader:
-                        return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                        return RedirectToAction(nameof(SoleTraderDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
                     case ExternalOrganisationType.Partnership:
                         return RedirectToAction(nameof(PartnerDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
                     case ExternalOrganisationType.RegisteredCompany:
@@ -699,9 +699,15 @@
         }
 
         [HttpGet]
-        public ActionResult SoleTraderDetails()
+        public async Task<ActionResult> SoleTraderDetails()
         {
-            var model = new SoleTraderViewModel();
+            SoleTraderViewModel model = null;
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            model = existingTransaction?.SoleTraderViewModel ??
+                    new SoleTraderViewModel();
+
             return View(model);
         }
 
