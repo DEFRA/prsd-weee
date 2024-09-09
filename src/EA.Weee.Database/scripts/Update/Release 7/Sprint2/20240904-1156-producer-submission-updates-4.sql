@@ -1,13 +1,23 @@
+
+
 IF OBJECT_ID('[Producer].[DirectProducerSubmissionHistory]', 'U') IS NOT NULL
 BEGIN
+    DROP INDEX [IX_DirectProducerSubmission_CurrentSubmissionId] ON [Producer].[DirectProducerSubmission]
+    ALTER TABLE [Producer].[DirectProducerSubmission] DROP CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission];
+    ALTER TABLE [Producer].[DirectProducerSubmission] DROP COLUMN [CurrentSubmissionId];
     DROP TABLE [Producer].[DirectProducerSubmissionHistory]
 END
+
 CREATE TABLE [Producer].[DirectProducerSubmissionHistory] (
     [Id] [uniqueidentifier] NOT NULL,
     [DirectProducerSubmissionId] [uniqueidentifier] NOT NULL,
+    [BusinessAddressId] [uniqueidentifier] NULL,
+    [ContactId] [uniqueidentifier] NULL,
+    [ContactAddressId] [uniqueidentifier] NULL,
     [ServiceOfNoticeAddressId] [uniqueidentifier] NULL,
     [AppropriateSignatoryId] [uniqueidentifier] NULL,
     [EeeOutputReturnVersionId] [uniqueidentifier] NULL,
+    [BrandNameId] [uniqueidentifier] NULL,
     [CompanyName] [nvarchar](256) NULL,
     [TradingName] [nvarchar](256) NULL,
     [CompanyRegistrationNumber] [nvarchar](15) NULL,
@@ -22,9 +32,26 @@ CREATE TABLE [Producer].[DirectProducerSubmissionHistory] (
     WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY];
 
+
 ALTER TABLE [Producer].[DirectProducerSubmissionHistory] WITH CHECK ADD CONSTRAINT [FK_DirectProducerSubmissionHistory_DirectProducerSubmission] 
     FOREIGN KEY([DirectProducerSubmissionId]) REFERENCES [Producer].[DirectProducerSubmission] ([Id]);
 CREATE NONCLUSTERED INDEX [IX_DirectProducerSubmissionHistory_DirectProducerSubmissionId] ON [Producer].[DirectProducerSubmissionHistory] ([DirectProducerSubmissionId]);
+
+ALTER TABLE [Producer].[DirectProducerSubmissionHistory] WITH CHECK ADD CONSTRAINT [FK_DirectProducerSubmissionHistory_BrandName] 
+    FOREIGN KEY([BrandNameId]) REFERENCES [Producer].[BrandName] ([Id]);
+CREATE NONCLUSTERED INDEX [IX_DirectProducerSubmissionHistory_BrandNameId] ON [Producer].[DirectProducerSubmissionHistory] ([BrandNameId]);
+
+ALTER TABLE [Producer].[DirectProducerSubmissionHistory] WITH CHECK ADD CONSTRAINT [FK_DirectProducerSubmissionHistory_Contact] 
+    FOREIGN KEY([ContactId]) REFERENCES [Organisation].[Contact] ([Id]);
+CREATE NONCLUSTERED INDEX [IX_DirectProducerSubmissionHistory_ContactId] ON [Producer].[DirectProducerSubmissionHistory] ([ContactId]);
+
+ALTER TABLE [Producer].[DirectProducerSubmissionHistory] WITH CHECK ADD CONSTRAINT [FK_DirectProducerSubmissionHistory_Address] 
+    FOREIGN KEY([ContactAddressId]) REFERENCES [Organisation].[Address] ([Id]);
+CREATE NONCLUSTERED INDEX [IX_DirectProducerSubmissionHistory_ContactAddressId] ON [Producer].[DirectProducerSubmissionHistory] ([ContactAddressId]);
+
+ALTER TABLE [Producer].[DirectProducerSubmissionHistory] WITH CHECK ADD CONSTRAINT [FK_DirectProducerSubmissionHistory_BusinessAddress] 
+    FOREIGN KEY([BusinessAddressId]) REFERENCES [Organisation].[Address] ([Id]);
+CREATE NONCLUSTERED INDEX [IX_DirectProducerSubmissionHistory_BusinessAddressId] ON [Producer].[DirectProducerSubmissionHistory] ([BusinessAddressId]);
 
 ALTER TABLE [Producer].[DirectProducerSubmissionHistory] WITH CHECK ADD CONSTRAINT [FK_DirectProducerSubmissionHistory_ServiceOfNoticeAddress] 
     FOREIGN KEY([ServiceOfNoticeAddressId]) REFERENCES [Organisation].[Address] ([Id]);

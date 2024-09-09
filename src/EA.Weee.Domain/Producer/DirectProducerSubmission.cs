@@ -1,11 +1,16 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using CuttingEdge.Conditions;
     using EA.Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
 
     public class DirectProducerSubmission : Entity
     {
+        public DirectProducerSubmission()
+        {
+        }
+
         public virtual Guid DirectRegistrantId { get; set; }
 
         public virtual Guid RegisteredProducerId { get; set; }
@@ -25,5 +30,25 @@
         public virtual DirectProducerSubmissionHistory CurrentSubmission { get; set; }
 
         public virtual ICollection<DirectProducerSubmissionHistory> SubmissionHistory { get; set; }
+
+        public void SetCurrentSubmission(DirectProducerSubmissionHistory submission)
+        {
+            Condition.Requires(submission).IsNotNull();
+
+            CurrentSubmission = submission;
+        }
+
+        public DirectProducerSubmission(DirectRegistrant directRegistrant, 
+            RegisteredProducer registeredProducer, 
+            int complianceYear)
+        {
+            Condition.Requires(directRegistrant).IsNotNull();
+            Condition.Requires(registeredProducer).IsNotNull();
+            Condition.Ensures(complianceYear).IsGreaterThan(0);
+
+            DirectRegistrant = directRegistrant;
+            RegisteredProducer = registeredProducer;
+            ComplianceYear = complianceYear;
+        }
     }
 }

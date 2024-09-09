@@ -22,6 +22,16 @@
             Removed = false;
         }
 
+        public RegisteredProducer(
+            string producerRegistrationNumber,
+            int complianceYear)
+        {
+            ProducerRegistrationNumber = producerRegistrationNumber;
+            ComplianceYear = complianceYear;
+            CurrentSubmission = null;
+            Removed = false;
+        }
+
         /// <summary>
         /// This constructor should only be used by Entity Framework.
         /// </summary>
