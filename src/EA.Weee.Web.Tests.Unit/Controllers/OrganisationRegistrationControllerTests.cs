@@ -1063,7 +1063,7 @@
 
             DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = null;
 
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber))
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber))
            .Returns(defraCompaniesHouseApiModel);
 
             // Act
@@ -1074,7 +1074,7 @@
             resultViewModel.LookupFound.Should().BeFalse();
             resultViewModel.Should().NotBeNull();
             resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1091,7 +1091,7 @@
             var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
             defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
 
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber))
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber))
            .Returns(defraCompaniesHouseApiModel);
 
             // Act
@@ -1101,6 +1101,7 @@
             var resultViewModel = result.Model as OrganisationViewModel;
             var countryName = UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
             resultViewModel.Should().NotBeNull();
+            resultViewModel.LookupFound.Should().BeTrue();
             resultViewModel.CompanyName.Should().Be(defraCompaniesHouseApiModel.Organisation.Name);
             resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.RegistrationNumber);
             resultViewModel.Address.Address1.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
@@ -1108,7 +1109,7 @@
             resultViewModel.Address.TownOrCity.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
             resultViewModel.Address.Postcode.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode);
             resultViewModel.Address.CountryId.Should().Be(countryName);
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
