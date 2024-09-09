@@ -27,6 +27,8 @@
 
         public List<PartnerModel> PartnerModels { get; set; }
 
+        public SoleTraderViewModel SoleTraderViewModel { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (OrganisationViewModel == null)

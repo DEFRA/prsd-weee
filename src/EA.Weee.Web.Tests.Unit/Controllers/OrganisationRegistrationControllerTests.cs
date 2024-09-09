@@ -1435,5 +1435,42 @@
 
             var model = result.Model as PartnerViewModel;
         }
+
+        [Fact]
+        public async Task SoleTraderDetails_Get_ReturnsView()
+        {
+            // Act
+            var result = await controller.SoleTraderDetails() as ViewResult;
+
+            // Assert
+            var model = result.Model as SoleTraderViewModel;
+
+            result.Should().NotBeNull();
+            model.Should().NotBeNull();
+            model.FirstName.Should().BeNull();
+            model.LastName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Post_CallsCaptureDataAndRedirectsToOrganisationDetails()
+        {
+            // Arrange
+            var model = TestFixture.Create<SoleTraderViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.SoleTraderViewModel, model).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.SoleTraderDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("OrganisationDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+        }
     }
 }
