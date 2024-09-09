@@ -362,47 +362,48 @@
 
                     model.Address.Countries = countries;
 
-                    if (result == null || result.RegistrationNumber == null)
+                    ModelState.Clear();
+
+                    if (result == null)
                     {
                         model.LookupFound = false;
+                        
                         return View(CastToSpecificViewModel(model.OrganisationType, model));
                     }
 
                     var orgModel = new OrganisationViewModel()
                     {
                         CompanyName = result.Organisation.Name,
-                        CompaniesRegistrationNumber = result.RegistrationNumber,
+                        CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
                         LookupFound = true,
                         Address = new ExternalAddressData
                         {
-                            Address1 = result.Organisation.RegisteredOffice.BuildingNumber,
-                            Address2 = result.Organisation.RegisteredOffice.Street,
-                            TownOrCity = result.Organisation.RegisteredOffice.Town,
-                            Postcode = result.Organisation.RegisteredOffice.Postcode,
+                            Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                            Address2 = result.Organisation?.RegisteredOffice?.Street,
+                            TownOrCity = result.Organisation?.RegisteredOffice?.Town,
+                            Postcode = result.Organisation?.RegisteredOffice?.Postcode,
                             Countries = countries,
-                            CountryId = UkCountry.GetIdByName(result.Organisation.RegisteredOffice.Country.Name)
+                            CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
                         },
                     };
                     return View(CastToSpecificViewModel(orgModel.OrganisationType, orgModel));
                 }
             }
-            else
+
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    var countries = await GetCountries();
+                var countries = await GetCountries();
 
-                    model.Address.Countries = countries;
+                model.Address.Countries = countries;
 
-                    ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
+                ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
 
-                    return View(CastToSpecificViewModel(model.OrganisationType, model));
-                }
-
-                await transactionService.CaptureData(User.GetAccessToken(), model);
-
-                return await CheckAuthorisedRepresentitiveAndRedirect();
+                return View(CastToSpecificViewModel(model.OrganisationType, model));
             }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return await CheckAuthorisedRepresentitiveAndRedirect();
         }
 
         [HttpGet]
