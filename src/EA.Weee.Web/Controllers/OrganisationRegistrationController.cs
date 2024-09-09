@@ -360,7 +360,7 @@
 
                     model.Address.Countries = countries;
 
-                    if (result == null)
+                    if (result == null || result.RegistrationNumber == null)
                     {
                         model.LookupFound = false;
                         return View(CastToSpecificViewModel(model.OrganisationType, model));

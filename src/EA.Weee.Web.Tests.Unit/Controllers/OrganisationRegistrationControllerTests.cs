@@ -1051,7 +1051,7 @@
         }
 
         [Fact]
-        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForValidCompaniesHouseApiCall()
+        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForInvalidCompaniesHouseApiCall()
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
@@ -1061,8 +1061,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
-            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
-            defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
+            DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = null;
 
             A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber))
            .Returns(defraCompaniesHouseApiModel);
@@ -1072,20 +1071,13 @@
 
             // Assert
             var resultViewModel = result.Model as OrganisationViewModel;
-            var countryName = UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
+            resultViewModel.LookupFound.Should().BeFalse();
             resultViewModel.Should().NotBeNull();
-            resultViewModel.CompanyName.Should().Be(defraCompaniesHouseApiModel.Organisation.Name);
-            resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.RegistrationNumber);
-            resultViewModel.Address.Address1.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
-            resultViewModel.Address.Address2.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street);
-            resultViewModel.Address.TownOrCity.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
-            resultViewModel.Address.Postcode.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode);
-            resultViewModel.Address.CountryId.Should().Be(countryName);
             A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
-        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForInvalidCompaniesHouseApiCall()
+        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForValidCompaniesHouseApiCall()
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
