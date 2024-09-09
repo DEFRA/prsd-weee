@@ -88,9 +88,11 @@
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
+    <Compile Include="Organisations\DirectRegistrant\GetSmallProducerSubmission.cs" />
     <Compile Include="Organisations\DirectRegistrant\DeleteUserOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\CompleteOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddUpdateOrganisationTransaction.cs" />
+    <Compile Include="Organisations\DirectRegistrant\AddSmallProducerSubmission.cs" />
     <Compile Include="Organisations\DirectRegistrant\GetUserOrganisationTransaction.cs" />
     <Compile Include="Shared\GetObligationSummaryRequest.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequest.cs" />
