@@ -1059,6 +1059,7 @@
     <Content Include="Content\govuk_frontend\components\task-list\template.njk" />
     <Content Include="Content\govuk_frontend\components\task-list\_index.scss" />
     <Content Include="Content\govuk_frontend\components\task-list\_task-list.scss" />
+    <Content Include="Areas\Producer\Views\Producer\CheckAnswers.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

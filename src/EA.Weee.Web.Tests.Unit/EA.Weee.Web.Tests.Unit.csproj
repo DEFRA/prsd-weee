@@ -430,6 +430,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOptionTests.cs" />
+    <Compile Include="Controllers\ProducerControllerTests.cs" />
     <Compile Include="Service\OrganisationTransactionServiceUnitTests.cs" />
     <Compile Include="ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBaseTests.cs" />
