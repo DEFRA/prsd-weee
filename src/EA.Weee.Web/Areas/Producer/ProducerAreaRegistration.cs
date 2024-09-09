@@ -13,7 +13,7 @@
         {
             context.MapLowercaseDashedRoute(
                 name: "Producer_default",
-                url: "Producer/{organisationId}/{directRegistrantId}/{controller}/{action}",
+                url: "Producer/{directRegistrantId}/{controller}/{action}",
                 defaults: new { action = nameof(ProducerController.Index), controller = typeof(ProducerController).GetControllerName(), area = "Producer" },
                 namespaces: new[] { typeof(ProducerController).Namespace });
 

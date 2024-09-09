@@ -578,6 +578,8 @@
     <Compile Include="Areas\Producer\Controllers\ProducerController.cs" />
     <Compile Include="Areas\Producer\Filters\AuthorizeRouteClaimsAttribute.cs" />
     <Compile Include="Areas\Producer\Filters\SmallProducerSubmissionContextAttribute.cs" />
+    <Compile Include="Areas\Producer\ViewModels\ProducerTaskModel.cs" />
+    <Compile Include="Areas\Producer\ViewModels\TaskListViewModel.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttribute.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckNoteAttributeBase.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttribute.cs" />
@@ -612,6 +614,7 @@
     <Compile Include="Areas\Shared\ToViewModels\ObligationEvidenceSummaryDataToViewModel.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerSubmissionController.cs" />
     <Compile Include="Areas\Producer\ProducerAreaRegistration.cs" />
+    <Compile Include="Constant\ProducerSubmissionConstant.cs" />
     <Compile Include="Constant\ValidationKeyConstants.cs" />
     <Compile Include="Controllers\HoldingController.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
@@ -1018,6 +1021,8 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
+    <Content Include="Content\govuk_frontend\components\task-list\accessibility.puppeteer.test.mjs" />
+    <Content Include="Content\govuk_frontend\components\task-list\template.jsdom.test.js" />
     <Content Include="Scripts\jquery-ui-1-13.3.js" />
     <Content Include="Scripts\jquery-ui-1.13.3.min.js" />
     <Content Include="Views\Shared\EditorTemplates\RecipientFiltersViewModel.cshtml" />
@@ -1049,6 +1054,13 @@
     <Content Include="Areas\Producer\Views\Producer\TaskList.cshtml" />
     <Content Include="Areas\Producer\Views\web.config" />
     <Content Include="Areas\Producer\Views\_ViewStart.cshtml" />
+    <Content Include="Content\govuk_frontend\components\task-list\macro.njk" />
+    <Content Include="Content\govuk_frontend\components\task-list\README.md" />
+    <Content Include="Content\govuk_frontend\components\task-list\task-list.yaml" />
+    <Content Include="Content\govuk_frontend\components\task-list\template.njk" />
+    <Content Include="Content\govuk_frontend\components\task-list\_index.scss" />
+    <Content Include="Content\govuk_frontend\components\task-list\_task-list.scss" />
+    <Content Include="Areas\Producer\Views\Producer\CheckAnswers.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnerDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
