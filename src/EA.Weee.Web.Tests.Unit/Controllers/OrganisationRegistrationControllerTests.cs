@@ -1102,7 +1102,7 @@
             var countryName = UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
             resultViewModel.Should().NotBeNull();
             resultViewModel.CompanyName.Should().Be(defraCompaniesHouseApiModel.Organisation.Name);
-            resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.RegistrationNumber);
+            resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.Organisation.RegistrationNumber);
             resultViewModel.Address.Address1.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
             resultViewModel.Address.Address2.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street);
             resultViewModel.Address.TownOrCity.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
