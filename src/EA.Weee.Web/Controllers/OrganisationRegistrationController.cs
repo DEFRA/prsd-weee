@@ -33,6 +33,7 @@
         private readonly int maximumSearchResults;
         private readonly IOrganisationTransactionService transactionService;
         private readonly IWeeeCache cache;
+        private readonly int maxPartnersAllowed = 10;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
@@ -281,6 +282,17 @@
                 var routeValues = new { organisationType = model.SelectedValue };
 
                 await transactionService.CaptureData(User.GetAccessToken(), model);
+
+                var organisationType = model.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
+                switch (organisationType)
+                {
+                    case ExternalOrganisationType.SoleTrader:
+                        return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                    case ExternalOrganisationType.Partnership:
+                        return RedirectToAction(nameof(PartnerDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                    case ExternalOrganisationType.RegisteredCompany:
+                        return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                }
 
                 return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
             }
@@ -622,6 +634,46 @@
                 default:
                     return MapToViewModel<RegisteredCompanyDetailsViewModel>(model);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PartnerDetails(PartnerViewModel model, string action)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.PartnerModels.Count > maxPartnersAllowed)
+            {
+                ModelState.AddModelError("PartnerModels", $"A maximum of {maxPartnersAllowed} partners are allowed");
+
+                return View(model);
+            }
+
+            if (action == "AnotherPartner")
+            {
+                model.NotRequiredPartnerModels.Add(new NotRequiredPartnerModel() { });
+
+                return View(model);
+            }
+
+            model.NotRequiredPartnerModels = model.NotRequiredPartnerModels.Where(x => x != null).ToList();
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public ActionResult PartnerDetails()
+        {
+            var vm = new PartnerViewModel();
+            vm.PartnerModels.Add(new PartnerModel());
+            vm.PartnerModels.Add(new PartnerModel());
+
+            return View(vm);
         }
 
         private T MapToViewModel<T>(OrganisationViewModel source) where T : OrganisationViewModel, new()
