@@ -1050,6 +1050,8 @@
     <Content Include="Areas\Producer\Views\web.config" />
     <Content Include="Areas\Producer\Views\_ViewStart.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnerDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

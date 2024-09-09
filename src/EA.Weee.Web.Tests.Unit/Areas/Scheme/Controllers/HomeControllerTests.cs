@@ -4,9 +4,11 @@
     using Core.Organisations;
     using Core.Scheme;
     using Core.Users;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -16,9 +18,6 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-
-    using EA.Weee.Core.AatfReturn;
-
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -29,17 +28,11 @@
     using Weee.Requests.Users;
     using Weee.Requests.Users.GetManageableOrganisationUsers;
     using Xunit;
-
     using AddressData = EA.Weee.Core.Shared.AddressData;
 
     public class HomeControllerTests
     {
-        private readonly IWeeeClient weeeClient;
-
-        public HomeControllerTests()
-        {
-            weeeClient = A.Fake<IWeeeClient>();
-        }
+        private readonly IWeeeClient weeeClient = A.Fake<IWeeeClient>();
 
         [Fact]
         public async Task GetChooseActivity_ChecksForValidityOfOrganisation()
@@ -85,7 +78,7 @@
                    HasMultipleOrganisationUsers = false
                });
 
-            var result = await HomeController().GetActivities(A.Dummy<Guid>());
+            var result = await HomeController().GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.DoesNotContain(PcsAction.ManageOrganisationUsers, result);
         }
@@ -99,7 +92,7 @@
                    HasMultipleOrganisationUsers = true
                });
 
-            var result = await HomeController().GetActivities(A.Dummy<Guid>());
+            var result = await HomeController().GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.Contains(PcsAction.ManageOrganisationUsers, result);
         }
@@ -107,7 +100,7 @@
         [Fact]
         public async Task GetActivities_WithEnableDataReturnsConfigurationSetToFalse_DoesNotReturnManageEeeWeeeDataOption()
         {
-            var result = await HomeController(false).GetActivities(A.Dummy<Guid>());
+            var result = await HomeController(false).GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.DoesNotContain(PcsAction.ManageEeeWeeeData, result);
         }
@@ -115,13 +108,15 @@
         [Fact]
         public async Task GetActivities_WithEnableDataReturnsConfigurationSetToTrue_ReturnsManageEeeWeeeDataOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = Guid.NewGuid()
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = Guid.NewGuid(),
+            };
 
-            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageEeeWeeeData, result);
         }
@@ -129,13 +124,15 @@
         [Fact]
         public async Task GetActivities_WithEnableDataReturnsConfigurationSetToTrueAndEnabledPBSIsSetToFalse_ReturnsManageEeeWeeeDataOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = Guid.NewGuid()
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = Guid.NewGuid()
+            };
 
-            var result = await HomeControllerSetupForEnableDataReturnsAndEnablePBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForEnableDataReturnsAndEnablePBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageEeeWeeeData, result);
         }
@@ -143,19 +140,16 @@
         [Fact]
         public async Task GetActivities_WithEnableDataReturnsConfigurationSetToTrueAndEnablePBSEvidenceNotesIsSetToTrue_ShouldNotReturnManageEeeWeeeDataOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = Guid.NewGuid()
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = Guid.NewGuid(),
+                IsBalancingScheme = true
+            };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = true
-                });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForEnableDataReturnsAndEnablePBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForEnableDataReturnsAndEnablePBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManageEeeWeeeData, result);
         }
@@ -163,7 +157,7 @@
         [Fact]
         public async Task GetActivities_WithBalancingSchemeSetToDefaultValueOfFalse_ReturnsViewOrganisationDetailsOptions()
         {
-            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.Contains(PcsAction.ViewOrganisationDetails, result);
         }
@@ -171,13 +165,15 @@
         [Fact]
         public async Task GetActivities_WithEnabledPBSEvidenceNotesSetToTrueAndIsPBS_ShouldNotReturnViewOrganisationDetailsOptions()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = true
-                });
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = true
+            };
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ViewOrganisationDetails, result);
         }
@@ -185,13 +181,15 @@
         [Fact]
         public async Task GetActivities_WithEnabledPBSEvidenceNotesSetToTrueAndIsNotPBS_ShouldReturnViewOrganisationDetailsOptions()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = false
-                });
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = false
+            };
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ViewOrganisationDetails, result);
         }
@@ -199,13 +197,15 @@
         [Fact]
         public async Task GetActivities_HasScheme_ReturnsManagePcsMembersAndManageContactDetailsOptions()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = Guid.NewGuid()
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = Guid.NewGuid()
+            };
 
-            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManagePcsMembers, result);
             Assert.Contains(PcsAction.ManagePcsContactDetails, result);
@@ -214,34 +214,33 @@
         [Fact]
         public async Task GetActivities_HasSchemeAndIsBalancingSchemeIsDefaultSetToFalse_ReturnsManagePcsMembersAndManageContactDetailsOptions()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = Guid.NewGuid()
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = Guid.NewGuid()
+            };
 
-            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManagePcsMembers, result);
             Assert.Contains(PcsAction.ManagePcsContactDetails, result);
         }
 
         [Fact]
-        public async Task GetActivities_HasSchemeAndEnabledPBSEvidenceNotesIsTrue_ShoulNotReturnManagePcsMembersAndManageContactDetailsOptions()
+        public async Task GetActivities_HasSchemeAndEnabledPBSEvidenceNotesIsTrue_ShouldNotReturnManagePcsMembersAndManageContactDetailsOptions()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = Guid.NewGuid(),
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = Guid.NewGuid(),
+                IsBalancingScheme = true
+            };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = true
-                });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManagePcsMembers, result);
             Assert.DoesNotContain(PcsAction.ManagePcsContactDetails, result);
@@ -250,13 +249,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAnAatf_ReturnsAATFReturnOption()
         {
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true
+            };
+            
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageAatfReturns, result);
         }
@@ -264,13 +265,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasNoAatf_DoesNotReturnsAATFReturnOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = false
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = false
+            };
 
-            var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFReturns(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManageAatfReturns, result);
         }
@@ -278,7 +281,7 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToFalse_DoesNotReturnsAATFReturnOption()
         {
-            var result = await HomeControllerSetupForAATFReturns(false).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFReturns(false).GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.DoesNotContain(PcsAction.ManageAatfReturns, result);
         }
@@ -286,26 +289,30 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAnAatfAndEnabledPBSIsSetToFalse_ReturnsAATFReturnOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true
+            };
 
-            var result = await HomeControllerSetupForAATFReturnsAndPBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFReturnsAndPBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageAatfReturns, result);
         }
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAnAatfAndEnabledPBSIsSetToFalse_ReturnsManageAatfContactDetailsOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true
+            };
 
-            var result = await HomeControllerSetupForAATFReturnsAndPBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFReturnsAndPBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageAatfContactDetails, result);
         }
@@ -313,13 +320,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAesAndEnabledPBSIsSetToFalse_ReturnsManageAeReturnsOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAes = true
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAes = true
+            };
 
-            var result = await HomeControllerSetupForAATFReturnsAndPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFReturnsAndPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageAeReturns, result);
         }
@@ -327,13 +336,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAesAndEnablePBSEvidenceNotesIsSetToTrue_ShouldNotReturnManageAeReturnsOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAes = true
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAes = true
+            };
 
-            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManageAeReturns, result);
         }
@@ -341,13 +352,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAesAndEnabledPBSEvidenceNotesIsSetToFalse_ShouldNotReturnManageAeContactDetailsOption()
         {
+            var organisationData = new OrganisationData
+            {
+                HasAes = true
+            };
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAes = true
-              });
+              .Returns(organisationData);
             
-            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManageAeContactDetails, result);
         }
@@ -355,13 +368,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAnAatfAndEnablePBSEvidenceNotesIsSetToTrue_ShouldNotReturnAATFReturnOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true
+            };
 
-            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManageAatfReturns, result);
         }
@@ -369,13 +384,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFReturnsConfigurationSetToTrueAndOrganisationHasAnAatfAndEnablePBSEvidenceNotesIsSetToTrue_ShouldNotReturnAatfContactDetailsOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true
+            };
 
-            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManageAatfContactDetails, result);
         }
@@ -390,7 +407,7 @@
                    HasDataReturnSubmissions = false
                });
 
-            var result = await HomeController().GetActivities(A.Dummy<Guid>());
+            var result = await HomeController().GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.DoesNotContain(PcsAction.ViewSubmissionHistory, result);
         }
@@ -405,7 +422,7 @@
                    HasDataReturnSubmissions = false
                });
 
-            var result = await HomeController().GetActivities(A.Dummy<Guid>());
+            var result = await HomeController().GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.Contains(PcsAction.ViewSubmissionHistory, result);
         }
@@ -420,7 +437,7 @@
                    HasDataReturnSubmissions = true
                });
 
-            var result = await HomeController(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeController(true).GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.Contains(PcsAction.ViewSubmissionHistory, result);
         }
@@ -435,13 +452,15 @@
                    HasDataReturnSubmissions = false
                });
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-            .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = false
-                });
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = false
+            };
 
-            var result = await HomeController().GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            .Returns(organisationData);
+
+            var result = await HomeController().GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ViewSubmissionHistory, result);
         }
@@ -456,13 +475,14 @@
                    HasDataReturnSubmissions = false
                });
 
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = true
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = true
-                });
+                .Returns(organisationData);
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ViewSubmissionHistory, result);
         }
@@ -477,7 +497,7 @@
                    HasDataReturnSubmissions = true
                });
 
-            var result = await HomeController(false).GetActivities(A.Dummy<Guid>());
+            var result = await HomeController(false).GetActivities(A.Dummy<Guid>(), A.Dummy<OrganisationData>());
 
             Assert.DoesNotContain(PcsAction.ViewSubmissionHistory, result);
         }
@@ -485,13 +505,14 @@
         [Fact]
         public async Task GetActivities_WithIsBalancingSchemeSetToTrueAndEnablePBSEvidenceNotesSetToTrue_ShouldReturnsManagePBSEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = true
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  IsBalancingScheme = true
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManagePBSEvidenceNotes, result);
         }
@@ -499,13 +520,14 @@
         [Fact]
         public async Task GetActivities_WithIsBalancingSchemeSetToTrueAndEnablePBSEvidenceNotesSetToFalse_ShouldNotReturnsManagePBSEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = true
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  IsBalancingScheme = true
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPBSEvidenceNotes(false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManagePBSEvidenceNotes, result);
         }
@@ -513,13 +535,14 @@
         [Fact]
         public async Task GetActivities_WithIsBalancingSchemeSetToFalseAndEnablePBSEvidenceNotesSetToTrue_ShouldNotReturnsManagePBSEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = false
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  IsBalancingScheme = false
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPBSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManagePBSEvidenceNotes, result);
         }
@@ -527,13 +550,14 @@
         [Fact]
         public async Task GetActivities_WithIsBalancingSchemeSetToFalseAndEnablePBSEvidenceNotesSetToFalse_ShouldNotReturnsManagePBSEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = false
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  IsBalancingScheme = false
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForPBSEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPBSEvidenceNotes(false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.DoesNotContain(PcsAction.ManagePBSEvidenceNotes, result);
         }
@@ -547,13 +571,13 @@
                    HasMultipleOrganisationUsers = true
                });
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-            .Returns(new OrganisationData
+            var organisationData = new OrganisationData
             {
                 IsBalancingScheme = true
-            });
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
 
-            var result = await HomeController().GetActivities(A.Dummy<Guid>());
+            var result = await HomeController().GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageOrganisationUsers, result);
         }
@@ -567,13 +591,13 @@
                    HasMultipleOrganisationUsers = true
                });
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-            .Returns(new OrganisationData
+            var organisationData = new OrganisationData
             {
                 IsBalancingScheme = false
-            });
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
 
-            var result = await HomeController().GetActivities(A.Dummy<Guid>());
+            var result = await HomeController().GetActivities(A.Dummy<Guid>(), organisationData);
 
             Assert.Contains(PcsAction.ManageOrganisationUsers, result);
         }
@@ -1072,13 +1096,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatf_ReturnsAATFEvidenceNotesOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true
+            };
 
-            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().Contain(PcsAction.ManageAatfEvidenceNotes);
         }
@@ -1086,13 +1112,14 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToTrueAndOrganisationHasNoAatf_DoesNotReturnAATFEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = false
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = false
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
         }
@@ -1100,13 +1127,14 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToFalseAndOrganisationHasAnAatf_DoesNotReturnsAATFEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
         }
@@ -1114,13 +1142,14 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToFalseAndOrganisationHasNoAatf_DoesNotReturnAATFEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = false
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = false
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotes(false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
         }
@@ -1128,14 +1157,15 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatfAndIsBalancingSchemeIsSetToFalse_ReturnsAATFEvidenceNotesOption()
         {
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true,
+                IsBalancingScheme = false
+            };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true,
-                  IsBalancingScheme = false
-              });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().Contain(PcsAction.ManageAatfEvidenceNotes);
         }
@@ -1143,19 +1173,16 @@
         [Fact]
         public async Task GetActivities_WithEnableAATFEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatfAndEnabledPBSEvidenceNotesIsSetToTrue_ShouldNotReturnAATFEvidenceNotesOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  HasAatfs = true,
-              });
+            var organisationData = new OrganisationData
+            {
+                HasAatfs = true,
+                IsBalancingScheme = true
+            };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = true
-                });
+              .Returns(organisationData);
 
-            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().NotContain(PcsAction.ManageAatfEvidenceNotes);
         }
@@ -1859,13 +1886,15 @@
         [Fact]
         public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatf_ReturnsPCSEvidenceNotesOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = A.Dummy<Guid>()
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = A.Dummy<Guid>()
+            };
 
-            var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().Contain(PcsAction.ManagePcsEvidenceNotes);
         }
@@ -1873,13 +1902,12 @@
         [Fact]
         public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasNoSchemeId_DoesNotReturnPCSEvidenceNotesOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = null
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = null
+            };
 
-            var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPCSEvidenceNotes(true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
         }
@@ -1929,13 +1957,15 @@
         [Fact]
         public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatfAndEnablePBSEvidenceNotesIsSetToFalse_ReturnsPCSEvidenceNotesOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = A.Dummy<Guid>(),
-              });
+            var organisationData = new OrganisationData
+            {
+                SchemeId = A.Dummy<Guid>(),
+            };
 
-            var result = await HomeControllerSetupForPCSEvidenceNotesAndPBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+              .Returns(organisationData);
+
+            var result = await HomeControllerSetupForPCSEvidenceNotesAndPBSEvidenceNotes(true, false).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().Contain(PcsAction.ManagePcsEvidenceNotes);
         }
@@ -1943,19 +1973,15 @@
         [Fact]
         public async Task GetActivities_WithEnablePCSEvidenceNotesConfigurationSetToTrueAndOrganisationHasAnAatfAndEnabledPBSIsSetToTrue_ShouldNotReturnsPCSEvidenceNotesOption()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-              .Returns(new OrganisationData
-              {
-                  SchemeId = A.Dummy<Guid>()
-              });
+            var organisationData = new OrganisationData
+            {
+                IsBalancingScheme = true
+            };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    IsBalancingScheme = true
-                });
+                .Returns(organisationData);
 
-            var result = await HomeControllerSetupForPCSEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>());
+            var result = await HomeControllerSetupForPCSEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>(), organisationData);
 
             result.Should().NotContain(PcsAction.ManagePcsEvidenceNotes);
         }
@@ -2014,6 +2040,103 @@
 
             var model = result.Model as ChooseActivityViewModel;
             model.PossibleValues.Should().NotContain(PcsAction.ManagePBSEvidenceNotes);
+        }
+
+        [Fact]
+        public async Task ChooseActivityGET_ShouldIncludeDirectRegistrantId()
+        {
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var organisationData = new OrganisationData { DirectRegistrantId = directRegistrantId };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
+
+            var result = await HomeController().ChooseActivity(organisationId) as ViewResult;
+
+            var model = result.Model as ChooseActivityViewModel;
+            Assert.Equal(directRegistrantId, model.DirectRegistrantId);
+        }
+
+        [Fact]
+        public async Task GetActivities_WithDirectRegistrant_ShouldIncludeDirectRegistrantOptions()
+        {
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+
+            var organisationData = new OrganisationData { DirectRegistrantId = directRegistrantId };
+
+            var activities = await HomeController().GetActivities(organisationId, organisationData);
+
+            Assert.Contains(BreadCrumbConstant.HistoricProducerRegistrationSubmission, activities);
+            Assert.Contains(BreadCrumbConstant.NewContinueProducerRegistrationSubmission, activities);
+            Assert.Contains(BreadCrumbConstant.ViewOrganisation, activities);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_NewContinueProducerRegistration_ShouldRedirectToProducerTaskList()
+        {
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = BreadCrumbConstant.NewContinueProducerRegistrationSubmission,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var result = await HomeController().ChooseActivity(model) as RedirectToRouteResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("TaskList", result.RouteValues["action"]);
+            Assert.Equal("Producer", result.RouteValues["controller"]);
+            Assert.Equal("Producer", result.RouteValues["area"]);
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+            Assert.Equal(directRegistrantId, result.RouteValues["directRegistrantId"]);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_ShouldRedirectToProducerSubmissions()
+        {
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = BreadCrumbConstant.HistoricProducerRegistrationSubmission,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var result = await HomeController().ChooseActivity(model) as RedirectToRouteResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("Submissions", result.RouteValues["action"]);
+            Assert.Equal("Producer", result.RouteValues["controller"]);
+            Assert.Equal("Producer", result.RouteValues["area"]);
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+            Assert.Equal(directRegistrantId, result.RouteValues["directRegistrantId"]);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_ViewOrganisation_ShouldRedirectToProducerOrganisationDetails()
+        {
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = BreadCrumbConstant.ViewOrganisation,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var result = await HomeController().ChooseActivity(model) as RedirectToRouteResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("OrganisationDetails", result.RouteValues["action"]);
+            Assert.Equal("Producer", result.RouteValues["controller"]);
+            Assert.Equal("Producer", result.RouteValues["area"]);
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+            Assert.Equal(directRegistrantId, result.RouteValues["directRegistrantId"]);
         }
     }
 }
