@@ -135,6 +135,15 @@
                     {
                         activities.Add(PcsAction.ViewOrganisationDetails);
                     }
+
+                    if (organisationDetails.HasDirectRegistrant)
+                    {
+                        activities.Add(PcsAction.HistoricProducerRegistrationSubmission);
+                        activities.Add(PcsAction.NewContinueProducerRegistrationSubmission);
+                        activities.Add(PcsAction.ManageOrganisationUsers);
+                        activities.Add(PcsAction.ManageOrganisation);
+                        activities.Add(PcsAction.ManageContactDetails);
+                    }
                 }
 
                 if (organisationOverview.HasMultipleOrganisationUsers)
