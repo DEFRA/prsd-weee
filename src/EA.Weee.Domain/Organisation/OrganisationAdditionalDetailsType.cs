@@ -4,8 +4,8 @@
 
     public class OrganisationAdditionalDetailsType : Enumeration
     {
-        public static readonly OrganisationAdditionalDetailsType RegisteredCompany = new OrganisationAdditionalDetailsType(1, "Partner");
-        public static readonly OrganisationAdditionalDetailsType Partnership = new OrganisationAdditionalDetailsType(2, "Sole Trader");
+        public static readonly OrganisationAdditionalDetailsType Partner = new OrganisationAdditionalDetailsType(1, "Partner");
+        public static readonly OrganisationAdditionalDetailsType SoleTrader = new OrganisationAdditionalDetailsType(2, "Sole Trader");
 
         protected OrganisationAdditionalDetailsType()
         {

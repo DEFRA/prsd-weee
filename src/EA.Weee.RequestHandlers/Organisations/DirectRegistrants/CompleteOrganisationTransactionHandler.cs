@@ -75,11 +75,11 @@
                     var contactDetails = CreateContact(organisationTransactionData);
                     var contactAddress = await CreateContactAddress(organisationTransactionData);
 
-                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany);
-                    directRegistrant = await genericDataAccess.Add(directRegistrant);
+                    var test = CreateAdditionalCompanyDetails(organisationTransactionData);
 
-                    //var additionalDetails = CreateAdditionalCompanyDetails(organisationTransactionData, directRegistrant);
-                    //await genericDataAccess.AddMany(additionalDetails);
+                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, test.ToList());
+                    
+                    directRegistrant = await genericDataAccess.Add(directRegistrant);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
 
@@ -143,16 +143,14 @@
         }
 
         private IEnumerable<AdditionalCompanyDetails> CreateAdditionalCompanyDetails(
-            OrganisationTransactionData organisationTransactionData, 
-            DirectRegistrant directRegistrant)
+            OrganisationTransactionData organisationTransactionData)
         {
             var additionalCompanyDetails = organisationTransactionData.PartnerModels
                 .Select(x => new AdditionalCompanyDetails
                 {
                     FirstName = x.FirstName,
                     LastName = x.LastName,
-                    DirectRegistrant = directRegistrant,
-                    Type = OrganisationAdditionalDetailsType.RegisteredCompany,
+                    Type = OrganisationAdditionalDetailsType.Partner,
                 });
 
             return additionalCompanyDetails;
