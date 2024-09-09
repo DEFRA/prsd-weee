@@ -41,7 +41,7 @@
             if (filterContext.HttpContext.User.Identity is ClaimsIdentity claimsIdentity)
             {
                 if (claims.All(claimType =>
-                        claimsIdentity.HasClaim(c => c.Type == claimType && c.Value == routeId)))
+                        claimsIdentity.HasClaim(c => c.Type == claimType && string.Equals(c.Value, routeId, StringComparison.InvariantCultureIgnoreCase))))
                 {
                     return;
                 }

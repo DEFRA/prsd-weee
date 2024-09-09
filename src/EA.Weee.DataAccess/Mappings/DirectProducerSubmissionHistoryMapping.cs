@@ -29,6 +29,11 @@
                 .WithMany()
                 .HasForeignKey(e => e.AppropriateSignatoryId);
 
+            HasOptional(e => e.Contact).WithMany().HasForeignKey(e => e.ContactId);
+            HasOptional(e => e.BusinessAddress).WithMany().HasForeignKey(e => e.BusinessAddressId);
+            HasOptional(e => e.ContactAddress).WithMany().HasForeignKey(e => e.ContactAddressId);
+            HasOptional(e => e.BrandName).WithMany().HasForeignKey(e => e.BrandNameId);
+            
             //HasOptional(e => e.EeeOutputReturnVersion)
             //    .WithOptionalPrincipal()
             //    .Map(m => m.MapKey("EeeOutputReturnVersionId"));
