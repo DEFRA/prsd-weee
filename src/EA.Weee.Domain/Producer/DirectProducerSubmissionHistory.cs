@@ -27,9 +27,25 @@
 
         public virtual DirectProducerSubmission DirectProducerSubmission { get; set; }
 
+        public virtual Guid? ContactId { get; private set; }
+
+        public virtual Guid? BusinessAddressId { get; private set; }
+
+        public virtual Guid? ContactAddressId { get; private set; }
+
+        public virtual Guid? BrandNameId { get; private set; }
+
         public virtual Address ServiceOfNoticeAddress { get; set; }
 
         public virtual Contact AppropriateSignatory { get; set; }
+
+        public virtual Address ContactAddress { get; set; }
+
+        public virtual Contact Contact { get; set; }
+
+        public virtual Address BusinessAddress { get; set; }
+
+        public virtual BrandName BrandName { get; set; }
 
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
 
