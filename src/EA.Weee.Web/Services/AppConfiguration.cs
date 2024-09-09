@@ -106,5 +106,9 @@
 
         [DefaultValue(false)]
         public bool ProxyUseDefaultCredentials { get; set; }
+
+        public string CompaniesHousePassword { get; set; }
+
+        public string CompaniesHouseReferencePath { get; set; }
     }
 }
