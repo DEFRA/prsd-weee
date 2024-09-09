@@ -50,8 +50,6 @@
 
             try
             {
-                response.EnsureSuccessStatusCode();
-
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 return jsonSerializer.Deserialize<DefraCompaniesHouseApiModel>(content);
