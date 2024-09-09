@@ -5,6 +5,8 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Api.Client.Models;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Shared;
@@ -1046,6 +1048,74 @@
             resultModel.OrganisationType.Should().Be(organisationType);
 
             A.CallTo(() => transactionService.CaptureData(A<string>._, A<OrganisationViewModel>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForValidCompaniesHouseApiCall()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.Action = "Find Company";
+
+            var countries = new List<CountryData> { new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" } };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
+            defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber))
+           .Returns(defraCompaniesHouseApiModel);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            var resultViewModel = result.Model as OrganisationViewModel;
+            var countryName = UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().Be(defraCompaniesHouseApiModel.Organisation.Name);
+            resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.RegistrationNumber);
+            resultViewModel.Address.Address1.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
+            resultViewModel.Address.Address2.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street);
+            resultViewModel.Address.TownOrCity.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
+            resultViewModel.Address.Postcode.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode);
+            resultViewModel.Address.CountryId.Should().Be(countryName);
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_ReturnsCorrectDetailsForInvalidCompaniesHouseApiCall()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.Action = "Find Company";
+
+            var countries = new List<CountryData> { new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" } };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+                .Returns(countries);
+
+            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
+            defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber))
+           .Returns(defraCompaniesHouseApiModel);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            var resultViewModel = result.Model as OrganisationViewModel;
+            var countryName = UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.CompanyName.Should().Be(defraCompaniesHouseApiModel.Organisation.Name);
+            resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.RegistrationNumber);
+            resultViewModel.Address.Address1.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
+            resultViewModel.Address.Address2.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street);
+            resultViewModel.Address.TownOrCity.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
+            resultViewModel.Address.Postcode.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode);
+            resultViewModel.Address.CountryId.Should().Be(countryName);
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
