@@ -151,6 +151,12 @@
     <Compile Include="ICompaniesHouseClient.cs" />
     <Compile Include="IHttpClientWrapper.cs" />
     <Compile Include="IHttpClientWrapperFactory.cs" />
+    <Compile Include="Models\CompaniesHouseApiModel.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\DefraCompaniesHouseModel.cs" />
+    <Compile Include="Models\Organisation.cs" />
+    <Compile Include="Models\OrganisationData.cs" />
+    <Compile Include="Models\RegisteredOffice.cs" />
     <Compile Include="Polly\IRetryPolicyWrapper.cs" />
     <Compile Include="IWeeeClient.cs" />
     <Compile Include="Polly\PollyPolicies.cs" />
