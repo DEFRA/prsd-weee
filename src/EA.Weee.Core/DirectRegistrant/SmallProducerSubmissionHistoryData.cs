@@ -7,7 +7,7 @@
     {
         public int ComplianceYear { get; set; }
 
-        public bool OrganizationDetailsComplete { get; set; }
+        public bool OrganisationDetailsComplete { get; set; }
         public bool ContactDetailsComplete { get; set; }
         public bool ServiceOfNoticeComplete { get; set; }
         public bool RepresentingCompanyDetailsComplete { get; set; }
