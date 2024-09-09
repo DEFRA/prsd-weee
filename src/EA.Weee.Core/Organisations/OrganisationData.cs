@@ -34,7 +34,9 @@
 
         public bool HasAatfs { get; set; }
 
-        public bool HasDirectRegistrant { get; set; }
+        public bool HasDirectRegistrant => DirectRegistrantId.HasValue;
+
+        public Guid? DirectRegistrantId { get; set; }
 
         public bool HasAes { get; set; }
 

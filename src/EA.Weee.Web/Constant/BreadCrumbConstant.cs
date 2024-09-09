@@ -8,5 +8,10 @@
         public static string SchemeManageEvidence = "Manage PCS evidence notes";
         public static string ManageEvidenceNotesAdmin = "Manage evidence notes";
         public static string PbsManageEvidence = "Manage PBS evidence notes";
+
+        public static string HistoricProducerRegistrationSubmission = "Producer registration submissions";
+        public static string NewContinueProducerRegistrationSubmission =
+            "New/Continue producer registration submission";
+        public static string ViewOrganisation = "View organisation";
     }
 }
