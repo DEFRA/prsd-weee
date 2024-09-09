@@ -80,7 +80,7 @@
             {
                 OrganisationData = new OrganisationData
                 {
-                    Id = Guid.Empty
+                    Id = Guid.NewGuid()
                 },
                 CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
                 {
@@ -135,6 +135,8 @@
             Assert.IsType<TaskListViewModel>(model);
 
             model.Should().BeEquivalentTo(expectedModel);
+            ((TaskListViewModel)model).OrganisationId.Should()
+                .Be(controller.SmallProducerSubmissionData.OrganisationData.Id);
         }
 
         [Fact]
