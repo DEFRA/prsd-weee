@@ -39,6 +39,7 @@
 
             var model = new TaskListViewModel()
             {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ProducerTaskModels = new List<ProducerTaskModel>
                 {
                     new ProducerTaskModel 

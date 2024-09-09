@@ -54,7 +54,7 @@
                 var jsonSerializer = cc.Resolve<IJsonSerializer>();
                 var logger = cc.Resolve<ILogger>();
 
-                string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\Boomi-WEE-TST.pfx";
+                string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\" + config.CompaniesCertificateName;
                 X509Certificate2 certificate = new X509Certificate2(filePath, config.CompaniesHousePassword);
                 HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
                 {
@@ -64,7 +64,7 @@
                     ByPassProxyOnLocal = config.ByPassProxyOnLocal
                 };
 
-                    return new CompaniesHouseClient("https://integration-tst.azure.defra.cloud/", httpClient, retryPolicy, 
+                    return new CompaniesHouseClient(config.CompaniesHouseBaseUrl, httpClient, retryPolicy, 
                         jsonSerializer, httpClientHandlerConfig, certificate, logger);
                 }).As<ICompaniesHouseClient>();
 
