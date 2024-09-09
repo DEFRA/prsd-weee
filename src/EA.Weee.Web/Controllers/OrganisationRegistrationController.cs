@@ -667,9 +667,19 @@
         }
 
         [HttpGet]
-        public ActionResult PartnerDetails()
+        public async Task<ActionResult> PartnerDetails()
         {
             var vm = new PartnerViewModel();
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.PartnerModels != null && existingTransaction.PartnerModels.Any())
+            {
+                vm.PartnerModels = existingTransaction.PartnerModels;
+
+                return View(vm);
+            }
+
             vm.PartnerModels.Add(new PartnerModel());
             vm.PartnerModels.Add(new PartnerModel());
 
