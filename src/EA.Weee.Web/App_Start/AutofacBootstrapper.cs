@@ -15,6 +15,7 @@
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
+    using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -105,6 +106,7 @@
             builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
             builder.RegisterType<FacilityViewModelBaseValidatorWrapper>().As<IFacilityViewModelBaseValidatorWrapper>();
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
+            builder.RegisterType<SmallProducerSubmissionContextAttribute>().PropertiesAutowired();
             builder.RegisterType<SessionService>().As<ISessionService>();
             builder.RegisterType<HttpContextService>().As<IHttpContextService>();
             builder.RegisterType<TransferEvidenceNoteRequestCreator>().As<ITransferEvidenceRequestCreator>();
