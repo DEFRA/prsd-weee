@@ -1331,12 +1331,12 @@
         }
 
         [Fact]
-        public void PartnerDetails_Get_ReturnsViewWithPopulatedViewModel()
+        public async Task PartnerDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
 
             // Act
-            var result = controller.PartnerDetails() as ViewResult;
+            var result = (await controller.PartnerDetails()) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1345,6 +1345,35 @@
             model.Should().NotBeNull();
 
             model.PartnerModels.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Get_ReturnsViewWithSavedData()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                PartnerModels = new List<PartnerModel> 
+                {
+                    new PartnerModel{ FirstName = "x", LastName = "y"},
+                    new PartnerModel{ FirstName = "a", LastName = "b"},
+                    new PartnerModel{ FirstName = "c", LastName = "d"},
+                }
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = (await controller.PartnerDetails()) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            var model = result.Model as PartnerViewModel;
+            model.Should().NotBeNull();
+
+            model.PartnerModels.Should().BeEquivalentTo(organisationTransactionData.PartnerModels);
         }
 
         [Fact]
