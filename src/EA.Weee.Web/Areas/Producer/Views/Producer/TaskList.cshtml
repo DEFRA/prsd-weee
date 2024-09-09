@@ -1,4 +1,6 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.TaskListViewModel
 
 @{
@@ -28,7 +30,7 @@
         {
             <li class="govuk-task-list__item govuk-task-list__item--with-link">
                 <div class="govuk-task-list__name-and-hint">
-                    <a class="govuk-link govuk-task-list__link" href="#" aria-describedby="company-details-1-status">
+                    <a class="govuk-link govuk-task-list__link" href="@Url.Action(task.Action, typeof(ProducerSubmissionController).GetControllerName())" aria-describedby="@(task.TaskLinkName.ToLower().Replace(" ", "-") + "-status")">
                         @task.TaskLinkName
                     </a>
                 </div>

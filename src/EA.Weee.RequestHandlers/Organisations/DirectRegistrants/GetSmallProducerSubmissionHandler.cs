@@ -46,6 +46,9 @@
                 {
                     OrganisationData = organisation,
                     CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                    {
+                        OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue
+                    }
                 };
             }
 
