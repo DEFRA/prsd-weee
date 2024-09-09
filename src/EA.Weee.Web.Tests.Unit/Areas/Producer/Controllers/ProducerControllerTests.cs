@@ -95,6 +95,7 @@
 
             var expectedModel = new TaskListViewModel()
             {
+                OrganisationId = controller.SmallProducerSubmissionData.OrganisationData.Id,
                 ProducerTaskModels = new List<ProducerTaskModel>
                 {
                     new ProducerTaskModel
@@ -135,8 +136,6 @@
             Assert.IsType<TaskListViewModel>(model);
 
             model.Should().BeEquivalentTo(expectedModel);
-            ((TaskListViewModel)model).OrganisationId.Should()
-                .Be(controller.SmallProducerSubmissionData.OrganisationData.Id);
         }
 
         [Fact]
