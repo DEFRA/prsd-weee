@@ -1073,6 +1073,7 @@
             var resultViewModel = result.Model as OrganisationViewModel;
             resultViewModel.LookupFound.Should().BeFalse();
             resultViewModel.Should().NotBeNull();
+            resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync("ws/rest/DEFRA/v2.1/CompaniesHouse/companies", model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
