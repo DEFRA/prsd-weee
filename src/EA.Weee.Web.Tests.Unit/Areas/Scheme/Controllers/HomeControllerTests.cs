@@ -2068,9 +2068,9 @@
 
             var activities = await HomeController().GetActivities(organisationId, organisationData);
 
-            Assert.Contains(BreadCrumbConstant.HistoricProducerRegistrationSubmission, activities);
-            Assert.Contains(BreadCrumbConstant.NewContinueProducerRegistrationSubmission, activities);
-            Assert.Contains(BreadCrumbConstant.ViewOrganisation, activities);
+            Assert.Contains(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission, activities);
+            Assert.Contains(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission, activities);
+            Assert.Contains(ProducerSubmissionConstant.ViewOrganisation, activities);
         }
 
         [Fact]
@@ -2080,7 +2080,7 @@
             var directRegistrantId = Guid.NewGuid();
             var model = new ChooseActivityViewModel
             {
-                SelectedValue = BreadCrumbConstant.NewContinueProducerRegistrationSubmission,
+                SelectedValue = ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission,
                 OrganisationId = organisationId,
                 DirectRegistrantId = directRegistrantId
             };
@@ -2102,7 +2102,7 @@
             var directRegistrantId = Guid.NewGuid();
             var model = new ChooseActivityViewModel
             {
-                SelectedValue = BreadCrumbConstant.HistoricProducerRegistrationSubmission,
+                SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
                 OrganisationId = organisationId,
                 DirectRegistrantId = directRegistrantId
             };
@@ -2124,7 +2124,7 @@
             var directRegistrantId = Guid.NewGuid();
             var model = new ChooseActivityViewModel
             {
-                SelectedValue = BreadCrumbConstant.ViewOrganisation,
+                SelectedValue = ProducerSubmissionConstant.ViewOrganisation,
                 OrganisationId = organisationId,
                 DirectRegistrantId = directRegistrantId
             };

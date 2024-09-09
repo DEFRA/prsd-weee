@@ -137,9 +137,9 @@
 
                 if (organisationDetails.HasDirectRegistrant)
                 {
-                    activities.Add(BreadCrumbConstant.HistoricProducerRegistrationSubmission);
-                    activities.Add(BreadCrumbConstant.NewContinueProducerRegistrationSubmission);
-                    activities.Add(BreadCrumbConstant.ViewOrganisation);
+                    activities.Add(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+                    activities.Add(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+                    activities.Add(ProducerSubmissionConstant.ViewOrganisation);
                 }
             }
 
@@ -269,17 +269,17 @@
                     return this.RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId = viewModel.OrganisationId});
                 }
 
-                if (viewModel.SelectedValue == BreadCrumbConstant.NewContinueProducerRegistrationSubmission)
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission)
                 {
                     return this.RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
-                if (viewModel.SelectedValue == BreadCrumbConstant.HistoricProducerRegistrationSubmission)
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)
                 {
                     return this.RedirectToAction(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
-                if (viewModel.SelectedValue == BreadCrumbConstant.ViewOrganisation)
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.ViewOrganisation)
                 {
                     return this.RedirectToAction(nameof(ProducerController.OrganisationDetails), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
