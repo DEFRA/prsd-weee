@@ -183,6 +183,7 @@
     <Compile Include="SystemTimeTests.cs" />
     <Compile Include="Stubs\StubbedHttpPostedFile.cs" />
     <Compile Include="Validation\HttpPostedFileTypeAttributeTests.cs" />
+    <Compile Include="Validation\RequiredIfOtherValueNotNullAttributeTests.cs" />
     <Compile Include="Validation\RequiredIfAttributeTests.cs" />
     <Compile Include="Validation\TestResources.Designer.cs">
       <AutoGen>True</AutoGen>
