@@ -110,5 +110,9 @@
         public string CompaniesHousePassword { get; set; }
 
         public string CompaniesHouseReferencePath { get; set; }
+
+        public string CompaniesCertificateName { get; set; }
+
+        public string CompaniesHouseBaseUrl { get; set; }
     }
 }
