@@ -1,18 +1,23 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Mapping.ToViewModel
 {
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
+    using FakeItEasy;
     using FluentAssertions;
     using Xunit;
 
     public class EditOrganisationDetailsMapTests
     {
-        private readonly EditOrganisationDetailsMap mapper;
+        private readonly EditOrganisationDetailsMap map;
+        private readonly IMapper mapper;
 
         public EditOrganisationDetailsMapTests()
         {
-            mapper = new EditOrganisationDetailsMap();
+            mapper = A.Fake<IMapper>();
+
+            map = new EditOrganisationDetailsMap(mapper);
         }
 
         [Fact]
@@ -22,7 +27,7 @@
             var source = new SmallProducerSubmissionData();
 
             // Act
-            var result = mapper.Map(source);
+            var result = map.Map(source);
 
             // Assert
             result.Should().NotBeNull();
@@ -36,7 +41,7 @@
             SmallProducerSubmissionData source = null;
 
             // Act
-            var result = mapper.Map(source);
+            var result = map.Map(source);
 
             // Assert
             result.Should().NotBeNull();
