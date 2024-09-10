@@ -45,50 +45,50 @@
             }).As<IUserInfoClient>();
 
             // example registraction of external service
-            //builder.Register(c =>
-            //{
-            //    var cc = c.Resolve<IComponentContext>();
-            //    var config = cc.Resolve<IAppConfiguration>();
-            //    var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
-            //    var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
-            //    var jsonSerializer = cc.Resolve<IJsonSerializer>();
-            //    var logger = cc.Resolve<ILogger>();
+            builder.Register(c =>
+            {
+                var cc = c.Resolve<IComponentContext>();
+                var config = cc.Resolve<IAppConfiguration>();
+                var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
+                var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
+                var jsonSerializer = cc.Resolve<IJsonSerializer>();
+                var logger = cc.Resolve<ILogger>();
 
-            //    string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\.pfx";
-            //    X509Certificate2 certificate = new X509Certificate2(filePath, "");
-            //    HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
-            //    {
-            //        ProxyEnabled = config.ProxyEnabled,
-            //        ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
-            //        ProxyWebAddress = config.ProxyWebAddress,
-            //        ByPassProxyOnLocal = config.ByPassProxyOnLocal
-            //    };
+                string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\" + config.CompaniesCertificateName;
+                X509Certificate2 certificate = new X509Certificate2(filePath, config.CompaniesHousePassword);
+                HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
+                {
+                    ProxyEnabled = config.ProxyEnabled,
+                    ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
+                    ProxyWebAddress = config.ProxyWebAddress,
+                    ByPassProxyOnLocal = config.ByPassProxyOnLocal
+                };
 
-            //    return new CompaniesHouseClient("https://integration-tst.azure.defra.cloud/ws/rest/DEFRA/v2.1/", httpClient, retryPolicy, 
-            //        jsonSerializer, httpClientHandlerConfig, certificate, logger);
-            //}).As<ICompaniesHouseClient>();
+                    return new CompaniesHouseClient(config.CompaniesHouseBaseUrl, httpClient, retryPolicy, 
+                        jsonSerializer, httpClientHandlerConfig, certificate, logger);
+                }).As<ICompaniesHouseClient>();
 
-            // example registraction of external service
-            //builder.Register(c =>
-            //{
-            //    var cc = c.Resolve<IComponentContext>();
-            //    var config = cc.Resolve<IAppConfiguration>();
-            //    var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
-            //    var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
-            //    var jsonSerializer = cc.Resolve<IJsonSerializer>();
-            //    var logger = cc.Resolve<ILogger>();
+                // example registraction of external service
+                //builder.Register(c =>
+                //{
+                //    var cc = c.Resolve<IComponentContext>();
+                //    var config = cc.Resolve<IAppConfiguration>();
+                //    var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
+                //    var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
+                //    var jsonSerializer = cc.Resolve<IJsonSerializer>();
+                //    var logger = cc.Resolve<ILogger>();
 
-            //    HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
-            //    {
-            //        ProxyEnabled = config.ProxyEnabled,
-            //        ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
-            //        ProxyWebAddress = config.ProxyWebAddress,
-            //        ByPassProxyOnLocal = config.ByPassProxyOnLocal
-            //    };
+                //    HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
+                //    {
+                //        ProxyEnabled = config.ProxyEnabled,
+                //        ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
+                //        ProxyWebAddress = config.ProxyWebAddress,
+                //        ByPassProxyOnLocal = config.ByPassProxyOnLocal
+                //    };
 
-            //    return new AddressLookupClient("https://dev-api-gateway.azure.defra.cloud/", httpClient, retryPolicy,
-            //        jsonSerializer, httpClientHandlerConfig, logger);
-            //}).As<IAddressLookupClient>();
-        }
+                //    return new AddressLookupClient("https://dev-api-gateway.azure.defra.cloud/", httpClient, retryPolicy,
+                //        jsonSerializer, httpClientHandlerConfig, logger);
+                //}).As<IAddressLookupClient>();
+            }
     }
 }

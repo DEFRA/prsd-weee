@@ -1,9 +1,12 @@
 ﻿namespace EA.Weee.Api.Client
 {
     using CuttingEdge.Conditions;
+    using EA.Weee.Api.Client.Models;
     using EA.Weee.Api.Client.Serlializer;
     using Serilog;
     using System;
+    using System.IdentityModel;
+    using System.Net;
     using System.Net.Http;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
@@ -39,19 +42,28 @@
             this.jsonSerializer = jsonSerializer;
         }
 
-        public async Task<T> GetCompanyDetailsAsync<T>(string endpoint, string companyReference)
+        public async Task<DefraCompaniesHouseApiModel> GetCompanyDetailsAsync(string endpoint, string companyReference)
         {
             Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
-            Condition.Requires(companyReference).IsNotNullOrWhiteSpace("Company reference cannot be null or whitespace.");
 
-            var response = await retryPolicy.ExecuteAsync(() =>
-                httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
+            try
+            {
+                var response = await retryPolicy.ExecuteAsync(() =>
+                    httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
 
-            response.EnsureSuccessStatusCode();
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest || response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    throw new BadRequestException($"Companies house bad request");
+                }
 
-            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            return jsonSerializer.Deserialize<T>(content);
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return jsonSerializer.Deserialize<DefraCompaniesHouseApiModel>(content);
+            }
+            catch (BadRequestException)
+            {
+                return null;
+            }
         }
 
         public void Dispose()

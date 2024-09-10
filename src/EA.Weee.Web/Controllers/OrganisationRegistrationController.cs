@@ -8,6 +8,7 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Extensions;
@@ -34,16 +35,21 @@
         private readonly IOrganisationTransactionService transactionService;
         private readonly IWeeeCache cache;
         private readonly int maxPartnersAllowed = 10;
+        private readonly Func<ICompaniesHouseClient> companiesHouseClient;
+        private readonly ConfigurationService configurationService;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
             ConfigurationService configurationService, IOrganisationTransactionService transactionService,
-            IWeeeCache cache)
+            IWeeeCache cache,
+            Func<ICompaniesHouseClient> companiesHouseClient)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
+            this.configurationService = configurationService;
             this.transactionService = transactionService;
             this.cache = cache;
+            this.companiesHouseClient = companiesHouseClient;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
@@ -345,6 +351,45 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationDetails(OrganisationViewModel model)
         {
+            if (model.Action == "Find Company")
+            {
+                using (var client = companiesHouseClient())
+                {
+                    var result = await client.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                        model.CompaniesRegistrationNumber);
+
+                    var countries = await GetCountries();
+
+                    model.Address.Countries = countries;
+
+                    ModelState.Clear();
+
+                    if (result == null)
+                    {
+                        model.LookupFound = false;
+                        
+                        return View(CastToSpecificViewModel(model.OrganisationType, model));
+                    }
+
+                    var orgModel = new OrganisationViewModel()
+                    {
+                        CompanyName = result.Organisation.Name,
+                        CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
+                        LookupFound = true,
+                        Address = new ExternalAddressData
+                        {
+                            Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                            Address2 = result.Organisation?.RegisteredOffice?.Street,
+                            TownOrCity = result.Organisation?.RegisteredOffice?.Town,
+                            Postcode = result.Organisation?.RegisteredOffice?.Postcode,
+                            Countries = countries,
+                            CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
+                        },
+                    };
+                    return View(CastToSpecificViewModel(orgModel.OrganisationType, orgModel));
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 var countries = await GetCountries();
