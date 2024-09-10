@@ -9,7 +9,7 @@
 }
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.PartnerDetails())))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.PreviousPage(Model.OrganisationType))))
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>

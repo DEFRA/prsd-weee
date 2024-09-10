@@ -1347,6 +1347,20 @@
             model.PartnerModels.Should().HaveCount(2);
         }
 
+        [Theory]
+        [InlineData(ExternalOrganisationType.RegisteredCompany, "Type")]
+        [InlineData(ExternalOrganisationType.Partnership, "PartnerDetails")]
+        [InlineData(ExternalOrganisationType.SoleTrader, "OrganisationDetails")]
+        public void PreviousPage_Get_RedirectsToPartnershipPageIfPartnerType(ExternalOrganisationType organisationType, string expectedAction)
+        {
+            // Act
+            var result = controller.PreviousPage(organisationType) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(expectedAction);
+        }
+
         [Fact]
         public async Task PartnerDetails_Get_ReturnsViewWithSavedData()
         {
