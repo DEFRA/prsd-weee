@@ -686,6 +686,25 @@
             return View(vm);
         }
 
+        [HttpGet]
+        public ActionResult PreviousPage(ExternalOrganisationType? orgType)
+        {
+            if (orgType == ExternalOrganisationType.Partnership)
+            {
+                return RedirectToAction(nameof(PartnerDetails));
+            }
+            if (orgType == ExternalOrganisationType.SoleTrader)
+            {
+                return RedirectToAction(nameof(OrganisationDetails));
+            }
+            if (orgType == ExternalOrganisationType.RegisteredCompany)
+            {
+                return RedirectToAction(nameof(Type));
+            }
+
+            return RedirectToAction(nameof(Type));
+        }
+
         private T MapToViewModel<T>(OrganisationViewModel source) where T : OrganisationViewModel, new()
         {
             var target = new T();
