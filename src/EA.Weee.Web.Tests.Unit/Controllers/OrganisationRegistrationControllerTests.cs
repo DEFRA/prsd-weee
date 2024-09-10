@@ -1437,7 +1437,7 @@
         }
 
         [Fact]
-        public async Task SoleTraderDetails_Get_ReturnsView()
+        public async Task SoleTraderDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
             // Act
             var result = await controller.SoleTraderDetails() as ViewResult;
@@ -1449,6 +1449,31 @@
             model.Should().NotBeNull();
             model.FirstName.Should().BeNull();
             model.LastName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            var countries = SetupCountries();
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                SoleTraderViewModel = TestFixture.Create<SoleTraderViewModel>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.SoleTraderDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as SoleTraderViewModel;
+
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.SoleTraderViewModel);
         }
 
         [Fact]
