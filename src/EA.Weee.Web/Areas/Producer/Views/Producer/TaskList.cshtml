@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Core.Helpers
 @using EA.Weee.Web.Areas.Producer.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.TaskListViewModel
 
 @{
@@ -9,6 +10,8 @@
 }
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>

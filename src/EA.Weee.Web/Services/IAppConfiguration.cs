@@ -79,5 +79,9 @@
         string CompaniesHousePassword { get; set; }
 
         string CompaniesHouseReferencePath { get; set; }
+
+        string CompaniesCertificateName { get; set; }
+
+        string CompaniesHouseBaseUrl { get; set; }
     }
 }
