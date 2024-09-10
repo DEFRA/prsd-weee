@@ -93,14 +93,14 @@
         [HttpGet]
         public ActionResult Submissions()
         {
-            return View();
+            return View(SmallProducerSubmissionData.OrganisationData.Id);
         }
 
         [SmallProducerSubmissionContext]
         [HttpGet]
         public ActionResult OrganisationDetails()
         {
-            return View();
+            return View(SmallProducerSubmissionData.OrganisationData.Id);
         }
     }
 }
