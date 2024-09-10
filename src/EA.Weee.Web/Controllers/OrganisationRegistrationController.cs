@@ -293,7 +293,7 @@
                 switch (organisationType)
                 {
                     case ExternalOrganisationType.SoleTrader:
-                        return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                        return RedirectToAction(nameof(SoleTraderDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
                     case ExternalOrganisationType.Partnership:
                         return RedirectToAction(nameof(PartnerDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
                     case ExternalOrganisationType.RegisteredCompany:
@@ -741,6 +741,33 @@
             }
 
             return target;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SoleTraderDetails()
+        {
+            SoleTraderViewModel model = null;
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            model = existingTransaction?.SoleTraderViewModel ??
+                    new SoleTraderViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SoleTraderDetails(SoleTraderViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
     }
 }
