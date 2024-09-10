@@ -80,7 +80,7 @@
             {
                 OrganisationData = new OrganisationData
                 {
-                    Id = Guid.Empty
+                    Id = Guid.NewGuid()
                 },
                 CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
                 {
@@ -95,6 +95,7 @@
 
             var expectedModel = new TaskListViewModel()
             {
+                OrganisationId = controller.SmallProducerSubmissionData.OrganisationData.Id,
                 ProducerTaskModels = new List<ProducerTaskModel>
                 {
                     new ProducerTaskModel
