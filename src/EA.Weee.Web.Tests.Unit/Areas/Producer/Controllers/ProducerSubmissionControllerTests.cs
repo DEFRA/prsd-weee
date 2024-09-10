@@ -20,20 +20,18 @@
     public class ProducerSubmissionControllerTests : SimpleUnitTestBase
     {
         private readonly ProducerSubmissionController controller;
-        private readonly IMap<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>
-            editOrganisationDetailsMapper;
+        private readonly IMapper mapper;
 
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>
             editOrganisationDetailsRequestCreator;
 
         public ProducerSubmissionControllerTests()
         {
-            editOrganisationDetailsMapper =
-                A.Fake<IMap<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>>();
+            mapper = A.Fake<IMapper>();
             editOrganisationDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>>();
 
-            controller = new ProducerSubmissionController(editOrganisationDetailsMapper, editOrganisationDetailsRequestCreator);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator);
         }
 
         [Fact]

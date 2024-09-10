@@ -12,5 +12,7 @@
         public bool ServiceOfNoticeComplete { get; set; }
         public bool RepresentingCompanyDetailsComplete { get; set; }
         public bool EEEDetailsComplete { get; set; }
+
+        public AddressData BusinessAddressData { get; set; }
     }
 }

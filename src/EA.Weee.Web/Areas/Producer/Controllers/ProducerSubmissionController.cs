@@ -15,22 +15,22 @@
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
 
-        private readonly IMap<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>
-            editOrganisationDetailsMapper;
+        private readonly IMapper mapper;
 
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>
             editOrganisationDetailsRequestCreator;
 
-        public ProducerSubmissionController(IMap<SmallProducerSubmissionData, EditOrganisationDetailsViewModel> editOrganisationDetailsMapper, IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest> editOrganisationDetailsRequestCreator)
+        public ProducerSubmissionController(IMapper mapper, IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest> editOrganisationDetailsRequestCreator)
         {
-            this.editOrganisationDetailsMapper = editOrganisationDetailsMapper;
+            this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
         }
 
         [HttpGet]
+        [SmallProducerSubmissionContext]
         public ActionResult EditOrganisationDetails()
         {
-            var model = editOrganisationDetailsMapper.Map(SmallProducerSubmissionData);
+            var model = mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(SmallProducerSubmissionData);
 
             return View(model);
         }
