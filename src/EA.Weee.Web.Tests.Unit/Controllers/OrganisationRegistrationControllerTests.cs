@@ -1545,8 +1545,6 @@
         public async Task SoleTraderDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
-            var countries = SetupCountries();
-
             var existingTransaction = new OrganisationTransactionData
             {
                 SoleTraderViewModel = TestFixture.Create<SoleTraderViewModel>()
