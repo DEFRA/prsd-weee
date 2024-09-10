@@ -6,8 +6,13 @@
     public class EditOrganisationDetailsViewModel
     {
         public OrganisationViewModel Organisation { get; set; }
+        //public OrganisationViewModel Organisation
+        //{
+        //    get => organisation.CastToSpecificViewModel(organisation);
+        //    set => organisation = (OrganisationViewModel)value;
+        //}
 
-        public object CastedModel => this.Organisation.CastToSpecificViewModel(this.Organisation);
+        //public object CastedModel => this.Organisation.CastToSpecificViewModel(this.Organisation);
 
         public Guid DirectRegistrantId { get; set; }
     }

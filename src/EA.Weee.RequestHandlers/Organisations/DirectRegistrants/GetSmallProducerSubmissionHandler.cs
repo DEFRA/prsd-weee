@@ -5,15 +5,15 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
-    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.Shared;
 
     internal class GetSmallProducerSubmissionHandler : IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData>
     {
@@ -54,11 +54,11 @@
                         CompanyName = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyName) ? currentYearSubmission.CurrentSubmission.CompanyName : organisation.Name,
                         TradingName = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.TradingName) ? currentYearSubmission.CurrentSubmission.TradingName : organisation.TradingName,
                         CompanyRegistrationNumber = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber) ? currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber : organisation.CompanyRegistrationNumber,
-                        OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue
+                        OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue,
+                        AdditionalCompanyDetailsData = mapper.Map<ICollection<AdditionalCompanyDetails>, IList<AdditionalCompanyDetailsData>>(currentYearSubmission.DirectRegistrant.AdditionalCompanyDetails)
                     }
                 };
             }
-
             return null;
         }
     }

@@ -4,6 +4,8 @@
     using EA.Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
+    using EA.Prsd.Core;
+    using EA.Weee.Domain.Organisation;
 
     public class DirectProducerSubmission : Entity
     {
