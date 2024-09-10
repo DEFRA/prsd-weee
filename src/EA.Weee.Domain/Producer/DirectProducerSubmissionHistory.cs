@@ -49,6 +49,10 @@
 
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
 
+        public DirectProducerSubmissionHistory()
+        {
+        }
+
         public DirectProducerSubmissionHistory(DirectProducerSubmission directProducerSubmission)
         {
             DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
