@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Core.DirectRegistrant
 {
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
-    using System;
+    using System.Collections.Generic;
 
     public class SmallProducerSubmissionHistoryData
     {
@@ -23,5 +22,7 @@
         public string CompanyRegistrationNumber { get; set; }
 
         public string TradingName { get; set; }
+
+        public IList<AdditionalCompanyDetailsData> AdditionalCompanyDetailsData { get; set; }
     }
 }

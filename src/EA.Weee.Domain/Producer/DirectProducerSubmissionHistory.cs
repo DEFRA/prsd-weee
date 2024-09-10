@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using EA.Prsd.Core;
     using EA.Weee.Domain.Audit;
+    using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using System;
-    using EA.Weee.Domain.DataReturns;
 
     public class DirectProducerSubmissionHistory : AuditableEntity
     {
@@ -57,6 +58,13 @@
         {
             DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
             DirectProducerSubmission = directProducerSubmission;
+        }
+
+        public void AddOrUpdateBusinessAddress(Address address)
+        {
+            Guard.ArgumentNotNull(() => address, address);
+
+            BusinessAddress = address.OverwriteWhereNull(BusinessAddress);
         }
     }
 }

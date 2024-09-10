@@ -46,7 +46,7 @@
 
             currentYearSubmission.CurrentSubmission.CompanyName = request.CompanyName;
             currentYearSubmission.CurrentSubmission.TradingName = request.TradingName;
-            currentYearSubmission.CurrentSubmission.BusinessAddress.OverwriteWhereNull(address);
+            currentYearSubmission.CurrentSubmission.AddOrUpdateBusinessAddress(address);
 
             if (!string.IsNullOrWhiteSpace(request.EEEBrandNames))
             {
