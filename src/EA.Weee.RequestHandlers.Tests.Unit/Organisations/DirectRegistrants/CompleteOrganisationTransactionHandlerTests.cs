@@ -320,6 +320,41 @@
                     partnerModels.Any(pm => pm.FirstName == acd.FirstName && pm.LastName == acd.LastName))))).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task HandleAsync_WhenSoleTraderModelProvided_ShouldCreateAdditionalCompanyDetails()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var externalOrganisationType = ExternalOrganisationType.SoleTrader;
+            var soleTraderModel = new SoleTraderViewModel()
+            {
+                FirstName = "John",
+                LastName = "Doe"
+            };
+
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType);
+            transactionData.SoleTraderViewModel = soleTraderModel;
+
+            var newAddress = A.Fake<Address>();
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            var newOrganisation = A.Fake<Organisation>();
+            A.CallTo(() => newOrganisation.Id).Returns(organisationId);
+            A.CallTo(() => directRegistrant.Organisation).Returns(newOrganisation);
+
+            A.CallTo(() => genericDataAccess.Add(A<Address>._)).Returns(Task.FromResult(newAddress));
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).Returns(Task.FromResult(directRegistrant));
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<CompleteOrganisationTransaction>());
+
+            // Assert
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
+                d.AdditionalCompanyDetails.Count == 1 &&
+                d.AdditionalCompanyDetails.ElementAt(0).FirstName == soleTraderModel.FirstName &&
+                d.AdditionalCompanyDetails.ElementAt(0).LastName == soleTraderModel.LastName &&
+                d.AdditionalCompanyDetails.ElementAt(0).Type.Value == OrganisationAdditionalDetailsType.SoleTrader.Value))).MustHaveHappenedOnceExactly();
+        }
+
         private OrganisationTransactionData SetupValidOrganisationTransaction(
             ExternalOrganisationType organisationType = ExternalOrganisationType.RegisteredCompany,
             string brandNames = null,
