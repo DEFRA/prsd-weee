@@ -23,7 +23,7 @@
 
             var organisation = new OrganisationViewModel
             {
-                OrganisationType = ExternalOrganisationType.Partnership,
+                OrganisationType = externalOrganisationType,
                 Address = businessAddressData,
                 EEEBrandNames = source.CurrentSubmission.EEEBrandNames,
                 CompanyName = source.CurrentSubmission.CompanyName,
