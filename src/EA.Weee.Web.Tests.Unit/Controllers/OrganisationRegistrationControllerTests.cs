@@ -680,7 +680,7 @@
         }
 
         [Theory]
-        [InlineData("Sole trader", "OrganisationDetails")]
+        [InlineData("Sole trader", "SoleTraderDetails")]
         [InlineData("Partnership", "PartnerDetails")]
         [InlineData("Registered company", "OrganisationDetails")]
         public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
@@ -1524,6 +1524,66 @@
             controller.ModelState["PartnerModels"].Errors[0].ErrorMessage.Should().BeEquivalentTo("A maximum of 10 partners are allowed");
 
             var model = result.Model as PartnerViewModel;
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Act
+            var result = await controller.SoleTraderDetails() as ViewResult;
+
+            // Assert
+            var model = result.Model as SoleTraderViewModel;
+
+            result.Should().NotBeNull();
+            model.Should().NotBeNull();
+            model.FirstName.Should().BeNull();
+            model.LastName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            var existingTransaction = new OrganisationTransactionData
+            {
+                SoleTraderViewModel = TestFixture.Create<SoleTraderViewModel>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.SoleTraderDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as SoleTraderViewModel;
+
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.SoleTraderViewModel);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Post_CallsCaptureDataAndRedirectsToOrganisationDetails()
+        {
+            // Arrange
+            var model = TestFixture.Create<SoleTraderViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.SoleTraderViewModel, model).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.SoleTraderDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("OrganisationDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
         }
     }
 }
