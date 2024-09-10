@@ -7,12 +7,12 @@
     {
         [Required]
         [DisplayName("First name")]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [StringLength(CommonMaxFieldLengths.FirstName)]
         public string FirstName { get; set; }
 
         [Required]
         [DisplayName("Last name")]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [StringLength(CommonMaxFieldLengths.LastName)]
         public string LastName { get; set; }
     }
 }
