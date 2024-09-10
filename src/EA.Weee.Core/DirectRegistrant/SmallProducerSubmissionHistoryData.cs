@@ -14,5 +14,11 @@
         public bool EEEDetailsComplete { get; set; }
 
         public AddressData BusinessAddressData { get; set; }
+
+        public AddressData ContactAddressData { get; set; }
+
+        public ContactData ContactData { get; set; }
+
+        public AuthorisedRepresentitiveData AuthorisedRepresentitiveData { get; set; }
     }
 }
