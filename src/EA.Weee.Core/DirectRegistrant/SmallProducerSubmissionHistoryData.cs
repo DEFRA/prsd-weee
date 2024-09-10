@@ -14,5 +14,7 @@
         public bool EEEDetailsComplete { get; set; }
 
         public AddressData BusinessAddressData { get; set; }
+
+        public string EEEBrandNames { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Controllers
 {
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
-    using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
@@ -21,17 +22,18 @@
     {
         private readonly ProducerSubmissionController controller;
         private readonly IMapper mapper;
-
-        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>
+        private readonly IWeeeClient weeeClient;
+        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
             editOrganisationDetailsRequestCreator;
 
         public ProducerSubmissionControllerTests()
         {
             mapper = A.Fake<IMapper>();
+            weeeClient = A.Fake<IWeeeClient>();
             editOrganisationDetailsRequestCreator =
-                A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>>();
+                A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>>();
 
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, () => weeeClient);
         }
 
         [Fact]

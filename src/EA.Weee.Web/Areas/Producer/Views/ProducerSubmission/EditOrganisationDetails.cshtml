@@ -1,1 +1,96 @@
-﻿
+﻿@using EA.Prsd.Core.Helpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Helpers
+@using EA.Weee.Core.Organisations
+@using EA.Weee.Domain.Producer
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.Shared
+@using EnumHelper = EA.Prsd.Core.Helpers.EnumHelper
+@model EA.Weee.Web.Areas.Producer.ViewModels.EditOrganisationDetailsViewModel
+@{
+    const string title = "Organisation details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.Gds().DisplayFor(m => m.Organisation.OrganisationType, Model.Organisation.OrganisationType.GetDisplayName())
+        @Html.Gds().DisplayFor(m => m.Organisation.CompaniesRegistrationNumber, Model.Organisation.CompaniesRegistrationNumber)
+
+        @Html.EditorFor(model => model.CastedModel, "OrganisationNameDetails")
+
+        @Html.HiddenFor(m => m.Organisation.OrganisationType)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.WebsiteAddress)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.WebsiteAddress)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.WebsiteAddress)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.WebsiteAddress, new { @maxlength = CommonMaxFieldLengths.WebsiteAddress })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Address1)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.Address1)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Address1)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.Address1, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Address2)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.Address2)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Address2)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.Address2, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.TownOrCity)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.TownOrCity)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.TownOrCity)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.TownOrCity, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.CountyOrRegion)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.CountyOrRegion)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.CountyOrRegion)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.CountyOrRegion, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Postcode)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.Postcode)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Postcode)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
+        </div>
+
+        <h2 class="govuk-heading-s">Enter the country your organisation is based in.</h2>
+        <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Organisation.Address.CountryId)" id="operator-country-dropdown-list">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.CountryId, new { id = "country-dropdown-list" })
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.CountryId)
+            @Html.DropDownListFor(m => m.Organisation.Address.CountryId, new SelectList(Model.Organisation.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.EEEBrandNames)">
+            <h2 class="govuk-heading-s">Enter EEE brand names that you place on the UK market</h2>
+            @Html.Gds().LabelFor(m => m.Organisation.EEEBrandNames, showOptionalLabel: false)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.EEEBrandNames)
+            @Html.Gds().TextAreaFor(m => m.Organisation.EEEBrandNames)
+        </div>
+
+        <div class="govuk-button-group">
+            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+
+            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, secondaryButton: true)
+        </div>
+        @(this.WeeeGds().BackToTopLink())
+    }
+}
