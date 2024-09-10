@@ -368,7 +368,7 @@
                     {
                         model.LookupFound = false;
                         
-                        return View(CastToSpecificViewModel(model.OrganisationType, model));
+                        return View(model.CastToSpecificViewModel(model));
                     }
 
                     var orgModel = new OrganisationViewModel()
@@ -386,7 +386,7 @@
                             CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
                         },
                     };
-                    return View(CastToSpecificViewModel(orgModel.OrganisationType, orgModel));
+                    return View(model.CastToSpecificViewModel(orgModel));
                 }
             }
 
@@ -398,7 +398,7 @@
 
                 ModelState.ApplyCustomValidationSummaryOrdering(OrganisationViewModel.ValidationMessageDisplayOrder);
 
-                return View(CastToSpecificViewModel(model.OrganisationType, model));
+                return View(model.CastToSpecificViewModel(model));
             }
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
@@ -419,7 +419,7 @@
 
             model.Address.Countries = await GetCountries();
 
-            var specificViewModel = CastToSpecificViewModel(model.OrganisationType, model);
+            var specificViewModel = model.CastToSpecificViewModel(model);
 
             return View(specificViewModel);
         }
@@ -666,21 +666,6 @@
             return RedirectToAction(nameof(Areas.Scheme.Controllers.HomeController.ChooseActivity), typeof(Areas.Scheme.Controllers.HomeController).GetControllerName(), new { area = nameof(Areas.Scheme), pcsId = organisationId });
         }
 
-        private object CastToSpecificViewModel(ExternalOrganisationType? organisationType, OrganisationViewModel model)
-        {
-            switch (organisationType)
-            {
-                case ExternalOrganisationType.RegisteredCompany:
-                    return MapToViewModel<RegisteredCompanyDetailsViewModel>(model);
-                case ExternalOrganisationType.Partnership:
-                    return MapToViewModel<PartnershipDetailsViewModel>(model);
-                case ExternalOrganisationType.SoleTrader:
-                    return MapToViewModel<SoleTraderDetailsViewModel>(model);
-                default:
-                    return MapToViewModel<RegisteredCompanyDetailsViewModel>(model);
-            }
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PartnerDetails(PartnerViewModel model, string action)
@@ -719,28 +704,6 @@
             vm.PartnerModels.Add(new PartnerModel());
 
             return View(vm);
-        }
-
-        private T MapToViewModel<T>(OrganisationViewModel source) where T : OrganisationViewModel, new()
-        {
-            var target = new T();
-
-            var propertiesToIgnore = new HashSet<string>
-            {
-                nameof(OrganisationViewModel.ValidationMessageDisplayOrder),
-            };
-
-            var properties = typeof(OrganisationViewModel)
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => !propertiesToIgnore.Contains(p.Name));
-
-            foreach (var prop in properties)
-            {
-                var value = prop.GetValue(source);
-                prop.SetValue(target, value);
-            }
-
-            return target;
         }
     }
 }

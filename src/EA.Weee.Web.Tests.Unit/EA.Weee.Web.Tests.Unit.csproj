@@ -413,6 +413,8 @@
     <Compile Include="Areas\Admin\ViewModels\VoidTransferNoteViewModelTests.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerSubmissionControllerTests.cs" />
     <Compile Include="Areas\Producer\Filters\AuthoriseRouteClaimsAttributeTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\AddressMapUnitTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ReverseAddressMapUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditOrganisationDetailsMapTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttributeTests.cs" />
