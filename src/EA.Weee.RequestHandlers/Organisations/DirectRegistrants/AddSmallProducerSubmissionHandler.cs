@@ -23,7 +23,7 @@
         public AddSmallProducerSubmissionHandler(IWeeeAuthorization authorization, 
             IGenericDataAccess genericDataAccess, 
             WeeeContext weeeContext, 
-            IGenerateFromXmlDataAccess generateFromXmlDataAccess, IGenerateFromXml generateFromXml)
+            IGenerateFromXmlDataAccess generateFromXmlDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;

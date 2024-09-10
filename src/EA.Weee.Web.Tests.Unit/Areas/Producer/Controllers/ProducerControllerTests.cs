@@ -87,7 +87,7 @@
                     ComplianceYear = 2005,
                     ContactDetailsComplete = true,
                     EEEDetailsComplete = true,
-                    OrganizationDetailsComplete = true,
+                    OrganisationDetailsComplete = true,
                     RepresentingCompanyDetailsComplete = false,
                     ServiceOfNoticeComplete = true
                 }
@@ -101,7 +101,8 @@
                     new ProducerTaskModel
                     {
                         TaskLinkName = "Organisation details",
-                        Complete = true
+                        Complete = true,
+                        Action = nameof(ProducerSubmissionController.EditOrganisationDetails)
                     },
                     new ProducerTaskModel
                     {
@@ -152,7 +153,7 @@
                     ComplianceYear = 2005,
                     ContactDetailsComplete = true,
                     EEEDetailsComplete = true,
-                    OrganizationDetailsComplete = true,
+                    OrganisationDetailsComplete = true,
                     RepresentingCompanyDetailsComplete = false,
                     ServiceOfNoticeComplete = true
                 }
