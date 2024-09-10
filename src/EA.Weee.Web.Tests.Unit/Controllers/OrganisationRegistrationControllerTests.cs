@@ -680,7 +680,7 @@
         }
 
         [Theory]
-        [InlineData("Sole trader", "OrganisationDetails")]
+        [InlineData("Sole trader", "SoleTraderDetails")]
         [InlineData("Partnership", "PartnerDetails")]
         [InlineData("Registered company", "OrganisationDetails")]
         public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
