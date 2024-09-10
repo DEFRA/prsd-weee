@@ -18,39 +18,46 @@
 
         public EditOrganisationDetailsViewModel Map(SmallProducerSubmissionData source)
         {
-            var viewModel = new EditOrganisationDetailsViewModel();
+            var externalOrganisationType = MapOrganisationType(source.OrganisationData.OrganisationType);
+            var businessAddressData = MapBusinessAddress(source);
 
-            ExternalOrganisationType externalOrganisationType;
-
-            switch (source.OrganisationData.OrganisationType)
-            {
-                case OrganisationType.Partnership:
-                    externalOrganisationType = ExternalOrganisationType.Partnership;
-                    break;
-                case OrganisationType.RegisteredCompany:
-                    externalOrganisationType = ExternalOrganisationType.RegisteredCompany;
-                    break;
-                case OrganisationType.SoleTraderOrIndividual:
-                    externalOrganisationType = ExternalOrganisationType.SoleTrader;
-                    break;
-                default:
-                    externalOrganisationType = ExternalOrganisationType.RegisteredCompany;
-                    break;
-            }
-
-            ExternalAddressData businessAddressData = null;
-            businessAddressData = mapper.Map<AddressData, ExternalAddressData>(source.CurrentSubmission.BusinessAddressData ?? source.OrganisationData.BusinessAddress);
-
-            var organisation = new OrganisationViewModel()
+            var organisation = new OrganisationViewModel
             {
                 OrganisationType = externalOrganisationType,
                 Address = businessAddressData,
-                EEEBrandNames = source.CurrentSubmission.EEEBrandNames
+                EEEBrandNames = source.CurrentSubmission.EEEBrandNames,
+                CompanyName = source.CurrentSubmission.CompanyName,
+                BusinessTradingName = source.CurrentSubmission.TradingName
             };
 
-            viewModel.Organisation = organisation;
+            var viewModel = new EditOrganisationDetailsViewModel
+            {
+                DirectRegistrantId = source.DirectRegistrantId,
+                Organisation = organisation
+            };
 
             return viewModel;
+        }
+
+        private ExternalOrganisationType MapOrganisationType(OrganisationType organisationType)
+        {
+            switch (organisationType)
+            {
+                case OrganisationType.Partnership:
+                    return ExternalOrganisationType.Partnership;
+                case OrganisationType.RegisteredCompany:
+                    return ExternalOrganisationType.RegisteredCompany;
+                case OrganisationType.SoleTraderOrIndividual:
+                    return ExternalOrganisationType.SoleTrader;
+                default:
+                    return ExternalOrganisationType.RegisteredCompany;
+            }
+        }
+
+        private ExternalAddressData MapBusinessAddress(SmallProducerSubmissionData source)
+        {
+            var addressData = source.CurrentSubmission.BusinessAddressData ?? source.OrganisationData.BusinessAddress;
+            return mapper.Map<AddressData, ExternalAddressData>(addressData);
         }
     }
 }
