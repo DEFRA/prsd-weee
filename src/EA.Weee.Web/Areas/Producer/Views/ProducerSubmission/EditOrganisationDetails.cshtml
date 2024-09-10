@@ -29,12 +29,15 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        @Html.Gds().DisplayFor(m => m.Organisation.OrganisationType, Model.Organisation.OrganisationType.GetDisplayName())
-        @Html.Gds().DisplayFor(m => m.Organisation.CompaniesRegistrationNumber, Model.Organisation.CompaniesRegistrationNumber)
-
-        @Html.EditorFor(model => model.CastedModel, "OrganisationNameDetails")
-
-        @Html.HiddenFor(m => m.Organisation.OrganisationType)
+        <div class="govuk-grid-row govuk-!-padding-bottom-1">
+                @Html.Gds().DisplayFor(m => m.Organisation.OrganisationType, Model.Organisation.OrganisationType.GetDisplayName(),  "govuk-grid-column-one-third")
+        </div>
+        <div class="govuk-grid-row govuk-!-padding-bottom-1">
+            @Html.Gds().DisplayFor(m => m.Organisation.CompaniesRegistrationNumber, Model.Organisation.CompaniesRegistrationNumber, "govuk-grid-column-one-third")
+        </div>
+             
+             @Html.EditorFor(model => model.CastedModel, "OrganisationNameDetails")
+             @Html.HiddenFor(m => m.Organisation.OrganisationType)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.WebsiteAddress)">
             @Html.Gds().LabelFor(m => m.Organisation.Address.WebsiteAddress)
@@ -85,6 +88,8 @@
             @Html.Gds().ValidationMessageFor(m => m.Organisation.EEEBrandNames)
             @Html.Gds().TextAreaFor(m => m.Organisation.EEEBrandNames)
         </div>
+
+        @(this.WeeeGds().Warning(Resources.ProducerSubmission.ProducerSubmission.WarningText))
 
         <div class="govuk-button-group">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)

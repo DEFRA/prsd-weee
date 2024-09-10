@@ -33,6 +33,7 @@
         [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
 
+        [DisplayName("Organisation type")]
         public ExternalOrganisationType? OrganisationType { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
