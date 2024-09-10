@@ -166,6 +166,7 @@
     <Compile Include="Mappings\AatfSimpleMap.cs" />
     <Compile Include="Mappings\EvidenceNoteWitheCriteriaMapperBase.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
+    <Compile Include="Organisations\DirectRegistrants\EditOrganisationDetailsRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetSmallProducerSubmissionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSmallProducerSubmissionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\DeleteUserOrganisationTransactionHandler.cs" />
