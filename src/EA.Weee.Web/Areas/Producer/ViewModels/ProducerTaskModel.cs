@@ -4,5 +4,6 @@
     {
         public string TaskLinkName { get; set; }
         public bool Complete { get; set; }
+        public string Action { get; set; }
     }
 }

@@ -45,7 +45,8 @@
                     new ProducerTaskModel 
                     { 
                         TaskLinkName = "Organisation details", 
-                        Complete = submission.OrganizationDetailsComplete 
+                        Complete = submission.OrganisationDetailsComplete,
+                        Action = nameof(ProducerSubmissionController.EditOrganisationDetails)
                     },
                     new ProducerTaskModel 
                     { 

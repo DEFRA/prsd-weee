@@ -48,9 +48,16 @@
                 throw new InvalidOperationException("Producer submission data could not be found");
             }
 
-            if (context.Controller is ProducerController controller)
+            switch (context.Controller)
             {
-                controller.SmallProducerSubmissionData = data;
+                case ProducerController producerController:
+                    producerController.SmallProducerSubmissionData = data;
+                    break;
+                case ProducerSubmissionController producerSubmissionController:
+                    producerSubmissionController.SmallProducerSubmissionData = data;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unsupported controller type");
             }
 
             base.OnActionExecuting(context);
