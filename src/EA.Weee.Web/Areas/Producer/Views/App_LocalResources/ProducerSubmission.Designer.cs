@@ -77,5 +77,14 @@ namespace Resources.ProducerSubmission {
                 return ResourceManager.GetString("SaveAndReturnTaskList", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing the details on this page will update your contact details on your account..
+        /// </summary>
+        public static string WarningText {
+            get {
+                return ResourceManager.GetString("WarningText", resourceCulture);
+            }
+        }
     }
 }

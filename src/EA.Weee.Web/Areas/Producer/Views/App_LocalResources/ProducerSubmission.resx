@@ -123,4 +123,7 @@
   <data name="SaveAndReturnTaskList" xml:space="preserve">
     <value>Save and return to task list</value>
   </data>
+  <data name="WarningText" xml:space="preserve">
+    <value>Changing the details on this page will update your contact details on your account.</value>
+  </data>
 </root>
