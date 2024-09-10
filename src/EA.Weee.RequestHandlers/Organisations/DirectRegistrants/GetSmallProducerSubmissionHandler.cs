@@ -13,6 +13,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Weee.Core.Shared;
 
     internal class GetSmallProducerSubmissionHandler : IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData>
     {
@@ -47,6 +48,7 @@
                     OrganisationData = organisation,
                     CurrentSubmission = new SmallProducerSubmissionHistoryData()
                     {
+                        BusinessAddressData = currentYearSubmission.CurrentSubmission.BusinessAddress != null ? mapper.Map<Address, AddressData>(currentYearSubmission.CurrentSubmission.BusinessAddress) : null,
                         OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue
                     }
                 };
