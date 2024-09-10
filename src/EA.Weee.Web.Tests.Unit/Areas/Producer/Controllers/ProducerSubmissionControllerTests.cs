@@ -44,7 +44,7 @@
         public void Controller_Should_Have_AuthorizeRouteClaims_Attribute()
         {
             // Arrange
-            var controllerType = typeof(ProducerController);
+            var controllerType = typeof(ProducerSubmissionController);
 
             // Act
             var attribute = controllerType.GetCustomAttributes(typeof(AuthorizeRouteClaimsAttribute), true)
