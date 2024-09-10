@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using System;
 
     public class SmallProducerSubmissionHistoryData
     {
@@ -16,5 +17,9 @@
         public AddressData BusinessAddressData { get; set; }
 
         public string EEEBrandNames { get; set; }
+
+        public string CompanyName { get; set; }
+
+        public string TradingName { get; set; }
     }
 }
