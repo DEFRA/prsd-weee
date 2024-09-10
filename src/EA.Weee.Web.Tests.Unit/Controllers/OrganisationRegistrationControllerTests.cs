@@ -1416,8 +1416,11 @@
                     new PartnerModel { FirstName = "xx", LastName = "x" },
                     new PartnerModel { FirstName = "xx", LastName = "x" },
                     new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                },
+                NotRequiredPartnerModels = new List<NotRequiredPartnerModel>
+                {
+                    new NotRequiredPartnerModel { FirstName = "xx", LastName = "x" },
+                    new NotRequiredPartnerModel { FirstName = "xx", LastName = "x" },
                 }
             };
 
