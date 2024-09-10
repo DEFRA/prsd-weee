@@ -20,6 +20,7 @@
     using FluentAssertions.Execution;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Xunit;
@@ -282,6 +283,41 @@
             await Assert.ThrowsAsync<Exception>(() => handler.HandleAsync(request));
             A.CallTo(() => transactionAdapter.BeginTransaction()).MustHaveHappenedOnceExactly();
             A.CallTo(() => transactionAdapter.Rollback(null)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenPartnerModelsProvided_ShouldCreateAdditionalCompanyDetails()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var externalOrganisationType = ExternalOrganisationType.Partnership;
+            var partnerModels = new List<PartnerModel>
+            {
+                new PartnerModel { FirstName = "John", LastName = "Doe" },
+                new PartnerModel { FirstName = "Jane", LastName = "Smith" }
+            };
+
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType);
+            transactionData.PartnerModels = partnerModels;
+
+            var newAddress = A.Fake<Address>();
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            var newOrganisation = A.Fake<Organisation>();
+            A.CallTo(() => newOrganisation.Id).Returns(organisationId);
+            A.CallTo(() => directRegistrant.Organisation).Returns(newOrganisation);
+
+            A.CallTo(() => genericDataAccess.Add(A<Address>._)).Returns(Task.FromResult(newAddress));
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).Returns(Task.FromResult(directRegistrant));
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<CompleteOrganisationTransaction>());
+
+            // Assert
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
+                d.AdditionalCompanyDetails.Count == 2 &&
+                d.AdditionalCompanyDetails.All(acd =>
+                    acd.Type == OrganisationAdditionalDetailsType.Partner &&
+                    partnerModels.Any(pm => pm.FirstName == acd.FirstName && pm.LastName == acd.LastName))))).MustHaveHappenedOnceExactly();
         }
 
         private OrganisationTransactionData SetupValidOrganisationTransaction(

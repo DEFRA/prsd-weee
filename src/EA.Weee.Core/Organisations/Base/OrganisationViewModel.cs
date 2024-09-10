@@ -9,6 +9,10 @@
 
     public class OrganisationViewModel : IValidatableObject
     {
+        public bool LookupFound { get; set; }
+
+        public string Action { get; set; }
+
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public virtual string CompanyName { get; set; }
 
