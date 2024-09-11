@@ -142,19 +142,42 @@
             return contactDetails;
         }
 
-        private List<AdditionalCompanyDetails> CreateAdditionalCompanyDetails(
-            OrganisationTransactionData organisationTransactionData)
+        private List<AdditionalCompanyDetails> CreateAdditionalCompanyDetails(OrganisationTransactionData organisationTransactionData)
         {
-            var additionalCompanyDetails = organisationTransactionData.PartnerModels?.Select(x => new AdditionalCompanyDetails
-                {
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    Type = OrganisationAdditionalDetailsType.Partner,
-                }).ToList();
+            var additionalCompanyDetails = new List<AdditionalCompanyDetails>();
+
+            if (organisationTransactionData.PartnerModels != null)
+            {
+                additionalCompanyDetails.AddRange(organisationTransactionData.PartnerModels.Select(CreatePartnerDetails));
+            }
+
+            if (organisationTransactionData.SoleTraderViewModel != null)
+            {
+                additionalCompanyDetails.Add(CreateSoleTraderDetails(organisationTransactionData.SoleTraderViewModel));
+            }
 
             return additionalCompanyDetails;
         }
 
+        private AdditionalCompanyDetails CreatePartnerDetails(PartnerModel partner)
+        {
+            return new AdditionalCompanyDetails
+            {
+                FirstName = partner.FirstName,
+                LastName = partner.LastName,
+                Type = OrganisationAdditionalDetailsType.Partner
+            };
+        }
+
+        private AdditionalCompanyDetails CreateSoleTraderDetails(SoleTraderViewModel soleTrader)
+        {
+            return new AdditionalCompanyDetails
+            {
+                FirstName = soleTrader.FirstName,
+                LastName = soleTrader.LastName,
+                Type = OrganisationAdditionalDetailsType.SoleTrader
+            };
+        }
         private async Task<Address> CreateContactAddress(OrganisationTransactionData organisationTransactionData)
         {
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == organisationTransactionData.ContactDetailsViewModel.AddressData.CountryId);
