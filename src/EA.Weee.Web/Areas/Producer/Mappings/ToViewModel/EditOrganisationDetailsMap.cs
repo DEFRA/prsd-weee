@@ -43,7 +43,8 @@
                 DirectRegistrantId = source.DirectRegistrantId,
                 OrganisationId = source.OrganisationData.Id,
                 Organisation = organisation,
-                AdditionalContactModels = additionalContactDetails
+                AdditionalContactModels = additionalContactDetails,
+                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive
             };
 
             return viewModel;

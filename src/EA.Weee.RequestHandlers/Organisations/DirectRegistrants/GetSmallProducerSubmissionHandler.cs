@@ -47,6 +47,7 @@
                 {
                     DirectRegistrantId = currentYearSubmission.DirectRegistrantId,
                     OrganisationData = organisation,
+                    HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
                     CurrentSubmission = new SmallProducerSubmissionHistoryData()
                     {
                         BusinessAddressData = currentYearSubmission.CurrentSubmission.BusinessAddress != null ? mapper.Map<Address, AddressData>(currentYearSubmission.CurrentSubmission.BusinessAddress) : mapper.Map<Address, AddressData>(currentYearSubmission.DirectRegistrant.Organisation.BusinessAddress),
