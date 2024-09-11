@@ -20,5 +20,7 @@
         public ContactData ContactData { get; set; }
 
         public AuthorisedRepresentitiveData AuthorisedRepresentitiveData { get; set; }
+
+        public AddressData ServiceOfNoticeData { get; set; }
     }
 }

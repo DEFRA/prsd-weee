@@ -1,7 +1,8 @@
-﻿@using EA.Weee.Core.Helpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Producer.Controllers
-@using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.ServiceOfNoticeViewModel
 
 @{
@@ -10,52 +11,84 @@
 }
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Producer.Controllers.ProducerController>(a => a.TaskList())))
 
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">@title</h1>
-    </header>
-
-    <p>
-        Provide your address for the service of notices. <br /><br />
-
-        For authorised representatives of non-UK established producers this will be your preferred address.
-    </p>
-
-    <ul class="govuk-task-list">
-        @foreach (var task in Model.ProducerTaskModels)
-        {
-            <li class="govuk-task-list__item govuk-task-list__item--with-link">
-                <div class="govuk-task-list__name-and-hint">
-                    <a class="govuk-link govuk-task-list__link" href="@Url.Action(task.Action, typeof(ProducerSubmissionController).GetControllerName())" aria-describedby="@(task.TaskLinkName.ToLower().Replace(" ", "-") + "-status")">
-                        @task.TaskLinkName
-                    </a>
-                </div>
-
-                @if (@task.Complete)
-                {
-                    <div class="govuk-task-list__status" id="company-details-1-status">
-                        Completed
-                    </div>
-                }
-                else
-                {
-                    <div class="govuk-task-list__status" id="company-details-2-status">
-                        <strong class="govuk-tag govuk-tag--blue">
-                            Incomplete
-                        </strong>
-                    </div>
-                }
-
-            </li>
-        }
-    </ul>
-
-    @using (Html.BeginForm("CheckAnswers", "Producer", FormMethod.Get, null))
+    @using (Html.BeginForm())
     {
+        @Html.Gds().ValidationSummary()
         @Html.AntiForgeryToken()
+
+        <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 3 of 5</span>
+
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">@title</h1>
+        </header>
+
+        <p>
+            Provide your address for the service of notices. <br /><br />
+
+            For authorised representatives of non-UK established producers this will be your preferred address.
+        </p>
+
         <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Check your answers"))
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="same-as-organisation-address" name="SameAsOrganisationAddress" type="checkbox" value="true">
+                    <label class="govuk-label govuk-checkboxes__label" for="same-as-organisation-address">
+                        Same as organisation address
+                    </label>
+                </div>
+            </div>
         </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
+            @Html.Gds().LabelFor(m => m.Address.Address1)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Address1)
+            @Html.Gds().TextBoxFor(m => m.Address.Address1, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address2)">
+            @Html.Gds().LabelFor(m => m.Address.Address2)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Address2)
+            @Html.Gds().TextBoxFor(m => m.Address.Address2, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.TownOrCity)">
+            @Html.Gds().LabelFor(m => m.Address.TownOrCity)
+            @Html.Gds().ValidationMessageFor(m => m.Address.TownOrCity)
+            @Html.Gds().TextBoxFor(m => m.Address.TownOrCity, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.CountyOrRegion)">
+            @Html.Gds().LabelFor(m => m.Address.CountyOrRegion)
+            @Html.Gds().ValidationMessageFor(m => m.Address.CountyOrRegion)
+            @Html.Gds().TextBoxFor(m => m.Address.CountyOrRegion, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Postcode)">
+            @Html.Gds().LabelFor(m => m.Address.Postcode)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Postcode)
+            @Html.Gds().TextBoxFor(m => m.Address.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
+        </div>
+
+        <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Address.CountryId)" id="operator-country-dropdown-list">
+            @Html.Gds().LabelFor(m => m.Address.CountryId, new { id = "country-dropdown-list" })
+            @Html.Gds().ValidationMessageFor(m => m.Address.CountryId)
+            @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-select", aria_labelledby = "country-dropdown-list" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Telephone)">
+            @Html.Gds().LabelFor(m => m.Address.Telephone)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
+            @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
+        </div>
+
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerController>(a => a.TaskList()), true)
+        </div>
+
+        @(this.WeeeGds().BackToTopLink())
     }
 }
