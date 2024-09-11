@@ -49,7 +49,13 @@
                     CurrentSubmission = new SmallProducerSubmissionHistoryData()
                     {
                         BusinessAddressData = currentYearSubmission.CurrentSubmission.BusinessAddress != null ? mapper.Map<Address, AddressData>(currentYearSubmission.CurrentSubmission.BusinessAddress) : null,
-                        OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue
+                        OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue,
+                        ContactData = currentYearSubmission.CurrentSubmission.ContactId.HasValue ? mapper.Map<Contact, ContactData>(currentYearSubmission.CurrentSubmission.Contact) :
+                            mapper.Map<Contact, ContactData>(directRegistrant.Contact),
+                        ContactAddressData = currentYearSubmission.CurrentSubmission.ContactId.HasValue ? mapper.Map<Address, AddressData>(currentYearSubmission.CurrentSubmission.ContactAddress) :
+                            mapper.Map<Address, AddressData>(directRegistrant.Address),
+                        AuthorisedRepresentitiveData = currentYearSubmission.CurrentSubmission.AuthorisedRepresentativeId.HasValue ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative) : (directRegistrant.AuthorisedRepresentativeId.HasValue ?
+                            mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative) : null),
                     }
                 };
             }
