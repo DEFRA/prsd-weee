@@ -12,6 +12,7 @@
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.ViewModels;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
@@ -36,10 +37,10 @@
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
 
-        public ProducerSubmissionControllerTests(BreadcrumbService breadcrumbService, IWeeeCache weeeCache)
+        public ProducerSubmissionControllerTests()
         {
-            this.breadcrumbService = breadcrumbService;
-            this.weeeCache = weeeCache;
+            breadcrumbService = A.Fake<BreadcrumbService>();
+            weeeCache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
             weeeClient = A.Fake<IWeeeClient>();
             editOrganisationDetailsRequestCreator =
@@ -108,26 +109,55 @@
             viewModel.Organisation.Address.Countries.Should().BeSameAs(countries);
         }
 
-        //[Fact]
-        //public async Task EditOrganisationDetails_Get_ShouldSetBreadCrumb()
-        //{
-        //    // Arrange
-        //    var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
-        //    var organisationName = TestFixture.Create<string>();
+        [Fact]
+        public async Task EditOrganisationDetails_Get_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            var organisationName = TestFixture.Create<string>();
 
-        //    controller.SmallProducerSubmissionData = submissionData;
+            controller.SmallProducerSubmissionData = submissionData;
 
-        //    A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
 
-        //    // Act
-        //    var result = await controller.EditOrganisationDetails() as ViewResult;
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
-        //    // Assert
-        //    result.Should().NotBeNull();
-        //    result.ViewName.Should().BeEmpty();
-        //    result.Model.Should().Be(viewModel);
-        //    viewModel.Organisation.Address.Countries.Should().BeSameAs(countries);
-        //}
+            var viewModel = TestFixture.Create<EditOrganisationDetailsViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(submissionData)).Returns(viewModel);
+
+            // Act
+            await controller.EditOrganisationDetails();
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task EditOrganisationDetails_InvalidPost_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var viewModel = TestFixture.Create<EditOrganisationDetailsViewModel>();
+            var organisationName = TestFixture.Create<string>();
+            A.CallTo(() => weeeCache.FetchOrganisationName(viewModel.OrganisationId)).Returns(organisationName);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            controller.ModelState.AddModelError("error", "this is an error");
+
+            // Act
+            await controller.EditOrganisationDetails(viewModel);
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(viewModel.OrganisationId);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
 
         [Fact]
         public async Task EditOrganisationDetails_Post_ValidModel_ShouldRedirectToTaskList()
