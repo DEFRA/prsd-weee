@@ -7,6 +7,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Security;
@@ -40,7 +41,7 @@
             var organisation = mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation);
 
             var currentYearSubmission = directRegistrant.DirectProducerSubmissions.FirstOrDefault(r => r.ComplianceYear == SystemTime.UtcNow.Year);
-
+            
             if (currentYearSubmission != null)
             {
                 return new SmallProducerSubmissionData()
@@ -63,6 +64,7 @@
                             mapper.Map<Address, AddressData>(directRegistrant.Address),
                         AuthorisedRepresentitiveData = currentYearSubmission.CurrentSubmission.AuthorisedRepresentativeId.HasValue ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative) : (directRegistrant.AuthorisedRepresentativeId.HasValue ?
                             mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative) : null),
+                        TonnageData = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null ? mapper.Map<EeeOutputReturnVersion, IList<TonnageData>>(currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion) : new List<TonnageData>()
                     }
                 };
             }
