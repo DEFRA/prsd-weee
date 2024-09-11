@@ -35,5 +35,7 @@
         public ContactData ContactData { get; set; }
 
         public AuthorisedRepresentitiveData AuthorisedRepresentitiveData { get; set; }
+
+        public IList<TonnageData> TonnageData { get; set; }
     }
 }
