@@ -6,6 +6,8 @@
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.ViewModels;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class EditOrganisationDetailsMap : IMap<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>
     {
@@ -21,19 +23,26 @@
             var externalOrganisationType = MapOrganisationType(source.OrganisationData.OrganisationType);
             var businessAddressData = MapBusinessAddress(source);
 
+            var additionalContactDetails = source.CurrentSubmission.AdditionalCompanyDetailsData.Select(c => new AdditionalContactModel()
+            {
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+            }).ToList();
+
             var organisation = new OrganisationViewModel
             {
                 OrganisationType = externalOrganisationType,
                 Address = businessAddressData,
                 EEEBrandNames = source.CurrentSubmission.EEEBrandNames,
                 CompanyName = source.CurrentSubmission.CompanyName,
-                BusinessTradingName = source.CurrentSubmission.TradingName
+                BusinessTradingName = source.CurrentSubmission.TradingName,
             };
 
             var viewModel = new EditOrganisationDetailsViewModel
             {
                 DirectRegistrantId = source.DirectRegistrantId,
-                Organisation = organisation
+                Organisation = organisation,
+                AdditionalContactModels = additionalContactDetails
             };
 
             return viewModel;
@@ -56,8 +65,7 @@
 
         private ExternalAddressData MapBusinessAddress(SmallProducerSubmissionData source)
         {
-            var addressData = source.CurrentSubmission.BusinessAddressData ?? source.OrganisationData.BusinessAddress;
-            return mapper.Map<AddressData, ExternalAddressData>(addressData);
+            return mapper.Map<AddressData, ExternalAddressData>(source.CurrentSubmission.BusinessAddressData);
         }
     }
 }

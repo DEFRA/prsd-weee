@@ -1443,9 +1443,9 @@
             // Arrange
             var vm = new PartnerViewModel
             {
-                PartnerModels = new List<PartnerModel>
+                PartnerModels = new List<AdditionalContactModel>
                 {
-                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" }
                 }
             };
 
@@ -1467,9 +1467,9 @@
             // Arrange
             var vm = new PartnerViewModel
             {
-                PartnerModels = new List<PartnerModel>
+                PartnerModels = new List<AdditionalContactModel>
                 {
-                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" }
                 }
             };
 
@@ -1495,19 +1495,19 @@
             // Arrange
             var vm = new PartnerViewModel
             {
-                PartnerModels = new List<PartnerModel>
+                PartnerModels = new List<AdditionalContactModel>
                 {
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
                 }
             };
 
