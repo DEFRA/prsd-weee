@@ -53,6 +53,9 @@
                     case PartnerViewModel partnerViewModel:
                         transaction.PartnerModels = partnerViewModel.AllParterModels;
                         break;
+                    case SoleTraderViewModel soleTraderViewModel:
+                        transaction.SoleTraderViewModel = soleTraderViewModel;
+                        break;
                 }
 
                 await client.SendAsync(accessToken, new AddUpdateOrganisationTransaction(transaction));

@@ -147,6 +147,7 @@
                     .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .With(o => o.OrganisationViewModel, soleTraderDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
+                    .With(o => o.SoleTraderViewModel, soleTraderModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -235,6 +236,18 @@
                 directRegistrant.Address.Telephone.Should().Be(contactDetailsViewModel.AddressData.Telephone);
             };
 
+            private readonly It shouldHaveReturnedSoleTraderDetails = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+
+                additionalDetails.Should().NotBeEmpty();
+                additionalDetails.Count.Should().Be(1);
+                additionalDetails.ElementAt(0).FirstName.Should().Be(soleTraderModel.FirstName);
+                additionalDetails.ElementAt(0).LastName.Should().Be(soleTraderModel.LastName);
+                additionalDetails.ElementAt(0).Type.Should().Be(OrganisationAdditionalDetailsType.SoleTrader);
+            };
+
             private readonly It shouldHaveCreatedOrganisationUser = () =>
             {
                 var users = Query.GetOrganisationForUser(UserId.ToString());
@@ -302,10 +315,11 @@
                 var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
 
                 additionalDetails.Should().NotBeEmpty();
-                foreach (var additionalDetail in additionalDetails)
+                
+                foreach (var partnerModel in partnerViewModel)
                 {
-                    partnerViewModel.Should().Contain(c =>
-                        c.FirstName == additionalDetail.FirstName && c.LastName == additionalDetail.LastName);
+                    additionalDetails.Should().Contain(c =>
+                        c.FirstName == partnerModel.FirstName && c.LastName == partnerModel.LastName && c.Type == OrganisationAdditionalDetailsType.Partner);
                 }
             };
 
@@ -649,6 +663,8 @@
             protected static ContactDetailsViewModel contactDetailsViewModel;
             protected static Organisation organisation;
             protected static List<AdditionalContactModel> partnerViewModel;
+            
+            protected static SoleTraderViewModel soleTraderModel;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -672,11 +688,7 @@
                 contactDetailsViewModel = fixture.Build<ContactDetailsViewModel>()
                     .With(r => r.AddressData, organisationContactAddress).Create();
 
-                var partnerModels = new List<AdditionalContactModel> 
-                {
-                    new AdditionalContactModel{ FirstName = "firstname1", LastName = "lastname1"},
-                    new AdditionalContactModel{ FirstName = "firstname2", LastName = "lastname2"},
-                };
+                soleTraderModel = fixture.Create<SoleTraderViewModel>();
 
                 partnerViewModel = fixture.CreateMany<AdditionalContactModel>().ToList();
 

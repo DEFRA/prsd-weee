@@ -163,6 +163,7 @@
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsAddressDataMap.cs" />
+    <Compile Include="Mappings\AuthorisedRepresentitiveDataMap.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />
     <Compile Include="Mappings\AatfSimpleMap.cs" />
     <Compile Include="Mappings\EvidenceNoteWitheCriteriaMapperBase.cs" />

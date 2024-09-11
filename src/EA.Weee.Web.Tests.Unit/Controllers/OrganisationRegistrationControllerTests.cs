@@ -680,7 +680,7 @@
         }
 
         [Theory]
-        [InlineData("Sole trader", "OrganisationDetails")]
+        [InlineData("Sole trader", "SoleTraderDetails")]
         [InlineData("Partnership", "PartnerDetails")]
         [InlineData("Registered company", "OrganisationDetails")]
         public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
@@ -1421,12 +1421,12 @@
         }
 
         [Fact]
-        public void PartnerDetails_Get_ReturnsViewWithPopulatedViewModel()
+        public async Task PartnerDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
             // Arrange
 
             // Act
-            var result = controller.PartnerDetails() as ViewResult;
+            var result = (await controller.PartnerDetails()) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1435,6 +1435,49 @@
             model.Should().NotBeNull();
 
             model.PartnerModels.Should().HaveCount(2);
+        }
+
+        [Theory]
+        [InlineData(ExternalOrganisationType.RegisteredCompany, "Type")]
+        [InlineData(ExternalOrganisationType.Partnership, "PartnerDetails")]
+        [InlineData(ExternalOrganisationType.SoleTrader, "OrganisationDetails")]
+        public void PreviousPage_Get_RedirectsToPartnershipPageIfPartnerType(ExternalOrganisationType organisationType, string expectedAction)
+        {
+            // Act
+            var result = controller.PreviousPage(organisationType) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(expectedAction);
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Get_ReturnsViewWithSavedData()
+        {
+            // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                PartnerModels = new List<AdditionalContactModel> 
+                {
+                    new AdditionalContactModel{ FirstName = "x", LastName = "y"},
+                    new AdditionalContactModel{ FirstName = "a", LastName = "b"},
+                    new AdditionalContactModel{ FirstName = "c", LastName = "d"},
+                }
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = (await controller.PartnerDetails()) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            var model = result.Model as PartnerViewModel;
+            model.Should().NotBeNull();
+
+            model.PartnerModels.Should().BeEquivalentTo(organisationTransactionData.PartnerModels);
         }
 
         [Fact]
@@ -1506,8 +1549,11 @@
                     new AdditionalContactModel { FirstName = "xx", LastName = "x" },
                     new AdditionalContactModel { FirstName = "xx", LastName = "x" },
                     new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                },
+                NotRequiredPartnerModels = new List<NotRequiredPartnerModel>
+                {
+                    new NotRequiredPartnerModel { FirstName = "xx", LastName = "x" },
+                    new NotRequiredPartnerModel { FirstName = "xx", LastName = "x" },
                 }
             };
 
@@ -1524,6 +1570,66 @@
             controller.ModelState["PartnerModels"].Errors[0].ErrorMessage.Should().BeEquivalentTo("A maximum of 10 partners are allowed");
 
             var model = result.Model as PartnerViewModel;
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Get_ReturnsViewWithPopulatedViewModel()
+        {
+            // Act
+            var result = await controller.SoleTraderDetails() as ViewResult;
+
+            // Assert
+            var model = result.Model as SoleTraderViewModel;
+
+            result.Should().NotBeNull();
+            model.Should().NotBeNull();
+            model.FirstName.Should().BeNull();
+            model.LastName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Get_WithExistingTransaction_ReturnsViewWithPopulatedViewModel()
+        {
+            // Arrange
+            var existingTransaction = new OrganisationTransactionData
+            {
+                SoleTraderViewModel = TestFixture.Create<SoleTraderViewModel>()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.SoleTraderDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as SoleTraderViewModel;
+
+            model.Should().NotBeNull();
+            model.Should().BeEquivalentTo(existingTransaction.SoleTraderViewModel);
+        }
+
+        [Fact]
+        public async Task SoleTraderDetails_Post_CallsCaptureDataAndRedirectsToOrganisationDetails()
+        {
+            // Arrange
+            var model = TestFixture.Create<SoleTraderViewModel>();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.SoleTraderViewModel, model).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.SoleTraderDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("OrganisationDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
         }
     }
 }

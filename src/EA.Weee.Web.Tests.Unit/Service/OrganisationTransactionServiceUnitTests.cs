@@ -242,5 +242,26 @@
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.ContactDetailsViewModel.Equals(contactDetailsViewModel)))).MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public async Task CaptureData_WithSoleTraderViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var soleTraderViewModel = fixture.Create<SoleTraderViewModel>();
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, soleTraderViewModel);
+
+            // Assert
+            transaction.SoleTraderViewModel.Should().Be(soleTraderViewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.SoleTraderViewModel.Equals(soleTraderViewModel)))).MustHaveHappenedOnceExactly();
+        }
     }
 }

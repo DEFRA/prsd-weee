@@ -36,6 +36,8 @@
 
         public virtual Guid? BrandNameId { get; private set; }
 
+        public virtual Guid? AuthorisedRepresentativeId { get; private set; }
+
         public virtual Address ServiceOfNoticeAddress { get; set; }
 
         public virtual Contact AppropriateSignatory { get; set; }
@@ -47,6 +49,8 @@
         public virtual Address BusinessAddress { get; set; }
 
         public virtual BrandName BrandName { get; set; }
+
+        public virtual AuthorisedRepresentative AuthorisedRepresentative { get; set; }
 
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
 
