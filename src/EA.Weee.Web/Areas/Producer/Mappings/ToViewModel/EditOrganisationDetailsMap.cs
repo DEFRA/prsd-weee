@@ -41,6 +41,7 @@
             var viewModel = new EditOrganisationDetailsViewModel
             {
                 DirectRegistrantId = source.DirectRegistrantId,
+                OrganisationId = source.OrganisationData.Id,
                 Organisation = organisation,
                 AdditionalContactModels = additionalContactDetails
             };

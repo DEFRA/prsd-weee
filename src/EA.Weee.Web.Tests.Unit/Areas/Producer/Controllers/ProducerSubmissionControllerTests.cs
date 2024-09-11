@@ -14,6 +14,8 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Requests.Base;
+    using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -31,15 +33,19 @@
         private readonly IWeeeClient weeeClient;
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
             editOrganisationDetailsRequestCreator;
+        private readonly BreadcrumbService breadcrumbService;
+        private readonly IWeeeCache weeeCache;
 
-        public ProducerSubmissionControllerTests()
+        public ProducerSubmissionControllerTests(BreadcrumbService breadcrumbService, IWeeeCache weeeCache)
         {
+            this.breadcrumbService = breadcrumbService;
+            this.weeeCache = weeeCache;
             mapper = A.Fake<IMapper>();
             weeeClient = A.Fake<IWeeeClient>();
             editOrganisationDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>>();
 
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, () => weeeClient);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache);
         }
 
         [Fact]
