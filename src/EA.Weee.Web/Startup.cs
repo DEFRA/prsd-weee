@@ -14,9 +14,7 @@ namespace EA.Weee.Web
     using Infrastructure;
     using Owin;
     using Serilog;
-    using Serilog.Sinks.MSSqlServer;
     using Services;
-    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Net;
     using System.Reflection;

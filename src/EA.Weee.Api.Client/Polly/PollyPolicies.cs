@@ -11,7 +11,7 @@
         public static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy(ILogger logger)
         {
             return Policy
-                .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                .HandleResult<HttpResponseMessage>(IsTransientError)
                 .Or<HttpRequestException>()
                 .Or<TimeoutException>()
                 .WaitAndRetryAsync(
@@ -21,6 +21,12 @@
                     {
                         logger.Information($"Retry {retryCount} after {timeSpan.TotalSeconds} seconds due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
                     });
+        }
+
+        private static bool IsTransientError(HttpResponseMessage response)
+        {
+            int[] transientHttpStatusCodes = { 408, 429, 500, 502, 503, 504 };
+            return Array.IndexOf(transientHttpStatusCodes, (int)response.StatusCode) != -1;
         }
     }
 }
