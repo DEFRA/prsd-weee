@@ -14,8 +14,8 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Controllers.Base;
     using EA.Weee.Web.Requests.Base;
-    using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -107,6 +107,27 @@
             result.Model.Should().Be(viewModel);
             viewModel.Organisation.Address.Countries.Should().BeSameAs(countries);
         }
+
+        //[Fact]
+        //public async Task EditOrganisationDetails_Get_ShouldSetBreadCrumb()
+        //{
+        //    // Arrange
+        //    var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+        //    var organisationName = TestFixture.Create<string>();
+
+        //    controller.SmallProducerSubmissionData = submissionData;
+
+        //    A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+
+        //    // Act
+        //    var result = await controller.EditOrganisationDetails() as ViewResult;
+
+        //    // Assert
+        //    result.Should().NotBeNull();
+        //    result.ViewName.Should().BeEmpty();
+        //    result.Model.Should().Be(viewModel);
+        //    viewModel.Organisation.Address.Countries.Should().BeSameAs(countries);
+        //}
 
         [Fact]
         public async Task EditOrganisationDetails_Post_ValidModel_ShouldRedirectToTaskList()
