@@ -26,7 +26,7 @@
         }
 
         [Fact]
-        public void Map_ShouldMapDirectRegistrantId()
+        public void Map_ShouldMapIds()
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionData>();
@@ -36,6 +36,7 @@
 
             // Assert
             result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
+            result.OrganisationId.Should().Be(source.OrganisationData.Id);
         }
 
         [Theory]
