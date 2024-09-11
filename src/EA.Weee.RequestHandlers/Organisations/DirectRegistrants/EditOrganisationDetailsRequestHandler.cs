@@ -51,7 +51,7 @@
             if (!string.IsNullOrWhiteSpace(request.EEEBrandNames))
             {
                 var brandNames = new BrandName(request.EEEBrandNames);
-                currentYearSubmission.CurrentSubmission.BrandName.OverwriteWhereNull(brandNames);
+                currentYearSubmission.CurrentSubmission.AddOrUpdateBrandName(brandNames);
             }
 
             await weeeContext.SaveChangesAsync();

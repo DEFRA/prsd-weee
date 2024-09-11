@@ -10,6 +10,7 @@
     {
         public DirectRegistrant()
         {
+            DirectProducerSubmissions = new List<DirectProducerSubmission>();
         }
 
         public DirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative authorisedRepresentative, List<AdditionalCompanyDetails> additionalCompanyDetails)
@@ -22,6 +23,7 @@
             Address = contactAddress;
             AuthorisedRepresentative = authorisedRepresentative;
             AdditionalCompanyDetails = additionalCompanyDetails;
+            DirectProducerSubmissions = new List<DirectProducerSubmission>();
         }
 
         public DirectRegistrant(Organisation organisation)
@@ -29,6 +31,7 @@
             Condition.Requires(organisation).IsNotNull();
 
             Organisation = organisation;
+            DirectProducerSubmissions = new List<DirectProducerSubmission>();
         }
 
         public virtual Guid OrganisationId { get; private set; }

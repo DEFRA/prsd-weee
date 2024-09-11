@@ -5,7 +5,6 @@
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
-    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;

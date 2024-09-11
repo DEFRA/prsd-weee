@@ -25,7 +25,8 @@
                 address.Postcode,
                 country,
                 address.Telephone,
-                address.Email);
+                address.Email,
+                address.WebAddress);
         }
 
         public static Address CreateAddress(ExternalAddressData address, Country country)
