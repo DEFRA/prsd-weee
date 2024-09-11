@@ -38,17 +38,17 @@
 
         public virtual Guid? AuthorisedRepresentativeId { get; private set; }
 
-        public virtual Address ServiceOfNoticeAddress { get; set; }
+        public virtual Address ServiceOfNoticeAddress { get; private set; }
 
-        public virtual Contact AppropriateSignatory { get; set; }
+        public virtual Contact AppropriateSignatory { get; private set; }
 
-        public virtual Address ContactAddress { get; set; }
+        public virtual Address ContactAddress { get; private set; }
 
-        public virtual Contact Contact { get; set; }
+        public virtual Contact Contact { get; private set; }
 
-        public virtual Address BusinessAddress { get; set; }
+        public virtual Address BusinessAddress { get; private set; }
 
-        public virtual BrandName BrandName { get; set; }
+        public virtual BrandName BrandName { get; private set; }
 
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; set; }
 
@@ -64,11 +64,26 @@
             DirectProducerSubmission = directProducerSubmission;
         }
 
+        public DirectProducerSubmissionHistory(DirectProducerSubmission directProducerSubmission, BrandName brandName, Address businessAddress)
+        {
+            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
+            DirectProducerSubmission = directProducerSubmission;
+            BusinessAddress = businessAddress;
+            BrandName = brandName;
+        }
+
         public void AddOrUpdateBusinessAddress(Address address)
         {
             Guard.ArgumentNotNull(() => address, address);
 
             BusinessAddress = address.OverwriteWhereNull(BusinessAddress);
+        }
+
+        public void AddOrUpdateBrandName(BrandName brandName)
+        {
+            Guard.ArgumentNotNull(() => brandName, brandName);
+
+            BrandName = brandName.OverwriteWhereNull(brandName);
         }
     }
 }

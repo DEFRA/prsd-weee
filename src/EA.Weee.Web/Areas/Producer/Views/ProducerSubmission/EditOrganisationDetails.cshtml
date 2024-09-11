@@ -18,9 +18,24 @@
     const string title = "Organisation details";
     ViewBag.Title = title + " - GOV.UK";
 }
+<style>
+
+    .flex-container {
+        display: flex;
+        align-items: center;
+        padding-left: 15px;
+    }
+
+    .label-width {
+        width: 30%;
+        flex-shrink: 0;
+    }
+</style>
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
+
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 1 of 5</span>
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
@@ -31,12 +46,19 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.Organisation.OrganisationType)
+        @Html.HiddenFor(m => m.Organisation.CompaniesRegistrationNumber)
 
-        <div class="govuk-grid-row govuk-!-padding-bottom-3">
-            @Html.Gds().DisplayFor(m => m.Organisation.OrganisationType, Model.Organisation.OrganisationType.GetDisplayName(), "govuk-grid-column-one-half")
+        <div class="govuk-grid-row govuk-!-padding-bottom-2">
+            <div class="flex-container">
+                <span class="govuk-body govuk-label--s label-width" for="Organisation_OrganisationType" id="Organisation_OrganisationType-label">Organisation type</span>
+                <span class="govuk-body" aria-labelledby="Organisation_OrganisationType-label" name="Organisation_OrganisationType" id="Organisation.OrganisationType">@Model.Organisation.OrganisationType.GetDisplayName()</span>
+            </div>
         </div>
-        <div class="govuk-grid-row govuk-!-padding-bottom-5">
-            @Html.Gds().DisplayFor(m => m.Organisation.CompaniesRegistrationNumber, Model.Organisation.CompaniesRegistrationNumber, "govuk-grid-column-one-half")
+        <div class="govuk-grid-row govuk-!-padding-bottom-2">
+            <div class="flex-container">
+                <span class="govuk-body govuk-label--s label-width" for="Organisation_CompaniesRegistrationNumber" id="Organisation_CompaniesRegistrationNumber-label">Company registration number</span>
+                <span class="govuk-body" aria-labelledby="Organisation_CompaniesRegistrationNumber-label" name="Organisation_CompaniesRegistrationNumber" id="Organisation.CompaniesRegistrationNumber">@Model.Organisation.CompaniesRegistrationNumber</span>
+            </div>
         </div>
 
         @Html.EditorForAs(model => model.Organisation)
@@ -93,10 +115,46 @@
 
         @(this.WeeeGds().Warning(Resources.ProducerSubmission.ProducerSubmission.WarningText))
 
-        <div class="govuk-button-group">
+        if (Model.AdditionalContactModels.Any())
+        {
+            for (var i = 0; i < Model.AdditionalContactModels.Count; i++)
+            {
+                
+                var heading = Model.Organisation.OrganisationType == ExternalOrganisationType.Partnership ? "Partner " + (i+1).ToString() + " details" : "Sole trader details";
+                
+                <h2 class="govuk-heading-m">@heading</h2>
+
+                var contact = Model.AdditionalContactModels[i];
+                var index = i.ToString();
+
+                var firstNameLabelFor = "AdditionalContactModels_FirstName_" + index;
+                var firstNameLabelId = "AdditionalContactModels_FirstName_" + index + "-label";
+                var lastNameLabelFor = "AdditionalContactModels_LastName_" + index;
+                var lastNameLabelId = "AdditionalContactModels_LastName_" + index + "-label";
+
+                @Html.HiddenFor(m => m.AdditionalContactModels[i].FirstName)
+                @Html.HiddenFor(m => m.AdditionalContactModels[i].LastName)
+
+                <div class="govuk-grid-row govuk-!-padding-bottom-2">
+                    <div class="flex-container">
+                        <span class="govuk-body govuk-label--s label-width" for="@firstNameLabelFor" id="@firstNameLabelId">First name</span>
+                        <span class="govuk-body" aria-labelledby="@firstNameLabelId">@contact.FirstName</span>
+                    </div>
+                </div>
+
+                <div class="govuk-grid-row govuk-!-padding-bottom-2">
+                    <div class="flex-container">
+                        <span class="govuk-body govuk-label--s label-width" for="@lastNameLabelFor" id="@lastNameLabelId">Last name</span>
+                        <span class="govuk-body" aria-labelledby="@lastNameLabelId">@contact.LastName</span>
+                    </div>
+                </div>
+            }
+        }
+        <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
 
-            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, secondaryButton: true)
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerController>(a => a.TaskList()), true)
+            
         </div>
         @(this.WeeeGds().BackToTopLink())
     }
