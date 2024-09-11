@@ -580,6 +580,7 @@
     <Compile Include="Areas\Producer\Filters\SmallProducerSubmissionContextAttribute.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
+    <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ProducerTaskModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\TaskListViewModel.cs" />
@@ -1069,6 +1070,7 @@
     <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditOrganisationDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\ServiceOfNotice.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
