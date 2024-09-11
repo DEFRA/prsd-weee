@@ -26,7 +26,7 @@
         }
 
         [Fact]
-        public void Map_ShouldMapIds()
+        public void Map_ShouldMaphighLevelSourceFields()
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionData>();
@@ -37,6 +37,7 @@
             // Assert
             result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
             result.OrganisationId.Should().Be(source.OrganisationData.Id);
+            result.HasAuthorisedRepresentitive.Should().Be(source.HasAuthorisedRepresentitive);
         }
 
         [Theory]
