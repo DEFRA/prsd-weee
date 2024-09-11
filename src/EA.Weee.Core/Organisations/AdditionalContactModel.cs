@@ -3,7 +3,8 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Core.DataStandards;
-    public class PartnerModel
+
+    public class AdditionalContactModel
     {
         [Required]
         [DisplayName("First name")]
