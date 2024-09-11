@@ -385,6 +385,7 @@
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\AuthorisedRepresentitiveDataMapUnitTests.cs" />
+    <Compile Include="Mapping\AdditionalCompanyDetailsAddressDataMapUnitTests.cs" />
     <Compile Include="Mapping\EvidenceNoteWithCriteriaMapperTests.cs" />
     <Compile Include="Mapping\EvidenceNoteRowCriteriaMapperTests.cs" />
     <Compile Include="Mapping\EvidenceNoteRowMapTests.cs" />
@@ -407,6 +408,7 @@
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Mapping\TransferNoteMapTransferTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\EditOrganisationDetailsRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSmallProducerSubmissionHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddUpdateOrganisationTransactionHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\CompleteOrganisationTransactionHandlerTests.cs" />

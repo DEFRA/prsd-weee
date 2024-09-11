@@ -46,9 +46,9 @@
             return dbContext.DirectRegistrants.First(c => c.OrganisationId.Equals(organisationId));
         }
 
-        public List<AdditionalCompanyDetails> GetAdditionalDetailsByRegistrantId(Guid directRegistrantId)
+        public List<AdditionalCompanyDetails> GetAdditionalDetailsByRegistrantId(Guid directRegistrantId, OrganisationAdditionalDetailsType type)
         {
-            return dbContext.AdditionalCompanyDetails.Where(c => c.DirectRegistrant.Id.Equals(directRegistrantId)).ToList();
+            return dbContext.AdditionalCompanyDetails.Where(c => c.DirectRegistrant.Id.Equals(directRegistrantId) && c.Type.Value == type.Value).ToList();
         }
 
         public Note GetEvidenceNoteById(Guid id)
@@ -148,6 +148,15 @@
             dbContext.OrganisationTransactions.RemoveRange(organisationTransactions);
 
             await dbContext.SaveChangesAsync();
+        }
+
+        public void DeleteAllAdditionalCompanyDetails()
+        {
+            var additionalContactDetails = dbContext.AdditionalCompanyDetails.ToList();
+
+            dbContext.AdditionalCompanyDetails.RemoveRange(additionalContactDetails);
+
+            dbContext.SaveChanges();
         }
 
         public List<OrganisationUser> GetOrganisationForUser(string userId)

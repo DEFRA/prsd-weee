@@ -291,10 +291,10 @@
             // Arrange
             var organisationId = Guid.NewGuid();
             var externalOrganisationType = ExternalOrganisationType.Partnership;
-            var partnerModels = new List<PartnerModel>
+            var partnerModels = new List<AdditionalContactModel>
             {
-                new PartnerModel { FirstName = "John", LastName = "Doe" },
-                new PartnerModel { FirstName = "Jane", LastName = "Smith" }
+                new AdditionalContactModel { FirstName = "John", LastName = "Doe" },
+                new AdditionalContactModel { FirstName = "Jane", LastName = "Smith" }
             };
 
             var transactionData = SetupValidOrganisationTransaction(externalOrganisationType);
