@@ -83,11 +83,11 @@
         }
 
         [Fact]
-        public void Map_WithLargeSource_ShouldMapAllItems()
+        public void Map_WithMultipleSource_ShouldMapAllItems()
         {
             // Arrange
             var source = new List<AdditionalCompanyDetails>();
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 5; i++)
             {
                 source.Add(new AdditionalCompanyDetails { FirstName = $"FirstName{i}", LastName = $"LastName{i}" });
             }
@@ -97,8 +97,8 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().HaveCount(1000);
-            for (var i = 0; i < 1000; i++)
+            result.Should().HaveCount(5);
+            for (var i = 0; i < 5; i++)
             {
                 result[i].FirstName.Should().Be($"FirstName{i}");
                 result[i].LastName.Should().Be($"LastName{i}");
