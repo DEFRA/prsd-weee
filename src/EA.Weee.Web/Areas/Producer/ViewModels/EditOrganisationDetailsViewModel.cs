@@ -14,5 +14,7 @@
         public Guid OrganisationId { get; set; }
 
         public List<AdditionalContactModel> AdditionalContactModels { get; set; }
+
+        public bool HasAuthorisedRepresentitive { get; set; }
     }
 }

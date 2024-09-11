@@ -35,7 +35,10 @@
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
 
-    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 1 of 5</span>
+    @{
+        var step = @Model.HasAuthorisedRepresentitive ? "5" : "4";
+    }
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 1 of @step</span>
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
@@ -47,6 +50,7 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.DirectRegistrantId)
+        @Html.HiddenFor(m => m.HasAuthorisedRepresentitive)
         @Html.HiddenFor(m => m.Organisation.OrganisationType)
         @Html.HiddenFor(m => m.Organisation.CompaniesRegistrationNumber)
 
@@ -152,10 +156,11 @@
                 </div>
             }
         }
+
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
 
-            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerController>(a => a.TaskList()), true)
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditOrganisationDetails()), true)
 
         </div>
         @(this.WeeeGds().BackToTopLink())

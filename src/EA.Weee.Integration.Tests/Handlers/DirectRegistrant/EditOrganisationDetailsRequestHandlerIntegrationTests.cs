@@ -1,103 +1,116 @@
-﻿//namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
-//{
-//    using Autofac;
-//    using AutoFixture;
-//    using Base;
-//    using EA.Weee.Core.Organisations;
-//    using EA.Weee.Core.Organisations.Base;
-//    using EA.Weee.Core.Shared;
-//    using EA.Weee.Domain;
-//    using EA.Weee.Domain.Organisation;
-//    using EA.Weee.Domain.Producer;
-//    using EA.Weee.Integration.Tests.Builders;
-//    using EA.Weee.Requests.Organisations.DirectRegistrant;
-//    using FluentAssertions;
-//    using Newtonsoft.Json;
-//    using NUnit.Specifications.Categories;
-//    using Prsd.Core.Autofac;
-//    using Prsd.Core.Mediator;
-//    using System;
-//    using System.Collections.Generic;
-//    using System.Linq;
-//    using System.Security;
+﻿namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
+{
+    using Autofac;
+    using AutoFixture;
+    using Base;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Domain;
+    using EA.Weee.Integration.Tests.Builders;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using FluentAssertions;
+    using NUnit.Specifications.Categories;
+    using Prsd.Core.Autofac;
+    using Prsd.Core.Mediator;
+    using System;
+    using System.Linq;
+    using System.Security;
 
-//    public class EditOrganisationDetailsRequestHandlerIntegrationTests : IntegrationTestBase
-//    {
-//        [Component]
-//        public class WhenIUpdateOrganisationDetails : EditOrganisationDetailsRequestHandlerIntegrationTestBase
-//        {
-//            private readonly Establish context = () =>
-//            {
-//                LocalSetup();
-//            };
+    public class EditOrganisationDetailsRequestHandlerIntegrationTests : IntegrationTestBase
+    {
+        [Component]
+        public class WhenIUpdateOrganisationDetails : EditOrganisationDetailsRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+            };
 
-//            private readonly Because of = () =>
-//            {
-//                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
-//            };
+            private readonly Because of = () =>
+            {
+                AsyncHelper.RunSync(() =>
+                    createSubmissionHandler.HandleAsync(new AddSmallProducerSubmission(directRegistrant.Id)));
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
 
-//            private readonly It shouldHappen = () =>
-//            {
-//                var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
-//            };
-//        }
+            private readonly It shouldUpdateTheData = () =>
+            {
+                var entity = Query.GetDirectRegistrantByOrganisationId(directRegistrant.OrganisationId);
 
-//        [Component]
-//        public class WhenUserIsNotAuthorised : EditOrganisationDetailsRequestHandlerIntegrationTestBase
-//        {
-//            protected static IRequestHandler<EditOrganisationDetailsRequest, bool> authHandler;
+                entity.DirectProducerSubmissions.Count().Should().Be(1);
 
-//            private readonly Establish context = () =>
-//            {
-//                SetupTest(IocApplication.RequestHandler)
-//                    .WithDefaultSettings();
+                var submission = entity.DirectProducerSubmissions.ElementAt(0);
+                submission.CurrentSubmission.CompanyName.Should().Be(request.CompanyName);
+                submission.CurrentSubmission.TradingName.Should().Be(request.TradingName);
+                submission.CurrentSubmission.BrandName.Name.Should().Be(request.EEEBrandNames);
+                submission.CurrentSubmission.BusinessAddress.Address1.Should().Be(request.BusinessAddressData.Address1);
+                submission.CurrentSubmission.BusinessAddress.Address2.Should().Be(request.BusinessAddressData.Address2);
+                submission.CurrentSubmission.BusinessAddress.TownOrCity.Should().Be(request.BusinessAddressData.TownOrCity);
+                submission.CurrentSubmission.BusinessAddress.CountyOrRegion.Should().Be(request.BusinessAddressData.CountyOrRegion);
+                submission.CurrentSubmission.BusinessAddress.CountryId.Should().Be(request.BusinessAddressData.CountryId);
+                submission.CurrentSubmission.BusinessAddress.Postcode.Should().Be(request.BusinessAddressData.Postcode);
+                submission.CurrentSubmission.BusinessAddress.WebAddress.Should().Be(request.BusinessAddressData.WebAddress);
+                submission.CurrentSubmission.BusinessAddress.Telephone.Should().Be(request.BusinessAddressData.Telephone);
+                submission.CurrentSubmission.BusinessAddress.Email.Should().Be(request.BusinessAddressData.Email);
+            };
+        }
 
-//                authHandler = Container.Resolve<IRequestHandler<EditOrganisationDetailsRequest, bool>>();
-//            };
+        [Component]
+        public class WhenUserIsNotAuthorised : EditOrganisationDetailsRequestHandlerIntegrationTestBase
+        {
+            protected static IRequestHandler<EditOrganisationDetailsRequest, bool> authHandler;
 
-//            private readonly Because of = () =>
-//            {
-//                CatchExceptionAsync(() => authHandler.HandleAsync(request));
-//            };
+            private readonly Establish context = () =>
+            {
+                SetupTest(IocApplication.RequestHandler)
+                    .WithDefaultSettings();
 
-//            private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
-//        }
+                authHandler = Container.Resolve<IRequestHandler<EditOrganisationDetailsRequest, bool>>();
+            };
 
-//        public class EditOrganisationDetailsRequestHandlerIntegrationTestBase : WeeeContextSpecification
-//        {
-//            protected static IRequestHandler<EditOrganisationDetailsRequest, bool> handler;
-//            protected static Fixture fixture;
-//            protected static Domain.Producer.DirectRegistrant directRegistrant;
-//            protected static EditOrganisationDetailsRequest request;
-//            protected static bool result;
-//            protected static Country country;
+            private readonly Because of = () =>
+            {
+                CatchExceptionAsync(() => authHandler.HandleAsync(request));
+            };
 
-//            public static IntegrationTestSetupBuilder LocalSetup()
-//            {
-//                var setup = SetupTest(IocApplication.RequestHandler)
-//                    .WithIoC()
-//                    .WithTestData()
-//                .WithExternalUserAccess();
+            private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
+        }
 
-//                directRegistrant = DirectRegistrantDbSetup.Init()
-//                    .WithSubmissions()
-//                    .Create();
+        public class EditOrganisationDetailsRequestHandlerIntegrationTestBase : WeeeContextSpecification
+        {
+            protected static IRequestHandler<EditOrganisationDetailsRequest, bool> handler;
+            protected static IRequestHandler<AddSmallProducerSubmission, Guid> createSubmissionHandler;
+            protected static Fixture fixture;
+            protected static Domain.Producer.DirectRegistrant directRegistrant;
+            protected static EditOrganisationDetailsRequest request;
+            protected static bool result;
+            protected static Country country;
 
-//                handler = Container.Resolve<IRequestHandler<EditOrganisationDetailsRequest, bool>>();
+            public static IntegrationTestSetupBuilder LocalSetup()
+            {
+                var setup = SetupTest(IocApplication.RequestHandler)
+                    .WithIoC()
+                    .WithTestData()
+                .WithExternalUserAccess();
 
-//                fixture = new Fixture();
+                directRegistrant = DirectRegistrantDbSetup.Init()
+                    .Create();
 
-//                country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
+                handler = Container.Resolve<IRequestHandler<EditOrganisationDetailsRequest, bool>>();
+                createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
 
-//                var address = fixture.Build<AddressData>().With(a => a.CountryId).Create();
+                fixture = new Fixture();
 
-//                request = new EditOrganisationDetailsRequest(directRegistrant.Id, "New company name",
-//                    "New trading name", address, "New brand names");
+                country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
 
-//                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+                var address = fixture.Build<AddressData>().With(a => a.CountryId, country.Id).Create();
 
-//                return setup;
-//            }
-//        }
-//    }
-//}
+                request = new EditOrganisationDetailsRequest(directRegistrant.Id, "New company name",
+                    "New trading name", address, "New brand names");
+
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+
+                return setup;
+            }
+        }
+    }
+}
