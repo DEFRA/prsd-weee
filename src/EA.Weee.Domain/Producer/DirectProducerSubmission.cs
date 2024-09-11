@@ -51,6 +51,7 @@
             DirectRegistrant = directRegistrant;
             RegisteredProducer = registeredProducer;
             ComplianceYear = complianceYear;
+            SubmissionHistory = new List<DirectProducerSubmissionHistory>();
         }
     }
 }
