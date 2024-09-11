@@ -283,7 +283,7 @@
                     .With(o => o.OrganisationViewModel, partnershipDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
                     .With(o => o.PartnerModels, partnerViewModel)
-                    .Without(o => o.PartnerModels)
+                    .Without(o => o.SoleTraderViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
