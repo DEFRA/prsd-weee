@@ -15,7 +15,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.ViewModels.Shared;
+    using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -26,42 +26,72 @@
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
         private readonly IMapper mapper;
-        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>
+        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
             editOrganisationDetailsRequestCreator;
+        private readonly Func<IWeeeClient> apiClient;
+        private readonly BreadcrumbService breadcrumbService;
+        private readonly IWeeeCache weeeCache;
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
-        private readonly Func<IWeeeClient> apiClient;
 
         public ProducerSubmissionController(IMapper mapper, 
-            IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest> editOrganisationDetailsRequestCreator,
-            IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
-            Func<IWeeeClient> apiClient)
+            IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
+            Func<IWeeeClient> apiClient, 
+            BreadcrumbService breadcrumbService, 
+            IWeeeCache weeeCache,
+            IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
-            this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
             this.apiClient = apiClient;
+            this.breadcrumbService = breadcrumbService;
+            this.weeeCache = weeeCache;
+            this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumbService.ExternalOrganisation = await weeeCache.FetchOrganisationName(organisationId);
+            breadcrumbService.ExternalActivity = activity;
+            breadcrumbService.OrganisationId = organisationId;
         }
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public ActionResult EditOrganisationDetails()
+        public async Task<ActionResult> EditOrganisationDetails()
         {
             var model = mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(SmallProducerSubmissionData);
+
+            var countries = await GetCountries();
+
+            model.Organisation.Address.Countries = countries;
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditOrganisationDetails(EditOrganisationDetailsViewModel model)
+        public async Task<ActionResult> EditOrganisationDetails(EditOrganisationDetailsViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var request = editOrganisationDetailsRequestCreator.ViewModelToRequest(model);
 
-                // send the request
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
             }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+            var countries = await GetCountries();
+
+            model.Organisation.Address.Countries = countries;
 
             return View(model);
         }

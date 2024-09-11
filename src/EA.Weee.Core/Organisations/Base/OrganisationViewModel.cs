@@ -3,9 +3,12 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Validation;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Reflection;
 
     public class OrganisationViewModel : IValidatableObject
     {
@@ -30,6 +33,7 @@
         [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
 
+        [DisplayName("Organisation type")]
         public ExternalOrganisationType? OrganisationType { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -50,5 +54,42 @@
             "Address.CountyOrRegion",
             "Address.Postcode"
         };
+
+        public object CastToSpecificViewModel(OrganisationViewModel model)
+        {
+            switch (OrganisationType)
+            {
+                case ExternalOrganisationType.RegisteredCompany:
+                    return model.MapToViewModel<RegisteredCompanyDetailsViewModel>(model);
+                case ExternalOrganisationType.Partnership:
+                    return model.MapToViewModel<PartnershipDetailsViewModel>(model);
+                case ExternalOrganisationType.SoleTrader:
+                    return model.MapToViewModel<SoleTraderDetailsViewModel>(model);
+                default:
+                    return model.MapToViewModel<RegisteredCompanyDetailsViewModel>(model);
+            }
+        }
+
+        private T MapToViewModel<T>(OrganisationViewModel source) where T : OrganisationViewModel, new()
+        {
+            var target = new T();
+
+            var propertiesToIgnore = new HashSet<string>
+            {
+                nameof(OrganisationViewModel.ValidationMessageDisplayOrder),
+            };
+
+            var properties = typeof(OrganisationViewModel)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => !propertiesToIgnore.Contains(p.Name));
+
+            foreach (var prop in properties)
+            {
+                var value = prop.GetValue(source);
+                prop.SetValue(target, value);
+            }
+
+            return target;
+        }
     }
 }
