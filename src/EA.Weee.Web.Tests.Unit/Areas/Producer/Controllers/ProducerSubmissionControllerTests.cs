@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Controllers
 {
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -24,6 +25,10 @@
 
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>
             editOrganisationDetailsRequestCreator;
+        private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
+            serviceOfNoticeRequestCreator;
+
+        private readonly Func<IWeeeClient> apiClient;
 
         public ProducerSubmissionControllerTests()
         {
@@ -31,7 +36,7 @@
             editOrganisationDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditProducerSubmissionAddressRequest>>();
 
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, serviceOfNoticeRequestCreator, apiClient);
         }
 
         [Fact]
