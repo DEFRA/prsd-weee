@@ -1073,6 +1073,7 @@
     <Content Include="Content\govuk_frontend\components\task-list\_task-list.scss" />
     <Content Include="Areas\Producer\Views\Producer\CheckAnswers.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnerDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditOrganisationDetails.cshtml" />
