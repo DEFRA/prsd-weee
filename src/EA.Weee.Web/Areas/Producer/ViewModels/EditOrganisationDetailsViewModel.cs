@@ -11,6 +11,8 @@
 
         public Guid DirectRegistrantId { get; set; }
 
+        public Guid OrganisationId { get; set; }
+
         public List<AdditionalContactModel> AdditionalContactModels { get; set; }
     }
 }
