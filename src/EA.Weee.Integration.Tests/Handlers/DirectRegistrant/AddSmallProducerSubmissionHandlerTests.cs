@@ -71,7 +71,6 @@
 
                 handler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
 
-                var organisation = OrganisationDbSetup.Init().Create();
                 directRegistrant = DirectRegistrantDbSetup.Init().Create();
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();

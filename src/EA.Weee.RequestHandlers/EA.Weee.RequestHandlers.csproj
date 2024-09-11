@@ -162,11 +162,13 @@
     <Compile Include="Admin\GetSchemes\GetSchemesWithObligationOrEvidenceByComplianceYearHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
+    <Compile Include="Mappings\AdditionalCompanyDetailsAddressDataMap.cs" />
     <Compile Include="Mappings\AuthorisedRepresentitiveDataMap.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />
     <Compile Include="Mappings\AatfSimpleMap.cs" />
     <Compile Include="Mappings\EvidenceNoteWitheCriteriaMapperBase.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
+    <Compile Include="Organisations\DirectRegistrants\EditOrganisationDetailsRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetSmallProducerSubmissionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSmallProducerSubmissionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\DeleteUserOrganisationTransactionHandler.cs" />

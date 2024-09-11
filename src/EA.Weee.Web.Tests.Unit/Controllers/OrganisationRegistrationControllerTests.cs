@@ -1457,11 +1457,11 @@
             // Arrange
             var organisationTransactionData = new OrganisationTransactionData()
             {
-                PartnerModels = new List<PartnerModel> 
+                PartnerModels = new List<AdditionalContactModel> 
                 {
-                    new PartnerModel{ FirstName = "x", LastName = "y"},
-                    new PartnerModel{ FirstName = "a", LastName = "b"},
-                    new PartnerModel{ FirstName = "c", LastName = "d"},
+                    new AdditionalContactModel{ FirstName = "x", LastName = "y"},
+                    new AdditionalContactModel{ FirstName = "a", LastName = "b"},
+                    new AdditionalContactModel{ FirstName = "c", LastName = "d"},
                 }
             };
 
@@ -1486,9 +1486,9 @@
             // Arrange
             var vm = new PartnerViewModel
             {
-                PartnerModels = new List<PartnerModel>
+                PartnerModels = new List<AdditionalContactModel>
                 {
-                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" }
                 }
             };
 
@@ -1510,9 +1510,9 @@
             // Arrange
             var vm = new PartnerViewModel
             {
-                PartnerModels = new List<PartnerModel>
+                PartnerModels = new List<AdditionalContactModel>
                 {
-                    new PartnerModel { FirstName = "xx", LastName = "x" }
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" }
                 }
             };
 
@@ -1538,17 +1538,17 @@
             // Arrange
             var vm = new PartnerViewModel
             {
-                PartnerModels = new List<PartnerModel>
+                PartnerModels = new List<AdditionalContactModel>
                 {
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
-                    new PartnerModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
                 },
                 NotRequiredPartnerModels = new List<NotRequiredPartnerModel>
                 {

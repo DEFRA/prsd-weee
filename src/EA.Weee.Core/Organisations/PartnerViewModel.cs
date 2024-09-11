@@ -5,14 +5,14 @@
 
     public class PartnerViewModel
     {
-        public List<PartnerModel> PartnerModels { get; set; } = new List<PartnerModel>();
+        public List<AdditionalContactModel> PartnerModels { get; set; } = new List<AdditionalContactModel>();
         public List<NotRequiredPartnerModel> NotRequiredPartnerModels { get; set; } = new List<NotRequiredPartnerModel>();
-        public List<PartnerModel> AllParterModels
+        public List<AdditionalContactModel> AllParterModels
         {
             get
             {
                 return NotRequiredPartnerModels
-                    .Select(x => new PartnerModel { FirstName = x.FirstName, LastName = x.LastName })
+                    .Select(x => new AdditionalContactModel { FirstName = x.FirstName, LastName = x.LastName })
                     .Concat(PartnerModels)
                     .ToList();
             }

@@ -301,6 +301,7 @@
     <Compile Include="Configuration\Logging\LoggerConfig.cs" />
     <Compile Include="Constants\DateTimeConstants.cs" />
     <Compile Include="Constants\UkCountry.cs" />
+    <Compile Include="DirectRegistrant\AdditionalCompanyDetailsData.cs" />
     <Compile Include="DirectRegistrant\AuthorisedRepresentitiveData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
@@ -311,7 +312,8 @@
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Organisations\NotRequiredPartnerModel.cs" />
     <Compile Include="Organisations\SoleTraderViewModel.cs" />
-    <Compile Include="Organisations\PartnerModel.cs" />
+    
+    <Compile Include="Organisations\AdditionalContactModel.cs" />
     <Compile Include="Organisations\PartnerViewModel.cs" />
     <Compile Include="Organisations\RepresentingCompanyAddressData.cs" />
     <Compile Include="Organisations\Base\OrganisationViewModel.cs" />
