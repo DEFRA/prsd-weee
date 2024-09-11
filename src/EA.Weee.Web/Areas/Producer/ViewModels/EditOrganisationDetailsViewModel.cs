@@ -1,19 +1,16 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.ViewModels
 {
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using System;
+    using System.Collections.Generic;
 
     public class EditOrganisationDetailsViewModel
     {
         public OrganisationViewModel Organisation { get; set; }
-        //public OrganisationViewModel Organisation
-        //{
-        //    get => organisation.CastToSpecificViewModel(organisation);
-        //    set => organisation = (OrganisationViewModel)value;
-        //}
-
-        //public object CastedModel => this.Organisation.CastToSpecificViewModel(this.Organisation);
 
         public Guid DirectRegistrantId { get; set; }
+
+        public List<AdditionalContactModel> AdditionalContactModels { get; set; }
     }
 }

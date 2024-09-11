@@ -648,7 +648,7 @@
             protected static DateTime date;
             protected static ContactDetailsViewModel contactDetailsViewModel;
             protected static Organisation organisation;
-            protected static List<PartnerModel> partnerViewModel;
+            protected static List<AdditionalContactModel> partnerViewModel;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -672,13 +672,13 @@
                 contactDetailsViewModel = fixture.Build<ContactDetailsViewModel>()
                     .With(r => r.AddressData, organisationContactAddress).Create();
 
-                var partnerModels = new List<PartnerModel> 
+                var partnerModels = new List<AdditionalContactModel> 
                 {
-                    new PartnerModel{ FirstName = "firstname1", LastName = "lastname1"},
-                    new PartnerModel{ FirstName = "firstname2", LastName = "lastname2"},
+                    new AdditionalContactModel{ FirstName = "firstname1", LastName = "lastname1"},
+                    new AdditionalContactModel{ FirstName = "firstname2", LastName = "lastname2"},
                 };
 
-                partnerViewModel = fixture.CreateMany<PartnerModel>().ToList();
+                partnerViewModel = fixture.CreateMany<AdditionalContactModel>().ToList();
 
                 var representingCompanyAddressDetails = fixture.Build<RepresentingCompanyAddressData>()
                     .With(r => r.CountryId, country.Id).Create();

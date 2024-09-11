@@ -700,8 +700,8 @@
         public ActionResult PartnerDetails()
         {
             var vm = new PartnerViewModel();
-            vm.PartnerModels.Add(new PartnerModel());
-            vm.PartnerModels.Add(new PartnerModel());
+            vm.PartnerModels.Add(new AdditionalContactModel());
+            vm.PartnerModels.Add(new AdditionalContactModel());
 
             return View(vm);
         }
