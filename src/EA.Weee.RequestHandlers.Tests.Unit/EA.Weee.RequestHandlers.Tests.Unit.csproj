@@ -384,6 +384,7 @@
     <Compile Include="Mapping\AatfSimpleMapTests.cs" />
     <Compile Include="Mapping\AatfSiteMapTests.cs" />
     <Compile Include="Mapping\AatfSummaryTotalsMapTests.cs" />
+    <Compile Include="Mapping\AuthorisedRepresentitiveDataMapUnitTests.cs" />
     <Compile Include="Mapping\AdditionalCompanyDetailsAddressDataMapUnitTests.cs" />
     <Compile Include="Mapping\EvidenceNoteWithCriteriaMapperTests.cs" />
     <Compile Include="Mapping\EvidenceNoteRowCriteriaMapperTests.cs" />

@@ -293,7 +293,7 @@
                 switch (organisationType)
                 {
                     case ExternalOrganisationType.SoleTrader:
-                        return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
+                        return RedirectToAction(nameof(SoleTraderDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
                     case ExternalOrganisationType.Partnership:
                         return RedirectToAction(nameof(PartnerDetails), typeof(OrganisationRegistrationController).GetControllerName(), routeValues);
                     case ExternalOrganisationType.RegisteredCompany:
@@ -675,7 +675,7 @@
                 return View(model);
             }
 
-            if (model.PartnerModels.Count > maxPartnersAllowed)
+            if (model.AllParterModels.Count >= maxPartnersAllowed)
             {
                 ModelState.AddModelError("PartnerModels", $"A maximum of {maxPartnersAllowed} partners are allowed");
 
@@ -697,13 +697,69 @@
         }
 
         [HttpGet]
-        public ActionResult PartnerDetails()
+        public async Task<ActionResult> PartnerDetails()
         {
             var vm = new PartnerViewModel();
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (existingTransaction?.PartnerModels != null && existingTransaction.PartnerModels.Any())
+            {
+                vm.PartnerModels = existingTransaction.PartnerModels;
+
+                return View(vm);
+            }
+
             vm.PartnerModels.Add(new AdditionalContactModel());
             vm.PartnerModels.Add(new AdditionalContactModel());
 
             return View(vm);
+        }
+
+        [HttpGet]
+        public ActionResult PreviousPage(ExternalOrganisationType? orgType)
+        {
+            if (orgType == ExternalOrganisationType.Partnership)
+            {
+                return RedirectToAction(nameof(PartnerDetails));
+            }
+            if (orgType == ExternalOrganisationType.SoleTrader)
+            {
+                return RedirectToAction(nameof(OrganisationDetails));
+            }
+            if (orgType == ExternalOrganisationType.RegisteredCompany)
+            {
+                return RedirectToAction(nameof(Type));
+            }
+
+            return RedirectToAction(nameof(Type));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SoleTraderDetails()
+        {
+            SoleTraderViewModel model = null;
+
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
+            model = existingTransaction?.SoleTraderViewModel ??
+                    new SoleTraderViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SoleTraderDetails(SoleTraderViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await transactionService.CaptureData(User.GetAccessToken(), model);
+
+            return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
     }
 }
