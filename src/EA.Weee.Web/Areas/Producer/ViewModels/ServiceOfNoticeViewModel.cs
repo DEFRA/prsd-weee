@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.ViewModels
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
 
     public class ServiceOfNoticeViewModel
     {
+        public Guid OrganisationId { get; set; }
+
+        //public bool SameAsOrganisationAddress { get; set; }
+        public Core.Shared.AddressPostcodeRequiredData Address { get; set; }
     }
 }
