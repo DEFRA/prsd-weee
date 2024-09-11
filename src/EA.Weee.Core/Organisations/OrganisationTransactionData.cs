@@ -25,7 +25,7 @@
 
         public ContactDetailsViewModel ContactDetailsViewModel { get; set; }
 
-        public List<PartnerModel> PartnerModels { get; set; }
+        public List<AdditionalContactModel> PartnerModels { get; set; }
 
         public SoleTraderViewModel SoleTraderViewModel { get; set; }
 

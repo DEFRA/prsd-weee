@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.Organisations.RegisteredCompanyDetailsViewModel
     
+
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
     @Html.Gds().LabelFor(m => m.CompanyName)
     @Html.Gds().ValidationMessageFor(m => m.CompanyName)

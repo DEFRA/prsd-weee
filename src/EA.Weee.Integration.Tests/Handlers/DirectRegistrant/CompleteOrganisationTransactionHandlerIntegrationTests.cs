@@ -36,6 +36,8 @@
                     .With(o => o.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(o => o.OrganisationViewModel, registeredCompanyDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
+                    .Without(o => o.PartnerModels)
+                    .Without(o => o.SoleTraderViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -78,9 +80,17 @@
             private readonly It shouldHaveReturnedNoPartners = () =>
             {
                 var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id, OrganisationAdditionalDetailsType.Partner);
 
-                additionalDetails.Should().NotBeEmpty();
+                additionalDetails.Should().BeEmpty();
+            };
+
+            private readonly It shouldHaveReturnedNoSoleTraders = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id, OrganisationAdditionalDetailsType.SoleTrader);
+
+                additionalDetails.Should().BeEmpty();
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -148,6 +158,7 @@
                     .With(o => o.OrganisationViewModel, soleTraderDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
                     .With(o => o.SoleTraderViewModel, soleTraderModel)
+                    .Without(o => o.PartnerModels)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -188,9 +199,9 @@
             private readonly It shouldHaveReturnedNoPartners = () =>
             {
                 var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id, OrganisationAdditionalDetailsType.Partner);
 
-                additionalDetails.Should().NotBeEmpty();
+                additionalDetails.Should().BeEmpty();
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -239,7 +250,7 @@
             private readonly It shouldHaveReturnedSoleTraderDetails = () =>
             {
                 var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id, OrganisationAdditionalDetailsType.SoleTrader);
 
                 additionalDetails.Should().NotBeEmpty();
                 additionalDetails.Count.Should().Be(1);
@@ -272,6 +283,7 @@
                     .With(o => o.OrganisationViewModel, partnershipDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
                     .With(o => o.PartnerModels, partnerViewModel)
+                    .Without(o => o.SoleTraderViewModel)
                     .Create();
 
                 OrganisationTransactionDbSetup.Init().WithModel(organisationTransactionData).Create();
@@ -312,7 +324,7 @@
             private readonly It shouldHaveReturnedPartners = () =>
             {
                 var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
-                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id, OrganisationAdditionalDetailsType.Partner);
 
                 additionalDetails.Should().NotBeEmpty();
                 
@@ -321,6 +333,14 @@
                     additionalDetails.Should().Contain(c =>
                         c.FirstName == partnerModel.FirstName && c.LastName == partnerModel.LastName && c.Type == OrganisationAdditionalDetailsType.Partner);
                 }
+            };
+
+            private readonly It shouldHaveReturnedNoSoleTraders = () =>
+            {
+                var directRegistrant = Query.GetDirectRegistrantByOrganisationId(result);
+                var additionalDetails = Query.GetAdditionalDetailsByRegistrantId(directRegistrant.Id, OrganisationAdditionalDetailsType.SoleTrader);
+
+                additionalDetails.Should().BeEmpty();
             };
 
             private readonly It shouldHaveReturnedOrganisationDetails = () =>
@@ -662,7 +682,8 @@
             protected static DateTime date;
             protected static ContactDetailsViewModel contactDetailsViewModel;
             protected static Organisation organisation;
-            protected static List<PartnerModel> partnerViewModel;
+            protected static List<AdditionalContactModel> partnerViewModel;
+            
             protected static SoleTraderViewModel soleTraderModel;
 
             public static IntegrationTestSetupBuilder LocalSetup()
@@ -687,14 +708,17 @@
                 contactDetailsViewModel = fixture.Build<ContactDetailsViewModel>()
                     .With(r => r.AddressData, organisationContactAddress).Create();
 
-                partnerViewModel = fixture.CreateMany<PartnerModel>().ToList();
                 soleTraderModel = fixture.Create<SoleTraderViewModel>();
+
+                partnerViewModel = fixture.CreateMany<AdditionalContactModel>().ToList();
 
                 var representingCompanyAddressDetails = fixture.Build<RepresentingCompanyAddressData>()
                     .With(r => r.CountryId, country.Id).Create();
 
                 representingCompanyDetails = fixture.Build<RepresentingCompanyDetailsViewModel>()
                     .With(r => r.Address, representingCompanyAddressDetails).Create();
+
+                Query.DeleteAllAdditionalCompanyDetails();
 
                 return setup;
             }

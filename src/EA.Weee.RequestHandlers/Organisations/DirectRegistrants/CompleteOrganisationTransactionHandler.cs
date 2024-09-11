@@ -159,7 +159,7 @@
             return additionalCompanyDetails;
         }
 
-        private AdditionalCompanyDetails CreatePartnerDetails(PartnerModel partner)
+        private AdditionalCompanyDetails CreatePartnerDetails(AdditionalContactModel partner)
         {
             return new AdditionalCompanyDetails
             {

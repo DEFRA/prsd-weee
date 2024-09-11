@@ -7,7 +7,7 @@
 
     public class ServiceOfNoticeRequest : IRequest<Guid>
     {
-        public AddressData Address {get; private set;}
+        public AddressData Address { get; private set; }
 
         public ServiceOfNoticeRequest(AddressData address)
         {
