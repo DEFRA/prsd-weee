@@ -49,6 +49,7 @@
             Condition.Ensures(complianceYear).IsGreaterThan(0);
 
             RegisteredProducer = registeredProducer;
+            DirectRegistrant = directRegistrant;
             ComplianceYear = complianceYear;
             SubmissionHistory = new List<DirectProducerSubmissionHistory>();
         }
