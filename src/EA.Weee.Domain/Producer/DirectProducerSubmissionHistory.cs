@@ -79,6 +79,13 @@
             BusinessAddress = address.OverwriteWhereNull(BusinessAddress);
         }
 
+        public void AddOrUpdateAuthorisedRepresentative(AuthorisedRepresentative authorisedRepresentative)
+        {
+            Guard.ArgumentNotNull(() => authorisedRepresentative, authorisedRepresentative);
+
+            AuthorisedRepresentative = authorisedRepresentative.OverwriteWhereNull(AuthorisedRepresentative);
+        }
+
         public void AddOrUpdateBrandName(BrandName brandName)
         {
             Guard.ArgumentNotNull(() => brandName, brandName);
