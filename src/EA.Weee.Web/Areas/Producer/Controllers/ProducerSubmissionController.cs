@@ -91,6 +91,21 @@
             return View(model);
         }
 
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> EditContactDetails()
+        {
+            var model = mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(SmallProducerSubmissionData);
+
+            var countries = await GetCountries();
+
+            model.ContactDetails.AddressData.Countries = countries;
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
         private async Task<IList<CountryData>> GetCountries()
         {
             using (var client = apiClient())

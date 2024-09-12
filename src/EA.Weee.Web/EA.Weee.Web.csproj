@@ -580,8 +580,10 @@
     <Compile Include="Areas\Producer\Filters\SmallProducerSubmissionContextAttribute.cs" />
     <Compile Include="Areas\Producer\Mappings\AddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\EditContactDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressMap.cs" />
+    <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ProducerTaskModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\TaskListViewModel.cs" />
@@ -1078,6 +1080,7 @@
     <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditOrganisationDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\EditContactDetails.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
