@@ -9,9 +9,17 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web;
+    using EA.Weee.Core.Helpers;
 
     public class EditEeeDataViewModelMap : IMap<SmallProducerSubmissionData, EditEeeDataViewModel>
     {
+        private readonly ITonnageUtilities tonnageUtilities;
+
+        public EditEeeDataViewModelMap(ITonnageUtilities tonnageUtilities)
+        {
+            this.tonnageUtilities = tonnageUtilities;
+        }
+
         public EditEeeDataViewModel Map(SmallProducerSubmissionData source)
         {
             var model = new EditEeeDataViewModel()
@@ -24,19 +32,14 @@
             {
                 var category = model.CategoryValues.ElementAt(i);
 
-                //var noteTonnage = source.EvidenceNoteData.EvidenceTonnageData.FirstOrDefault(t =>
-                //    t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
+                var tonnage = source.CurrentSubmission.TonnageData.FirstOrDefault(t =>
+                    t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
 
-                //if (noteTonnage == null && !source.IncludeAllCategories)
-                //{
-                //    model.CategoryValues.RemoveAt(i);
-                //}
-                //else if (noteTonnage != null)
-                //{
-                //    category.Received = tonnageUtilities.CheckIfTonnageIsNull(noteTonnage.Received);
-                //    category.Reused = tonnageUtilities.CheckIfTonnageIsNull(noteTonnage.Reused);
-                //    category.Id = noteTonnage.Id;
-                //}
+                if (tonnage != null)
+                {
+                    category.HouseHold = tonnageUtilities.CheckIfTonnageIsNull(tonnage.HouseHold);
+                    category.NonHouseHold = tonnageUtilities.CheckIfTonnageIsNull(tonnage.NonHouseHold);
+                }
             }
 
             return model;
