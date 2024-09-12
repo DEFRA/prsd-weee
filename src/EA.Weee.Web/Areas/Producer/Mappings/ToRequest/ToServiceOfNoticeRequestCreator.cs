@@ -19,7 +19,7 @@
         {
             var address = mapper.Map<AddressPostcodeRequiredData, AddressData>(viewModel.Address);
 
-            return new ServiceOfNoticeRequest(address);
+            return new ServiceOfNoticeRequest(viewModel.DirectRegistrantId, address);
         }
     }
 }
