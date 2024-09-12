@@ -102,13 +102,12 @@
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
-            if (model.Address == null)
-            {
-                model.Address = new AddressPostcodeRequiredData();
-            }
+            model.Address = new AddressPostcodeRequiredData();
 
             var countries = await GetCountries();
             model.Address.Countries = countries;
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
             return View(model);
         }
@@ -129,6 +128,11 @@
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
 
             return View(model);
         }
