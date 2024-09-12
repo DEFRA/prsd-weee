@@ -7,8 +7,7 @@
 
     public class EditContactDetailsViewModel
     {
-        public ContactDetailsViewModel ContactDetails { get; set; }
-
+        public ContactDetailsViewModel ContactDetails { get; set; } = new ContactDetailsViewModel();
         public Guid DirectRegistrantId { get; set; }
 
         public Guid OrganisationId { get; set; }

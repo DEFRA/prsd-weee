@@ -69,5 +69,37 @@
         {
             return mapper.Map<AddressData, ExternalAddressData>(source.CurrentSubmission.BusinessAddressData);
         }
+
+        public EditContactDetailsViewModel MapContactDetails(SmallProducerSubmissionData source)
+        {
+            var externalOrganisationType = MapOrganisationType(source.OrganisationData.OrganisationType);
+            var businessAddressData = MapBusinessAddress(source);
+
+            var additionalContactDetails = source.CurrentSubmission.AdditionalCompanyDetailsData.Select(c => new AdditionalContactModel()
+            {
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+            }).ToList();
+
+            var organisation = new OrganisationViewModel
+            {
+                OrganisationType = externalOrganisationType,
+                Address = businessAddressData,
+                EEEBrandNames = source.CurrentSubmission.EEEBrandNames,
+                CompanyName = source.CurrentSubmission.CompanyName,
+                BusinessTradingName = source.CurrentSubmission.TradingName,
+            };
+
+            var viewModel = new EditContactDetailsViewModel
+            {
+                DirectRegistrantId = source.DirectRegistrantId,
+                OrganisationId = source.OrganisationData.Id,
+                //Organisation = organisation,
+                AdditionalContactModels = additionalContactDetails,
+                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive
+            };
+
+            return viewModel;
+        }
     }
 }
