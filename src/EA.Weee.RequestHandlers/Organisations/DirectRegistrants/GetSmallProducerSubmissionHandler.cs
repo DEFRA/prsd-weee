@@ -21,13 +21,15 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IMapper mapper;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public GetSmallProducerSubmissionHandler(IWeeeAuthorization authorization, 
-            IGenericDataAccess genericDataAccess, IMapper mapper)
+            IGenericDataAccess genericDataAccess, IMapper mapper, ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.mapper = mapper;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<SmallProducerSubmissionData> HandleAsync(GetSmallProducerSubmission request)
@@ -40,7 +42,8 @@
 
             var organisation = mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation);
 
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.FirstOrDefault(r => r.ComplianceYear == SystemTime.UtcNow.Year);
+            var systemTime = await systemDataDataAccess.GetSystemDateTime();
+            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.FirstOrDefault(r => r.ComplianceYear == systemTime.Year);
             
             if (currentYearSubmission != null)
             {
