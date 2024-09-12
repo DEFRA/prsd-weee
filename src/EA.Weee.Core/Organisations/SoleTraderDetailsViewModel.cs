@@ -7,7 +7,7 @@
 
     public class SoleTraderDetailsViewModel : OrganisationViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Enter company name")]
         [DisplayName("Company name / Business name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public override string CompanyName { get; set; }
