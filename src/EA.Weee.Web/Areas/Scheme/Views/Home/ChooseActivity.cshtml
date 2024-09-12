@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
 @{
     ViewBag.Title = "Choose Activity - GOV.UK";
@@ -7,6 +8,12 @@
 
 @section main_content
 {
+    
+    @if (!Model.ShowLinkToCreateOrJoinOrganisation)
+    {
+        @(this.WeeeGds().BackLink(@Url.Action("Index", "Organisation", new { @area = "" })))
+    }
+
     @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
     {
         @Html.Gds().ValidationSummary()
