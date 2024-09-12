@@ -10,5 +10,7 @@
         public SmallProducerSubmissionHistoryData CurrentSubmission { get; set; }
 
         public Guid DirectRegistrantId { get; set; }
+
+        public bool HasAuthorisedRepresentitive { get; set; }
     }
 }
