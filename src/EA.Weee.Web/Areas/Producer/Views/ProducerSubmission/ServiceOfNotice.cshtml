@@ -13,36 +13,42 @@
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Producer.Controllers.ProducerController>(a => a.TaskList())))
 
-    @using (Html.BeginForm())
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 3 of 5</span>
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p>
+        Provide your address for the service of notices. <br /><br />
+
+        For authorised representatives of non-UK established producers this will be your preferred address.
+    </p>
+
+    @using (Html.BeginForm("ServiceOfNotice", "ProducerSubmission", FormMethod.Get, new { id = "sameAsOrganisationAddressForm" }))
     {
-        @Html.AntiForgeryToken()
-
-        <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 3 of 5</span>
-
-        <header class="hgroup">
-            <h1 class="govuk-heading-l">@title</h1>
-        </header>
-
-        @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.DirectRegistrantId)
-
-        <p>
-            Provide your address for the service of notices. <br /><br />
-
-            For authorised representatives of non-UK established producers this will be your preferred address.
-        </p>
+        @Html.Hidden("copyAddress", true)
 
         <div class="govuk-form-group">
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="same-as-organisation-address" name="SameAsOrganisationAddress" type="checkbox" value="true">
+                    @Html.CheckBoxFor(m => m.SameAsOrganisationAddress, new { @class = "govuk-checkboxes__input", @onchange = "submitFormOnCheckboxChange()" })
+                    @*<input class="govuk-checkboxes__input" id="same-as-organisation-address" name="SameAsOrganisationAddress" type="checkbox" value="true" onchange="submitFormOnCheckboxChange()">*@
                     <label class="govuk-label govuk-checkboxes__label" for="same-as-organisation-address">
                         Same as organisation address
                     </label>
                 </div>
             </div>
         </div>
+        <br />
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.DirectRegistrantId)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
             @Html.Gds().LabelFor(m => m.Address.Address1)
@@ -89,9 +95,16 @@
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
 
-            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.ServiceOfNotice()), true)
+            @*@this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.ServiceOfNotice(copyAddress)), true)*@
         </div>
 
         @(this.WeeeGds().BackToTopLink())
     }
+}
+
+@section Scripts {
+    <script type="text/javascript">function submitFormOnCheckboxChange() {
+            // Automatically submit the form when checkbox is checked/unchecked
+            document.getElementById('sameAsOrganisationAddressForm').submit();
+        }</script>
 }

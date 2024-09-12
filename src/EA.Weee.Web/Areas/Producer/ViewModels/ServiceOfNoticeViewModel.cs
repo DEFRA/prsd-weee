@@ -8,6 +8,8 @@
 
         public Guid DirectRegistrantId { get; set; }
 
+        public bool SameAsOrganisationAddress { get; set; }
+
         public Core.Shared.AddressPostcodeRequiredData Address { get; set; }
     }
 }
