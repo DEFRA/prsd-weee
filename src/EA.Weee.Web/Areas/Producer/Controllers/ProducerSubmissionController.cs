@@ -24,6 +24,7 @@
     using System.Threading.Tasks;
     using System.Web.Caching;
     using System.Web.Mvc;
+    using EA.Weee.Core.Organisations.Base;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
     public class ProducerSubmissionController : ExternalSiteController
@@ -79,7 +80,9 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditOrganisationDetails(EditOrganisationDetailsViewModel model)
         {
-            if (ModelState.IsValid)
+            var isValid = ((OrganisationViewModel)model.Organisation.CastToSpecificViewModel(model.Organisation)).ValidateModel(ModelState, "Organisation");
+
+            if (ModelState.IsValid && isValid)
             {
                 var request = editOrganisationDetailsRequestCreator.ViewModelToRequest(model);
 
