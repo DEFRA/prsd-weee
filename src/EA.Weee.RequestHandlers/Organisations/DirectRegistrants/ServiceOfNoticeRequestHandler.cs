@@ -45,7 +45,7 @@
 
             await genericDataAccess.Add(address);
 
-            currentYearSubmission.CurrentSubmission.AddOrUpdateBusinessAddress(address);
+            currentYearSubmission.CurrentSubmission.AddOrUpdateServiceOfNotice(address);
 
             await weeeContext.SaveChangesAsync();
 
