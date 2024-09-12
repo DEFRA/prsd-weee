@@ -91,6 +91,17 @@
             return View(model);
         }
 
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> EditEeeeData()
+        {
+            var model = mapper.Map<SmallProducerSubmissionData, EditEeeDataViewModel>(SmallProducerSubmissionData);
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
         private async Task<IList<CountryData>> GetCountries()
         {
             using (var client = apiClient())
