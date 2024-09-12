@@ -3,8 +3,10 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
@@ -98,7 +100,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> ServiceOfNotice()
+        public async Task<ActionResult> ServiceOfNotice(bool? copyAddress)
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
@@ -108,6 +110,27 @@
             model.Address.Countries = countries;
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            if (copyAddress.HasValue)
+            {
+                model.SameAsOrganisationAddress = copyAddress.Value;
+            }
+
+            if (model.SameAsOrganisationAddress)
+            {
+                var organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                model.Address = new AddressPostcodeRequiredData
+                {
+                    Address1 = organisationAddress.Address1,
+                    Address2 = organisationAddress.Address2,
+                    TownOrCity = organisationAddress.TownOrCity,
+                    Postcode = organisationAddress.Postcode,
+                    Countries = countries,
+                    CountryId = organisationAddress.CountryId,
+                    Telephone = organisationAddress.Telephone
+                };
+                return View(model);
+            }
 
             return View(model);
         }
