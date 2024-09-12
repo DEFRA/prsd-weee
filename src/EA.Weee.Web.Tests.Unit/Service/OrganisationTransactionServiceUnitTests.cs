@@ -11,6 +11,7 @@
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
+    using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -242,7 +243,6 @@
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                 x => x.OrganisationTransactionData.ContactDetailsViewModel.Equals(contactDetailsViewModel)))).MustHaveHappenedOnceExactly();
         }
-
         [Fact]
         public async Task CaptureData_WithSoleTraderViewModel_ShouldUpdateTransaction()
         {
@@ -259,9 +259,69 @@
 
             // Assert
             transaction.SoleTraderViewModel.Should().Be(soleTraderViewModel);
+            transaction.PartnerModels.Should().BeNull();
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
-                x => x.OrganisationTransactionData.SoleTraderViewModel.Equals(soleTraderViewModel)))).MustHaveHappenedOnceExactly();
+                x => x.OrganisationTransactionData.SoleTraderViewModel.Equals(soleTraderViewModel) &&
+                     x.OrganisationTransactionData.PartnerModels == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CaptureData_WithRepresentingCompanyDetailsViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var representingCompanyDetailsViewModel = fixture.Create<RepresentingCompanyDetailsViewModel>();
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, representingCompanyDetailsViewModel);
+
+            // Assert
+            transaction.RepresentingCompanyDetailsViewModel.Should().Be(representingCompanyDetailsViewModel);
+            transaction.PartnerModels.Should().BeNull();
+            transaction.SoleTraderViewModel.Should().BeNull();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.RepresentingCompanyDetailsViewModel.Equals(representingCompanyDetailsViewModel) &&
+                     x.OrganisationTransactionData.PartnerModels == null &&
+                     x.OrganisationTransactionData.SoleTraderViewModel == null))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CaptureData_WithPartnerViewModel_ShouldUpdateTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var partners = fixture.CreateMany<AdditionalContactModel>(2).ToList();
+            var notRequiredPartners = fixture.CreateMany<NotRequiredPartnerModel>(1).ToList();
+            var partnerViewModel = fixture.Build<PartnerViewModel>()
+                .With(p => p.PartnerModels, partners)
+                .With(p => p.NotRequiredPartnerModels, notRequiredPartners)
+                .Create();
+
+            var transaction = new OrganisationTransactionData();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, partnerViewModel);
+
+            // Assert
+            transaction.PartnerModels.Should().BeEquivalentTo(partnerViewModel.AllParterModels);
+            transaction.SoleTraderViewModel.Should().BeNull();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                    x => x.OrganisationTransactionData.PartnerModels != null &&
+                         x.OrganisationTransactionData.PartnerModels.Count == partnerViewModel.AllParterModels.Count &&
+                         partnerViewModel.AllParterModels.All(partner =>
+                             x.OrganisationTransactionData.PartnerModels.Any(p =>
+                                 p.FirstName == partner.FirstName && p.LastName == partner.LastName)))))
+                .MustHaveHappenedOnceExactly();
         }
     }
 }

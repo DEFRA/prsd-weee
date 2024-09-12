@@ -43,6 +43,8 @@
                         break;
                     case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
                         transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
+                        transaction.PartnerModels = null;
+                        transaction.SoleTraderViewModel = null;
                         break;
                     case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
                         transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
@@ -52,9 +54,11 @@
                         break;
                     case PartnerViewModel partnerViewModel:
                         transaction.PartnerModels = partnerViewModel.AllParterModels;
+                        transaction.SoleTraderViewModel = null;
                         break;
                     case SoleTraderViewModel soleTraderViewModel:
                         transaction.SoleTraderViewModel = soleTraderViewModel;
+                        transaction.PartnerModels = null;
                         break;
                 }
 

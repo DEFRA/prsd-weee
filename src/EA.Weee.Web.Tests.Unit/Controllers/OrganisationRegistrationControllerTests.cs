@@ -1440,7 +1440,7 @@
         [Theory]
         [InlineData(ExternalOrganisationType.RegisteredCompany, "Type")]
         [InlineData(ExternalOrganisationType.Partnership, "PartnerDetails")]
-        [InlineData(ExternalOrganisationType.SoleTrader, "OrganisationDetails")]
+        [InlineData(ExternalOrganisationType.SoleTrader, "SoleTraderDetails")]
         public void PreviousPage_Get_RedirectsToPartnershipPageIfPartnerType(ExternalOrganisationType organisationType, string expectedAction)
         {
             // Act
