@@ -102,6 +102,19 @@
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditEeeeData(EditEeeDataViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+            }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
         private async Task<IList<CountryData>> GetCountries()
         {
             using (var client = apiClient())
