@@ -5,8 +5,10 @@
     using EA.Weee.Core.Shared;
     using System;
 
-    public class ServiceOfNoticeRequest : IRequest<Guid>
+    public class ServiceOfNoticeRequest : IRequest<bool>
     {
+        public Guid DirectRegistrantId { get; set; }
+
         public AddressData Address { get; private set; }
 
         public ServiceOfNoticeRequest(AddressData address)
