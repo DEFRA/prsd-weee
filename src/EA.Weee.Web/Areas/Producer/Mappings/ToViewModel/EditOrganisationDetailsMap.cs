@@ -36,6 +36,7 @@
                 EEEBrandNames = source.CurrentSubmission.EEEBrandNames,
                 CompanyName = source.CurrentSubmission.CompanyName,
                 BusinessTradingName = source.CurrentSubmission.TradingName,
+                CompaniesRegistrationNumber = source.OrganisationData.CompanyRegistrationNumber
             };
 
             var viewModel = new EditOrganisationDetailsViewModel
