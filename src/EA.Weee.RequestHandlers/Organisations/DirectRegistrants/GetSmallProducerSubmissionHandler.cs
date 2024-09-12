@@ -54,6 +54,7 @@
                     HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
                     CurrentSubmission = new SmallProducerSubmissionHistoryData()
                     {
+                        EEEDetailsComplete = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null,
                         BusinessAddressData = currentYearSubmission.CurrentSubmission.BusinessAddress != null ? mapper.Map<Address, AddressData>(currentYearSubmission.CurrentSubmission.BusinessAddress) : mapper.Map<Address, AddressData>(currentYearSubmission.DirectRegistrant.Organisation.BusinessAddress),
                         EEEBrandNames = currentYearSubmission.CurrentSubmission.BrandName != null ? currentYearSubmission.CurrentSubmission.BrandName.Name : (currentYearSubmission.DirectRegistrant.BrandName != null ? currentYearSubmission.DirectRegistrant.BrandName.Name : string.Empty),
                         CompanyName = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyName) ? currentYearSubmission.CurrentSubmission.CompanyName : organisation.Name,
