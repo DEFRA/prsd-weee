@@ -5,6 +5,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
@@ -33,6 +34,9 @@
         private readonly IWeeeClient weeeClient;
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
             editOrganisationDetailsRequestCreator;
+
+        private readonly IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest>
+          editRepresentedOrganisationDetailsRequestCreator;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
 
@@ -45,7 +49,10 @@
             editOrganisationDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>>();
 
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache);
+            editRepresentedOrganisationDetailsRequestCreator =
+               A.Fake<IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest>>();
+
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache);
         }
 
         [Fact]

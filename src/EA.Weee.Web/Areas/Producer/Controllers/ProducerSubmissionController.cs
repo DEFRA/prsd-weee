@@ -5,10 +5,12 @@
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -29,16 +31,23 @@
         public SmallProducerSubmissionData SmallProducerSubmissionData;
 
         private readonly IMapper mapper;
-        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
-            editOrganisationDetailsRequestCreator;
+
+        private readonly IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest> editRepresentedOrganisationDetailsRequestCreator;
+        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator;
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
 
-        public ProducerSubmissionController(IMapper mapper, IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumbService, IWeeeCache weeeCache)
+        public ProducerSubmissionController(IMapper mapper, 
+            IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
+            IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest> editRepresentedOrganisationDetailsRequestCreator,
+            Func<IWeeeClient> apiClient, 
+            BreadcrumbService breadcrumbService, 
+            IWeeeCache weeeCache)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
+            this.editRepresentedOrganisationDetailsRequestCreator = editRepresentedOrganisationDetailsRequestCreator;
             this.apiClient = apiClient;
             this.breadcrumbService = breadcrumbService;
             this.weeeCache = weeeCache;
@@ -87,6 +96,42 @@
             var countries = await GetCountries();
 
             model.Organisation.Address.Countries = countries;
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> EditRepresentedOrganisationDetails()
+        {
+            var model = mapper.Map<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>(SmallProducerSubmissionData);
+
+            model.Address.Countries = await GetCountries();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditRepresentedOrganisationDetails(RepresentingCompanyDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = editRepresentedOrganisationDetailsRequestCreator.ViewModelToRequest(model);
+
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return RedirectToAction(
+                    nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
+            }
+
+            var countries = await GetCountries();
+
+            model.Address.Countries = await GetCountries();
 
             return View(model);
         }

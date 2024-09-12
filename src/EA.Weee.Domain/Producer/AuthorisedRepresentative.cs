@@ -59,5 +59,20 @@
         public Guid? OverseasContactId { get; private set; }
 
         public virtual ProducerContact OverseasContact { get; private set; }
+
+        public AuthorisedRepresentative OverwriteWhereNull(AuthorisedRepresentative other)
+        {
+            if (other == null)
+            {
+                return this;
+            }
+
+            other.OverseasContact = OverseasContact;
+            other.OverseasContactId = OverseasContactId;
+            other.OverseasProducerName = OverseasProducerName;
+            other.OverseasProducerTradingName = OverseasProducerTradingName;
+
+            return other;
+        }
     }
 }
