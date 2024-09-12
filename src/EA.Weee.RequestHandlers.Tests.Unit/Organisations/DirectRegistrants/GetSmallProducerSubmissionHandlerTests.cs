@@ -31,8 +31,12 @@
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             mapper = A.Fake<IMapper>();
+            var systemDataAccess = A.Fake<ISystemDataDataAccess>();
 
-            handler = new GetSmallProducerSubmissionHandler(authorization, genericDataAccess, mapper);
+            A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(new DateTime(SystemTime.UtcNow.Year,
+                SystemTime.UtcNow.Month, SystemTime.UtcNow.Day));
+
+            handler = new GetSmallProducerSubmissionHandler(authorization, genericDataAccess, mapper, systemDataAccess);
         }
 
         [Fact]

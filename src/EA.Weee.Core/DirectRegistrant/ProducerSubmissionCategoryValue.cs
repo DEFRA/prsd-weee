@@ -6,10 +6,10 @@
 
     public class ProducerSubmissionCategoryValue : CategoryValue
     {
-        [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
+        [TonnageValue(nameof(CategoryId), "The household tonnage value", true)]
         public virtual string HouseHold { get; set; }
 
-        [TonnageValue(nameof(CategoryId), "The tonnage value", true)]
+        [TonnageValue(nameof(CategoryId), "The non-household tonnage value", true)]
         public virtual string NonHouseHold { get; set; }
 
         public ProducerSubmissionCategoryValue()

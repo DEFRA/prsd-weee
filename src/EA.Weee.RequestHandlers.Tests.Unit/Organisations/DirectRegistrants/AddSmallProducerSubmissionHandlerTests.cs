@@ -33,12 +33,17 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             generateFromXmlDataAccess = A.Fake<IGenerateFromXmlDataAccess>();
+            var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(new DateTime(SystemTime.UtcNow.Year,
+                SystemTime.UtcNow.Month, SystemTime.UtcNow.Day));
 
             handler = new AddSmallProducerSubmissionHandler(
                 authorization,
                 genericDataAccess,
                 weeeContext,
-                generateFromXmlDataAccess);
+                generateFromXmlDataAccess,
+                systemDataDataAccess);
         }
 
         [Fact]
