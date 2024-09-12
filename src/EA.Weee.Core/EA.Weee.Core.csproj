@@ -304,6 +304,7 @@
     <Compile Include="DirectRegistrant\AdditionalCompanyDetailsData.cs" />
     <Compile Include="DirectRegistrant\AuthorisedRepresentitiveData.cs" />
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValue.cs" />
+    <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValues.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
     <Compile Include="DirectRegistrant\TonnageData.cs" />
