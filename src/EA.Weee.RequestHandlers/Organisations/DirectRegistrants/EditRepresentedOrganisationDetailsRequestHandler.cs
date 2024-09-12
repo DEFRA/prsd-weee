@@ -2,11 +2,9 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Producer;
-    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using System.Data.Entity;
@@ -18,15 +16,17 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
+        private readonly ISystemDataDataAccess systemDataAccess;
 
         public EditRepresentedOrganisationDetailsRequestHandler(
             IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess,
-            WeeeContext weeeContext)
+            WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
+            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<bool> HandleAsync(RepresentedOrganisationDetailsRequest request)
@@ -37,7 +37,9 @@
 
             authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
 
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == SystemTime.UtcNow.Year);
+            var systemDate = await systemDataAccess.GetSystemDateTime();
+
+            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDate.Year);
 
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.Address.CountryId);
 
