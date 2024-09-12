@@ -26,7 +26,7 @@
         }
 
         [Fact]
-        public void Map_ShouldMaphighLevelSourceFields()
+        public void Map_ShouldMapHighLevelSourceFields()
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionData>();
@@ -73,6 +73,7 @@
             result.Organisation.CompanyName.Should().Be(source.CurrentSubmission.CompanyName);
             result.Organisation.BusinessTradingName.Should().Be(source.CurrentSubmission.TradingName);
             result.Organisation.EEEBrandNames.Should().Be(source.CurrentSubmission.EEEBrandNames);
+            result.Organisation.CompaniesRegistrationNumber.Should().Be(source.OrganisationData.CompanyRegistrationNumber);
         }
 
         [Fact]
