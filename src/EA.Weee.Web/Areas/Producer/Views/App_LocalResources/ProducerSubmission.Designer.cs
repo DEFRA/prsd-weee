@@ -70,6 +70,15 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changing the details on this page will update your organisation details on your account..
+        /// </summary>
+        public static string OrganisationDetailsWarningText {
+            get {
+                return ResourceManager.GetString("OrganisationDetailsWarningText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save and return to task list.
         /// </summary>
         public static string SaveAndReturnTaskList {
