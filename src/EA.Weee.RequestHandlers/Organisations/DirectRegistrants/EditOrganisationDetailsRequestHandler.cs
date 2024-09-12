@@ -42,8 +42,6 @@
 
             var address = ValueObjectInitializer.CreateAddress(request.BusinessAddressData, country);
 
-            await genericDataAccess.Add(address);
-
             currentYearSubmission.CurrentSubmission.CompanyName = request.CompanyName;
             currentYearSubmission.CurrentSubmission.TradingName = request.TradingName;
             currentYearSubmission.CurrentSubmission.AddOrUpdateBusinessAddress(address);
