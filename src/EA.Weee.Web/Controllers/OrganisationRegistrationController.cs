@@ -725,7 +725,7 @@
             }
             if (orgType == ExternalOrganisationType.SoleTrader)
             {
-                return RedirectToAction(nameof(OrganisationDetails));
+                return RedirectToAction(nameof(SoleTraderDetails));
             }
             if (orgType == ExternalOrganisationType.RegisteredCompany)
             {
