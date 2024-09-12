@@ -64,12 +64,13 @@
             DirectProducerSubmission = directProducerSubmission;
         }
 
-        public DirectProducerSubmissionHistory(DirectProducerSubmission directProducerSubmission, BrandName brandName, Address businessAddress)
+        public DirectProducerSubmissionHistory(DirectProducerSubmission directProducerSubmission, BrandName brandName, Address businessAddress, AuthorisedRepresentative authorisedRepresentative = null)
         {
             DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
             DirectProducerSubmission = directProducerSubmission;
             BusinessAddress = businessAddress;
             BrandName = brandName;
+            AuthorisedRepresentativeId = authorisedRepresentative?.Id;
         }
 
         public void AddOrUpdateBusinessAddress(Address address)

@@ -53,7 +53,7 @@
             var year = SystemTime.UtcNow.Year;
             var registeredProducer = new RegisteredProducer(prn, SystemTime.UtcNow.Year);
 
-            var directRegistrantSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, year);
+            var directRegistrantSubmission = new DirectProducerSubmission(registeredProducer, year);
             var directProducerSubmissionHistory = new DirectProducerSubmissionHistory(directRegistrantSubmission);
 
             await genericDataAccess.Add(directProducerSubmissionHistory);
