@@ -1,14 +1,8 @@
-﻿using EA.Weee.Core.DataReturns;
-
-namespace EA.Weee.Core.DirectRegistrant
+﻿namespace EA.Weee.Core.DirectRegistrant
 {
-    using EA.Weee.Core.Validation;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Core.Validation;
 
     public class ProducerSubmissionCategoryValue : CategoryValue
     {
