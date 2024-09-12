@@ -3,12 +3,12 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Validation;
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Reflection;
+    using System.Web.Mvc;
 
     public class OrganisationViewModel : IValidatableObject
     {
@@ -90,6 +90,28 @@
             }
 
             return target;
+        }
+
+        public bool ValidateModel(ModelStateDictionary modelState, string prefix = "")
+        {
+            var validationResults = new List<ValidationResult>();
+            var validationContext = new ValidationContext(this, serviceProvider: null, items: null);
+
+            var isValid = Validator.TryValidateObject(this, validationContext, validationResults, validateAllProperties: true);
+
+            foreach (var validationResult in validationResults)
+            {
+                foreach (var memberName in validationResult.MemberNames)
+                {
+                    // If a prefix is provided, concatenate it with the member name using dot notation
+                    var fullMemberName = string.IsNullOrEmpty(prefix) ? memberName : $"{prefix}.{memberName}";
+
+                    // Add the error to ModelState using the fully qualified member name
+                    modelState.AddModelError(fullMemberName, validationResult.ErrorMessage);
+                }
+            }
+
+            return isValid;
         }
     }
 }

@@ -390,7 +390,9 @@
                 }
             }
 
-            if (!ModelState.IsValid)
+            var isValid = ((OrganisationViewModel)model.CastToSpecificViewModel(model)).ValidateModel(ModelState);
+
+            if (!isValid)
             {
                 var countries = await GetCountries();
 
