@@ -1023,6 +1023,7 @@
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>()
                 .With(m => m.OrganisationType, organisationType)
+                .Without(c => c.CompanyName)
                 .Create();
 
             controller.ModelState.AddModelError("error", "error");
