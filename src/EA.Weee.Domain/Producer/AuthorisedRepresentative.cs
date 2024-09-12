@@ -67,7 +67,7 @@
                 return this;
             }
 
-            other.OverseasContact = OverseasContact;
+            OverseasContact = other.OverseasContact.OverwriteWhereNull(OverseasContact);
             other.OverseasContactId = OverseasContactId;
             other.OverseasProducerName = OverseasProducerName;
             other.OverseasProducerTradingName = OverseasProducerTradingName;
