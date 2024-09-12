@@ -13,7 +13,7 @@
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.ViewModels.Shared
 @using EnumHelper = EA.Prsd.Core.Helpers.EnumHelper
-@model EA.Weee.Web.Areas.Producer.ViewModels.EditContackDetailsViewModel
+@model EA.Weee.Web.Areas.Producer.ViewModels.EditContactDetailsViewModel
 @{
     const string title = "Contact details";
     ViewBag.Title = title + " - GOV.UK";
@@ -40,19 +40,13 @@
     }
     <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 2 of @step</span>
 
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">@title</h1>
-    </header>
-
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
         <header class="hgroup">
-            <h1 class="govuk-heading-l">
-                @title
-            </h1>
+            <h1 class="govuk-heading-l">@title</h1>
         </header>
 
         // Contact details
