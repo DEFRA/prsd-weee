@@ -11,10 +11,12 @@
 
         public AddressData Address { get; private set; }
 
-        public ServiceOfNoticeRequest(AddressData address)
+        public ServiceOfNoticeRequest(Guid directRegistrantId, AddressData address)
         {
+            Condition.Requires(directRegistrantId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(address).IsNotNull();
 
+            DirectRegistrantId = directRegistrantId;
             Address = address;
         }
     }
