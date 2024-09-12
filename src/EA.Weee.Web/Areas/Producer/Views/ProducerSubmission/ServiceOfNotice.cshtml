@@ -15,7 +15,6 @@
 
     @using (Html.BeginForm())
     {
-        @Html.Gds().ValidationSummary()
         @Html.AntiForgeryToken()
 
         <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 3 of 5</span>
@@ -23,6 +22,10 @@
         <header class="hgroup">
             <h1 class="govuk-heading-l">@title</h1>
         </header>
+
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.DirectRegistrantId)
 
         <p>
             Provide your address for the service of notices. <br /><br />
@@ -86,7 +89,7 @@
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
 
-            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerController>(a => a.TaskList()), true)
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.ServiceOfNotice()), true)
         </div>
 
         @(this.WeeeGds().BackToTopLink())
