@@ -7,23 +7,11 @@
     using Validation;
 
     [Serializable]
-    public class AddressPostcodeRequiredData : IValidatableObject
+    public class ServiceOfNoticeAddressData : IValidatableObject
     {
         public Guid Id { get; set; }
 
         public byte[] RowVersion { get; set; }
-
-        [Required]
-        [StringLength(CommonMaxFieldLengths.Telephone)]
-        [Display(Name = "Phone")]
-        [GenericPhoneNumber(ErrorMessage = "The phone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.")]
-        public string Telephone { get; set; }
-
-        [Required]
-        [StringLength(CommonMaxFieldLengths.EmailAddress)]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
 
         [Required]
         [StringLength(CommonMaxFieldLengths.AddressLine)]
@@ -56,6 +44,12 @@
         public string CountryName { get; set; }
 
         public IEnumerable<CountryData> Countries { get; set; }
+
+        [Required]
+        [StringLength(CommonMaxFieldLengths.Telephone)]
+        [Display(Name = "Phone")]
+        [GenericPhoneNumber(ErrorMessage = "The phone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.")]
+        public string Telephone { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
