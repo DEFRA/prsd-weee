@@ -14,6 +14,7 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
@@ -77,7 +78,10 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditOrganisationDetails(EditOrganisationDetailsViewModel model)
         {
-            if (ModelState.IsValid)
+            var castedModel = model.Organisation.CastToSpecificViewModel(model.Organisation);
+            var isValid = ValidationModel.ValidateModel(castedModel, ModelState, nameof(EditOrganisationDetailsViewModel.Organisation));
+
+            if (ModelState.IsValid && isValid)
             {
                 var request = editOrganisationDetailsRequestCreator.ViewModelToRequest(model);
 

@@ -99,7 +99,7 @@
         public async Task EditOrganisationDetails_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
-            var submissionData = new SmallProducerSubmissionData();
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
             controller.SmallProducerSubmissionData = submissionData;
 
             var viewModel = TestFixture.Create<EditOrganisationDetailsViewModel>();
