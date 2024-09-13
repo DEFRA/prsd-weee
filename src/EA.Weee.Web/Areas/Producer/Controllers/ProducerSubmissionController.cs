@@ -95,7 +95,8 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> EditContactDetails()
         {
-            var model = new EditContactDetailsViewModel();
+            var model =
+                mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(SmallProducerSubmissionData);
 
             var countries = await GetCountries();
 

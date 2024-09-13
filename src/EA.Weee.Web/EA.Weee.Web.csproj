@@ -579,6 +579,7 @@
     <Compile Include="Areas\Producer\Filters\AuthorizeRouteClaimsAttribute.cs" />
     <Compile Include="Areas\Producer\Filters\SmallProducerSubmissionContextAttribute.cs" />
     <Compile Include="Areas\Producer\Mappings\AddressMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ReverseAddressPostcodeRequiredMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditContactDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
