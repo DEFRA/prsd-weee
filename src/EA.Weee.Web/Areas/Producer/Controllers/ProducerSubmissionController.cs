@@ -31,6 +31,8 @@
         private readonly IMapper mapper;
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
             editOrganisationDetailsRequestCreator;
+        private readonly IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
+            editContactDetailsRequestCreator;
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
@@ -103,6 +105,31 @@
             model.ContactDetails.AddressData.Countries = countries;
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditContactDetails(EditContactDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = editContactDetailsRequestCreator.ViewModelToRequest(model);
+
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
+            }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+            var countries = await GetCountries();
+
+            model.ContactDetails.AddressData.Countries = countries;
 
             return View(model);
         }
