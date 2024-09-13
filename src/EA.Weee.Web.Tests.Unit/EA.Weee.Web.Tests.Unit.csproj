@@ -416,6 +416,7 @@
     <Compile Include="Areas\Producer\Mapping\AddressMapUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ReverseAddressMapUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToRequest\ToEditOrganisationDetailsRequestCreatorUnitTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToViewModel\EditEeeDataViewModelMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditOrganisationDetailsMapTests.cs" />
     <Compile Include="Areas\Producer\ViewModel\EditEeeDataViewModelUnitTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttributeTests.cs" />

@@ -4,6 +4,7 @@
     using EA.Weee.Domain.Audit;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Producer.Classfication;
     using System;
 
     public class DirectProducerSubmissionHistory : AuditableEntity
@@ -53,6 +54,8 @@
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; set; }
 
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
+
+        public virtual SellingTechniqueType SellingTechniqueType { get; set; }
 
         public DirectProducerSubmissionHistory()
         {
