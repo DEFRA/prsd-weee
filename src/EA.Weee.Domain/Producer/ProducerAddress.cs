@@ -104,6 +104,7 @@
             other.PrimaryName = PrimaryName;
             other.SecondaryName = SecondaryName;
             other.Street = Street;
+            other.Town = Town;
             other.Locality = Locality;
             other.AdministrativeArea = AdministrativeArea;
             other.PostCode = PostCode;

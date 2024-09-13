@@ -3,6 +3,7 @@
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.Producer.Controllers
 
 @model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
 @{
@@ -11,7 +12,6 @@
 }
 @section full_main_content
 {
-
     @this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.RepresentingCompanyRedirect()))
 
     <header class="hgroup">
@@ -41,8 +41,10 @@
             @Html.EditorFor(m => m.Address)
         </div>
 
-        <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Continue"))
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditRepresentedOrganisationDetails()), true)
         </div>
 
         @(this.WeeeGds().BackToTopLink())
