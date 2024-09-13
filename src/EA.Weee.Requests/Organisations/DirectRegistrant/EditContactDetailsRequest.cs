@@ -4,30 +4,25 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using System;
+    using EA.Weee.Core.Organisations;
 
     public class EditContactDetailsRequest : IRequest<bool>
     {
         public Guid DirectRegistrantId { get; private set; }
 
-        public string CompanyName { get; private set; }
+        public AddressData AddressData {get; private set; }
 
-        public string TradingName { get; private set; }
+        public ContactData ContactData { get; private set; }
 
-        public string EEEBrandNames {get; private set; }
-
-        public AddressData BusinessAddressData {get; private set; }
-
-        public EditContactDetailsRequest(Guid directRegistrantId, string companyName, string tradingName, AddressData businessAddressData, string eeeBrandNames)
+        public EditContactDetailsRequest(Guid directRegistrantId, AddressData addressData, ContactData contactData)
         {
             Condition.Requires(directRegistrantId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(companyName).IsNotNullOrWhiteSpace();
-            Condition.Requires(businessAddressData).IsNotNull();
+            Condition.Requires(addressData).IsNotNull();
+            Condition.Requires(contactData).IsNotNull();
 
             DirectRegistrantId = directRegistrantId;
-            CompanyName = companyName;
-            TradingName = tradingName;
-            BusinessAddressData = businessAddressData;
-            EEEBrandNames = eeeBrandNames;
+            ContactData = contactData;
+            AddressData = addressData;
         }
     }
 }
