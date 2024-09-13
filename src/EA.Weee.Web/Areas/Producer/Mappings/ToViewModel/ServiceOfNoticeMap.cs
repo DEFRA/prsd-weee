@@ -28,9 +28,9 @@
             return viewModel;
         }
 
-        private AddressPostcodeRequiredData MapAddress(SmallProducerSubmissionData source)
+        private ServiceOfNoticeAddressData MapAddress(SmallProducerSubmissionData source)
         {
-            return mapper.Map<AddressData, AddressPostcodeRequiredData>(source.CurrentSubmission.ServiceOfNoticeData);
+            return mapper.Map<AddressData, ServiceOfNoticeAddressData>(source.CurrentSubmission.ServiceOfNoticeData);
         }
     }
 }

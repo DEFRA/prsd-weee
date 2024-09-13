@@ -104,7 +104,7 @@
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
-            model.Address = new AddressPostcodeRequiredData();
+            model.Address = new ServiceOfNoticeAddressData();
 
             var countries = await GetCountries();
             model.Address.Countries = countries;
@@ -119,7 +119,7 @@
             if (model.SameAsOrganisationAddress)
             {
                 var organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
-                model.Address = new AddressPostcodeRequiredData
+                model.Address = new ServiceOfNoticeAddressData
                 {
                     Address1 = organisationAddress.Address1,
                     Address2 = organisationAddress.Address2,

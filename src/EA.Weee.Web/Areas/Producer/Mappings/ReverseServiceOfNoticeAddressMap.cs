@@ -3,11 +3,11 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Shared;
 
-    public class ReverseAddressPostcodeRequiredMap : IMap<AddressData, AddressPostcodeRequiredData>
+    public class ReverseServiceOfNoticeAddressMap : IMap<AddressData, ServiceOfNoticeAddressData>
     {
-        public AddressPostcodeRequiredData Map(AddressData source)
+        public ServiceOfNoticeAddressData Map(AddressData source)
         {
-            return new AddressPostcodeRequiredData()
+            return new ServiceOfNoticeAddressData()
             {
                 Address1 = source.Address1,
                 Address2 = source.Address2,

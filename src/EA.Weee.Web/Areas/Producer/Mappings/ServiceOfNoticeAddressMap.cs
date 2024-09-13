@@ -3,9 +3,9 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Shared;
 
-    public class AddressPostcodeRequiredMap : IMap<AddressPostcodeRequiredData, AddressData>
+    public class AddressServiceOfNoticeAddressMap : IMap<ServiceOfNoticeAddressData, AddressData>
     {
-        public AddressData Map(AddressPostcodeRequiredData source)
+        public AddressData Map(ServiceOfNoticeAddressData source)
         {
             return new AddressData()
             {
