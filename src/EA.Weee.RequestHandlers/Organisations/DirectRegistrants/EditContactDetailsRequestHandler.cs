@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
-    using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
@@ -17,13 +16,15 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
+        private readonly ISystemDataDataAccess systemDataAccess;
 
         public EditContactDetailsRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
+            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditContactDetailsRequest request)
@@ -34,25 +35,17 @@
 
             authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
 
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == SystemTime.UtcNow.Year);
+            var systemDateTime = await systemDataAccess.GetSystemDateTime();
+
+            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDateTime.Year);
             
-            var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.BusinessAddressData.CountryId);
+            var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.AddressData.CountryId);
 
-            request.BusinessAddressData.CountryName = country.Name;
+            var address = ValueObjectInitializer.CreateAddress(request.AddressData, country);
+            var contact = ValueObjectInitializer.CreateContact(request.ContactData);
 
-            var address = ValueObjectInitializer.CreateAddress(request.BusinessAddressData, country);
-
-            await genericDataAccess.Add(address);
-
-            currentYearSubmission.CurrentSubmission.CompanyName = request.CompanyName;
-            currentYearSubmission.CurrentSubmission.TradingName = request.TradingName;
-            currentYearSubmission.CurrentSubmission.AddOrUpdateBusinessAddress(address);
-
-            if (!string.IsNullOrWhiteSpace(request.EEEBrandNames))
-            {
-                var brandNames = new BrandName(request.EEEBrandNames);
-                currentYearSubmission.CurrentSubmission.AddOrUpdateBrandName(brandNames);
-            }
+            currentYearSubmission.CurrentSubmission.AddOrUpdateContactAddress(address);
+            currentYearSubmission.CurrentSubmission.AddOrUpdateContact(contact);
 
             await weeeContext.SaveChangesAsync();
 
