@@ -83,7 +83,7 @@
         {
             Guard.ArgumentNotNull(() => brandName, brandName);
 
-            BrandName = brandName.OverwriteWhereNull(brandName);
+            BrandName = brandName.OverwriteWhereNull(BrandName);
         }
     }
 }
