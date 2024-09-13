@@ -221,9 +221,9 @@
         public async Task ServiceOfNotice_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
-            bool copyAddress = true;
+            bool sameAsOrganisationAddress = true;
 
-            var submissionData = new SmallProducerSubmissionData();
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
             controller.SmallProducerSubmissionData = submissionData;
 
             var viewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
@@ -233,7 +233,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
             // Act
-            var result = await controller.ServiceOfNotice(copyAddress) as ViewResult;
+            var result = await controller.ServiceOfNotice(sameAsOrganisationAddress) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -246,7 +246,7 @@
         public async Task ServiceOfNotice_Get_ShouldSetBreadCrumb()
         {
             // Arrange
-            bool copyAddress = false;
+            bool sameAsOrganisationAddress = false;
 
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
             var organisationName = TestFixture.Create<string>();
@@ -262,7 +262,7 @@
             A.CallTo(() => mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(submissionData)).Returns(viewModel);
 
             // Act
-            await controller.ServiceOfNotice(copyAddress);
+            await controller.ServiceOfNotice(sameAsOrganisationAddress);
 
             // Assert
             breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
@@ -336,7 +336,7 @@
         public void ServiceOfNotice_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ServiceOfNotice", new Type[0]);
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ServiceOfNotice", new[] { typeof(bool?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();

@@ -3,7 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Shared;
 
-    public class AddressServiceOfNoticeAddressMap : IMap<ServiceOfNoticeAddressData, AddressData>
+    public class ServiceOfNoticeAddressMap : IMap<ServiceOfNoticeAddressData, AddressData>
     {
         public AddressData Map(ServiceOfNoticeAddressData source)
         {
