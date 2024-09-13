@@ -390,7 +390,8 @@
                 }
             }
 
-            var isValid = ((OrganisationViewModel)model.CastToSpecificViewModel(model)).ValidateModel(ModelState);
+            var castedModel = model.CastToSpecificViewModel(model);
+            var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
 
             if (!isValid)
             {

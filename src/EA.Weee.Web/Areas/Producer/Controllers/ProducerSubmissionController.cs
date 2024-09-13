@@ -12,7 +12,7 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
-    using EA.Weee.Web.Filters;
+    using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
@@ -20,9 +20,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using System.Web.Caching;
     using System.Web.Mvc;
-    using EA.Weee.Core.Organisations.Base;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
     public class ProducerSubmissionController : ExternalSiteController
@@ -71,7 +69,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditOrganisationDetails(EditOrganisationDetailsViewModel model)
         {
-            var isValid = ((OrganisationViewModel)model.Organisation.CastToSpecificViewModel(model.Organisation)).ValidateModel(ModelState, "Organisation");
+            var castedModel = model.Organisation.CastToSpecificViewModel(model.Organisation);
+            var isValid = ValidationModel.ValidateModel(castedModel, ModelState, nameof(EditOrganisationDetailsViewModel.Organisation));
 
             if (ModelState.IsValid && isValid)
             {
