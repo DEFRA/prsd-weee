@@ -85,14 +85,13 @@
             }
 
             Address = other.Address.OverwriteWhereNull(Address);
-            other.Title = Title;
-            other.Email = Email;
-            other.Fax = Fax;
-            other.Mobile = Mobile;
-            other.Telephone = Telephone;
-            other.SurName = SurName;
-            other.ForeName = ForeName;
-            other.Title = Title;
+            Email = other.Email;
+            Fax = other.Fax;
+            Mobile = other.Mobile;
+            Telephone = other.Telephone;
+            SurName = other.SurName;
+            ForeName = other.ForeName;
+            Title = other.Title;
 
             return other;
         }
