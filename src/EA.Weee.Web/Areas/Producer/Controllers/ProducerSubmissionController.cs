@@ -146,7 +146,7 @@
                 {
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
-                SmallProducerSubmissionData.CurrentSubmission.ServiceOfNoticeComplete = true;
+
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
