@@ -634,6 +634,7 @@
     <Compile Include="Controllers\HoldingController.cs" />
     <Compile Include="Extensions\EvidenceNoteDataListExtensions.cs" />
     <Compile Include="Extensions\ReturnUrlHelper.cs" />
+    <Compile Include="Extensions\ValidationModel.cs" />
     <Compile Include="Filters\NoCacheFilterAttribute.cs" />
     <Compile Include="Infrastructure\IMvcTemplateExecutor.cs" />
     <Compile Include="Infrastructure\PDF\IPdfDocumentProvider.cs" />
@@ -2154,6 +2155,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ProducerSubmission.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Resources.ProducerSubmission</CustomToolNamespace>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
