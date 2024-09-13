@@ -108,6 +108,8 @@
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
+            model.Address = new ServiceOfNoticeAddressData();
+
             var countries = await GetCountries();
             model.Address.Countries = countries;
 
