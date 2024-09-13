@@ -396,7 +396,7 @@
     <Compile Include="Mapping\SchemeObligationDataMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationUploadDataTests.cs" />
     <Compile Include="Mapping\SchemeOrganisationMapTests.cs" />
-    <Compile Include="Mapping\TonnageDataMapTests.cs" />
+    <Compile Include="Mapping\EeeDataMapTests.cs" />
     <Compile Include="Mapping\TransferEvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\EvidenceNoteMapTests.cs" />
     <Compile Include="Mapping\FacilityTypeMapTests.cs" />

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.DirectRegistrant
 {
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using System.Collections.Generic;
@@ -36,6 +37,6 @@
 
         public AuthorisedRepresentitiveData AuthorisedRepresentitiveData { get; set; }
 
-        public IList<TonnageData> TonnageData { get; set; }
+        public IList<Eee> TonnageData { get; set; }
     }
 }
