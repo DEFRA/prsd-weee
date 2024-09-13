@@ -3,8 +3,10 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
@@ -26,21 +28,28 @@
     public class ProducerSubmissionController : ExternalSiteController
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
-
         private readonly IMapper mapper;
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
             editOrganisationDetailsRequestCreator;
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
+        private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
+            serviceOfNoticeRequestCreator;
 
-        public ProducerSubmissionController(IMapper mapper, IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumbService, IWeeeCache weeeCache)
+        public ProducerSubmissionController(IMapper mapper, 
+            IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
+            Func<IWeeeClient> apiClient, 
+            BreadcrumbService breadcrumbService, 
+            IWeeeCache weeeCache,
+            IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
             this.apiClient = apiClient;
             this.breadcrumbService = breadcrumbService;
             this.weeeCache = weeeCache;
+            this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -89,6 +98,63 @@
             var countries = await GetCountries();
 
             model.Organisation.Address.Countries = countries;
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress)
+        {
+            var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            model.SameAsOrganisationAddress = sameAsOrganisationAddress ?? false;
+            
+            if (model.SameAsOrganisationAddress)
+            {
+                var organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                model.Address = new ServiceOfNoticeAddressData
+                {
+                    Address1 = organisationAddress.Address1,
+                    Address2 = organisationAddress.Address2,
+                    TownOrCity = organisationAddress.TownOrCity,
+                    Postcode = organisationAddress.Postcode,
+                    Countries = countries,
+                    CountryId = organisationAddress.CountryId,
+                    Telephone = organisationAddress.Telephone
+                };
+                return View(model);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ServiceOfNotice(ServiceOfNoticeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = serviceOfNoticeRequestCreator.ViewModelToRequest(model);
+
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
+            }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            var countries = await GetCountries();
+            model.Address.Countries = countries;
 
             return View(model);
         }

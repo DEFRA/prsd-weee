@@ -1,0 +1,111 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.ServiceOfNoticeViewModel
+
+@{
+    const string title = "Service of notice";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Producer.Controllers.ProducerController>(a => a.TaskList())))
+
+    @{
+        var step = @Model.HasAuthorisedRepresentitive ? "5" : "4";
+    }
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 3 of @step</span>
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p>
+        Provide your address for the service of notices. <br /><br />
+
+        For authorised representatives of non-UK established producers this will be your preferred address.
+    </p>
+
+    @using (Html.BeginForm("ServiceOfNotice", "ProducerSubmission", FormMethod.Get, new { id = "sameAsOrganisationAddressForm" }))
+    {
+        <div class="govuk-form-group">
+
+            @Html.Gds().CheckBoxFrontEndFor(m => m.SameAsOrganisationAddress, new { @id = "SameAsOrganisationAddress", @class = "govuk-checkboxes__input", onchange = "submitFormOnCheckboxChange()" })
+
+        </div>
+        <br />
+        <div>
+            <noscript>
+                <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Same as organisation address</button>
+            </noscript>
+        </div>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.DirectRegistrantId)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
+            @Html.Gds().LabelFor(m => m.Address.Address1)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Address1)
+            @Html.Gds().TextBoxFor(m => m.Address.Address1, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address2)">
+            @Html.Gds().LabelFor(m => m.Address.Address2)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Address2)
+            @Html.Gds().TextBoxFor(m => m.Address.Address2, new { @maxlength = CommonMaxFieldLengths.AddressLine })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.TownOrCity)">
+            @Html.Gds().LabelFor(m => m.Address.TownOrCity)
+            @Html.Gds().ValidationMessageFor(m => m.Address.TownOrCity)
+            @Html.Gds().TextBoxFor(m => m.Address.TownOrCity, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.CountyOrRegion)">
+            @Html.Gds().LabelFor(m => m.Address.CountyOrRegion)
+            @Html.Gds().ValidationMessageFor(m => m.Address.CountyOrRegion)
+            @Html.Gds().TextBoxFor(m => m.Address.CountyOrRegion, new { @maxlength = CommonMaxFieldLengths.TownCounty })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Postcode)">
+            @Html.Gds().LabelFor(m => m.Address.Postcode)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Postcode)
+            @Html.Gds().TextBoxFor(m => m.Address.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
+        </div>
+
+        <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Address.CountryId)" id="operator-country-dropdown-list">
+            @Html.Gds().LabelFor(m => m.Address.CountryId, new { id = "country-dropdown-list" })
+            @Html.Gds().ValidationMessageFor(m => m.Address.CountryId)
+            @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-select", aria_labelledby = "country-dropdown-list" })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Telephone)">
+            @Html.Gds().LabelFor(m => m.Address.Telephone)
+            @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
+            @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
+        </div>
+
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.ServiceOfNotice((bool?)null)), true)
+        </div>
+
+        @(this.WeeeGds().BackToTopLink())
+    }
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        function submitFormOnCheckboxChange() {
+            // Automatically submit the form when checkbox is checked/unchecked
+            document.getElementById('sameAsOrganisationAddressForm').submit();
+        }</script>
+}
