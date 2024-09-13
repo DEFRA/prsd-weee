@@ -37,13 +37,14 @@
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
 
-        public ProducerSubmissionController(IMapper mapper, IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumbService, IWeeeCache weeeCache)
+        public ProducerSubmissionController(IMapper mapper, IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator, Func<IWeeeClient> apiClient, BreadcrumbService breadcrumbService, IWeeeCache weeeCache, IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest> editContactDetailsRequestCreator)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
             this.apiClient = apiClient;
             this.breadcrumbService = breadcrumbService;
             this.weeeCache = weeeCache;
+            this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
