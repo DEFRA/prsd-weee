@@ -17,7 +17,7 @@
 
         public ServiceOfNoticeRequest ViewModelToRequest(ServiceOfNoticeViewModel viewModel)
         {
-            var address = mapper.Map<AddressPostcodeRequiredData, AddressData>(viewModel.Address);
+            var address = mapper.Map<ServiceOfNoticeAddressData, AddressData>(viewModel.Address);
 
             return new ServiceOfNoticeRequest(viewModel.DirectRegistrantId, address);
         }
