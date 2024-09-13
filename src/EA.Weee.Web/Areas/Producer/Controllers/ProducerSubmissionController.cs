@@ -108,8 +108,6 @@
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
-            model.Address = new ServiceOfNoticeAddressData();
-
             var countries = await GetCountries();
             model.Address.Countries = countries;
 
@@ -148,7 +146,7 @@
                 {
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
-
+                SmallProducerSubmissionData.CurrentSubmission.ServiceOfNoticeComplete = true;
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
