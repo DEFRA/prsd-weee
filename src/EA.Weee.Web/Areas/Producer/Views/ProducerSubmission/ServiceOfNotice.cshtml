@@ -13,7 +13,10 @@
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Producer.Controllers.ProducerController>(a => a.TaskList())))
 
-    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 3 of 5</span>
+    @{
+        var step = @Model.HasAuthorisedRepresentitive ? "5" : "4";
+    }
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 1 of @step</span>
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
@@ -35,6 +38,11 @@
 
         </div>
         <br />
+        <div>
+            <noscript>
+                <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Same as organisation address</button>
+            </noscript>
+        </div>
     }
 
     @using (Html.BeginForm())
@@ -98,7 +106,7 @@
 
 @section Scripts {
     <script type="text/javascript">
-    function submitFormOnCheckboxChange() {
+        function submitFormOnCheckboxChange() {
             // Automatically submit the form when checkbox is checked/unchecked
             document.getElementById('sameAsOrganisationAddressForm').submit();
         }</script>

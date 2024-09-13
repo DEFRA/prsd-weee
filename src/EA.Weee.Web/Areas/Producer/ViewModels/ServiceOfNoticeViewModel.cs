@@ -12,6 +12,8 @@
         [DisplayName("Same as organisation address")]
         public bool SameAsOrganisationAddress { get; set; }
 
-        public Core.Shared.AddressPostcodeRequiredData Address { get; set; }
+        public Core.Shared.ServiceOfNoticeAddressData Address { get; set; }
+
+        public bool HasAuthorisedRepresentitive { get; set; }
     }
 }
