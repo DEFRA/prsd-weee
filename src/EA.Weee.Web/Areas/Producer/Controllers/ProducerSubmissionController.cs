@@ -100,7 +100,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> ServiceOfNotice(bool? copyAddress)
+        public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress)
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
@@ -111,11 +111,8 @@
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
-            if (copyAddress.HasValue)
-            {
-                model.SameAsOrganisationAddress = copyAddress.Value;
-            }
-
+            model.SameAsOrganisationAddress = sameAsOrganisationAddress ?? false;
+            
             if (model.SameAsOrganisationAddress)
             {
                 var organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
