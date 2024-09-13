@@ -1,25 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Mappings.ToViewModel
 {
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.AatfEvidence;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Web.Areas.Producer.ViewModels;
-    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Web.Areas.Producer.ViewModels;
 
     public class EditEeeDataViewModelMap : IMap<SmallProducerSubmissionData, EditEeeDataViewModel>
     {
-        private readonly ITonnageUtilities tonnageUtilities;
-
-        public EditEeeDataViewModelMap(ITonnageUtilities tonnageUtilities)
-        {
-            this.tonnageUtilities = tonnageUtilities;
-        }
-
         public EditEeeDataViewModel Map(SmallProducerSubmissionData source)
         {
             var model = new EditEeeDataViewModel()
@@ -28,18 +16,19 @@
                 DirectRegistrantId = source.DirectRegistrantId
             };
 
-            for (var i = model.CategoryValues.Count - 1; i >= 0; i--)
+            foreach (var eee in source.CurrentSubmission.TonnageData)
             {
-                var category = model.CategoryValues.ElementAt(i);
-
-                var tonnage = source.CurrentSubmission.TonnageData.FirstOrDefault(t =>
-                    t.CategoryId.ToInt().Equals(category.CategoryId.ToInt()));
-
-                if (tonnage != null)
+                foreach (var producerSubmissionCategoryValue in model.CategoryValues)
                 {
-                    category.HouseHold = tonnageUtilities.CheckIfTonnageIsNull(tonnage.HouseHold);
-                    category.NonHouseHold = tonnageUtilities.CheckIfTonnageIsNull(tonnage.NonHouseHold);
-                }
+                    if (producerSubmissionCategoryValue.CategoryId.ToInt() == eee.Category.ToInt() && eee.ObligationType == ObligationType.B2C)
+                    {
+                        producerSubmissionCategoryValue.HouseHold = eee.Tonnage.ToTonnageEditDisplay();
+                    }
+                    if (producerSubmissionCategoryValue.CategoryId.ToInt() == eee.Category.ToInt() && eee.ObligationType == ObligationType.B2B)
+                    {
+                        producerSubmissionCategoryValue.NonHouseHold = eee.Tonnage.ToTonnageEditDisplay();
+                    }
+                }    
             }
 
             return model;

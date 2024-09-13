@@ -583,6 +583,7 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditEeeDataViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\SellingTechniqueViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditEeeDataViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ProducerTaskModel.cs" />

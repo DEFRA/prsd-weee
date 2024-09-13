@@ -3,6 +3,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
@@ -68,7 +69,7 @@
                             mapper.Map<Address, AddressData>(directRegistrant.Address),
                         AuthorisedRepresentitiveData = currentYearSubmission.CurrentSubmission.AuthorisedRepresentativeId.HasValue ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative) : (directRegistrant.AuthorisedRepresentativeId.HasValue ?
                             mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative) : null),
-                        TonnageData = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null ? mapper.Map<EeeOutputReturnVersion, IList<TonnageData>>(currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion) : new List<TonnageData>()
+                        TonnageData = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null ? mapper.Map<EeeOutputReturnVersion, IList<Eee>>(currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion) : new List<Eee>()
                     }
                 };
             }

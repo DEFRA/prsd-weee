@@ -403,7 +403,8 @@
     <Content Include="scripts\Update\Release 7\Sprint1\20240823-1137-registrants-schema.sql" />
     <Content Include="scripts\Update\Release 7\Sprint1\20240821-1117-organisation-transaction-table.sql" />
     <Content Include="scripts\Update\Release 7\Sprint2\20240904-1018-producer-submission-updates.sql" />
-    <Content Include="scripts\Update\Release 7\Sprint2\20240910-1502-producer-submission-updates-5.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint2\20240910-1502-producer-submission-updates-5 - Copy.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint2\20240910-1502-producer-submission-updates-6.sql" />
     <Content Include="scripts\Update\Release 7\Sprint2\20240904-1156-producer-submission-updates-4.sql" />
     <None Include="rebuild-development.bat" />
     <Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
