@@ -16,7 +16,7 @@
     @{
         var step = @Model.HasAuthorisedRepresentitive ? "5" : "4";
     }
-    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 1 of @step</span>
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 3 of @step</span>
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
@@ -30,8 +30,6 @@
 
     @using (Html.BeginForm("ServiceOfNotice", "ProducerSubmission", FormMethod.Get, new { id = "sameAsOrganisationAddressForm" }))
     {
-        @*@Html.Hidden("copyAddress", true)*@
-
         <div class="govuk-form-group">
 
             @Html.Gds().CheckBoxFrontEndFor(m => m.SameAsOrganisationAddress, new { @id = "SameAsOrganisationAddress", @class = "govuk-checkboxes__input", onchange = "submitFormOnCheckboxChange()" })
