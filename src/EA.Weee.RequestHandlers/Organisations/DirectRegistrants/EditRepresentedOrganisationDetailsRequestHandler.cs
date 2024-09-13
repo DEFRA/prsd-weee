@@ -21,7 +21,8 @@
         public EditRepresentedOrganisationDetailsRequestHandler(
             IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess,
-            WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess)
+            WeeeContext weeeContext, 
+            ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
@@ -39,7 +40,7 @@
 
             var systemDate = await systemDataAccess.GetSystemDateTime();
 
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDate.Year);
+            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == SystemTime.UtcNow.Year);
 
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.Address.CountryId);
 
@@ -61,10 +62,10 @@
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == representedOrganisationDetailsRequest.Address.CountryId);
 
             var producerAddress = new ProducerAddress(
-                representedOrganisationDetailsRequest.Address.Address1,
-                string.Empty,
-                representedOrganisationDetailsRequest.Address.Address2 ?? string.Empty,
-                representedOrganisationDetailsRequest.Address.TownOrCity,
+                primaryName: representedOrganisationDetailsRequest.Address.Address1,
+                secondaryName: representedOrganisationDetailsRequest.Address.Address2,
+                street: representedOrganisationDetailsRequest.Address.Address2 ?? string.Empty,
+                town: representedOrganisationDetailsRequest.Address.TownOrCity,
                 string.Empty,
                 representedOrganisationDetailsRequest.Address.CountyOrRegion ?? string.Empty,
                 country,

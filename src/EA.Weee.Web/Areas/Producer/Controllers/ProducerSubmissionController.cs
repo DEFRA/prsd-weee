@@ -111,6 +111,8 @@
 
             model.Address.Countries = await GetCountries();
 
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
             return View(model);
         }
 
@@ -127,9 +129,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
-                return RedirectToAction(
-                    nameof(ProducerController.TaskList),
-                    typeof(ProducerController).GetControllerName());
+                return RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName());
             }
 
             var countries = await GetCountries();
