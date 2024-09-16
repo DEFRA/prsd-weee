@@ -15,7 +15,7 @@
                 CountyOrRegion = source.CountyOrRegion,
                 TownOrCity = source.TownOrCity,
                 Postcode = source.Postcode,
-                Telephone = source.Telephone,
+                Telephone = !string.IsNullOrWhiteSpace(source.Telephone) ? source.Telephone : null,
             };
         }
     }
