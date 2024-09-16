@@ -415,7 +415,9 @@
     <Compile Include="Areas\Producer\Filters\AuthoriseRouteClaimsAttributeTests.cs" />
     <Compile Include="Areas\Producer\Mapping\AddressMapUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ReverseAddressMapUnitTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToRequest\ToEditContactDetailsRequestCreatorUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToRequest\ToEditOrganisationDetailsRequestCreatorUnitTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToViewModel\EditContactDetailsMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditOrganisationDetailsMapTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanApproveNoteAttributeTests.cs" />
     <Compile Include="Areas\Scheme\Attributes\CheckCanEditTransferNoteAttributeTests.cs" />
