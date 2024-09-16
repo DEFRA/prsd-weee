@@ -44,6 +44,8 @@
 
                 var authedRep = submission.CurrentSubmission.AuthorisedRepresentative;
 
+                authedRep.OverseasProducerName.Should()
+                    .Be(directRegistrant.AuthorisedRepresentative.OverseasProducerName);
                 authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
                 authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
                 authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
@@ -96,10 +98,11 @@
                     .WithTestData()
                 .WithExternalUserAccess();
 
-                directRegistrant = DirectRegistrantDbSetup.Init()
-                .Create();
-
                 var authorisedRep = AuthorisedRepDbSetup.Init().Create();
+
+                directRegistrant = DirectRegistrantDbSetup.Init()
+                    .WithAuthorisedRep(authorisedRep)
+                    .Create();
 
                 directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
                     .WithDirectRegistrant(directRegistrant, authorisedRep)

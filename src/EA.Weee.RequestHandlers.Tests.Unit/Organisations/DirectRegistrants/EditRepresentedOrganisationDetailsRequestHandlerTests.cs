@@ -31,16 +31,16 @@
         private readonly EditRepresentedOrganisationDetailsRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid countryId = Guid.NewGuid();
-        private readonly Guid userId = Guid.NewGuid();
         private readonly Country country;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public EditRepresentedOrganisationDetailsRequestHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
-            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
 
             var dbContextHelper = new DbContextHelper();
 
