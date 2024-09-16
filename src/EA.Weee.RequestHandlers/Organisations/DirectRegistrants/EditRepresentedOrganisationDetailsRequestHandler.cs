@@ -40,13 +40,13 @@
 
             var systemDate = await systemDataAccess.GetSystemDateTime();
 
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == SystemTime.UtcNow.Year);
+            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDate.Year);
 
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.Address.CountryId);
 
             request.Address.CountryName = country.Name;
 
-            var authorisedRepresentative = await CreateRepresentingCompany(request);
+            var authorisedRepresentative = await CreateRepresentingCompany(request, directRegistrant);
 
             currentYearSubmission.CurrentSubmission.AddOrUpdateAuthorisedRepresentative(authorisedRepresentative);
 
@@ -55,7 +55,8 @@
             return true;
         }
 
-        private async Task<AuthorisedRepresentative> CreateRepresentingCompany(RepresentedOrganisationDetailsRequest representedOrganisationDetailsRequest)
+        private async Task<AuthorisedRepresentative> CreateRepresentingCompany(RepresentedOrganisationDetailsRequest representedOrganisationDetailsRequest,
+            DirectRegistrant directRegistrant)
         {
             AuthorisedRepresentative authorisedRepresentative = null;
             
@@ -80,7 +81,7 @@
                 representedOrganisationDetailsRequest.Address.Email,
                 producerAddress);
 
-            authorisedRepresentative = AuthorisedRepresentative.Create(representedOrganisationDetailsRequest.BusinessTradingName, producerContact);
+            authorisedRepresentative = new AuthorisedRepresentative(directRegistrant.AuthorisedRepresentative.OverseasProducerName, representedOrganisationDetailsRequest.BusinessTradingName, producerContact);
             
             return authorisedRepresentative;
         }

@@ -3,6 +3,7 @@
     using Base;
     using EA.Prsd.Core;
     using EA.Weee.Domain.Producer;
+    using EA.Weee.Tests.Core;
 
     public class DirectRegistrantDbSetup : DbTestDataBuilder<DirectRegistrant, DirectRegistrantDbSetup>
     {
@@ -13,6 +14,13 @@
             instance = new DirectRegistrant(organisation);
 
             return instance;
+        }
+
+        public DirectRegistrantDbSetup WithAuthorisedRep(AuthorisedRepresentative authorisedRep)
+        {
+            ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.AuthorisedRepresentativeId, authorisedRep.Id, instance);
+
+            return this;
         }
     }
 }
