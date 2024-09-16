@@ -73,39 +73,79 @@
             usage.AllowMultiple.Should().BeTrue();
         }
 
-        [Fact]
-        public async Task TaskList_WithAuthorisedRepresentative_ReturnsCorrectViewModel()
+        public static IEnumerable<object[]> TaskCompletionCombinations()
+        {
+            var allCombinations = new List<object[]>();
+            for (var i = 0; i < 64; i++)
+            {
+                allCombinations.Add(new object[]
+                {
+                    (i & 1) != 0,  // OrganisationDetailsComplete
+                    (i & 2) != 0,  // ContactDetailsComplete
+                    (i & 4) != 0,  // ServiceOfNoticeComplete
+                    (i & 8) != 0,  // RepresentingCompanyDetailsComplete
+                    (i & 16) != 0, // EEEDetailsComplete
+                    (i & 32) != 0  // HasAuthorizedRepresentative
+                });
+            }
+            return allCombinations;
+        }
+
+        [Theory]
+        [MemberData(nameof(TaskCompletionCombinations))]
+        public async Task TaskList_ReturnsCorrectViewModelForAllCombinations(
+            bool organisationDetailsComplete,
+            bool contactDetailsComplete,
+            bool serviceOfNoticeComplete,
+            bool representingCompanyDetailsComplete,
+            bool eeeDetailsComplete,
+            bool hasAuthorizedRepresentative)
         {
             // Arrange
-            SetupControllerData(hasAuthorisedRepresentative: true);
-            var expectedModel = GetExpectedModel(includeRepresentingCompanyDetails: true);
+            SetupControllerData(
+                organisationDetailsComplete,
+                contactDetailsComplete,
+                serviceOfNoticeComplete,
+                representingCompanyDetailsComplete,
+                eeeDetailsComplete,
+                hasAuthorizedRepresentative);
+
+            var expectedModel = GetExpectedModel(
+                organisationDetailsComplete,
+                contactDetailsComplete,
+                serviceOfNoticeComplete,
+                representingCompanyDetailsComplete,
+                eeeDetailsComplete,
+                hasAuthorizedRepresentative);
 
             // Act
             var result = await controller.TaskList();
 
             // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<TaskListViewModel>(viewResult.Model);
-            model.Should().BeEquivalentTo(expectedModel);
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var model = viewResult.Model.Should().BeOfType<TaskListViewModel>().Subject;
+
+            model.OrganisationId.Should().Be(expectedModel.OrganisationId);
+            model.ProducerTaskModels.Should().HaveSameCount(expectedModel.ProducerTaskModels);
+
+            for (int i = 0; i < model.ProducerTaskModels.Count; i++)
+            {
+                var actualTask = model.ProducerTaskModels[i];
+                var expectedTask = expectedModel.ProducerTaskModels[i];
+
+                actualTask.TaskLinkName.Should().Be(expectedTask.TaskLinkName);
+                actualTask.Complete.Should().Be(expectedTask.Complete);
+                actualTask.Action.Should().Be(expectedTask.Action);
+            }
         }
 
-        [Fact]
-        public async Task TaskList_WithoutAuthorisedRepresentative_ReturnsCorrectViewModel()
-        {
-            // Arrange
-            SetupControllerData(hasAuthorisedRepresentative: false);
-            var expectedModel = GetExpectedModel(includeRepresentingCompanyDetails: false);
-
-            // Act
-            var result = await controller.TaskList();
-
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<TaskListViewModel>(viewResult.Model);
-            model.Should().BeEquivalentTo(expectedModel);
-        }
-
-        private void SetupControllerData(bool hasAuthorisedRepresentative)
+        private void SetupControllerData(
+            bool organisationDetailsComplete,
+            bool contactDetailsComplete,
+            bool serviceOfNoticeComplete,
+            bool representingCompanyDetailsComplete,
+            bool eeeDetailsComplete,
+            bool hasAuthorizedRepresentative)
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
@@ -116,13 +156,67 @@
                 CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
                 {
                     ComplianceYear = 2005,
-                    ContactDetailsComplete = true,
-                    EEEDetailsComplete = true,
-                    OrganisationDetailsComplete = true,
-                    RepresentingCompanyDetailsComplete = false,
-                    ServiceOfNoticeComplete = true
+                    OrganisationDetailsComplete = organisationDetailsComplete,
+                    ContactDetailsComplete = contactDetailsComplete,
+                    ServiceOfNoticeComplete = serviceOfNoticeComplete,
+                    RepresentingCompanyDetailsComplete = representingCompanyDetailsComplete,
+                    EEEDetailsComplete = eeeDetailsComplete
                 },
-                HasAuthorisedRepresentitive = hasAuthorisedRepresentative
+                HasAuthorisedRepresentitive = hasAuthorizedRepresentative
+            };
+        }
+
+        private TaskListViewModel GetExpectedModel(
+            bool organisationDetailsComplete,
+            bool contactDetailsComplete,
+            bool serviceOfNoticeComplete,
+            bool representingCompanyDetailsComplete,
+            bool eeeDetailsComplete,
+            bool hasAuthorizedRepresentative)
+        {
+            var taskModels = new List<ProducerTaskModel>
+            {
+                new ProducerTaskModel
+                {
+                    TaskLinkName = "Organisation details",
+                    Complete = organisationDetailsComplete,
+                    Action = nameof(ProducerSubmissionController.EditOrganisationDetails)
+                },
+                new ProducerTaskModel
+                {
+                    TaskLinkName = "Contact details",
+                    Complete = contactDetailsComplete,
+                    Action = null
+                },
+                new ProducerTaskModel
+                {
+                    TaskLinkName = "Service of notice",
+                    Complete = serviceOfNoticeComplete,
+                    Action = nameof(ProducerSubmissionController.ServiceOfNotice)
+                }
+            };
+
+            if (hasAuthorizedRepresentative)
+            {
+                taskModels.Add(new ProducerTaskModel
+                {
+                    TaskLinkName = "Representing company details",
+                    Complete = representingCompanyDetailsComplete,
+                    Action = null
+                });
+            }
+
+            taskModels.Add(new ProducerTaskModel
+            {
+                TaskLinkName = "EEE details",
+                Complete = eeeDetailsComplete,
+                Action = nameof(ProducerSubmissionController.EditEeeeData)
+            });
+
+            return new TaskListViewModel
+            {
+                OrganisationId = organisationId,
+                ProducerTaskModels = taskModels
             };
         }
 
@@ -157,51 +251,6 @@
             var view = controller.CheckAnswers() as ViewResult;
 
             view.ViewName.Should().Be("CheckAnswers");
-        }
-
-        private TaskListViewModel GetExpectedModel(bool includeRepresentingCompanyDetails)
-        {
-            var taskModels = new List<ProducerTaskModel>
-            {
-                new ProducerTaskModel
-                {
-                    TaskLinkName = "Organisation details",
-                    Complete = true,
-                    Action = nameof(ProducerSubmissionController.EditOrganisationDetails)
-                },
-                new ProducerTaskModel
-                {
-                    TaskLinkName = "Contact details",
-                    Complete = true
-                },
-                new ProducerTaskModel
-                {
-                    TaskLinkName = "Service of notice",
-                    Complete = true
-                }
-            };
-
-            if (includeRepresentingCompanyDetails)
-            {
-                taskModels.Add(new ProducerTaskModel
-                {
-                    TaskLinkName = "Representing company details",
-                    Complete = false
-                });
-            }
-
-            taskModels.Add(new ProducerTaskModel
-            {
-                TaskLinkName = "EEE details",
-                Complete = true,
-                Action = nameof(ProducerSubmissionController.EditEeeeData)
-            });
-
-            return new TaskListViewModel
-            {
-                OrganisationId = organisationId,
-                ProducerTaskModels = taskModels
-            };
         }
     }
 }
