@@ -63,6 +63,7 @@
                         CompanyRegistrationNumber = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber) ? currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber : organisation.CompanyRegistrationNumber,
                         OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue,
                         SellingTechnique = currentYearSubmission.CurrentSubmission.SellingTechniqueType.HasValue ? (SellingTechniqueType?)currentYearSubmission.CurrentSubmission.SellingTechniqueType.Value : null,
+                        ContactDetailsComplete = currentYearSubmission.CurrentSubmission.ContactAddressId.HasValue,
                         AdditionalCompanyDetailsData = mapper.Map<ICollection<AdditionalCompanyDetails>, IList<AdditionalCompanyDetailsData>>(currentYearSubmission.DirectRegistrant.AdditionalCompanyDetails),
                         ContactData = currentYearSubmission.CurrentSubmission.ContactId.HasValue ? mapper.Map<Contact, ContactData>(currentYearSubmission.CurrentSubmission.Contact) :
                             mapper.Map<Contact, ContactData>(directRegistrant.Contact),

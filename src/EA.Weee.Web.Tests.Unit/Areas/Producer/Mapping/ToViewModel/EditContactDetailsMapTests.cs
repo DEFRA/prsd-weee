@@ -4,29 +4,27 @@
     using AutoFixture.AutoFakeItEasy;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
-    using System.Collections.Generic;
     using Xunit;
 
-    public class ServiceOfNoticeMapTests
+    public class EditContactDetailsMapTests
     {
         private readonly IFixture fixture;
         private readonly IMapper mapper;
-        private readonly ServiceOfNoticeMap map;
+        private readonly EditContactDetailsMap map;
 
-        public ServiceOfNoticeMapTests()
+        public EditContactDetailsMapTests()
         {
             fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
             mapper = fixture.Freeze<IMapper>();
-            map = new ServiceOfNoticeMap(mapper);
+            map = new EditContactDetailsMap(mapper);
         }
 
         [Fact]
-        public void Map_ShouldMapHighLevelSourceFields()
+        public void Map_ShouldMaphighLevelSourceFields()
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionData>();
@@ -41,39 +39,35 @@
         }
 
         [Fact]
-        public void Map_ShouldMapServiceOfNoticeAddress()
+        public void Map_ShouldUseCurrentSubmissionDataWhenAvailable()
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionData>();
-            var expectedAddress = fixture.Create<ServiceOfNoticeAddressData>();
-            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
-                .Returns(expectedAddress);
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.Address.Should().Be(expectedAddress);
-            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(source.CurrentSubmission.ServiceOfNoticeData))
-                .MustHaveHappenedOnceExactly();
+            result.ContactDetails.FirstName.Should().Be(source.CurrentSubmission.ContactData.FirstName);
+            result.ContactDetails.LastName.Should().Be(source.CurrentSubmission.ContactData.LastName);
+            result.ContactDetails.Position.Should().Be(source.CurrentSubmission.ContactData.Position);
         }
 
         [Fact]
-        public void Map_ShouldMapNullServiceOfNoticeAddress()
+        public void Map_ShouldMapAddressData()
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionData>();
-            source.CurrentSubmission.ServiceOfNoticeData = null;
-            var expectedAddress = new ServiceOfNoticeAddressData();
-            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
+            var expectedAddress = fixture.Create<AddressPostcodeRequiredData>();
+            A.CallTo(() => mapper.Map<AddressData, AddressPostcodeRequiredData>(A<AddressData>._))
                 .Returns(expectedAddress);
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.Address.Should().Be(expectedAddress);
-            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(source.CurrentSubmission.ServiceOfNoticeData))
+            result.ContactDetails.AddressData.Should().Be(expectedAddress);
+            A.CallTo(() => mapper.Map<AddressData, AddressPostcodeRequiredData>(source.CurrentSubmission.ContactAddressData))
                 .MustHaveHappenedOnceExactly();
         }
     }
