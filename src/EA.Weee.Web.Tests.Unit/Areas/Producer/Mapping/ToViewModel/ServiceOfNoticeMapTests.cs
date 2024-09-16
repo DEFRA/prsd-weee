@@ -57,5 +57,24 @@
             A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(source.CurrentSubmission.ServiceOfNoticeData))
                 .MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public void Map_ShouldMapNullServiceOfNoticeAddress()
+        {
+            // Arrange
+            var source = fixture.Create<SmallProducerSubmissionData>();
+            source.CurrentSubmission.ServiceOfNoticeData = null;
+            var expectedAddress = new ServiceOfNoticeAddressData();
+            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
+                .Returns(expectedAddress);
+
+            // Act
+            var result = map.Map(source);
+
+            // Assert
+            result.Address.Should().Be(expectedAddress);
+            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(source.CurrentSubmission.ServiceOfNoticeData))
+                .MustHaveHappenedOnceExactly();
+        }
     }
 }
