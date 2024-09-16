@@ -40,15 +40,26 @@
             CurrentSubmission = submission;
         }
 
-        public DirectProducerSubmission(DirectRegistrant directRegistrant, 
-            RegisteredProducer registeredProducer, 
+        public DirectProducerSubmission(DirectRegistrant directRegistrant,
+            RegisteredProducer registeredProducer,
             int complianceYear)
         {
             Condition.Requires(directRegistrant).IsNotNull();
             Condition.Requires(registeredProducer).IsNotNull();
             Condition.Ensures(complianceYear).IsGreaterThan(0);
 
+            RegisteredProducer = registeredProducer;
             DirectRegistrant = directRegistrant;
+            ComplianceYear = complianceYear;
+            SubmissionHistory = new List<DirectProducerSubmissionHistory>();
+        }
+
+        public DirectProducerSubmission(RegisteredProducer registeredProducer, 
+            int complianceYear)
+        {
+            Condition.Requires(registeredProducer).IsNotNull();
+            Condition.Ensures(complianceYear).IsGreaterThan(0);
+
             RegisteredProducer = registeredProducer;
             ComplianceYear = complianceYear;
             SubmissionHistory = new List<DirectProducerSubmissionHistory>();

@@ -223,6 +223,8 @@
     <Compile Include="Base\WeeeContextSpecification.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
+    <Compile Include="Builders\AuthorisedRepDbSetup.cs" />
+    <Compile Include="Builders\DirectRegistrantSubmissionDbSetup.cs" />
     <Compile Include="Builders\DirectRegistrantDbSetup.cs" />
     <Compile Include="Builders\OrganisationTransactionDbSetup.cs" />
     <Compile Include="Builders\CompetentAuthorityUserDbSetup.cs" />
@@ -245,6 +247,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\DirectRegistrant\EditRepresentedOrganisationDetailsRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\ServiceOfNoticeRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\EditContactDetailsRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\EditOrganisationDetailsRequestHandlerIntegrationTests.cs" />

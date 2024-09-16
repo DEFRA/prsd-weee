@@ -92,5 +92,24 @@
             }
             throw new InvalidOperationException("Country not defined.");
         }
+
+        public ProducerAddress OverwriteWhereNull(ProducerAddress other)
+        {
+            if (other == null)
+            {
+                return this;
+            }
+
+            other.Country = Country;
+            other.PrimaryName = PrimaryName;
+            other.SecondaryName = SecondaryName;
+            other.Street = Street;
+            other.Town = Town;
+            other.Locality = Locality;
+            other.AdministrativeArea = AdministrativeArea;
+            other.PostCode = PostCode;
+
+            return other;
+        }
     }
 }
