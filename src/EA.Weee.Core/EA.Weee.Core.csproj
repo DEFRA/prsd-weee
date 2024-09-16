@@ -305,6 +305,7 @@
     <Compile Include="DirectRegistrant\AuthorisedRepresentitiveData.cs" />
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValue.cs" />
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValues.cs" />
+    <Compile Include="DirectRegistrant\SellingTechniqueType.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
     <Compile Include="DirectRegistrant\TonnageData.cs" />
@@ -579,7 +580,9 @@
       <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Producer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

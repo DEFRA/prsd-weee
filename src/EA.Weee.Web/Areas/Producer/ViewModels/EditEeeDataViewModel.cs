@@ -16,7 +16,9 @@
 
         public Guid DirectRegistrantId { get; set; }
 
-        public virtual IList<ProducerSubmissionCategoryValue> CategoryValues { get; set; }
+        public IList<ProducerSubmissionCategoryValue> CategoryValues { get; set; }
+
+        public SellingTechniqueViewModel SellingTechnique { get; set; }
 
         public EditEeeDataViewModel()
         {
