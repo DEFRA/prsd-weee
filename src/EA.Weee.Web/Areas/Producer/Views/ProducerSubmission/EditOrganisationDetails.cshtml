@@ -121,7 +121,7 @@
 
         @(this.WeeeGds().Warning(Resources.ProducerSubmission.ProducerSubmission.OrganisationDetailsWarningText))
 
-        if (Model.AdditionalContactModels.Any())
+        if (Model.AdditionalContactModels != null && Model.AdditionalContactModels.Any())
         {
             for (var i = 0; i < Model.AdditionalContactModels.Count; i++)
             {

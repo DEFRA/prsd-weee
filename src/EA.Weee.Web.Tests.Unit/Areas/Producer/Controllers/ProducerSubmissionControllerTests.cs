@@ -40,6 +40,8 @@
           editRepresentedOrganisationDetailsRequestCreator;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
+        private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
+            serviceOfNoticeRequestCreator;
 
         public ProducerSubmissionControllerTests()
         {
@@ -49,11 +51,13 @@
             weeeClient = A.Fake<IWeeeClient>();
             editOrganisationDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>>();
-
+            serviceOfNoticeRequestCreator =
+                A.Fake<IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>>();
             editRepresentedOrganisationDetailsRequestCreator =
-               A.Fake<IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest>>();
-
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache);
+                A.Fake<IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest>>();
+            controller = new ProducerSubmissionController(mapper, 
+  
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, serviceOfNoticeRequestCreator);
         }
 
         [Fact]
@@ -209,6 +213,132 @@
         {
             // Arrange
             var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditOrganisationDetails", new Type[0]);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task ServiceOfNotice_Get_ShouldReturnViewWithMappedModel()
+        {
+            // Arrange
+            bool sameAsOrganisationAddress = true;
+
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var viewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(submissionData)).Returns(viewModel);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            // Act
+            var result = await controller.ServiceOfNotice(sameAsOrganisationAddress) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(viewModel);
+            viewModel.Address.Countries.Should().BeSameAs(countries);
+        }
+
+        [Fact]
+        public async Task ServiceOfNotice_Get_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            bool sameAsOrganisationAddress = false;
+
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            var organisationName = TestFixture.Create<string>();
+
+            controller.SmallProducerSubmissionData = submissionData;
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            var viewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(submissionData)).Returns(viewModel);
+
+            // Act
+            await controller.ServiceOfNotice(sameAsOrganisationAddress);
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task ServiceOfNotice_InvalidPost_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var viewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
+            var organisationName = TestFixture.Create<string>();
+            A.CallTo(() => weeeCache.FetchOrganisationName(viewModel.OrganisationId)).Returns(organisationName);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            controller.ModelState.AddModelError("error", "this is an error");
+
+            // Act
+            await controller.ServiceOfNotice(viewModel);
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(viewModel.OrganisationId);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task ServiceOfNotice_Post_ValidModel_ShouldRedirectToTaskList()
+        {
+            // Arrange
+            var model = TestFixture.Create<ServiceOfNoticeViewModel>();
+            var request = TestFixture.Create<ServiceOfNoticeRequest>();
+            A.CallTo(() => serviceOfNoticeRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.ServiceOfNotice(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TaskList");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ServiceOfNotice_Post_InvalidModel_ShouldReturnViewWithModel()
+        {
+            // Arrange
+            var model = TestFixture.Create<ServiceOfNoticeViewModel>();
+            controller.ModelState.AddModelError("Test", "Test error");
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            // Act
+            var result = await controller.ServiceOfNotice(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
+            ((ServiceOfNoticeViewModel)result.Model).Address.Countries.Should().BeSameAs(countries);
+        }
+
+        [Fact]
+        public void ServiceOfNotice_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ServiceOfNotice", new[] { typeof(bool?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
