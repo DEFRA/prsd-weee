@@ -62,7 +62,7 @@
                         TradingName = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.TradingName) ? currentYearSubmission.CurrentSubmission.TradingName : organisation.TradingName,
                         CompanyRegistrationNumber = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber) ? currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber : organisation.CompanyRegistrationNumber,
                         OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue,
-                        SellingTechnique = currentYearSubmission.CurrentSubmission.SellingTechniqueType != null ? (SellingTechniqueType?)currentYearSubmission.CurrentSubmission.SellingTechniqueType.Value : null,
+                        SellingTechnique = currentYearSubmission.CurrentSubmission.SellingTechniqueType.HasValue ? (SellingTechniqueType?)currentYearSubmission.CurrentSubmission.SellingTechniqueType.Value : null,
                         AdditionalCompanyDetailsData = mapper.Map<ICollection<AdditionalCompanyDetails>, IList<AdditionalCompanyDetailsData>>(currentYearSubmission.DirectRegistrant.AdditionalCompanyDetails),
                         ContactData = currentYearSubmission.CurrentSubmission.ContactId.HasValue ? mapper.Map<Contact, ContactData>(currentYearSubmission.CurrentSubmission.Contact) :
                             mapper.Map<Contact, ContactData>(directRegistrant.Contact),

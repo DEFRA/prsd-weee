@@ -55,7 +55,7 @@
 
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
 
-        public virtual SellingTechniqueType SellingTechniqueType { get; set; }
+        public virtual int? SellingTechniqueType { get; set; }
 
         public DirectProducerSubmissionHistory()
         {
