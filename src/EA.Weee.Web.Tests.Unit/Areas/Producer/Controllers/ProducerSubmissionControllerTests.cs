@@ -54,7 +54,7 @@
             editContactDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>>();
 
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, serviceOfNoticeRequestCreator, editContactDetailsRequestCreator);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator);
         }
 
         [Fact]

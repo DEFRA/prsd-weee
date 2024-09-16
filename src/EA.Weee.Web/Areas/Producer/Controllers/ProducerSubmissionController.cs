@@ -44,6 +44,8 @@
             Func<IWeeeClient> apiClient, 
             BreadcrumbService breadcrumbService, 
             IWeeeCache weeeCache,
+            IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
+                editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator)
         {
             this.mapper = mapper;
