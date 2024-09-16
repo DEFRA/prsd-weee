@@ -312,7 +312,6 @@
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Organisations\NotRequiredPartnerModel.cs" />
     <Compile Include="Organisations\SoleTraderViewModel.cs" />
-    
     <Compile Include="Organisations\AdditionalContactModel.cs" />
     <Compile Include="Organisations\PartnerViewModel.cs" />
     <Compile Include="Organisations\RepresentingCompanyAddressData.cs" />
@@ -328,6 +327,7 @@
     <Compile Include="Organisations\ExternalOrganisationType.cs" />
     <Compile Include="Organisations\OrganisationTransactionData.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
+    <Compile Include="Shared\ServiceOfNoticeAddressData.cs" />
     <Compile Include="Shared\AddressPostcodeRequiredData.cs" />
     <Compile Include="Shared\EntityIdDisplayNameData.cs" />
     <Compile Include="Shared\AddressUtilities.cs" />

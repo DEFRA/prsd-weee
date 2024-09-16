@@ -90,6 +90,7 @@
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
     <Compile Include="Organisations\DirectRegistrant\EditContactDetailsRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\EditOrganisationDetailsRequest.cs" />
+    <Compile Include="Organisations\DirectRegistrant\ServiceOfNoticeRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\GetSmallProducerSubmission.cs" />
     <Compile Include="Organisations\DirectRegistrant\DeleteUserOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\CompleteOrganisationTransaction.cs" />
