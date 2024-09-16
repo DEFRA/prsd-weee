@@ -444,15 +444,21 @@
 
         public async Task<List<Organisation>> GetRecipientLists(Guid organisationId, Guid aatfId, int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes)
         {
-            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && n.AatfId == aatfId && n.OrganisationId == organisationId);
+            var aatf = await context.Aatfs.FindAsync(aatfId);
+            Condition.Requires(aatf).IsNotNull();
+            var groupedAatfId = aatf.AatfId;
+
+            var notes = context.Notes.Where(n => n.ComplianceYear == complianceYear && n.Aatf.AatfId == groupedAatfId && n.OrganisationId == organisationId);
 
             var noteStatus = allowedStatus.Select(e => e.Value);
             var noteTypes = allowedNoteTypes.Select(e => e.Value);
 
-            return await notes.Where(n => noteStatus.Contains(n.Status.Value) && noteTypes.Contains(n.NoteType.Value))
-                              .Select(n => n.Recipient)
-                              .Distinct()
-                              .ToListAsync();
+            var recipientList = await notes.Where(n => noteStatus.Contains(n.Status.Value) && noteTypes.Contains(n.NoteType.Value))
+                                     .Select(n => n.Recipient)
+                                     .Distinct()
+                                     .ToListAsync();
+
+            return recipientList;
         }
 
         public async Task<List<Organisation>> GetTransferOrganisations(int complianceYear, List<NoteStatus> allowedStatus, List<NoteType> allowedNoteTypes)

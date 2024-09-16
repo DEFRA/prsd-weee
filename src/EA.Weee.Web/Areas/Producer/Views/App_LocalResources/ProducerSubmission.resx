@@ -120,6 +120,9 @@
   <data name="DiscardChanges" xml:space="preserve">
     <value>Discard changes</value>
   </data>
+  <data name="OrganisationDetailsWarningText" xml:space="preserve">
+    <value>Changing the details on this page will update your organisation details on your account.</value>
+  </data>
   <data name="SaveAndReturnTaskList" xml:space="preserve">
     <value>Save and return to task list</value>
   </data>

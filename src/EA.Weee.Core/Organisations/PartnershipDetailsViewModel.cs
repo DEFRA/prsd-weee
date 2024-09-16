@@ -7,7 +7,7 @@
 
     public class PartnershipDetailsViewModel : OrganisationViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Enter company name / business name")]
         [DisplayName("Company name / Business name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public override string CompanyName { get; set; }
