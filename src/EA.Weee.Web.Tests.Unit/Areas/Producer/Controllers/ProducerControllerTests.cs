@@ -119,7 +119,8 @@
                     new ProducerTaskModel
                     {
                         TaskLinkName = "Representing company details",
-                        Complete = false
+                        Complete = false,
+                        Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
                     },
                     new ProducerTaskModel
                     {

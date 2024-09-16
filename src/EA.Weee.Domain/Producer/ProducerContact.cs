@@ -76,5 +76,24 @@
         {
             get { return string.Format("{0} {1} {2}", Title, ForeName, SurName); }
         }
+
+        public ProducerContact OverwriteWhereNull(ProducerContact other)
+        {
+            if (other == null)
+            {
+                return this;
+            }
+
+            Address = other.Address.OverwriteWhereNull(Address);
+            Email = other.Email;
+            Fax = other.Fax;
+            Mobile = other.Mobile;
+            Telephone = other.Telephone;
+            SurName = other.SurName;
+            ForeName = other.ForeName;
+            Title = other.Title;
+
+            return other;
+        }
     }
 }
