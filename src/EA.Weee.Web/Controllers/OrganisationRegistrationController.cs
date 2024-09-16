@@ -390,7 +390,10 @@
                 }
             }
 
-            if (!ModelState.IsValid)
+            var castedModel = model.CastToSpecificViewModel(model);
+            var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
+
+            if (!isValid)
             {
                 var countries = await GetCountries();
 
@@ -725,7 +728,7 @@
             }
             if (orgType == ExternalOrganisationType.SoleTrader)
             {
-                return RedirectToAction(nameof(OrganisationDetails));
+                return RedirectToAction(nameof(SoleTraderDetails));
             }
             if (orgType == ExternalOrganisationType.RegisteredCompany)
             {

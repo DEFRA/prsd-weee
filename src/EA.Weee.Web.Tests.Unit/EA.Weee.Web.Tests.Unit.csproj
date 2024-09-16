@@ -413,9 +413,13 @@
     <Compile Include="Areas\Admin\ViewModels\VoidTransferNoteViewModelTests.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerSubmissionControllerTests.cs" />
     <Compile Include="Areas\Producer\Filters\AuthoriseRouteClaimsAttributeTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ReverseServiceOfNoticeAddressMapUnitTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ServiceOfNoticeAddressMapUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\AddressMapUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ReverseAddressMapUnitTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToRequest\ToServiceOfNoticeRequestCreatorUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToRequest\ToEditOrganisationDetailsRequestCreatorUnitTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToViewModel\ServiceOfNoticeMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditEeeDataViewModelMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditOrganisationDetailsMapTests.cs" />
     <Compile Include="Areas\Producer\ViewModel\EditEeeDataViewModelUnitTests.cs" />
