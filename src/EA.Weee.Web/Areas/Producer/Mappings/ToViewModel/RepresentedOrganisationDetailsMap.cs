@@ -11,6 +11,7 @@
             return new RepresentingCompanyDetailsViewModel()
             {
                 DirectRegistrantId = source.DirectRegistrantId,
+                OrganisationId = source.OrganisationData.Id,
                 Address = new RepresentingCompanyAddressData
                 {
                     Address1 = source.CurrentSubmission.AuthorisedRepresentitiveData.Address1,

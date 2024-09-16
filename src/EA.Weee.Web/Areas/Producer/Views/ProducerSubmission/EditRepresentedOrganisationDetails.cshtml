@@ -1,9 +1,8 @@
-﻿@using EA.Weee.Core.DataStandards
-@using MvcNavigationHelpers
-@using EA.Weee.Web.Controllers
-@using EA.Weee.Web.RazorHelpers
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Producer.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
 
 @model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
 @{
@@ -12,24 +11,41 @@
 }
 @section full_main_content
 {
-    @this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.RepresentingCompanyRedirect()))
+    @this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList()))
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>
 
     <p>Provide the address of the non-UK established Small EEE producer you are registering on behalf of.</p>
-    <p>If the producer has previously registered in the UK under the WEEE Regulations through being a member of a Producer Compliance Scheme, include their Producer Registration Number.</p>
+    <p>
+        If the producer has previously registered in the UK under the WEEE Regulations through being a member of a Producer Compliance Scheme,
+        include their Producer Registration Number.
+    </p>
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
-            @Html.Gds().LabelFor(m => m.CompanyName)
-            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
-            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        @Html.HiddenFor(m => m.OrganisationId)
+
+        @Html.HiddenFor(m => m.CompanyName)
+
+        <div class="govuk-!-padding-bottom-4">
+            <div class="flex-container">
+                <span class="govuk-body govuk-label--s label-width"
+                      for="RepresentingCompany_OrganisationType"
+                      id="RepresentingCompany_CompanyName-label">
+                    @Html.DisplayNameFor(x => x.CompanyName)
+                </span>
+                <span class="govuk-body"
+                      aria-labelledby="RepresentingCompany_CompanyName-label"
+                      name="RepresentingCompany_CompanyName"
+                      id="RepresentingCompany_CompanyName">
+                    @Model.CompanyName
+                </span>
+            </div>
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">

@@ -80,10 +80,7 @@
                 representedOrganisationDetailsRequest.Address.Email,
                 producerAddress);
 
-            authorisedRepresentative = new AuthorisedRepresentative(
-                representedOrganisationDetailsRequest.CompanyName,
-                representedOrganisationDetailsRequest.BusinessTradingName,
-                producerContact);
+            authorisedRepresentative = AuthorisedRepresentative.Create(representedOrganisationDetailsRequest.BusinessTradingName, producerContact);
             
             return authorisedRepresentative;
         }

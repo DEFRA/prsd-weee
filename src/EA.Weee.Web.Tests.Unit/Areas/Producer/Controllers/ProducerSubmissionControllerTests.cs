@@ -219,6 +219,129 @@
         }
 
         [Fact]
+        public async Task EditRepresentedOrganisationDetails_Get_ShouldReturnViewWithMappedModel()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var viewModel = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>(submissionData)).Returns(viewModel);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            // Act
+            var result = await controller.EditRepresentedOrganisationDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(viewModel);
+            viewModel.Address.Countries.Should().BeSameAs(countries);
+        }
+
+        [Fact]
+        public async Task EditRepresentedOrganisationDetails_Get_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            var organisationName = TestFixture.Create<string>();
+
+            controller.SmallProducerSubmissionData = submissionData;
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            var viewModel = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>(submissionData)).Returns(viewModel);
+
+            // Act
+            await controller.EditRepresentedOrganisationDetails();
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task EditRepresentedOrganisationDetails_InvalidPost_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var viewModel = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            var organisationName = TestFixture.Create<string>();
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(viewModel.OrganisationId)).Returns(organisationName);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            controller.ModelState.AddModelError("error", "this is an error");
+
+            // Act
+            await controller.EditRepresentedOrganisationDetails(viewModel);
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(viewModel.OrganisationId);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task EditRepresentedOrganisationDetails_Post_ValidModel_ShouldRedirectToTaskList()
+        {
+            // Arrange
+            var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            var request = TestFixture.Create<RepresentedOrganisationDetailsRequest>();
+            A.CallTo(() => editRepresentedOrganisationDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.EditRepresentedOrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TaskList");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditRepresentedOrganisationDetails_Post_InvalidModel_ShouldReturnViewWithModel()
+        {
+            // Arrange
+            var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            controller.ModelState.AddModelError("Test", "Test error");
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            // Act
+            var result = await controller.EditRepresentedOrganisationDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
+            ((RepresentingCompanyDetailsViewModel)result.Model).Address.Countries.Should().BeSameAs(countries);
+        }
+
+        [Fact]
+        public void EditRepresentedOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditRepresentedOrganisationDetails", new Type[0]);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task ServiceOfNotice_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
