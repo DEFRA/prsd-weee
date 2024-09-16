@@ -33,12 +33,9 @@
             @Html.Gds().CheckBoxFrontEndFor(m => m.SameAsOrganisationAddress, new { @id = "SameAsOrganisationAddress", @class = "govuk-checkboxes__input", onchange = "submitFormOnCheckboxChange()" })
 
         </div>
-        <br />
-        <div>
-            <noscript>
-                <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Same as organisation address</button>
-            </noscript>
-        </div>
+        <noscript>
+            <button class="govuk-button" type="submit" data-module="govuk-button" data-prevent-double-click="true">Same as organisation address</button>
+        </noscript>
     }
 
     @using (Html.BeginForm())

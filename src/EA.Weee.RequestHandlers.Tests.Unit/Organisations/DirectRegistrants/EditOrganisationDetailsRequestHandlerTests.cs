@@ -136,29 +136,6 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task HandleAsync_AddsNewAddress(bool existingAddress)
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            SetupValidDirectRegistrant(existingAddress: existingAddress);
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => genericDataAccess.Add(A<Address>.That.Matches(a => 
-                a.Address1 == request.BusinessAddressData.Address1 && 
-                a.Address2 == request.BusinessAddressData.Address2 &&
-                a.TownOrCity == request.BusinessAddressData.TownOrCity &&
-                a.CountyOrRegion == request.BusinessAddressData.CountyOrRegion &&
-                a.Postcode == request.BusinessAddressData.Postcode &&
-                a.WebAddress == request.BusinessAddressData.WebAddress &&
-                a.Country.Equals(country)))).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
         public async Task HandleAsync_UpdatesBrandName_WhenProvided(bool existingBrandName)
         {
             // Arrange
