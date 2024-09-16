@@ -126,6 +126,8 @@
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Email,
                     producerAddress);
 
+                //producerContact.IsOverseas
+
                 authorisedRepresentative = new AuthorisedRepresentative(
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.CompanyName,
                     organisationTransactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName,
