@@ -18,19 +18,6 @@
     const string title = "Contact details";
     ViewBag.Title = title + " - GOV.UK";
 }
-<style>
-
-    .flex-container {
-        display: flex;
-        align-items: center;
-        padding-left: 15px;
-    }
-
-    .label-width {
-        width: 30%;
-        flex-shrink: 0;
-    }
-</style>
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
@@ -50,12 +37,13 @@
             <h1 class="govuk-heading-l">@title</h1>
         </header>
 
-        // Contact details
         <div class="govuk-body">
             Provide the name and address of the person who is the primary contact. We will send all correspondence to this contact.
             <br /><br />
             For authorised representatives of non-UK established producers this will be your own primary details.
         </div>
+
+        <h2 class="govuk-heading-s">@title</h2>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ContactDetails.FirstName)">
             @Html.Gds().LabelFor(m => m.ContactDetails.FirstName)
@@ -88,13 +76,7 @@
             @Html.Gds().TextBoxFor(m => m.ContactDetails.AddressData.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
         </div>
 
-        // Contact address
-
         <h2 class="govuk-heading-s">Contact address</h2>
-
-        <div class="govuk-body">
-            For non-UK addresses, enter your details manually.
-        </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ContactDetails.AddressData.Address1)">
             @Html.Gds().LabelFor(m => m.ContactDetails.AddressData.Address1)
