@@ -36,13 +36,14 @@
         private readonly IWeeeCache weeeCache;
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
+        private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
 
         public ProducerSubmissionController(IMapper mapper, 
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
             Func<IWeeeClient> apiClient, 
             BreadcrumbService breadcrumbService, 
             IWeeeCache weeeCache,
-            IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator)
+            IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator, IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -50,6 +51,7 @@
             this.breadcrumbService = breadcrumbService;
             this.weeeCache = weeeCache;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
+            this.editEeeDataRequestCreator = editEeeDataRequestCreator;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -119,6 +121,15 @@
         {
             if (ModelState.IsValid)
             {
+                var request = editEeeDataRequestCreator.ViewModelToRequest(model);
+
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
             }
 
             await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

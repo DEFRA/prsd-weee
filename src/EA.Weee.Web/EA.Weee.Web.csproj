@@ -581,6 +581,7 @@
     <Compile Include="Areas\Producer\Mappings\ServiceOfNoticeAddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\AddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseServiceOfNoticeAddressMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditEeeDataRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToServiceOfNoticeRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditEeeDataViewModelMap.cs" />
