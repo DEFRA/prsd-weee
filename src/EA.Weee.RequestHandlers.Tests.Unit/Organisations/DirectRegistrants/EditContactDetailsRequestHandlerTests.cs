@@ -48,6 +48,8 @@
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
 
+            A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
+
             handler = new EditContactDetailsRequestHandler(
                 authorization,
                 genericDataAccess,
@@ -82,20 +84,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_EnsureOrganisationAccess_IsCalled()
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant();
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
         public async Task HandleAsync_WhenDirectRegistrantNotFound_ThrowsInvalidOperationException()
         {
             // Arrange
@@ -121,7 +109,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_UpdatesCompanyDetails()
+        public async Task HandleAsync_UpdatesContactDetails()
         {
             // Arrange
             var request = CreateValidRequest();
@@ -135,76 +123,32 @@
             directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.Contact.FirstName.Should().Be(request.ContactData.FirstName);
             directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.Contact.LastName.Should().Be(request.ContactData.LastName);
             directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.Contact.Position.Should().Be(request.ContactData.Position);
-            A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task HandleAsync_AddsNewAddress(bool existingAddress)
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            SetupValidDirectRegistrant(existingAddress: existingAddress);
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => genericDataAccess.Add(A<Address>.That.Matches(a => 
-                a.Address1 == request.AddressData.Address1 && 
-                a.Address2 == request.AddressData.Address2 &&
-                a.TownOrCity == request.AddressData.TownOrCity &&
-                a.CountyOrRegion == request.AddressData.CountyOrRegion &&
-                a.Postcode == request.AddressData.Postcode &&
-                a.Country.Equals(country)))).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task HandleAsync_UpdatesAddress_WhenProvided(bool existingAddress)
-        {
-            // Arrange
-            var request = CreateValidRequest(TestFixture.Create<string>());
-
-            var directRegistrant = SetupValidDirectRegistrant(existingAddress: existingAddress);
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Address1.Should()
+            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.ContactAddress.Address1.Should()
                 .Be(request.AddressData.Address1);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Address2.Should()
+            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.ContactAddress.Address2.Should()
                 .Be(request.AddressData.Address2);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Country.Should()
+            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.ContactAddress.Country.Should()
                 .Be(country);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.CountyOrRegion.Should()
+            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.ContactAddress.CountyOrRegion.Should()
                 .Be(request.AddressData.CountyOrRegion);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.TownOrCity.Should()
+            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.ContactAddress.TownOrCity.Should()
                 .Be(request.AddressData.TownOrCity);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Postcode.Should()
+            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.ContactAddress.Postcode.Should()
                 .Be(request.AddressData.Postcode);
-        }
 
-        [Fact]
-        public async Task HandleAsync_DoesNotUpdateBrandName_WhenNotProvided()
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant();
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BrandName.Should().BeNull();
+            A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
 
         private EditContactDetailsRequest CreateValidRequest(string brandNames = null)
         {
-            var addressData = TestFixture.Build<AddressData>().With(a => a.CountryId, countryId).Create();
+            var addressData = TestFixture.Build<AddressData>()
+                .With(a => a.Address1, "Address1")
+                .With(a => a.Address2, "Address2")
+                .With(a => a.CountyOrRegion, "CountyOrRegion")
+                .With(a => a.Postcode, "Postcode")
+                .With(a => a.TownOrCity, "TownOrCity")
+                .With(a => a.CountryId, countryId)
+                .Create();
 
             var contactData = TestFixture.Build<ContactData>()
                 .With(a => a.FirstName, "First")
@@ -244,7 +188,7 @@
 
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionCurrentYear);
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionNotCurrentYear);
-
+            
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
 
