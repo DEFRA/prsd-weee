@@ -1,13 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Mappings
 {
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Organisations;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
     using EA.Weee.Core.Shared;
 
-    public class ReverseServiceOfNoticeAddressMap : IMap<AddressData, ServiceOfNoticeAddressData>
+    public class ReverseAddressPostcodeRequiredMap : IMap<AddressData, AddressPostcodeRequiredData>
     {
-        public ServiceOfNoticeAddressData Map(AddressData source)
+        public AddressPostcodeRequiredData Map(AddressData source)
         {
-            return new ServiceOfNoticeAddressData()
+            return new AddressPostcodeRequiredData()
             {
                 Address1 = source.Address1,
                 Address2 = source.Address2,
@@ -15,7 +20,8 @@
                 CountyOrRegion = source.CountyOrRegion,
                 TownOrCity = source.TownOrCity,
                 Postcode = source.Postcode,
-                Telephone = !string.IsNullOrWhiteSpace(source.Telephone) ? source.Telephone : null,
+                Email = source.Email,
+                Telephone = source.Telephone
             };
         }
     }

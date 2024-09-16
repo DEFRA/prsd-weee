@@ -30,9 +30,11 @@
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
         private readonly IMapper mapper;
-
+        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
+            editOrganisationDetailsRequestCreator;
+        private readonly IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
+            editContactDetailsRequestCreator;
         private readonly IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest> editRepresentedOrganisationDetailsRequestCreator;
-        private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator;
         private readonly Func<IWeeeClient> apiClient;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
@@ -45,6 +47,8 @@
             Func<IWeeeClient> apiClient, 
             BreadcrumbService breadcrumbService, 
             IWeeeCache weeeCache,
+            IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
+                editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator)
         {
             this.mapper = mapper;
@@ -53,6 +57,7 @@
             this.apiClient = apiClient;
             this.breadcrumbService = breadcrumbService;
             this.weeeCache = weeeCache;
+            this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
         }
 
@@ -112,8 +117,6 @@
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
-            model.Address = new ServiceOfNoticeAddressData();
-
             var countries = await GetCountries();
             model.Address.Countries = countries;
 
@@ -123,16 +126,25 @@
             
             if (model.SameAsOrganisationAddress)
             {
-                var organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                AddressData organisationAddress;
+                if (SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData != null)
+                {
+                    organisationAddress = SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData;
+                }
+                else
+                {
+                    organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                }
                 model.Address = new ServiceOfNoticeAddressData
                 {
                     Address1 = organisationAddress.Address1,
                     Address2 = organisationAddress.Address2,
                     TownOrCity = organisationAddress.TownOrCity,
                     Postcode = organisationAddress.Postcode,
+                    CountyOrRegion = organisationAddress.CountyOrRegion,
                     Countries = countries,
                     CountryId = organisationAddress.CountryId,
-                    Telephone = organisationAddress.Telephone
+                    Telephone = model.Address.Telephone,
                 };
                 return View(model);
             }
@@ -197,6 +209,47 @@
             var countries = await GetCountries();
 
             model.Address.Countries = await GetCountries();
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> EditContactDetails()
+        {
+            var model =
+                mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(SmallProducerSubmissionData);
+
+            var countries = await GetCountries();
+
+            model.ContactDetails.AddressData.Countries = countries;
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditContactDetails(EditContactDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = editContactDetailsRequestCreator.ViewModelToRequest(model);
+
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
+            }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+            var countries = await GetCountries();
+
+            model.ContactDetails.AddressData.Countries = countries;
 
             return View(model);
         }
