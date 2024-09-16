@@ -60,8 +60,9 @@
     @using (Html.BeginForm("CheckAnswers", "Producer", FormMethod.Get, null))
     {
         @Html.AntiForgeryToken()
+
         <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Check your answers"))
+            @(this.WeeeGds().Submit("Check your answers", new { disabled = !Model.CheckAnswersEnabled }))
         </div>
     }
 }
