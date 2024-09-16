@@ -206,6 +206,8 @@
                 return RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName());
             }
 
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
             var countries = await GetCountries();
 
             model.Address.Countries = await GetCountries();

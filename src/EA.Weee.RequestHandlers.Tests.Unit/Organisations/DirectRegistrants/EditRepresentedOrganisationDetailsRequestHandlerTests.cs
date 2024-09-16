@@ -154,16 +154,17 @@
 
             // Assert
             result.Should().BeTrue();
-            authedRep.OverseasProducerName.Should().Be(request.CompanyName);
             authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
             authedRep.OverseasContact.Should().Be(producerContact);
+
+            A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
 
         private RepresentedOrganisationDetailsRequest CreateValidRequest()
         {
             var address = TestFixture.Build<RepresentingCompanyAddressData>().With(a => a.CountryId, countryId).Create();
 
-            var res = new RepresentedOrganisationDetailsRequest(directRegistrantId, TestFixture.Create<string>(), TestFixture.Create<string>(), address);
+            var res = new RepresentedOrganisationDetailsRequest(directRegistrantId, TestFixture.Create<string>(), address);
 
             return res;
         }

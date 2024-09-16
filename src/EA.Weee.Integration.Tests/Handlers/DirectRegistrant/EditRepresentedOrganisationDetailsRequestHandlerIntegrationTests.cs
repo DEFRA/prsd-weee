@@ -45,7 +45,6 @@
                 var authedRep = submission.CurrentSubmission.AuthorisedRepresentative;
 
                 authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
-                authedRep.OverseasProducerName.Should().Be(request.CompanyName);
                 authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
                 authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
                 authedRep.OverseasContact.Address.Street.Should().Be(request.Address.Address2);
@@ -117,7 +116,8 @@
                 var representingCompanyDetails = fixture.Build<RepresentingCompanyAddressData>()
                     .With(r => r.CountryId, country.Id).Create();
 
-                request = new RepresentedOrganisationDetailsRequest(directRegistrant.Id, fixture.Create<string>(),
+                request = new RepresentedOrganisationDetailsRequest(
+                    directRegistrant.Id,
                     fixture.Create<string>(),
                     representingCompanyDetails);
 

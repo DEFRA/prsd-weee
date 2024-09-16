@@ -9,6 +9,8 @@ namespace EA.Weee.Core.Organisations
     {
         public Guid DirectRegistrantId { get; set; }
 
+        public Guid OrganisationId { get; set; }
+
         [Required]
         [DisplayName("Producer name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
