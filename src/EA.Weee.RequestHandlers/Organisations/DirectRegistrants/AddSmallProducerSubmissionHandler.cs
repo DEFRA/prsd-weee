@@ -19,16 +19,18 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly IGenerateFromXmlDataAccess generateFromXmlDataAccess;
+        private readonly ISystemDataDataAccess systemDataAccess;
 
         public AddSmallProducerSubmissionHandler(IWeeeAuthorization authorization, 
             IGenericDataAccess genericDataAccess, 
             WeeeContext weeeContext, 
-            IGenerateFromXmlDataAccess generateFromXmlDataAccess)
+            IGenerateFromXmlDataAccess generateFromXmlDataAccess, ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
             this.generateFromXmlDataAccess = generateFromXmlDataAccess;
+            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<Guid> HandleAsync(AddSmallProducerSubmission request)
@@ -50,10 +52,11 @@
                 throw new InvalidOperationException($"Producer number {prn} already exists");
             }
 
-            var year = SystemTime.UtcNow.Year;
-            var registeredProducer = new RegisteredProducer(prn, SystemTime.UtcNow.Year);
+            var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
-            var directRegistrantSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, year);
+            var registeredProducer = new RegisteredProducer(prn, systemDateTime.Year);
+
+            var directRegistrantSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, systemDateTime.Year);
             var directProducerSubmissionHistory = new DirectProducerSubmissionHistory(directRegistrantSubmission);
 
             await genericDataAccess.Add(directProducerSubmissionHistory);

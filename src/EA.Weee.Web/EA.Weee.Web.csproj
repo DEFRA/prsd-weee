@@ -585,8 +585,10 @@
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditContactDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditRepresentedOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseServiceOfNoticeAddressMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditEeeDataRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToServiceOfNoticeRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\EditEeeDataViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\ServiceOfNoticeMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditContactDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
@@ -594,6 +596,8 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\RepresentedOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
+    <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
+    <Compile Include="Areas\Producer\ViewModels\EditEeeDataViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ProducerTaskModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\TaskListViewModel.cs" />
@@ -1091,6 +1095,7 @@
     <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditOrganisationDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\EditEeeeData.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\ServiceOfNotice.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditContactDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditRepresentedOrganisationDetails.cshtml" />

@@ -8,5 +8,13 @@
         public List<ProducerTaskModel> ProducerTaskModels { get; set; }
 
         public Guid OrganisationId { get; set; }
+
+        public bool CheckAnswersEnabled
+        {
+            get
+            {
+                return ProducerTaskModels.TrueForAll(a => a.Complete);
+            }
+        }
     }
 }

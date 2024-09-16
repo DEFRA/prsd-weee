@@ -303,8 +303,12 @@
     <Compile Include="Constants\UkCountry.cs" />
     <Compile Include="DirectRegistrant\AdditionalCompanyDetailsData.cs" />
     <Compile Include="DirectRegistrant\AuthorisedRepresentitiveData.cs" />
+    <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValue.cs" />
+    <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValues.cs" />
+    <Compile Include="DirectRegistrant\SellingTechniqueType.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
+    <Compile Include="DirectRegistrant\TonnageData.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\IJsonSerialiser.cs" />
     <Compile Include="Helpers\JsonSerializer.cs" />
@@ -537,6 +541,8 @@
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\UserStatus.cs" />
+    <Compile Include="Validation\AtLeastOneCheckedAttribute.cs" />
+    <Compile Include="Validation\ProducerCategoryValuesValidationAttribute.cs" />
     <Compile Include="Validation\DecimalPlaceHelper.cs" />
     <Compile Include="Validation\ExternalAddressValidator.cs" />
     <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
@@ -576,7 +582,9 @@
       <Name>EA.Weee.Security</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Producer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

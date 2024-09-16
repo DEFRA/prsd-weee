@@ -70,5 +70,10 @@
         {
             return ObligationType.GetHashCode() ^ WeeeCategory.GetHashCode() ^ Tonnage.GetHashCode();
         }
+
+        public void UpdateTonnage(decimal tonnage)
+        {
+            Tonnage = tonnage;
+        }
     }
 }
