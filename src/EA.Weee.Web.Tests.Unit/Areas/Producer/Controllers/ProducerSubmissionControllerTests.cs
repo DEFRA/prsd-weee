@@ -34,6 +34,8 @@
         private readonly IWeeeClient weeeClient;
         private readonly IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>
             editOrganisationDetailsRequestCreator;
+        private readonly IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
+            editContactDetailsRequestCreator;
         private readonly BreadcrumbService breadcrumbService;
         private readonly IWeeeCache weeeCache;
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
@@ -49,13 +51,10 @@
                 A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>>();
             serviceOfNoticeRequestCreator =
                 A.Fake<IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>>();
+            editContactDetailsRequestCreator =
+                A.Fake<IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>>();
 
-            controller = new ProducerSubmissionController(mapper, 
-                editOrganisationDetailsRequestCreator, 
-                () => weeeClient, 
-                breadcrumbService, 
-                weeeCache, 
-                serviceOfNoticeRequestCreator);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, serviceOfNoticeRequestCreator, editContactDetailsRequestCreator);
         }
 
         [Fact]
@@ -215,6 +214,128 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void EditContactDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditContactDetails", new Type[0]);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task EditContactDetails_Post_ValidModel_ShouldRedirectToTaskList()
+        {
+            // Arrange
+            var model = TestFixture.Create<EditContactDetailsViewModel>();
+            var request = TestFixture.Create<EditContactDetailsRequest>();
+            A.CallTo(() => editContactDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.EditContactDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TaskList");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditContactDetails_Post_InvalidModel_ShouldReturnViewWithModel()
+        {
+            // Arrange
+            var model = TestFixture.Create<EditContactDetailsViewModel>();
+            controller.ModelState.AddModelError("Test", "Test error");
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            // Act
+            var result = await controller.EditContactDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
+            ((EditContactDetailsViewModel)result.Model).ContactDetails.AddressData.Countries.Should().BeSameAs(countries);
+        }
+
+        [Fact]
+        public async Task EditContactDetails_Get_ShouldReturnViewWithMappedModel()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var viewModel = TestFixture.Create<EditContactDetailsViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(submissionData)).Returns(viewModel);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            // Act
+            var result = await controller.EditContactDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(viewModel);
+            viewModel.ContactDetails.AddressData.Countries.Should().BeSameAs(countries);
+        }
+
+        [Fact]
+        public async Task EditContactDetails_Get_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            var organisationName = TestFixture.Create<string>();
+
+            controller.SmallProducerSubmissionData = submissionData;
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            var viewModel = TestFixture.Create<EditContactDetailsViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(submissionData)).Returns(viewModel);
+
+            // Act
+            await controller.EditContactDetails();
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task EditContactDetails_InvalidPost_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var viewModel = TestFixture.Create<EditContactDetailsViewModel>();
+            var organisationName = TestFixture.Create<string>();
+            A.CallTo(() => weeeCache.FetchOrganisationName(viewModel.OrganisationId)).Returns(organisationName);
+
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
+
+            controller.ModelState.AddModelError("error", "this is an error");
+
+            // Act
+            await controller.EditContactDetails(viewModel);
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(viewModel.OrganisationId);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
         }
 
         [Fact]
