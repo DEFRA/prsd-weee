@@ -1,0 +1,68 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+
+@model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
+@{
+    const string title = "Producer details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList()))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p>Provide the address of the non-UK established Small EEE producer you are registering on behalf of.</p>
+    <p>
+        If the producer has previously registered in the UK under the WEEE Regulations through being a member of a Producer Compliance Scheme,
+        include their Producer Registration Number.
+    </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(m => m.OrganisationId)
+
+        @Html.HiddenFor(m => m.CompanyName)
+
+        <div class="govuk-!-padding-bottom-4">
+            <div class="flex-container">
+                <span class="govuk-body govuk-label--s label-width"
+                      for="RepresentingCompany_OrganisationType"
+                      id="RepresentingCompany_CompanyName-label">
+                    @Html.DisplayNameFor(x => x.CompanyName)
+                </span>
+                <span class="govuk-body"
+                      aria-labelledby="RepresentingCompany_CompanyName-label"
+                      name="RepresentingCompany_CompanyName"
+                      id="RepresentingCompany_CompanyName">
+                    @Model.CompanyName
+                </span>
+            </div>
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
+            @Html.EditorFor(m => m.Address)
+        </div>
+
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditRepresentedOrganisationDetails()), true)
+        </div>
+
+        @(this.WeeeGds().BackToTopLink())
+    }
+}

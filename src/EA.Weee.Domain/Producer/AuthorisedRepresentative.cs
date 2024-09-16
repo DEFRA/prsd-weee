@@ -20,6 +20,15 @@
             }
         }
 
+        public static AuthorisedRepresentative Create(string tradingName, ProducerContact overseasContact = null)
+        {
+            return new AuthorisedRepresentative()
+            {
+                OverseasProducerTradingName = tradingName,
+                OverseasContact = overseasContact
+            };
+        }
+
         public AuthorisedRepresentative(string name, string tradingName, ProducerContact overseasContact = null)
         {
             OverseasProducerName = name;
@@ -59,5 +68,18 @@
         public Guid? OverseasContactId { get; private set; }
 
         public virtual ProducerContact OverseasContact { get; private set; }
+
+        public AuthorisedRepresentative OverwriteWhereNull(AuthorisedRepresentative other)
+        {
+            if (other == null)
+            {
+                return this;
+            }
+
+            OverseasContact = other.OverseasContact.OverwriteWhereNull(OverseasContact);
+            other.OverseasProducerTradingName = OverseasProducerTradingName;
+
+            return other;
+        }
     }
 }

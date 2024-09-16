@@ -1,12 +1,16 @@
 namespace EA.Weee.Core.Organisations
 {
     using EA.Weee.Core.DataStandards;
-    using EA.Weee.Core.Shared;
+    using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     public class RepresentingCompanyDetailsViewModel
     {
+        public Guid DirectRegistrantId { get; set; }
+
+        public Guid OrganisationId { get; set; }
+
         [Required]
         [DisplayName("Producer name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]

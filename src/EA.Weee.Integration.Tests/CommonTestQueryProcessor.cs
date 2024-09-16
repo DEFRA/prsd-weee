@@ -141,6 +141,12 @@
             return dbContext.OrganisationTransactions.Count(c => c.UserId.Equals(userId));
         }
 
+        public void UpdateCurrentProducerSubmission(Guid directRegistrantSubmissionId, Guid directRegistrantSubmissionHistoryId)
+        {
+            dbContext.Database.ExecuteSqlCommand(
+                $"UPDATE [Producer].DirectProducerSubmission Set CurrentSubmissionId = '{directRegistrantSubmissionHistoryId}' WHERE Id = '{directRegistrantSubmissionId}'");
+        }
+
         public async Task DeleteAllOrganisationTransactionsAsync()
         {
             var organisationTransactions = dbContext.OrganisationTransactions.ToList();

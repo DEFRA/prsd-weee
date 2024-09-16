@@ -2,6 +2,7 @@
 {
     using AutoFixture;
     using EA.Prsd.Core;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
@@ -22,22 +23,25 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class EditOrganisationDetailsRequestHandlerTests : SimpleUnitTestBase
+    public class EditRepresentedOrganisationDetailsRequestHandlerTests : SimpleUnitTestBase
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
-        private readonly EditOrganisationDetailsRequestHandler handler;
+        private readonly EditRepresentedOrganisationDetailsRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid countryId = Guid.NewGuid();
-        private readonly Guid userId = Guid.NewGuid();
         private readonly Country country;
 
-        public EditOrganisationDetailsRequestHandlerTests()
+        public EditRepresentedOrganisationDetailsRequestHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
+            var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
+
             var dbContextHelper = new DbContextHelper();
 
             country = new Country(countryId, "UK");
@@ -45,10 +49,11 @@
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
 
-            handler = new EditOrganisationDetailsRequestHandler(
+            handler = new EditRepresentedOrganisationDetailsRequestHandler(
                 authorization,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -117,7 +122,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_UpdatesCompanyDetails()
+        public async Task HandleAsync_UpdatesAuthorisedRepresentative()
         {
             // Arrange
             var request = CreateValidRequest();
@@ -126,103 +131,42 @@
             // Act
             var result = await handler.HandleAsync(request);
 
+            var producerAddress = new ProducerAddress(
+               primaryName: request.Address.Address1,
+               secondaryName: request.Address.Address2,
+               street: request.Address.Address2 ?? string.Empty,
+               town: request.Address.TownOrCity,
+               string.Empty,
+               request.Address.CountyOrRegion ?? string.Empty,
+               country,
+               request.Address.Postcode);
+
+            var producerContact = new ProducerContact(string.Empty,
+                string.Empty,
+                string.Empty,
+                request.Address.Telephone,
+                string.Empty,
+                string.Empty,
+                request.Address.Email,
+                producerAddress);
+
+            var authedRep = directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.AuthorisedRepresentative;
+
             // Assert
             result.Should().BeTrue();
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.CompanyName.Should().Be(request.CompanyName);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.TradingName.Should().Be(request.TradingName);
+            authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
+            authedRep.OverseasContact.Should().Be(producerContact);
+
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task HandleAsync_AddsNewAddress(bool existingAddress)
+        private RepresentedOrganisationDetailsRequest CreateValidRequest()
         {
-            // Arrange
-            var request = CreateValidRequest();
-            SetupValidDirectRegistrant(existingAddress: existingAddress);
+            var address = TestFixture.Build<RepresentingCompanyAddressData>().With(a => a.CountryId, countryId).Create();
 
-            // Act
-            await handler.HandleAsync(request);
+            var res = new RepresentedOrganisationDetailsRequest(directRegistrantId, TestFixture.Create<string>(), address);
 
-            // Assert
-            A.CallTo(() => genericDataAccess.Add(A<Address>.That.Matches(a => 
-                a.Address1 == request.BusinessAddressData.Address1 && 
-                a.Address2 == request.BusinessAddressData.Address2 &&
-                a.TownOrCity == request.BusinessAddressData.TownOrCity &&
-                a.CountyOrRegion == request.BusinessAddressData.CountyOrRegion &&
-                a.Postcode == request.BusinessAddressData.Postcode &&
-                a.WebAddress == request.BusinessAddressData.WebAddress &&
-                a.Country.Equals(country)))).MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task HandleAsync_UpdatesBrandName_WhenProvided(bool existingBrandName)
-        {
-            // Arrange
-            var request = CreateValidRequest(TestFixture.Create<string>());
-            
-            var directRegistrant = SetupValidDirectRegistrant(existingBrandName);
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BrandName.Should().NotBeNull();
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BrandName.Name.Should().Be(request.EEEBrandNames);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task HandleAsync_UpdatesAddress_WhenProvided(bool existingAddress)
-        {
-            // Arrange
-            var request = CreateValidRequest(TestFixture.Create<string>());
-
-            var directRegistrant = SetupValidDirectRegistrant(existingAddress: existingAddress);
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Address1.Should()
-                .Be(request.BusinessAddressData.Address1);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Address2.Should()
-                .Be(request.BusinessAddressData.Address2);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Country.Should()
-                .Be(country);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.CountyOrRegion.Should()
-                .Be(request.BusinessAddressData.CountyOrRegion);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.TownOrCity.Should()
-                .Be(request.BusinessAddressData.TownOrCity);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.Postcode.Should()
-                .Be(request.BusinessAddressData.Postcode);
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BusinessAddress.WebAddress.Should()
-                .Be(request.BusinessAddressData.WebAddress);
-        }
-
-        [Fact]
-        public async Task HandleAsync_DoesNotUpdateBrandName_WhenNotProvided()
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant();
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BrandName.Should().BeNull();
-        }
-
-        private EditOrganisationDetailsRequest CreateValidRequest(string brandNames = null)
-        {
-            var address = TestFixture.Build<AddressData>().With(a => a.CountryId, countryId).Create();
-            return new EditOrganisationDetailsRequest(directRegistrantId, TestFixture.Create<string>(),
-                TestFixture.Create<string>(), address, brandNames);
+            return res;
         }
 
         private DirectRegistrant SetupValidDirectRegistrant(bool existingBrandName = false, bool existingAddress = false)
