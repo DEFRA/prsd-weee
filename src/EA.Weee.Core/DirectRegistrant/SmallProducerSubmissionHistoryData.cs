@@ -29,6 +29,8 @@
 
         public string TradingName { get; set; }
 
+        public SellingTechniqueType? SellingTechnique { get; set; }
+
         public IList<AdditionalCompanyDetailsData> AdditionalCompanyDetailsData { get; set; }
 
         public AddressData ContactAddressData { get; set; }
