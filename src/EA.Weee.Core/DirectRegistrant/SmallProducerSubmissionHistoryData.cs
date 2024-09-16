@@ -37,6 +37,8 @@
 
         public AuthorisedRepresentitiveData AuthorisedRepresentitiveData { get; set; }
 
+        public AddressData ServiceOfNoticeData { get; set; }
+
         public IList<Eee> TonnageData { get; set; }
     }
 }

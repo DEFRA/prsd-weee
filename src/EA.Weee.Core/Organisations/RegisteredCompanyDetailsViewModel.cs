@@ -9,7 +9,7 @@
 
     public class RegisteredCompanyDetailsViewModel : OrganisationViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Enter company name")]
         [DisplayName("Company name")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         public override string CompanyName { get; set; }

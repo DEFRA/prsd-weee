@@ -56,7 +56,8 @@
                     new ProducerTaskModel 
                     {
                         TaskLinkName = "Service of notice", 
-                        Complete = submission.ServiceOfNoticeComplete 
+                        Complete = submission.ServiceOfNoticeComplete,
+                        Action = nameof(ProducerSubmissionController.ServiceOfNotice)
                     },
                 }
             };

@@ -169,6 +169,7 @@
     <Compile Include="Mappings\EvidenceNoteWitheCriteriaMapperBase.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Mappings\EeeDataMap.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ServiceOfNoticeRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditOrganisationDetailsRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetSmallProducerSubmissionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSmallProducerSubmissionHandler.cs" />

@@ -69,6 +69,8 @@
                             mapper.Map<Address, AddressData>(directRegistrant.Address),
                         AuthorisedRepresentitiveData = currentYearSubmission.CurrentSubmission.AuthorisedRepresentativeId.HasValue ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative) : (directRegistrant.AuthorisedRepresentativeId.HasValue ?
                             mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative) : null),
+                        ServiceOfNoticeData = currentYearSubmission.CurrentSubmission.ServiceOfNoticeAddress != null ? mapper.Map<Address, AddressData>(currentYearSubmission.CurrentSubmission.ServiceOfNoticeAddress) : null,
+                        ServiceOfNoticeComplete = currentYearSubmission.CurrentSubmission.ServiceOfNoticeAddressId.HasValue,
                         TonnageData = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null ? mapper.Map<EeeOutputReturnVersion, IList<Eee>>(currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion) : new List<Eee>()
                     }
                 };
