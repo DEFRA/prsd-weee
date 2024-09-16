@@ -25,6 +25,7 @@
         private readonly ProducerController controller;
         private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumb;
+        private readonly Guid organisationId = Guid.NewGuid();
 
         public ProducerControllerTests()
         {
@@ -72,74 +73,151 @@
             usage.AllowMultiple.Should().BeTrue();
         }
 
-        [Fact]
-        public async Task TaskList_ReturnsTaskListView()
+        public static IEnumerable<object[]> TaskCompletionCombinations()
+        {
+            var allCombinations = new List<object[]>();
+            for (var i = 0; i < 64; i++)
+            {
+                allCombinations.Add(new object[]
+                {
+                    (i & 1) != 0,  // OrganisationDetailsComplete
+                    (i & 2) != 0,  // ContactDetailsComplete
+                    (i & 4) != 0,  // ServiceOfNoticeComplete
+                    (i & 8) != 0,  // RepresentingCompanyDetailsComplete
+                    (i & 16) != 0, // EEEDetailsComplete
+                    (i & 32) != 0  // HasAuthorizedRepresentative
+                });
+            }
+            return allCombinations;
+        }
+
+        [Theory]
+        [MemberData(nameof(TaskCompletionCombinations))]
+        public async Task TaskList_ReturnsCorrectViewModelForAllCombinations(
+            bool organisationDetailsComplete,
+            bool contactDetailsComplete,
+            bool serviceOfNoticeComplete,
+            bool representingCompanyDetailsComplete,
+            bool eeeDetailsComplete,
+            bool hasAuthorizedRepresentative)
         {
             // Arrange
+            SetupControllerData(
+                organisationDetailsComplete,
+                contactDetailsComplete,
+                serviceOfNoticeComplete,
+                representingCompanyDetailsComplete,
+                eeeDetailsComplete,
+                hasAuthorizedRepresentative);
+
+            var expectedModel = GetExpectedModel(
+                organisationDetailsComplete,
+                contactDetailsComplete,
+                serviceOfNoticeComplete,
+                representingCompanyDetailsComplete,
+                eeeDetailsComplete,
+                hasAuthorizedRepresentative);
+
+            // Act
+            var result = await controller.TaskList();
+
+            // Assert
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var model = viewResult.Model.Should().BeOfType<TaskListViewModel>().Subject;
+
+            model.OrganisationId.Should().Be(expectedModel.OrganisationId);
+            model.ProducerTaskModels.Should().HaveSameCount(expectedModel.ProducerTaskModels);
+
+            for (int i = 0; i < model.ProducerTaskModels.Count; i++)
+            {
+                var actualTask = model.ProducerTaskModels[i];
+                var expectedTask = expectedModel.ProducerTaskModels[i];
+
+                actualTask.TaskLinkName.Should().Be(expectedTask.TaskLinkName);
+                actualTask.Complete.Should().Be(expectedTask.Complete);
+                actualTask.Action.Should().Be(expectedTask.Action);
+            }
+        }
+
+        private void SetupControllerData(
+            bool organisationDetailsComplete,
+            bool contactDetailsComplete,
+            bool serviceOfNoticeComplete,
+            bool representingCompanyDetailsComplete,
+            bool eeeDetailsComplete,
+            bool hasAuthorizedRepresentative)
+        {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
                 OrganisationData = new OrganisationData
                 {
-                    Id = Guid.NewGuid()
+                    Id = organisationId
                 },
                 CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
                 {
                     ComplianceYear = 2005,
-                    ContactDetailsComplete = true,
-                    EEEDetailsComplete = true,
-                    OrganisationDetailsComplete = true,
-                    RepresentingCompanyDetailsComplete = false,
-                    ServiceOfNoticeComplete = true
-                }
+                    OrganisationDetailsComplete = organisationDetailsComplete,
+                    ContactDetailsComplete = contactDetailsComplete,
+                    ServiceOfNoticeComplete = serviceOfNoticeComplete,
+                    RepresentingCompanyDetailsComplete = representingCompanyDetailsComplete,
+                    EEEDetailsComplete = eeeDetailsComplete
+                },
+                HasAuthorisedRepresentitive = hasAuthorizedRepresentative
             };
+        }
 
-            var expectedModel = new TaskListViewModel()
+        private TaskListViewModel GetExpectedModel(
+            bool organisationDetailsComplete,
+            bool contactDetailsComplete,
+            bool serviceOfNoticeComplete,
+            bool representingCompanyDetailsComplete,
+            bool eeeDetailsComplete,
+            bool hasAuthorizedRepresentative)
+        {
+            var taskModels = new List<ProducerTaskModel>
             {
-                OrganisationId = controller.SmallProducerSubmissionData.OrganisationData.Id,
-                ProducerTaskModels = new List<ProducerTaskModel>
+                new ProducerTaskModel
                 {
-                    new ProducerTaskModel
-                    {
-                        TaskLinkName = "Organisation details",
-                        Complete = true,
-                        Action = nameof(ProducerSubmissionController.EditOrganisationDetails)
-                    },
-                    new ProducerTaskModel
-                    {
-                        TaskLinkName = "Contact details",
-                        Complete = true,
-                        Action = nameof(ProducerSubmissionController.EditContactDetails)
-                    },
-                    new ProducerTaskModel
-                    {
-                        TaskLinkName = "Service of notice",
-                        Complete = true,
-                        Action = nameof(ProducerSubmissionController.ServiceOfNotice)
-                    },
-                    new ProducerTaskModel
-                    {
-                        TaskLinkName = "Representing company details",
-                        Complete = false,
-                        Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
-                    },
-                    new ProducerTaskModel
-                    {
-                        TaskLinkName = "EEE details",
-                        Complete = true
-                    }
+                    TaskLinkName = "Organisation details",
+                    Complete = organisationDetailsComplete,
+                    Action = nameof(ProducerSubmissionController.EditOrganisationDetails)
+                },
+                new ProducerTaskModel
+                {
+                    TaskLinkName = "Contact details",
+                    Complete = contactDetailsComplete,
+                    Action = nameof(ProducerSubmissionController.EditContactDetails)
+                },
+                new ProducerTaskModel
+                {
+                    TaskLinkName = "Service of notice",
+                    Complete = serviceOfNoticeComplete,
+                    Action = nameof(ProducerSubmissionController.ServiceOfNotice)
                 }
             };
 
-            // Act
-            ActionResult result = await controller.TaskList();
+            if (hasAuthorizedRepresentative)
+            {
+                taskModels.Add(new ProducerTaskModel
+                {
+                    TaskLinkName = "Representing company details",
+                    Complete = representingCompanyDetailsComplete,
+                    Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
+                });
+            }
 
-            // Assert
-            var model = ((ViewResult)result).Model;
+            taskModels.Add(new ProducerTaskModel
+            {
+                TaskLinkName = "EEE details",
+                Complete = eeeDetailsComplete,
+                Action = nameof(ProducerSubmissionController.EditEeeeData)
+            });
 
-            Assert.NotNull(model);
-            Assert.IsType<TaskListViewModel>(model);
-
-            model.Should().BeEquivalentTo(expectedModel);
+            return new TaskListViewModel
+            {
+                OrganisationId = organisationId,
+                ProducerTaskModels = taskModels
+            };
         }
 
         [Fact]

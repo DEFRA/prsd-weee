@@ -45,7 +45,7 @@
                 var authedRep = submission.CurrentSubmission.AuthorisedRepresentative;
 
                 authedRep.OverseasProducerName.Should()
-                    .Be(directRegistrant.AuthorisedRepresentative.OverseasProducerName);
+                    .Be(authorisedRepresentative.OverseasProducerName);
                 authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
                 authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
                 authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
@@ -90,6 +90,7 @@
             protected static RepresentedOrganisationDetailsRequest request;
             protected static bool result;
             protected static Country country;
+            protected static AuthorisedRepresentative authorisedRepresentative;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -98,14 +99,14 @@
                     .WithTestData()
                 .WithExternalUserAccess();
 
-                var authorisedRep = AuthorisedRepDbSetup.Init().Create();
+                authorisedRepresentative = AuthorisedRepDbSetup.Init().Create();
 
                 directRegistrant = DirectRegistrantDbSetup.Init()
-                    .WithAuthorisedRep(authorisedRep)
+                    .WithAuthorisedRep(authorisedRepresentative)
                     .Create();
 
                 directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
-                    .WithDirectRegistrant(directRegistrant, authorisedRep)
+                    .WithDirectRegistrant(directRegistrant, authorisedRepresentative)
                     .Create();
                 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmission.SubmissionHistory.ElementAt(0).Id);
