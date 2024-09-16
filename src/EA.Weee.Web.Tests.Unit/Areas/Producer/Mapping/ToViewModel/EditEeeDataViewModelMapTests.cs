@@ -1,153 +1,134 @@
-﻿//namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Mapping.ToViewModel
-//{
-//    using System;
-//    using System.Collections.Generic;
-//    using EA.Weee.Core.DataReturns;
-//    using EA.Weee.Core.DirectRegistrant;
-//    using EA.Weee.Core.Helpers;
-//    using EA.Weee.Core.Organisations;
-//    using EA.Weee.Core.Shared;
-//    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
-//    using EA.Weee.Web.Areas.Producer.ViewModels;
-//    using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
-//    using FakeItEasy;
-//    using FluentAssertions;
-//    using Xunit;
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Mapping.ToViewModel
+{
+    using AutoFixture;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.Producer.ViewModels;
+    using FluentAssertions;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
 
-//    public class EditEeeDataViewModelMapTests
-//    {
-//        private readonly EditEeeDataViewModelMap mapper;
-//        private readonly ITonnageUtilities fakeTonnageUtilities;
+    public class EditEeeDataViewModelMapTests : SimpleUnitTestBase
+    {
+        private readonly EditEeeDataViewModelMap map = new EditEeeDataViewModelMap();
 
-//        public EditEeeDataViewModelMapTests()
-//        {
-//            fakeTonnageUtilities = A.Fake<ITonnageUtilities>();
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(A<decimal?>.Ignored))
-//                .ReturnsLazily((decimal? t) => t.HasValue ? $"{t.Value:F3}" : "-");
+        [Fact]
+        public void Map_ShouldMapBasicProperties_Correctly()
+        {
+            // Arrange
+            var source = TestFixture.Create<SmallProducerSubmissionData>();
 
-//            mapper = new EditEeeDataViewModelMap(fakeTonnageUtilities);
-//        }
+            // Act
+            var result = map.Map(source);
 
-//        [Fact]
-//        public void Map_NullInput_ReturnsEmptyViewModel()
-//        {
-//            var result = mapper.Map(null);
+            // Assert
+            result.OrganisationId.Should().Be(source.OrganisationData.Id);
+            result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
+            result.SellingTechnique.Should().BeEquivalentTo(SellingTechniqueViewModel.FromSellingTechniqueType(source.CurrentSubmission.SellingTechnique));
+        }
 
-//            result.Should().NotBeNull();
-//            result.CategoryValues.Should().NotBeNull();
-//            result.CategoryValues.Should().HaveCount(14);
-//        }
+        [Fact]
+        public void Map_ShouldMapTonnageData_Correctly()
+        {
+            // Arrange
+            var source = TestFixture.Create<SmallProducerSubmissionData>();
+            source.CurrentSubmission.TonnageData = new List<Eee>
+            {
+                new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
+                new Eee(20.75m, WeeeCategory.DisplayEquipment, ObligationType.B2B)
+            };
 
-//        [Fact]
-//        public void Map_ValidInput_MapsCorrectly()
-//        {
-//            var input = new SmallProducerSubmissionData
-//            {
-//                OrganisationData = new OrganisationData { Id = Guid.NewGuid() },
-//                DirectRegistrantId = Guid.NewGuid(),
-//                HasAuthorisedRepresentitive = false,
-//                CurrentSubmission = new SmallProducerSubmissionHistoryData
-//                {
-//                    TonnageData = new List<Eee>
-//                    {
-//                        new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
-//                        new Eee(5.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2B),
-//                        new Eee(7.5m, WeeeCategory.AutomaticDispensers, ObligationType.B2C)
-//                    }
-//                }
-//            };
+            // Act
+            var result = map.Map(source);
 
-//            var result = mapper.Map(input);
+            // Assert
+            result.CategoryValues.Should().Contain(cv =>
+                cv.CategoryId == (int)WeeeCategory.ConsumerEquipment &&
+                cv.HouseHold == "10.500" &&
+                cv.NonHouseHold == null);
 
-//            result.Should().NotBeNull();
-//            result.OrganisationId.Should().Be(input.OrganisationData.Id);
-//            result.DirectRegistrantId.Should().Be(input.DirectRegistrantId);
-//            result.HasAuthorisedRepresentitive.Should().BeFalse();
-//            result.CategoryValues.Should().HaveCount(14); 
-//            result.CategoryValues.Should().Contain(c => c.CategoryId == (int)WeeeCategory.ConsumerEquipment &&
-//                                                        c.HouseHold == "10.500" &&
-//                                                        c.NonHouseHold == "5.500");
-//            result.CategoryValues.Should().Contain(c => c.CategoryId == (int)WeeeCategory.AutomaticDispensers &&
-//                                                        c.HouseHold == "7.500" &&
-//                                                        c.NonHouseHold == "-");
+            result.CategoryValues.Should().Contain(cv =>
+                cv.CategoryId == (int)WeeeCategory.DisplayEquipment &&
+                cv.HouseHold == null &&
+                cv.NonHouseHold == "20.750");
+        }
 
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(10.5m)).MustHaveHappened();
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(5.5m)).MustHaveHappened();
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(7.5m)).MustHaveHappened();
-//        }
+        [Fact]
+        public void Map_ShouldHandleEmptyTonnageData_Correctly()
+        {
+            // Arrange
+            var source = TestFixture.Create<SmallProducerSubmissionData>();
+            source.CurrentSubmission.TonnageData = new List<Eee>();
 
-//        [Fact]
-//        public void Map_MultipleEntriesForSameCategory_SumsTonnages()
-//        {
-//            var input = new SmallProducerSubmissionData
-//            {
-//                OrganisationData = new OrganisationData { Id = Guid.NewGuid() },
-//                DirectRegistrantId = Guid.NewGuid(),
-//                CurrentSubmission = new SmallProducerSubmissionHistoryData
-//                {
-//                    TonnageData = new List<Eee>
-//                    {
-//                        new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
-//                        new Eee(5.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
-//                        new Eee(7.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2B)
-//                    }
-//                }
-//            };
+            // Act
+            var result = map.Map(source);
 
-//            var result = mapper.Map(input);
+            // Assert
+            result.CategoryValues.Should().NotBeNull();
+            result.CategoryValues.Should().AllSatisfy(cv =>
+            {
+                cv.HouseHold.Should().BeNull();
+                cv.NonHouseHold.Should().BeNull();
+            });
+        }
 
-//            result.Should().NotBeNull();
-//            result.CategoryValues.Should().HaveCount(14); // Assuming there are 14 WEEE categories
-//            result.CategoryValues.Should().Contain(c => c.CategoryId == (int)WeeeCategory.ConsumerEquipment &&
-//                                                        c.HouseHold == "16.000" &&
-//                                                        c.NonHouseHold == "7.500");
+        [Fact]
+        public void Map_ShouldHandleMultipleEntriesForSameCategory_ByUsingLastValue()
+        {
+            // Arrange
+            var source = TestFixture.Create<SmallProducerSubmissionData>();
+            source.CurrentSubmission.TonnageData = new List<Eee>
+            {
+                new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
+                new Eee(5.25m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
+                new Eee(20.75m, WeeeCategory.ConsumerEquipment, ObligationType.B2B)
+            };
 
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(16.0m)).MustHaveHappened();
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(7.5m)).MustHaveHappened();
-//        }
+            // Act
+            var result = map.Map(source);
 
-//        [Fact]
-//        public void Map_EmptyTonnageData_ReturnsAllCategoriesWithZeroValues()
-//        {
-//            var input = new SmallProducerSubmissionData
-//            {
-//                OrganisationData = new OrganisationData { Id = Guid.NewGuid() },
-//                DirectRegistrantId = Guid.NewGuid(),
-//                CurrentSubmission = new SmallProducerSubmissionHistoryData
-//                {
-//                    TonnageData = new List<Eee>()
-//                }
-//            };
+            // Assert
+            var consumerEquipmentCategory = result.CategoryValues.Single(cv => cv.CategoryId == (int)WeeeCategory.ConsumerEquipment);
+            consumerEquipmentCategory.HouseHold.Should().Be("5.250");
+            consumerEquipmentCategory.NonHouseHold.Should().Be("20.750");
+        }
 
-//            var result = mapper.Map(input);
+        [Fact]
+        public void Map_ShouldPopulateAllCategories()
+        {
+            // Arrange
+            var source = TestFixture.Create<SmallProducerSubmissionData>();
+            source.CurrentSubmission.TonnageData = new List<Eee>();
 
-//            result.Should().NotBeNull();
-//            result.CategoryValues.Should().HaveCount(14); // Assuming there are 14 WEEE categories
-//            result.CategoryValues.Should().OnlyContain(c => c.HouseHold == "-" && c.NonHouseHold == "-");
+            // Act
+            var result = map.Map(source);
 
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(null)).MustHaveHappened(28); // 14 categories * 2 (HouseHold and NonHouseHold)
-//        }
+            // Assert
+            result.CategoryValues.Should().HaveCount(14); 
+            result.CategoryValues.Select(cv => cv.CategoryId).Should().BeEquivalentTo(Enumerable.Range(1, 14));
+        }
 
-//        [Fact]
-//        public void Map_NullTonnageData_ReturnsAllCategoriesWithZeroValues()
-//        {
-//            var input = new SmallProducerSubmissionData
-//            {
-//                OrganisationData = new OrganisationData { Id = Guid.NewGuid() },
-//                DirectRegistrantId = Guid.NewGuid(),
-//                CurrentSubmission = new SmallProducerSubmissionHistoryData
-//                {
-//                    TonnageData = null
-//                }
-//            };
+        [Fact]
+        public void Map_ShouldSetCategoryDisplayCorrectly()
+        {
+            // Arrange
+            var source = TestFixture.Create<SmallProducerSubmissionData>();
+            source.CurrentSubmission.TonnageData = new List<Eee>
+            {
+                new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C)
+            };
 
-//            var result = mapper.Map(input);
+            // Act
+            var result = map.Map(source);
 
-//            result.Should().NotBeNull();
-//            result.CategoryValues.Should().HaveCount(14); // Assuming there are 14 WEEE categories
-//            result.CategoryValues.Should().OnlyContain(c => c.HouseHold == "-" && c.NonHouseHold == "-");
-
-//            A.CallTo(() => fakeTonnageUtilities.CheckIfTonnageIsNull(null)).MustHaveHappened(28); // 14 categories * 2 (HouseHold and NonHouseHold)
-//        }
-//    }
-//}
+            // Assert
+            var consumerEquipmentCategory = result.CategoryValues.Single(cv => cv.CategoryId == (int)WeeeCategory.ConsumerEquipment);
+            consumerEquipmentCategory.CategoryDisplay.Should().Be(WeeeCategory.ConsumerEquipment.ToDisplayString());
+        }
+    }
+}
