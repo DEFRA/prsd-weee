@@ -1,9 +1,7 @@
-﻿using EA.Weee.Core.Helpers;
-
-namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
+﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
-    using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.DataReturns;
@@ -20,21 +18,28 @@ namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
+        private readonly ISystemDataDataAccess systemDataAccess;
 
         public EditEeeDataRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
+            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditEeeDataRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
+            
             var directRegistrant = await genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId);
+            
             authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == SystemTime.UtcNow.Year);
+
+            var systemDateTime = await systemDataAccess.GetSystemDateTime();
+
+            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDateTime.Year);
 
             currentYearSubmission.CurrentSubmission.SellingTechniqueType = request.SellingTechniqueType.ToInt();
 

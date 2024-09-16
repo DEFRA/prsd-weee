@@ -38,6 +38,7 @@
         private readonly IWeeeCache weeeCache;
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
+        private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
 
         public ProducerSubmissionControllerTests()
         {
@@ -49,13 +50,15 @@
                 A.Fake<IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest>>();
             serviceOfNoticeRequestCreator =
                 A.Fake<IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>>();
+            editEeeDataRequestCreator = A.Fake<IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest>>();
 
             controller = new ProducerSubmissionController(mapper, 
                 editOrganisationDetailsRequestCreator, 
                 () => weeeClient, 
                 breadcrumbService, 
                 weeeCache, 
-                serviceOfNoticeRequestCreator);
+                serviceOfNoticeRequestCreator,
+                editEeeDataRequestCreator);
         }
 
         [Fact]
