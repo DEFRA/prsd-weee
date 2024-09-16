@@ -408,6 +408,7 @@
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Mapping\TransferNoteMapTransferTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ServiceOfNoticeRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditOrganisationDetailsRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSmallProducerSubmissionHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddUpdateOrganisationTransactionHandlerTests.cs" />
