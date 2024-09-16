@@ -26,6 +26,11 @@
                 HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive,
             };
 
+            if (viewModel.Address == null)
+            {
+                viewModel.Address = new ServiceOfNoticeAddressData();
+            }
+
             return viewModel;
         }
 
