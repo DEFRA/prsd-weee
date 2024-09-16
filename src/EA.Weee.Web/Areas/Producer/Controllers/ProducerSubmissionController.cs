@@ -108,8 +108,6 @@
         {
             var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
 
-            model.Address = new ServiceOfNoticeAddressData();
-
             var countries = await GetCountries();
             model.Address.Countries = countries;
 
@@ -119,16 +117,25 @@
             
             if (model.SameAsOrganisationAddress)
             {
-                var organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                AddressData organisationAddress;
+                if (SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData != null)
+                {
+                    organisationAddress = SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData;
+                }
+                else
+                {
+                    organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                }
                 model.Address = new ServiceOfNoticeAddressData
                 {
                     Address1 = organisationAddress.Address1,
                     Address2 = organisationAddress.Address2,
                     TownOrCity = organisationAddress.TownOrCity,
                     Postcode = organisationAddress.Postcode,
+                    CountyOrRegion = organisationAddress.CountyOrRegion,
                     Countries = countries,
                     CountryId = organisationAddress.CountryId,
-                    Telephone = organisationAddress.Telephone
+                    Telephone = model.Address.Telephone,
                 };
                 return View(model);
             }
