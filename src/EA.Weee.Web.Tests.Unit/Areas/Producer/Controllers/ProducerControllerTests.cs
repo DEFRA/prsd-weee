@@ -73,7 +73,7 @@
         }
 
         [Fact]
-        public async Task TaskList_ReturnsTaskListViewView()
+        public async Task TaskList_ReturnsTaskListView()
         {
             // Arrange
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
@@ -113,7 +113,8 @@
                     new ProducerTaskModel
                     {
                         TaskLinkName = "Service of notice",
-                        Complete = true
+                        Complete = true,
+                        Action = nameof(ProducerSubmissionController.ServiceOfNotice)
                     },
                     new ProducerTaskModel
                     {
