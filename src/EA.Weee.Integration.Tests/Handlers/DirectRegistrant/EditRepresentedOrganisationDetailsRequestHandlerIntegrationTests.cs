@@ -121,7 +121,7 @@
 
                 request = new RepresentedOrganisationDetailsRequest(
                     directRegistrant.Id,
-                    fixture.Create<string>(),
+                    "business trading name",
                     representingCompanyDetails);
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
