@@ -186,7 +186,7 @@
                 {
                     TaskLinkName = "Contact details",
                     Complete = contactDetailsComplete,
-                    Action = null
+                    Action = nameof(ProducerSubmissionController.EditContactDetails)
                 },
                 new ProducerTaskModel
                 {
