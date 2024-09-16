@@ -202,7 +202,7 @@
                 {
                     TaskLinkName = "Representing company details",
                     Complete = representingCompanyDetailsComplete,
-                    Action = null
+                    Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
                 });
             }
 
