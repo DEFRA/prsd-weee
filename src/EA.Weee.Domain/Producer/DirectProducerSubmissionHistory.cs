@@ -86,7 +86,14 @@
         {
             Guard.ArgumentNotNull(() => brandName, brandName);
 
-            BrandName = brandName.OverwriteWhereNull(brandName);
+            BrandName = brandName.OverwriteWhereNull(BrandName);
+        }
+
+        public void AddOrUpdateServiceOfNotice(Address address)
+        {
+            Guard.ArgumentNotNull(() => address, address);
+
+            ServiceOfNoticeAddress = address.OverwriteWhereNull(ServiceOfNoticeAddress);
         }
     }
 }
