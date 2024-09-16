@@ -49,6 +49,7 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.DirectRegistrantId)
+        @Html.HiddenFor(m => m.HasAuthorisedRepresentitive)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
             @Html.Gds().LabelFor(m => m.Address.Address1)

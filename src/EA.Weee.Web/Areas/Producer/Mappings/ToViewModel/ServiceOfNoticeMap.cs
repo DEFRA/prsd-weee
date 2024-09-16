@@ -23,6 +23,7 @@
                 DirectRegistrantId = source.DirectRegistrantId,
                 OrganisationId = source.OrganisationData.Id,
                 Address = address,
+                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive,
             };
 
             return viewModel;
