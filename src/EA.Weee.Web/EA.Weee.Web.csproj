@@ -583,6 +583,7 @@
     <Compile Include="Areas\Producer\Mappings\AddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressPostcodeRequiredMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditContactDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditRepresentedOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseServiceOfNoticeAddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditEeeDataRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToServiceOfNoticeRequestCreator.cs" />
@@ -592,6 +593,7 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditContactDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\RepresentedOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
@@ -1096,6 +1098,7 @@
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditEeeeData.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\ServiceOfNotice.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditContactDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\EditRepresentedOrganisationDetails.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
