@@ -92,5 +92,19 @@
 
             ServiceOfNoticeAddress = address.OverwriteWhereNull(ServiceOfNoticeAddress);
         }
+
+        public void AddOrUpdateContact(Contact contact)
+        {
+            Guard.ArgumentNotNull(() => contact, contact);
+
+            Contact = contact.OverwriteWhereNull(Contact);
+        }
+
+        public void AddOrUpdateContactAddress(Address address)
+        {
+            Guard.ArgumentNotNull(() => address, address);
+
+            ContactAddress = address.OverwriteWhereNull(ContactAddress);
+        }
     }
 }
