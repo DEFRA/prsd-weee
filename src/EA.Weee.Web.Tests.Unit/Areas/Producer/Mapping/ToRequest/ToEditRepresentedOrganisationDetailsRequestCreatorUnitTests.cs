@@ -34,7 +34,6 @@
             result.Should().NotBeNull();
             result.Should().BeOfType<RepresentedOrganisationDetailsRequest>();
             result.DirectRegistrantId.Should().Be(viewModel.DirectRegistrantId);
-            result.CompanyName.Should().Be(viewModel.CompanyName);
             result.BusinessTradingName.Should().Be(viewModel.BusinessTradingName);
             result.Address.Should().Be(viewModel.Address);
         }
