@@ -55,7 +55,6 @@
                 A.Fake<IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>>();
             editRepresentedOrganisationDetailsRequestCreator =
                 A.Fake<IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest>>();
-            controller = new ProducerSubmissionController(mapper, 
   
             controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, serviceOfNoticeRequestCreator);
         }
