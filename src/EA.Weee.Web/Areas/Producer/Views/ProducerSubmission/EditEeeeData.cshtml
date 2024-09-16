@@ -94,18 +94,32 @@
             </table>
         </div>
 
-            {
-                <div class="govuk-form-group">
-
-                    @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsDirectSelling, new { @id = "IsDirectSelling", @class = "govuk-checkboxes__input" })
-
+        <div class="@(ViewData.ModelState.ContainsKey("SellingTechnique") ? "govuk-form-group--error error" : "")">
+        <label for="SellingTechnique" aria-hidden="true" class="govuk-visually-hidden">hidden link for navigation to EEE selling technique error</label>
+        <input id="SellingTechnique" type="hidden" />
+        
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="selling-technique-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <span class="govuk-body govuk-!-padding-bottom-1">
+                        Please select the selling technique(s) that you use.
+                    </span>
+                </legend>
+                <div id="waste-hint" class="govuk-hint govuk-visually-hidden">
+                    Select all that apply.
                 </div>
-                <div class="govuk-form-group">
-
-                    @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsIndirectSelling, new { @id = "IsIndirectSelling", @class = "govuk-checkboxes__input" })
-
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                    @Html.Gds().ValidationMessageFor(m => m.SellingTechnique)
+                    <div class="govuk-!-padding-bottom-1">
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsDirectSelling, new { @id = "IsDirectSelling", @class = "govuk-checkboxes__input" })
+                    </div>
+                    <div class="govuk-!-padding-bottom-1">
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsIndirectSelling, new { @id = "IsIndirectSelling", @class = "govuk-checkboxes__input" })
+                    </div>
                 </div>
-
+            </fieldset>
+        </div>
+        </div>
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
 

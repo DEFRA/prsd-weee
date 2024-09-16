@@ -1,17 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.ViewModels
 {
     using EA.Weee.Core.DirectRegistrant;
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     public class SellingTechniqueViewModel
     {
-        [Display(Name = "Direct Selling to End User")]
+        [Display(Name = "Direct selling to end user (mail, order, internet etc)")]
         public bool IsDirectSelling { get; set; }
 
-        [Display(Name = "Indirect Selling to End User")]
+        [Display(Name = "Indirect selling (other)")]
         public bool IsIndirectSelling { get; set; }
 
-        public SellingTechniqueType? ToSellingTechniqueType()
+        public SellingTechniqueType ToSellingTechniqueType()
         {
             switch (IsDirectSelling)
             {
@@ -25,8 +26,8 @@
             {
                 return SellingTechniqueType.IndirectSellingToEndUser;
             }
-                
-            return null;
+
+            throw new InvalidOperationException();
         }
 
         public static SellingTechniqueViewModel FromSellingTechniqueType(SellingTechniqueType? type)

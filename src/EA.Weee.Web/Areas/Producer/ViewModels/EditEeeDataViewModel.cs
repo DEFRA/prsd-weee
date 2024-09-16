@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Validation;
     using EA.Weee.Web.Extensions;
     using System;
     using System.Collections.Generic;
@@ -16,8 +17,10 @@
 
         public Guid DirectRegistrantId { get; set; }
 
+        [ProducerCategoryValuesValidation]
         public IList<ProducerSubmissionCategoryValue> CategoryValues { get; set; }
 
+        [AtLeastOneChecked(nameof(SellingTechnique), nameof(SellingTechniqueViewModel.IsDirectSelling), nameof(SellingTechniqueViewModel.IsIndirectSelling), ErrorMessage = "At least one selling technique must be selected")]
         public SellingTechniqueViewModel SellingTechnique { get; set; }
 
         public EditEeeDataViewModel()
@@ -48,6 +51,12 @@
                     yield return new ValidationResult("EEE details need to total less than 5 tonnes",
                         new[] { nameof(CategoryValues) });
                 }
+            }
+
+            if (CategoryValues != null && !CategoryValues.Any())
+            {
+                yield return new ValidationResult("Enter EEE tonnage details",
+                    new[] { nameof(CategoryValues) });
             }
         }
     }
