@@ -16,17 +16,9 @@
         <h1 class="govuk-heading-l">@title</h1>
     </header>
 
-    <p>
-        There are 5 steps required to complete the registration. <br /><br />
-
-        After completing a step, you can click on the <span class="govuk-!-font-weight-bold">
-            Return to tasklist button
-        </span>,
-        to return to this page. When you have completed all the steps within the application and provided all the documents required,
-        click the submit button below. <br /><br />
-
-        The charge for registering is <span class="govuk-!-font-weight-bold">£30.00.</span>
-    </p>
+    <p class="govuk-body">There @(Model.ProducerTaskModels.Count == 1 ? "is" : "are") @Model.ProducerTaskModels.Count @(Model.ProducerTaskModels.Count == 1 ? "step" : "steps") required to complete the registration.</p>
+    <p class="govuk-body">After completing a step, you can click on the <span class="govuk-!-font-weight-bold">Return to tasklist</span> button, to return to this page. When you have completed all the steps within the application and provided all the documents required, click the submit button below.</p>
+    <p class="govuk-body">The charge for registering is <span class="govuk-!-font-weight-bold">£30.00.</span></p>
 
     <ul class="govuk-task-list">
         @foreach (var task in Model.ProducerTaskModels)
@@ -60,8 +52,20 @@
     @using (Html.BeginForm("CheckAnswers", "Producer", FormMethod.Get, null))
     {
         @Html.AntiForgeryToken()
-        <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Check your answers"))
-        </div>
+
+
+        if (Model.CheckAnswersEnabled)
+        {
+            <div class="govuk-form-group">
+                @(this.WeeeGds().Submit("Check your answers"))
+            </div>
+        }
+        else
+        {
+            <div class="govuk-form-group">
+                @(this.WeeeGds().Submit("Check your answers", new { disabled = "disabled"}))
+            </div>
+        }
+       
     }
 }
