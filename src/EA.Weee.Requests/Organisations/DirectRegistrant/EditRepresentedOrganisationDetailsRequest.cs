@@ -9,15 +9,12 @@
     {
         public RepresentedOrganisationDetailsRequest(
             Guid directRegistrantId, 
-            string companyName, 
             string businessTradingName, 
             RepresentingCompanyAddressData address)
         {
             Condition.Requires(directRegistrantId).IsNotEqualTo(Guid.Empty);
-            Condition.Requires(companyName).IsNotNullOrWhiteSpace();
             Condition.Requires(address).IsNotNull();
 
-            CompanyName = companyName;
             BusinessTradingName = businessTradingName;
             DirectRegistrantId = directRegistrantId;
 
@@ -25,8 +22,6 @@
         }
 
         public Guid DirectRegistrantId { get; set; }
-
-        public string CompanyName { get; set; }
 
         public string BusinessTradingName { get; set; }
 

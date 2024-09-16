@@ -20,6 +20,15 @@
             }
         }
 
+        public static AuthorisedRepresentative Create(string tradingName, ProducerContact overseasContact = null)
+        {
+            return new AuthorisedRepresentative()
+            {
+                OverseasProducerTradingName = tradingName,
+                OverseasContact = overseasContact
+            };
+        }
+
         public AuthorisedRepresentative(string name, string tradingName, ProducerContact overseasContact = null)
         {
             OverseasProducerName = name;
@@ -68,7 +77,6 @@
             }
 
             OverseasContact = other.OverseasContact.OverwriteWhereNull(OverseasContact);
-            other.OverseasProducerName = OverseasProducerName;
             other.OverseasProducerTradingName = OverseasProducerTradingName;
 
             return other;
