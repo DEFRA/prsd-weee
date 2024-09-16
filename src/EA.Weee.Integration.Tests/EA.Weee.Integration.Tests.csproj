@@ -245,6 +245,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\DirectRegistrant\EditContactDetailsRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\EditOrganisationDetailsRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\GetSmallProducerSubmissionHandlerTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\AddSmallProducerSubmissionHandlerTests.cs" />
