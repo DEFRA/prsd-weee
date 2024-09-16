@@ -139,6 +139,20 @@
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task HandleAsync_EnsureOrganisationAccess_IsCalled()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant();
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId)).MustHaveHappenedOnceExactly();
+        }
+
         private EditContactDetailsRequest CreateValidRequest(string brandNames = null)
         {
             var addressData = TestFixture.Build<AddressData>()
