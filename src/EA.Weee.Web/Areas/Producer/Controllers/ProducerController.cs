@@ -60,19 +60,25 @@
                         Complete = submission.ServiceOfNoticeComplete,
                         Action = nameof(ProducerSubmissionController.ServiceOfNotice)
                     },
-                    new ProducerTaskModel 
-                    { 
-                        TaskLinkName = "Representing company details", 
-                        Complete = submission.RepresentingCompanyDetailsComplete,
-                        Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
-                    },
-                    new ProducerTaskModel 
-                    { 
-                        TaskLinkName = "EEE details", 
-                        Complete = submission.EEEDetailsComplete
-                    }
                 }
             };
+
+            if (SmallProducerSubmissionData.HasAuthorisedRepresentitive)
+            {
+                model.ProducerTaskModels.Add(new ProducerTaskModel
+                {
+                    TaskLinkName = "Representing company details",
+                    Complete = submission.RepresentingCompanyDetailsComplete,
+                    Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
+                });
+            }
+
+            model.ProducerTaskModels.Add(new ProducerTaskModel
+            {
+                TaskLinkName = "EEE details",
+                Complete = submission.EEEDetailsComplete,
+                Action = nameof(ProducerSubmissionController.EditEeeeData)
+            });
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
