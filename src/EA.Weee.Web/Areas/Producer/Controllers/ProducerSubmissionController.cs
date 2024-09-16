@@ -124,6 +124,7 @@
                     Address2 = organisationAddress.Address2,
                     TownOrCity = organisationAddress.TownOrCity,
                     Postcode = organisationAddress.Postcode,
+                    CountyOrRegion = organisationAddress.CountyOrRegion,
                     Countries = countries,
                     CountryId = organisationAddress.CountryId,
                     Telephone = organisationAddress.Telephone
