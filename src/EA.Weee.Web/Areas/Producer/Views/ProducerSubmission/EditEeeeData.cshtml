@@ -1,0 +1,131 @@
+﻿
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.EditEeeDataViewModel
+@{
+    const string title = "EEE Details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+<style>
+    .tonnage-error {
+        border-left: 5px solid #d4351c;
+        padding-left: 15px;
+    }
+
+</style>
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
+
+    @{
+        var step = @Model.HasAuthorisedRepresentitive ? "5" : "4";
+    }
+
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step @step of @step</span>
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+    
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p class="govuk-body">Please provide the amount of EEE in tonnes that you (or if you are an Authorised Representative your client) placed on the UK market (netting off exports) in the previous year.</p>
+        <p class="govuk-body">This is to be broken down by category and obligation type in the table below. The tonnages should be entered to three decimal places; for example, 211 kilograms should be entered as 0.211 tonnes.</p>
+        <p class="govuk-body">Any B2B EEE that can be classed as dual use, is to be reported as B2C.</p>
+        <p class="govuk-body">If you have placed 5 tonnes or more of EEE on the UK market, you don't fit the definition of a 'Small Producer' and the option to register here is not available to you and you need to join a Producer Compliance Scheme.</p>
+
+        <label for="CategoryValues" aria-hidden="true" class="govuk-visually-hidden">hidden link for navigation to EEE tonnage error</label>
+        <input id="CategoryValues" type="hidden" />
+  
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.DirectRegistrantId)
+        @Html.HiddenFor(m => m.HasAuthorisedRepresentitive)
+
+        <div class="@(ViewData.ModelState.ContainsKey("CategoryValues") ? "tonnage-error" : "")">
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-visually-hidden">EEE Category tonnage values</caption>
+                <thead class="govuk-table__head">
+                <tr>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Category</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Household (B2C)</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Non-Household (B2B)</th>
+                </tr>
+                </thead>
+
+                <tbody class="govuk-table__body">
+
+                @for (var i = 0; i < Model.CategoryValues.Count; i++)
+                {
+                    var category = Model.CategoryValues[i];
+                    var index = i;
+
+                    <tr class="govuk-table__row" id="category-row-@category.CategoryId">
+                        <td class="govuk-table__cell">
+                            @(@category.CategoryId). @category.CategoryDisplay
+                            @Html.HiddenFor(m => m.CategoryValues[index].CategoryId)
+                            @Html.HiddenFor(m => m.CategoryValues[index].CategoryDisplay)
+                            @Html.HiddenFor(m => m.CategoryValues[index].Id)
+                        </td>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[index], m => m.CategoryValues[index].HouseHold)">
+                                <span class="govuk-visually-hidden" id="category-received-@category.CategoryId">Household (B2C) in tonnes for @category.CategoryDisplay</span>
+                                @Html.Gds().ValidationMessageFor(m => m.CategoryValues[index].HouseHold)
+                                @Html.TextBoxFor(m => m.CategoryValues[index].HouseHold, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[index], m => m.CategoryValues[index].NonHouseHold)">
+                                <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Non-Household (B2B) in tonnes for @category.CategoryDisplay</span>
+                                @Html.Gds().ValidationMessageFor(m => m.CategoryValues[index].NonHouseHold)
+                                @Html.TextBoxFor(m => m.CategoryValues[index].NonHouseHold, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="@(ViewData.ModelState.ContainsKey("SellingTechnique") ? "govuk-form-group--error error" : "")">
+        <label for="SellingTechnique" aria-hidden="true" class="govuk-visually-hidden">hidden link for navigation to EEE selling technique error</label>
+        <input id="SellingTechnique" type="hidden" />
+        
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="selling-technique-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <span class="govuk-body govuk-!-padding-bottom-1">
+                        Please select the selling technique(s) that you use.
+                    </span>
+                </legend>
+                <div id="waste-hint" class="govuk-hint govuk-visually-hidden">
+                    Select all that apply.
+                </div>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                    @Html.Gds().ValidationMessageFor(m => m.SellingTechnique)
+                    <div class="govuk-!-padding-bottom-1">
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsDirectSelling, new { @id = "IsDirectSelling", @class = "govuk-checkboxes__input" })
+                    </div>
+                    <div class="govuk-!-padding-bottom-1">
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsIndirectSelling, new { @id = "IsIndirectSelling", @class = "govuk-checkboxes__input" })
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        </div>
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditEeeeData()), true)
+
+        </div>
+        @(this.WeeeGds().BackToTopLink())
+    }
+}
