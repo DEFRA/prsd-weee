@@ -23,7 +23,13 @@
                 DirectRegistrantId = source.DirectRegistrantId,
                 OrganisationId = source.OrganisationData.Id,
                 Address = address,
+                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive,
             };
+
+            if (viewModel.Address == null)
+            {
+                viewModel.Address = new ServiceOfNoticeAddressData();
+            }
 
             return viewModel;
         }
