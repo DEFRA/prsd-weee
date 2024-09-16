@@ -117,7 +117,15 @@
             
             if (model.SameAsOrganisationAddress)
             {
-                var organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                AddressData organisationAddress;
+                if (SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData != null)
+                {
+                    organisationAddress = SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData;
+                }
+                else
+                {
+                    organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
+                }
                 model.Address = new ServiceOfNoticeAddressData
                 {
                     Address1 = organisationAddress.Address1,
@@ -127,7 +135,7 @@
                     CountyOrRegion = organisationAddress.CountyOrRegion,
                     Countries = countries,
                     CountryId = organisationAddress.CountryId,
-                    Telephone = organisationAddress.Telephone
+                    Telephone = model.Address.Telephone,
                 };
                 return View(model);
             }

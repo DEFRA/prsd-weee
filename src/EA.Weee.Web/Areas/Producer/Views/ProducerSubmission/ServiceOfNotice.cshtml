@@ -22,11 +22,9 @@
         <h1 class="govuk-heading-l">@title</h1>
     </header>
 
-    <p>
-        Provide your address for the service of notices. <br /><br />
+    <p>Provide your address for the service of notices.</p>
 
-        For authorised representatives of non-UK established producers this will be your preferred address.
-    </p>
+    <p>For authorised representatives of non-UK established producers, this will be your preferred address.</p>
 
     @using (Html.BeginForm("ServiceOfNotice", "ProducerSubmission", FormMethod.Get, new { id = "sameAsOrganisationAddressForm" }))
     {
