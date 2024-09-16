@@ -8,7 +8,7 @@
     {
         public RepresentedOrganisationDetailsRequest ViewModelToRequest(RepresentingCompanyDetailsViewModel viewModel)
         {
-            return new RepresentedOrganisationDetailsRequest(viewModel.DirectRegistrantId, viewModel.CompanyName, viewModel.BusinessTradingName, viewModel.Address);
+            return new RepresentedOrganisationDetailsRequest(viewModel.DirectRegistrantId, viewModel.BusinessTradingName, viewModel.Address);
         }
     }
 }
