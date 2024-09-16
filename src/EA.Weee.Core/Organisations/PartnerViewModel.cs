@@ -11,9 +11,8 @@
         {
             get
             {
-                return NotRequiredPartnerModels
-                    .Select(x => new AdditionalContactModel { FirstName = x.FirstName, LastName = x.LastName })
-                    .Concat(PartnerModels)
+                return PartnerModels
+                    .Concat(NotRequiredPartnerModels.Select(x => new AdditionalContactModel { FirstName = x.FirstName, LastName = x.LastName }))
                     .ToList();
             }
         } 
