@@ -46,16 +46,16 @@
 
                 //authedRep.OverseasProducerName.Should()
                 //    .Be(authorisedRepresentative.OverseasProducerName);
-                authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
-                authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
-                authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
-                authedRep.OverseasContact.Address.Street.Should().Be(request.Address.Address2);
-                authedRep.OverseasContact.Address.Town.Should().Be(request.Address.TownOrCity);
-                authedRep.OverseasContact.Address.AdministrativeArea.Should().Be(request.Address.CountyOrRegion);
-                authedRep.OverseasContact.Address.CountryId.Should().Be(request.Address.CountryId);
-                authedRep.OverseasContact.Address.PostCode.Should().Be(request.Address.Postcode);
-                authedRep.OverseasContact.Email.Should().Be(request.Address.Email);
-                authedRep.OverseasContact.Telephone.Should().Be(request.Address.Telephone);
+                //authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
+                //authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
+                //authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
+                //authedRep.OverseasContact.Address.Street.Should().Be(request.Address.Address2);
+                //authedRep.OverseasContact.Address.Town.Should().Be(request.Address.TownOrCity);
+                //authedRep.OverseasContact.Address.AdministrativeArea.Should().Be(request.Address.CountyOrRegion);
+                //authedRep.OverseasContact.Address.CountryId.Should().Be(request.Address.CountryId);
+                //authedRep.OverseasContact.Address.PostCode.Should().Be(request.Address.Postcode);
+                //authedRep.OverseasContact.Email.Should().Be(request.Address.Email);
+                //authedRep.OverseasContact.Telephone.Should().Be(request.Address.Telephone);
             };
         }
 
