@@ -10,7 +10,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
 
-    internal class EditOrganisationDetailsRequestHandler : EditSubmissionRequestHandlerBase, IRequestHandler<EditOrganisationDetailsRequest, bool>
+    internal class EditOrganisationDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<EditOrganisationDetailsRequest, bool>
     {
         private readonly WeeeContext weeeContext;
 

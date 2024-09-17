@@ -18,6 +18,11 @@
     using System.Security;
     using System.Threading.Tasks;
     using Xunit;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Domain.DataReturns;
+
 
     public class GetSmallProducerSubmissionHandlerTests : SimpleUnitTestBase
     {
@@ -135,6 +140,117 @@
             result.Should().NotBeNull();
             result.CurrentSubmission.Should().NotBeNull();
             result.CurrentSubmission.OrganisationDetailsComplete.Should().Be(expectedOrganisationDetailsComplete);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ThrowsException_WhenAuthorizationFails()
+        {
+            // Arrange
+            A.CallTo(() => authorization.EnsureCanAccessExternalArea())
+                .Throws<SecurityException>();
+
+            // Act
+            Func<Task> act = async () => await handler.HandleAsync(new GetSmallProducerSubmission { DirectRegistrantId = Guid.NewGuid() });
+
+            // Assert
+            await act.Should().ThrowAsync<SecurityException>();
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsNull_WhenNoCurrentYearSubmission()
+        {
+            // Arrange
+            var directRegistrantId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var currentYear = 2023;
+
+            SetupFakesForValidRequest(directRegistrantId, organisationId, currentYear);
+
+            // Act
+            var result = await handler.HandleAsync(new GetSmallProducerSubmission { DirectRegistrantId = directRegistrantId });
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsCorrectData_WhenCurrentYearSubmissionExists()
+        {
+            // Arrange
+            var directRegistrantId = Guid.NewGuid();
+            var organisationId = Guid.NewGuid();
+            var currentYear = 2023;
+
+            SetupFakesForValidRequest(directRegistrantId, organisationId, currentYear);
+            SetupFakesForCurrentYearSubmission(currentYear);
+
+            // Act
+            var result = await handler.HandleAsync(new GetSmallProducerSubmission { DirectRegistrantId = directRegistrantId });
+
+            // Assert
+            result.Should().NotBeNull();
+            result.DirectRegistrantId.Should().Be(directRegistrantId);
+            result.HasAuthorisedRepresentitive.Should().BeTrue();
+            result.CurrentSubmission.Should().NotBeNull();
+            result.CurrentSubmission.EEEDetailsComplete.Should().BeTrue();
+            // Add more assertions here to check all properties of result.CurrentSubmission
+        }
+
+        private void SetupFakesForValidRequest(Guid directRegistrantId, Guid organisationId, int currentYear)
+        {
+            var directRegistrant = new DirectRegistrant { Id = directRegistrantId, OrganisationId = organisationId, AuthorisedRepresentativeId = Guid.NewGuid() };
+            var organisation = new Organisation { Id = organisationId };
+
+            A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
+                .Returns(directRegistrant);
+
+            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(A<Organisation>._))
+                .Returns(new OrganisationData());
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime())
+                .Returns(new DateTime(currentYear, 1, 1));
+        }
+
+        private void SetupFakesForCurrentYearSubmission(int currentYear)
+        {
+            var currentSubmission = new DirectProducerSubmission
+            {
+                ComplianceYear = currentYear,
+                CurrentSubmission = new DirectRegistrantSubmission
+                {
+                    EeeOutputReturnVersion = new EeeOutputReturnVersion(),
+                    BusinessAddress = new Address(),
+                    BrandName = new BrandName { Name = "Test Brand" },
+                    CompanyName = "Test Company",
+                    TradingName = "Test Trading Name",
+                    CompanyRegistrationNumber = "12345678",
+                    SellingTechniqueType = Domain.Producer.SellingTechniqueType.DistanceSellingFromInsideUK,
+                    ContactAddress = new Address(),
+                    Contact = new Contact(),
+                    AuthorisedRepresentative = new AuthorisedRepresentative(),
+                    ServiceOfNoticeAddress = new Address()
+                }
+            };
+
+            A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(A<Guid>._))
+                .Returns(new DirectRegistrant
+                {
+                    DirectProducerSubmissions = new List<DirectProducerSubmission> { currentSubmission },
+                    Organisation = new Organisation(),
+                    AuthorisedRepresentative = new AuthorisedRepresentative()
+                });
+
+            A.CallTo(() => mapper.Map<Domain.Organisation.Address, AddressData>(A<Address>._))
+                .Returns(new AddressData());
+
+            A.CallTo(() => mapper.Map<Contact, ContactData>(A<Contact>._))
+                .Returns(new ContactData());
+
+            A.CallTo(() => mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(A<AuthorisedRepresentative>._))
+                .Returns(new AuthorisedRepresentitiveData());
+
+            A.CallTo(() => mapper.Map<EeeOutputReturnVersion, IList<Eee>>(A<EeeOutputReturnVersion>._))
+                .Returns(new List<Eee>());
         }
 
         private DirectRegistrant SetupValidDirectRegistrant(Guid directRegistrantId, bool hasCurrentYearSubmission = false)

@@ -12,7 +12,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class EditEeeDataRequestHandler : EditSubmissionRequestHandlerBase, IRequestHandler<EditEeeDataRequest, bool>
+    internal class EditEeeDataRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<EditEeeDataRequest, bool>
     {
         private readonly WeeeContext weeeContext;
 
