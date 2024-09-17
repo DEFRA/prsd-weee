@@ -23,22 +23,24 @@
     <ul class="govuk-task-list">
         @foreach (var task in Model.ProducerTaskModels)
         {
+            var described = task.TaskLinkName.ToLower().Replace(" ", "-") + "-status";
+
             <li class="govuk-task-list__item govuk-task-list__item--with-link">
                 <div class="govuk-task-list__name-and-hint">
-                    <a class="govuk-link govuk-task-list__link" href="@Url.Action(task.Action, typeof(ProducerSubmissionController).GetControllerName())" aria-describedby="@(task.TaskLinkName.ToLower().Replace(" ", "-") + "-status")">
+                    <a class="govuk-link govuk-task-list__link" href="@Url.Action(task.Action, typeof(ProducerSubmissionController).GetControllerName())" aria-describedby="@described">
                         @task.TaskLinkName
                     </a>
                 </div>
 
                 @if (@task.Complete)
                 {
-                    <div class="govuk-task-list__status" id="company-details-1-status">
+                    <div class="govuk-task-list__status" id="@described">
                         Completed
                     </div>
                 }
                 else
                 {
-                    <div class="govuk-task-list__status" id="company-details-2-status">
+                    <div class="govuk-task-list__status" id="@described">
                         <strong class="govuk-tag govuk-tag--blue">
                             Incomplete
                         </strong>
