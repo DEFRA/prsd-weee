@@ -17,45 +17,56 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Security;
+    using EA.Prsd.Core;
 
     public class EditRepresentedOrganisationDetailsRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIUpdateRepresentingOrganisationDetails : EditRepresentedOrganisationDetailsRequestHandlerIntegrationTestBase
+        public class WhenIUpdateRepresentingOrganisationDetailsWhereNonExist : EditRepresentedOrganisationDetailsRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
                 LocalSetup();
+
+                authorisedRepresentative = AuthorisedRepDbSetup.Init().Create();
+
+                directRegistrant = DirectRegistrantDbSetup.Init()
+                    .WithAuthorisedRep(authorisedRepresentative)
+                    .Create();
+
+                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
+                    .WithDirectRegistrant(directRegistrant)
+                    .Create();
+
+                directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
             };
 
             private readonly Because of = () =>
             {
-                AsyncHelper.RunSync(() =>
-                    createSubmissionHandler.HandleAsync(new AddSmallProducerSubmission(directRegistrant.Id)));
-
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
             };
 
             private readonly It shouldUpdateTheData = () =>
             {
-                var entity = Query.GetDirectRegistrantByOrganisationId(directRegistrant.OrganisationId);
+                var history = Query.CurrentSubmissionHistoryForComplianceYear(directRegistrant.Id, SystemTime.UtcNow.Year);
 
-                var submission = entity.DirectProducerSubmissions.ElementAt(0);
+                var authedRep = history.AuthorisedRepresentative;
 
-                var authedRep = submission.CurrentSubmission.AuthorisedRepresentative;
-
-                //authedRep.OverseasProducerName.Should()
-                //    .Be(authorisedRepresentative.OverseasProducerName);
-                //authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
-                //authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
-                //authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
-                //authedRep.OverseasContact.Address.Street.Should().Be(request.Address.Address2);
-                //authedRep.OverseasContact.Address.Town.Should().Be(request.Address.TownOrCity);
-                //authedRep.OverseasContact.Address.AdministrativeArea.Should().Be(request.Address.CountyOrRegion);
-                //authedRep.OverseasContact.Address.CountryId.Should().Be(request.Address.CountryId);
-                //authedRep.OverseasContact.Address.PostCode.Should().Be(request.Address.Postcode);
-                //authedRep.OverseasContact.Email.Should().Be(request.Address.Email);
-                //authedRep.OverseasContact.Telephone.Should().Be(request.Address.Telephone);
+                authedRep.OverseasProducerName.Should()
+                    .Be(authorisedRepresentative.OverseasProducerName);
+                authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
+                authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
+                authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
+                authedRep.OverseasContact.Address.Street.Should().Be(request.Address.Address2);
+                authedRep.OverseasContact.Address.Town.Should().Be(request.Address.TownOrCity);
+                authedRep.OverseasContact.Address.AdministrativeArea.Should().Be(request.Address.CountyOrRegion);
+                authedRep.OverseasContact.Address.CountryId.Should().Be(request.Address.CountryId);
+                authedRep.OverseasContact.Address.PostCode.Should().Be(request.Address.Postcode);
+                authedRep.OverseasContact.Email.Should().Be(request.Address.Email);
+                authedRep.OverseasContact.Telephone.Should().Be(request.Address.Telephone);
             };
         }
 
@@ -87,6 +98,7 @@
             protected static Fixture fixture;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
             protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
+            protected static Domain.Producer.DirectProducerSubmissionHistory directProducerSubmissionHistory;
             protected static RepresentedOrganisationDetailsRequest request;
             protected static bool result;
             protected static Country country;
@@ -99,17 +111,6 @@
                     .WithTestData()
                 .WithExternalUserAccess();
 
-                authorisedRepresentative = AuthorisedRepDbSetup.Init().Create();
-
-                directRegistrant = DirectRegistrantDbSetup.Init()
-                    .WithAuthorisedRep(authorisedRepresentative)
-                    .Create();
-
-                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
-                    .WithDirectRegistrant(directRegistrant, authorisedRepresentative)
-                    .Create();
-                
-                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmission.SubmissionHistory.ElementAt(0).Id);
                 handler = Container.Resolve<IRequestHandler<RepresentedOrganisationDetailsRequest, bool>>();
                 createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
 
