@@ -55,6 +55,7 @@
                     CurrentSubmission = new SmallProducerSubmissionHistoryData()
                     {
                         EEEDetailsComplete = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null,
+                        RepresentingCompanyDetailsComplete = currentYearSubmission.CurrentSubmission.AuthorisedRepresentativeId.HasValue,
                         BusinessAddressData = currentYearSubmission.CurrentSubmission.BusinessAddress != null ? mapper.Map<Domain.Organisation.Address, AddressData>(currentYearSubmission.CurrentSubmission.BusinessAddress) : mapper.Map<Domain.Organisation.Address, AddressData>(currentYearSubmission.DirectRegistrant.Organisation.BusinessAddress),
                         EEEBrandNames = currentYearSubmission.CurrentSubmission.BrandName != null ? currentYearSubmission.CurrentSubmission.BrandName.Name : (currentYearSubmission.DirectRegistrant.BrandName != null ? currentYearSubmission.DirectRegistrant.BrandName.Name : string.Empty),
                         CompanyName = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyName) ? currentYearSubmission.CurrentSubmission.CompanyName : organisation.Name,
