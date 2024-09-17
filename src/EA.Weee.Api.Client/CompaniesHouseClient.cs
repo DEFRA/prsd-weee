@@ -6,11 +6,9 @@
     using Serilog;
     using System;
     using System.IdentityModel;
-    using System.Net;
-    using System.Net.Http;
+    using System.Linq;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
-    using System.Linq;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
