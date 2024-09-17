@@ -124,7 +124,7 @@
     <value>Changing the details on this page will update your organisation details on your account.</value>
   </data>
   <data name="RepresentingCompanyDetailsWarningText" xml:space="preserve">
-    <value>Changing the details on this page will update your representing company details on your account.</value>
+    <value>Changing the details on this page will update your producer details on your account.</value>
   </data>
   <data name="SaveAndReturnTaskList" xml:space="preserve">
     <value>Save and return to task list</value>
