@@ -1,18 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
+    using Core.DirectRegistrant;
+    using Domain.Organisation;
+    using Domain.Producer;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.DataReturns;
-    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Scheme.MemberUploadTesting;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.DataReturns;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.Domain.Producer;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using Security;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
