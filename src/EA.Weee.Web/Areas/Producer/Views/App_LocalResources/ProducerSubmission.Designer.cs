@@ -79,7 +79,7 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Changing the details on this page will update your representing company details on your account..
+        ///   Looks up a localized string similar to Changing the details on this page will update your producer details on your account..
         /// </summary>
         public static string RepresentingCompanyDetailsWarningText {
             get {
