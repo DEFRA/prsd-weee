@@ -7,13 +7,13 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal abstract class EditSubmissionRequestHandlerBase
+    internal abstract class SubmissionRequestHandlerBase
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly ISystemDataDataAccess systemDataAccess;
 
-        protected EditSubmissionRequestHandlerBase(IWeeeAuthorization authorization,
+        protected SubmissionRequestHandlerBase(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, ISystemDataDataAccess systemDataAccess)
         {
             this.authorization = authorization;
@@ -32,6 +32,12 @@
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
             var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDateTime.Year);
+
+            if (currentYearSubmission == null)
+            {
+                throw new InvalidOperationException(
+                    $"SubmissionRequestHandlerBase current year submission for {systemDateTime.Year} not found");
+            }
 
             return currentYearSubmission;
         }
