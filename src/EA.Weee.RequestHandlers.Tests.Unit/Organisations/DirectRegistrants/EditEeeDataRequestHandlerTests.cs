@@ -1,23 +1,28 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.DirectRegistrants
 {
-    using EA.Weee.RequestHandlers.Organisations.DirectRegistrants;
-    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using AutoFixture;
+    using EA.Prsd.Core;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
+    using EA.Weee.RequestHandlers.Organisations.DirectRegistrants;
     using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
-    using EA.Weee.Core.Helpers;
-    using EA.Prsd.Core;
-    using EA.Weee.Domain.DataReturns;
 
-    public class EditEeeDataRequestHandlerTests
+    public class EditEeeDataRequestHandlerTests : SimpleUnitTestBase
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -25,6 +30,7 @@
         private readonly ISystemDataDataAccess systemDataAccess;
         private readonly EditEeeDataRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
+        private DirectProducerSubmission directProducerSubmission;
 
         public EditEeeDataRequestHandlerTests()
         {
@@ -41,7 +47,7 @@
         {
             // Arrange
             var request = CreateValidRequest();
-            SetupValidDirectRegistrant(request.DirectRegistrantId);
+            SetupCurrentSubmission();
 
             // Act
             await handler.HandleAsync(request);
@@ -55,7 +61,7 @@
         {
             // Arrange
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            var directRegistrant = SetupCurrentSubmission();
 
             // Act
             await handler.HandleAsync(request);
@@ -69,15 +75,25 @@
         {
             // Arrange
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
-            var currentSubmission = SetupCurrentSubmission(directRegistrant, null);
+            SetupCurrentSubmission();
 
             // Act
             await handler.HandleAsync(request);
 
             // Assert
-            currentSubmission.Should().NotBeNull();
-            currentSubmission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts.Should().HaveCount(request.TonnageData.Count);
+            directProducerSubmission.CurrentSubmission.EeeOutputReturnVersion.Should().NotBeNull();
+            directProducerSubmission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts.Count.Should()
+                .BeGreaterThan(0);
+            directProducerSubmission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts.Count.Should()
+                .Be(request.TonnageData.Count);
+
+            foreach (var expectedEee in request.TonnageData)
+            {
+                directProducerSubmission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts.Should().Contain(amount =>
+                    amount.ObligationType == (Domain.Obligation.ObligationType)expectedEee.ObligationType &&
+                    amount.WeeeCategory == (Domain.Lookup.WeeeCategory)expectedEee.Category &&
+                    amount.Tonnage == expectedEee.Tonnage);
+            }
         }
 
         [Fact]
@@ -85,16 +101,56 @@
         {
             // Arrange
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            SetupCurrentSubmission();
             var existingEeeVersion = new EeeOutputReturnVersion();
-            var currentSubmission = SetupCurrentSubmission(directRegistrant, existingEeeVersion);
+
+            // Add an existing amount that should be removed
+            var amountToRemove = new EeeOutputAmount(
+                Domain.Obligation.ObligationType.B2C,
+                Domain.Lookup.WeeeCategory.MedicalDevices,
+                30m,
+                directProducerSubmission.RegisteredProducer);
+            existingEeeVersion.EeeOutputAmounts.Add(amountToRemove);
+
+            // Add an existing amount that should be updated
+            var amountToUpdate = new EeeOutputAmount(
+                (Domain.Obligation.ObligationType)request.TonnageData[0].ObligationType,
+                (Domain.Lookup.WeeeCategory)request.TonnageData[0].Category,
+                50m, // Different tonnage than in the request
+                directProducerSubmission.RegisteredProducer);
+            existingEeeVersion.EeeOutputAmounts.Add(amountToUpdate);
+
+            directProducerSubmission.CurrentSubmission.EeeOutputReturnVersion = existingEeeVersion;
 
             // Act
             await handler.HandleAsync(request);
 
             // Assert
-            currentSubmission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts.Should().BeSameAs(existingEeeVersion);
-            currentSubmission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts.EeeOutputAmounts.Should().HaveCount(request.TonnageData.Count);
+            directProducerSubmission.CurrentSubmission.EeeOutputReturnVersion.Should().BeSameAs(existingEeeVersion);
+            var updatedAmounts = directProducerSubmission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts;
+
+            // Check that the count matches the request
+            updatedAmounts.Should().HaveCount(request.TonnageData.Count);
+
+            // Check that all requested items are present with correct values
+            foreach (var expectedEee in request.TonnageData)
+            {
+                updatedAmounts.Should().Contain(amount =>
+                    amount.ObligationType == (Domain.Obligation.ObligationType)expectedEee.ObligationType &&
+                    amount.WeeeCategory == (Domain.Lookup.WeeeCategory)expectedEee.Category &&
+                    amount.Tonnage == expectedEee.Tonnage);
+            }
+
+            // Check that the amount to remove is no longer present
+            updatedAmounts.Should().NotContain(amount =>
+                amount.ObligationType == amountToRemove.ObligationType &&
+                amount.WeeeCategory == amountToRemove.WeeeCategory);
+
+            // Check that the amount to update has been updated
+            updatedAmounts.Should().Contain(amount =>
+                amount.ObligationType == amountToUpdate.ObligationType &&
+                amount.WeeeCategory == amountToUpdate.WeeeCategory &&
+                amount.Tonnage == request.TonnageData[0].Tonnage); // Should now have the tonnage from the request
         }
 
         [Fact]
@@ -102,14 +158,13 @@
         {
             // Arrange
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
-            var currentSubmission = SetupCurrentSubmission(directRegistrant, new EeeOutputReturnVersion());
+            SetupCurrentSubmission();
 
             // Act
             await handler.HandleAsync(request);
 
             // Assert
-            currentSubmission.SellingTechniqueType.Should().Be(request.SellingTechniqueType.ToInt());
+            directProducerSubmission.CurrentSubmission.SellingTechniqueType.Should().Be(request.SellingTechniqueType.ToInt());
         }
 
         [Fact]
@@ -117,7 +172,7 @@
         {
             // Arrange
             var request = CreateValidRequest();
-            SetupValidDirectRegistrant(request.DirectRegistrantId);
+            SetupCurrentSubmission();
 
             // Act
             await handler.HandleAsync(request);
@@ -129,43 +184,39 @@
         private EditEeeDataRequest CreateValidRequest()
         {
             return new EditEeeDataRequest(
-                Guid.NewGuid(),
-                Core.Shared.SellingTechniqueType.Both,
-                new List<Core.Shared.TonnageData>
+                directRegistrantId,
+                new List<Eee>
                 {
-                    new Core.Shared.TonnageData { ObligationType = 1, Category = 1, Tonnage = 10 },
-                    new Core.Shared.TonnageData { ObligationType = 2, Category = 2, Tonnage = 20 }
-                });
+                    new Eee(20m, WeeeCategory.AutomaticDispensers, ObligationType.B2C),
+                    new Eee(10m, WeeeCategory.DisplayEquipment, ObligationType.B2B)
+                },
+                TestFixture.Create<SellingTechniqueType>());
         }
 
-        private DirectRegistrant SetupValidDirectRegistrant(Guid directRegistrantId)
+        private DirectRegistrant SetupCurrentSubmission()
         {
-            var directRegistrant = A.Fake<DirectRegistrant>();
-            A.CallTo(() => directRegistrant.OrganisationId).Returns(Guid.NewGuid());
-            A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
-                .Returns(Task.FromResult(directRegistrant));
-            return directRegistrant;
-        }
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.Id).Returns(Guid.NewGuid());
 
-        private DirectProducerSubmission SetupCurrentSubmission(DirectRegistrant directRegistrant, EeeOutputReturnVersion eeeVersion)
-        {
+            var directRegistrant = new DirectRegistrant(organisation);
+
             A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(Task.FromResult(DateTime.UtcNow));
 
-            var directProducerSubmissionCurrentYear = new DirectProducerSubmission(directRegistrant,
+            directProducerSubmission = new DirectProducerSubmission(directRegistrant,
                 A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year);
             var directProducerSubmissionNotCurrentYear = new DirectProducerSubmission(directRegistrant,
                 A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year + 1);
 
-            directProducerSubmissionCurrentYear.CurrentSubmission =
-                new DirectProducerSubmissionHistory(directProducerSubmissionCurrentYear);
+            directProducerSubmission.CurrentSubmission =
+                new DirectProducerSubmissionHistory(directProducerSubmission);
 
-            directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionCurrentYear);
+            directRegistrant.DirectProducerSubmissions.Add(directProducerSubmission);
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionNotCurrentYear);
 
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
 
-            return directProducerSubmissionCurrentYear;
+            return directRegistrant;
         }
     }
 }
