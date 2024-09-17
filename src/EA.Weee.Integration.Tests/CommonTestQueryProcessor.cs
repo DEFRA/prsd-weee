@@ -46,6 +46,11 @@
             return dbContext.DirectRegistrants.First(c => c.OrganisationId.Equals(organisationId));
         }
 
+        public DirectProducerSubmissionHistory CurrentSubmissionHistoryForComplianceYear(Guid directRegistrantId, int year)
+        {
+            return dbContext.DirectProducerSubmissionHistories.First(c => c.DirectProducerSubmission.DirectRegistrantId == directRegistrantId && c.DirectProducerSubmission.ComplianceYear == year);
+        }
+
         public List<AdditionalCompanyDetails> GetAdditionalDetailsByRegistrantId(Guid directRegistrantId, OrganisationAdditionalDetailsType type)
         {
             return dbContext.AdditionalCompanyDetails.Where(c => c.DirectRegistrant.Id.Equals(directRegistrantId) && c.Type.Value == type.Value).ToList();
