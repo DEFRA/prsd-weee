@@ -105,16 +105,16 @@
                         Please select the selling technique(s) that you use.
                     </span>
                 </legend>
-                <div id="waste-hint" class="govuk-hint govuk-visually-hidden">
+                <div id="selling-technique-hint" class="govuk-hint govuk-visually-hidden">
                     Select all that apply.
                 </div>
                 <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                     @Html.Gds().ValidationMessageFor(m => m.SellingTechnique)
                     <div class="govuk-!-padding-bottom-1">
-                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsDirectSelling, new { @id = "IsDirectSelling", @class = "govuk-checkboxes__input" })
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsDirectSelling, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(new { @id = "IsDirectSelling", @class = "govuk-checkboxes__input" }), "Direct selling")
                     </div>
                     <div class="govuk-!-padding-bottom-1">
-                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsIndirectSelling, new { @id = "IsIndirectSelling", @class = "govuk-checkboxes__input" })
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.SellingTechnique.IsIndirectSelling, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(new { @id = "IsIndirectSelling", @class = "govuk-checkboxes__input" }), "Indirect selling")
                     </div>
                 </div>
             </fieldset>
