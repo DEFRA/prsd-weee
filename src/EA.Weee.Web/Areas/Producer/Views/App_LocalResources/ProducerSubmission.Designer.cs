@@ -79,6 +79,15 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changing the details on this page will update your producer details on your account..
+        /// </summary>
+        public static string RepresentingCompanyDetailsWarningText {
+            get {
+                return ResourceManager.GetString("RepresentingCompanyDetailsWarningText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save and return to task list.
         /// </summary>
         public static string SaveAndReturnTaskList {

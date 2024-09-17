@@ -1069,3 +1069,14 @@ input[type='radio']:checked:before {
 .back-to-top span {
     text-decoration: underline;
 }
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+.label-width {
+    width: 30%;
+    flex-shrink: 0;
+}
