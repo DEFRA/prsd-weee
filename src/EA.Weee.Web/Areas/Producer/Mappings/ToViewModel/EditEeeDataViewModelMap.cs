@@ -13,7 +13,8 @@
             {
                 OrganisationId = source.OrganisationData.Id,
                 DirectRegistrantId = source.DirectRegistrantId,
-                SellingTechnique = SellingTechniqueViewModel.FromSellingTechniqueType(source.CurrentSubmission.SellingTechnique)
+                SellingTechnique = SellingTechniqueViewModel.FromSellingTechniqueType(source.CurrentSubmission.SellingTechnique),
+                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive
             };
 
             foreach (var eee in source.CurrentSubmission.TonnageData)
