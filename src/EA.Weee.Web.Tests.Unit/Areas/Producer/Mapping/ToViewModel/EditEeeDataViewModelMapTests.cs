@@ -30,6 +30,7 @@
             result.OrganisationId.Should().Be(source.OrganisationData.Id);
             result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
             result.SellingTechnique.Should().BeEquivalentTo(SellingTechniqueViewModel.FromSellingTechniqueType(source.CurrentSubmission.SellingTechnique));
+            result.HasAuthorisedRepresentitive.Should().Be(source.HasAuthorisedRepresentitive);
         }
 
         [Fact]
