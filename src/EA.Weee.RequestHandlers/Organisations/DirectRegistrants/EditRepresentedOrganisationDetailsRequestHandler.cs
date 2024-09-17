@@ -64,7 +64,7 @@
 
             var producerAddress = new ProducerAddress(
                 primaryName: representedOrganisationDetailsRequest.Address.Address1,
-                secondaryName: representedOrganisationDetailsRequest.Address.Address2,
+                secondaryName: string.Empty,
                 street: representedOrganisationDetailsRequest.Address.Address2 ?? string.Empty,
                 town: representedOrganisationDetailsRequest.Address.TownOrCity,
                 string.Empty,

@@ -57,6 +57,8 @@
             @Html.EditorFor(m => m.Address)
         </div>
 
+        @(this.WeeeGds().Warning(Resources.ProducerSubmission.ProducerSubmission.RepresentingCompanyDetailsWarningText))
+
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
 

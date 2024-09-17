@@ -393,7 +393,7 @@
             var castedModel = model.CastToSpecificViewModel(model);
             var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
 
-            if (!isValid)
+            if (!isValid || !ModelState.IsValid)
             {
                 var countries = await GetCountries();
 

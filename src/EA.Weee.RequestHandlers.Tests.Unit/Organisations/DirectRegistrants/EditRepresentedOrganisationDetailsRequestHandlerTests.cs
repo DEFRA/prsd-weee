@@ -133,8 +133,8 @@
 
             var producerAddress = new ProducerAddress(
                primaryName: request.Address.Address1,
-               secondaryName: request.Address.Address2,
-               street: request.Address.Address2 ?? string.Empty,
+               secondaryName: string.Empty,
+               street: request.Address.Address2,
                town: request.Address.TownOrCity,
                string.Empty,
                request.Address.CountyOrRegion ?? string.Empty,
