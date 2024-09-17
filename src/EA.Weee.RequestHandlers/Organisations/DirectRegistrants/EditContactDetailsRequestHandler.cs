@@ -9,7 +9,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
 
-    internal class EditContactDetailsRequestHandler : EditSubmissionRequestHandlerBase, IRequestHandler<EditContactDetailsRequest, bool>
+    internal class EditContactDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<EditContactDetailsRequest, bool>
     {
         private readonly WeeeContext weeeContext;
 

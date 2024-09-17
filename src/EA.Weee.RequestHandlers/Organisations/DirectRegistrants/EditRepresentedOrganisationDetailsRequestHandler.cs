@@ -9,7 +9,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
 
-    internal class EditRepresentedOrganisationDetailsRequestHandler : EditSubmissionRequestHandlerBase, IRequestHandler<RepresentedOrganisationDetailsRequest, bool>
+    internal class EditRepresentedOrganisationDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<RepresentedOrganisationDetailsRequest, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
