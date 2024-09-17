@@ -13,6 +13,8 @@
 {
     @this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList()))
 
+    <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 4 of 5</span>
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>
@@ -29,10 +31,10 @@
         @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.OrganisationId)
-
+        @Html.HiddenFor(m => m.DirectRegistrantId)
         @Html.HiddenFor(m => m.CompanyName)
 
-        <div class="govuk-!-padding-bottom-4">
+        <div class="govuk-grid-row govuk-!-padding-bottom-4">
             <div class="flex-container">
                 <span class="govuk-body govuk-label--s label-width"
                       for="RepresentingCompany_OrganisationType"
