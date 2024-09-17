@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
-    using EA.Prsd.Core;
+    using DataAccess;
+    using Domain.Producer;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.Producer;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using Security;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
 
-    internal class EditRepresentedOrganisationDetailsRequestHandler : IRequestHandler<RepresentedOrganisationDetailsRequest, bool>
+    internal class EditRepresentedOrganisationDetailsRequestHandler : EditSubmissionRequestHandlerBase, IRequestHandler<RepresentedOrganisationDetailsRequest, bool>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -22,7 +20,7 @@
             IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess,
             WeeeContext weeeContext, 
-            ISystemDataDataAccess systemDataAccess)
+            ISystemDataDataAccess systemDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
@@ -32,21 +30,13 @@
 
         public async Task<bool> HandleAsync(RepresentedOrganisationDetailsRequest request)
         {
-            authorization.EnsureCanAccessExternalArea();
-
-            var directRegistrant = await genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId);
-
-            authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
-
-            var systemDate = await systemDataAccess.GetSystemDateTime();
-
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDate.Year);
+            var currentYearSubmission = await Get(request.DirectRegistrantId);
 
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.Address.CountryId);
 
             request.Address.CountryName = country.Name;
 
-            var authorisedRepresentative = await CreateRepresentingCompany(request, directRegistrant);
+            var authorisedRepresentative = await CreateRepresentingCompany(request, currentYearSubmission.DirectRegistrant);
 
             currentYearSubmission.CurrentSubmission.AddOrUpdateAuthorisedRepresentative(authorisedRepresentative);
 

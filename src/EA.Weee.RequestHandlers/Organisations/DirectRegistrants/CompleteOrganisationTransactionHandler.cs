@@ -1,18 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
+    using Core.Helpers;
+    using DataAccess;
+    using Domain;
+    using Domain.Organisation;
+    using Domain.Producer;
+    using Domain.User;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.Domain.Producer;
-    using EA.Weee.Domain.User;
-    using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using Mappings;
+    using Security;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -200,19 +200,19 @@
             {
                 case ExternalOrganisationType.Partnership:
                     return Organisation.CreateDirectRegistrantCompany(
-                        EA.Weee.Domain.Organisation.OrganisationType.DirectRegistrantPartnership,
+                        Domain.Organisation.OrganisationType.DirectRegistrantPartnership,
                         organisationTransactionData.OrganisationViewModel.CompanyName,
                         organisationTransactionData.OrganisationViewModel.BusinessTradingName,
                         organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 case ExternalOrganisationType.RegisteredCompany:
                     return Organisation.CreateDirectRegistrantCompany(
-                        EA.Weee.Domain.Organisation.OrganisationType.RegisteredCompany,
+                        Domain.Organisation.OrganisationType.RegisteredCompany,
                         organisationTransactionData.OrganisationViewModel.CompanyName,
                         organisationTransactionData.OrganisationViewModel.BusinessTradingName,
                         organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
                 case ExternalOrganisationType.SoleTrader:
                     return Organisation.CreateDirectRegistrantCompany(
-                        EA.Weee.Domain.Organisation.OrganisationType.SoleTraderOrIndividual,
+                        Domain.Organisation.OrganisationType.SoleTraderOrIndividual,
                         organisationTransactionData.OrganisationViewModel.CompanyName,
                         organisationTransactionData.OrganisationViewModel.BusinessTradingName,
                         organisationTransactionData.OrganisationViewModel.CompaniesRegistrationNumber);
