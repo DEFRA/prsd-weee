@@ -26,7 +26,7 @@
             result.CompanyName.Should().Be(source.OverseasProducerName);
             result.BusinessTradingName.Should().Be(source.OverseasProducerTradingName);
             result.Address1.Should().Be(source.OverseasContact.Address.PrimaryName);
-            result.Address2.Should().Be(source.OverseasContact.Address.SecondaryName);
+            result.Address2.Should().Be(source.OverseasContact.Address.Street);
             result.CountryId.Should().Be(source.OverseasContact.Address.CountryId);
             result.CountyOrRegion.Should().Be(source.OverseasContact.Address.AdministrativeArea);
             result.TownOrCity.Should().Be(source.OverseasContact.Address.Town);

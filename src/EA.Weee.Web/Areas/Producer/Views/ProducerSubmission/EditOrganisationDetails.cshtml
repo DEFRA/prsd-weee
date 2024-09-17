@@ -18,19 +18,7 @@
     const string title = "Organisation details";
     ViewBag.Title = title + " - GOV.UK";
 }
-<style>
 
-    .flex-container {
-        display: flex;
-        align-items: center;
-        padding-left: 15px;
-    }
-
-    .label-width {
-        width: 30%;
-        flex-shrink: 0;
-    }
-</style>
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
