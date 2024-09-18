@@ -449,6 +449,7 @@
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOptionTests.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerControllerTests.cs" />
     <Compile Include="Service\OrganisationTransactionServiceUnitTests.cs" />
+    <Compile Include="Service\PaymentReferenceGeneratorUnitTests.cs" />
     <Compile Include="ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBaseTests.cs" />
     <Compile Include="ViewModels\SubmittedDatesFilterViewModelTests.cs" />

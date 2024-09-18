@@ -656,6 +656,12 @@
     <Compile Include="RazorHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="RazorHelpers\WeeeGds.ButtonAsLink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
+    <Compile Include="Services\IPaymentReferenceGenerator.cs" />
+    <Compile Include="Services\IPaymentService.cs" />
+    <Compile Include="Services\ISecureReturnUrlHelper.cs" />
+    <Compile Include="Services\PaymentReferenceGenerator.cs" />
+    <Compile Include="Services\PaymentService.cs" />
+    <Compile Include="Services\SecureReturnUrlHelper.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AuthorisedRepresentativeViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\PreviousRegistrationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\TonnageTypeViewModel.cs" />
