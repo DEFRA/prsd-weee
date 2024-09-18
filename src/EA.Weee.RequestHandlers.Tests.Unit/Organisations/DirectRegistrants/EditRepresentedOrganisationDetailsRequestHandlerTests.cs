@@ -133,8 +133,8 @@
 
             var producerAddress = new ProducerAddress(
                primaryName: request.Address.Address1,
-               secondaryName: request.Address.Address2,
-               street: request.Address.Address2 ?? string.Empty,
+               secondaryName: string.Empty,
+               street: request.Address.Address2,
                town: request.Address.TownOrCity,
                string.Empty,
                request.Address.CountyOrRegion ?? string.Empty,
@@ -188,7 +188,11 @@
                 A.Fake<AuthorisedRepresentative>(),
                 A.CollectionOfFake<AdditionalCompanyDetails>(2).ToList());
 
-            var directProducerSubmissionCurrentYear = new DirectProducerSubmission(A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year);
+            var directProducerSubmissionCurrentYear = new DirectProducerSubmission(A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year)
+                {
+                    DirectRegistrant = directRegistrant
+                };
+
             var directProducerSubmissionNotCurrentYear = new DirectProducerSubmission(A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year + 1);
 
             directProducerSubmissionCurrentYear.CurrentSubmission =

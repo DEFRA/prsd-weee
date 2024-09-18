@@ -26,6 +26,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly ISystemDataDataAccess systemDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly EditOrganisationDetailsRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
@@ -38,6 +39,10 @@
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
+            systemDataAccess = A.Fake<ISystemDataDataAccess>();
+
+            A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
+
             var dbContextHelper = new DbContextHelper();
 
             country = new Country(countryId, "UK");
@@ -48,7 +53,8 @@
             handler = new EditOrganisationDetailsRequestHandler(
                 authorization,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                systemDataAccess);
         }
 
         [Fact]

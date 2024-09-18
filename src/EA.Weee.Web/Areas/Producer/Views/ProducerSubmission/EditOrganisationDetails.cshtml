@@ -18,19 +18,7 @@
     const string title = "Organisation details";
     ViewBag.Title = title + " - GOV.UK";
 }
-<style>
 
-    .flex-container {
-        display: flex;
-        align-items: center;
-        padding-left: 15px;
-    }
-
-    .label-width {
-        width: 30%;
-        flex-shrink: 0;
-    }
-</style>
 @section full_main_content
 {
     @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
@@ -160,7 +148,7 @@
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
 
-            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditOrganisationDetails()), true)
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditOrganisationDetails()), true, "discard-button")
 
         </div>
         @(this.WeeeGds().BackToTopLink())

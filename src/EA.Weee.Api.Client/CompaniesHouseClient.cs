@@ -6,8 +6,7 @@
     using Serilog;
     using System;
     using System.IdentityModel;
-    using System.Net;
-    using System.Net.Http;
+    using System.Linq;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
@@ -46,6 +45,11 @@
         {
             Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
 
+            if (!IsValidCompanyReference(companyReference))
+            {
+                return null;
+            }
+
             try
             {
                 var response = await retryPolicy.ExecuteAsync(() =>
@@ -64,6 +68,11 @@
             {
                 return null;
             }
+        }
+
+        private bool IsValidCompanyReference(string companyReference)
+        {
+            return !string.IsNullOrWhiteSpace(companyReference) && companyReference.All(char.IsDigit);
         }
 
         public void Dispose()

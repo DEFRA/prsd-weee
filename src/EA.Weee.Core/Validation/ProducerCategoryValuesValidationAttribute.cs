@@ -15,13 +15,27 @@
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var categoryValues = value as IList<ProducerSubmissionCategoryValue>;
-
             if (categoryValues == null)
             {
                 return new ValidationResult("Category values cannot be null", new[] { validationContext.MemberName });
             }
 
-            var hasValues = categoryValues.Any(cv => cv.HouseHold != null || cv.NonHouseHold != null);
+            // Check for invalid inputs before using the calculator
+            foreach (var cv in categoryValues)
+            {
+                if (!string.IsNullOrEmpty(cv.HouseHold) && !decimal.TryParse(cv.HouseHold, out _))
+                {
+                    return new ValidationResult("Invalid household total", new[] { validationContext.MemberName });
+                }
+                if (!string.IsNullOrEmpty(cv.NonHouseHold) && !decimal.TryParse(cv.NonHouseHold, out _))
+                {
+                    return new ValidationResult("Invalid non-household total", new[] { validationContext.MemberName });
+                }
+            }
+
+            var hasValues = categoryValues.Any(cv =>
+                (cv.HouseHold != null && decimal.TryParse(cv.HouseHold, out decimal householdValue) && householdValue > 0) ||
+                (cv.NonHouseHold != null && decimal.TryParse(cv.NonHouseHold, out decimal nonHouseholdValue) && nonHouseholdValue > 0));
 
             if (!hasValues)
             {
@@ -36,14 +50,12 @@
             {
                 return new ValidationResult("Invalid household total", new[] { validationContext.MemberName });
             }
-
             if (!decimal.TryParse(totalNonHouseHold, out var nonHouseholdDecimal))
             {
                 return new ValidationResult("Invalid non-household total", new[] { validationContext.MemberName });
             }
 
             var total = householdDecimal + nonHouseholdDecimal;
-
             if (total >= 5m)
             {
                 return new ValidationResult("EEE details need to total less than 5 tonnes", new[] { validationContext.MemberName });
