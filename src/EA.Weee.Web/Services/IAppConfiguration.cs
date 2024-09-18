@@ -83,5 +83,11 @@
         string CompaniesCertificateName { get; set; }
 
         string CompaniesHouseBaseUrl { get; set; }
+
+        string GovUkPayBaseUrl { get; set; }
+
+        string GovUkPayApiKey { get; set; }
+
+        string GovUkPayReturnBaseUrl { get; set; }
     }
 }

@@ -9,5 +9,8 @@
 
         IHttpClientWrapper CreateHttpClientWithCertificate(string baseUrl, HttpClientHandlerConfig config,
             ILogger logger, X509Certificate2 certificate);
+
+        IHttpClientWrapper CreateHttpClientWithAuthorization(string baseUrl, HttpClientHandlerConfig config,
+            ILogger logger, string scheme, string parameter);
     }
 }
