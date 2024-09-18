@@ -6,12 +6,20 @@ namespace EA.Weee.Web.RazorHelpers
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString TableSummary(string caption, Dictionary<string, object> data, string columnHeading = null, string columnDescription = null)
+        public MvcHtmlString TableSummary(string caption, Dictionary<string, object> data, string columnHeading = null, string columnDescription = null, bool displayCaption = false)
         {
             Guard.ArgumentNotNullOrEmpty(() => caption, caption);
 
-            var html = "<div class=\"govuk-form-group\"><table class=\"govuk-table\">" +
-                       $"<caption class=\"govuk-table__caption\"><span class=\"govuk-visually-hidden\">{caption}</span></caption>";
+            var html = "<div class=\"govuk-form-group\"><table class=\"govuk-table\">";
+
+            if (displayCaption)
+            {
+                html += $"<caption class=\"govuk-table__caption\" style=\"font-size: 24px;\">{caption}</caption>";
+            }
+            else
+            {
+                html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}</caption>";
+            }
 
             html += "<thead class=\"govuk-table__head\">";
 
