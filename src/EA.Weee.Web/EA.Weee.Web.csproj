@@ -595,7 +595,9 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\RepresentedOrganisationDetailsMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\SmallProducerSubmissionMapperData.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
+    <Compile Include="Areas\Producer\ViewModels\IProducerSubmissionViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
