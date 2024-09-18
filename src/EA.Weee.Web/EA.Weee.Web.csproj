@@ -657,7 +657,6 @@
     <Compile Include="Infrastructure\SchemeTransferEvidenceRedirect.cs" />
     <Compile Include="RazorHelpers\HtmlHelperExtensions.cs" />
     <Compile Include="RazorHelpers\WeeeGds.ButtonAsLink.cs" />
-    <Compile Include="RazorHelpers\WeeeGds.SummaryList.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Warning.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AuthorisedRepresentativeViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\PreviousRegistrationViewModel.cs" />
