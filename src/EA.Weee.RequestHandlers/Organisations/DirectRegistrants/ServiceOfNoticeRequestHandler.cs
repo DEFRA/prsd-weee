@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
+    using DataAccess;
+    using Domain.Producer;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.Producer;
-    using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using Mappings;
+    using Security;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
