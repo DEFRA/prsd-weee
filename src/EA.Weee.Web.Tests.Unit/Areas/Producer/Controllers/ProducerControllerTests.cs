@@ -200,7 +200,7 @@
             {
                 taskModels.Add(new ProducerTaskModel
                 {
-                    TaskLinkName = "Representing company details",
+                    TaskLinkName = "Represented company details",
                     Complete = representingCompanyDetailsComplete,
                     Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
                 });
