@@ -114,5 +114,11 @@
         public string CompaniesCertificateName { get; set; }
 
         public string CompaniesHouseBaseUrl { get; set; }
+
+        public string GovUkPayBaseUrl { get; set; }
+
+        public string GovUkPayApiKey { get; set; }
+
+        public string GovUkPayReturnBaseUrl { get; set; }
     }
 }

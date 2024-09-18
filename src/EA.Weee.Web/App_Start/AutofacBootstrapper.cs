@@ -115,6 +115,9 @@
             builder.RegisterType<MvcTemplateExecutor>().As<IMvcTemplateExecutor>();
             builder.RegisterType<PdfDocumentProvider>().As<IPdfDocumentProvider>();
             builder.RegisterType<OrganisationTransactionService>().As<IOrganisationTransactionService>();
+            builder.RegisterType<PaymentService>().As<IPaymentService>();
+            builder.RegisterType<SecureReturnUrlHelper>().As<ISecureReturnUrlHelper>();
+            builder.RegisterType<PaymentReferenceGenerator>().As<IPaymentReferenceGenerator>();
 
             return builder.Build();
         }
