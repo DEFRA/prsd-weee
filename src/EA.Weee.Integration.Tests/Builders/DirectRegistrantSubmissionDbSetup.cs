@@ -17,13 +17,19 @@
             return instance;
         }
 
-        public DirectRegistrantSubmissionDbSetup WithDirectRegistrant(DirectRegistrant directRegistrant, 
-                AuthorisedRepresentative authorisedRep = null)
+        public DirectRegistrantSubmissionDbSetup WithDirectRegistrant(DirectRegistrant directRegistrant)
         {
-            var submissionHistory = new DirectProducerSubmissionHistory(instance, null, null, authorisedRep);
+            //var submissionHistory = new DirectProducerSubmissionHistory(instance, null, null, null);
 
             ObjectInstantiator<DirectProducerSubmission>.SetProperty(o => o.DirectRegistrant, directRegistrant, instance);
             
+            //instance.SubmissionHistory.Add(submissionHistory);
+
+            return this;
+        }
+
+        public DirectRegistrantSubmissionDbSetup WithSubmission(DirectProducerSubmissionHistory submissionHistory)
+        {
             instance.SubmissionHistory.Add(submissionHistory);
 
             return this;
