@@ -3,6 +3,7 @@
     using Serilog;
     using Serilog.Sinks.MSSqlServer;
     using System.Configuration;
+    using System.Web;
 
     public static class LoggerConfig
     {
@@ -26,6 +27,12 @@
                     tableName: tableName,
                     autoCreateSqlTable: true)
                 .CreateLogger();
+
+            string appDataPath = HttpContext.Current.Server.MapPath("~/App_Data/");
+            Serilog.Debugging.SelfLog.Enable(msg =>
+            {
+                System.IO.File.AppendAllText($"{appDataPath}serilog-self-log.txt", msg);  // Log Serilog internal errors
+            });
         }
     }
 }
