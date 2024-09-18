@@ -89,5 +89,9 @@
         string GovUkPayApiKey { get; set; }
 
         string GovUkPayReturnBaseUrl { get; set; }
+
+        string GovUkPayDescription { get; set; }
+
+        int GovUkPaymentAmountPence { get; set; }
     }
 }
