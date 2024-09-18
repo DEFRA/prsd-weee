@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Controllers
 {
     using Core.Organisations;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
@@ -26,14 +27,18 @@
         private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumb;
         private readonly Guid organisationId = Guid.NewGuid();
+        private readonly IMapper mapper;
 
         public ProducerControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             weeeCache = A.Fake<IWeeeCache>();
+            mapper = A.Fake<IMapper>();
 
             controller = new ProducerController(
-               breadcrumb, weeeCache);
+               breadcrumb, 
+               weeeCache, 
+               mapper);
         }
 
         [Fact]
@@ -200,7 +205,7 @@
             {
                 taskModels.Add(new ProducerTaskModel
                 {
-                    TaskLinkName = "Representing company details",
+                    TaskLinkName = "Represented company details",
                     Complete = representingCompanyDetailsComplete,
                     Action = nameof(ProducerSubmissionController.EditRepresentedOrganisationDetails)
                 });

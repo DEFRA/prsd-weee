@@ -1,43 +1,27 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
+    using DataAccess;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.Producer;
-    using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using Mappings;
+    using Security;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
 
-    internal class EditContactDetailsRequestHandler : IRequestHandler<EditContactDetailsRequest, bool>
+    internal class EditContactDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<EditContactDetailsRequest, bool>
     {
-        private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
-        private readonly ISystemDataDataAccess systemDataAccess;
 
         public EditContactDetailsRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
         {
-            this.authorization = authorization;
-            this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
-            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<bool> HandleAsync(EditContactDetailsRequest request)
         {
-            authorization.EnsureCanAccessExternalArea();
-
-            var directRegistrant = await genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId);
-
-            authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
-
-            var systemDateTime = await systemDataAccess.GetSystemDateTime();
-
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDateTime.Year);
+            var currentYearSubmission = await Get(request.DirectRegistrantId);
             
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.AddressData.CountryId);
 
