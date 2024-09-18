@@ -128,10 +128,12 @@
 
     @if (representingOrg)
     {
-        <div class="table-summary-container">
+        <div>
             @Html.Raw(this.WeeeGds().TableSummary("Represented company details", representingCompanyDetails, "", "", displayCaption: true))
-            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission")" style="font-size: 19px;">Change represented company details</a>
-        </div>
+            <div style="margin-bottom: 40px;">
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission")" style="font-size: 19px;">Change represented company details</a>
+                </div>
+            </div>
     }
 
     <table class="govuk-table category-row-no-break">
