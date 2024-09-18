@@ -1,0 +1,39 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+
+@using EA.Weee.Web.Areas.Producer.ViewModels
+
+@model OrganisationDetailsTabsViewModel
+
+@{
+    var @title = "Service of notice details";
+    ViewBag.Title = @title + " - GOV.UK";
+}
+@section full_main_content{
+    <div class="govuk-!-padding-bottom-8"></div>
+    <div class="govuk-tabs">
+        @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
+
+        <div class="govuk-tabs__panel" id="organisationDetails">
+            <h1 class="govuk-heading-m">
+                @title
+            </h1>
+            <table id="pcs-details-table" class="govuk-table">
+                <tbody class="govuk-table__body">
+                   
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    @(this.WeeeGds().BackToTopLink())
+}
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            initialiseTabs();
+        });
+    </script>
+}
