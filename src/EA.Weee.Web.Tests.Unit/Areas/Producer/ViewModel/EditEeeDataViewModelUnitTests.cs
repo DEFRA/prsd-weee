@@ -2,11 +2,14 @@
 {
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Validation;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public class EditEeeDataViewModelTests
@@ -106,6 +109,78 @@
             // Assert
             categoryToTest.HouseHold.Should().Be("100.5");
             categoryToTest.NonHouseHold.Should().Be("200.75");
+        }
+
+        [Fact]
+        public void CategoryValues_ShouldHaveProducerCategoryValuesValidationAttribute()
+        {
+            // Arrange
+            var propertyInfo = typeof(EditEeeDataViewModel).GetProperty(nameof(EditEeeDataViewModel.CategoryValues));
+
+            // Act
+            var attribute = propertyInfo.GetCustomAttribute<ProducerCategoryValuesValidationAttribute>();
+
+            // Assert
+            attribute.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Properties_ShouldNotHaveUnexpectedAttributes()
+        {
+            // Arrange
+            var properties = typeof(EditEeeDataViewModel).GetProperties();
+
+            // Act & Assert
+            foreach (var property in properties)
+            {
+                switch (property.Name)
+                {
+                    case nameof(EditEeeDataViewModel.CategoryValues):
+                        property.GetCustomAttributes().Should().HaveCount(1);
+                        property.GetCustomAttribute<ProducerCategoryValuesValidationAttribute>().Should().NotBeNull();
+                        break;
+                    case nameof(EditEeeDataViewModel.SellingTechnique):
+                        property.GetCustomAttributes().Should().HaveCount(1);
+                        property.GetCustomAttribute<AtLeastOneCheckedAttribute>().Should().NotBeNull();
+                        break;
+                    default:
+                        property.GetCustomAttributes().Should().BeEmpty();
+                        break;
+                }
+            }
+        }
+
+        [Fact]
+        public void SellingTechnique_ShouldHaveAtLeastOneCheckedAttribute()
+        {
+            // Arrange
+            var propertyInfo = typeof(EditEeeDataViewModel).GetProperty(nameof(EditEeeDataViewModel.SellingTechnique));
+
+            // Act
+            var attribute = propertyInfo.GetCustomAttribute<AtLeastOneCheckedAttribute>();
+
+            // Assert
+            attribute.Should().NotBeNull();
+            attribute.ErrorMessage.Should().Be("At least one selling technique must be selected");
+
+            // Verify the attribute's constructor parameters
+            var validationPropertyName = GetPrivateField(attribute, "validationPropertyName") as string;
+            var propertyNamesToCheck = GetPrivateField(attribute, "propertyNamesToCheck") as string[];
+
+            validationPropertyName.Should().Be(nameof(EditEeeDataViewModel.SellingTechnique));
+            propertyNamesToCheck.Should().BeEquivalentTo(new[]
+            {
+                nameof(SellingTechniqueViewModel.IsDirectSelling),
+                nameof(SellingTechniqueViewModel.IsIndirectSelling)
+            });
+        }
+
+        // Helper method to access private fields for testing
+        private static object GetPrivateField(object instance, string fieldName)
+        {
+            return instance.GetType()
+                .GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.GetValue(instance);
         }
     }
 }

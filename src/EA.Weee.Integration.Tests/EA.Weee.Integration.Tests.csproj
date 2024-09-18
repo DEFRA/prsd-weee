@@ -224,6 +224,7 @@
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
     <Compile Include="Builders\AuthorisedRepDbSetup.cs" />
+    <Compile Include="Builders\DirectRegistrantSubmissionHistoryDbSetup.cs" />
     <Compile Include="Builders\DirectRegistrantSubmissionDbSetup.cs" />
     <Compile Include="Builders\DirectRegistrantDbSetup.cs" />
     <Compile Include="Builders\OrganisationTransactionDbSetup.cs" />

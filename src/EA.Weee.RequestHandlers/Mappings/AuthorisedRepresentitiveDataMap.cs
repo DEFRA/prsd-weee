@@ -16,7 +16,7 @@
                 CompanyName = source.OverseasProducerName,
                 BusinessTradingName = source.OverseasProducerTradingName,
                 Address1 = source.OverseasContact.Address.PrimaryName,
-                Address2 = source.OverseasContact.Address.SecondaryName,
+                Address2 = source.OverseasContact.Address.Street,
                 CountryId = source.OverseasContact.Address.CountryId,
                 CountyOrRegion = source.OverseasContact.Address.AdministrativeArea,
                 TownOrCity = source.OverseasContact.Address.Town,
