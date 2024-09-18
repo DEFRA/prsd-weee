@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Controllers
 {
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -19,11 +20,13 @@
         public SmallProducerSubmissionData SmallProducerSubmissionData;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
+        private readonly IMapper mapper;
 
-        public ProducerController(BreadcrumbService breadcrumb, IWeeeCache cache)
+        public ProducerController(BreadcrumbService breadcrumb, IWeeeCache cache, IMapper mapper)
         {
             this.breadcrumb = breadcrumb;
             this.cache = cache;
+            this.mapper = mapper;
         }
 
         public ActionResult Index()
@@ -93,9 +96,24 @@
         }
 
         [HttpGet]
-        public ActionResult CheckAnswers()
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> CheckAnswers()
         {
-            return View("CheckAnswers");
+            var model =
+                mapper.Map<SmallProducerSubmissionData, CheckAnswersViewModel>(SmallProducerSubmissionData);
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> CheckAnswers(CheckAnswersViewModel model)
+        {
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return RedirectToAction("SubmitRegistration");
         }
 
         [SmallProducerSubmissionContext]
@@ -110,6 +128,12 @@
         public ActionResult OrganisationDetails()
         {
             return View(SmallProducerSubmissionData.OrganisationData.Id);
+        }
+
+        [HttpGet]
+        public ActionResult SubmitRegistration()
+        {
+            return View("SubmitRegistration");
         }
     }
 }

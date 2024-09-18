@@ -1,4 +1,12 @@
-﻿@{
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
+
+
+@{
     ViewBag.Title = "Check answers - GOV.UK";
 }
 @{
@@ -7,9 +15,176 @@
 }
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Producer.Controllers.ProducerController>(a => a.TaskList())))
+
+    @{
+        var representingOrg = @Model.HasAuthorisedRepresentitive;
+    }
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>
 
-   
+    @{
+        var organisationDetails = new Dictionary<string, object>
+{
+            { "Organisation type", Model.OrganisationDetails.Organisation.OrganisationType},
+            { "Company registration number", Model.OrganisationDetails.Organisation.CompaniesRegistrationNumber},
+            { "Company name", Model.OrganisationDetails.Organisation.CompanyName},
+            { "Trading name", Model.OrganisationDetails.Organisation.BusinessTradingName},
+            { "Website address", Model.OrganisationDetails.Organisation.Address.WebsiteAddress},
+            { "Address line 1", Model.OrganisationDetails.Organisation.Address.Address1},
+            { "Address line 2", Model.OrganisationDetails.Organisation.Address.Address2},
+            { "Town or city", Model.OrganisationDetails.Organisation.Address.TownOrCity},
+            { "County or region", Model.OrganisationDetails.Organisation.Address.CountyOrRegion},
+            { "Postcode", Model.OrganisationDetails.Organisation.Address.Postcode},
+            { "Country", Model.OrganisationDetails.Organisation.Address.CountryName},
+            { "EEE brand names", Model.OrganisationDetails.Organisation.EEEBrandNames},
+            // partners...
+        };
+
+        var contactDetails = new Dictionary<string, object>
+{
+            { "First name", Model.ContactDetails.ContactDetails.FirstName },
+            { "Last name", Model.ContactDetails.ContactDetails.LastName },
+            { "Position", Model.ContactDetails.ContactDetails.Position },
+            { "Email", Model.ContactDetails.ContactDetails.AddressData.Email },
+            { "Phone number", Model.ContactDetails.ContactDetails.AddressData.Telephone },
+            { "Address line 1", Model.ContactDetails.ContactDetails.AddressData.Address1 },
+            { "Address line 2", Model.ContactDetails.ContactDetails.AddressData.Address2 },
+            { "Town or city", Model.ContactDetails.ContactDetails.AddressData.TownOrCity },
+            { "County or region", Model.ContactDetails.ContactDetails.AddressData.CountyOrRegion },
+            { "Postcode", Model.ContactDetails.ContactDetails.AddressData.Postcode },
+            { "Country", Model.ContactDetails.ContactDetails.AddressData.CountryName }
+        };
+
+        var serviceOfNoticeData = new Dictionary<string, object>
+{
+            { "Address line 1", Model.ServiceOfNoticeData.Address.Address1 },
+            { "Address line 2", Model.ServiceOfNoticeData.Address.Address2 },
+            { "Town or city", Model.ServiceOfNoticeData.Address.TownOrCity },
+            { "County or region", Model.ServiceOfNoticeData.Address.CountyOrRegion },
+            { "Postcode", Model.ServiceOfNoticeData.Address.Postcode },
+            { "Country", Model.ServiceOfNoticeData.Address.CountryName},
+            { "Phone number", Model.ServiceOfNoticeData.Address.Telephone },
+        };
+
+        var representingCompanyDetails = new Dictionary<string, object>();
+        if (representingOrg)
+        {
+            representingCompanyDetails = new Dictionary<string, object>
+{
+                { "Producer name", Model.RepresentingCompanyDetails.CompanyName },
+                { "Trading name", Model.RepresentingCompanyDetails.BusinessTradingName },
+                { "Address line 1", Model.RepresentingCompanyDetails.Address.Address1 },
+                { "Address line 2", Model.RepresentingCompanyDetails.Address.Address2 },
+                { "Town or city", Model.RepresentingCompanyDetails.Address.TownOrCity },
+                { "County or region", Model.RepresentingCompanyDetails.Address.CountyOrRegion },
+                { "Postcode", Model.RepresentingCompanyDetails.Address.Postcode },
+                { "Country", Model.RepresentingCompanyDetails.Address.CountryName },
+                { "Phone number", Model.RepresentingCompanyDetails.Address.Telephone },
+                { "Email", Model.RepresentingCompanyDetails.Address.Email },
+            };
+        }
+
+
+        var eeeData = new Dictionary<string, object>
+{
+            { "1. Large household appliances", Model.EeeData.CategoryValues },
+            { "Last name", Model.ContactDetails.ContactDetails.LastName },
+            { "Position", Model.ContactDetails.ContactDetails.Position },
+            { "Email", Model.ContactDetails.ContactDetails.AddressData.Email },
+            { "Phone number", Model.ContactDetails.ContactDetails.AddressData.Telephone },
+            { "Address line 1", Model.ContactDetails.ContactDetails.AddressData.Address1 },
+            { "Address line 2", Model.ContactDetails.ContactDetails.AddressData.Address2 },
+            { "Town or city", Model.ContactDetails.ContactDetails.AddressData.TownOrCity },
+            { "County or region", Model.ContactDetails.ContactDetails.AddressData.CountyOrRegion },
+            { "Postcode", Model.ContactDetails.ContactDetails.AddressData.Email },
+            { "Country", Model.ContactDetails.ContactDetails.AddressData.Email }
+
+        };
+    }
+
+    <div>
+        @this.WeeeGds().TableSummary("Organisation details", organisationDetails, "", "", displayCaption: true)
+        <div style="margin-bottom: 40px;">
+            <a class="govuk-link govuk-link--no-visited-state font" href="@Url.Action("EditOrganisationDetails", "ProducerSubmission")" style="font-size: 19px;">Change organisation details</a>
+        </div>
+    </div>
+
+    <div>
+        @this.WeeeGds().TableSummary("Contact details", contactDetails, "", "", displayCaption: true)
+        <div style="margin-bottom: 40px;">
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditContactDetails", "ProducerSubmission")" style="font-size: 19px;">Change contact details</a>
+        </div>
+    </div>
+
+    <div>
+        @this.WeeeGds().TableSummary("Service of notice details", serviceOfNoticeData, "", "", displayCaption: true)
+        <div style="margin-bottom: 40px;">
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ServiceOfNotice", "ProducerSubmission")" style="font-size: 19px;">Change service of notice details</a>
+        </div>
+    </div>
+
+    @if (representingOrg)
+    {
+        <div>
+            @Html.Raw(this.WeeeGds().TableSummary("Represented company details", representingCompanyDetails, "", "", displayCaption: true))
+            <div style="margin-bottom: 40px;">
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission")" style="font-size: 19px;">Change represented company details</a>
+                </div>
+            </div>
+    }
+
+    <table class="govuk-table category-row-no-break">
+        <caption class="govuk-table__caption" style="font-size: 24px">Eee details</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Category</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 18%; ">B2C Tonnes</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 19%; ">B2B Tonnes</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+
+            @for (var i = 0; i < Model.EeeData.CategoryValues.Count; i++)
+            {
+                var category = Model.EeeData.CategoryValues[i];
+
+                <tr class="govuk-table__row category-row-no-break" id="category-row-@category.CategoryId">
+                    <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1 category-cell-no-break">
+                        <div class="category">
+                            <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                        </div>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
+                        @category.HouseHold
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
+                        @category.NonHouseHold
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="margin-bottom: 40px;">
+        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditEeeeData", "ProducerSubmission")" style="font-size: 19px;">Change Eee details</a>
+    </div>
+
+    <p class="govuk-body">Pressing confirm answers will take you to the application submission page.</p>
+
+    @using (Html.BeginForm("SubmitRegistration", "Producer", FormMethod.Get, null))
+    {
+        <div class="govuk-form-group">
+            @(this.WeeeGds().Submit("Confirm answers"))
+        </div>
+    }
+
+    <div>
+        <a class="govuk-link govuk-link--no-visited-state" href="" style="font-size: 19px;">Download as PDF</a>
+    </div>
+
+    <div class="govuk-!-padding-top-6">
+        @(this.WeeeGds().BackToTopLink())
+    </div>
 }
