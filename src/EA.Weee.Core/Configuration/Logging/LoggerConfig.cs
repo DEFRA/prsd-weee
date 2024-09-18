@@ -19,15 +19,12 @@
             }
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.MSSqlServer(
                     connectionString: connectionString,
-                    sinkOptions: new MSSqlServerSinkOptions
-                    {
-                        SchemaName = schemaName,
-                        TableName = tableName,
-                        AutoCreateSqlTable = true
-                    })
+                    schemaName: schemaName,
+                    tableName: tableName,
+                    autoCreateSqlTable: true)
                 .CreateLogger();
         }
     }
