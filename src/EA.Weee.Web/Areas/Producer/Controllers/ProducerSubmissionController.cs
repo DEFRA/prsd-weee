@@ -41,6 +41,7 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
+        private readonly IPaymentService paymentService;
 
         public ProducerSubmissionController(IMapper mapper, 
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
@@ -51,7 +52,7 @@
             IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
-            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator)
+            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator, IPaymentService paymentService)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -62,6 +63,7 @@
             this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
             this.editEeeDataRequestCreator = editEeeDataRequestCreator;
+            this.paymentService = paymentService;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -290,6 +292,37 @@
             model.ContactDetails.AddressData.Countries = countries;
 
             return View(model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> AppropriateSignatory()
+        {
+           return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
+        {
+            var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,  User.GetEmailAddress(), User.GetAccessToken());
+
+            if (paymentService.ValidateExternalUrl(result.Links.NextUrl.Href))
+            {
+                return Redirect(result.Links.NextUrl.Href);
+            }
+
+            throw new InvalidOperationException("Invalid payment next url");
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> PaymentResult(string token)
+        {
+            //var payment =
+                //await paymentService.HandlePaymentReturnAsync(SmallProducerSubmissionData.DirectRegistrantId, token);
+            return View();
         }
 
         private async Task<IList<CountryData>> GetCountries()
