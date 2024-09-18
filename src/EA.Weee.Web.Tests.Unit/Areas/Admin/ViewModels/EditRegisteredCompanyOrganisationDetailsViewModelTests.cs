@@ -51,13 +51,13 @@
                 .BeDecoratedWith<StringLengthAttribute>(a => a.MaximumLength.Equals(EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber)
                                                              && a.MinimumLength.Equals(7)
                                                              && a.ErrorMessage.Equals(
-                                                                 "The company registration number should be 7 to 15 characters long"));
+                                                                 "The Company registration number should be 7 to 15 characters long"));
         }
 
         [Fact]
         public void GivenModel_CompaniesRegistrationNumberShouldHaveDisplayNameAttribute()
         {
-            GetProperty("CompaniesRegistrationNumber").Should().BeDecoratedWith<DisplayAttribute>().Which.Name.Should().Be("company registration number (CRN)");
+            GetProperty("CompaniesRegistrationNumber").Should().BeDecoratedWith<DisplayAttribute>().Which.Name.Should().Be("Company registration number (CRN)");
         }
 
         [Fact]

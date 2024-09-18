@@ -152,7 +152,7 @@
                 .And.Subject.As<StringLengthAttribute>().Should().Match<StringLengthAttribute>(attr =>
                     attr.MinimumLength == 7 &&
                     attr.MaximumLength == EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber &&
-                    attr.ErrorMessage == "The company registration number should be 7 to 15 characters long");
+                    attr.ErrorMessage == "The Company registration number should be 7 to 15 characters long");
         }
 
         [Fact]
