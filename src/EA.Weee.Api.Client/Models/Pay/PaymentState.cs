@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Api.Client.Models.Pay
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     public class PaymentState
     {
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
 
-        [JsonProperty("finished")]
+        [JsonPropertyName("finished")]
         public bool Finished { get; set; }
     }
 }

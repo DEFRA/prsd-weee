@@ -23,6 +23,10 @@
 
         public virtual string PaymentId { get; set; }
 
+        public virtual bool? PaymentFinished { get; set; }
+
+        public virtual string PaymentReturnToken { get; set; }
+
         public virtual int ComplianceYear {get; set; }
 
         public virtual DirectRegistrant DirectRegistrant { get; set; }
@@ -33,11 +37,25 @@
 
         public virtual ICollection<DirectProducerSubmissionHistory> SubmissionHistory { get; set; }
 
+        //public virtual DateTime PaymentStartedDateTime { get; set; }
+
         public void SetCurrentSubmission(DirectProducerSubmissionHistory submission)
         {
             Condition.Requires(submission).IsNotNull();
 
             CurrentSubmission = submission;
+        }
+
+        public void SetPaymentInformation(string paymentReference, string paymentReturnToken, string paymentId, DateTime paymentStartedDateTime)
+        {
+            Condition.Requires(paymentReference).IsNotNullOrWhiteSpace();
+            Condition.Requires(paymentReturnToken).IsNotNullOrWhiteSpace();
+            Condition.Requires(paymentId).IsNotNullOrWhiteSpace();
+            
+            PaymentId = paymentId;
+            PaymentReference = paymentReference;
+            PaymentReturnToken = paymentReturnToken;
+            //PaymentStartedDateTime = paymentStartedDateTime;
         }
 
         public DirectProducerSubmission(DirectRegistrant directRegistrant,

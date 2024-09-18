@@ -1,32 +1,32 @@
 ﻿namespace EA.Weee.Api.Client.Models.Pay
 {
-    using Newtonsoft.Json;
     using System;
+    using System.Text.Json.Serialization;
 
     public class CreatePaymentResult
     {
-        [JsonProperty("payment_id")]
+        [JsonPropertyName("payment_id")]
         public string PaymentId { get; set; }
 
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public int Amount { get; set; }
 
-        [JsonProperty("state")]
+        [JsonPropertyName("state")]
         public PaymentState State { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty("return_url")]
+        [JsonPropertyName("return_url")]
         public string ReturnUrl { get; set; }
 
-        [JsonProperty("reference")]
+        [JsonPropertyName("reference")]
         public string Reference { get; set; }
 
-        [JsonProperty("created_date")]
+        [JsonPropertyName("created_date")]
         public DateTime CreatedDate { get; set; }
 
-        [JsonProperty("_links")]
+        [JsonPropertyName("_links")]
         public PaymentLinks Links { get; set; }
     }
 }
