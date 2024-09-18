@@ -4,13 +4,19 @@
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString GovUkButtonLink(string linkText, string url, bool secondaryButton = false)
+        public MvcHtmlString GovUkButtonLink(string linkText, string url, bool secondaryButton = false, string id = null)
         {
             var tag = new TagBuilder("a");
             tag.MergeAttribute("href", url);
             tag.MergeAttribute("role", "button");
             tag.MergeAttribute("draggable", "false");
             tag.MergeAttribute("data-module", "govuk-button");
+
+            if (id != null)
+            {
+                tag.MergeAttribute("id", id);
+            }
+          
             tag.AddCssClass("govuk-button");
             if (secondaryButton)
             {

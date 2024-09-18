@@ -9,7 +9,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
-    public class EditEeeDataViewModel : IValidatableObject
+    public class EditEeeDataViewModel
     {
         public Guid OrganisationId { get; set; }
         
@@ -35,28 +35,6 @@
             foreach (var categoryValue in evidenceCategoryValues)
             {
                 CategoryValues.Add(categoryValue);
-            }
-        }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var calculator = new CategoryValueTotalCalculator();
-            if (CategoryValues != null && CategoryValues.Any())
-            {
-                var totalHouseHold = calculator.Total(CategoryValues.Select(t => t.HouseHold).ToList());
-                var totalNonHouseHold = calculator.Total(CategoryValues.Select(t => t.NonHouseHold).ToList());
-                var total = totalHouseHold.ToDecimal() + totalNonHouseHold.ToDecimal();
-                if (total >= 5m)
-                {
-                    yield return new ValidationResult("EEE details need to total less than 5 tonnes",
-                        new[] { nameof(CategoryValues) });
-                }
-            }
-
-            if (CategoryValues != null && !CategoryValues.Any())
-            {
-                yield return new ValidationResult("Enter EEE tonnage details",
-                    new[] { nameof(CategoryValues) });
             }
         }
     }

@@ -188,7 +188,11 @@
                 A.Fake<AuthorisedRepresentative>(),
                 A.CollectionOfFake<AdditionalCompanyDetails>(2).ToList());
 
-            var directProducerSubmissionCurrentYear = new DirectProducerSubmission(A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year);
+            var directProducerSubmissionCurrentYear = new DirectProducerSubmission(A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year)
+                {
+                    DirectRegistrant = directRegistrant
+                };
+
             var directProducerSubmissionNotCurrentYear = new DirectProducerSubmission(A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year + 1);
 
             directProducerSubmissionCurrentYear.CurrentSubmission =

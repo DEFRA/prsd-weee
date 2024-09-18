@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
+    using Core.Helpers;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using Security;
     using System.Threading.Tasks;
 
     internal class DeleteUserOrganisationTransactionHandler : IRequestHandler<DeleteUserOrganisationTransaction, bool>

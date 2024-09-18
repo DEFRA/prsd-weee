@@ -59,6 +59,7 @@
 
         public DirectProducerSubmissionHistory()
         {
+            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
         }
 
         public DirectProducerSubmissionHistory(DirectProducerSubmission directProducerSubmission)
