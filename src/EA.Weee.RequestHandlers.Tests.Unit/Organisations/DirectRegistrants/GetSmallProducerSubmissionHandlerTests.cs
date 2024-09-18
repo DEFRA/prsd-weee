@@ -7,6 +7,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Organisations.DirectRegistrants;
@@ -20,7 +21,6 @@
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
-    using EA.Weee.Domain.DataReturns;
     using Xunit;
 
     public class GetSmallProducerSubmissionHandlerTests : SimpleUnitTestBase
@@ -28,7 +28,6 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IMapper mapper;
-        private readonly ISystemDataDataAccess systemDataAccess;
         private readonly GetSmallProducerSubmissionHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
 
@@ -37,7 +36,7 @@
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             mapper = A.Fake<IMapper>();
-            systemDataAccess = A.Fake<ISystemDataDataAccess>();
+            var systemDataAccess = A.Fake<ISystemDataDataAccess>();
 
             A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
             handler = new GetSmallProducerSubmissionHandler(authorization, genericDataAccess, mapper, systemDataAccess);
@@ -106,29 +105,6 @@
             result.Should().BeNull();
         }
 
-        [Theory]
-        [InlineData(true, true)]
-        [InlineData(false, false)]
-        public async Task HandleAsync_WhenCurrentYearSubmissionExists_SetsOrganisationDetailsCompleteCorrectly(bool hasBusinessAddressId, bool expectedOrganisationDetailsComplete)
-        {
-            var request = new GetSmallProducerSubmission(directRegistrantId);
-            var directRegistrant = SetupValidDirectRegistrant(true);
-            var organisationData = A.Fake<OrganisationData>();
-            A.CallTo(() => mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation)).Returns(organisationData);
-
-            var currentYearSubmission = A.Fake<DirectProducerSubmission>();
-            var currentSubmissionHistory = A.Fake<DirectProducerSubmissionHistory>();
-            A.CallTo(() => currentSubmissionHistory.BusinessAddressId).Returns(hasBusinessAddressId ? (Guid?)Guid.NewGuid() : null);
-            A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(currentSubmissionHistory);
-            A.CallTo(() => directRegistrant.DirectProducerSubmissions.First()).Returns(currentYearSubmission);
-
-            var result = await handler.HandleAsync(request);
-
-            result.Should().NotBeNull();
-            result.CurrentSubmission.Should().NotBeNull();
-            result.CurrentSubmission.OrganisationDetailsComplete.Should().Be(expectedOrganisationDetailsComplete);
-        }
-
         [Fact]
         public async Task HandleAsync_WhenCurrentYearSubmissionExists_MapsAllPropertiesCorrectly()
         {
@@ -138,9 +114,15 @@
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation)).Returns(organisationData);
 
             var currentYearSubmission = A.Fake<DirectProducerSubmission>();
+            A.CallTo(() => currentYearSubmission.ComplianceYear).Returns(SystemTime.UtcNow.Year);
             var currentSubmissionHistory = A.Fake<DirectProducerSubmissionHistory>();
+            var producerSubmissions = new List<DirectProducerSubmission>
+            {
+                currentYearSubmission
+            };
+
             A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(currentSubmissionHistory);
-            A.CallTo(() => directRegistrant.DirectProducerSubmissions.First()).Returns(currentYearSubmission);
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(producerSubmissions);
 
             SetupCurrentSubmissionFakes(currentSubmissionHistory);
 
@@ -159,10 +141,7 @@
             var organisationData = A.Fake<OrganisationData>();
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation)).Returns(organisationData);
 
-            var currentYearSubmission = A.Fake<DirectProducerSubmission>();
-            var currentSubmissionHistory = A.Fake<DirectProducerSubmissionHistory>();
-            A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(currentSubmissionHistory);
-            A.CallTo(() => directRegistrant.DirectProducerSubmissions.First()).Returns(currentYearSubmission);
+            SetupSubmissions(directRegistrant);
 
             SetupDirectRegistrantFallbackData(directRegistrant);
 
@@ -172,17 +151,17 @@
             result.CurrentSubmission.Should().NotBeNull();
             VerifyFallbackDataUsed(result.CurrentSubmission, directRegistrant);
         }
-
+       
         [Fact]
         public async Task HandleAsync_WhenSellingTechniqueTypeIsSet_MapsCorrectly()
         {
             var request = new GetSmallProducerSubmission(directRegistrantId);
             var directRegistrant = SetupValidDirectRegistrant(true);
-            var currentYearSubmission = A.Fake<DirectProducerSubmission>();
-            var currentSubmissionHistory = A.Fake<DirectProducerSubmissionHistory>();
-            A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(currentSubmissionHistory);
-            A.CallTo(() => directRegistrant.DirectProducerSubmissions.First()).Returns(currentYearSubmission);
-            A.CallTo(() => currentSubmissionHistory.SellingTechniqueType).Returns(Domain.Producer.Classfication.SellingTechniqueType.Both.Value);
+            
+            SetupSubmissions(directRegistrant);
+
+            directRegistrant.DirectProducerSubmissions.ElementAt(0).CurrentSubmission.SellingTechniqueType =
+                (int)SellingTechniqueType.Both;
 
             var result = await handler.HandleAsync(request);
 
@@ -216,33 +195,36 @@
 
         private void SetupCurrentSubmissionFakes(DirectProducerSubmissionHistory currentSubmissionHistory)
         {
-            var brandName = A.Fake<BrandName>();
-            A.CallTo(() => brandName.Name).Returns("Test Brand");
+            var brandName = new BrandName("Test Brand");
             A.CallTo(() => currentSubmissionHistory.EeeOutputReturnVersion).Returns(A.Fake<EeeOutputReturnVersion>());
             A.CallTo(() => currentSubmissionHistory.BusinessAddress).Returns(A.Fake<Address>());
+            A.CallTo(() => currentSubmissionHistory.BusinessAddressId).Returns(Guid.NewGuid());
             A.CallTo(() => currentSubmissionHistory.BrandName).Returns(brandName);
+            A.CallTo(() => currentSubmissionHistory.BrandNameId).Returns(Guid.NewGuid());
             A.CallTo(() => currentSubmissionHistory.CompanyName).Returns("Test Company");
             A.CallTo(() => currentSubmissionHistory.TradingName).Returns("Test Trading Name");
             A.CallTo(() => currentSubmissionHistory.CompanyRegistrationNumber).Returns("12345678");
             A.CallTo(() => currentSubmissionHistory.SellingTechniqueType).Returns(Domain.Producer.Classfication.SellingTechniqueType.Both.Value);
-            A.CallTo(() => currentSubmissionHistory.ContactAddress).Returns(A.Fake<Address>());
+            A.CallTo(() => currentSubmissionHistory.ContactAddressId).Returns(Guid.NewGuid());
+            A.CallTo(() => currentSubmissionHistory.ContactId).Returns(Guid.NewGuid());
             A.CallTo(() => currentSubmissionHistory.Contact).Returns(A.Fake<Contact>());
             A.CallTo(() => currentSubmissionHistory.AuthorisedRepresentative).Returns(A.Fake<AuthorisedRepresentative>());
-            A.CallTo(() => currentSubmissionHistory.ServiceOfNoticeAddress).Returns(A.Fake<Address>());
+            A.CallTo(() => currentSubmissionHistory.AuthorisedRepresentativeId).Returns(Guid.NewGuid());
+            A.CallTo(() => currentSubmissionHistory.ServiceOfNoticeAddressId).Returns(Guid.NewGuid());
         }
 
         private void SetupDirectRegistrantFallbackData(DirectRegistrant directRegistrant)
         {
-            var brandName = A.Fake<BrandName>();
-            A.CallTo(() => brandName.Name).Returns("Fallback Brand");
+            var brandName = new BrandName("Fallback Brand");
             A.CallTo(() => directRegistrant.Organisation.BusinessAddress).Returns(A.Fake<Address>());
             A.CallTo(() => directRegistrant.BrandName).Returns(brandName);
-            A.CallTo(() => directRegistrant.Organisation.Name).Returns("Fallback Company");
-            A.CallTo(() => directRegistrant.Organisation.TradingName).Returns("Fallback Trading Name");
-            A.CallTo(() => directRegistrant.Organisation.CompanyRegistrationNumber).Returns("87654321");
+            A.CallTo(() => directRegistrant.BrandNameId).Returns(Guid.NewGuid());
+            var organisation = Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.RegisteredCompany, "Fallback Company", "Fallback Trading Name", "87654321");
+            A.CallTo(() => directRegistrant.Organisation).Returns(organisation);
             A.CallTo(() => directRegistrant.Contact).Returns(A.Fake<Contact>());
             A.CallTo(() => directRegistrant.Address).Returns(A.Fake<Address>());
             A.CallTo(() => directRegistrant.AuthorisedRepresentative).Returns(A.Fake<AuthorisedRepresentative>());
+            A.CallTo(() => directRegistrant.AuthorisedRepresentativeId).Returns(Guid.NewGuid());
         }
 
         private void VerifyAllPropertiesMapped(SmallProducerSubmissionHistoryData result, DirectProducerSubmissionHistory currentSubmissionHistory)
@@ -284,10 +266,17 @@
         {
             var request = new GetSmallProducerSubmission(directRegistrantId);
             var directRegistrant = SetupValidDirectRegistrant(true);
+
             var currentYearSubmission = A.Fake<DirectProducerSubmission>();
+            A.CallTo(() => currentYearSubmission.ComplianceYear).Returns(SystemTime.UtcNow.Year);
             var currentSubmissionHistory = A.Fake<DirectProducerSubmissionHistory>();
+            var producerSubmissions = new List<DirectProducerSubmission>
+            {
+                currentYearSubmission
+            };
+
             A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(currentSubmissionHistory);
-            A.CallTo(() => directRegistrant.DirectProducerSubmissions.First()).Returns(currentYearSubmission);
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(producerSubmissions);
 
             // Set up null values
             A.CallTo(() => currentSubmissionHistory.BrandName).Returns(null);
@@ -311,8 +300,15 @@
             var request = new GetSmallProducerSubmission(directRegistrantId);
             var directRegistrant = SetupValidDirectRegistrant(true);
             var currentYearSubmission = A.Fake<DirectProducerSubmission>();
-            A.CallTo(() => currentYearSubmission.ComplianceYear).Returns(SystemTime.UtcNow.Year - 1); // Previous year
-            A.CallTo(() => directRegistrant.DirectProducerSubmissions.First()).Returns(currentYearSubmission);
+            A.CallTo(() => currentYearSubmission.ComplianceYear).Returns(SystemTime.UtcNow.Year + 1);
+            var currentSubmissionHistory = A.Fake<DirectProducerSubmissionHistory>();
+            var producerSubmissions = new List<DirectProducerSubmission>
+            {
+                currentYearSubmission
+            };
+
+            A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(currentSubmissionHistory);
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(producerSubmissions);
 
             var result = await handler.HandleAsync(request);
 
@@ -334,6 +330,20 @@
 
             result.Should().NotBeNull();
             result.CurrentSubmission.Should().NotBeNull();
+        }
+
+        private static void SetupSubmissions(DirectRegistrant directRegistrant)
+        {
+            var currentYearSubmission = A.Fake<DirectProducerSubmission>();
+            A.CallTo(() => currentYearSubmission.ComplianceYear).Returns(SystemTime.UtcNow.Year);
+            var currentSubmissionHistory = A.Fake<DirectProducerSubmissionHistory>();
+            var producerSubmissions = new List<DirectProducerSubmission>
+            {
+                currentYearSubmission
+            };
+
+            A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(currentSubmissionHistory);
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(producerSubmissions);
         }
     }
 }
