@@ -1,29 +1,32 @@
 ﻿namespace EA.Weee.Api.Client.Models.Pay
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
 
     public class CreateCardPaymentRequest
     {
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public int Amount { get; set; }
 
-        [JsonProperty("reference")]
+        [JsonPropertyName("reference")]
         public string Reference { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
-        [JsonProperty("return_url")]
+        [JsonPropertyName("return_url")]
         public string ReturnUrl { get; set; }
 
-        [JsonProperty("language")]
-        public string Language { get; set; }
+        [JsonPropertyName("email")]
+        public string Email { get; set; }
 
-        [JsonProperty("moto")]
-        public bool Moto { get; set; }
+        [JsonPropertyName("language")]
+        public string Language => "en";
 
-        [JsonProperty("metadata")]
-        public Dictionary<string, string> Metadata { get; set; }
+        //[JsonPropertyName("moto")]
+        //public bool Moto { get; set; }
+
+        //[JsonPropertyName("metadata")]
+        //public Dictionary<string, string> Metadata { get; set; }
     }
 }

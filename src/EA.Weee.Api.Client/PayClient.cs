@@ -7,6 +7,7 @@
     using System;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Text;
     using System.Threading.Tasks;
 
     public class PayClient : IPayClient, IDisposable
@@ -47,7 +48,7 @@
 
             try
             {
-                var content = new StringContent(jsonSerializer.Serialize(body));
+                var content = new StringContent(jsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
                 if (!string.IsNullOrEmpty(idempotencyKey))
@@ -58,8 +59,15 @@
                 var response = await retryPolicy.ExecuteAsync(() =>
                     httpClient.PostAsync("v1/payments", content)).ConfigureAwait(false);
 
-                response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    logger.Information("CreatePaymentAsync response content: {ResponseContent}", responseContent);
+                }
+                
+                response.EnsureSuccessStatusCode();
+
                 return jsonSerializer.Deserialize<CreatePaymentResult>(responseContent);
             }
             catch (Exception ex)

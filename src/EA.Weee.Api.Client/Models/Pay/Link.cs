@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Api.Client.Models.Pay
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     public class Link
     {
-        [JsonProperty("href")]
+        [JsonPropertyName("href")]
         public string Href { get; set; }
 
-        [JsonProperty("method")]
+        [JsonPropertyName("method")]
         public string Method { get; set; }
     }
 }

@@ -1105,6 +1105,7 @@
     <Content Include="Areas\Producer\Views\ProducerSubmission\ServiceOfNotice.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditContactDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditRepresentedOrganisationDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\AppropriateSignatory.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
