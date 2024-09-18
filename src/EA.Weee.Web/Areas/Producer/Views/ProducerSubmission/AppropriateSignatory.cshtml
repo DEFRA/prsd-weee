@@ -1,0 +1,30 @@
+﻿
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+
+
+@{
+    const string title = "Submit registration";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">@title</h1>
+        </header>
+
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button("Submit your application")
+        </div>
+    }
+}
