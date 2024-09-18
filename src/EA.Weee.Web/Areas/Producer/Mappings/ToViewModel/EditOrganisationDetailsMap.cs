@@ -8,8 +8,9 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using System.Collections.Generic;
     using System.Linq;
+    using CuttingEdge.Conditions;
 
-    public class EditOrganisationDetailsMap : IMap<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>
+    public class EditOrganisationDetailsMap : IMap<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>
     {
         private readonly IMapper mapper;
 
@@ -18,12 +19,16 @@
             this.mapper = mapper;
         }
 
-        public EditOrganisationDetailsViewModel Map(SmallProducerSubmissionData source)
+        public EditOrganisationDetailsViewModel Map(SmallProducerSubmissionMapperData source)
         {
-            var externalOrganisationType = MapOrganisationType(source.OrganisationData.OrganisationType);
-            var businessAddressData = MapBusinessAddress(source);
+            Condition.Requires(source.SmallProducerSubmissionData).IsNotNull();
 
-            var additionalContactDetails = source.CurrentSubmission.AdditionalCompanyDetailsData.Select(c => new AdditionalContactModel()
+            var submissionData = source.SmallProducerSubmissionData;
+
+            var externalOrganisationType = MapOrganisationType(submissionData.OrganisationData.OrganisationType);
+            var businessAddressData = MapBusinessAddress(submissionData);
+
+            var additionalContactDetails = submissionData.CurrentSubmission.AdditionalCompanyDetailsData.Select(c => new AdditionalContactModel()
             {
                 FirstName = c.FirstName,
                 LastName = c.LastName,
@@ -33,19 +38,19 @@
             {
                 OrganisationType = externalOrganisationType,
                 Address = businessAddressData,
-                EEEBrandNames = source.CurrentSubmission.EEEBrandNames,
-                CompanyName = source.CurrentSubmission.CompanyName,
-                BusinessTradingName = source.CurrentSubmission.TradingName,
-                CompaniesRegistrationNumber = source.OrganisationData.CompanyRegistrationNumber
+                EEEBrandNames = submissionData.CurrentSubmission.EEEBrandNames,
+                CompanyName = submissionData.CurrentSubmission.CompanyName,
+                BusinessTradingName = submissionData.CurrentSubmission.TradingName,
+                CompaniesRegistrationNumber = submissionData.OrganisationData.CompanyRegistrationNumber
             };
 
             var viewModel = new EditOrganisationDetailsViewModel
             {
-                DirectRegistrantId = source.DirectRegistrantId,
-                OrganisationId = source.OrganisationData.Id,
+                DirectRegistrantId = submissionData.DirectRegistrantId,
+                OrganisationId = submissionData.OrganisationData.Id,
                 Organisation = organisation,
                 AdditionalContactModels = additionalContactDetails,
-                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive
+                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive
             };
 
             return viewModel;

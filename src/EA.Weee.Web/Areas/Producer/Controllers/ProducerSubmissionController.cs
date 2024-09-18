@@ -12,6 +12,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -73,9 +74,15 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditOrganisationDetails()
+        public async Task<ActionResult> EditOrganisationDetails(bool? redirectToCheckAnswers)
         {
-            var model = mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(SmallProducerSubmissionData);
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                RedirectToCheckAnswers = redirectToCheckAnswers,
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>(source);
 
             var countries = await GetCountries();
 
@@ -102,6 +109,10 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
+                if (model.RedirectToCheckAnswers == true)
+                {
+                    // return check answers
+                }
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
