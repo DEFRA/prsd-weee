@@ -393,7 +393,7 @@
             var castedModel = model.CastToSpecificViewModel(model);
             var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
 
-            if (!isValid)
+            if (!isValid || !ModelState.IsValid)
             {
                 var countries = await GetCountries();
 
@@ -692,7 +692,7 @@
                 return View(model);
             }
 
-            model.NotRequiredPartnerModels = model.NotRequiredPartnerModels.Where(x => x != null).ToList();
+            model.NotRequiredPartnerModels = model.NotRequiredPartnerModels.Where(x => x.FirstName != null).ToList();
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 

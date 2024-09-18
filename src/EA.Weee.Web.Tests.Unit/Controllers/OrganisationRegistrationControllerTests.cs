@@ -1529,8 +1529,8 @@
 
             model.AllParterModels.Should().HaveCount(2);
 
-            model.AllParterModels[0].FirstName.Should().BeNull();
-            model.AllParterModels[0].LastName.Should().BeNull();
+            model.AllParterModels[1].FirstName.Should().BeNull();
+            model.AllParterModels[1].LastName.Should().BeNull();
         }
 
         [Fact]

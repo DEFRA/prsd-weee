@@ -466,3 +466,30 @@ function initialiseTabs() {
         tab.addEventListener('keydown', onTabKeydown);
     });
 }
+
+(function ($) {
+    let $button = $("#discard-button");
+    if (!$button) return;
+
+    let $form = $('form');
+
+    let originalData = $form.serialize();
+
+    let disableButton = () => {
+        $button.attr("disabled", true);
+        $button.css({ "pointer-events": "none" });
+    }
+
+    disableButton();
+
+    $form.on('keyup change paste', 'input, select, textarea', () => {
+        let currentData = $form.serialize();
+
+        if (currentData == originalData) {
+            disableButton();
+        } else {
+            $button.removeAttr("disabled");
+            $button.css({ "pointer-events": "auto" });
+        }
+    });
+})(jQuery);
