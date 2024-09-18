@@ -50,7 +50,8 @@
                 OrganisationId = submissionData.OrganisationData.Id,
                 Organisation = organisation,
                 AdditionalContactModels = additionalContactDetails,
-                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive
+                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
+                RedirectToCheckAnswers = source.RedirectToCheckAnswers
             };
 
             return viewModel;
