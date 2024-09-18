@@ -19,7 +19,7 @@
         [Display(Name = "Lighting equipment")]
         LightingEquipment = 5,
 
-        [Display(Name = "electrical and electronic tools")]
+        [Display(Name = "Electrical and electronic tools")]
         ElectricalAndElectronicTools = 6,
 
         [Display(Name = "Toys, leisure and sports equipment")]
