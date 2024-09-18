@@ -292,6 +292,21 @@
             return View(model);
         }
 
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> AppropriateSignatory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [SmallProducerSubmissionContext]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
+        {
+            return View(model);
+        }
+
         private async Task<IList<CountryData>> GetCountries()
         {
             using (var client = apiClient())
