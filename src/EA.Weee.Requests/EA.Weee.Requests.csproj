@@ -88,6 +88,7 @@
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
+    <Compile Include="Organisations\DirectRegistrant\UpdateSubmissionPaymentDetailsRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\EditEeeDataRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\EditContactDetailsRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\EditRepresentedOrganisationDetailsRequest.cs" />

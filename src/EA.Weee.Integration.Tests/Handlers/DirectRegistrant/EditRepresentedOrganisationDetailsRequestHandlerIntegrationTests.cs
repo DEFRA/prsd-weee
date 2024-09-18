@@ -42,6 +42,12 @@
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+
+                request = new RepresentedOrganisationDetailsRequest(
+                    directRegistrant.Id,
+                    "business trading name",
+                    representingCompanyDetails);
             };
 
             private readonly Because of = () =>
@@ -59,7 +65,7 @@
                     .Be(authorisedRepresentative.OverseasProducerName);
                 authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
                 authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
-                authedRep.OverseasContact.Address.SecondaryName.Should().Be(request.Address.Address2);
+                authedRep.OverseasContact.Address.SecondaryName.Should().BeEmpty();
                 authedRep.OverseasContact.Address.Street.Should().Be(request.Address.Address2);
                 authedRep.OverseasContact.Address.Town.Should().Be(request.Address.TownOrCity);
                 authedRep.OverseasContact.Address.AdministrativeArea.Should().Be(request.Address.CountyOrRegion);
@@ -80,12 +86,19 @@
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings();
 
+                directRegistrant = DirectRegistrantDbSetup.Init()
+                    .WithAuthorisedRep(authorisedRepresentative)
+                    .Create();
+
                 authHandler = Container.Resolve<IRequestHandler<RepresentedOrganisationDetailsRequest, bool>>();
             };
 
             private readonly Because of = () =>
             {
-                CatchExceptionAsync(() => authHandler.HandleAsync(request));
+                CatchExceptionAsync(() => authHandler.HandleAsync(new RepresentedOrganisationDetailsRequest(
+                    directRegistrant.Id,
+                    "business trading name",
+                    representingCompanyDetails)));
             };
 
             private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
@@ -103,6 +116,7 @@
             protected static bool result;
             protected static Country country;
             protected static AuthorisedRepresentative authorisedRepresentative;
+            protected static RepresentingCompanyAddressData representingCompanyDetails;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -111,22 +125,17 @@
                     .WithTestData()
                 .WithExternalUserAccess();
 
+                fixture = new Fixture();
+
                 handler = Container.Resolve<IRequestHandler<RepresentedOrganisationDetailsRequest, bool>>();
                 createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
 
-                fixture = new Fixture();
-
                 country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
 
-                var representingCompanyDetails = fixture.Build<RepresentingCompanyAddressData>()
+                representingCompanyDetails = fixture.Build<RepresentingCompanyAddressData>()
                     .With(r => r.CountryId, country.Id).Create();
 
-                request = new RepresentedOrganisationDetailsRequest(
-                    directRegistrant.Id,
-                    "business trading name",
-                    representingCompanyDetails);
-
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+                country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
 
                 return setup;
             }

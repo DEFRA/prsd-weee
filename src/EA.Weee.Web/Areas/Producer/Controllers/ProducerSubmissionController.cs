@@ -41,6 +41,7 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
+        private readonly IPaymentService paymentService;
 
         public ProducerSubmissionController(IMapper mapper, 
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
@@ -51,7 +52,7 @@
             IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
-            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator)
+            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator, IPaymentService paymentService)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -62,6 +63,7 @@
             this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
             this.editEeeDataRequestCreator = editEeeDataRequestCreator;
+            this.paymentService = paymentService;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -290,6 +292,22 @@
             model.ContactDetails.AddressData.Countries = countries;
 
             return View(model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> AppropriateSignatory()
+        {
+           return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
+        {
+            var result = await paymentService.CreatePaymentAsync(Guid.Parse("949522b8-8144-424d-8440-b1e800a57d7a"),  User.GetEmailAddress(), User.GetAccessToken());
+
+            return Redirect(result.Links.NextUrl.Href);
         }
 
         private async Task<IList<CountryData>> GetCountries()

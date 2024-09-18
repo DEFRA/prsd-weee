@@ -23,6 +23,10 @@
 
         public virtual string PaymentId { get; set; }
 
+        public virtual bool? PaymentFinished { get; set; }
+
+        public virtual string PaymentReturnToken { get; set; }
+
         public virtual int ComplianceYear {get; set; }
 
         public virtual DirectRegistrant DirectRegistrant { get; set; }
@@ -38,6 +42,17 @@
             Condition.Requires(submission).IsNotNull();
 
             CurrentSubmission = submission;
+        }
+
+        public void SetPaymentInformation(string paymentReference, string paymentReturnToken, string paymentId)
+        {
+            Condition.Requires(paymentReference).IsNotNullOrWhiteSpace();
+            Condition.Requires(paymentReturnToken).IsNotNullOrWhiteSpace();
+            Condition.Requires(paymentId).IsNotNullOrWhiteSpace();
+
+            PaymentId = paymentId;
+            PaymentReference = paymentReference;
+            PaymentReturnToken = paymentReturnToken;
         }
 
         public DirectProducerSubmission(DirectRegistrant directRegistrant,
