@@ -3,7 +3,7 @@
     using EA.Weee.Domain.Producer;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class PaymentStatusMapping : ComplexTypeConfiguration<PaymentStatus>
+    internal class PaymentStatusMapping : ComplexTypeConfiguration<PaymentState>
     {
         public PaymentStatusMapping()
         {

@@ -306,7 +306,8 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
         {
-            var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,  User.GetEmailAddress(), User.GetAccessToken());
+            var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,  
+                User.GetEmailAddress(), User.GetAccessToken());
 
             if (paymentService.ValidateExternalUrl(result.Links.NextUrl.Href))
             {
@@ -318,10 +319,21 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> PaymentResult(string token)
+        public async Task<ActionResult> PaymentSuccess(string reference)
         {
-            //var payment =
-                //await paymentService.HandlePaymentReturnAsync(SmallProducerSubmissionData.DirectRegistrantId, token);
+            var model = new PaymentResultModel()
+            {
+                PaymentReference = reference,
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id
+            };
+
+            return View(reference, model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> PaymentFailure()
+        {
             return View();
         }
 

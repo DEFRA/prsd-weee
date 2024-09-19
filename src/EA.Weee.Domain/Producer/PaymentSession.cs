@@ -24,7 +24,7 @@
 
         public decimal Amount { get; set; }
 
-        public PaymentStatus Status { get; set; }
+        public PaymentState Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -50,6 +50,7 @@
             string paymentId,
             string paymentReference)
         {
+            Condition.Requires(userId, nameof(userId)).IsNotNullOrWhiteSpace();
             Condition.Requires(amount, nameof(amount)).IsGreaterThan(0);
             Condition.Requires(currentYearSubmission, nameof(currentYearSubmission)).IsNotNull();
             Condition.Requires(directRegistrant, nameof(directRegistrant)).IsNotNull();
@@ -57,14 +58,15 @@
             Condition.Requires(paymentId, nameof(paymentId)).IsNotNullOrEmpty();
             Condition.Requires(paymentReference, nameof(paymentReference)).IsNotNullOrEmpty();
 
+            UserId = userId;
             Amount = amount;
-            CreatedAt = systemDateTime.Date;
+            CreatedAt = systemDateTime;
             DirectProducerSubmission = currentYearSubmission;
             DirectRegistrant = directRegistrant;
             PaymentReturnToken = paymentReturnToken;
             PaymentId = paymentId;
             PaymentReference = paymentReference;
-            Status = PaymentStatus.Started;
+            Status = PaymentState.New;
         }
     }
 }
