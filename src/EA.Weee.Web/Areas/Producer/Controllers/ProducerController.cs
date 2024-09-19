@@ -120,13 +120,6 @@
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails()
         {
-            return await ViewOrganisationDetails();
-        }
-
-        [SmallProducerSubmissionContext]
-        [HttpGet]
-        public async Task<ActionResult> ViewOrganisationDetails()
-        {
             await SetViewBreadcrumb();
 
             var organisationVM = mapper.Map<SmallProducerSubmissionData, OrganisationViewModel>(SmallProducerSubmissionData);
