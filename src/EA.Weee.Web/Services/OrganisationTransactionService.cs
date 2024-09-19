@@ -30,7 +30,24 @@
                 {
                     case OrganisationViewModel organisationViewModel:
                         transaction.OrganisationViewModel = organisationViewModel;
-                            break;
+                        switch (organisationViewModel.OrganisationType)
+                        {
+                            case ExternalOrganisationType.RegisteredCompany:
+                                transaction.SoleTraderViewModel = null;
+                                transaction.PartnerModels = null;
+                                break;
+                            case ExternalOrganisationType.Partnership:
+                                transaction.SoleTraderViewModel = null;
+                                break;
+                            case ExternalOrganisationType.SoleTrader:
+                                transaction.PartnerModels = null;
+                                break;
+                            case null:
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        break;
                     case OrganisationTypeViewModel externalOrganisationTypeViewModel:
                         transaction.OrganisationType = externalOrganisationTypeViewModel.SelectedValue.GetValueFromDisplayName<ExternalOrganisationType>();
                         break;
@@ -43,8 +60,6 @@
                         break;
                     case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
                         transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
-                        transaction.PartnerModels = null;
-                        transaction.SoleTraderViewModel = null;
                         break;
                     case AuthorisedRepresentativeViewModel authorisedRepresentativeViewModel:
                         transaction.AuthorisedRepresentative = authorisedRepresentativeViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
