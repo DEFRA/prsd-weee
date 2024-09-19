@@ -40,7 +40,6 @@
             { "Postcode", Model.OrganisationDetails.Organisation.Address.Postcode},
             { "Country", Model.OrganisationDetails.Organisation.Address.CountryName},
             { "EEE brand names", Model.OrganisationDetails.Organisation.EEEBrandNames},
-            // partners...
         };
 
         for (var i = 0; i < Model.OrganisationDetails.AdditionalContactModels.Count; i++)
@@ -51,7 +50,6 @@
             var contact = Model.OrganisationDetails.AdditionalContactModels[i];
             var partnerIndex = (i + 1).ToString();
 
-            //KorganisationDetails.Add("Partner" + index + "Details", "");
             organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
             organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
         }
