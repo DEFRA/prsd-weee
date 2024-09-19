@@ -22,7 +22,7 @@
 
 <ul class="govuk-tabs__list" role="tablist">
     @this.WeeeGds().Tab("View organisation",
-        Url.UrlFor<ProducerController>(a => a.ViewOrganisationDetails()),
+        Url.UrlFor<ProducerController>(a => a.OrganisationDetails()),
         Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
 
     @this.WeeeGds().Tab("Contact details",
