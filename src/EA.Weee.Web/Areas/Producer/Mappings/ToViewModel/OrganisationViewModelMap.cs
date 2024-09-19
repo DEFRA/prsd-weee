@@ -4,24 +4,22 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Core.Shared;
 
     public class OrganisationViewModelMap : IMap<SmallProducerSubmissionData, OrganisationViewModel>
     {
+        private readonly IMapper mapper;
+
+        public OrganisationViewModelMap(IMapper mapper)
+        {
+            this.mapper = mapper;
+        }
+
         public OrganisationViewModel Map(SmallProducerSubmissionData source)
         {
             return new OrganisationViewModel()
             {
-                Address = new Core.Organisations.ExternalAddressData
-                {
-                    Address1 = source.OrganisationData.BusinessAddress.Address1,
-                    Address2 = source.OrganisationData.BusinessAddress.Address2,
-                    CountryId = source.OrganisationData.BusinessAddress.CountryId,
-                    CountryName = source.OrganisationData.BusinessAddress.CountryName,
-                    Postcode = source.OrganisationData.BusinessAddress.Postcode,
-                    TownOrCity = source.OrganisationData.BusinessAddress.TownOrCity,
-                    CountyOrRegion = source.OrganisationData.BusinessAddress.CountyOrRegion,
-                    WebsiteAddress = source.OrganisationData.BusinessAddress.WebAddress
-                },
+                Address = mapper.Map<AddressData, ExternalAddressData>(source.CurrentSubmission.BusinessAddressData),
                 CompanyName = source.OrganisationData.Name,
                 BusinessTradingName = source.OrganisationData.TradingName,
                 CompaniesRegistrationNumber = source.OrganisationData.CompanyRegistrationNumber,
