@@ -19,7 +19,7 @@
         {
             return new OrganisationViewModel()
             {
-                Address = mapper.Map<AddressData, ExternalAddressData>(source.CurrentSubmission.BusinessAddressData),
+                Address = mapper.Map<AddressData, ExternalAddressData>(source.OrganisationData.BusinessAddress),
                 CompanyName = source.OrganisationData.Name,
                 BusinessTradingName = source.OrganisationData.TradingName,
                 CompaniesRegistrationNumber = source.OrganisationData.CompanyRegistrationNumber,

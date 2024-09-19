@@ -75,7 +75,7 @@
 
             // Assert
             A.CallTo(() => mapper
-                            .Map<AddressData, ExternalAddressData>(source.CurrentSubmission.BusinessAddressData))
+                            .Map<AddressData, ExternalAddressData>(source.OrganisationData.BusinessAddress))
                             .MustHaveHappenedOnceExactly();
         }
     }
