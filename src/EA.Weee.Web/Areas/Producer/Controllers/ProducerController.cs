@@ -14,6 +14,7 @@
     using iText.Kernel.XMP.Options;
     using System;
     using System.Collections.Generic;
+    using System.Runtime;
     using System.Threading.Tasks;
     using System.Web.Helpers;
     using System.Web.Mvc;
@@ -119,82 +120,72 @@
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails()
         {
-            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
-
-            return ViewOrganisation(this.SmallProducerSubmissionData);
+            return await ViewOrganisationDetails();
         }
 
         [SmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> RouteTab(OrganisationDetailsDisplayOption option)
+        public async Task<ActionResult> ViewOrganisationDetails()
         {
-            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
+            await SetViewBreadcrumb();
 
-            if (option == OrganisationDetailsDisplayOption.OrganisationDetails)
-            {
-                return ViewOrganisation(this.SmallProducerSubmissionData);
-            }
-            if (option == OrganisationDetailsDisplayOption.ContactDetails)
-            {
-                return ContactDetails(this.SmallProducerSubmissionData);
-            }
-            if (option == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails)
-            {
-                return ServiceOfNoticeDetails(this.SmallProducerSubmissionData);
-            }
-            if (option == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails)
-            {
-                return RepresentedOrganisationDetails(this.SmallProducerSubmissionData);
-            }
-
-            return await OrganisationDetails();
-        }
-
-        public ActionResult ViewOrganisation(SmallProducerSubmissionData submissionsData)
-        {
             var organisationVM = mapper.Map<SmallProducerSubmissionData, OrganisationViewModel>(SmallProducerSubmissionData);
 
             var vm = new OrganisationDetailsTabsViewModel
             {
                 ActiveOption = OrganisationDetailsDisplayOption.OrganisationDetails,
                 OrganisationViewModel = organisationVM,
-                SmallProducerSubmissionData = submissionsData,
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData
             };
 
             return View("ViewOrganisation/OrganisationDetails", vm);
         }
 
-        public ActionResult ContactDetails(SmallProducerSubmissionData submissionsData)
+        [SmallProducerSubmissionContext]
+        [HttpGet]
+        public async Task<ActionResult> ContactDetails()
         {
+            await SetViewBreadcrumb();
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 ActiveOption = OrganisationDetailsDisplayOption.ContactDetails,
-                SmallProducerSubmissionData = submissionsData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData
             };
 
             return View("ViewOrganisation/ContactDetails", vm);
         }
 
-        public ActionResult ServiceOfNoticeDetails(SmallProducerSubmissionData submissionsData)
+        [SmallProducerSubmissionContext]
+        [HttpGet]
+        public async Task<ActionResult> ServiceOfNoticeDetails()
         {
+            await SetViewBreadcrumb();
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 ActiveOption = OrganisationDetailsDisplayOption.ServiceOfNoticeDetails,
-                SmallProducerSubmissionData = submissionsData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData
             };
 
             return View("ViewOrganisation/ServiceOfNoticeDetails", vm);
         }
 
-        public ActionResult RepresentedOrganisationDetails(SmallProducerSubmissionData submissionsData)
+        [SmallProducerSubmissionContext]
+        [HttpGet]
+        public async Task<ActionResult> RepresentedOrganisationDetails()
         {
+            await SetViewBreadcrumb();
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 ActiveOption = OrganisationDetailsDisplayOption.RepresentedOrganisationDetails,
-                SmallProducerSubmissionData = submissionsData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData
             };
 
             return View("ViewOrganisation/RepresentedOrganisationDetails", vm);
         }
+
+        private Task SetViewBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
     }
 }
