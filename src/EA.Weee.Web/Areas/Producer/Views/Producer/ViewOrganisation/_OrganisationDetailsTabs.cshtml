@@ -22,19 +22,19 @@
 
 <ul class="govuk-tabs__list" role="tablist">
     @this.WeeeGds().Tab("View organisation",
-        Url.UrlFor<ProducerController>(a => a.RouteTab(OrganisationDetailsDisplayOption.OrganisationDetails)),
-        Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "OrganisationDetailsAnchor")
+        Url.UrlFor<ProducerController>(a => a.ViewOrganisationDetails()),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
 
     @this.WeeeGds().Tab("Contact details",
-        Url.UrlFor<ProducerController>(a => a.RouteTab(OrganisationDetailsDisplayOption.ContactDetails)),
+        Url.UrlFor<ProducerController>(a => a.ContactDetails()),
         Model.ActiveOption == OrganisationDetailsDisplayOption.ContactDetails, "contactDetailsAnchor")
 
     @this.WeeeGds().Tab("Service of notice details",
-        Url.UrlFor<ProducerController>(a => a.RouteTab(OrganisationDetailsDisplayOption.ServiceOfNoticeDetails)),
+        Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails()),
         Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
 
     @this.WeeeGds().Tab("Represented organisation details",
-        Url.UrlFor<ProducerController>(a => a.RouteTab(OrganisationDetailsDisplayOption.RepresentedOrganisationDetails)),
+        Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails()),
         Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
 </ul>
 
