@@ -46,6 +46,11 @@
             return dbContext.DirectRegistrants.First(c => c.OrganisationId.Equals(organisationId));
         }
 
+        public DirectProducerSubmission GetDirectProducerSubmissionById(Guid directSubmissionId)
+        {
+            return dbContext.DirectProducerSubmissions.First(c => c.Id == directSubmissionId);
+        }
+
         public DirectProducerSubmissionHistory CurrentSubmissionHistoryForComplianceYear(Guid directRegistrantId, int year)
         {
             return dbContext.DirectProducerSubmissionHistories.First(c => c.DirectProducerSubmission.DirectRegistrantId == directRegistrantId && c.DirectProducerSubmission.ComplianceYear == year);
