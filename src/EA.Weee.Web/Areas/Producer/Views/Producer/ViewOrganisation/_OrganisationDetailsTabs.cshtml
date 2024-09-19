@@ -1,0 +1,40 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+
+@using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using EA.Weee.Web.Areas.Producer.ViewModels
+
+@model OrganisationDetailsTabsViewModel
+
+@{
+    var @title = "View organisation details";
+}
+
+@(this.WeeeGds()
+        .BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">@title</h1>
+</header>
+
+<ul class="govuk-tabs__list" role="tablist">
+    @this.WeeeGds().Tab("View organisation",
+        Url.UrlFor<ProducerController>(a => a.OrganisationDetails()),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
+
+    @this.WeeeGds().Tab("Contact details",
+        Url.UrlFor<ProducerController>(a => a.ContactDetails()),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.ContactDetails, "contactDetailsAnchor")
+
+    @this.WeeeGds().Tab("Service of notice details",
+        Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails()),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
+
+    @this.WeeeGds().Tab("Represented organisation details",
+        Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails()),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
+</ul>
+
