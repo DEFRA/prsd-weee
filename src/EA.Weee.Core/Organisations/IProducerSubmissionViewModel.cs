@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Producer.ViewModels
+﻿namespace EA.Weee.Core.Organisations
 {
     using System;
 

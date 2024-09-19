@@ -21,7 +21,8 @@
                 TownOrCity = source.TownOrCity,
                 Postcode = source.Postcode,
                 Email = source.Email,
-                Telephone = source.Telephone
+                Telephone = source.Telephone,
+                CountryName = source.CountryName,
             };
         }
     }

@@ -6,7 +6,7 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.ViewModels;
 
-    public class CheckAnswersMap : IMap<SmallProducerSubmissionData, CheckAnswersViewModel>
+    public class CheckAnswersMap : IMap<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
     {
         private readonly IMapper mapper;
 
@@ -15,30 +15,32 @@
             this.mapper = mapper;
         }
 
-        public CheckAnswersViewModel Map(SmallProducerSubmissionData source)
+        public CheckAnswersViewModel Map(SmallProducerSubmissionMapperData source)
         {
+            var submissionData = source.SmallProducerSubmissionData;
+
             var editOrganisationDetailsmodel =
-                            mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(source);
+                            mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>(source);
             var editContactDetailsmodel =
-                            mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(source);
+                            mapper.Map<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>(source);
             var serviceOfNoticemodel =
-                            mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(source);
+                            mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(source);
 
             RepresentingCompanyDetailsViewModel representingCompanyDetailsmodel = null;
 
-            if (source.HasAuthorisedRepresentitive)
+            if (submissionData.HasAuthorisedRepresentitive)
             {
                 representingCompanyDetailsmodel =
-                            mapper.Map<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>(source);
+                            mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(source);
             }
             var editEeeDatamodel =
-                            mapper.Map<SmallProducerSubmissionData, EditEeeDataViewModel>(source);
+                            mapper.Map<SmallProducerSubmissionMapperData, EditEeeDataViewModel>(source);
 
             var viewModel = new CheckAnswersViewModel()
             {
-                DirectRegistrantId = source.DirectRegistrantId,
-                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive,
-                OrganisationId = source.OrganisationData.Id,
+                DirectRegistrantId = submissionData.DirectRegistrantId,
+                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
+                OrganisationId = submissionData.OrganisationData.Id,
                 OrganisationDetails = editOrganisationDetailsmodel,
                 ContactDetails = editContactDetailsmodel,
                 ServiceOfNoticeData = serviceOfNoticemodel,

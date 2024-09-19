@@ -22,7 +22,8 @@
                 TownOrCity = source.OverseasContact.Address.Town,
                 Email = source.OverseasContact.Email,
                 Telephone = source.OverseasContact.Telephone,
-                Postcode = source.OverseasContact.Address.PostCode
+                Postcode = source.OverseasContact.Address.PostCode,
+                CountryName = source.OverseasContact.Address.Country.Name
             };
         }
     }

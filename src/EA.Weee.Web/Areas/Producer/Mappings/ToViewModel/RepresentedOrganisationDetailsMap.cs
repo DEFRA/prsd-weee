@@ -4,27 +4,31 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
 
-    public class RepresentedOrganisationDetailsMap : IMap<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>
+    public class RepresentedOrganisationDetailsMap : IMap<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>
     {
-        public RepresentingCompanyDetailsViewModel Map(SmallProducerSubmissionData source)
+        public RepresentingCompanyDetailsViewModel Map(SmallProducerSubmissionMapperData source)
         {
+            var submissionData = source.SmallProducerSubmissionData;
+
             return new RepresentingCompanyDetailsViewModel()
             {
-                DirectRegistrantId = source.DirectRegistrantId,
-                OrganisationId = source.OrganisationData.Id,
+                DirectRegistrantId = submissionData.DirectRegistrantId,
+                OrganisationId = submissionData.OrganisationData.Id,
                 Address = new RepresentingCompanyAddressData
                 {
-                    Address1 = source.CurrentSubmission.AuthorisedRepresentitiveData.Address1,
-                    Address2 = source.CurrentSubmission.AuthorisedRepresentitiveData.Address2,
-                    CountryId = source.CurrentSubmission.AuthorisedRepresentitiveData.CountryId,
-                    CountyOrRegion = source.CurrentSubmission.AuthorisedRepresentitiveData.CountyOrRegion,
-                    Email = source.CurrentSubmission.AuthorisedRepresentitiveData.Email,
-                    Postcode = source.CurrentSubmission.AuthorisedRepresentitiveData.Postcode,
-                    Telephone = source.CurrentSubmission.AuthorisedRepresentitiveData.Telephone,
-                    TownOrCity = source.CurrentSubmission.AuthorisedRepresentitiveData.TownOrCity,
+                    Address1 = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Address1,
+                    Address2 = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Address2,
+                    CountryId = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountryId,
+                    CountyOrRegion = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountyOrRegion,
+                    Email = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Email,
+                    Postcode = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Postcode,
+                    Telephone = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Telephone,
+                    TownOrCity = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.TownOrCity,
+                    CountryName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountryName
                 },
-                BusinessTradingName = source.CurrentSubmission.AuthorisedRepresentitiveData.BusinessTradingName,
-                CompanyName = source.CurrentSubmission.AuthorisedRepresentitiveData.CompanyName
+                BusinessTradingName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.BusinessTradingName,
+                CompanyName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CompanyName,
+                RedirectToCheckAnswers = source.RedirectToCheckAnswers
             };
         }
     }

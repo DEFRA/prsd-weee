@@ -23,7 +23,7 @@
 {
     @if (Model.RedirectToCheckAnswers == true)
     {
-        // go check answers
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.CheckAnswers())))
     }
     else
     {
@@ -155,7 +155,14 @@
         }
 
         <div class="govuk-button-group govuk-!-padding-top-3">
-            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+            @if (Model.RedirectToCheckAnswers == true)
+            {
+                @(this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnCheckAnswers))
+            }
+            else
+            {
+                @(this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList));
+            }
 
             @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditOrganisationDetails((bool?)null)), true, "discard-button")
 

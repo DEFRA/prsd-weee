@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.ViewModels
 {
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Validation;
-    using EA.Weee.Web.Extensions;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
 
-    public class EditEeeDataViewModel
+    public class EditEeeDataViewModel : IProducerSubmissionViewModel
     {
         public Guid OrganisationId { get; set; }
         
@@ -22,6 +19,8 @@
 
         [AtLeastOneChecked(nameof(SellingTechnique), nameof(SellingTechniqueViewModel.IsDirectSelling), nameof(SellingTechniqueViewModel.IsIndirectSelling), ErrorMessage = "At least one selling technique must be selected")]
         public SellingTechniqueViewModel SellingTechnique { get; set; }
+
+        public bool? RedirectToCheckAnswers { get; set; }
 
         public EditEeeDataViewModel()
         {

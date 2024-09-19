@@ -597,7 +597,6 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\RepresentedOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\SmallProducerSubmissionMapperData.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
-    <Compile Include="Areas\Producer\ViewModels\IProducerSubmissionViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
@@ -2170,6 +2169,9 @@
       <LastGenOutput>AatfResources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Resources.Aatf</CustomToolNamespace>
     </EmbeddedResource>
+    <Content Include="Areas\Producer\Views\App_LocalResources\Producer.resx">
+      <SubType>Designer</SubType>
+    </Content>
     <EmbeddedResource Include="Areas\Producer\Views\App_LocalResources\ProducerSubmission.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ProducerSubmission.Designer.cs</LastGenOutput>

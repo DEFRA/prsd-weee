@@ -43,6 +43,19 @@
             // partners...
         };
 
+        for (var i = 0; i < Model.OrganisationDetails.AdditionalContactModels.Count; i++)
+        {
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[i].FirstName)
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[i].LastName)
+
+            var contact = Model.OrganisationDetails.AdditionalContactModels[i];
+            var index = i.ToString();
+
+            organisationDetails.Add("Partner" + index + "Details", "");
+            organisationDetails.Add("First name", contact.FirstName);
+            organisationDetails.Add("Last name", contact.LastName);
+        }
+
         var contactDetails = new Dictionary<string, object>
 {
             { "First name", Model.ContactDetails.ContactDetails.FirstName },
@@ -86,54 +99,37 @@
                 { "Email", Model.RepresentingCompanyDetails.Address.Email },
             };
         }
-
-
-        var eeeData = new Dictionary<string, object>
-{
-            { "1. Large household appliances", Model.EeeData.CategoryValues },
-            { "Last name", Model.ContactDetails.ContactDetails.LastName },
-            { "Position", Model.ContactDetails.ContactDetails.Position },
-            { "Email", Model.ContactDetails.ContactDetails.AddressData.Email },
-            { "Phone number", Model.ContactDetails.ContactDetails.AddressData.Telephone },
-            { "Address line 1", Model.ContactDetails.ContactDetails.AddressData.Address1 },
-            { "Address line 2", Model.ContactDetails.ContactDetails.AddressData.Address2 },
-            { "Town or city", Model.ContactDetails.ContactDetails.AddressData.TownOrCity },
-            { "County or region", Model.ContactDetails.ContactDetails.AddressData.CountyOrRegion },
-            { "Postcode", Model.ContactDetails.ContactDetails.AddressData.Email },
-            { "Country", Model.ContactDetails.ContactDetails.AddressData.Email }
-
-        };
     }
 
     <div>
         @this.WeeeGds().TableSummary("Organisation details", organisationDetails, "", "", displayCaption: true)
         <div style="margin-bottom: 40px;">
-            <a class="govuk-link govuk-link--no-visited-state font" href="@Url.Action("EditOrganisationDetails", "ProducerSubmission")" style="font-size: 19px;">Change organisation details</a>
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditOrganisationDetails", "ProducerSubmission", new { redirectToCheckAnswers = true})" style="font-size: 19px;">Change organisation details</a>
         </div>
     </div>
 
     <div>
         @this.WeeeGds().TableSummary("Contact details", contactDetails, "", "", displayCaption: true)
         <div style="margin-bottom: 40px;">
-            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditContactDetails", "ProducerSubmission")" style="font-size: 19px;">Change contact details</a>
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditContactDetails", "ProducerSubmission", new { redirectToCheckAnswers = true})" style="font-size: 19px;">Change contact details</a>
         </div>
     </div>
 
     <div>
         @this.WeeeGds().TableSummary("Service of notice details", serviceOfNoticeData, "", "", displayCaption: true)
         <div style="margin-bottom: 40px;">
-            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ServiceOfNotice", "ProducerSubmission")" style="font-size: 19px;">Change service of notice details</a>
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("ServiceOfNotice", "ProducerSubmission", new { redirectToCheckAnswers = true})" style="font-size: 19px;">Change service of notice details</a>
         </div>
     </div>
 
     @if (representingOrg)
     {
         <div>
-            @Html.Raw(this.WeeeGds().TableSummary("Represented company details", representingCompanyDetails, "", "", displayCaption: true))
+            @(this.WeeeGds().TableSummary("Represented company details", representingCompanyDetails, "", "", displayCaption: true))
             <div style="margin-bottom: 40px;">
-                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission")" style="font-size: 19px;">Change represented company details</a>
-                </div>
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission", new { redirectToCheckAnswers = true})" style="font-size: 19px;">Change represented company details</a>
             </div>
+        </div>
     }
 
     <table class="govuk-table category-row-no-break">
@@ -168,7 +164,7 @@
         </tbody>
     </table>
     <div style="margin-bottom: 40px;">
-        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditEeeeData", "ProducerSubmission")" style="font-size: 19px;">Change Eee details</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("EditEeeeData", "ProducerSubmission", new { redirectToCheckAnswers = true})" style="font-size: 19px;">Change Eee details</a>
     </div>
 
     <p class="govuk-body">Pressing confirm answers will take you to the application submission page.</p>

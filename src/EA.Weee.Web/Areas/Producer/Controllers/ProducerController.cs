@@ -4,6 +4,7 @@
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -99,8 +100,12 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> CheckAnswers()
         {
-            var model =
-                mapper.Map<SmallProducerSubmissionData, CheckAnswersViewModel>(SmallProducerSubmissionData);
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
