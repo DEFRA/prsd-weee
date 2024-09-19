@@ -314,6 +314,7 @@
     <Compile Include="Helpers\JsonSerializer.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
+    <Compile Include="Organisations\IProducerSubmissionViewModel.cs" />
     <Compile Include="Organisations\NotRequiredPartnerModel.cs" />
     <Compile Include="Organisations\SoleTraderViewModel.cs" />
     <Compile Include="Organisations\AdditionalContactModel.cs" />

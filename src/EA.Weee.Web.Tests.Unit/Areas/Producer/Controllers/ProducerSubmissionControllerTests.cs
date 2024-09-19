@@ -113,8 +113,10 @@
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
+            bool noRedirect = false;
+
             // Act
-            var result = await controller.EditOrganisationDetails() as ViewResult;
+            var result = await controller.EditOrganisationDetails(noRedirect) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -140,8 +142,10 @@
             var viewModel = TestFixture.Create<EditOrganisationDetailsViewModel>();
             A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(submissionData)).Returns(viewModel);
 
+            bool noRedirect = false;
+
             // Act
-            await controller.EditOrganisationDetails();
+            await controller.EditOrganisationDetails(noRedirect);
 
             // Assert
             breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);

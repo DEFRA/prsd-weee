@@ -11,7 +11,14 @@
 }
 @section full_main_content
 {
-    @this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList()))
+    @if (Model.RedirectToCheckAnswers == true)
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.CheckAnswers())))
+    }
+    else
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
+    }
 
     <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 4 of 5</span>
 
@@ -33,6 +40,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.DirectRegistrantId)
         @Html.HiddenFor(m => m.CompanyName)
+        @Html.HiddenFor(m => m.RedirectToCheckAnswers)
 
         <div class="govuk-grid-row govuk-!-padding-bottom-4">
             <div class="flex-container">
@@ -62,9 +70,16 @@
         @(this.WeeeGds().Warning(Resources.ProducerSubmission.ProducerSubmission.RepresentingCompanyDetailsWarningText))
 
         <div class="govuk-button-group govuk-!-padding-top-3">
-            @this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList)
+            @if (Model.RedirectToCheckAnswers == true)
+            {
+                @(this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnCheckAnswers))
+            }
+            else
+            {
+                @(this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList));
+            }
 
-            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditRepresentedOrganisationDetails()), true, "discard-button")
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditRepresentedOrganisationDetails((bool?)null)), true, "discard-button")
         </div>
 
         @(this.WeeeGds().BackToTopLink())

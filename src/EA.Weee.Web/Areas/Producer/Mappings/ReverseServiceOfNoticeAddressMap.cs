@@ -16,6 +16,7 @@
                 TownOrCity = source.TownOrCity,
                 Postcode = source.Postcode,
                 Telephone = !string.IsNullOrWhiteSpace(source.Telephone) ? source.Telephone : null,
+                CountryName = source.CountryName,
             };
         }
     }
