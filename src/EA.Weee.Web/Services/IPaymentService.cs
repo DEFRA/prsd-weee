@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Services
 {
     using EA.Weee.Api.Client.Models.Pay;
+    using EA.Weee.Core.DirectRegistrant;
     using System;
     using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@
     {
         Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken);
 
-        Task<bool> HandlePaymentReturnAsync(string accessToken, Guid directRegistrantId, string token);
+        Task<PaymentResult> HandlePaymentReturnAsync(string accessToken, string token);
 
         bool ValidateExternalUrl(string url);
     }

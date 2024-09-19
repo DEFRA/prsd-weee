@@ -6,10 +6,11 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Weee.Core.DirectRegistrant;
 
     public class PaymentService : IPaymentService
     {
-        private readonly string[] allowedDomains = new[] { "publicapi.payments.service.gov.uk" };
+        private readonly string[] allowedDomains = new[] { "publicapi.payments.service.gov.uk", "card.payments.service.gov.uk" };
 
         private readonly IPayClient paymentClient;
         private readonly ConfigurationService configurationService;
@@ -52,7 +53,7 @@
             return result;
         }
 
-        public async Task<bool> HandlePaymentReturnAsync(string accessToken, Guid directRegistrantId, string token)
+        public async Task<PaymentResult> HandlePaymentReturnAsync(string accessToken, string token)
         {
             if (!secureReturnUrlHelper.ValidateSecureRandomString(token))
             {
@@ -61,17 +62,31 @@
 
             using (var client = weeeClient())
             {
-                //var validToken = await client.SendAsync(accessToken, new ValidateSubmissionPaymentTokenRequest(directRegistrantId, token));
+                var payment = await client.SendAsync(accessToken, new ValidateAndGetSubmissionPayment(token));
 
-                //if (!validToken)
-                //{
-                    //throw new InvalidOperationException("ProcessPaymentResultAsync invalid token");
-                //}
+                if (!string.IsNullOrWhiteSpace(payment.ErrorMessage))
+                {
+                    throw new InvalidOperationException($"ProcessPaymentResultAsync invalid token {payment.ErrorMessage}");
+                }
 
-                //var result = await paymentClient.GetPaymentAsync(paymentId);
+                var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
+
+                await client.SendAsync(accessToken, new UpdateSubmissionPaymentDetailsRequest(payment.DirectRegistrantId, result.State.Status, payment.PaymentSessionId));
+
+                if (result.State.Status == PaymentStatus.Success)
+                {
+                    return new PaymentResult()
+                    {
+                        PaymentReference = payment.PaymentReference,
+                        DirectRegistrantId = payment.DirectRegistrantId
+                    };
+                }
+
+                return new PaymentResult()
+                {
+                    DirectRegistrantId = payment.DirectRegistrantId
+                };
             }
-
-            return true;
         }
 
         public bool ValidateExternalUrl(string url)
