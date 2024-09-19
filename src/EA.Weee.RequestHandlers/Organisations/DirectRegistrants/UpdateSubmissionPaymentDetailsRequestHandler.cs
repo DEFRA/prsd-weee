@@ -2,10 +2,13 @@
 {
     using DataAccess;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
-    using System.Data.Entity.Validation;
+    using System;
+    using System.Data.Entity;
     using System.Threading.Tasks;
 
     internal class UpdateSubmissionPaymentDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<UpdateSubmissionPaymentDetailsRequest, bool>
@@ -26,7 +29,15 @@
 
             var systemDateTime = await systemDataDataAccess.GetSystemDateTime();
 
-            currentYearSubmission.SetPaymentInformation(request.PaymentReference, request.PaymentReturnToken, request.PaymentId, systemDateTime.Date);
+            var paymentSession = await weeeContext.PaymentSessions.FirstOrDefaultAsync(p => p.Id == request.PaymentSessionId);
+
+            if (paymentSession == null)
+            {
+                throw new InvalidOperationException($"Payment session {request.PaymentSessionId} not found");
+            }
+
+            paymentSession.Status = request.PaymentStatus.ToDomainEnumeration<PaymentState>();
+            currentYearSubmission.FinalPaymentSession = paymentSession;
 
             await weeeContext.SaveChangesAsync();
   

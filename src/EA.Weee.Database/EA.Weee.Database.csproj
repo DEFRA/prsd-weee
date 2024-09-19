@@ -406,6 +406,9 @@
     <Content Include="scripts\Update\Release 7\Sprint2\20240910-1502-producer-submission-updates-5.sql" />
     <Content Include="scripts\Update\Release 7\Sprint2\2024916-1007-producer-submission-updates-6.sql" />
     <Content Include="scripts\Update\Release 7\Sprint2\20240904-1156-producer-submission-updates-4.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint3\2024919-1553-paymentupdates-removetoken.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint3\2024919-1414-paymentupdates-final-payment.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint3\2024919-1349-paymentupdates-payment-state.sql" />
     <Content Include="scripts\Update\Release 7\Sprint3\2024919-1104-paymentupdates-payment-started.sql" />
     <Content Include="scripts\Update\Release 7\Sprint3\2024918-1603-paymentupdates.sql" />
     <Content Include="scripts\Update\Release 7\Sprint3\2024918-1537-paymentupdates.sql" />

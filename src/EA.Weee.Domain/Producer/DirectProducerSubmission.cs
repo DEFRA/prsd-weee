@@ -4,9 +4,7 @@
     using EA.Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
-    using EA.Prsd.Core;
-    using EA.Weee.Domain.Organisation;
-
+    
     public class DirectProducerSubmission : Entity
     {
         public DirectProducerSubmission()
@@ -15,17 +13,11 @@
 
         public virtual Guid DirectRegistrantId { get; set; }
 
+        public virtual Guid? FinalPaymentSessionId { get; set; }
+
         public virtual Guid RegisteredProducerId { get; set; }
-
-        public virtual int? PaymentStatus { get; set; }
-
-        public virtual string PaymentReference { get; set; }
-
-        public virtual string PaymentId { get; set; }
-
+        
         public virtual bool? PaymentFinished { get; set; }
-
-        public virtual string PaymentReturnToken { get; set; }
 
         public virtual int ComplianceYear {get; set; }
 
@@ -37,6 +29,8 @@
 
         public virtual ICollection<DirectProducerSubmissionHistory> SubmissionHistory { get; set; }
 
+        public virtual PaymentSession FinalPaymentSession { get; set; }
+
         //public virtual DateTime PaymentStartedDateTime { get; set; }
 
         public void SetCurrentSubmission(DirectProducerSubmissionHistory submission)
@@ -46,16 +40,9 @@
             CurrentSubmission = submission;
         }
 
-        public void SetPaymentInformation(string paymentReference, string paymentReturnToken, string paymentId, DateTime paymentStartedDateTime)
+        public void SetPaymentInformation(PaymentState paymentState)
         {
-            Condition.Requires(paymentReference).IsNotNullOrWhiteSpace();
-            Condition.Requires(paymentReturnToken).IsNotNullOrWhiteSpace();
-            Condition.Requires(paymentId).IsNotNullOrWhiteSpace();
-            
-            PaymentId = paymentId;
-            PaymentReference = paymentReference;
-            PaymentReturnToken = paymentReturnToken;
-            //PaymentStartedDateTime = paymentStartedDateTime;
+            Condition.Requires(paymentState).IsNotNull();
         }
 
         public DirectProducerSubmission(DirectRegistrant directRegistrant,
