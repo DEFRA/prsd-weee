@@ -49,11 +49,11 @@
             @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[i].LastName)
 
             var contact = Model.OrganisationDetails.AdditionalContactModels[i];
-            var index = i.ToString();
+            var partnerIndex = (i + 1).ToString();
 
-            organisationDetails.Add("Partner" + index + "Details", "");
-            organisationDetails.Add("First name", contact.FirstName);
-            organisationDetails.Add("Last name", contact.LastName);
+            //KorganisationDetails.Add("Partner" + index + "Details", "");
+            organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
+            organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
         }
 
         var contactDetails = new Dictionary<string, object>
