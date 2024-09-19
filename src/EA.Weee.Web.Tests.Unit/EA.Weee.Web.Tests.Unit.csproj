@@ -423,6 +423,7 @@
     <Compile Include="Areas\Producer\Mapping\ToRequest\ToEditRepresentedOrganisationDetailsRequestCreatorUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToRequest\ToEditOrganisationDetailsRequestCreatorUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditContactDetailsMapTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToViewModel\OrganisationViewModelMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\RepresentedOrganisationDetailsMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\ServiceOfNoticeMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditEeeDataViewModelMapTests.cs" />
