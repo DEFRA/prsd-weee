@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
+﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
     using DataAccess;
     using EA.Prsd.Core;
@@ -10,8 +8,7 @@ namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
     using EA.Weee.Domain.Producer;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
-    using System.Data.Entity;
-    using System.Linq;
+    using System;
     using System.Threading.Tasks;
 
     internal class AddPaymentSessionRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<AddPaymentSessionRequest, bool>

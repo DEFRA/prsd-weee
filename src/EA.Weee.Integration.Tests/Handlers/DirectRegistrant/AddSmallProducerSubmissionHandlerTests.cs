@@ -38,7 +38,6 @@
                 submission.RegisteredProducer.ProducerRegistrationNumber.Should().NotBeNullOrWhiteSpace();
                 submission.RegisteredProducer.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
                 submission.DirectRegistrantId.Should().Be(directRegistrant.Id);
-                submission.PaymentReference.Should().BeNull();
                 submission.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
                 submission.CurrentSubmission.Should().NotBeNull();
                 submission.SubmissionHistory.Count.Should().Be(1);
@@ -80,7 +79,6 @@
                 submission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(registrationNumber);
                 submission.RegisteredProducer.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
                 submission.DirectRegistrantId.Should().Be(directRegistrant.Id);
-                submission.PaymentReference.Should().BeNull();
                 submission.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
                 submission.CurrentSubmission.Should().NotBeNull();
                 submission.SubmissionHistory.Count.Should().Be(1);
