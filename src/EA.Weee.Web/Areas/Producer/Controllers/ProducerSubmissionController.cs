@@ -54,7 +54,8 @@
             IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
-            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator)
+            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator,
+            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryRequest> addSignatoryRequestCreator)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -65,6 +66,7 @@
             this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
             this.editEeeDataRequestCreator = editEeeDataRequestCreator;
+            this.addSignatoryRequestCreator = addSignatoryRequestCreator;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
