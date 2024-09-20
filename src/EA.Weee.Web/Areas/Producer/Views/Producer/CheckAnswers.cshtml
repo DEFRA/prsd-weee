@@ -167,12 +167,11 @@
 
     <p class="govuk-body">Pressing confirm answers will take you to the application submission page.</p>
 
-    @using (Html.BeginForm("SubmitRegistration", "Producer", FormMethod.Get, null))
-    {
-        <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Confirm answers"))
-        </div>
-    }
+    <div class="govuk-form-group">
+        <a href="@Url.Action("SubmitRegistration", "Producer")" class="govuk-button" role="button">
+            Confirm answers
+        </a>
+    </div>
 
     <div>
         <a class="govuk-link govuk-link--no-visited-state" href="" style="font-size: 19px;">Download as PDF</a>

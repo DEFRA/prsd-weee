@@ -112,15 +112,6 @@
             return View(model);
         }
 
-        [HttpPost]
-        [SmallProducerSubmissionContext]
-        public async Task<ActionResult> CheckAnswers(CheckAnswersViewModel model)
-        {
-            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
-
-            return RedirectToAction("SubmitRegistration");
-        }
-
         [SmallProducerSubmissionContext]
         [HttpGet]
         public ActionResult Submissions()

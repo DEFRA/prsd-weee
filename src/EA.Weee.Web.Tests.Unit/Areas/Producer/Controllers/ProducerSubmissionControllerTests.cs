@@ -12,6 +12,7 @@
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -30,6 +31,7 @@
 
     public class ProducerSubmissionControllerTests : SimpleUnitTestBase
     {
+        private bool? redirectToCheckAnswers = false;
         private readonly ProducerSubmissionController controller;
         private readonly IMapper mapper;
         private readonly IWeeeClient weeeClient;
@@ -104,19 +106,20 @@
         public async Task EditOrganisationDetails_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
-            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
-            controller.SmallProducerSubmissionData = submissionData;
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
             var viewModel = TestFixture.Create<EditOrganisationDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(submissionData)).Returns(viewModel);
-            
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
+
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
-            bool noRedirect = false;
-
             // Act
-            var result = await controller.EditOrganisationDetails(noRedirect) as ViewResult;
+            var result = await controller.EditOrganisationDetails(redirectToCheckAnswers) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -129,26 +132,27 @@
         public async Task EditOrganisationDetails_Get_ShouldSetBreadCrumb()
         {
             // Arrange
-            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
             var organisationName = TestFixture.Create<string>();
 
-            controller.SmallProducerSubmissionData = submissionData;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
-            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.SmallProducerSubmissionData.OrganisationData.Id)).Returns(organisationName);
 
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
             var viewModel = TestFixture.Create<EditOrganisationDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(submissionData)).Returns(viewModel);
-
-            bool noRedirect = false;
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
 
             // Act
-            await controller.EditOrganisationDetails(noRedirect);
+            await controller.EditOrganisationDetails(redirectToCheckAnswers);
 
             // Assert
-            breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            breadcrumbService.OrganisationId.Should().Be(submissionData.SmallProducerSubmissionData.OrganisationData.Id);
             breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
             breadcrumbService.ExternalActivity.Should()
                 .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
@@ -182,6 +186,7 @@
         {
             // Arrange
             var model = TestFixture.Create<EditOrganisationDetailsViewModel>();
+            model.RedirectToCheckAnswers = false;
             var request = TestFixture.Create<EditOrganisationDetailsRequest>();
             A.CallTo(() => editOrganisationDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -219,7 +224,7 @@
         public void EditOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditOrganisationDetails", new Type[0]);
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditOrganisationDetails", new[] { typeof(bool?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
@@ -230,7 +235,7 @@
         public void EditContactDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditContactDetails", new Type[0]);
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditContactDetails", new[] { typeof(bool?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
@@ -279,17 +284,20 @@
         public async Task EditContactDetails_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
-            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
-            controller.SmallProducerSubmissionData = submissionData;
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
             var viewModel = TestFixture.Create<EditContactDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(submissionData)).Returns(viewModel);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
 
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
             // Act
-            var result = await controller.EditContactDetails() as ViewResult;
+            var result = await controller.EditContactDetails(redirectToCheckAnswers) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -302,24 +310,27 @@
         public async Task EditContactDetails_Get_ShouldSetBreadCrumb()
         {
             // Arrange
-            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
             var organisationName = TestFixture.Create<string>();
 
-            controller.SmallProducerSubmissionData = submissionData;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
-            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.SmallProducerSubmissionData.OrganisationData.Id)).Returns(organisationName);
 
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
             var viewModel = TestFixture.Create<EditContactDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(submissionData)).Returns(viewModel);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
 
             // Act
-            await controller.EditContactDetails();
+            await controller.EditContactDetails(redirectToCheckAnswers);
 
             // Assert
-            breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            breadcrumbService.OrganisationId.Should().Be(submissionData.SmallProducerSubmissionData.OrganisationData.Id);
             breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
             breadcrumbService.ExternalActivity.Should()
                 .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
@@ -352,17 +363,20 @@
         public async Task EditRepresentedOrganisationDetails_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
-            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
-            controller.SmallProducerSubmissionData = submissionData;
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
             var viewModel = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>(submissionData)).Returns(viewModel);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
 
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
             // Act
-            var result = await controller.EditRepresentedOrganisationDetails() as ViewResult;
+            var result = await controller.EditRepresentedOrganisationDetails(redirectToCheckAnswers) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -389,7 +403,7 @@
             A.CallTo(() => mapper.Map<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>(submissionData)).Returns(viewModel);
 
             // Act
-            await controller.EditRepresentedOrganisationDetails();
+            await controller.EditRepresentedOrganisationDetails(redirectToCheckAnswers);
 
             // Assert
             breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
@@ -427,6 +441,7 @@
         {
             // Arrange
             var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            model.RedirectToCheckAnswers = false;
             var request = TestFixture.Create<RepresentedOrganisationDetailsRequest>();
             A.CallTo(() => editRepresentedOrganisationDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -464,7 +479,7 @@
         public void EditRepresentedOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditRepresentedOrganisationDetails", new Type[0]);
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditRepresentedOrganisationDetails", new[] { typeof(bool?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
@@ -477,17 +492,20 @@
             // Arrange
             bool sameAsOrganisationAddress = true;
 
-            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
-            controller.SmallProducerSubmissionData = submissionData;
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
             var viewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(submissionData)).Returns(viewModel);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
 
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
             // Act
-            var result = await controller.ServiceOfNotice(sameAsOrganisationAddress) as ViewResult;
+            var result = await controller.ServiceOfNotice(sameAsOrganisationAddress, redirectToCheckAnswers) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -502,24 +520,27 @@
             // Arrange
             bool sameAsOrganisationAddress = false;
 
-            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
             var organisationName = TestFixture.Create<string>();
 
-            controller.SmallProducerSubmissionData = submissionData;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
-            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.OrganisationData.Id)).Returns(organisationName);
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.SmallProducerSubmissionData.OrganisationData.Id)).Returns(organisationName);
 
             var countries = TestFixture.CreateMany<CountryData>().ToList();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._)).Returns(Task.FromResult<IList<CountryData>>(countries));
 
             var viewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(submissionData)).Returns(viewModel);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
 
             // Act
-            await controller.ServiceOfNotice(sameAsOrganisationAddress);
+            await controller.ServiceOfNotice(sameAsOrganisationAddress, redirectToCheckAnswers);
 
             // Assert
-            breadcrumbService.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            breadcrumbService.OrganisationId.Should().Be(submissionData.SmallProducerSubmissionData.OrganisationData.Id);
             breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
             breadcrumbService.ExternalActivity.Should()
                 .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
@@ -553,6 +574,7 @@
         {
             // Arrange
             var model = TestFixture.Create<ServiceOfNoticeViewModel>();
+            model.RedirectToCheckAnswers = false;
             var request = TestFixture.Create<ServiceOfNoticeRequest>();
             A.CallTo(() => serviceOfNoticeRequestCreator.ViewModelToRequest(model)).Returns(request);
 
@@ -590,7 +612,7 @@
         public void ServiceOfNotice_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ServiceOfNotice", new[] { typeof(bool?) });
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ServiceOfNotice", new[] { typeof(bool?), typeof(bool?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
