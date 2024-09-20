@@ -54,6 +54,25 @@
             return result;
         }
 
+        public async Task<PaymentWithAllLinks> CheckInProgressPaymentAsync(string accessToken, Guid directRegistrantId)
+        {
+            using (var client = weeeClient())
+            {
+                var payment = await client.SendAsync(accessToken, new GetInProgressPaymentSessionRequest(directRegistrantId));
+
+                if (payment != null)
+                {
+                    var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
+
+                    // Update the current in progress payment with the current status of the GOV.UK payment
+                    //new UpdateSubmissionPaymentDetailsRequest()
+                    return result;
+                }
+
+                return null;
+            }
+        }
+
         public async Task<PaymentResult> HandlePaymentReturnAsync(string accessToken, string token)
         {
             var (isValid, extractDirectRegistrantId) = secureReturnUrlHelper.ValidateSecureRandomString(token);

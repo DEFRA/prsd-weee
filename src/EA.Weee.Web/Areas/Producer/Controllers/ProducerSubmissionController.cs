@@ -362,12 +362,25 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
         {
-            var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,  
-                User.GetEmailAddress(), User.GetAccessToken());
+            var existingPaymentInProgress = await paymentService.CheckInProgressPaymentAsync(User.GetAccessToken(),
+                SmallProducerSubmissionData.DirectRegistrantId);
 
-            if (paymentService.ValidateExternalUrl(result.Links.NextUrl.Href))
+            string nextUrl;
+            if (existingPaymentInProgress == null)
             {
-                return Redirect(result.Links.NextUrl.Href);
+                var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,
+                    User.GetEmailAddress(), User.GetAccessToken());
+
+                nextUrl = result.Links.NextUrl.Href;
+            }
+            else
+            {
+                nextUrl = existingPaymentInProgress.Links.NextUrl.Href;
+            }
+
+            if (paymentService.ValidateExternalUrl(nextUrl))
+            {
+                return Redirect(nextUrl);
             }
 
             throw new InvalidOperationException("Invalid payment next url");

@@ -124,6 +124,7 @@
         [InlineData(PaymentStatus.Created)]
         [InlineData(PaymentStatus.Started)]
         [InlineData(PaymentStatus.Submitted)]
+        [InlineData(PaymentStatus.New)]
         public async Task GetCurrentRetryPayment_WithValidInputs_ShouldReturnCorrectPaymentSession(PaymentStatus state)
         {
             using (var database = new DatabaseWrapper())

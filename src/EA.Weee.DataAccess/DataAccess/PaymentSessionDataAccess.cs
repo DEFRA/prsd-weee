@@ -35,7 +35,8 @@
             return await weeeContext.PaymentSessions.Where(c =>
                     c.UserId.ToString() == userContext.UserId.ToString() &&
                     c.DirectRegistrantId == directRegistrantId &&
-                    (c.Status.Value == PaymentState.Created.Value || c.Status.Value == PaymentState.Started.Value || c.Status.Value == PaymentState.Submitted.Value) &&
+                    (c.Status.Value == PaymentState.Created.Value || c.Status.Value == PaymentState.Started.Value 
+                    || c.Status.Value == PaymentState.Submitted.Value || c.Status.Value == PaymentState.New.Value) &&
                     c.DirectProducerSubmission.ComplianceYear == year &&
                     c.InFinalState == false).OrderByDescending(p => p.CreatedAt)
                 .Include(paymentSession => paymentSession.DirectRegistrant).FirstOrDefaultAsync();
