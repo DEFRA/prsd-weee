@@ -5,7 +5,7 @@ namespace EA.Weee.Core.Organisations
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
-    public class RepresentingCompanyDetailsViewModel
+    public class RepresentingCompanyDetailsViewModel : IProducerSubmissionViewModel
     {
         public Guid DirectRegistrantId { get; set; }
 
@@ -20,5 +20,8 @@ namespace EA.Weee.Core.Organisations
         public string BusinessTradingName { get; set; }
 
         public RepresentingCompanyAddressData Address { get; set; } = new RepresentingCompanyAddressData();
+
+        public bool? RedirectToCheckAnswers { get; set; }
+        public bool HasAuthorisedRepresentitive { get; set; }
     }
 }

@@ -6,7 +6,7 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.ViewModels;
 
-    public class EditContactDetailsMap : IMap<SmallProducerSubmissionData, EditContactDetailsViewModel>
+    public class EditContactDetailsMap : IMap<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>
     {
         private readonly IMapper mapper;
 
@@ -15,23 +15,26 @@
             this.mapper = mapper;
         }
 
-        public EditContactDetailsViewModel Map(SmallProducerSubmissionData source)
+        public EditContactDetailsViewModel Map(SmallProducerSubmissionMapperData source)
         {
+            var submissionData = source.SmallProducerSubmissionData;
+
             var viewModel = new EditContactDetailsViewModel
             {
-                DirectRegistrantId = source.DirectRegistrantId,
-                OrganisationId = source.OrganisationData.Id,
-                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive
+                DirectRegistrantId = submissionData.DirectRegistrantId,
+                OrganisationId = submissionData.OrganisationData.Id,
+                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
+                RedirectToCheckAnswers = source.RedirectToCheckAnswers
             };
 
             var contactDetailsViewModel = viewModel.ContactDetails = new ContactDetailsViewModel();
 
-            contactDetailsViewModel.FirstName = source.CurrentSubmission.ContactData.FirstName;
-            contactDetailsViewModel.LastName = source.CurrentSubmission.ContactData.LastName;
-            contactDetailsViewModel.Position = source.CurrentSubmission.ContactData.Position;
+            contactDetailsViewModel.FirstName = submissionData.CurrentSubmission.ContactData.FirstName;
+            contactDetailsViewModel.LastName = submissionData.CurrentSubmission.ContactData.LastName;
+            contactDetailsViewModel.Position = submissionData.CurrentSubmission.ContactData.Position;
 
             contactDetailsViewModel.AddressData =
-                mapper.Map<AddressData, AddressPostcodeRequiredData>(source.CurrentSubmission.ContactAddressData);
+                mapper.Map<AddressData, AddressPostcodeRequiredData>(submissionData.CurrentSubmission.ContactAddressData);
 
             return viewModel;
         }
