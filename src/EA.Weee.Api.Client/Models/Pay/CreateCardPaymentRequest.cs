@@ -22,11 +22,5 @@
 
         [JsonPropertyName("language")]
         public string Language => "en";
-
-        //[JsonPropertyName("moto")]
-        //public bool Moto { get; set; }
-
-        //[JsonPropertyName("metadata")]
-        //public Dictionary<string, string> Metadata { get; set; }
     }
 }
