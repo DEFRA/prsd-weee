@@ -8,7 +8,7 @@
     {
         public string SearchedText { get; set; }
 
-        [Required(ErrorMessage = "Please indicate if you are a producer of Electrical or Electronic Equipment")]
+        [Required(ErrorMessage = "Please indicate if you are a producer of electrical or electronic equipment")]
         public override string SelectedValue { get; set; }
 
         public TonnageTypeViewModel()

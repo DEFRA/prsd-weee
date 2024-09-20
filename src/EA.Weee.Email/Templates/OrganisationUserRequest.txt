@@ -2,7 +2,7 @@
 
 Hello,
 
-You have received this message because @Model.FullName has requested to gain access to @Model.OrganisationName via the Waste electrical and Electronic Equipment (WEEE) online service.
+You have received this message because @Model.FullName has requested to gain access to @Model.OrganisationName via the Waste electrical and electronic equipment (WEEE) online service.
 
 To action this request sign in to the WEEE online service at @Model.ExternalUserLoginUrl
 
