@@ -8,6 +8,7 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     internal class AddSmallProducerSubmissionHandler : IRequestHandler<AddSmallProducerSubmission, Guid>
@@ -38,20 +39,40 @@
 
             authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
 
-            var test = await generateFromXmlDataAccess.ComputePrns(1);
-
-            var prn = test.Dequeue();
-
-            var exists = await generateFromXmlDataAccess.ProducerRegistrationExists(prn);
-
-            if (exists)
-            {
-                throw new InvalidOperationException($"Producer number {prn} already exists");
-            }
-
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
-            var registeredProducer = new RegisteredProducer(prn, systemDateTime.Year);
+            var currentYearSubmission =
+                directRegistrant.DirectProducerSubmissions.Where(d => d.ComplianceYear == systemDateTime.Year);
+
+            if (currentYearSubmission.Any())
+            {
+                throw new InvalidOperationException($"Producer submission for compliance year {systemDateTime.Year} already exists");
+            }
+
+            var existingProducer = directRegistrant.DirectProducerSubmissions.Where(c => c.RegisteredProducer.ComplianceYear != systemDateTime.Year)
+                .Select(r => r.RegisteredProducer).FirstOrDefault();
+
+            string producerRegistrationNumber;
+
+            if (existingProducer != null)
+            {
+                producerRegistrationNumber = existingProducer.ProducerRegistrationNumber;
+            }
+            else
+            {
+                var generatedPrn = await generateFromXmlDataAccess.ComputePrns(1);
+
+                producerRegistrationNumber = generatedPrn.Dequeue();
+
+                var exists = await generateFromXmlDataAccess.ProducerRegistrationExists(producerRegistrationNumber);
+
+                if (exists)
+                {
+                    throw new InvalidOperationException($"Producer number {producerRegistrationNumber} already exists");
+                }
+            }
+
+            var registeredProducer = new RegisteredProducer(producerRegistrationNumber, systemDateTime.Year);
 
             var directRegistrantSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, systemDateTime.Year);
             var directProducerSubmissionHistory = new DirectProducerSubmissionHistory(directRegistrantSubmission);
