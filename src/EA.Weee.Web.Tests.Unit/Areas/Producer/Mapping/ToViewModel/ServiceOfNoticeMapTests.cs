@@ -29,22 +29,24 @@
         public void Map_ShouldMapHighLevelSourceFields()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
-            result.OrganisationId.Should().Be(source.OrganisationData.Id);
-            result.HasAuthorisedRepresentitive.Should().Be(source.HasAuthorisedRepresentitive);
+            result.DirectRegistrantId.Should().Be(submissionData.DirectRegistrantId);
+            result.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            result.HasAuthorisedRepresentitive.Should().Be(submissionData.HasAuthorisedRepresentitive);
         }
 
         [Fact]
         public void Map_ShouldMapServiceOfNoticeAddress()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
             var expectedAddress = fixture.Create<ServiceOfNoticeAddressData>();
             A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
                 .Returns(expectedAddress);
@@ -54,7 +56,7 @@
 
             // Assert
             result.Address.Should().Be(expectedAddress);
-            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(source.CurrentSubmission.ServiceOfNoticeData))
+            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(submissionData.CurrentSubmission.ServiceOfNoticeData))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -62,8 +64,9 @@
         public void Map_ShouldMapNullServiceOfNoticeAddress()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
-            source.CurrentSubmission.ServiceOfNoticeData = null;
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
+            submissionData.CurrentSubmission.ServiceOfNoticeData = null;
             var expectedAddress = new ServiceOfNoticeAddressData();
             A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
                 .Returns(expectedAddress);
@@ -73,7 +76,7 @@
 
             // Assert
             result.Address.Should().Be(expectedAddress);
-            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(source.CurrentSubmission.ServiceOfNoticeData))
+            A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(submissionData.CurrentSubmission.ServiceOfNoticeData))
                 .MustHaveHappenedOnceExactly();
         }
     }

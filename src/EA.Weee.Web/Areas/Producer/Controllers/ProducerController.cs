@@ -6,6 +6,7 @@
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -104,9 +105,19 @@
         }
 
         [HttpGet]
-        public ActionResult CheckAnswers()
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> CheckAnswers()
         {
-            return View("CheckAnswers");
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
         }
 
         [SmallProducerSubmissionContext]
@@ -177,6 +188,12 @@
             };
 
             return View("ViewOrganisation/RepresentedOrganisationDetails", vm);
+        }
+
+        [HttpGet]
+        public ActionResult SubmitRegistration()
+        {
+            return View("SubmitRegistration");
         }
 
         private Task SetViewBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
