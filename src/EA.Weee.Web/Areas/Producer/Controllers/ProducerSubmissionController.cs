@@ -375,13 +375,15 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public ActionResult PaymentSuccess(string reference)
+        public async Task<ActionResult> PaymentSuccess(string reference)
         {
             var model = new PaymentResultModel()
             {
                 PaymentReference = reference,
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id
             };
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
             return View(reference, model);
         }
