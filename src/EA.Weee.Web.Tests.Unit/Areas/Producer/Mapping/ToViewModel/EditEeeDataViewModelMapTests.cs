@@ -21,24 +21,25 @@
         public void Map_ShouldMapBasicProperties_Correctly()
         {
             // Arrange
-            var source = TestFixture.Create<SmallProducerSubmissionData>();
+            var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.OrganisationId.Should().Be(source.OrganisationData.Id);
-            result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
-            result.SellingTechnique.Should().BeEquivalentTo(SellingTechniqueViewModel.FromSellingTechniqueType(source.CurrentSubmission.SellingTechnique));
-            result.HasAuthorisedRepresentitive.Should().Be(source.HasAuthorisedRepresentitive);
+            result.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            result.DirectRegistrantId.Should().Be(submissionData.DirectRegistrantId);
+            result.SellingTechnique.Should().BeEquivalentTo(SellingTechniqueViewModel.FromSellingTechniqueType(submissionData.CurrentSubmission.SellingTechnique));
+            result.HasAuthorisedRepresentitive.Should().Be(submissionData.HasAuthorisedRepresentitive);
         }
 
         [Fact]
         public void Map_ShouldMapTonnageData_Correctly()
         {
             // Arrange
-            var source = TestFixture.Create<SmallProducerSubmissionData>();
-            source.CurrentSubmission.TonnageData = new List<Eee>
+            var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>
             {
                 new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
                 new Eee(20.75m, WeeeCategory.DisplayEquipment, ObligationType.B2B)
@@ -63,8 +64,8 @@
         public void Map_ShouldHandleEmptyTonnageData_Correctly()
         {
             // Arrange
-            var source = TestFixture.Create<SmallProducerSubmissionData>();
-            source.CurrentSubmission.TonnageData = new List<Eee>();
+            var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>();
 
             // Act
             var result = map.Map(source);
@@ -82,8 +83,8 @@
         public void Map_ShouldHandleMultipleEntriesForSameCategory_ByUsingLastValue()
         {
             // Arrange
-            var source = TestFixture.Create<SmallProducerSubmissionData>();
-            source.CurrentSubmission.TonnageData = new List<Eee>
+            var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>
             {
                 new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
                 new Eee(5.25m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
@@ -103,8 +104,8 @@
         public void Map_ShouldPopulateAllCategories()
         {
             // Arrange
-            var source = TestFixture.Create<SmallProducerSubmissionData>();
-            source.CurrentSubmission.TonnageData = new List<Eee>();
+            var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>();
 
             // Act
             var result = map.Map(source);
@@ -118,8 +119,8 @@
         public void Map_ShouldSetCategoryDisplayCorrectly()
         {
             // Arrange
-            var source = TestFixture.Create<SmallProducerSubmissionData>();
-            source.CurrentSubmission.TonnageData = new List<Eee>
+            var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>
             {
                 new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C)
             };
