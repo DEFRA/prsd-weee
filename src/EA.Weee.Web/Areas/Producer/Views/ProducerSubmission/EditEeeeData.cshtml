@@ -18,14 +18,7 @@
 </style>
 @section full_main_content
 {
-    @if (Model.RedirectToCheckAnswers == true)
-    {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.CheckAnswers())))
-    }
-    else
-    {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
-    }
+    @(this.WeeeGds().BackLink(Url.Action("BackToPrevious", "ProducerSubmission", new { redirectToCheckAnswers = Model.RedirectToCheckAnswers })))
 
     @{
         var step = @Model.HasAuthorisedRepresentitive ? "5" : "4";

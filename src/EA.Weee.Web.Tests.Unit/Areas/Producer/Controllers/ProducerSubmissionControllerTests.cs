@@ -618,5 +618,100 @@
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
         }
+
+        [Fact]
+        public async Task EditOrganisationDetails_Post_ValidModel_ShouldRedirectToCheckAnswers()
+        {
+            // Arrange
+            var model = TestFixture.Create<EditOrganisationDetailsViewModel>();
+            model.RedirectToCheckAnswers = true;
+            var request = TestFixture.Create<EditOrganisationDetailsRequest>();
+            A.CallTo(() => editOrganisationDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.EditOrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("CheckAnswers");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditContactDetails_Post_ValidModel_ShouldRedirectToCheckAnswers()
+        {
+            // Arrange
+            var model = TestFixture.Create<EditContactDetailsViewModel>();
+            model.RedirectToCheckAnswers = true;
+            var request = TestFixture.Create<EditContactDetailsRequest>();
+            A.CallTo(() => editContactDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.EditContactDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("CheckAnswers");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ServiceOfNotice_Post_ValidModel_ShouldRedirectToCheckAnswers()
+        {
+            // Arrange
+            var model = TestFixture.Create<ServiceOfNoticeViewModel>();
+            model.RedirectToCheckAnswers = true;
+            var request = TestFixture.Create<ServiceOfNoticeRequest>();
+            A.CallTo(() => serviceOfNoticeRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.ServiceOfNotice(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("CheckAnswers");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditRepresentedCompanyDetails_Post_ValidModel_ShouldRedirectToCheckAnswers()
+        {
+            // Arrange
+            var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            model.RedirectToCheckAnswers = true;
+            var request = TestFixture.Create<RepresentedOrganisationDetailsRequest>();
+            A.CallTo(() => editRepresentedOrganisationDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.EditRepresentedOrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("CheckAnswers");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task EditEeeData_Post_ValidModel_ShouldRedirectToCheckAnswers()
+        {
+            // Arrange
+            var model = TestFixture.Create<EditEeeDataViewModel>();
+            model.RedirectToCheckAnswers = true;
+            var request = TestFixture.Create<EditEeeDataRequest>();
+            A.CallTo(() => editEeeDataRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.EditEeeeData(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("CheckAnswers");
+            result.RouteValues["controller"].Should().Be("Producer");
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }        
     }
 }

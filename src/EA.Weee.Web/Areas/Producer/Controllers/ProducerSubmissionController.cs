@@ -43,11 +43,11 @@
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
 
-        public ProducerSubmissionController(IMapper mapper, 
+        public ProducerSubmissionController(IMapper mapper,
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
             IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest> editRepresentedOrganisationDetailsRequestCreator,
-            Func<IWeeeClient> apiClient, 
-            BreadcrumbService breadcrumbService, 
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumbService,
             IWeeeCache weeeCache,
             IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
                 editContactDetailsRequestCreator,
@@ -74,7 +74,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditOrganisationDetails(bool? redirectToCheckAnswers)
+        public async Task<ActionResult> EditOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
             {
@@ -128,7 +128,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditEeeeData(bool? redirectToCheckAnswers)
+        public async Task<ActionResult> EditEeeeData(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
             {
@@ -172,7 +172,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress, bool? redirectToCheckAnswers)
+        public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress, bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
             {
@@ -188,7 +188,7 @@
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
             model.SameAsOrganisationAddress = sameAsOrganisationAddress ?? false;
-            
+
             if (model.SameAsOrganisationAddress)
             {
                 AddressData organisationAddress;
@@ -249,7 +249,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditRepresentedOrganisationDetails(bool? redirectToCheckAnswers)
+        public async Task<ActionResult> EditRepresentedOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
             {
@@ -298,7 +298,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditContactDetails(bool? redirectToCheckAnswers)
+        public async Task<ActionResult> EditContactDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
             {
@@ -363,6 +363,19 @@
             return View(model);
         }
 
+        public ActionResult BackToPrevious(bool? redirectToCheckAnswers)
+        {
+            if (redirectToCheckAnswers == true)
+            {
+                return RedirectToAction(nameof(ProducerController.CheckAnswers),
+                    typeof(ProducerController).GetControllerName());
+            }
+            else
+            {
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
+            }
+        }
         private async Task<IList<CountryData>> GetCountries()
         {
             using (var client = apiClient())
