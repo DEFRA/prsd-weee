@@ -11,14 +11,7 @@
 }
 @section full_main_content
 {
-    @if (Model.RedirectToCheckAnswers == true)
-    {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.CheckAnswers())))
-    }
-    else
-    {
-        @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
-    }
+    @(this.WeeeGds().BackLink(Url.Action("BackToPrevious", "ProducerSubmission", new { redirectToCheckAnswers = Model.RedirectToCheckAnswers })))
 
     <span class="govuk-caption-xl govuk-!-padding-bottom-3">Step 4 of 5</span>
 
