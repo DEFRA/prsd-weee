@@ -5,7 +5,7 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.ViewModels;
 
-    public class ServiceOfNoticeMap : IMap<SmallProducerSubmissionData, ServiceOfNoticeViewModel>
+    public class ServiceOfNoticeMap : IMap<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>
     {
         private readonly IMapper mapper;
 
@@ -14,16 +14,19 @@
             this.mapper = mapper;
         }
 
-        public ServiceOfNoticeViewModel Map(SmallProducerSubmissionData source)
+        public ServiceOfNoticeViewModel Map(SmallProducerSubmissionMapperData source)
         {
-            var address = MapAddress(source);
+            var submissionData = source.SmallProducerSubmissionData;
+
+            var address = MapAddress(submissionData);
 
             var viewModel = new ServiceOfNoticeViewModel()
             {
-                DirectRegistrantId = source.DirectRegistrantId,
-                OrganisationId = source.OrganisationData.Id,
+                DirectRegistrantId = submissionData.DirectRegistrantId,
+                OrganisationId = submissionData.OrganisationData.Id,
                 Address = address,
-                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive,
+                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
+                RedirectToCheckAnswers = source.RedirectToCheckAnswers
             };
 
             if (viewModel.Address == null)

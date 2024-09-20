@@ -5,19 +5,22 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.Producer.ViewModels;
 
-    public class EditEeeDataViewModelMap : IMap<SmallProducerSubmissionData, EditEeeDataViewModel>
+    public class EditEeeDataViewModelMap : IMap<SmallProducerSubmissionMapperData, EditEeeDataViewModel>
     {
-        public EditEeeDataViewModel Map(SmallProducerSubmissionData source)
+        public EditEeeDataViewModel Map(SmallProducerSubmissionMapperData source)
         {
+            var submissionData = source.SmallProducerSubmissionData;
+
             var model = new EditEeeDataViewModel()
             {
-                OrganisationId = source.OrganisationData.Id,
-                DirectRegistrantId = source.DirectRegistrantId,
-                SellingTechnique = SellingTechniqueViewModel.FromSellingTechniqueType(source.CurrentSubmission.SellingTechnique),
-                HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive
+                OrganisationId = submissionData.OrganisationData.Id,
+                DirectRegistrantId = submissionData.DirectRegistrantId,
+                SellingTechnique = SellingTechniqueViewModel.FromSellingTechniqueType(submissionData.CurrentSubmission.SellingTechnique),
+                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
+                RedirectToCheckAnswers = source.RedirectToCheckAnswers
             };
 
-            foreach (var eee in source.CurrentSubmission.TonnageData)
+            foreach (var eee in submissionData.CurrentSubmission.TonnageData)
             {
                 foreach (var producerSubmissionCategoryValue in model.CategoryValues)
                 {

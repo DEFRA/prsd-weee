@@ -23,24 +23,25 @@
         public void Map_ShouldMap()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
-            result.BusinessTradingName.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.BusinessTradingName);
-            result.CompanyName.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.CompanyName);
+            result.DirectRegistrantId.Should().Be(submissionData.DirectRegistrantId);
+            result.BusinessTradingName.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.BusinessTradingName);
+            result.CompanyName.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CompanyName);
 
-            result.Address.Address1.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.Address1);
-            result.Address.Address2.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.Address2);
-            result.Address.TownOrCity.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.TownOrCity);
-            result.Address.CountyOrRegion.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.CountyOrRegion);
-            result.Address.Postcode.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.Postcode);
-            result.Address.CountryId.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.CountryId);
-            result.Address.Email.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.Email);
-            result.Address.Telephone.Should().Be(source.CurrentSubmission.AuthorisedRepresentitiveData.Telephone);
+            result.Address.Address1.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Address1);
+            result.Address.Address2.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Address2);
+            result.Address.TownOrCity.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.TownOrCity);
+            result.Address.CountyOrRegion.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountyOrRegion);
+            result.Address.Postcode.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Postcode);
+            result.Address.CountryId.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountryId);
+            result.Address.Email.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Email);
+            result.Address.Telephone.Should().Be(submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Telephone);
         }
     }
 }
