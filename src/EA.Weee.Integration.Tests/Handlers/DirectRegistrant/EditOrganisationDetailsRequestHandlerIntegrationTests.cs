@@ -3,8 +3,10 @@
     using Autofac;
     using AutoFixture;
     using Base;
+    using EA.Prsd.Core;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.Integration.Tests.Builders;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using FluentAssertions;
@@ -27,9 +29,7 @@
 
             private readonly Because of = () =>
             {
-                AsyncHelper.RunSync(() =>
-                    createSubmissionHandler.HandleAsync(new AddSmallProducerSubmission(directRegistrant.Id)));
-                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+               result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
             };
 
             private readonly It shouldUpdateTheData = () =>
@@ -81,6 +81,7 @@
             protected static IRequestHandler<AddSmallProducerSubmission, Guid> createSubmissionHandler;
             protected static Fixture fixture;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
+            protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
             protected static EditOrganisationDetailsRequest request;
             protected static bool result;
             protected static Country country;
@@ -99,6 +100,17 @@
                 createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
 
                 fixture = new Fixture();
+
+                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
+                    .WithDefaultRegisteredProducer()
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
+                    .WithDirectRegistrant(directRegistrant)
+                    .Create();
+
+                var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
 
                 country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
 
