@@ -3,15 +3,12 @@
     using AutoFixture;
     using Core.Organisations;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
     using EA.Weee.Core;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Requests.Organisations.DirectRegistrant;
-    using EA.Weee.Requests.Shared;
+    using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
-    using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
@@ -23,7 +20,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -44,7 +40,9 @@
             mapper = A.Fake<IMapper>();
 
             controller = new ProducerController(
-               breadcrumb, weeeCache, mapper);
+               breadcrumb, 
+               weeeCache, 
+               mapper);
         }
 
         [Fact]
@@ -174,6 +172,41 @@
                     EEEDetailsComplete = eeeDetailsComplete
                 },
                 HasAuthorisedRepresentitive = hasAuthorizedRepresentative
+            };
+        }
+
+        private void SetupDefaultControllerData()
+        {
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = organisationId,
+                    CompanyRegistrationNumber = Guid.NewGuid().ToString(),
+                    Name = Guid.NewGuid().ToString(),
+                    OrganisationType = OrganisationType.Partnership,
+                    TradingName = Guid.NewGuid().ToString(),
+                    BusinessAddress = new Core.Shared.AddressData
+                    {
+                        Address1 = Guid.NewGuid().ToString(),
+                        Address2 = Guid.NewGuid().ToString(),
+                        TownOrCity = Guid.NewGuid().ToString(),
+                        CountryName = Guid.NewGuid().ToString(),
+                        WebAddress = Guid.NewGuid().ToString(),
+                        Telephone = "4567894563",
+                        Postcode = Guid.NewGuid().ToString()
+                    }
+                },
+                CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = 2005,
+                    OrganisationDetailsComplete = true,
+                    ContactDetailsComplete = true,
+                    ServiceOfNoticeComplete = true,
+                    RepresentingCompanyDetailsComplete = true,
+                    EEEDetailsComplete = true
+                },
+                HasAuthorisedRepresentitive = true
             };
         }
 
@@ -307,6 +340,66 @@
         {
             // Arrange
             var methodInfo = typeof(ProducerController).GetMethod("CheckAnswers");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_ReturnOrganisationDetailsView()
+        {
+            SetupDefaultControllerData();
+
+            var view = (await controller.OrganisationDetails()) as ViewResult;
+
+            view.ViewName.Should().Be("ViewOrganisation/OrganisationDetails");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_ReturnViewModelAndMapsData()
+        {
+            SetupDefaultControllerData();
+
+            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+
+            var result = (await controller.OrganisationDetails()) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.OrganisationViewModel.Should().NotBeNull();
+
+            A.CallTo(() => mapper
+                            .Map<SmallProducerSubmissionData, OrganisationViewModel>(controller.SmallProducerSubmissionData))
+                            .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_SetViewBreadcrumb()
+        {
+            SetupDefaultControllerData();
+
+            var expected = "org name";
+
+            A.CallTo(() => weeeCache
+            .FetchOrganisationName(controller.SmallProducerSubmissionData.OrganisationData.Id))
+                .Returns(expected);
+
+            var result = (await controller.OrganisationDetails()) as ViewResult;
+
+            Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
+            Assert.Equal(breadcrumb.OrganisationId, controller.SmallProducerSubmissionData.OrganisationData.Id);
+            Assert.Equal(breadcrumb.ExternalOrganisation, expected);
+        }
+
+        [Fact]
+        public void OrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("OrganisationDetails", new Type[0]);
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();

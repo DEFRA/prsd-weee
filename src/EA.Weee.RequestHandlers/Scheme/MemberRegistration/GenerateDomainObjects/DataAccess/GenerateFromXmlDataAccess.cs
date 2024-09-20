@@ -149,10 +149,15 @@
 
         public async Task<bool> ProducerRegistrationExists(string producerRegistrationNumber)
         {
-            return await context
+            var existsProducerSubmissions = await context
                 .RegisteredProducers
                 .Where(rp => rp.CurrentSubmission != null)
                 .AnyAsync(rp => rp.ProducerRegistrationNumber == producerRegistrationNumber);
+
+            var existsRegisteredProducers = await context.DirectProducerSubmissions.AnyAsync(d =>
+                d.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber);
+
+            return existsProducerSubmissions || existsRegisteredProducers;
         }
     }
 }

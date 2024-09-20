@@ -1,0 +1,83 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Helpers
+@using EA.Weee.Web.Areas.Producer.ViewModels
+
+@model OrganisationDetailsTabsViewModel
+
+@{
+    var @title = "Organisation details";
+    ViewBag.Title = @title + " - GOV.UK";
+}
+@section full_main_content{
+    <div class="govuk-!-padding-bottom-8"></div>
+    <div class="govuk-tabs">
+        @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
+
+        <div class="govuk-tabs__panel" id="organisationDetails">
+            <h1 class="govuk-heading-m">
+                @title
+            </h1>
+            <table id="pcs-details-table" class="govuk-table">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Organisation type</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.OrganisationType.GetDisplayName()</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Company name</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.CompanyName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Company registration number</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.CompaniesRegistrationNumber</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Trading name</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.BusinessTradingName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Website address</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.WebsiteAddress</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Address line 1</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Address1</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Address line 2</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Address2</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Town</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.TownOrCity</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">County</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.CountyOrRegion</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Postcode</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Postcode</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Country</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.CountryName</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    @(this.WeeeGds().BackToTopLink())
+}

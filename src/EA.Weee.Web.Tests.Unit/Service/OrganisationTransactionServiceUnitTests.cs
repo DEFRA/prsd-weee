@@ -323,5 +323,80 @@
                                  p.FirstName == partner.FirstName && p.LastName == partner.LastName)))))
                 .MustHaveHappenedOnceExactly();
         }
+
+        [Theory]
+        [InlineData(ExternalOrganisationType.RegisteredCompany)]
+        [InlineData(ExternalOrganisationType.Partnership)]
+        [InlineData(ExternalOrganisationType.SoleTrader)]
+        public async Task CaptureData_WithOrganisationViewModel_ShouldUpdateTransactionCorrectly(ExternalOrganisationType organisationType)
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var organisationViewModel = fixture.Build<OrganisationViewModel>()
+                .With(o => o.OrganisationType, organisationType)
+                .Create();
+            var transaction = new OrganisationTransactionData
+            {
+                SoleTraderViewModel = new SoleTraderViewModel(),
+                PartnerModels = new System.Collections.Generic.List<AdditionalContactModel> { new AdditionalContactModel() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, organisationViewModel);
+
+            // Assert
+            transaction.OrganisationViewModel.Should().Be(organisationViewModel);
+
+            switch (organisationType)
+            {
+                case ExternalOrganisationType.RegisteredCompany:
+                    transaction.SoleTraderViewModel.Should().BeNull();
+                    transaction.PartnerModels.Should().BeNull();
+                    break;
+                case ExternalOrganisationType.Partnership:
+                    transaction.SoleTraderViewModel.Should().BeNull();
+                    transaction.PartnerModels.Should().NotBeNull();
+                    break;
+                case ExternalOrganisationType.SoleTrader:
+                    transaction.SoleTraderViewModel.Should().NotBeNull();
+                    transaction.PartnerModels.Should().BeNull();
+                    break;
+            }
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.OrganisationViewModel.Equals(organisationViewModel)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CaptureData_WithRepresentingCompanyDetailsViewModel_ShouldNotNullifyOtherFields()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var representingCompanyDetailsViewModel = fixture.Create<RepresentingCompanyDetailsViewModel>();
+            var transaction = new OrganisationTransactionData
+            {
+                PartnerModels = new System.Collections.Generic.List<AdditionalContactModel> { new AdditionalContactModel() },
+                SoleTraderViewModel = new SoleTraderViewModel()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
+                .Returns(Task.FromResult(transaction));
+
+            // Act
+            await organisationService.CaptureData(accessToken, representingCompanyDetailsViewModel);
+
+            // Assert
+            transaction.RepresentingCompanyDetailsViewModel.Should().Be(representingCompanyDetailsViewModel);
+            transaction.PartnerModels.Should().NotBeNull();
+            transaction.SoleTraderViewModel.Should().NotBeNull();
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
+                x => x.OrganisationTransactionData.RepresentingCompanyDetailsViewModel.Equals(representingCompanyDetailsViewModel) &&
+                     x.OrganisationTransactionData.PartnerModels != null &&
+                     x.OrganisationTransactionData.SoleTraderViewModel != null))).MustHaveHappenedOnceExactly();
+        }
     }
 }
