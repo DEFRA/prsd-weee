@@ -573,6 +573,7 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidEvidenceNoteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidTransferNoteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Organisation\OrganisationDetailsDisplayOption.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\EvidenceAndObligationProgressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Payment\PaymentAreaRegistration.cs" />
@@ -591,6 +592,7 @@
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToServiceOfNoticeRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditEeeDataViewModelMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\OrganisationViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\ServiceOfNoticeMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditContactDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
@@ -603,6 +605,7 @@
     <Compile Include="Areas\Producer\ViewModels\EditEeeDataViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ProducerTaskModel.cs" />
+    <Compile Include="Areas\Producer\ViewModels\OrganisationDetailsTabsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\TaskListViewModel.cs" />
     <Compile Include="Areas\Producer\Views\App_LocalResources\ProducerSubmission.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1102,12 +1105,16 @@
     <Content Include="Views\OrganisationRegistration\PartnerDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\OrganisationDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\OrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditOrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditEeeeData.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\ServiceOfNotice.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditContactDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditRepresentedOrganisationDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\_OrganisationDetailsTabs.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\ContactDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\ServiceOfNoticeDetails.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\RepresentedOrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\AppropriateSignatory.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentResult.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentSuccess.cshtml" />

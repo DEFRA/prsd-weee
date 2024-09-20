@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Filters
 {
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -34,11 +35,12 @@
 
             var breadcrumbService = A.Fake<BreadcrumbService>();
             var weeeCache = A.Fake<IWeeeCache>();
+            var mapper = A.Fake<IMapper>();
 
             actionExecutingContext = new ActionExecutingContext
             {
                 ActionParameters = new System.Web.Routing.RouteValueDictionary(),
-                Controller = new ProducerController(breadcrumbService, weeeCache),
+                Controller = new ProducerController(breadcrumbService, weeeCache, mapper),
                 HttpContext = fakeHttpContext,
                 RouteData = new System.Web.Routing.RouteData()
             };
