@@ -88,6 +88,15 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save and return to check answers.
+        /// </summary>
+        public static string SaveAndReturnCheckAnswers {
+            get {
+                return ResourceManager.GetString("SaveAndReturnCheckAnswers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save and return to task list.
         /// </summary>
         public static string SaveAndReturnTaskList {

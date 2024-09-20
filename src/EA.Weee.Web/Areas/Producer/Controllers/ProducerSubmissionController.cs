@@ -12,6 +12,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -42,11 +43,11 @@
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
 
-        public ProducerSubmissionController(IMapper mapper, 
+        public ProducerSubmissionController(IMapper mapper,
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
             IRequestCreator<RepresentingCompanyDetailsViewModel, RepresentedOrganisationDetailsRequest> editRepresentedOrganisationDetailsRequestCreator,
-            Func<IWeeeClient> apiClient, 
-            BreadcrumbService breadcrumbService, 
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumbService,
             IWeeeCache weeeCache,
             IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
                 editContactDetailsRequestCreator,
@@ -73,9 +74,15 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditOrganisationDetails()
+        public async Task<ActionResult> EditOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
-            var model = mapper.Map<SmallProducerSubmissionData, EditOrganisationDetailsViewModel>(SmallProducerSubmissionData);
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                RedirectToCheckAnswers = redirectToCheckAnswers,
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>(source);
 
             var countries = await GetCountries();
 
@@ -102,6 +109,11 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
+                if (model.RedirectToCheckAnswers == true)
+                {
+                    return RedirectToAction(nameof(ProducerController.CheckAnswers),
+                    typeof(ProducerController).GetControllerName());
+                }
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
@@ -116,9 +128,15 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditEeeeData()
+        public async Task<ActionResult> EditEeeeData(bool? redirectToCheckAnswers = false)
         {
-            var model = mapper.Map<SmallProducerSubmissionData, EditEeeDataViewModel>(SmallProducerSubmissionData);
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                RedirectToCheckAnswers = redirectToCheckAnswers,
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, EditEeeDataViewModel>(source);
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
@@ -138,6 +156,11 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
+                if (model.RedirectToCheckAnswers == true)
+                {
+                    return RedirectToAction(nameof(ProducerController.CheckAnswers),
+                    typeof(ProducerController).GetControllerName());
+                }
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
@@ -149,9 +172,15 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress)
+        public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress, bool? redirectToCheckAnswers = false)
         {
-            var model = mapper.Map<SmallProducerSubmissionData, ServiceOfNoticeViewModel>(SmallProducerSubmissionData);
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                RedirectToCheckAnswers = redirectToCheckAnswers,
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(source);
 
             var countries = await GetCountries();
             model.Address.Countries = countries;
@@ -159,7 +188,7 @@
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
             model.SameAsOrganisationAddress = sameAsOrganisationAddress ?? false;
-            
+
             if (model.SameAsOrganisationAddress)
             {
                 AddressData organisationAddress;
@@ -201,6 +230,11 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
+                if (model.RedirectToCheckAnswers == true)
+                {
+                    return RedirectToAction(nameof(ProducerController.CheckAnswers),
+                    typeof(ProducerController).GetControllerName());
+                }
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
@@ -215,9 +249,15 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditRepresentedOrganisationDetails()
+        public async Task<ActionResult> EditRepresentedOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
-            var model = mapper.Map<SmallProducerSubmissionData, RepresentingCompanyDetailsViewModel>(SmallProducerSubmissionData);
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                RedirectToCheckAnswers = redirectToCheckAnswers,
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(source);
 
             model.Address.Countries = await GetCountries();
 
@@ -239,6 +279,11 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
+                if (model.RedirectToCheckAnswers == true)
+                {
+                    return RedirectToAction(nameof(ProducerController.CheckAnswers),
+                    typeof(ProducerController).GetControllerName());
+                }
                 return RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName());
             }
 
@@ -253,10 +298,16 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> EditContactDetails()
+        public async Task<ActionResult> EditContactDetails(bool? redirectToCheckAnswers = false)
         {
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                RedirectToCheckAnswers = redirectToCheckAnswers,
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
             var model =
-                mapper.Map<SmallProducerSubmissionData, EditContactDetailsViewModel>(SmallProducerSubmissionData);
+                mapper.Map<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>(source);
 
             var countries = await GetCountries();
 
@@ -280,6 +331,11 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
+                if (model.RedirectToCheckAnswers == true)
+                {
+                    return RedirectToAction(nameof(ProducerController.CheckAnswers),
+                    typeof(ProducerController).GetControllerName());
+                }
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
@@ -307,6 +363,19 @@
             return View(model);
         }
 
+        public ActionResult BackToPrevious(bool? redirectToCheckAnswers)
+        {
+            if (redirectToCheckAnswers == true)
+            {
+                return RedirectToAction(nameof(ProducerController.CheckAnswers),
+                    typeof(ProducerController).GetControllerName());
+            }
+            else
+            {
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
+            }
+        }
         private async Task<IList<CountryData>> GetCountries()
         {
             using (var client = apiClient())
