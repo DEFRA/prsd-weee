@@ -590,6 +590,7 @@
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditEeeDataRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToServiceOfNoticeRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\AddSignatoryMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditEeeDataViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\OrganisationViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\ServiceOfNoticeMap.cs" />

@@ -299,6 +299,11 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> AppropriateSignatory()
         {
+            var model =
+                mapper.Map<SmallProducerSubmissionData, AppropriateSignatoryViewModel>(SmallProducerSubmissionData);
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
             return View();
         }
 
