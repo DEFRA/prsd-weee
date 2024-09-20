@@ -23,5 +23,7 @@
         public string Telephone { get; set; }
 
         public string Email { get; set; }
+
+        public string CountryName { get; set; }
     }
 }

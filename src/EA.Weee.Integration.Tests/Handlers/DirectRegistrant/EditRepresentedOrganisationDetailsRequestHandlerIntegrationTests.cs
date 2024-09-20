@@ -22,7 +22,7 @@
     public class EditRepresentedOrganisationDetailsRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIUpdateRepresentingOrganisationDetailsWhereNonExist : EditRepresentedOrganisationDetailsRequestHandlerIntegrationTestBase
+        public class WhenIUpdateRepresentingOrganisationDetailsWithNoSubmissionDetails : EditRepresentedOrganisationDetailsRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -30,12 +30,16 @@
 
                 authorisedRepresentative = AuthorisedRepDbSetup.Init().Create();
 
+                var registeredProducer = new RegisteredProducer("reg", SystemTime.UtcNow.Year);
+
                 directRegistrant = DirectRegistrantDbSetup.Init()
                     .WithAuthorisedRep(authorisedRepresentative)
                     .Create();
 
                 directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
                     .WithDirectRegistrant(directRegistrant)
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
+                    .WithRegisteredProducer(registeredProducer)
                     .Create();
 
                 directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
