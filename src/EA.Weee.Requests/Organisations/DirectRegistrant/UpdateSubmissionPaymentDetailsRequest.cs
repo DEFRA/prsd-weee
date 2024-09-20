@@ -11,15 +11,19 @@
 
         public PaymentStatus PaymentStatus { get; private set; }
 
-        public Guid PaymentSessionId {get; private set; }
+        public Guid PaymentSessionId { get; private set; }
 
-        public UpdateSubmissionPaymentDetailsRequest(Guid directRegistrantId, PaymentStatus paymentStatus, Guid paymentSessionId)
+        public bool IsFinalState { get; private set; }
+
+        public UpdateSubmissionPaymentDetailsRequest(Guid directRegistrantId, PaymentStatus paymentStatus, Guid paymentSessionId, bool isFinalState)
         {
             Condition.Requires(directRegistrantId).IsNotEqualTo(Guid.Empty);
+            Condition.Requires(paymentSessionId).IsNotEqualTo(Guid.Empty);
 
             DirectRegistrantId = directRegistrantId;
             PaymentStatus = paymentStatus;
             PaymentSessionId = paymentSessionId;
+            IsFinalState = isFinalState;
         }
     }
 }

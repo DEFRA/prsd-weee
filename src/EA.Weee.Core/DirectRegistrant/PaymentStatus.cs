@@ -2,7 +2,7 @@
 {
     public enum PaymentStatus
     {
-        New,
+        New = 1,
         Created,
         Started,
         Submitted,

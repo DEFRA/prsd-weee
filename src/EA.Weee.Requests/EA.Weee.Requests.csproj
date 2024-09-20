@@ -89,7 +89,7 @@
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddPaymentSessionRequest.cs" />
-    <Compile Include="Organisations\DirectRegistrant\ValidateAndUpdateSubmissionPaymentResultRequest.cs" />
+    <Compile Include="Organisations\DirectRegistrant\GetInProgressPaymentSessionRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\ValidateAndGetSubmissionPayment.cs" />
     <Compile Include="Organisations\DirectRegistrant\UpdateSubmissionPaymentDetailsRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\EditEeeDataRequest.cs" />

@@ -18,12 +18,14 @@
         private readonly IUserContext userContext;
         private readonly IWeeeAuthorization authorization;
         private readonly ISystemDataDataAccess systemDataAccess;
+        private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
 
         public ValidateAndGetSubmissionPaymentHandler(IWeeeAuthorization authorization,
-            WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IUserContext userContext)
+            WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IUserContext userContext, IPaymentSessionDataAccess paymentSessionDataAccess)
         {
             this.weeeContext = weeeContext;
             this.userContext = userContext;
+            this.paymentSessionDataAccess = paymentSessionDataAccess;
             this.authorization = authorization;
             this.systemDataAccess = systemDataAccess;
         }
@@ -45,13 +47,8 @@
                 };
             }
 
-            // we only care about the most recent session that may have been started
-            var session = await weeeContext.PaymentSessions.Where(c =>
-                    c.PaymentReturnToken == request.PaymentReturnToken &&
-                    c.UserId.ToString() == userContext.UserId.ToString() &&
-                    c.Status.Value == PaymentState.New.Value &&
-                    c.DirectProducerSubmission.ComplianceYear == systemTime.Year).OrderByDescending(p => p.CreatedAt)
-                .Include(paymentSession => paymentSession.DirectRegistrant).FirstOrDefaultAsync();
+            // we only care about the most recent session as user should only have one payment process at once.
+            var session = await paymentSessionDataAccess.GetCurrentInProgressPayment(request.PaymentReturnToken, request.DirectRegistrantId, systemTime.Year);
 
             if (session == null)
             {
