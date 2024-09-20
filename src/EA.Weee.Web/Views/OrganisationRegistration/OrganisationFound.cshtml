@@ -1,0 +1,23 @@
+﻿@using EA.Weee.Core.DataStandards
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationsFoundViewModel
+@{
+    const string title = "Organisation found";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @*@(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.PreviousPage(Model.OrganisationType))))*@
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    @foreach (var thing in Model.OrganisationFoundViewModels)
+    {
+        <span>@thing.OrganisationName</span>
+        <span>@thing.CompanyRegistrationName</span>
+    }
+}
