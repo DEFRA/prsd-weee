@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using System;
+
     public interface ISecureReturnUrlHelper
     {
-        string GenerateSecureRandomString(int length = 32);
+        string GenerateSecureRandomString(Guid guid, int length = 16);
 
-        bool ValidateSecureRandomString(string input);
+        (bool isValid, Guid guid) ValidateSecureRandomString(string input);
     }
 }

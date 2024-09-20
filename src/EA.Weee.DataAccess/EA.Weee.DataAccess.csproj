@@ -105,6 +105,7 @@
     <Compile Include="DataAccess\IGenericDataAccess.cs" />
     <Compile Include="DataAccess\IObligationDataAccess.cs" />
     <Compile Include="DataAccess\IOrganisationTransactionDataAccess.cs" />
+    <Compile Include="DataAccess\IPaymentSessionDataAccess.cs" />
     <Compile Include="DataAccess\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
     <Compile Include="DataAccess\ObligationDataAccess.cs" />
     <Compile Include="DataAccess\OrganisationTransactionDataAccess.cs" />
+    <Compile Include="DataAccess\PaymentSessionDataAccess.cs" />
     <Compile Include="DataAccess\ProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="DataAccess\ProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />

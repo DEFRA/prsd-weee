@@ -29,7 +29,7 @@
 
         public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken)
         {
-            var secureId = secureReturnUrlHelper.GenerateSecureRandomString();
+            var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
             var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl, directRegistrantId.ToString(), secureId);
 
             var paymentRequest = new CreateCardPaymentRequest
@@ -47,7 +47,8 @@
 
             using (var client = weeeClient())
             {
-                await client.SendAsync(accessToken, new AddPaymentSessionRequest(directRegistrantId, paymentRequest.Reference, secureId, result.PaymentId, paymentRequest.Amount));
+                await client.SendAsync(accessToken, new AddPaymentSessionRequest(directRegistrantId, paymentRequest.Reference, 
+                    secureId, result.PaymentId, paymentRequest.Amount));
             }
 
             return result;
@@ -55,14 +56,16 @@
 
         public async Task<PaymentResult> HandlePaymentReturnAsync(string accessToken, string token)
         {
-            if (!secureReturnUrlHelper.ValidateSecureRandomString(token))
+            var (isValid, extractDirectRegistrantId) = secureReturnUrlHelper.ValidateSecureRandomString(token);
+
+            if (!isValid)
             {
                 throw new InvalidOperationException("Invalid secure ID");
             }
 
             using (var client = weeeClient())
             {
-                var payment = await client.SendAsync(accessToken, new ValidateAndGetSubmissionPayment(token));
+                var payment = await client.SendAsync(accessToken, new ValidateAndGetSubmissionPayment(token, extractDirectRegistrantId));
 
                 if (!string.IsNullOrWhiteSpace(payment.ErrorMessage))
                 {
@@ -71,7 +74,7 @@
 
                 var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
 
-                await client.SendAsync(accessToken, new UpdateSubmissionPaymentDetailsRequest(payment.DirectRegistrantId, result.State.Status, payment.PaymentSessionId));
+                await client.SendAsync(accessToken, new UpdateSubmissionPaymentDetailsRequest(payment.DirectRegistrantId, result.State.Status, payment.PaymentSessionId, result.State.IsInFinalState()));
 
                 if (result.State.Status == PaymentStatus.Success)
                 {

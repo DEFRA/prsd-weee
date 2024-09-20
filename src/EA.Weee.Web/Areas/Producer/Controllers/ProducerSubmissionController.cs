@@ -319,7 +319,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> PaymentSuccess(string reference)
+        public ActionResult PaymentSuccess(string reference)
         {
             var model = new PaymentResultModel()
             {
@@ -332,7 +332,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> PaymentFailure()
+        public ActionResult PaymentFailure()
         {
             return View();
         }

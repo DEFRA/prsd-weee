@@ -14,7 +14,7 @@
             this.configurationService = configurationService;
         }
 
-        public string GenerateSecureRandomString(int length = 32)
+        public string GenerateSecureRandomString(Guid guid, int length = 16)
         {
             var bytes = new byte[length];
             using (var rng = RandomNumberGenerator.Create())
@@ -24,35 +24,45 @@
             var token = Convert.ToBase64String(bytes)
                 .Replace("+", "-").Replace("/", "_").TrimEnd('=');
 
-            var hmac = ComputeHmac(token);
-            var fullToken = $"{token}.{hmac}";
+            var guidString = guid.ToString("N");
+            var combinedString = $"{token}.{guidString}";
+            var hmac = ComputeHmac(combinedString);
 
+            var fullToken = $"{combinedString}.{hmac}";
             return fullToken;
         }
 
-        public bool ValidateSecureRandomString(string input)
+        public (bool isValid, Guid guid) ValidateSecureRandomString(string input)
         {
-            if (string.IsNullOrEmpty(input) || !input.Contains('.'))
+            if (string.IsNullOrEmpty(input) || input.Count(c => c == '.') != 2)
             {
-                return false;
+                return (false, Guid.Empty);
             }
 
             var parts = input.Split('.');
-            if (parts.Length != 2)
+            if (parts.Length != 3)
             {
-                return false;
+                return (false, Guid.Empty);
             }
 
             var token = parts[0];
-            var providedHmac = parts[1];
+            var guidString = parts[1];
+            var providedHmac = parts[2];
 
             if (!token.All(c => char.IsLetterOrDigit(c) || c == '-' || c == '_'))
             {
-                return false;
+                return (false, Guid.Empty);
             }
 
-            var computedHmac = ComputeHmac(token);
-            return providedHmac.Equals(computedHmac);
+            if (!Guid.TryParseExact(guidString, "N", out var guid))
+            {
+                return (false, Guid.Empty);
+            }
+
+            var combinedString = $"{token}.{guidString}";
+            var computedHmac = ComputeHmac(combinedString);
+
+            return (providedHmac.Equals(computedHmac), guid);
         }
 
         private string ComputeHmac(string data)
