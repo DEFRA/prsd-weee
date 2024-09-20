@@ -1,0 +1,1 @@
+ALTER TABLE [Producer].[PaymentSession] ADD InFinalState BIT DEFAULT(0) NOT NULL;

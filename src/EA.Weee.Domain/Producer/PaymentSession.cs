@@ -6,7 +6,7 @@
 
     public class PaymentSession : Entity
     {
-        protected PaymentSession()
+        public PaymentSession()
         {
         }
 
@@ -25,6 +25,8 @@
         public decimal Amount { get; set; }
 
         public PaymentState Status { get; set; }
+
+        public bool InFinalState { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
