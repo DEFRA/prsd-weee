@@ -21,19 +21,37 @@ namespace EA.Weee.Web.RazorHelpers
                 html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}</caption>";
             }
 
+            // Adding table headers with govuk-visually-hidden class for accessibility
             html += "<thead class=\"govuk-table__head\">";
 
-            if (columnDescription != null && columnHeading != null)
+            // Always add hidden headers for screen readers even if columnHeading and columnDescription are null
+            html += "<tr class=\"govuk-table__row\">";
+
+            // Hidden header for key/row label column
+            if (!string.IsNullOrEmpty(columnHeading))
             {
-                html += $"<tr class=\"govuk-table__row govuk-visually-hidden\"><th class=\"govuk-table__header govuk-visually-hidden\" scope=\"col\">{columnHeading}</th>" +
-                        $"<th class=\"govuk-table__header govuk-visually-hidden\" scope=\"col\">{columnDescription}</th></tr>";
+                html += $"<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">{columnHeading}</th>";
             }
             else
             {
-                html += "<tr class=\"govuk-table__row govuk-visually-hidden\"><th class=\"govuk-table__header\" scope=\"col\" colspan=\"2\"></th></tr>";
+                html += "<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">Item</th>";
             }
 
-            html += "</thead><tbody class=\"govuk-table__body\">";
+            // Hidden header for value column
+            if (!string.IsNullOrEmpty(columnDescription))
+            {
+                html += $"<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">{columnDescription}</th>";
+            }
+            else
+            {
+                html += "<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">Details</th>";
+            }
+
+            html += "</tr>";
+            html += "</thead>";
+
+            // Add table body
+            html += "<tbody class=\"govuk-table__body\">";
 
             foreach (var key in data.Keys)
             {

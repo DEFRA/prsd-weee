@@ -29,15 +29,16 @@
         public void Map_ShouldMapHighLevelSourceFields()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
-            result.OrganisationId.Should().Be(source.OrganisationData.Id);
-            result.HasAuthorisedRepresentitive.Should().Be(source.HasAuthorisedRepresentitive);
+            result.DirectRegistrantId.Should().Be(submissionData.DirectRegistrantId);
+            result.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            result.HasAuthorisedRepresentitive.Should().Be(submissionData.HasAuthorisedRepresentitive);
         }
 
         [Theory]
@@ -47,9 +48,11 @@
         public void Map_ShouldMapOrganisationTypeCorrectly(OrganisationType sourceType, ExternalOrganisationType expectedType)
         {
             // Arrange
-            var source = fixture.Build<SmallProducerSubmissionData>()
-                .With(x => x.OrganisationData, fixture.Build<OrganisationData>()
-                    .With(o => o.OrganisationType, sourceType)
+            var source = fixture.Build<SmallProducerSubmissionMapperData>()
+                .With(x => x.SmallProducerSubmissionData, fixture.Build<SmallProducerSubmissionData>()
+                    .With(s => s.OrganisationData, fixture.Build<OrganisationData>()
+                        .With(o => o.OrganisationType, sourceType)
+                        .Create())
                     .Create())
                 .Create();
 
@@ -64,23 +67,26 @@
         public void Map_ShouldUseCurrentSubmissionDataWhenAvailable()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.Organisation.CompanyName.Should().Be(source.CurrentSubmission.CompanyName);
-            result.Organisation.BusinessTradingName.Should().Be(source.CurrentSubmission.TradingName);
-            result.Organisation.EEEBrandNames.Should().Be(source.CurrentSubmission.EEEBrandNames);
-            result.Organisation.CompaniesRegistrationNumber.Should().Be(source.OrganisationData.CompanyRegistrationNumber);
+            result.Organisation.CompanyName.Should().Be(submissionData.CurrentSubmission.CompanyName);
+            result.Organisation.BusinessTradingName.Should().Be(submissionData.CurrentSubmission.TradingName);
+            result.Organisation.EEEBrandNames.Should().Be(submissionData.CurrentSubmission.EEEBrandNames);
+            result.Organisation.CompaniesRegistrationNumber.Should().Be(submissionData.OrganisationData.CompanyRegistrationNumber);
         }
 
         [Fact]
         public void Map_ShouldMapBusinessAddress()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
+
             var expectedAddress = fixture.Create<ExternalAddressData>();
             A.CallTo(() => mapper.Map<AddressData, ExternalAddressData>(A<AddressData>._))
                 .Returns(expectedAddress);
@@ -90,7 +96,7 @@
 
             // Assert
             result.Organisation.Address.Should().Be(expectedAddress);
-            A.CallTo(() => mapper.Map<AddressData, ExternalAddressData>(source.CurrentSubmission.BusinessAddressData))
+            A.CallTo(() => mapper.Map<AddressData, ExternalAddressData>(submissionData.CurrentSubmission.BusinessAddressData))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -98,13 +104,15 @@
         public void Map_ShouldMapAdditionalContactDetails()
         {
             // Arrange
-            var source = fixture.Build<SmallProducerSubmissionData>()
-                .With(x => x.CurrentSubmission, fixture.Build<SmallProducerSubmissionHistoryData>()
-                    .With(s => s.AdditionalCompanyDetailsData, new List<AdditionalCompanyDetailsData>
-                    {
-                        new AdditionalCompanyDetailsData { FirstName = "John", LastName = "Doe" },
-                        new AdditionalCompanyDetailsData { FirstName = "Jane", LastName = "Smith" }
-                    })
+            var source = fixture.Build<SmallProducerSubmissionMapperData>()
+                .With(x => x.SmallProducerSubmissionData, fixture.Build<SmallProducerSubmissionData>()
+                    .With(s => s.CurrentSubmission, fixture.Build<SmallProducerSubmissionHistoryData>()
+                        .With(ss => ss.AdditionalCompanyDetailsData, new List<AdditionalCompanyDetailsData>
+                        {
+                            new AdditionalCompanyDetailsData { FirstName = "John", LastName = "Doe" },
+                            new AdditionalCompanyDetailsData { FirstName = "Jane", LastName = "Smith" }
+                        })
+                        .Create())
                     .Create())
                 .Create();
 

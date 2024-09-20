@@ -1,10 +1,18 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Controllers
 {
+    using AutoFixture;
     using Core.Organisations;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -15,6 +23,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -26,14 +35,16 @@
         private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumb;
         private readonly Guid organisationId = Guid.NewGuid();
+        private readonly IMapper mapper;
 
         public ProducerControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             weeeCache = A.Fake<IWeeeCache>();
+            mapper = A.Fake<IMapper>();
 
             controller = new ProducerController(
-               breadcrumb, weeeCache);
+               breadcrumb, weeeCache, mapper);
         }
 
         [Fact]
@@ -246,11 +257,60 @@
         }
 
         [Fact]
-        public void TaskList_ReturnView()
+        public async Task CheckAnswers_Get_ShouldReturnViewWithMappedModel()
         {
-            var view = controller.CheckAnswers() as ViewResult;
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
-            view.ViewName.Should().Be("CheckAnswers");
+            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData)))).Returns(viewModel);
+
+            // Act
+            var result = await controller.CheckAnswers() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(viewModel);
+        }
+
+        [Fact]
+        public async Task CheckAnswers_Get_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            var organisationName = TestFixture.Create<string>();
+
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.SmallProducerSubmissionData.OrganisationData.Id)).Returns(organisationName);
+
+            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
+
+            // Act
+            await controller.CheckAnswers();
+
+            // Assert
+            breadcrumb.OrganisationId.Should().Be(submissionData.SmallProducerSubmissionData.OrganisationData.Id);
+            breadcrumb.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumb.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public void CheckAnswers_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("CheckAnswers");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
         }
     }
 }

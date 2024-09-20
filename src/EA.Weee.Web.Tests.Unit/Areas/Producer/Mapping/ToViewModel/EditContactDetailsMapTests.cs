@@ -27,37 +27,41 @@
         public void Map_ShouldMaphighLevelSourceFields()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.DirectRegistrantId.Should().Be(source.DirectRegistrantId);
-            result.OrganisationId.Should().Be(source.OrganisationData.Id);
-            result.HasAuthorisedRepresentitive.Should().Be(source.HasAuthorisedRepresentitive);
+            result.DirectRegistrantId.Should().Be(submissionData.DirectRegistrantId);
+            result.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
+            result.HasAuthorisedRepresentitive.Should().Be(submissionData.HasAuthorisedRepresentitive);
         }
 
         [Fact]
         public void Map_ShouldUseCurrentSubmissionDataWhenAvailable()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
 
             // Act
             var result = map.Map(source);
 
             // Assert
-            result.ContactDetails.FirstName.Should().Be(source.CurrentSubmission.ContactData.FirstName);
-            result.ContactDetails.LastName.Should().Be(source.CurrentSubmission.ContactData.LastName);
-            result.ContactDetails.Position.Should().Be(source.CurrentSubmission.ContactData.Position);
+            result.ContactDetails.FirstName.Should().Be(submissionData.CurrentSubmission.ContactData.FirstName);
+            result.ContactDetails.LastName.Should().Be(submissionData.CurrentSubmission.ContactData.LastName);
+            result.ContactDetails.Position.Should().Be(submissionData.CurrentSubmission.ContactData.Position);
         }
 
         [Fact]
         public void Map_ShouldMapAddressData()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var submissionData = source.SmallProducerSubmissionData;
+
             var expectedAddress = fixture.Create<AddressPostcodeRequiredData>();
             A.CallTo(() => mapper.Map<AddressData, AddressPostcodeRequiredData>(A<AddressData>._))
                 .Returns(expectedAddress);
@@ -67,7 +71,7 @@
 
             // Assert
             result.ContactDetails.AddressData.Should().Be(expectedAddress);
-            A.CallTo(() => mapper.Map<AddressData, AddressPostcodeRequiredData>(source.CurrentSubmission.ContactAddressData))
+            A.CallTo(() => mapper.Map<AddressData, AddressPostcodeRequiredData>(submissionData.CurrentSubmission.ContactAddressData))
                 .MustHaveHappenedOnceExactly();
         }
     }
