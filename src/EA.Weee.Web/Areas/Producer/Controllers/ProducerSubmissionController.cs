@@ -20,6 +20,7 @@
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -41,6 +42,8 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
+        private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryRequest> 
+            addSignatoryRequestCreator;
 
         public ProducerSubmissionController(IMapper mapper, 
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
@@ -302,8 +305,23 @@
         [HttpPost]
         [SmallProducerSubmissionContext]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
+        public async Task<ActionResult> AppropriateSignatory(AppropriateSignatoryViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                var request = addSignatoryRequestCreator.ViewModelToRequest(model);
+
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return RedirectToAction(nameof(ProducerController.TaskList),
+                    typeof(ProducerController).GetControllerName());
+            }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
             return View(model);
         }
 

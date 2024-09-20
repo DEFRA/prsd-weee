@@ -583,6 +583,7 @@
     <Compile Include="Areas\Producer\Mappings\AddressFromAddressPostcodeRequiredDataMap.cs" />
     <Compile Include="Areas\Producer\Mappings\AddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressPostcodeRequiredMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToRequest\ToAddSignatoryRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditContactDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditRepresentedOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseServiceOfNoticeAddressMap.cs" />
@@ -596,6 +597,7 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\RepresentedOrganisationDetailsMap.cs" />
+    <Compile Include="Areas\Producer\ViewModels\AppropriateSignatoryViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
