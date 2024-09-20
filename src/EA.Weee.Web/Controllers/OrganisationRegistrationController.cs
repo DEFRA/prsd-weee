@@ -367,7 +367,7 @@
                     if (result == null)
                     {
                         model.LookupFound = false;
-                        
+
                         return View(model.CastToSpecificViewModel(model));
                     }
 
@@ -406,6 +406,13 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
+            var existingOrgs = await GetExistingOrganisations(model);
+
+            if (existingOrgs.Any())
+            {
+                return await OrganisationFound(existingOrgs);
+            }
+
             return await CheckAuthorisedRepresentitiveAndRedirect();
         }
 
@@ -440,12 +447,61 @@
             return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
+        private async Task<OrganisationData> GetExistingByRegistrationNumber(OrganisationViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                var res = await client
+                    .SendAsync(User.GetAccessToken(), new OrganisationByRegistrationNumberValue(model.CompaniesRegistrationNumber));
+
+                return res;
+            }
+        }
+
+        private async Task<IEnumerable<OrganisationFoundViewModel>> GetExistingOrganisations(OrganisationViewModel model)
+        {
+            OrganisationData existing = await GetExistingByRegistrationNumber(model);
+
+            if (existing != null)
+            {
+                return new List<OrganisationFoundViewModel> 
+                {
+                    new OrganisationFoundViewModel
+                    {
+                        OrganisationName = existing.Name,
+                        CompanyRegistrationName = existing.CompanyRegistrationNumber
+                    }
+                };
+            }
+
+            var nameSearch = await organisationSearcher.Search(model.CompanyName, maximumSearchResults, false);
+
+            var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
+            {
+                OrganisationName = x.Name,
+                CompanyRegistrationName = x.CompanyRegistrationNumber
+            });
+
+            return organisationsMapped;
+        }
+
+        public async Task<ActionResult> OrganisationFound(IEnumerable<OrganisationFoundViewModel> orgs)
+        {
+            var vm = new OrganisationsFoundViewModel
+            {
+                OrganisationFoundViewModels = orgs
+            };
+
+            return View("OrganisationFound", vm); //URL doesnt change here RedirectToAction isn't used. Can be sorted out as part of 71102
+        }
+
         private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
         {
-            var organisationTransactionData =
-                await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
-            if (organisationTransactionData != null &&
-                organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
+            var organisationTransactionData = await transactionService
+                                                    .GetOrganisationTransactionData(User.GetAccessToken());
+
+            if (organisationTransactionData != null 
+                && organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
                 var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
                 await cache.InvalidateOrganisationSearch();
