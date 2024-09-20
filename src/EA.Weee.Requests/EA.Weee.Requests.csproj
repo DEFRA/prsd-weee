@@ -99,6 +99,7 @@
     <Compile Include="Organisations\DirectRegistrant\AddUpdateOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddSmallProducerSubmission.cs" />
     <Compile Include="Organisations\DirectRegistrant\GetUserOrganisationTransaction.cs" />
+    <Compile Include="Organisations\OrganisationByRegistrationNumberValue.cs" />
     <Compile Include="Shared\GetObligationSummaryRequest.cs" />
     <Compile Include="AatfEvidence\GetTransferEvidenceNoteForSchemeRequest.cs" />
     <Compile Include="AatfEvidence\GetEvidenceNoteForSchemeRequest.cs" />
