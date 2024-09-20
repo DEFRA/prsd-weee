@@ -130,7 +130,7 @@
                 @(this.WeeeGds().Button(Resources.ProducerSubmission.ProducerSubmission.SaveAndReturnTaskList));
             }
 
-            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditEeeeData((bool?)null)), true)
+            @this.WeeeGds().GovUkButtonLink(Resources.ProducerSubmission.ProducerSubmission.DiscardChanges, @Url.UrlFor<ProducerSubmissionController>(a => a.EditEeeeData((bool?)null)), true, "discard-button")
 
         </div>
         @(this.WeeeGds().BackToTopLink())
