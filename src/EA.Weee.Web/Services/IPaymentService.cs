@@ -11,6 +11,8 @@
 
         Task<PaymentResult> HandlePaymentReturnAsync(string accessToken, string token);
 
+        Task<PaymentWithAllLinks> CheckInProgressPaymentAsync(string accessToken, Guid directRegistrantId);
+
         bool ValidateExternalUrl(string url);
     }
 }
