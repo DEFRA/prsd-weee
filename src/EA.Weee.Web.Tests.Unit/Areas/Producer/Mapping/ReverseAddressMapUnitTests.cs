@@ -20,6 +20,7 @@
                 Address1 = "123 Test Street",
                 Address2 = "Apt 4",
                 CountryId = Guid.NewGuid(),
+                CountryName = Guid.NewGuid().ToString(),
                 CountyOrRegion = "Test County",
                 TownOrCity = "Test City",
                 WebAddress = "www.test.com",
@@ -34,6 +35,7 @@
             result.Address1.Should().Be(address.Address1);
             result.Address2.Should().Be(address.Address2);
             result.CountryId.Should().Be(address.CountryId);
+            result.CountryName.Should().Be(address.CountryName);
             result.CountyOrRegion.Should().Be(address.CountyOrRegion);
             result.TownOrCity.Should().Be(address.TownOrCity);
             result.WebsiteAddress.Should().Be(address.WebAddress);

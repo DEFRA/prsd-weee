@@ -17,11 +17,11 @@
                 Address1 = source.Address1,
                 Address2 = source.Address2,
                 CountryId = source.CountryId,
+                CountryName = source.CountryName,
                 CountyOrRegion = source.CountyOrRegion,
                 TownOrCity = source.TownOrCity,
                 WebsiteAddress = source.WebAddress,
                 Postcode = source.Postcode,
-                CountryName = source.CountryName,
             };
         }
     }

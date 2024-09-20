@@ -134,6 +134,59 @@
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task HandleAsync_WhenCurrentYearSubmissionExists_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var request = new AddSmallProducerSubmission(Guid.NewGuid());
+            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            var currentYear = SystemTime.UtcNow.Year;
+            var currentYearSubmission = new DirectProducerSubmission(directRegistrant, A.Fake<RegisteredProducer>(), currentYear);
+            directRegistrant.DirectProducerSubmissions.Add(currentYearSubmission);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                async () => await handler.HandleAsync(request));
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenExistingProducerExists_ReusesProducerRegistrationNumber()
+        {
+            // Arrange
+            var request = new AddSmallProducerSubmission(Guid.NewGuid());
+            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            var existingProducer = new RegisteredProducer("EXISTING_PRN", SystemTime.UtcNow.Year - 1);
+            var existingSubmission = new DirectProducerSubmission(directRegistrant, existingProducer, SystemTime.UtcNow.Year - 1);
+            directRegistrant.DirectProducerSubmissions.Add(existingSubmission);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => generateFromXmlDataAccess.ComputePrns(A<int>._)).MustNotHaveHappened();
+            A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
+                .WhenArgumentsMatch(args => ((DirectProducerSubmissionHistory)args[0]).DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber == "EXISTING_PRN")
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenNoExistingProducer_GeneratesNewPrn()
+        {
+            // Arrange
+            var request = new AddSmallProducerSubmission(Guid.NewGuid());
+            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            SetupValidPrn("NEW_PRN");
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => generateFromXmlDataAccess.ComputePrns(1)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
+                .WhenArgumentsMatch(args => ((DirectProducerSubmissionHistory)args[0]).DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber == "NEW_PRN")
+                .MustHaveHappenedOnceExactly();
+        }
+
         private DirectRegistrant SetupValidDirectRegistrant(Guid directRegistrantId)
         {
             var directRegistrant = A.Fake<DirectRegistrant>();
