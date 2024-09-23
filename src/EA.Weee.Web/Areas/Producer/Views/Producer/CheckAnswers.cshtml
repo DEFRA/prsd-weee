@@ -1,6 +1,4 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.DataStandards
-@using EA.Weee.Web.Areas.Producer.Controllers
+﻿@using EA.Prsd.Core.Helpers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
@@ -28,7 +26,7 @@
     @{
         var organisationDetails = new Dictionary<string, object>
 {
-            { "Organisation type", Model.OrganisationDetails.Organisation.OrganisationType},
+            { "Organisation type", Model.OrganisationDetails.Organisation.OrganisationType.GetDisplayName()},
             { "Company registration number", Model.OrganisationDetails.Organisation.CompaniesRegistrationNumber},
             { "Company name", Model.OrganisationDetails.Organisation.CompanyName},
             { "Trading name", Model.OrganisationDetails.Organisation.BusinessTradingName},
