@@ -7,11 +7,11 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.ViewModels.Shared;
 
-    public class AddSignatoryMap : IMap<SmallProducerSubmissionData, AppropriateSignatoryViewModel>
+    public class AddSignatoryAndCompleteMap : IMap<SmallProducerSubmissionData, AppropriateSignatoryViewModel>
     {
         private readonly IMapper mapper;
 
-        public AddSignatoryMap(IMapper mapper)
+        public AddSignatoryAndCompleteMap(IMapper mapper)
         {
             this.mapper = mapper;
         }
