@@ -3,6 +3,7 @@
     using DataAccess;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Mappings;
@@ -25,6 +26,9 @@
             var currentYearSubmission = await Get(request.DirectRegistrantId);
 
             var contact = ValueObjectInitializer.CreateContact(request.ContactData);
+
+            currentYearSubmission.DirectRegistrant.Organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, currentYearSubmission.CurrentSubmission.BusinessAddress);
+            currentYearSubmission.DirectRegistrant.Organisation.UpdateCompanyDetails(currentYearSubmission.CurrentSubmission.CompanyName, currentYearSubmission.CurrentSubmission.TradingName);
 
             currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 

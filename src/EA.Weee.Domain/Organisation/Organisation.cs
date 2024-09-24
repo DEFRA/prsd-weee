@@ -139,6 +139,13 @@
             TradingName = tradingName;
         }
 
+        public void UpdateCompanyDetails(string companyName, string tradingName)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+            Name = companyName;
+            TradingName = tradingName;
+        }
+
         public void CompleteRegistration()
         {
             ToComplete();
