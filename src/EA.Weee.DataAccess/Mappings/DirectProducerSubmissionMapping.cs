@@ -12,7 +12,6 @@
             Property(e => e.PaymentFinished).IsOptional();
             
             Property(e => e.ComplianceYear).IsRequired();
-            //Property(e => e.PaymentStartedDateTime).IsOptional();
 
             HasRequired(e => e.DirectRegistrant)
                 .WithMany(er => er.DirectProducerSubmissions)
