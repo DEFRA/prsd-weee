@@ -1,0 +1,1 @@
+ALTER TABLE  [Producer].[DirectProducerSubmission] ALTER COLUMN PaymentId [nvarchar](35) NULL;

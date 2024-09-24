@@ -8,5 +8,10 @@
         {
             return System.Text.Json.JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions());
         }
+
+        public string Serialize(object item)
+        {
+            return System.Text.Json.JsonSerializer.Serialize(item, new JsonSerializerOptions());
+        }
     }
 }
