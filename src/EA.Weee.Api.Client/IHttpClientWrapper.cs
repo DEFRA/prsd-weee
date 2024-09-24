@@ -10,5 +10,8 @@
         Task<HttpResponseMessage> GetAsync(string requestUri);
 
         Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default);
+
+        Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content,
+            CancellationToken cancellationToken = default);
     }
 }
