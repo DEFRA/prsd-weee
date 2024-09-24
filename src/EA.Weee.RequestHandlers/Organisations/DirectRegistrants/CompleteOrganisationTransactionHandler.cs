@@ -150,7 +150,7 @@
 
             if (organisationTransactionData.PartnerModels != null)
             {
-                additionalCompanyDetails.AddRange(organisationTransactionData.PartnerModels.Select(CreatePartnerDetails));
+                additionalCompanyDetails.AddRange(organisationTransactionData.PartnerModels.OrderBy(p => p.Order).Select(CreatePartnerDetails));
             }
 
             if (organisationTransactionData.SoleTraderViewModel != null)
@@ -167,7 +167,8 @@
             {
                 FirstName = partner.FirstName,
                 LastName = partner.LastName,
-                Type = OrganisationAdditionalDetailsType.Partner
+                Type = OrganisationAdditionalDetailsType.Partner,
+                Order = partner.Order
             };
         }
 

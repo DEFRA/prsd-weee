@@ -15,5 +15,7 @@
         [DisplayName("Last name")]
         [StringLength(CommonMaxFieldLengths.LastName)]
         public string LastName { get; set; }
+
+        public int Order { get; set; }
     }
 }
