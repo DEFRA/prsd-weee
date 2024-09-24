@@ -398,7 +398,7 @@
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
-            return View(reference, model);
+            return View(model);
         }
 
         [HttpGet]
