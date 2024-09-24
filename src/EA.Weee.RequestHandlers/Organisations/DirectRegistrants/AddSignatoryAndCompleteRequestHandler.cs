@@ -26,14 +26,13 @@
             var currentYearSubmission = await Get(request.DirectRegistrantId);
 
             var contact = ValueObjectInitializer.CreateContact(request.ContactData);
+            currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 
             currentYearSubmission.DirectRegistrant.Organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, currentYearSubmission.CurrentSubmission.BusinessAddress);
             currentYearSubmission.DirectRegistrant.Organisation.UpdateOrganisationTypeDetails(currentYearSubmission.CurrentSubmission.CompanyName,
                 currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber,
                 currentYearSubmission.CurrentSubmission.TradingName, 
                 currentYearSubmission.DirectRegistrant.Organisation.OrganisationType);
-
-            currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 
             currentYearSubmission.DirectRegistrant.AddOrUpdateMainContactPerson(currentYearSubmission.CurrentSubmission.Contact);
             currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.BusinessAddress);
