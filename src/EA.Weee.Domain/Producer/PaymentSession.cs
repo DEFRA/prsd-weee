@@ -10,29 +10,29 @@
         {
         }
 
-        public string UserId { get; set; }
+        public virtual string UserId { get; set; }
 
-        public Guid DirectRegistrantId { get; set; }
+        public virtual Guid DirectRegistrantId { get; set; }
 
-        public Guid DirectProducerSubmissionId { get; set; }
+        public virtual Guid DirectProducerSubmissionId { get; set; }
 
-        public string PaymentId { get; set; }
+        public virtual string PaymentId { get; set; }
 
-        public string PaymentReference { get; set; }
+        public virtual string PaymentReference { get; set; }
 
-        public string PaymentReturnToken { get; set; }
+        public virtual string PaymentReturnToken { get; set; }
 
-        public decimal Amount { get; set; }
+        public virtual decimal Amount { get; set; }
 
-        public PaymentState Status { get; set; }
+        public virtual PaymentState Status { get; set; }
 
-        public bool InFinalState { get; set; }
+        public virtual bool InFinalState { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public virtual DateTime CreatedAt { get; set; }
 
-        public DateTime? UpdatedAt { get; set; }
+        public virtual DateTime? UpdatedAt { get; set; }
 
-        public string UpdatedById { get; set; }
+        public virtual string UpdatedById { get; set; }
 
         public virtual DirectRegistrant DirectRegistrant { get; set; }
 

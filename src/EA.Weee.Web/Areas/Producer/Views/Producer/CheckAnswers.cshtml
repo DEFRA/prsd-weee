@@ -40,14 +40,18 @@
             { "EEE brand names", Model.OrganisationDetails.Organisation.EEEBrandNames},
         };
 
-        for (var i = 0; i < Model.OrganisationDetails.AdditionalContactModels.Count; i++)
+        var sortedContacts = Model.OrganisationDetails.AdditionalContactModels.OrderBy(c => c.Order).ToList();
+
+        for (var i = 0; i < sortedContacts.Count; i++)
         {
-            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[i].FirstName)
-            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[i].LastName)
-
-            var contact = Model.OrganisationDetails.AdditionalContactModels[i];
+            var contact = sortedContacts[i];
+            var index = Model.OrganisationDetails.AdditionalContactModels.IndexOf(contact);
+    
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
+    
             var partnerIndex = (i + 1).ToString();
-
             organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
             organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
         }
