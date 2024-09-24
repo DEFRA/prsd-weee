@@ -36,13 +36,14 @@
         }
 
         [Fact]
-        public void Map_WithValidSource_ShouldMapCorrectly()
+        public void Map_WithOrderedSource_ShouldReturnOrderedResult()
         {
             // Arrange
             var source = new List<AdditionalCompanyDetails>
             {
-                new AdditionalCompanyDetails { FirstName = "John", LastName = "Doe" },
-                new AdditionalCompanyDetails { FirstName = "Jane", LastName = "Smith" }
+                new AdditionalCompanyDetails { FirstName = "John", LastName = "Doe", Order = 2 },
+                new AdditionalCompanyDetails { FirstName = "Jane", LastName = "Smith", Order = 1 },
+                new AdditionalCompanyDetails { FirstName = "Bob", LastName = "Johnson", Order = 3 }
             };
 
             // Act
@@ -50,11 +51,10 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().HaveCount(2);
-            result[0].FirstName.Should().Be("John");
-            result[0].LastName.Should().Be("Doe");
-            result[1].FirstName.Should().Be("Jane");
-            result[1].LastName.Should().Be("Smith");
+            result.Should().HaveCount(3);
+            result[0].FirstName.Should().Be("Jane");
+            result[1].FirstName.Should().Be("John");
+            result[2].FirstName.Should().Be("Bob");
         }
 
         [Fact]
