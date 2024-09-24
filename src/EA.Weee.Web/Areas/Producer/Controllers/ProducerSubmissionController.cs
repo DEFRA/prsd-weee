@@ -363,7 +363,7 @@
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
