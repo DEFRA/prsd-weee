@@ -28,7 +28,10 @@
             var contact = ValueObjectInitializer.CreateContact(request.ContactData);
 
             currentYearSubmission.DirectRegistrant.Organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, currentYearSubmission.CurrentSubmission.BusinessAddress);
-            currentYearSubmission.DirectRegistrant.Organisation.UpdateCompanyDetails(currentYearSubmission.CurrentSubmission.CompanyName, currentYearSubmission.CurrentSubmission.TradingName);
+            currentYearSubmission.DirectRegistrant.Organisation.UpdateOrganisationTypeDetails(currentYearSubmission.CurrentSubmission.CompanyName,
+                currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber,
+                currentYearSubmission.CurrentSubmission.TradingName, 
+                currentYearSubmission.DirectRegistrant.Organisation.OrganisationType);
 
             currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 
