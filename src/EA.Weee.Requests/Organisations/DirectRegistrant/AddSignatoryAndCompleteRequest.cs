@@ -8,9 +8,9 @@
 
     public class AddSignatoryAndCompleteRequest : IRequest<bool>
     {
-        public Guid DirectRegistrantId { get; private set; }
+        public Guid DirectRegistrantId { get; set; }
 
-        public ContactData ContactData { get; private set; }
+        public ContactData ContactData { get; set; }
 
         public AddSignatoryAndCompleteRequest(Guid directRegistrantId, ContactData contactData)
         {
