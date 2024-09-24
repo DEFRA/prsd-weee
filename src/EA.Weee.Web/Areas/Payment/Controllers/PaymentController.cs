@@ -25,7 +25,7 @@
             if (!string.IsNullOrWhiteSpace(success.PaymentReference))
             {
                 return RedirectToAction(nameof(ProducerSubmissionController.PaymentSuccess), typeof(ProducerSubmissionController).GetControllerName(), 
-                    new { directRegistrantId = success.DirectRegistrantId, area = "Producer" });
+                    new { directRegistrantId = success.DirectRegistrantId, area = "Producer", reference = success.PaymentReference });
             }
 
             return RedirectToAction(nameof(ProducerSubmissionController.PaymentFailure), typeof(ProducerSubmissionController).GetControllerName(), 
