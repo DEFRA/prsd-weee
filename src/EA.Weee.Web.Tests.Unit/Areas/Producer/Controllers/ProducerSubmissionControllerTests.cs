@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Api.Client.Models.Pay;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
@@ -21,6 +22,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using RazorEngine.Compilation.ImpromptuInterface;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -46,8 +48,8 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
-        private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryRequest>
-            addSignatoryRequestCreator;
+        private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
+            addSignatoryAndCompleteRequestCreator;
         private readonly IPaymentService paymentService;
 
         public ProducerSubmissionControllerTests()
@@ -65,9 +67,9 @@
             editContactDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>>();
             editEeeDataRequestCreator = A.Fake<IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest>>();
-            addSignatoryRequestCreator = A.Fake<IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryRequest>>();
+            addSignatoryAndCompleteRequestCreator = A.Fake<IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>>();
             paymentService = A.Fake<IPaymentService>();
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryRequestCreator, paymentService);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService);
         }
 
         [Fact]
@@ -717,6 +719,22 @@
             result.RouteValues["action"].Should().Be("CheckAnswers");
             result.RouteValues["controller"].Should().Be("Producer");
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
-        }        
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_InvalidModel_ShouldReturnViewWithModel()
+        {
+            // Arrange
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            controller.ModelState.AddModelError("Test", "Test error");
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
+        }
     }
 }
