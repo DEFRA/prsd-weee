@@ -286,16 +286,17 @@
         }
 
         [Fact]
-        public async Task HandleAsync_WhenPartnerModelsProvided_ShouldCreateAdditionalCompanyDetails()
+        public async Task HandleAsync_WhenPartnerModelsProvided_ShouldCreateAdditionalCompanyDetailsInCorrectOrder()
         {
             // Arrange
             var organisationId = Guid.NewGuid();
             var externalOrganisationType = ExternalOrganisationType.Partnership;
             var partnerModels = new List<AdditionalContactModel>
-            {
-                new AdditionalContactModel { FirstName = "John", LastName = "Doe" },
-                new AdditionalContactModel { FirstName = "Jane", LastName = "Smith" }
-            };
+    {
+        new AdditionalContactModel { FirstName = "John", LastName = "Doe", Order = 2 },
+        new AdditionalContactModel { FirstName = "Jane", LastName = "Smith", Order = 1 },
+        new AdditionalContactModel { FirstName = "Bob", LastName = "Johnson", Order = 3 }
+    };
 
             var transactionData = SetupValidOrganisationTransaction(externalOrganisationType);
             transactionData.PartnerModels = partnerModels;
@@ -314,10 +315,17 @@
 
             // Assert
             A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
-                d.AdditionalCompanyDetails.Count == 2 &&
-                d.AdditionalCompanyDetails.All(acd =>
-                    acd.Type == OrganisationAdditionalDetailsType.Partner &&
-                    partnerModels.Any(pm => pm.FirstName == acd.FirstName && pm.LastName == acd.LastName))))).MustHaveHappenedOnceExactly();
+                d.AdditionalCompanyDetails.Count == 3 &&
+                d.AdditionalCompanyDetails.All(acd => acd.Type == OrganisationAdditionalDetailsType.Partner) &&
+                d.AdditionalCompanyDetails.ElementAt(0).FirstName == "Jane" &&
+                d.AdditionalCompanyDetails.ElementAt(0).LastName == "Smith" &&
+                d.AdditionalCompanyDetails.ElementAt(0).Order == 1 &&
+                d.AdditionalCompanyDetails.ElementAt(1).FirstName == "John" &&
+                d.AdditionalCompanyDetails.ElementAt(1).LastName == "Doe" &&
+                d.AdditionalCompanyDetails.ElementAt(1).Order == 2 &&
+                d.AdditionalCompanyDetails.ElementAt(2).FirstName == "Bob" &&
+                d.AdditionalCompanyDetails.ElementAt(2).LastName == "Johnson" &&
+                d.AdditionalCompanyDetails.ElementAt(2).Order == 3))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -405,6 +413,91 @@
                 .Returns(transactionData);
 
             return transactionData;
+        }
+        [Fact]
+        public async Task HandleAsync_WhenPartnerModelsHaveSameOrder_ShouldMaintainOriginalOrder()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var externalOrganisationType = ExternalOrganisationType.Partnership;
+            var partnerModels = new List<AdditionalContactModel>
+    {
+        new AdditionalContactModel { FirstName = "John", LastName = "Doe", Order = 1 },
+        new AdditionalContactModel { FirstName = "Jane", LastName = "Smith", Order = 1 },
+        new AdditionalContactModel { FirstName = "Bob", LastName = "Johnson", Order = 2 }
+    };
+
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType);
+            transactionData.PartnerModels = partnerModels;
+
+            var newAddress = A.Fake<Address>();
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            var newOrganisation = A.Fake<Organisation>();
+            A.CallTo(() => newOrganisation.Id).Returns(organisationId);
+            A.CallTo(() => directRegistrant.Organisation).Returns(newOrganisation);
+
+            A.CallTo(() => genericDataAccess.Add(A<Address>._)).Returns(Task.FromResult(newAddress));
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).Returns(Task.FromResult(directRegistrant));
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<CompleteOrganisationTransaction>());
+
+            // Assert
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
+                d.AdditionalCompanyDetails.Count == 3 &&
+                d.AdditionalCompanyDetails.All(acd => acd.Type == OrganisationAdditionalDetailsType.Partner) &&
+                d.AdditionalCompanyDetails.ElementAt(0).FirstName == "John" &&
+                d.AdditionalCompanyDetails.ElementAt(0).LastName == "Doe" &&
+                d.AdditionalCompanyDetails.ElementAt(0).Order == 1 &&
+                d.AdditionalCompanyDetails.ElementAt(1).FirstName == "Jane" &&
+                d.AdditionalCompanyDetails.ElementAt(1).LastName == "Smith" &&
+                d.AdditionalCompanyDetails.ElementAt(1).Order == 1 &&
+                d.AdditionalCompanyDetails.ElementAt(2).FirstName == "Bob" &&
+                d.AdditionalCompanyDetails.ElementAt(2).LastName == "Johnson" &&
+                d.AdditionalCompanyDetails.ElementAt(2).Order == 2))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenPartnerOrderIsNotSequential_ShouldOrderCorrectly()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var externalOrganisationType = ExternalOrganisationType.Partnership;
+            var partnerModels = new List<AdditionalContactModel>
+    {
+        new AdditionalContactModel { FirstName = "John", LastName = "Doe", Order = 5 },
+        new AdditionalContactModel { FirstName = "Jane", LastName = "Smith", Order = 2 },
+        new AdditionalContactModel { FirstName = "Bob", LastName = "Johnson", Order = 10 }
+    };
+
+            var transactionData = SetupValidOrganisationTransaction(externalOrganisationType);
+            transactionData.PartnerModels = partnerModels;
+
+            var newAddress = A.Fake<Address>();
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            var newOrganisation = A.Fake<Organisation>();
+            A.CallTo(() => newOrganisation.Id).Returns(organisationId);
+            A.CallTo(() => directRegistrant.Organisation).Returns(newOrganisation);
+
+            A.CallTo(() => genericDataAccess.Add(A<Address>._)).Returns(Task.FromResult(newAddress));
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>._)).Returns(Task.FromResult(directRegistrant));
+
+            // Act
+            var result = await handler.HandleAsync(A.Dummy<CompleteOrganisationTransaction>());
+
+            // Assert
+            A.CallTo(() => genericDataAccess.Add(A<DirectRegistrant>.That.Matches(d =>
+                d.AdditionalCompanyDetails.Count == 3 &&
+                d.AdditionalCompanyDetails.All(acd => acd.Type == OrganisationAdditionalDetailsType.Partner) &&
+                d.AdditionalCompanyDetails.ElementAt(0).FirstName == "Jane" &&
+                d.AdditionalCompanyDetails.ElementAt(0).LastName == "Smith" &&
+                d.AdditionalCompanyDetails.ElementAt(0).Order == 2 &&
+                d.AdditionalCompanyDetails.ElementAt(1).FirstName == "John" &&
+                d.AdditionalCompanyDetails.ElementAt(1).LastName == "Doe" &&
+                d.AdditionalCompanyDetails.ElementAt(1).Order == 5 &&
+                d.AdditionalCompanyDetails.ElementAt(2).FirstName == "Bob" &&
+                d.AdditionalCompanyDetails.ElementAt(2).LastName == "Johnson" &&
+                d.AdditionalCompanyDetails.ElementAt(2).Order == 10))).MustHaveHappenedOnceExactly();
         }
     }
 }
