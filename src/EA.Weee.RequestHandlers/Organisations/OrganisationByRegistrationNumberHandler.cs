@@ -25,6 +25,8 @@
 
         public async Task<OrganisationData> HandleAsync(OrganisationByRegistrationNumberValue message)
         {
+            authorization.EnsureCanAccessExternalArea();
+
             var organisation = await organisationDataAccess.GetByRegistrationNumber(message.RegistrationNumber);
 
             if (organisation == null)
