@@ -303,11 +303,14 @@
     <Compile Include="Constants\UkCountry.cs" />
     <Compile Include="DirectRegistrant\AdditionalCompanyDetailsData.cs" />
     <Compile Include="DirectRegistrant\AuthorisedRepresentitiveData.cs" />
+    <Compile Include="DirectRegistrant\PaymentResult.cs" />
+    <Compile Include="DirectRegistrant\PaymentStatus.cs" />
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValue.cs" />
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValues.cs" />
     <Compile Include="DirectRegistrant\SellingTechniqueType.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
+    <Compile Include="DirectRegistrant\SubmissionPaymentDetails.cs" />
     <Compile Include="DirectRegistrant\TonnageData.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\IJsonSerialiser.cs" />
