@@ -715,6 +715,81 @@
             result.RouteValues["action"].Should().Be("CheckAnswers");
             result.RouteValues["controller"].Should().Be("Producer");
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
-        }        
+        }
+
+        [Fact]
+        public void PaymentSuccess_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("PaymentSuccess");
+
+            // Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+        }
+
+        [Fact]
+        public async Task PaymentSuccess_ShouldReturnViewWithCorrectModel()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData { Id = organisationId }
+            };
+
+            // Act
+            var result = await controller.PaymentSuccess(reference) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Model.Should().BeOfType<PaymentResultModel>();
+            var model = (PaymentResultModel)result.Model;
+            model.PaymentReference.Should().Be(reference);
+            model.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task PaymentSuccess_ShouldSetBreadcrumb()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            var organisationName = TestFixture.Create<string>();
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData { Id = organisationId }
+            };
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            // Act
+            await controller.PaymentSuccess(reference);
+
+            // Assert
+            A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).MustHaveHappenedOnceExactly();
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public void PaymentFailure_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("PaymentFailure");
+
+            // Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+        }
+
+        [Fact]
+        public void PaymentFailure_ShouldReturnView()
+        {
+            // Act
+            var result = controller.PaymentFailure();
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+        }
     }
 }

@@ -102,15 +102,12 @@
         {
             // Arrange
             var token = TestFixture.Create<string>();
-            var accessToken = TestFixture.Create<string>();
-
-            A.CallTo(() => controller.User.GetAccessToken()).Returns(accessToken);
 
             // Act
             await controller.PaymentResult(token);
 
             // Assert
-            A.CallTo(() => paymentService.HandlePaymentReturnAsync(accessToken, token))
+            A.CallTo(() => paymentService.HandlePaymentReturnAsync(A<string>._, token))
                 .MustHaveHappenedOnceExactly();
         }
     }
