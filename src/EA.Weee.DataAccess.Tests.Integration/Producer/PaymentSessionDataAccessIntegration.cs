@@ -240,6 +240,115 @@
             }
         }
 
+        [Fact]
+        public async Task AnyPaymentTokenAsync_WithExistingToken_ReturnsTrue()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var producer = new Domain.Producer.RegisteredProducer("ABC12345", SystemTime.UtcNow.Year);
+                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
+                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "existingToken";
+                var paymentSession = CreatePaymentSession(user, 2023, producer, directRegistrant, paymentToken, "paymentId1", "paymentRef1");
+                context.PaymentSessions.Add(paymentSession);
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.AnyPaymentTokenAsync(paymentToken);
+
+                // Assert
+                result.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async Task AnyPaymentTokenAsync_WithNonExistingToken_ReturnsFalse()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "nonExistingToken";
+
+                // Act
+                var result = await dataAccess.AnyPaymentTokenAsync(paymentToken);
+
+                // Assert
+                result.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_WithExistingId_ReturnsPaymentSession()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                var producer = new Domain.Producer.RegisteredProducer("ABC12345", SystemTime.UtcNow.Year);
+                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
+                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+
+                var paymentSession = CreatePaymentSession(user, 2023, producer, directRegistrant, "token", "paymentId1", "paymentRef1");
+                context.PaymentSessions.Add(paymentSession);
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetByIdAsync(paymentSession.Id);
+
+                // Assert
+                result.Should().NotBeNull();
+                result.Id.Should().Be(paymentSession.Id);
+                result.PaymentReturnToken.Should().Be("token");
+                result.PaymentId.Should().Be("paymentId1");
+                result.PaymentReference.Should().Be("paymentRef1");
+            }
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_WithNonExistingId_ReturnsNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                var nonExistingId = Guid.NewGuid();
+
+                // Act
+                var result = await dataAccess.GetByIdAsync(nonExistingId);
+
+                // Assert
+                result.Should().BeNull();
+            }
+        }
+
         private static PaymentSession CreatePaymentSession(string userId, int year, Domain.Producer.RegisteredProducer producer, DirectRegistrant directRegistrant, string paymentToken, string paymentId, string paymentRef, int minutesOffset = 0)
         {
             return new PaymentSession(

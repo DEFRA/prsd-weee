@@ -1527,10 +1527,10 @@
 
             var model = result.Model as PartnerViewModel;
 
-            model.AllParterModels.Should().HaveCount(2);
+            model.AllPartnerModels.Should().HaveCount(2);
 
-            model.AllParterModels[1].FirstName.Should().BeNull();
-            model.AllParterModels[1].LastName.Should().BeNull();
+            model.AllPartnerModels[1].FirstName.Should().BeNull();
+            model.AllPartnerModels[1].LastName.Should().BeNull();
         }
 
         [Fact]
