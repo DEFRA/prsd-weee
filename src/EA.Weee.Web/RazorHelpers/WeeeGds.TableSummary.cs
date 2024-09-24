@@ -15,48 +15,31 @@ namespace EA.Weee.Web.RazorHelpers
             if (displayCaption)
             {
                 html += $"<caption class=\"govuk-table__caption\" style=\"font-size: 24px;\">{caption}</caption>";
+                // Add column widths only when displayCaption is true
+                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"></th>" +
+                        "<th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"></th></tr></thead>";
             }
             else
             {
                 html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}</caption>";
+                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\"></th>" +
+                        "<th class=\"govuk-table__header\" scope=\"col\"></th></tr></thead>";
             }
 
-            // Adding table headers with govuk-visually-hidden class for accessibility
-            html += "<thead class=\"govuk-table__head\">";
-
-            // Always add hidden headers for screen readers even if columnHeading and columnDescription are null
-            html += "<tr class=\"govuk-table__row\">";
-
-            // Hidden header for key/row label column
-            if (!string.IsNullOrEmpty(columnHeading))
-            {
-                html += $"<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">{columnHeading}</th>";
-            }
-            else
-            {
-                html += "<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">Item</th>";
-            }
-
-            // Hidden header for value column
-            if (!string.IsNullOrEmpty(columnDescription))
-            {
-                html += $"<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">{columnDescription}</th>";
-            }
-            else
-            {
-                html += "<th scope=\"col\" class=\"govuk-table__header govuk-visually-hidden\">Details</th>";
-            }
-
-            html += "</tr>";
-            html += "</thead>";
-
-            // Add table body
             html += "<tbody class=\"govuk-table__body\">";
 
             foreach (var key in data.Keys)
             {
-                html += $"<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\">{key}</th>";
-                html += $"<td class=\"govuk-table__cell\">{data[key]}</td></tr>";
+                if (displayCaption)
+                {
+                    html += $"<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\" style=\"width: 50%;\">{key}</th>";
+                    html += $"<td class=\"govuk-table__cell\" style=\"width: 50%;\">{data[key]}</td></tr>";
+                }
+                else
+                {
+                    html += $"<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\">{key}</th>";
+                    html += $"<td class=\"govuk-table__cell\">{data[key]}</td></tr>";
+                }
             }
 
             html += "</tbody></table></div>";
