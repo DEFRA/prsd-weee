@@ -24,6 +24,15 @@
             return await SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri));
         }
 
+        public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content, CancellationToken cancellationToken = default)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
+            {
+                Content = content
+            };
+            return await SendAsync(request, cancellationToken);
+        }
+
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             var stopwatch = Stopwatch.StartNew();
@@ -31,17 +40,14 @@
             {
                 var fullUrl = GetFullUrl(request.RequestUri);
                 logger.Information("Starting {Method} request to {FullUrl}", request.Method, fullUrl);
-
                 var response = await httpClient.SendAsync(request, cancellationToken);
                 stopwatch.Stop();
-
                 logger.Information(
                     "Completed {Method} request to {FullUrl} with status code {StatusCode} in {ElapsedMilliseconds} ms",
                     request.Method,
                     fullUrl,
                     (int)response.StatusCode,
                     stopwatch.ElapsedMilliseconds);
-
                 if (!response.IsSuccessStatusCode)
                 {
                     logger.Warning(
@@ -50,7 +56,6 @@
                         fullUrl,
                         (int)response.StatusCode);
                 }
-
                 return response;
             }
             catch (HttpRequestException ex)
@@ -76,12 +81,10 @@
             {
                 return requestUri.ToString();
             }
-
             if (httpClient.BaseAddress == null)
             {
                 return requestUri.ToString();
             }
-
             return new Uri(httpClient.BaseAddress, requestUri).ToString();
         }
 

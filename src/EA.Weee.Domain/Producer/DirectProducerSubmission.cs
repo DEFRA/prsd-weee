@@ -4,9 +4,7 @@
     using EA.Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
-    using EA.Prsd.Core;
-    using EA.Weee.Domain.Organisation;
-
+    
     public class DirectProducerSubmission : Entity
     {
         public DirectProducerSubmission()
@@ -15,13 +13,11 @@
 
         public virtual Guid DirectRegistrantId { get; set; }
 
+        public virtual Guid? FinalPaymentSessionId { get; set; }
+
         public virtual Guid RegisteredProducerId { get; set; }
-
-        public virtual int? PaymentStatus { get; set; }
-
-        public virtual string PaymentReference { get; set; }
-
-        public virtual string PaymentId { get; set; }
+        
+        public virtual bool? PaymentFinished { get; set; }
 
         public virtual int ComplianceYear {get; set; }
 
@@ -33,11 +29,18 @@
 
         public virtual ICollection<DirectProducerSubmissionHistory> SubmissionHistory { get; set; }
 
+        public virtual PaymentSession FinalPaymentSession { get; set; }
+
         public void SetCurrentSubmission(DirectProducerSubmissionHistory submission)
         {
             Condition.Requires(submission).IsNotNull();
 
             CurrentSubmission = submission;
+        }
+
+        public void SetPaymentInformation(PaymentState paymentState)
+        {
+            Condition.Requires(paymentState).IsNotNull();
         }
 
         public DirectProducerSubmission(DirectRegistrant directRegistrant,

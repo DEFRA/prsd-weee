@@ -188,6 +188,7 @@
     <Compile Include="ObligatedSentOnWeeeIntegration.cs" />
     <Compile Include="DataAccess\ObligationDataAccessIntegration.cs" />
     <Compile Include="OrganisationTransactionDataAccessIntegration.cs" />
+    <Compile Include="Producer\PaymentSessionDataAccessIntegration.cs" />
     <Compile Include="ReportOptionsIntegration.cs" />
     <Compile Include="SentOnAatfSiteIntegration.cs" />
     <Compile Include="Auditing\AuditingTests.cs" />
