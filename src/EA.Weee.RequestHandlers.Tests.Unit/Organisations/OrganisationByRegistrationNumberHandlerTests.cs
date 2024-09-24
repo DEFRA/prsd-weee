@@ -39,6 +39,20 @@
         }
 
         [Fact]
+        public async Task OrganisationByRegistrationNumberHandler_Calls_EnsureCanAccessExternalArea()
+        {
+
+            var message = new OrganisationByRegistrationNumberValue("456d");
+
+            var handler = Handler();
+
+            var result = await handler.HandleAsync(message);
+
+            A.CallTo(() => authorization.EnsureCanAccessExternalArea())
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
         public async Task OrganisationByRegistrationNumberHandler_ReturnsNullIfNotExists()
         {
             var message = new OrganisationByRegistrationNumberValue("456d");
