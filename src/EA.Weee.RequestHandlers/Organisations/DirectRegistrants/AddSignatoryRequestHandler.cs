@@ -9,7 +9,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
 
-    internal class AddSignatoryRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<EditContactDetailsRequest, bool>
+    internal class AddSignatoryRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<AddSignatoryRequest, bool>
     {
         private readonly WeeeContext weeeContext;
 
@@ -19,17 +19,13 @@
             this.weeeContext = weeeContext;
         }
 
-        public async Task<bool> HandleAsync(EditContactDetailsRequest request)
+        public async Task<bool> HandleAsync(AddSignatoryRequest request)
         {
             var currentYearSubmission = await Get(request.DirectRegistrantId);
-            
-            var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.AddressData.CountryId);
 
-            var address = ValueObjectInitializer.CreateAddress(request.AddressData, country);
             var contact = ValueObjectInitializer.CreateContact(request.ContactData);
 
-            currentYearSubmission.CurrentSubmission.AddOrUpdateContactAddress(address);
-            currentYearSubmission.CurrentSubmission.AddOrUpdateContact(contact);
+            currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 
             await weeeContext.SaveChangesAsync();
 
