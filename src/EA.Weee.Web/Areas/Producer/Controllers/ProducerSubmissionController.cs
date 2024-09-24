@@ -43,8 +43,8 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
-        private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryRequest> 
-            addSignatoryRequestCreator;
+        private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> 
+            addSignatoryAndCompleteRequestCreator;
 
         public ProducerSubmissionController(IMapper mapper,
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
@@ -56,7 +56,7 @@
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
             IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator,
-            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryRequest> addSignatoryRequestCreator)
+            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> addSignatoryRequestCreator)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -67,7 +67,7 @@
             this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
             this.editEeeDataRequestCreator = editEeeDataRequestCreator;
-            this.addSignatoryRequestCreator = addSignatoryRequestCreator;
+            this.addSignatoryAndCompleteRequestCreator = addSignatoryRequestCreator;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -372,7 +372,7 @@
         {
             if (ModelState.IsValid)
             {
-                var request = addSignatoryRequestCreator.ViewModelToRequest(model);
+                var request = addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model);
 
                 using (var client = apiClient())
                 {
