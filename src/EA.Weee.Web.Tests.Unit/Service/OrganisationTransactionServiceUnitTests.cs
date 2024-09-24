@@ -312,13 +312,13 @@
             await organisationService.CaptureData(accessToken, partnerViewModel);
 
             // Assert
-            transaction.PartnerModels.Should().BeEquivalentTo(partnerViewModel.AllParterModels);
+            transaction.PartnerModels.Should().BeEquivalentTo(partnerViewModel.AllPartnerModels);
             transaction.SoleTraderViewModel.Should().BeNull();
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
                     x => x.OrganisationTransactionData.PartnerModels != null &&
-                         x.OrganisationTransactionData.PartnerModels.Count == partnerViewModel.AllParterModels.Count &&
-                         partnerViewModel.AllParterModels.All(partner =>
+                         x.OrganisationTransactionData.PartnerModels.Count == partnerViewModel.AllPartnerModels.Count &&
+                         partnerViewModel.AllPartnerModels.All(partner =>
                              x.OrganisationTransactionData.PartnerModels.Any(p =>
                                  p.FirstName == partner.FirstName && p.LastName == partner.LastName)))))
                 .MustHaveHappenedOnceExactly();
