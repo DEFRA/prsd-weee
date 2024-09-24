@@ -9,9 +9,8 @@
         {
             ToTable("DirectProducerSubmission", "Producer");
 
-            Property(e => e.PaymentStatus).IsOptional();
-            Property(e => e.PaymentReference).HasMaxLength(20).IsOptional();
-            Property(e => e.PaymentId).HasMaxLength(20).IsOptional();
+            Property(e => e.PaymentFinished).IsOptional();
+            
             Property(e => e.ComplianceYear).IsRequired();
 
             HasRequired(e => e.DirectRegistrant)
