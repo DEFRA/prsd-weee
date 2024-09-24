@@ -42,6 +42,7 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
+        private readonly IPaymentService paymentService;
 
         public ProducerSubmissionController(IMapper mapper,
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
@@ -52,7 +53,7 @@
             IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
-            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator)
+            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator, IPaymentService paymentService)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -63,6 +64,7 @@
             this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
             this.editEeeDataRequestCreator = editEeeDataRequestCreator;
+            this.paymentService = paymentService;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -352,15 +354,58 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> AppropriateSignatory()
         {
-            return View();
+           return View();
         }
 
         [HttpPost]
-        [SmallProducerSubmissionContext]
         [ValidateAntiForgeryToken]
+        [SmallProducerSubmissionContext]
         public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
         {
-            return View(model);
+            var existingPaymentInProgress = await paymentService.CheckInProgressPaymentAsync(User.GetAccessToken(),
+                SmallProducerSubmissionData.DirectRegistrantId);
+
+            string nextUrl;
+            if (existingPaymentInProgress == null)
+            {
+                var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,
+                    User.GetEmailAddress(), User.GetAccessToken());
+
+                nextUrl = result.Links.NextUrl.Href;
+            }
+            else
+            {
+                nextUrl = existingPaymentInProgress.Links.NextUrl.Href;
+            }
+
+            if (paymentService.ValidateExternalUrl(nextUrl))
+            {
+                return Redirect(nextUrl);
+            }
+
+            throw new InvalidOperationException("Invalid payment next url");
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> PaymentSuccess(string reference)
+        {
+            var model = new PaymentResultModel()
+            {
+                PaymentReference = reference,
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id
+            };
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(reference, model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public ActionResult PaymentFailure()
+        {
+            return View();
         }
 
         public ActionResult BackToPrevious(bool? redirectToCheckAnswers)
