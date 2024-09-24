@@ -31,8 +31,6 @@
 
         public virtual PaymentSession FinalPaymentSession { get; set; }
 
-        //public virtual DateTime PaymentStartedDateTime { get; set; }
-
         public void SetCurrentSubmission(DirectProducerSubmissionHistory submission)
         {
             Condition.Requires(submission).IsNotNull();
