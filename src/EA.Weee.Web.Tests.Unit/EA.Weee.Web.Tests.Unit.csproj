@@ -425,6 +425,7 @@
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditContactDetailsMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\OrganisationViewModelMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\RepresentedOrganisationDetailsMapTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToViewModel\CheckAnsweraMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\ServiceOfNoticeMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditEeeDataViewModelMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditOrganisationDetailsMapTests.cs" />
@@ -450,6 +451,7 @@
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOptionTests.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerControllerTests.cs" />
     <Compile Include="Service\OrganisationTransactionServiceUnitTests.cs" />
+    <Compile Include="Service\PaymentReferenceGeneratorUnitTests.cs" />
     <Compile Include="ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\SubmittedDateFilterBaseTests.cs" />
     <Compile Include="ViewModels\SubmittedDatesFilterViewModelTests.cs" />

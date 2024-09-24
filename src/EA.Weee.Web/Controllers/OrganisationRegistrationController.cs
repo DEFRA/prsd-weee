@@ -734,7 +734,7 @@
                 return View(model);
             }
 
-            if (model.AllParterModels.Count >= maxPartnersAllowed)
+            if (model.AllPartnerModels.Count >= maxPartnersAllowed)
             {
                 ModelState.AddModelError("PartnerModels", $"A maximum of {maxPartnersAllowed} partners are allowed");
 
