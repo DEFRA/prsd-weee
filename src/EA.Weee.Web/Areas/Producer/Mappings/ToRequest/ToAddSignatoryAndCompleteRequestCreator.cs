@@ -6,16 +6,16 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Requests.Base;
 
-    public class ToAddSignatoryRequestCreator : IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryRequest>
+    public class ToAddSignatoryAndCompleteRequestCreator : IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
     {
         private readonly IMapper mapper;
 
-        public ToAddSignatoryRequestCreator(IMapper mapper)
+        public ToAddSignatoryAndCompleteRequestCreator(IMapper mapper)
         {
             this.mapper = mapper;
         }
 
-        public AddSignatoryRequest ViewModelToRequest(AppropriateSignatoryViewModel viewModel)
+        public AddSignatoryAndCompleteRequest ViewModelToRequest(AppropriateSignatoryViewModel viewModel)
         {
             var contact = new ContactData()
             {
@@ -23,7 +23,7 @@
                 LastName = viewModel.Contact.LastName,
                 Position = viewModel.Contact.Position ?? string.Empty,
             };
-            return new AddSignatoryRequest(viewModel.DirectRegistrantId, contact);
+            return new AddSignatoryAndCompleteRequest(viewModel.DirectRegistrantId, contact);
         }
     }
 }
