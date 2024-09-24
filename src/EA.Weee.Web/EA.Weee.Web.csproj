@@ -1119,7 +1119,6 @@
     <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\ServiceOfNoticeDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\RepresentedOrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\AppropriateSignatory.cshtml" />
-    <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentResult.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentSuccess.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentFailure.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
