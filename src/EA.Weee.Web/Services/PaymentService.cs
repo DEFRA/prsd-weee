@@ -2,15 +2,15 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Client.Models.Pay;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.DirectRegistrant;
 
     public class PaymentService : IPaymentService
     {
-        private readonly string[] allowedDomains = new[] { "publicapi.payments.service.gov.uk", "card.payments.service.gov.uk" };
+        private readonly string[] allowedDomains = { "publicapi.payments.service.gov.uk", "card.payments.service.gov.uk" };
 
         private readonly IPayClient paymentClient;
         private readonly ConfigurationService configurationService;
@@ -64,8 +64,10 @@
                 {
                     var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
 
-                    // Update the current in progress payment with the current status of the GOV.UK payment
-                    //new UpdateSubmissionPaymentDetailsRequest()
+                    await client.SendAsync(accessToken,
+                        new UpdateSubmissionPaymentDetailsRequest(directRegistrantId, result.State.Status,
+                            payment.PaymentSessionId, result.State.IsInFinalState()));
+
                     return result;
                 }
 
