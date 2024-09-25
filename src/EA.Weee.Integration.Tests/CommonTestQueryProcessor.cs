@@ -51,6 +51,11 @@
             return dbContext.DirectProducerSubmissions.First(c => c.Id == directSubmissionId);
         }
 
+        public PaymentSession GetPaymentSessionById(Guid id)
+        {
+            return dbContext.PaymentSessions.First(c => c.Id == id);
+        }
+
         public DirectProducerSubmissionHistory CurrentSubmissionHistoryForComplianceYear(Guid directRegistrantId, int year)
         {
             return dbContext.DirectProducerSubmissionHistories.First(c => c.DirectProducerSubmission.DirectRegistrantId == directRegistrantId && c.DirectProducerSubmission.ComplianceYear == year);
