@@ -42,6 +42,8 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
+        private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
+            addSignatoryAndCompleteRequestCreator;
         private readonly IPaymentService paymentService;
 
         public ProducerSubmissionController(IMapper mapper,
@@ -53,7 +55,9 @@
             IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
-            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator, IPaymentService paymentService)
+            IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator,
+            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> addSignatoryRequestCreator, 
+            IPaymentService paymentService)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -64,6 +68,7 @@
             this.editContactDetailsRequestCreator = editContactDetailsRequestCreator;
             this.serviceOfNoticeRequestCreator = serviceOfNoticeRequestCreator;
             this.editEeeDataRequestCreator = editEeeDataRequestCreator;
+            this.addSignatoryAndCompleteRequestCreator = addSignatoryRequestCreator;
             this.paymentService = paymentService;
         }
 
@@ -354,16 +359,39 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> AppropriateSignatory()
         {
-           return View();
+            var model = mapper.Map<SmallProducerSubmissionData, AppropriateSignatoryViewModel>(SmallProducerSubmissionData);
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> AppropriateSignatory(object model) // needs to be updated to the final model.
+        public async Task<ActionResult> AppropriateSignatory(AppropriateSignatoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model);
+
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), request);
+                }
+
+                return await RedirectToNextUrl();
+            }
+
+            await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
+        private async Task<ActionResult> RedirectToNextUrl()
         {
             var existingPaymentInProgress = await paymentService.CheckInProgressPaymentAsync(User.GetAccessToken(),
-                SmallProducerSubmissionData.DirectRegistrantId);
+                            SmallProducerSubmissionData.DirectRegistrantId);
 
             string nextUrl;
             if (existingPaymentInProgress == null)
