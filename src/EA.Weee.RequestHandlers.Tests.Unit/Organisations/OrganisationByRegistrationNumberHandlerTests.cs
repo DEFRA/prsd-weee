@@ -41,7 +41,6 @@
         [Fact]
         public async Task OrganisationByRegistrationNumberHandler_Calls_EnsureCanAccessExternalArea()
         {
-
             var message = new OrganisationByRegistrationNumberValue("456d");
 
             var handler = Handler();
