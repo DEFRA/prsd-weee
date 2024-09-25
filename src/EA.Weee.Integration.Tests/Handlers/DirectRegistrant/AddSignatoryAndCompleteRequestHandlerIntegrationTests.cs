@@ -16,6 +16,7 @@
     using System.Linq;
     using System.Security;
     using EA.Prsd.Core;
+    using EA.Weee.Domain.Producer;
 
     public class AddSignatoryAndCompleteRequestHandlerIntegrationTests : IntegrationTestBase
     {
@@ -34,7 +35,23 @@
 
             private readonly It shouldUpdateTheData = () =>
             {
-                var entity = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+                var submission = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                submission.CurrentSubmission.Contact.FirstName.Should().Be(request.ContactData.FirstName);
+                submission.CurrentSubmission.Contact.LastName.Should().Be(request.ContactData.LastName);
+                submission.CurrentSubmission.Contact.Position.Should().Be(request.ContactData.Position);
+
+                submission.DirectRegistrant.Organisation.BusinessAddress.Should().Be(submission.CurrentSubmission.BusinessAddress);
+                submission.DirectRegistrant.Organisation.Name.Should().Be(submission.CurrentSubmission.CompanyName);
+                submission.DirectRegistrant.Organisation.TradingName.Should().Be(submission.CurrentSubmission.TradingName);
+
+                submission.DirectRegistrant.Contact.Should().Be(submission.CurrentSubmission.Contact);
+                submission.DirectRegistrant.Address.Should().Be(submission.CurrentSubmission.BusinessAddress);
+                submission.DirectRegistrant.BrandName.Should().Be(submission.CurrentSubmission.BrandName);
+                submission.DirectRegistrant.AuthorisedRepresentative.Should().Be(submission.CurrentSubmission.AuthorisedRepresentative);
+
+                submission.CurrentSubmission.SubmittedDate.Should().NotBeNull();
+                submission.CurrentSubmission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
             };
         }
 
@@ -110,9 +127,9 @@
                 fixture = new Fixture();
 
                 var contactData = fixture.Build<ContactData>()
-                    .With(a => a.FirstName, "First")
-                    .With(a => a.LastName, "Last")
-                    .With(a => a.Position, "Pos").Create();
+                    .With(a => a.FirstName, contact.FirstName)
+                    .With(a => a.LastName, contact.LastName)
+                    .With(a => a.Position, contact.Position).Create();
 
                 request = new AddSignatoryAndCompleteRequest(directRegistrant.Id, contactData);
 
