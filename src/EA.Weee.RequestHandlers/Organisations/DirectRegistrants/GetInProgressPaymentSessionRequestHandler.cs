@@ -43,7 +43,8 @@
 
             return new SubmissionPaymentDetails()
             {
-                PaymentId = paymentSession.PaymentId
+                PaymentId = paymentSession.PaymentId,
+                PaymentSessionId = paymentSession.Id
             };
         }
     }

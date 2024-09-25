@@ -145,7 +145,7 @@
 
             if (hasFinalPaymentSession)
             {
-                currentYearSubmission.FinalPaymentSession = A.Fake<PaymentSession>();
+                currentYearSubmission.PaymentFinished = true;
             }
 
             directRegistrant.DirectProducerSubmissions.Add(currentYearSubmission);
