@@ -14,11 +14,13 @@
     internal class AddSignatoryAndCompleteRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<AddSignatoryAndCompleteRequest, bool>
     {
         private readonly WeeeContext weeeContext;
+        private readonly ISystemDataDataAccess systemDataAccess;
 
         public AddSignatoryAndCompleteRequestHandler(IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
         {
             this.weeeContext = weeeContext;
+            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<bool> HandleAsync(AddSignatoryAndCompleteRequest request)
@@ -41,6 +43,11 @@
             currentYearSubmission.DirectRegistrant.BrandName.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.BrandName);
 
             currentYearSubmission.DirectRegistrant.AuthorisedRepresentative.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative);
+
+            var systemDateTime = await systemDataAccess.GetSystemDateTime();
+
+            currentYearSubmission.CurrentSubmission.SubmittedDate = systemDateTime.Date;
+            currentYearSubmission.CurrentSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
 
             await weeeContext.SaveChangesAsync();
 

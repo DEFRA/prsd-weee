@@ -181,6 +181,7 @@
 
             Contact contact = new Contact("First", "Last", "Pos");
 
+            directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName = TestFixture.Create<string>();
             directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContact(contact);
 
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionCurrentYear);
