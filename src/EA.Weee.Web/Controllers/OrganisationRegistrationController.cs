@@ -410,7 +410,9 @@
 
             if (existingOrgs.Any())
             {
-                return await OrganisationFound(existingOrgs);
+                TempData["FoundOrganisations"] = existingOrgs;
+
+                return RedirectToAction("OrganisationFound");
             }
 
             return await CheckAuthorisedRepresentitiveAndRedirect();
@@ -469,7 +471,8 @@
                     new OrganisationFoundViewModel
                     {
                         OrganisationName = existing.Name,
-                        CompanyRegistrationName = existing.CompanyRegistrationNumber
+                        CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
+                        OrganisationId = existing.Id
                     }
                 };
             }
@@ -479,20 +482,38 @@
             var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
             {
                 OrganisationName = x.Name,
-                CompanyRegistrationName = x.CompanyRegistrationNumber
+                CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
+                OrganisationId = existing.Id
             });
 
             return organisationsMapped;
         }
 
-        public async Task<ActionResult> OrganisationFound(IEnumerable<OrganisationFoundViewModel> orgs)
+        [HttpGet]
+        public async Task<ActionResult> OrganisationFound()
         {
+            TempData.Keep("FoundOrganisations");
+
             var vm = new OrganisationsFoundViewModel
             {
-                OrganisationFoundViewModels = orgs
+                OrganisationFoundViewModels = TempData["FoundOrganisations"] as IEnumerable<OrganisationFoundViewModel>
             };
 
-            return View("OrganisationFound", vm); //URL doesnt change here RedirectToAction isn't used. Can be sorted out as part of 71102
+            return View("OrganisationFound", vm);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> OrganisationFound(OrganisationsFoundViewModel orgsFoundViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(orgsFoundViewModel);
+            }
+
+            return RedirectToAction("JoinOrganisation", new
+            {
+                OrganisationId = orgsFoundViewModel.SelectedOrganisationId.Value
+            });
         }
 
         private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
