@@ -7,7 +7,7 @@
 
     public class OrganisationsFoundViewModel
     {
-        public IEnumerable<OrganisationFoundViewModel> OrganisationFoundViewModels { get; set; }
+        public IList<OrganisationFoundViewModel> OrganisationFoundViewModels { get; set; }
 
         [Required(ErrorMessage = "You must choose an organisation")]
         public Guid? SelectedOrganisationId { get; set; }
