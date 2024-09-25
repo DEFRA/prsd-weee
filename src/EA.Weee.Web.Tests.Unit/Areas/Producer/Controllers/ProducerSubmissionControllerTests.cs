@@ -3,6 +3,7 @@
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
+    using EA.Weee.Api.Client.Models.Pay;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
@@ -21,6 +22,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using RazorEngine.Compilation.ImpromptuInterface;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -46,6 +48,8 @@
         private readonly IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest>
             serviceOfNoticeRequestCreator;
         private readonly IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator;
+        private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
+            addSignatoryAndCompleteRequestCreator;
         private readonly IPaymentService paymentService;
 
         public ProducerSubmissionControllerTests()
@@ -63,9 +67,9 @@
             editContactDetailsRequestCreator =
                 A.Fake<IRequestCreator<EditContactDetailsViewModel, EditContactDetailsRequest>>();
             editEeeDataRequestCreator = A.Fake<IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest>>();
+            addSignatoryAndCompleteRequestCreator = A.Fake<IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>>();
             paymentService = A.Fake<IPaymentService>();
-
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, paymentService);
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService);
         }
 
         [Fact]
@@ -715,6 +719,96 @@
             result.RouteValues["action"].Should().Be("CheckAnswers");
             result.RouteValues["controller"].Should().Be("Producer");
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Get_ShouldReturnViewWithMappedModel()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var viewModel = TestFixture.Create<AppropriateSignatoryViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionData, AppropriateSignatoryViewModel>
+                (A<SmallProducerSubmissionData>.That.Matches(sd => sd.Equals(submissionData)))).Returns(viewModel);
+
+            // Act
+            var result = await controller.AppropriateSignatory() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(viewModel);
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Get_ShouldSetBreadCrumb()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
+            var organisationName = TestFixture.Create<string>();
+
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(submissionData.SmallProducerSubmissionData.OrganisationData.Id)).Returns(organisationName);
+
+            // Act
+            await controller.AppropriateSignatory();
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(submissionData.SmallProducerSubmissionData.OrganisationData.Id);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_ValidModel_ShouldRedirectToNextUrl()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
+
+            var createPaymentResult = TestFixture.Create<CreatePaymentResult>();
+            createPaymentResult.Links = TestFixture.Create<PaymentLinks>();
+            createPaymentResult.Links.NextUrl = TestFixture.Create<Link>();
+            createPaymentResult.Links.NextUrl.Href = TestFixture.Create<string>();
+
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult((PaymentWithAllLinks)null));
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).Returns(createPaymentResult);
+            A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).Returns(true);
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as RedirectResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_InvalidModel_ShouldReturnViewWithModel()
+        {
+            // Arrange
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            controller.ModelState.AddModelError("Test", "Test error");
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
         }
 
         [Fact]

@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Domain.Organisation
 {
+    using CuttingEdge.Conditions;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using Scheme;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
-    using Scheme;
 
     public partial class Organisation : Entity
     {
@@ -115,6 +115,15 @@
 
             OrganisationType = organisationType;
             TradingName = tradingName;
+        }
+
+        public void UpdateDirectRegistrantDetails(string companyName, string companyRegNumber, string tradingName)
+        {
+            Condition.Requires(companyName).IsNotNullOrWhiteSpace();
+
+            Name = companyName;
+            TradingName = tradingName;
+            CompanyRegistrationNumber = companyRegNumber;
         }
 
         public void UpdateSoleTraderDetails(string companyName, string tradingName)
