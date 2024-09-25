@@ -68,7 +68,7 @@
                         transaction.ContactDetailsViewModel = contactDetailsViewModel;
                         break;
                     case PartnerViewModel partnerViewModel:
-                        transaction.PartnerModels = partnerViewModel.AllParterModels;
+                        transaction.PartnerModels = partnerViewModel.AllPartnerModels;
                         transaction.SoleTraderViewModel = null;
                         break;
                     case SoleTraderViewModel soleTraderViewModel:
