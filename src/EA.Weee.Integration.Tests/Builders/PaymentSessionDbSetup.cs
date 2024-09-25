@@ -34,6 +34,20 @@
             return this;
         }
 
+        public PaymentSessionDbSetup WithPaymentTokenUrl(string tokenUrl)
+        {
+            ObjectInstantiator<PaymentSession>.SetProperty(o => o.PaymentReturnToken, tokenUrl, instance);
+
+            return this;
+        }
+
+        public PaymentSessionDbSetup WithReference(string reference)
+        {
+            ObjectInstantiator<PaymentSession>.SetProperty(o => o.PaymentReference, reference, instance);
+
+            return this;
+        }
+
         public PaymentSessionDbSetup WithDirectRegistrantSubmission(DirectProducerSubmission submission)
         {
             ObjectInstantiator<PaymentSession>.SetProperty(o => o.DirectProducerSubmissionId, submission.Id, instance);
