@@ -3,6 +3,7 @@
     using AutoFixture;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Organisation;
     using Domain.User;
     using FluentAssertions;
     using System;
@@ -524,6 +525,46 @@
                 var result = await organisationDataAccess.GetReturnsByComplianceYear(Guid.NewGuid(), 2020, FacilityType.Ae);
 
                 result.Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task GetByRegistrationNumber_GivenOrganisationNumberExists_ReturnsOrganisationNumber()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var companyRegistrationNumber = "12345678A";
+                var organisation = Domain.Organisation.Organisation.CreateDirectRegistrantCompany(OrganisationType.RegisteredCompany, fixture.Create<string>(),
+                    fixture.Create<string>(), companyRegistrationNumber);
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetByRegistrationNumber(organisation.CompanyRegistrationNumber);
+
+                result.CompanyRegistrationNumber.Should().Be(organisation.CompanyRegistrationNumber);
+            }
+        }
+
+        [Fact]
+        public async Task GetByRegistrationNumber_GivenOrganisationNumberDoesNotExist_ReturnsOrganisationNumber()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var companyRegistrationNumber = "12345678B";
+                var organisation = Domain.Organisation.Organisation.CreateDirectRegistrantCompany(OrganisationType.RegisteredCompany, fixture.Create<string>(),
+                    fixture.Create<string>(), companyRegistrationNumber);
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetByRegistrationNumber("ZZZZZZZZZZ");
+
+                result.Should().BeNull();
             }
         }
     }

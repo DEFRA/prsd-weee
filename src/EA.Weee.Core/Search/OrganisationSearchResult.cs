@@ -9,6 +9,8 @@
 
         public string Name { get; set; }
 
+        public string CompanyRegistrationNumber { get; set; }
+
         public AddressData Address { get; set; }
 
         public int AatfCount { get; set; }
