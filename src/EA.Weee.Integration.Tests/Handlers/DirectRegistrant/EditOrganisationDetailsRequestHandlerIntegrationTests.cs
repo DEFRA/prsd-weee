@@ -6,7 +6,6 @@
     using EA.Prsd.Core;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
-    using EA.Weee.Domain.Producer;
     using EA.Weee.Integration.Tests.Builders;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using FluentAssertions;
@@ -14,17 +13,21 @@
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
     using System;
-    using System.Linq;
     using System.Security;
 
     public class EditOrganisationDetailsRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIUpdateOrganisationDetails : EditOrganisationDetailsRequestHandlerIntegrationTestBase
+        public class WhenIUpdateOrganisationDetailsWhereNoExist : EditOrganisationDetailsRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
                 LocalSetup();
+
+                var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
             };
 
             private readonly Because of = () =>
@@ -34,23 +37,64 @@
 
             private readonly It shouldUpdateTheData = () =>
             {
-                var entity = Query.GetDirectRegistrantByOrganisationId(directRegistrant.OrganisationId);
+                var entity = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
 
-                entity.DirectProducerSubmissions.Count().Should().Be(1);
+                entity.Should().NotBeNull();
 
-                var submission = entity.DirectProducerSubmissions.ElementAt(0);
-                submission.CurrentSubmission.CompanyName.Should().Be(request.CompanyName);
-                submission.CurrentSubmission.TradingName.Should().Be(request.TradingName);
-                submission.CurrentSubmission.BrandName.Name.Should().Be(request.EEEBrandNames);
-                submission.CurrentSubmission.BusinessAddress.Address1.Should().Be(request.BusinessAddressData.Address1);
-                submission.CurrentSubmission.BusinessAddress.Address2.Should().Be(request.BusinessAddressData.Address2);
-                submission.CurrentSubmission.BusinessAddress.TownOrCity.Should().Be(request.BusinessAddressData.TownOrCity);
-                submission.CurrentSubmission.BusinessAddress.CountyOrRegion.Should().Be(request.BusinessAddressData.CountyOrRegion);
-                submission.CurrentSubmission.BusinessAddress.CountryId.Should().Be(request.BusinessAddressData.CountryId);
-                submission.CurrentSubmission.BusinessAddress.Postcode.Should().Be(request.BusinessAddressData.Postcode);
-                submission.CurrentSubmission.BusinessAddress.WebAddress.Should().Be(request.BusinessAddressData.WebAddress);
-                submission.CurrentSubmission.BusinessAddress.Telephone.Should().Be(request.BusinessAddressData.Telephone);
-                submission.CurrentSubmission.BusinessAddress.Email.Should().Be(request.BusinessAddressData.Email);
+                entity.CurrentSubmission.CompanyName.Should().Be(request.CompanyName);
+                entity.CurrentSubmission.TradingName.Should().Be(request.TradingName);
+                entity.CurrentSubmission.BrandName.Name.Should().Be(request.EEEBrandNames);
+                entity.CurrentSubmission.BusinessAddress.Address1.Should().Be(request.BusinessAddressData.Address1);
+                entity.CurrentSubmission.BusinessAddress.Address2.Should().Be(request.BusinessAddressData.Address2);
+                entity.CurrentSubmission.BusinessAddress.TownOrCity.Should().Be(request.BusinessAddressData.TownOrCity);
+                entity.CurrentSubmission.BusinessAddress.CountyOrRegion.Should().Be(request.BusinessAddressData.CountyOrRegion);
+                entity.CurrentSubmission.BusinessAddress.CountryId.Should().Be(request.BusinessAddressData.CountryId);
+                entity.CurrentSubmission.BusinessAddress.Postcode.Should().Be(request.BusinessAddressData.Postcode);
+                entity.CurrentSubmission.BusinessAddress.WebAddress.Should().Be(request.BusinessAddressData.WebAddress);
+                entity.CurrentSubmission.BusinessAddress.Telephone.Should().Be(request.BusinessAddressData.Telephone);
+                entity.CurrentSubmission.BusinessAddress.Email.Should().Be(request.BusinessAddressData.Email);
+            };
+        }
+
+        [Component]
+        public class WhenIUpdateOrganisationDetailsWithExistingDetails : EditOrganisationDetailsRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var address = AddressDbSetup.Init().Create();
+
+                var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithBusinessAddress(address.Id)
+                    .WithBrandName(fixture.Create<string>())
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldUpdateTheData = () =>
+            {
+                var entity = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                entity.Should().NotBeNull();
+                entity.CurrentSubmission.CompanyName.Should().Be(request.CompanyName);
+                entity.CurrentSubmission.TradingName.Should().Be(request.TradingName);
+                entity.CurrentSubmission.BrandName.Name.Should().Be(request.EEEBrandNames);
+                entity.CurrentSubmission.BusinessAddress.Address1.Should().Be(request.BusinessAddressData.Address1);
+                entity.CurrentSubmission.BusinessAddress.Address2.Should().Be(request.BusinessAddressData.Address2);
+                entity.CurrentSubmission.BusinessAddress.TownOrCity.Should().Be(request.BusinessAddressData.TownOrCity);
+                entity.CurrentSubmission.BusinessAddress.CountyOrRegion.Should().Be(request.BusinessAddressData.CountyOrRegion);
+                entity.CurrentSubmission.BusinessAddress.CountryId.Should().Be(request.BusinessAddressData.CountryId);
+                entity.CurrentSubmission.BusinessAddress.Postcode.Should().Be(request.BusinessAddressData.Postcode);
+                entity.CurrentSubmission.BusinessAddress.WebAddress.Should().Be(request.BusinessAddressData.WebAddress);
+                entity.CurrentSubmission.BusinessAddress.Telephone.Should().Be(request.BusinessAddressData.Telephone);
+                entity.CurrentSubmission.BusinessAddress.Email.Should().Be(request.BusinessAddressData.Email);
             };
         }
 
@@ -72,7 +116,7 @@
                 CatchExceptionAsync(() => authHandler.HandleAsync(request));
             };
 
-            private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
+            private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<SecurityException>;
         }
 
         public class EditOrganisationDetailsRequestHandlerIntegrationTestBase : WeeeContextSpecification
@@ -106,11 +150,6 @@
                     .WithComplianceYear(SystemTime.UtcNow.Year)
                     .WithDirectRegistrant(directRegistrant)
                     .Create();
-
-                var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
-                    .WithDirectProducerSubmission(directProducerSubmission).Create();
-
-                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
 
                 country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
 
