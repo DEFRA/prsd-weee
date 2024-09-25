@@ -7,13 +7,6 @@
 
     public class AddSignatoryAndCompleteMap : IMap<SmallProducerSubmissionData, AppropriateSignatoryViewModel>
     {
-        private readonly IMapper mapper;
-
-        public AddSignatoryAndCompleteMap(IMapper mapper)
-        {
-            this.mapper = mapper;
-        }
-
         public AppropriateSignatoryViewModel Map(SmallProducerSubmissionData source)
         {
             var viewModel = new AppropriateSignatoryViewModel
@@ -22,12 +15,6 @@
                 OrganisationId = source.OrganisationData.Id,
                 HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive
             };
-
-            var contactPersonViewModel = viewModel.Contact = new ContactPersonViewModel();
-
-            contactPersonViewModel.FirstName = source.CurrentSubmission.ContactData.FirstName;
-            contactPersonViewModel.LastName = source.CurrentSubmission.ContactData.LastName;
-            contactPersonViewModel.Position = source.CurrentSubmission.ContactData.Position;
 
             return viewModel;
         }
