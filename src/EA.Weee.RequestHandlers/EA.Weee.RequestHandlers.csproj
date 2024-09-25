@@ -185,6 +185,7 @@
     <Compile Include="Organisations\DirectRegistrants\AddUpdateOrganisationTransactionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\CompleteOrganisationTransactionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetUserOrganisationTransactionHandler.cs" />
+    <Compile Include="Organisations\OrganisationByRegistrationNumberHandler.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
