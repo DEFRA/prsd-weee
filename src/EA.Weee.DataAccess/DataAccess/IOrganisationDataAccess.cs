@@ -12,6 +12,8 @@
 
         Task<Organisation> GetById(Guid organisationId);
 
+        Task<Organisation> GetByRegistrationNumber(string companyRegistrationNumber);
+
         Task Delete(Guid organisationId);
 
         Task<bool> HasActiveUsers(Guid organisationId);
