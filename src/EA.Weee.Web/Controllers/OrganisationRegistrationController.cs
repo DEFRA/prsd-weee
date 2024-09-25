@@ -496,7 +496,7 @@
 
             var vm = new OrganisationsFoundViewModel
             {
-                OrganisationFoundViewModels = TempData["FoundOrganisations"] as IEnumerable<OrganisationFoundViewModel>
+                OrganisationFoundViewModels = TempData["FoundOrganisations"] as IList<OrganisationFoundViewModel>
             };
 
             return View("OrganisationFound", vm);
