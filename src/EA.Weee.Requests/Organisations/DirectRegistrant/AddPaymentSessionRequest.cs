@@ -6,7 +6,7 @@
     using System;
     using EA.Weee.Core.Organisations;
 
-    public class AddPaymentSessionRequest : IRequest<bool>
+    public class AddPaymentSessionRequest : IRequest<Guid>
     {
         public Guid DirectRegistrantId { get; private set; }
 

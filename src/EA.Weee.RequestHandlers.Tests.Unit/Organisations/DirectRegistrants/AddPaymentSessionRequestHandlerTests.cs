@@ -109,7 +109,7 @@
             var result = await handler.HandleAsync(request);
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().NotBeEmpty();
             A.CallTo(() => weeeContext.PaymentSessions.Add(A<PaymentSession>.That.Matches(p => p.InFinalState == false &&
                                                                                                             p.Amount == request.Amount &&
                                                                                                             p.DirectProducerSubmission == currentYearSubmission &&
