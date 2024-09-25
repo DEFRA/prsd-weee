@@ -10,7 +10,7 @@
 @section full_main_content{
 
     @(this.WeeeGds().BackLink(@Url.Action("TonnageType")))
-    
+
     @using (Html.BeginForm())
     {
         @Html.Gds().ValidationSummary()
@@ -21,6 +21,8 @@
                 @ViewBag.Title
             </h1>
         </header>
+
+        <p class="govuk-body">If you have been a member of a producer compliance scheme (PCS) or have been previously registered directly as a small producer you will need to select ‘Yes’ and find your organisation.</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @this.WeeeGds().RadioButtonsFor(
