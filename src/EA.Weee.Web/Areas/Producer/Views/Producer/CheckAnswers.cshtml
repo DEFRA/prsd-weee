@@ -125,9 +125,9 @@
     @if (representingOrg)
     {
         <div>
-            @(this.WeeeGds().TableSummary("Represented company details", representingCompanyDetails, "", "", displayCaption: true))
+            @(this.WeeeGds().TableSummary("Represented organisation details", representingCompanyDetails, "", "", displayCaption: true))
             <div style="margin-bottom: 40px;">
-                <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission", new { redirectToCheckAnswers = true})">Change represented company details</a>
+                <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission", new { redirectToCheckAnswers = true})">Change represented organisation details</a>
             </div>
         </div>
     }
