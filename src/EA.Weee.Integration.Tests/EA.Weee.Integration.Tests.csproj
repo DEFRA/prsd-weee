@@ -221,6 +221,8 @@
     <Compile Include="AsyncHelper.cs" />
     <Compile Include="Base\IntegrationTestBase.cs" />
     <Compile Include="Base\WeeeContextSpecification.cs" />
+    <Compile Include="Builders\ContactDbSetup.cs" />
+    <Compile Include="Builders\AddressDbSetup.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
     <Compile Include="Builders\AuthorisedRepDbSetup.cs" />
@@ -249,6 +251,7 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
+    <Compile Include="Handlers\DirectRegistrant\AddSignatoryAndCompleteRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\EditEeeDataRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\EditRepresentedOrganisationDetailsRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\ServiceOfNoticeRequestHandlerIntegrationTests.cs" />
