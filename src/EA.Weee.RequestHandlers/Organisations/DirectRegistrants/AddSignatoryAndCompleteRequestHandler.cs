@@ -42,7 +42,10 @@
 
             currentYearSubmission.DirectRegistrant.BrandName.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.BrandName);
 
-            currentYearSubmission.DirectRegistrant.AuthorisedRepresentative.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative);
+            if (currentYearSubmission.CurrentSubmission.AuthorisedRepresentative != null)
+            {
+                currentYearSubmission.DirectRegistrant.AuthorisedRepresentative.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative);
+            }
 
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 

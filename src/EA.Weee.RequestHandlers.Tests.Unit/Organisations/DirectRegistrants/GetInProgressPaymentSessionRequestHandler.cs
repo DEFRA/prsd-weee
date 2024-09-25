@@ -112,6 +112,9 @@
             SetupValidDirectRegistrant();
             var paymentSession = A.Fake<PaymentSession>();
             var paymentId = TestFixture.Create<string>();
+            var paymentSessionId = TestFixture.Create<Guid>();
+
+            A.CallTo(() => paymentSession.Id).Returns(paymentSessionId);
             A.CallTo(() => paymentSession.PaymentId).Returns(paymentId);
             A.CallTo(() => paymentSessionDataAccess.GetCurrentRetryPayment(request.DirectRegistrantId, year))
                 .Returns(Task.FromResult(paymentSession));
@@ -122,6 +125,7 @@
             // Assert
             result.Should().NotBeNull();
             result.PaymentId.Should().Be(paymentId);
+            result.PaymentSessionId.Should().Be(paymentSessionId);
         }
 
         private GetInProgressPaymentSessionRequest CreateValidRequest()
