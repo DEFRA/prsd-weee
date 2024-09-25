@@ -112,23 +112,21 @@
 
         if (Model.AdditionalContactModels != null && Model.AdditionalContactModels.Any())
         {
-            for (var i = 0; i < Model.AdditionalContactModels.Count; i++)
+            foreach (var contact in Model.AdditionalContactModels.OrderBy(c => c.Order))
             {
-
-                var heading = Model.Organisation.OrganisationType == ExternalOrganisationType.Partnership ? "Partner " + (i + 1).ToString() + " details" : "Sole trader details";
+                var index = Model.AdditionalContactModels.IndexOf(contact);
+                var heading = Model.Organisation.OrganisationType == ExternalOrganisationType.Partnership ? "Partner " + (index + 1).ToString() + " details" : "Sole trader details";
 
                 <h2 class="govuk-heading-m">@heading</h2>
 
-                var contact = Model.AdditionalContactModels[i];
-                var index = i.ToString();
+                var firstNameLabelFor = "AdditionalContactModels_" + index + "__FirstName";
+                var firstNameLabelId = "AdditionalContactModels_" + index + "__FirstName-label";
+                var lastNameLabelFor = "AdditionalContactModels_" + index + "__LastName";
+                var lastNameLabelId = "AdditionalContactModels_" + index + "__LastName-label";
 
-                var firstNameLabelFor = "AdditionalContactModels_FirstName_" + index;
-                var firstNameLabelId = "AdditionalContactModels_FirstName_" + index + "-label";
-                var lastNameLabelFor = "AdditionalContactModels_LastName_" + index;
-                var lastNameLabelId = "AdditionalContactModels_LastName_" + index + "-label";
-
-                @Html.HiddenFor(m => m.AdditionalContactModels[i].FirstName)
-                @Html.HiddenFor(m => m.AdditionalContactModels[i].LastName)
+                @Html.HiddenFor(m => m.AdditionalContactModels[index].FirstName)
+                @Html.HiddenFor(m => m.AdditionalContactModels[index].LastName)
+                @Html.HiddenFor(m => m.AdditionalContactModels[index].Order)
 
                 <div class="govuk-grid-row govuk-!-padding-bottom-2">
                     <div class="flex-container">
