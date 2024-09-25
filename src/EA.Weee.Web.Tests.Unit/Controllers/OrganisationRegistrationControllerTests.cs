@@ -9,6 +9,7 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Search;
+    using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Services.Caching;
@@ -933,6 +934,12 @@
 
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
 
+            A.CallTo(() => this.weeeClient
+              .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+              .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
+
+            A.CallTo(() => organisationSearcher.Search(A<string>._, A<int>._, A<bool>._)).Returns(new List<OrganisationSearchResult>());
+
             // Act
             var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
 
@@ -955,6 +962,97 @@
                 A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
                 A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
             }
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_ValidModel_ChecksOrganisationExistence()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => this.weeeClient
+                .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
+                .That
+                .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
+                .MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_ValidModel_ChecksOrganisationExistenceWithNameSearchIfRegReturnsNull()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+
+            A.CallTo(() => this.weeeClient
+               .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
+               .That
+               .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
+               .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            A.CallTo(() => this.organisationSearcher
+                .Search(model.CompanyName, A<int>._, A<bool>._))
+                .MustHaveHappened(1, Times.Exactly);
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_ValidModel_RedirectsIfOrgExists()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            var organisationId = TestFixture.Create<Guid>();
+
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+
+            var org = new EA.Weee.Core.Organisations.OrganisationData { Id = Guid.NewGuid() };
+
+            A.CallTo(() => this.weeeClient
+               .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
+               .That
+               .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
+               .Returns(org);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            result.ViewName.Should().Be("OrganisationFound");
         }
 
         public static IEnumerable<object[]> OrganisationTypeData()
