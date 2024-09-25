@@ -34,6 +34,7 @@
         private readonly Guid countryId = Guid.NewGuid();
         private readonly Guid userId = Guid.NewGuid();
         private readonly Country country;
+        private readonly Contact contact = new Contact("First", "Last", "Pos");
 
         public AddSignatoryAndCompleteRequestHandlerTests()
         {
@@ -144,9 +145,9 @@
         private AddSignatoryAndCompleteRequest CreateValidRequest(string brandNames = null)
         {
             var contactData = TestFixture.Build<ContactData>()
-                .With(a => a.FirstName, "First")
-                .With(a => a.LastName, "Last")
-                .With(a => a.Position, "Pos")
+                .With(a => a.FirstName, contact.FirstName)
+                .With(a => a.LastName, contact.LastName)
+                .With(a => a.Position, contact.Position)
                 .Create();
             
             return new AddSignatoryAndCompleteRequest(directRegistrantId,  contactData);
@@ -178,8 +179,6 @@
 
             directProducerSubmissionCurrentYear.CurrentSubmission =
                 new DirectProducerSubmissionHistory(directProducerSubmissionCurrentYear, brandName, businessAddress);
-
-            Contact contact = new Contact("First", "Last", "Pos");
 
             directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName = TestFixture.Create<string>();
             directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContact(contact);
