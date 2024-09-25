@@ -9,7 +9,7 @@
 </div>
 
 <h2 class="govuk-heading-s">Enter the details of the organisation applying to register.</h2>
-@Html.Gds().HintParagraph("If you don't have a Company Registration Number, leave this field blank")
+@Html.Gds().HintParagraph("If you don't have a company registration number, leave this field blank")
 
 <div class="govuk-form-group @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
     @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
