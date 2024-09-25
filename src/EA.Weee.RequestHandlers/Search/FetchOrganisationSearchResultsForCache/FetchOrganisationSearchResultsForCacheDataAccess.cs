@@ -48,7 +48,8 @@
                     AatfCount = r.AatfCount,
                     AeCount = r.AeCount,
                     IsBalancingScheme = r.Organisation.ProducerBalancingScheme != null,
-                    DirectRegistrantCount = r.DirectRegistrantCount
+                    DirectRegistrantCount = r.DirectRegistrantCount,
+                    CompanyRegistrationNumber = r.Organisation.CompanyRegistrationNumber
                 })
                 .Where(r => r.PcsCount > 0 || r.AatfCount > 0 || r.AeCount > 0 || r.IsBalancingScheme || r.DirectRegistrantCount > 0)
                 .OrderBy(r => r.Name)

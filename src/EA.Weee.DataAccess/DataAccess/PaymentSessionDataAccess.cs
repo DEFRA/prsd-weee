@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
     using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.Producer;
     using System;
     using System.Data.Entity;
@@ -40,6 +41,16 @@
                     c.DirectProducerSubmission.ComplianceYear == year &&
                     c.InFinalState == false).OrderByDescending(p => p.CreatedAt)
                 .Include(paymentSession => paymentSession.DirectRegistrant).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> AnyPaymentTokenAsync(string paymentToken)
+        {
+            return await weeeContext.PaymentSessions.AnyAsync(c => c.PaymentReturnToken == paymentToken);
+        }
+
+        public async Task<PaymentSession> GetByIdAsync(Guid paymentSessionId)
+        {
+            return await weeeContext.PaymentSessions.FirstOrDefaultAsync(p => p.Id == paymentSessionId);
         }
     }
 }
