@@ -221,6 +221,8 @@
     <Compile Include="AsyncHelper.cs" />
     <Compile Include="Base\IntegrationTestBase.cs" />
     <Compile Include="Base\WeeeContextSpecification.cs" />
+    <Compile Include="Builders\ContactDbSetup.cs" />
+    <Compile Include="Builders\AddressDbSetup.cs" />
     <Compile Include="Builders\AatfContactDbSetup.cs" />
     <Compile Include="Builders\AatfAddressDbSetup.cs" />
     <Compile Include="Builders\AuthorisedRepDbSetup.cs" />
