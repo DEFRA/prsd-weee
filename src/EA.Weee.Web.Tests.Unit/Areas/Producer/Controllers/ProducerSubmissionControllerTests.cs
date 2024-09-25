@@ -22,7 +22,6 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
-    using RazorEngine.Compilation.ImpromptuInterface;
     using System;
     using System.Collections.Generic;
     using System.Linq;
