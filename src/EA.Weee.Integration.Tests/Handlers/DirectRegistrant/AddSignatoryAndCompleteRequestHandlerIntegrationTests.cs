@@ -15,6 +15,7 @@
     using System;
     using System.Linq;
     using System.Security;
+    using EA.Prsd.Core;
 
     public class AddSignatoryAndCompleteRequestHandlerIntegrationTests : IntegrationTestBase
     {
@@ -28,30 +29,12 @@
 
             private readonly Because of = () =>
             {
-                AsyncHelper.RunSync(() =>
-                    createSubmissionHandler.HandleAsync(new AddSmallProducerSubmission(directRegistrant.Id)));
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
             };
 
             private readonly It shouldUpdateTheData = () =>
             {
-                var entity = Query.GetDirectRegistrantByOrganisationId(directRegistrant.OrganisationId);
-
-                entity.DirectProducerSubmissions.Count().Should().Be(1);
-
-                var submission = entity.DirectProducerSubmissions.ElementAt(0);
-                submission.CurrentSubmission.Contact.FirstName.Should().Be(request.ContactData.FirstName);
-                submission.CurrentSubmission.Contact.LastName.Should().Be(request.ContactData.LastName);
-                submission.CurrentSubmission.Contact.Position.Should().Be(request.ContactData.Position);
-
-                submission.DirectRegistrant.Organisation.BusinessAddress.Should().Be(submission.CurrentSubmission.BusinessAddress);
-                submission.DirectRegistrant.Organisation.Name.Should().Be(submission.CurrentSubmission.CompanyName);
-                submission.DirectRegistrant.Organisation.TradingName.Should().Be(submission.CurrentSubmission.TradingName);
-
-                submission.DirectRegistrant.Contact.Should().Be(submission.CurrentSubmission.Contact);
-                submission.DirectRegistrant.Address.Should().Be(submission.CurrentSubmission.BusinessAddress);
-                submission.DirectRegistrant.BrandName.Should().Be(submission.CurrentSubmission.BrandName);
-                submission.DirectRegistrant.AuthorisedRepresentative.Should().Be(submission.CurrentSubmission.AuthorisedRepresentative);
+                var entity = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
             };
         }
 
@@ -79,12 +62,11 @@
         public class AddSignatoryAndCompleteRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<AddSignatoryAndCompleteRequest, bool> handler;
-            protected static IRequestHandler<AddSmallProducerSubmission, Guid> createSubmissionHandler;
             protected static Fixture fixture;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
             protected static AddSignatoryAndCompleteRequest request;
+            protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
             protected static bool result;
-            protected static Country country;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -93,17 +75,39 @@
                     .WithTestData()
                 .WithExternalUserAccess();
 
+                var organisation = OrganisationDbSetup.Init().Create();
+                var address = AddressDbSetup.Init().Create();
+                var contact = ContactDbSetup.Init().Create();
+
+                var authedRep = AuthorisedRepDbSetup.Init().Create();
                 directRegistrant = DirectRegistrantDbSetup.Init()
+                    .WithAddress(address.Id)
+                    .WithContact(contact.Id)
+                    .WithBrandName("another brand")
+                    .WithAuthorisedRep(authedRep)
+                    .WithOrganisation(organisation.Id)
                     .Create();
 
+                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
+                    .WithDefaultRegisteredProducer()
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
+                    .WithDirectRegistrant(directRegistrant)
+                    .Create();
+
+                var authedRepSubmission = AuthorisedRepDbSetup.Init().Create();
+
+                var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithAddress(address.Id)
+                    .WithContact(contact.Id)
+                    .WithBrandName("new brand")
+                    .WithAuthorisedRep(authedRepSubmission.Id)
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
+
                 handler = Container.Resolve<IRequestHandler<AddSignatoryAndCompleteRequest, bool>>();
-                createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
 
                 fixture = new Fixture();
-
-                country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
-
-                var addressData = fixture.Build<AddressData>().With(a => a.CountryId, country.Id).Create();
 
                 var contactData = fixture.Build<ContactData>()
                     .With(a => a.FirstName, "First")

@@ -29,14 +29,17 @@
             currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 
             currentYearSubmission.DirectRegistrant.Organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, currentYearSubmission.CurrentSubmission.BusinessAddress);
-            currentYearSubmission.DirectRegistrant.Organisation.UpdateOrganisationTypeDetails(currentYearSubmission.CurrentSubmission.CompanyName,
+
+            currentYearSubmission.DirectRegistrant.Organisation.UpdateDirectRegistrantDetails(currentYearSubmission.CurrentSubmission.CompanyName,
                 currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber,
-                currentYearSubmission.CurrentSubmission.TradingName, 
-                currentYearSubmission.DirectRegistrant.Organisation.OrganisationType);
+                currentYearSubmission.CurrentSubmission.TradingName);
 
             currentYearSubmission.DirectRegistrant.AddOrUpdateMainContactPerson(currentYearSubmission.CurrentSubmission.Contact);
+
             currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.BusinessAddress);
+
             currentYearSubmission.DirectRegistrant.BrandName.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.BrandName);
+
             currentYearSubmission.DirectRegistrant.AuthorisedRepresentative.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative);
 
             await weeeContext.SaveChangesAsync();
