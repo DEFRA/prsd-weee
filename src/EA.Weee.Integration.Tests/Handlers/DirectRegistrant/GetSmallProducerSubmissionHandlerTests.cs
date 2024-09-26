@@ -3,9 +3,11 @@
     using Autofac;
     using AutoFixture;
     using Base;
+    using EA.Prsd.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Integration.Tests.Builders;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using FluentAssertions;
     using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
@@ -15,7 +17,7 @@
     public class GetSmallProducerSubmissionHandlerTests : IntegrationTestBase
     {
         [Component]
-        public class WhenICreateANewProducerSubmission : GetSmallProducerSubmissionHandlerTestsBase
+        public class WhenIGetSmallProducerSubmission : GetSmallProducerSubmissionHandlerTestsBase
         {
             private readonly Establish context = () =>
             {
@@ -29,8 +31,11 @@
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
             };
 
-            private readonly It shouldHaveCompletedTheTransaction = () =>
+            private readonly It shouldHaveRetrievedTheData = () =>
             {
+                var fullDirectRegistrant = Query.GetDirectRegistrantByOrganisationId(directRegistrant.OrganisationId);
+
+                result.CurrentSubmission.Should().NotBeNull();
             };
         }
 
@@ -62,6 +67,8 @@
             protected static GetSmallProducerSubmission request;
             protected static SmallProducerSubmissionData result;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
+            protected static Domain.Producer.DirectProducerSubmissionHistory directProducerSubmissionHistory;
+            protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -72,8 +79,19 @@
 
                 handler = Container.Resolve<IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData>>();
 
-                var organisation = OrganisationDbSetup.Init().Create();
-                directRegistrant = DirectRegistrantDbSetup.Init().Create();
+                directRegistrant = DirectRegistrantDbSetup.Init()
+                    .Create();
+
+                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
+                    .WithDefaultRegisteredProducer()
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
+                    .WithDirectRegistrant(directRegistrant)
+                    .Create();
+
+                directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
 
