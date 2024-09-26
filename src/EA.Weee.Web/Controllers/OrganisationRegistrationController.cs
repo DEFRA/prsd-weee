@@ -510,7 +510,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> OrganisationFound()
+        public ActionResult OrganisationFound()
         {
             TempData.Keep("FoundOrganisations");
 
@@ -530,7 +530,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OrganisationFound(OrganisationsFoundViewModel orgsFoundViewModel)
+        public ActionResult OrganisationFound(OrganisationsFoundViewModel orgsFoundViewModel)
         {
             if (!ModelState.IsValid)
             {
