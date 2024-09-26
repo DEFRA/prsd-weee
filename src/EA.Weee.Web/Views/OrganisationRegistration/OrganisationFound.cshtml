@@ -21,7 +21,8 @@
     </p>
 
     @using (Html.BeginForm())
-    { 
+    {
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationFoundType)
 
         <fieldset class="prsd-table-fieldset">
@@ -35,38 +36,34 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                @for (int i = 0; i < Model.OrganisationFoundViewModels.Count(); i++)
-                {
-                    var org = Model.OrganisationFoundViewModels.ElementAt(i);
-                    var id = "selectOrg" + org.OrganisationId;
-                    <tr class="govuk-table__row">
-                        <td style="word-break: break-word" class="govuk-table__cell">
-                            @org.OrganisationName
-                            @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].OrganisationName)
-                        </td>
-                        <td style="word-break: break-word" class="govuk-table__cell">
-                            @org.CompanyRegistrationNumber
-                            @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].CompanyRegistrationNumber)
-                        </td>
-                        <td style="padding-right: 15px; text-align: center" class="govuk-table__cell">
-                            <label class="govuk-visually-hidden" for="@id">Confirm organisation</label>
-                            @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].OrganisationId)
-                            @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = id })
-                        </td>
-                    </tr>
-                }
+                    @for (int i = 0; i < Model.OrganisationFoundViewModels.Count(); i++)
+                    {
+                        var org = Model.OrganisationFoundViewModels.ElementAt(i);
+                        var id = "selectOrg" + org.OrganisationId;
+                        <tr class="govuk-table__row">
+                            <td style="word-break: break-word" class="govuk-table__cell">
+                                @org.OrganisationName
+                                @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].OrganisationName)
+                            </td>
+                            <td style="word-break: break-word" class="govuk-table__cell">
+                                @org.CompanyRegistrationNumber
+                                @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].CompanyRegistrationNumber)
+                            </td>
+                            <td style="padding-right: 15px; text-align: center" class="govuk-table__cell">
+                                <label class="govuk-visually-hidden" for="@id">Confirm organisation</label>
+                                @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].OrganisationId)
+                                @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = id })
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </fieldset>
 
         <div class="govuk-button-group govuk-!-padding-top-3">
-            <button type="submit" class="govuk-button" role="button">
-                Request access to organisation
-            </button>
+            @(this.WeeeGds().Button("Request access to organisation"))
 
-            <a href="@Url.Action("OrganisationDetails", "OrganisationRegistration")" class="govuk-button govuk-button--secondary" role="button">
-                Return to organisation details
-            </a>
+            @this.WeeeGds().GovUkButtonLink("Return to organisation details", @Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails()), true)
         </div>
     }
 }
