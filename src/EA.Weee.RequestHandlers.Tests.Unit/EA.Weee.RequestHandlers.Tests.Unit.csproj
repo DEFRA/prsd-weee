@@ -409,9 +409,12 @@
     <Compile Include="Mapping\ReturnStatusMapTests.cs" />
     <Compile Include="Mapping\TransferNoteMapTransferTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditEeeDataRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditRepresentedOrganisationDetailsRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditContactDetailsRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\GetInProgressPaymentSessionRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\ServiceOfNoticeRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditOrganisationDetailsRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSmallProducerSubmissionHandlerTests.cs" />
@@ -420,6 +423,8 @@
     <Compile Include="Organisations\DirectRegistrants\GetSmallProducerSubmissionHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetUserOrganisationTransactionHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\OrganisationTestDataGenerator.cs" />
+    <Compile Include="Organisations\DirectRegistrants\UpdateSubmissionPaymentDetailsRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ValidateAndGetSubmissionPaymentHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingPartialOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\GetActiveOrgnisationUsers\GetActiveOrganisationUsersHandlerTests.cs" />
     <Compile Include="Organisations\GetSchemeByOrganisationIdHandlerTests.cs" />

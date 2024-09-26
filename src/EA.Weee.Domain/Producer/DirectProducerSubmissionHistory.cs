@@ -118,5 +118,12 @@
 
             ContactAddress = address.OverwriteWhereNull(ContactAddress);
         }
+
+        public void AddOrUpdateAppropriateSignatory(Contact contact)
+        {
+            Guard.ArgumentNotNull(() => contact, contact);
+
+            AppropriateSignatory = contact.OverwriteWhereNull(AppropriateSignatory);
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
     using DataAccess;
-    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.DataAccess.DataAccess;
@@ -15,16 +14,14 @@
     internal class ValidateAndGetSubmissionPaymentHandler : IRequestHandler<ValidateAndGetSubmissionPayment, SubmissionPaymentDetails>
     {
         private readonly WeeeContext weeeContext;
-        private readonly IUserContext userContext;
         private readonly IWeeeAuthorization authorization;
         private readonly ISystemDataDataAccess systemDataAccess;
         private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
 
         public ValidateAndGetSubmissionPaymentHandler(IWeeeAuthorization authorization,
-            WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IUserContext userContext, IPaymentSessionDataAccess paymentSessionDataAccess)
+            WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess)
         {
             this.weeeContext = weeeContext;
-            this.userContext = userContext;
             this.paymentSessionDataAccess = paymentSessionDataAccess;
             this.authorization = authorization;
             this.systemDataAccess = systemDataAccess;
@@ -32,10 +29,9 @@
 
         public async Task<SubmissionPaymentDetails> HandleAsync(ValidateAndGetSubmissionPayment request)
         {
-            authorization.CheckCanAccessExternalArea();
+            authorization.EnsureCanAccessExternalArea();
 
-            var requestExists = await weeeContext.PaymentSessions.AnyAsync(c =>
-                c.PaymentReturnToken == request.PaymentReturnToken);
+            var requestExists = await paymentSessionDataAccess.AnyPaymentTokenAsync(request.PaymentReturnToken);
 
             var systemTime = await systemDataAccess.GetSystemDateTime();
 
