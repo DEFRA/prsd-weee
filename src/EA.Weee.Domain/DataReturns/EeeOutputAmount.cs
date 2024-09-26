@@ -11,6 +11,8 @@
     {
         public virtual RegisteredProducer RegisteredProducer { get; private set; }
 
+        public virtual Guid RegisteredProducerId {get; private set; }
+
         public virtual ICollection<EeeOutputReturnVersion> EeeOutputReturnVersions { get; private set; }
 
         /// <summary>

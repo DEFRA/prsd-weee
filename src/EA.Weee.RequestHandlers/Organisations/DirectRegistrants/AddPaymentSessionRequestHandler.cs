@@ -27,7 +27,7 @@
         {
             var currentYearSubmission = await Get(request.DirectRegistrantId);
 
-            if (currentYearSubmission.FinalPaymentSession != null)
+            if (currentYearSubmission.PaymentFinished == true)
             {
                 throw new InvalidOperationException($"Payment already finalised for submission {currentYearSubmission.Id}");
             }
