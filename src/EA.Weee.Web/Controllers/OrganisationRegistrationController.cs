@@ -408,7 +408,7 @@
 
             var existingOrgs = await GetExistingOrganisations(model);
 
-            if (existingOrgs.Any())
+            if (existingOrgs.Organisations.Any())
             {
                 TempData["FoundOrganisations"] = existingOrgs;
 
@@ -460,33 +460,48 @@
             }
         }
 
-        private async Task<IEnumerable<OrganisationFoundViewModel>> GetExistingOrganisations(OrganisationViewModel model)
+        private async Task<OrganisationExistsSearchResult> GetExistingOrganisations(OrganisationViewModel model)
         {
             OrganisationData existing = await GetExistingByRegistrationNumber(model);
-
             if (existing != null)
             {
-                return new List<OrganisationFoundViewModel> 
+                return new OrganisationExistsSearchResult
                 {
-                    new OrganisationFoundViewModel
+                    Organisations = new List<OrganisationFoundViewModel>
                     {
-                        OrganisationName = existing.Name,
-                        CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
-                        OrganisationId = existing.Id
-                    }
+                        new OrganisationFoundViewModel
+                        {
+                            OrganisationName = existing.Name,
+                            CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
+                            OrganisationId = existing.Id
+                        }
+                    },
+                    FoundType = OrganisationFoundType.CompanyNumber
                 };
             }
 
             var nameSearch = await organisationSearcher.Search(model.CompanyName, maximumSearchResults, false);
-
             var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
             {
                 OrganisationName = x.Name,
-                CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
-                OrganisationId = existing.Id
-            });
+                CompanyRegistrationNumber = x.CompanyRegistrationNumber,
+                OrganisationId = x.OrganisationId
+            }).ToList();
 
-            return organisationsMapped;
+            if (organisationsMapped.Any())
+            {
+                return new OrganisationExistsSearchResult
+                {
+                    Organisations = organisationsMapped,
+                    FoundType = OrganisationFoundType.CompanyName
+                };
+            }
+
+            return new OrganisationExistsSearchResult
+            {
+                Organisations = new List<OrganisationFoundViewModel>(),
+                FoundType = OrganisationFoundType.NotFound
+            };
         }
 
         [HttpGet]
@@ -494,12 +509,18 @@
         {
             TempData.Keep("FoundOrganisations");
 
-            var vm = new OrganisationsFoundViewModel
+            if (TempData["FoundOrganisations"] is OrganisationExistsSearchResult organisationsExistSearchResults)
             {
-                OrganisationFoundViewModels = TempData["FoundOrganisations"] as IList<OrganisationFoundViewModel>
-            };
+                var vm = new OrganisationsFoundViewModel
+                {
+                    OrganisationFoundViewModels = organisationsExistSearchResults.Organisations,
+                    OrganisationFoundType = organisationsExistSearchResults.FoundType
+                };
 
-            return View("OrganisationFound", vm);
+                return View("OrganisationFound", vm);
+            }
+
+            return View(new OrganisationsFoundViewModel());
         }
 
         [HttpPost]

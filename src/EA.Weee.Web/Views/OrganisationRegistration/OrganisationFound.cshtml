@@ -24,6 +24,8 @@
 
     @using (Html.BeginForm())
     { 
+        @Html.HiddenFor(m => m.OrganisationFoundType)
+
         <fieldset class="prsd-table-fieldset">
             <legend class="govuk-visually-hidden">select organisation</legend>
             <table id="organisationSearchResultsTable" class="govuk-table prsd-table hover-effect">

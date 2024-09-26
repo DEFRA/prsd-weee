@@ -11,5 +11,7 @@
 
         [Required(ErrorMessage = "You must choose an organisation")]
         public Guid? SelectedOrganisationId { get; set; }
+
+        public OrganisationFoundType OrganisationFoundType { get; set; }
     }
 }
