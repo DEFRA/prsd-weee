@@ -35,6 +35,7 @@
         private readonly Guid userId = Guid.NewGuid();
         private readonly Country country;
         private readonly Contact contact = new Contact("First", "Last", "Pos");
+        private DirectProducerSubmission directProducerSubmissionCurrentYear;
 
         public AddSignatoryAndCompleteRequestHandlerTests()
         {
@@ -142,6 +143,59 @@
             A.CallTo(() => authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task HandleAsync_UpdatesBrandName_WhenBrandNameExists()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(true, true);
+            var name = TestFixture.Create<string>();
+            directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateBrandName(new BrandName(name));
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            directRegistrant.BrandName.Name.Should().Be(name);
+        }
+
+        [Fact]
+        public async Task HandleAsync_UpdatesAuthorisedRepresentative_WhenExists()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(true, true);
+
+            var name = TestFixture.Create<string>();
+            var tradingName = TestFixture.Create<string>();
+            directProducerSubmissionCurrentYear.CurrentSubmission.AuthorisedRepresentative =
+                new AuthorisedRepresentative(name, tradingName, A.Fake<ProducerContact>());
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            directRegistrant.AuthorisedRepresentative.OverseasProducerTradingName.Should().Be(tradingName);
+        }
+
+        [Fact]
+        public async Task HandleAsync_SetsSubmissionDateAndStatus()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(true, true);
+            var currentSubmission = directRegistrant.DirectProducerSubmissions.First().CurrentSubmission;
+            var systemDate = new DateTime(2024, 1, 1);
+            A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(Task.FromResult(systemDate));
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            currentSubmission.SubmittedDate.Should().Be(systemDate.Date);
+            currentSubmission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
+        }
+
         private AddSignatoryAndCompleteRequest CreateValidRequest(string brandNames = null)
         {
             var contactData = TestFixture.Build<ContactData>()
@@ -169,18 +223,20 @@
 
             var directRegistrant = new DirectRegistrant(A.Fake<Organisation>(),
                 brandName, A.Fake<Contact>(), A.Fake<Address>(),
-                A.Fake<AuthorisedRepresentative>(),
+                new AuthorisedRepresentative("oldName", "oldTradingName", A.Fake<ProducerContact>()),
                 A.CollectionOfFake<AdditionalCompanyDetails>(2).ToList());
 
-            var directProducerSubmissionCurrentYear = new DirectProducerSubmission(directRegistrant,
+            directProducerSubmissionCurrentYear = new DirectProducerSubmission(directRegistrant,
                 A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year);
             var directProducerSubmissionNotCurrentYear = new DirectProducerSubmission(directRegistrant,
                 A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year + 1);
 
             directProducerSubmissionCurrentYear.CurrentSubmission =
-                new DirectProducerSubmissionHistory(directProducerSubmissionCurrentYear, brandName, businessAddress);
+                new DirectProducerSubmissionHistory(directProducerSubmissionCurrentYear, brandName, businessAddress)
+                    {
+                        CompanyName = TestFixture.Create<string>()
+                    };
 
-            directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName = TestFixture.Create<string>();
             directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContact(contact);
 
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionCurrentYear);
