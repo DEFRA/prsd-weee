@@ -460,7 +460,11 @@
 
         private async Task<IEnumerable<OrganisationFoundViewModel>> GetExistingOrganisations(OrganisationViewModel model)
         {
-            OrganisationData existing = await GetExistingByRegistrationNumber(model);
+            OrganisationData existing = null;
+            if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
+            {
+                existing = await GetExistingByRegistrationNumber(model);
+            }
 
             if (existing != null)
             {
