@@ -19,7 +19,7 @@
     public class EditContactDetailsRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIUpdateOrganisationDetailsWithNoExistingDetails : EditContactDetailsRequestHandlerIntegrationTestBase
+        public class WhenIUpdateContactDetailsWithNoExistingDetails : EditContactDetailsRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -57,7 +57,7 @@
         }
 
         [Component]
-        public class WhenIUpdateOrganisationDetailsWithExistingDetails : EditContactDetailsRequestHandlerIntegrationTestBase
+        public class WhenIUpdateContactDetailsWithExistingDetails : EditContactDetailsRequestHandlerIntegrationTestBase
         {
             private static Contact contact;
             private static Address address;
