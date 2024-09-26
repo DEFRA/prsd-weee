@@ -141,8 +141,8 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
-                transactionService, 
+                configurationService,
+                transactionService,
                 weeeCache,
                 () => companiesHouseClient);
 
@@ -169,7 +169,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -205,7 +205,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -263,7 +263,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -296,7 +296,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -325,7 +325,7 @@
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -347,14 +347,14 @@
             // Arrange
             var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
-               .Returns(new List<OrganisationUserData>());
+                .Returns(new List<OrganisationUserData>());
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -375,18 +375,18 @@
             // Arrange
             var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
-               .Returns(new List<OrganisationUserData>
-               {
-                   new OrganisationUserData(),
-                   new OrganisationUserData()
-               });
+                .Returns(new List<OrganisationUserData>
+                {
+                    new OrganisationUserData(),
+                    new OrganisationUserData()
+                });
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -400,7 +400,7 @@
             Assert.NotNull(model);
             Assert.True(model.ShowPerformAnotherActivityLink);
         }
-        
+
         [Fact]
         public async Task GetSearch_ReturnsSearchView()
         {
@@ -423,7 +423,8 @@
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "search");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) ||
+                        viewResult.ViewName.ToLowerInvariant() == "search");
         }
 
         [Fact]
@@ -451,7 +452,8 @@
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "search");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) ||
+                        viewResult.ViewName.ToLowerInvariant() == "search");
         }
 
         [Fact]
@@ -492,7 +494,7 @@
             var controller = new OrganisationRegistrationController(
                 weeeClient,
                 organisationSearcher,
-                configurationService, 
+                configurationService,
                 transactionService,
                 weeeCache,
                 () => companiesHouseClient);
@@ -511,7 +513,8 @@
             Assert.NotNull(redirectResult);
 
             Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
-            Assert.Equal(redirectResult.RouteValues["OrganisationId"], new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+            Assert.Equal(redirectResult.RouteValues["OrganisationId"],
+                new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
 
         [Fact]
@@ -548,12 +551,14 @@
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) ||
+                        viewResult.ViewName.ToLowerInvariant() == "searchresults");
 
             var viewModel = viewResult.Model as SearchResultsViewModel;
             Assert.NotNull(viewModel);
 
-            Assert.Contains(viewModel.Results, r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+            Assert.Contains(viewModel.Results,
+                r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
 
         [Fact]
@@ -593,12 +598,14 @@
             var viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) ||
+                        viewResult.ViewName.ToLowerInvariant() == "searchresults");
 
             var resultsViewModel = viewResult.Model as SearchResultsViewModel;
             Assert.NotNull(resultsViewModel);
 
-            Assert.Contains(resultsViewModel.Results, r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+            Assert.Contains(resultsViewModel.Results,
+                r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
 
         [Fact]
@@ -630,7 +637,8 @@
             Assert.NotNull(redirectResult);
 
             Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
-            Assert.Equal(redirectResult.RouteValues["OrganisationId"], new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+            Assert.Equal(redirectResult.RouteValues["OrganisationId"],
+                new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
 
         [Fact]
@@ -641,11 +649,11 @@
             var weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             var controller = new OrganisationRegistrationController(
-               weeeClient,
-               organisationSearcher,
-               configurationService,
-               transactionService,
-               weeeCache,
+                weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService,
+                weeeCache,
                 () => companiesHouseClient);
 
             var result = await controller.Type() as ViewResult;
@@ -671,7 +679,7 @@
 
             // Act
             var result = await controller.Type() as ViewResult;
-            
+
             // Assert
             result.Should().NotBeNull();
             result.ViewName.Should().BeNullOrWhiteSpace();
@@ -692,11 +700,11 @@
             var weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             var controller = new OrganisationRegistrationController(
-               weeeClient,
-               organisationSearcher,
-               configurationService,
-               transactionService,
-               weeeCache,
+                weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService,
+                weeeCache,
                 () => companiesHouseClient);
 
             var viewModel = new OrganisationTypeViewModel()
@@ -798,7 +806,8 @@
         [Theory]
         [InlineData("5 tonnes or more", "FiveTonnesOrMore", "OrganisationRegistration")]
         [InlineData("Less than 5 tonnes", "PreviousRegistration", "OrganisationRegistration")]
-        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action, string correctController)
+        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action,
+            string correctController)
         {
             // Arrange
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -829,8 +838,8 @@
             result.RouteValues["controller"].Should().Be(correctController);
 
             A.CallTo(() =>
-                        transactionService.CaptureData(A<string>._, A<TonnageTypeViewModel>.That.IsSameAs(viewModel)))
-                    .MustHaveHappenedOnceExactly();
+                    transactionService.CaptureData(A<string>._, A<TonnageTypeViewModel>.That.IsSameAs(viewModel)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -858,7 +867,8 @@
         [Theory]
         [InlineData("Yes", "Search")]
         [InlineData("No", "AuthorisedRepresentative")]
-        public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType(string selectedValue, string action)
+        public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType(string selectedValue,
+            string action)
         {
             // Arrange
             var model = new PreviousRegistrationViewModel { SelectedValue = selectedValue };
@@ -920,7 +930,8 @@
         [Theory]
         [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistration")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
-        public async Task OrganisationDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep, string index, string controllerName)
+        public async Task OrganisationDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep,
+            string index, string controllerName)
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
@@ -936,10 +947,11 @@
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
 
             A.CallTo(() => this.weeeClient
-              .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
-              .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
+                    .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
 
-            A.CallTo(() => organisationSearcher.Search(A<string>._, A<int>._, A<bool>._)).Returns(new List<OrganisationSearchResult>());
+            A.CallTo(() => organisationSearcher.Search(A<string>._, A<int>._, A<bool>._))
+                .Returns(new List<OrganisationSearchResult>());
 
             // Act
             var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
@@ -988,14 +1000,15 @@
             result.Should().NotBeNull();
 
             A.CallTo(() => this.weeeClient
-                .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
-                .That
-                .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
+                    .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
+                        .That
+                        .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
                 .MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
-        public async Task OrganisationDetails_Post_ValidModel_ChecksOrganisationExistenceWithNameSearchIfRegReturnsNull()
+        public async Task
+            OrganisationDetails_Post_ValidModel_ChecksOrganisationExistenceWithNameSearchIfRegReturnsNull()
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
@@ -1011,17 +1024,17 @@
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
 
             A.CallTo(() => this.weeeClient
-               .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
-               .That
-               .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
-               .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
+                    .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
+                        .That
+                        .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
+                .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
 
             // Act
             var result = await controller.OrganisationDetails(model) as ViewResult;
 
             // Assert
             A.CallTo(() => this.organisationSearcher
-                .Search(model.CompanyName, A<int>._, A<bool>._))
+                    .Search(model.CompanyName, A<int>._, A<bool>._))
                 .MustHaveHappened(1, Times.Exactly);
         }
 
@@ -1044,10 +1057,10 @@
             var org = new EA.Weee.Core.Organisations.OrganisationData { Id = Guid.NewGuid() };
 
             A.CallTo(() => this.weeeClient
-               .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
-               .That
-               .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
-               .Returns(org);
+                    .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
+                        .That
+                        .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
+                .Returns(org);
 
             // Act
             var result = await controller.OrganisationDetails(model) as ViewResult;
@@ -1069,7 +1082,8 @@
             // Arrange
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
@@ -1128,7 +1142,8 @@
             controller.ModelState.AddModelError("error", "error");
 
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
@@ -1147,7 +1162,8 @@
             resultModel.Address.Countries.Should().BeEquivalentTo(countries);
             resultModel.OrganisationType.Should().Be(organisationType);
 
-            A.CallTo(() => transactionService.CaptureData(A<string>._, A<OrganisationViewModel>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CaptureData(A<string>._, A<OrganisationViewModel>._))
+                .MustNotHaveHappened();
         }
 
         [Fact]
@@ -1157,14 +1173,22 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.Action = "Find Company";
 
-            var countries = new List<CountryData> { new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" } };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            var countries = new List<CountryData>
+            {
+                new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" }
+            };
+
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = null;
 
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber))
-           .Returns(defraCompaniesHouseApiModel);
+            A.CallTo(() =>
+                    companiesHouseClient.GetCompanyDetailsAsync(
+                        configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                        model.CompaniesRegistrationNumber))
+                .Returns(defraCompaniesHouseApiModel);
 
             // Act
             var result = await controller.OrganisationDetails(model) as ViewResult;
@@ -1174,7 +1198,10 @@
             resultViewModel.LookupFound.Should().BeFalse();
             resultViewModel.Should().NotBeNull();
             resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
+            A.CallTo(() =>
+                companiesHouseClient.GetCompanyDetailsAsync(
+                    configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                    model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1184,32 +1211,49 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.Action = "Find Company";
 
-            var countries = new List<CountryData> { new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" } };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            var countries = new List<CountryData>
+            {
+                new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" }
+            };
+
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
             defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
 
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber))
-           .Returns(defraCompaniesHouseApiModel);
+            A.CallTo(() =>
+                    companiesHouseClient.GetCompanyDetailsAsync(
+                        configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                        model.CompaniesRegistrationNumber))
+                .Returns(defraCompaniesHouseApiModel);
 
             // Act
             var result = await controller.OrganisationDetails(model) as ViewResult;
 
             // Assert
             var resultViewModel = result.Model as OrganisationViewModel;
-            var countryName = UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
+            var countryName =
+                UkCountry.GetIdByName(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name);
             resultViewModel.Should().NotBeNull();
             resultViewModel.LookupFound.Should().BeTrue();
             resultViewModel.CompanyName.Should().Be(defraCompaniesHouseApiModel.Organisation.Name);
-            resultViewModel.CompaniesRegistrationNumber.Should().Be(defraCompaniesHouseApiModel.Organisation.RegistrationNumber);
-            resultViewModel.Address.Address1.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
-            resultViewModel.Address.Address2.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street);
-            resultViewModel.Address.TownOrCity.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
-            resultViewModel.Address.Postcode.Should().Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode);
+            resultViewModel.CompaniesRegistrationNumber.Should()
+                .Be(defraCompaniesHouseApiModel.Organisation.RegistrationNumber);
+            resultViewModel.Address.Address1.Should()
+                .Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.BuildingNumber);
+            resultViewModel.Address.Address2.Should()
+                .Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Street);
+            resultViewModel.Address.TownOrCity.Should()
+                .Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Town);
+            resultViewModel.Address.Postcode.Should()
+                .Be(defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Postcode);
             resultViewModel.Address.CountryId.Should().Be(countryName);
-            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath, model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
+            A.CallTo(() =>
+                companiesHouseClient.GetCompanyDetailsAsync(
+                    configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                    model.CompaniesRegistrationNumber)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -1218,7 +1262,8 @@
             // Arrange
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
@@ -1263,7 +1308,8 @@
 
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
@@ -1315,7 +1361,8 @@
         {
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             return countries;
@@ -1349,7 +1396,8 @@
         [Theory]
         [InlineData("Yes")]
         [InlineData("No")]
-        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToOrganisationType(string selectedValue)
+        public async Task AuthorisedRepresentative_Post_WhenModelValid_CapturesDataAndRedirectsToOrganisationType(
+            string selectedValue)
         {
             // Arrange
             var model = new AuthorisedRepresentativeViewModel { SelectedValue = selectedValue };
@@ -1369,7 +1417,8 @@
         [InlineData(ExternalOrganisationType.RegisteredCompany, "OrganisationDetails")]
         [InlineData(ExternalOrganisationType.Partnership, "OrganisationDetails")]
         [InlineData(ExternalOrganisationType.SoleTrader, "OrganisationDetails")]
-        public async Task RepresentingCompanyRedirect_ShouldRedirectToCorrectAction_WhenOrganisationTypeIsSet(ExternalOrganisationType organisationType, string expectedAction)
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToCorrectAction_WhenOrganisationTypeIsSet(
+            ExternalOrganisationType organisationType, string expectedAction)
         {
             // Arrange
             var transactionData = new OrganisationTransactionData { OrganisationType = organisationType };
@@ -1474,7 +1523,8 @@
 
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
+            A.CallTo(() =>
+                    weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
@@ -1541,7 +1591,8 @@
         [InlineData(ExternalOrganisationType.RegisteredCompany, "Type")]
         [InlineData(ExternalOrganisationType.Partnership, "PartnerDetails")]
         [InlineData(ExternalOrganisationType.SoleTrader, "SoleTraderDetails")]
-        public void PreviousPage_Get_RedirectsToPartnershipPageIfPartnerType(ExternalOrganisationType organisationType, string expectedAction)
+        public void PreviousPage_Get_RedirectsToPartnershipPageIfPartnerType(ExternalOrganisationType organisationType,
+            string expectedAction)
         {
             // Act
             var result = controller.PreviousPage(organisationType) as RedirectToRouteResult;
@@ -1557,11 +1608,11 @@
             // Arrange
             var organisationTransactionData = new OrganisationTransactionData()
             {
-                PartnerModels = new List<AdditionalContactModel> 
+                PartnerModels = new List<AdditionalContactModel>
                 {
-                    new AdditionalContactModel{ FirstName = "x", LastName = "y"},
-                    new AdditionalContactModel{ FirstName = "a", LastName = "b"},
-                    new AdditionalContactModel{ FirstName = "c", LastName = "d"},
+                    new AdditionalContactModel { FirstName = "x", LastName = "y" },
+                    new AdditionalContactModel { FirstName = "a", LastName = "b" },
+                    new AdditionalContactModel { FirstName = "c", LastName = "d" },
                 }
             };
 
@@ -1667,7 +1718,8 @@
 
             controller.ModelState["PartnerModels"].Errors.Count.Should().Be(1);
 
-            controller.ModelState["PartnerModels"].Errors[0].ErrorMessage.Should().BeEquivalentTo("A maximum of 10 partners are allowed");
+            controller.ModelState["PartnerModels"].Errors[0].ErrorMessage.Should()
+                .BeEquivalentTo("A maximum of 10 partners are allowed");
 
             var model = result.Model as PartnerViewModel;
         }
@@ -1730,6 +1782,57 @@
             result.RouteValues["action"].Should().Be("OrganisationDetails");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task
+            OrganisationDetails_Post_WithEmptyRegistrationNumber_ShouldNotCallApiForRegistrationNumberSearch()
+        {
+            // Arrange
+            var model = new OrganisationViewModel
+                { CompaniesRegistrationNumber = string.Empty, CompanyName = "Test Company" };
+
+            // Act
+            await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task
+            OrganisationDetails_Post_WithValidRegistrationNumber_ShouldCallApiForRegistrationNumberSearch()
+        {
+            // Arrange
+            var model = new OrganisationViewModel
+                { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .Returns(Task.FromResult<Core.Organisations.OrganisationData>(null));
+
+            // Act
+            await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_WhenRegistrationNumberSearchReturnsNull_ShouldFallbackToNameSearch()
+        {
+            // Arrange
+            var model = new OrganisationViewModel
+                { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .Returns(Task.FromResult<Core.Organisations.OrganisationData>(null));
+
+            // Act
+            await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => organisationSearcher.Search(model.CompanyName, A<int>._, A<bool>._))
+                .MustHaveHappened();
         }
 
         [Fact]

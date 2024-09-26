@@ -14,18 +14,20 @@
     internal class UpdateSubmissionPaymentDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<UpdateSubmissionPaymentDetailsRequest, bool>
     {
         private readonly WeeeContext weeeContext;
+        private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
 
         public UpdateSubmissionPaymentDetailsRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, ISystemDataDataAccess systemDataDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, ISystemDataDataAccess systemDataDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
         {
             this.weeeContext = weeeContext;
+            this.paymentSessionDataAccess = paymentSessionDataAccess;
         }
 
         public async Task<bool> HandleAsync(UpdateSubmissionPaymentDetailsRequest request)
         {
             var currentYearSubmission = await Get(request.DirectRegistrantId);
 
-            var paymentSession = await weeeContext.PaymentSessions.FirstOrDefaultAsync(p => p.Id == request.PaymentSessionId);
+            var paymentSession = await paymentSessionDataAccess.GetByIdAsync(request.PaymentSessionId);
 
             if (paymentSession == null)
             {
@@ -35,7 +37,10 @@
             paymentSession.Status = request.PaymentStatus.ToDomainEnumeration<PaymentState>();
             paymentSession.InFinalState = request.IsFinalState;
 
-            currentYearSubmission.FinalPaymentSession = paymentSession;
+            if (request.IsFinalState)
+            {
+                currentYearSubmission.FinalPaymentSession = paymentSession;
+            }
 
             await weeeContext.SaveChangesAsync();
   

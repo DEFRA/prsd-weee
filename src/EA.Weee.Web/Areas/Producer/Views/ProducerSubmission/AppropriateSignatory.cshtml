@@ -1,10 +1,9 @@
-﻿
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Producer.Controllers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
-
+@model EA.Weee.Web.Areas.Producer.ViewModels.AppropriateSignatoryViewModel
 
 @{
     const string title = "Submit registration";
@@ -12,19 +11,50 @@
 }
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.TaskList())))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<ProducerController>(a => a.CheckAnswers())))
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.DirectRegistrantId)
         <header class="hgroup">
             <h1 class="govuk-heading-l">@title</h1>
         </header>
 
+        <h2 class="govuk-heading-m">Appropriate signatory</h2>
+
+        <p class="govuk-body">This submission must be made by the appropriate person for your organisation.</p>
+        <p class="govuk-body">For companies this means a director or company secretary. For partnerships this means a partner or member of the partnership. For individuals or sole traders this means that individual. For any other type of organisation this means a person who has control or management of that body.</p>
+        <p class="govuk-body">It is an offence to deliberately make a statement which is knowingly false or misleading or to recklessly submit false information as part of your application to register. If you do this you may be liable to prosecution.</p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
+            @Html.Gds().LabelFor(m => m.Contact.FirstName)
+            @Html.Gds().ValidationMessageFor(m => m.Contact.FirstName)
+            @Html.Gds().TextBoxFor(m => m.Contact.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
+            @Html.Gds().LabelFor(m => m.Contact.LastName)
+            @Html.Gds().ValidationMessageFor(m => m.Contact.LastName)
+            @Html.Gds().TextBoxFor(m => m.Contact.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
+            @Html.Gds().LabelFor(m => m.Contact.Position)
+            @Html.Gds().ValidationMessageFor(m => m.Contact.Position)
+            @Html.Gds().TextBoxFor(m => m.Contact.Position, new { @maxlength = CommonMaxFieldLengths.Position })
+        </div>
+
+        <h2 class="govuk-heading-m">Now send your application</h2>
+
+        <p class="govuk-body">By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are correct.</p>
+        <p class="govuk-body">Pressing submit will take you to our online payments page. The charge for registering is £30.00.</p>
+
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button("Submit your application")
         </div>
+        @(this.WeeeGds().BackToTopLink())
     }
 }
