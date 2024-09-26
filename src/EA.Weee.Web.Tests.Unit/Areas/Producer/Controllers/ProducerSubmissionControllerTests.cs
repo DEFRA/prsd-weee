@@ -928,7 +928,7 @@
         public void BackToPrevious_ShouldRedirectCorrectly(bool redirect)
         {
             // Act
-            var result = controller.BackToPrevious(redirectToCheckAnswers) as RedirectToRouteResult;
+            var result = controller.BackToPrevious(redirect) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
