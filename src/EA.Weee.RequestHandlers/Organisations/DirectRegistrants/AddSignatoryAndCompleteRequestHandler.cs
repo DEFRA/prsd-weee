@@ -40,11 +40,14 @@
 
             currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.BusinessAddress);
 
-            currentYearSubmission.DirectRegistrant.BrandName.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.BrandName);
+            if (currentYearSubmission.CurrentSubmission.BrandName != null)
+            {
+                currentYearSubmission.DirectRegistrant.AddOrUpdateBrandName(currentYearSubmission.CurrentSubmission.BrandName);
+            }
 
             if (currentYearSubmission.CurrentSubmission.AuthorisedRepresentative != null)
             {
-                currentYearSubmission.DirectRegistrant.AuthorisedRepresentative.OverwriteWhereNull(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative);
+                currentYearSubmission.DirectRegistrant.AddOrUpdateAuthorisedRepresentitive(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative);
             }
 
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
