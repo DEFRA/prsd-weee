@@ -16,6 +16,7 @@
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
+    using iText.Commons.Utils;
     using Services;
     using System;
     using System.Collections.Generic;
@@ -993,10 +994,9 @@
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
 
             // Act
-            var result = await controller.OrganisationDetails(model) as ViewResult;
+            await controller.OrganisationDetails(model);
 
             // Assert
-            result.Should().NotBeNull();
 
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
@@ -1062,10 +1062,10 @@
                 .Returns(org);
 
             // Act
-            var result = await controller.OrganisationDetails(model) as ViewResult;
+            var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
 
             // Assert
-            result.ViewName.Should().Be("OrganisationFound");
+            result.RouteValues["action"].Should().Be("OrganisationFound");
         }
 
         public static IEnumerable<object[]> OrganisationTypeData()
@@ -1832,6 +1832,85 @@
             // Assert
             A.CallTo(() => organisationSearcher.Search(model.CompanyName, A<int>._, A<bool>._))
                 .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task OrganisationFound_Get_ReturnsViewWithPopulatedModel()
+        {
+            // Arrange
+            var organisationExistsSearchResult = new OrganisationExistsSearchResult
+            {
+                Organisations = new List<OrganisationFoundViewModel>
+                {
+                    new OrganisationFoundViewModel
+                    {
+                        OrganisationName = "Test Organisation",
+                        OrganisationId = Guid.NewGuid(),
+                        CompanyRegistrationNumber = "123456789"
+                    }
+                },
+                FoundType = OrganisationFoundType.CompanyNumber
+            };
+
+            controller.TempData["FoundOrganisations"] = organisationExistsSearchResult;
+
+            // Act
+            var result = await controller.OrganisationFound() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().Be("OrganisationFound");
+
+            var model = result.Model as OrganisationsFoundViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationFoundViewModels.Should().BeEquivalentTo(organisationExistsSearchResult.Organisations);
+            model.OrganisationFoundType.Should().Be(organisationExistsSearchResult.FoundType);
+            controller.TempData["FoundOrganisations"].Should().Be(organisationExistsSearchResult);
+        }
+
+        [Fact]
+        public async Task OrganisationFound_Post_ValidModelRedirectsToJoinOrganisation()
+        {
+            // Arrange
+            var viewModel = new OrganisationsFoundViewModel
+            {
+                OrganisationFoundViewModels = new List<OrganisationFoundViewModel>
+                {
+                    new OrganisationFoundViewModel
+                    {
+                        OrganisationName = "Test Organisation",
+                        OrganisationId = Guid.NewGuid(),
+                        CompanyRegistrationNumber = "123456789"
+                    }
+                },
+                SelectedOrganisationId = Guid.NewGuid(),
+                OrganisationFoundType = OrganisationFoundType.CompanyNumber
+            };
+
+            // Act
+            var result = await controller.OrganisationFound(viewModel) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("JoinOrganisation");
+        }
+
+        [Fact]
+        public async Task OrganisationFound_Post_InvalidModelReturnsView()
+        {
+            // Arrange
+            var viewModel = TestFixture.Create<OrganisationsFoundViewModel>();
+            controller.ModelState.AddModelError("error", "error");
+
+            // Act
+            var result = await controller.OrganisationFound(viewModel) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+
+            var resultModel = result.Model as OrganisationsFoundViewModel;
+            resultModel.Should().BeEquivalentTo(viewModel);
         }
     }
 }
