@@ -1,6 +1,4 @@
-﻿using FluentAssertions;
-
-namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
+﻿namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
 {
     using Autofac;
     using AutoFixture;
@@ -10,6 +8,7 @@ namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
     using EA.Weee.Domain.Producer;
     using EA.Weee.Integration.Tests.Builders;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using FluentAssertions;
     using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
@@ -18,7 +17,7 @@ namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
     public class UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenThePaymentReturnTokenDoesNotExist : UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTestBase
+        public class WhenUpdatingAPaymentSession : UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -44,6 +43,39 @@ namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
 
                 updatedPaymentSession.Status.Should().Be(PaymentState.Failed);
                 updatedPaymentSession.InFinalState.Should().BeFalse();
+            };
+        }
+
+        [Component]
+        public class WhenUpdatingAPaymentSessionWithFinalState : UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                paymentSession = PaymentSessionDbSetup.Init()
+                    .WithDirectRegistrantSubmission(directProducerSubmission)
+                    .WithUser(UserId.ToString())
+                    .WithStatus(PaymentState.New)
+                    .Create();
+
+                request = new UpdateSubmissionPaymentDetailsRequest(directRegistrant.Id, PaymentStatus.Success, paymentSession.Id, true);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldUpdateTheData = () =>
+            {
+                var updatedPaymentSession = Query.GetPaymentSessionById(paymentSession.Id);
+                var updatedSubmission = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                updatedPaymentSession.Status.Should().Be(PaymentState.Success);
+                updatedPaymentSession.InFinalState.Should().BeTrue();
+
+                updatedSubmission.FinalPaymentSessionId.Should().Be(updatedPaymentSession.Id);
             };
         }
 
