@@ -196,6 +196,74 @@
             currentSubmission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
         }
 
+        [Fact]
+        public async Task HandleAsync_UpdatesOrganisationDetails()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(true, true);
+            directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName = TestFixture.Create<string>();
+            directProducerSubmissionCurrentYear.CurrentSubmission.TradingName = TestFixture.Create<string>();
+            directProducerSubmissionCurrentYear.CurrentSubmission.CompanyRegistrationNumber = "1234567X";
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            directRegistrant.Organisation.Name.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName);
+            directRegistrant.Organisation.CompanyRegistrationNumber.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.CompanyRegistrationNumber);
+            directRegistrant.Organisation.TradingName.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.TradingName);
+        }
+
+        [Fact]
+        public async Task HandleAsync_UpdatesAddress_WhenExists()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(true, true);
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            directRegistrant.Organisation.BusinessAddress.Should().BeEquivalentTo(directProducerSubmissionCurrentYear.CurrentSubmission.BusinessAddress);
+        }
+
+        [Fact]
+        public async Task HandleAsync_UpdatesContact_WhenExists()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(true, true);
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            directRegistrant.Contact.Should()
+                .BeEquivalentTo(directProducerSubmissionCurrentYear.CurrentSubmission.Contact);
+        }
+
+        [Fact]
+        public async Task HandleAsync_NoBrandNameOrAuthorisedRepresentative()
+        {
+            // Arrange
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(false, true, useAuthRep: false); // No brand name or authorised representative
+            
+            directProducerSubmissionCurrentYear.CurrentSubmission.AuthorisedRepresentative = null;
+            directProducerSubmissionCurrentYear.CurrentSubmission.BrandName = null;
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.Should().BeTrue();
+            directRegistrant.BrandName.Should().BeNull();
+            directRegistrant.AuthorisedRepresentative.Should().BeNull();
+            A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
+        }
+
         private AddSignatoryAndCompleteRequest CreateValidRequest(string brandNames = null)
         {
             var contactData = TestFixture.Build<ContactData>()
@@ -207,7 +275,7 @@
             return new AddSignatoryAndCompleteRequest(directRegistrantId,  contactData);
         }
 
-        private DirectRegistrant SetupValidDirectRegistrant(bool existingBrandName = false, bool existingAddress = false)
+        private DirectRegistrant SetupValidDirectRegistrant(bool existingBrandName = false, bool existingAddress = false, bool useAuthRep = true)
         {
             BrandName brandName = null;
             if (existingBrandName)
@@ -221,9 +289,16 @@
                 businessAddress = ValueObjectInitializer.CreateAddress(TestFixture.Create<AddressData>(), country);
             }
 
-            var directRegistrant = new DirectRegistrant(A.Fake<Organisation>(),
-                brandName, A.Fake<Contact>(), A.Fake<Address>(),
-                new AuthorisedRepresentative("oldName", "oldTradingName", A.Fake<ProducerContact>()),
+            AuthorisedRepresentative authorisedRepresentative = null;
+            if (useAuthRep)
+            {
+                authorisedRepresentative =
+                    new AuthorisedRepresentative("oldName", "oldTradingName", A.Fake<ProducerContact>());
+            }
+
+            var directRegistrant = new DirectRegistrant(Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.Partnership, "companyName", "tradingName", "1231234"),
+                brandName, new Contact("First", "Last", "Position"), A.Fake<Address>(),
+                authorisedRepresentative,
                 A.CollectionOfFake<AdditionalCompanyDetails>(2).ToList());
 
             directProducerSubmissionCurrentYear = new DirectProducerSubmission(directRegistrant,
