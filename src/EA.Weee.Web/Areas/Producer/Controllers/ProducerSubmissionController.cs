@@ -296,8 +296,6 @@
 
             await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
-            var countries = await GetCountries();
-
             model.Address.Countries = await GetCountries();
 
             return View(model);
