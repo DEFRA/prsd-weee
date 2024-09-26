@@ -994,10 +994,9 @@
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
 
             // Act
-            var result = await controller.OrganisationDetails(model) as ViewResult;
+            await controller.OrganisationDetails(model);
 
             // Assert
-            result.Should().NotBeNull();
 
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
@@ -1063,10 +1062,10 @@
                 .Returns(org);
 
             // Act
-            var result = await controller.OrganisationDetails(model) as ViewResult;
+            var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
 
             // Assert
-            result.ViewName.Should().Be("OrganisationFound");
+            result.RouteValues["action"].Should().Be("OrganisationFound");
         }
 
         public static IEnumerable<object[]> OrganisationTypeData()
