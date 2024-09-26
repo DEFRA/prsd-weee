@@ -76,11 +76,11 @@
 
             @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyNumber)
             {
-                @this.WeeeGds().GovUkButtonLink("Return to organisation details", @Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails()), true)
+                @(this.WeeeGds().GovUkButtonLink("Return to organisation details", @Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails()), true))
             }
             @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
             {
-                @this.WeeeGds().GovUkButtonLink("Continue", @Url.UrlFor<OrganisationRegistrationController>(a => a.CheckAuthorisedRepresentitiveAndRedirect()), true)
+                @(this.WeeeGds().GovUkButtonLink("Continue", @Url.UrlFor<OrganisationRegistrationController>(a => a.CheckAuthorisedRepresentitiveAndRedirect()), true))
             }
         </div>
     }
