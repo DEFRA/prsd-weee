@@ -138,6 +138,8 @@
     <Compile Include="Organisation\OrganisationAdditionalDetailsType.cs" />
     <Compile Include="Organisation\ProducerBalancingScheme.cs" />
     <Compile Include="Producer\Classification\StatusType.cs" />
+    <Compile Include="Producer\DirectRegistrant.BrandName.cs" />
+    <Compile Include="Producer\DirectRegistrant.AuthorisedRepresentitive.cs" />
     <Compile Include="Producer\PaymentState.cs" />
     <Compile Include="Producer\PaymentStartedStatus.cs" />
     <Compile Include="Producer\PaymentSession.cs" />

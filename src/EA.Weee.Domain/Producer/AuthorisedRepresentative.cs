@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using EA.Prsd.Core;
+    using EA.Weee.Domain.Organisation;
     using Prsd.Core.Domain;
     using System;
 
@@ -14,7 +16,8 @@
             {
                 if (!overseasContact.IsOverseas)
                 {
-                    string errorMessage = "The overseas producer of an authorised representative cannot be based in the UK.";
+                    string errorMessage =
+                        "The overseas producer of an authorised representative cannot be based in the UK.";
                     throw new ArgumentException(errorMessage);
                 }
             }
