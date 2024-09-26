@@ -1865,6 +1865,7 @@
             model.Should().NotBeNull();
             model.OrganisationFoundViewModels.Should().BeEquivalentTo(organisationExistsSearchResult.Organisations);
             model.OrganisationFoundType.Should().Be(organisationExistsSearchResult.FoundType);
+            controller.TempData["FoundOrganisations"].Should().Be(organisationExistsSearchResult);
         }
 
         [Fact]
