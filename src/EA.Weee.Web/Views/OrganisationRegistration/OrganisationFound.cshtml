@@ -18,14 +18,14 @@
 
     @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyNumber)
     {
-        <p>
+        <p class="govuk-body">
             This company registration number has already been registered. If the organisation below is yours request access.
             If this isn't your organisation, return to the organisation details page and enter a different company registration number.
         </p>
     }
     @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
     {
-        <p>
+        <p class="govuk-body">
             Organisation details that are similar to yours have been found. If one of the organisations below is yours, request access.
             If none of these organisations are yours, select continue.
         </p>
