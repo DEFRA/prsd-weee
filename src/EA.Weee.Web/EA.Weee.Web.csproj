@@ -675,6 +675,8 @@
     <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Services\SecureReturnUrlHelper.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AuthorisedRepresentativeViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\OrganisationFoundType.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\OrganisationExistsSearchResult.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationsFoundViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationFoundViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\PreviousRegistrationViewModel.cs" />
