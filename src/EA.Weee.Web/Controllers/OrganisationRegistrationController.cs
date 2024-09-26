@@ -543,7 +543,8 @@
             });
         }
 
-        private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
+        [HttpGet]
+        public async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
         {
             var organisationTransactionData = await transactionService
                                                     .GetOrganisationTransactionData(User.GetAccessToken());
