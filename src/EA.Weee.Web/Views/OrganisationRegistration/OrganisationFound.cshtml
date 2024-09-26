@@ -72,21 +72,15 @@
         </fieldset>
 
         <div class="govuk-button-group govuk-!-padding-top-3">
-            <button type="submit" class="govuk-button" role="button">
-                Request access to organisation
-            </button>
+            @(this.WeeeGds().Button("Request access to organisation"))
 
             @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyNumber)
             {
-                <a href="@Url.Action("OrganisationDetails", "OrganisationRegistration")" class="govuk-button govuk-button--secondary" role="button">
-                    Return to organisation details
-                </a>
+                @this.WeeeGds().GovUkButtonLink("Return to organisation details", @Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails()), true)
             }
             @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
             {
-                <a href="@Url.Action("CheckAuthorisedRepresentitiveAndRedirect", "OrganisationRegistration")" class="govuk-button govuk-button--secondary" role="button">
-                    Continue
-                </a>
+                @this.WeeeGds().GovUkButtonLink("Continue", @Url.UrlFor<OrganisationRegistrationController>(a => a.CheckAuthorisedRepresentitiveAndRedirect()), true)
             }
         </div>
     }
