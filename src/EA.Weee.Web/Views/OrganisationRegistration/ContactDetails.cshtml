@@ -24,12 +24,12 @@
             </h1>
         </header>
 
-        // Contact details
-        <div class="govuk-body">
-            Provide the name and address of the person who is the primary contact. We will send all correspondence to this contact.
-            <br /><br />
-            For authorised representatives of non-UK established producers this will be your own primary details.
-        </div>
+        <p class="govuk-body">Provide the name and address of the person who is the primary contact. We will send all correspondence to this contact.</p>
+
+        if (Model.HasAuthorisedRepresentitive)
+        {
+            <p class="govuk-body">For authorised representatives of non-UK established producers this will be your own primary contact details.</p>
+        }
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
