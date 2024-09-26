@@ -14,7 +14,7 @@
         protected override EeeOutputAmount Instantiate()
         {
             instance = new EeeOutputAmount(ObligationType.B2B, WeeeCategory.AutomaticDispensers, 0,
-                new RegisteredProducer("reg", SystemTime.UtcNow.Year));
+                new RegisteredProducer(SystemTime.UtcNow.Ticks.ToString(), SystemTime.UtcNow.Year));
 
             return instance;
         }
