@@ -33,7 +33,7 @@
 
     public class ProducerSubmissionControllerTests : SimpleUnitTestBase
     {
-        private bool? redirectToCheckAnswers = false;
+        private readonly bool? redirectToCheckAnswers = false;
         private readonly ProducerSubmissionController controller;
         private readonly IMapper mapper;
         private readonly IWeeeClient weeeClient;
@@ -884,6 +884,121 @@
 
             // Assert
             result.Should().BeOfType<ViewResult>();
+        }
+        [Fact]
+        public async Task EditEeeData_Get_ShouldReturnViewWithMappedModel()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            submissionData.RedirectToCheckAnswers = redirectToCheckAnswers;
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            var viewModel = TestFixture.Create<EditEeeDataViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditEeeDataViewModel>
+            (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                                                                     sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
+
+            // Act
+            var result = await controller.EditEeeeData(redirectToCheckAnswers) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(viewModel);
+        }
+
+        [Fact]
+        public async Task EditEeeData_Post_InvalidModel_ShouldReturnViewWithModel()
+        {
+            // Arrange
+            var model = TestFixture.Create<EditEeeDataViewModel>();
+            controller.ModelState.AddModelError("Test", "Test error");
+
+            // Act
+            var result = await controller.EditEeeeData(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().Be(model);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void BackToPrevious_ShouldRedirectCorrectly(bool redirect)
+        {
+            // Act
+            var result = controller.BackToPrevious(redirectToCheckAnswers) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            if (redirect)
+            {
+                result.RouteValues["action"].Should().Be("CheckAnswers");
+            }
+            else
+            {
+                result.RouteValues["action"].Should().Be("TaskList");
+            }
+            result.RouteValues["controller"].Should().Be("Producer");
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_ValidModel_ExistingPayment_ShouldRedirectToExistingNextUrl()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
+
+            var existingPayment = TestFixture.Create<PaymentWithAllLinks>();
+            existingPayment.Links = TestFixture.Create<PaymentLinks>();
+            existingPayment.Links.NextUrl = TestFixture.Create<Link>();
+            existingPayment.Links.NextUrl.Href = TestFixture.Create<string>();
+
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult(existingPayment));
+            A.CallTo(() => paymentService.ValidateExternalUrl(existingPayment.Links.NextUrl.Href)).Returns(true);
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as RedirectResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Url.Should().Be(existingPayment.Links.NextUrl.Href);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CreatePaymentAsync(A<Guid>._, A<string>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => paymentService.ValidateExternalUrl(existingPayment.Links.NextUrl.Href)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_ValidModel_InvalidExternalUrl_ShouldThrowException()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
+
+            var createPaymentResult = TestFixture.Create<CreatePaymentResult>();
+            createPaymentResult.Links = TestFixture.Create<PaymentLinks>();
+            createPaymentResult.Links.NextUrl = TestFixture.Create<Link>();
+            createPaymentResult.Links.NextUrl.Href = TestFixture.Create<string>();
+
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult((PaymentWithAllLinks)null));
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).Returns(createPaymentResult);
+            A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).Returns(false);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() => controller.AppropriateSignatory(model));
         }
     }
 }
