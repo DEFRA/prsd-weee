@@ -524,6 +524,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationFound(OrganisationsFoundViewModel orgsFoundViewModel)
         {
             if (!ModelState.IsValid)
