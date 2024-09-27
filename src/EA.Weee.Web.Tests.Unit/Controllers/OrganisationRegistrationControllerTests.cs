@@ -1835,7 +1835,7 @@
         }
 
         [Fact]
-        public async Task OrganisationFound_Get_ReturnsViewWithPopulatedModel()
+        public void OrganisationFound_Get_ReturnsViewWithPopulatedModel()
         {
             // Arrange
             var organisationExistsSearchResult = new OrganisationExistsSearchResult
@@ -1855,7 +1855,7 @@
             controller.TempData["FoundOrganisations"] = organisationExistsSearchResult;
 
             // Act
-            var result = await controller.OrganisationFound() as ViewResult;
+            var result = controller.OrganisationFound() as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1869,7 +1869,7 @@
         }
 
         [Fact]
-        public async Task OrganisationFound_Post_ValidModelRedirectsToJoinOrganisation()
+        public void OrganisationFound_Post_ValidModelRedirectsToJoinOrganisation()
         {
             // Arrange
             var viewModel = new OrganisationsFoundViewModel
@@ -1888,7 +1888,7 @@
             };
 
             // Act
-            var result = await controller.OrganisationFound(viewModel) as RedirectToRouteResult;
+            var result = controller.OrganisationFound(viewModel) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1896,14 +1896,14 @@
         }
 
         [Fact]
-        public async Task OrganisationFound_Post_InvalidModelReturnsView()
+        public void OrganisationFound_Post_InvalidModelReturnsView()
         {
             // Arrange
             var viewModel = TestFixture.Create<OrganisationsFoundViewModel>();
             controller.ModelState.AddModelError("error", "error");
 
             // Act
-            var result = await controller.OrganisationFound(viewModel) as ViewResult;
+            var result = controller.OrganisationFound(viewModel) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();

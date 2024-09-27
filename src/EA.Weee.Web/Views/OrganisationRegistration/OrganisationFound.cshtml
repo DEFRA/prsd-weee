@@ -2,6 +2,7 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.OrganisationRegistration
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationsFoundViewModel
 @{
     const string title = "Your organisation has been found";
@@ -15,10 +16,20 @@
 
     @Html.Gds().ValidationSummary()
 
-    <p>
-        This company registration number has already been registered. If the organisation below is yours request access.
-        If this isn't your organisation, return to the organisation details page and enter a different company registration number.
-    </p>
+    @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyNumber)
+    {
+        <p class="govuk-body">
+            This company registration number has already been registered. If the organisation below is yours request access.
+            If this isn't your organisation, return to the organisation details page and enter a different company registration number.
+        </p>
+    }
+    @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
+    {
+        <p class="govuk-body">
+            Organisation details that are similar to yours have been found. If one of the organisations below is yours, request access.
+            If none of these organisations are yours, select continue.
+        </p>
+    }
 
     @using (Html.BeginForm())
     {
@@ -63,7 +74,14 @@
         <div class="govuk-button-group govuk-!-padding-top-3">
             @(this.WeeeGds().Button("Request access to organisation"))
 
-            @this.WeeeGds().GovUkButtonLink("Return to organisation details", @Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails()), true)
+            @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyNumber)
+            {
+                @(this.WeeeGds().GovUkButtonLink("Return to organisation details", @Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails()), true))
+            }
+            @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
+            {
+                @(this.WeeeGds().GovUkButtonLink("Continue", @Url.UrlFor<OrganisationRegistrationController>(a => a.CheckAuthorisedRepresentitiveAndRedirect()), true))
+            }
         </div>
     }
 }
