@@ -253,6 +253,7 @@
         {
             // Arrange
             var model = TestFixture.Create<EditContactDetailsViewModel>();
+            model.RedirectToCheckAnswers = false;
             var request = TestFixture.Create<EditContactDetailsRequest>();
             A.CallTo(() => editContactDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
 
