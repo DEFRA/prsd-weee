@@ -510,7 +510,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> OrganisationFound()
+        public ActionResult OrganisationFound()
         {
             TempData.Keep("FoundOrganisations");
 
@@ -530,7 +530,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OrganisationFound(OrganisationsFoundViewModel orgsFoundViewModel)
+        public ActionResult OrganisationFound(OrganisationsFoundViewModel orgsFoundViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -543,7 +543,8 @@
             });
         }
 
-        private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
+        [HttpGet]
+        public async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
         {
             var organisationTransactionData = await transactionService
                                                     .GetOrganisationTransactionData(User.GetAccessToken());
