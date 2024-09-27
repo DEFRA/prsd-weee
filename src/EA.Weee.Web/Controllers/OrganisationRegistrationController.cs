@@ -408,9 +408,11 @@
 
             var existingOrgs = await GetExistingOrganisations(model);
 
-            if (existingOrgs.Any())
+            if (existingOrgs.Organisations.Any())
             {
-                return await OrganisationFound(existingOrgs);
+                TempData["FoundOrganisations"] = existingOrgs;
+
+                return RedirectToAction("OrganisationFound");
             }
 
             return await CheckAuthorisedRepresentitiveAndRedirect();
@@ -458,7 +460,7 @@
             }
         }
 
-        private async Task<IEnumerable<OrganisationFoundViewModel>> GetExistingOrganisations(OrganisationViewModel model)
+        private async Task<OrganisationExistsSearchResult> GetExistingOrganisations(OrganisationViewModel model)
         {
             OrganisationData existing = null;
             if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
@@ -468,35 +470,77 @@
 
             if (existing != null)
             {
-                return new List<OrganisationFoundViewModel> 
+                return new OrganisationExistsSearchResult
                 {
-                    new OrganisationFoundViewModel
+                    Organisations = new List<OrganisationFoundViewModel>
                     {
-                        OrganisationName = existing.Name,
-                        CompanyRegistrationName = existing.CompanyRegistrationNumber
-                    }
+                        new OrganisationFoundViewModel
+                        {
+                            OrganisationName = existing.Name,
+                            CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
+                            OrganisationId = existing.Id
+                        }
+                    },
+                    FoundType = OrganisationFoundType.CompanyNumber
                 };
             }
 
             var nameSearch = await organisationSearcher.Search(model.CompanyName, maximumSearchResults, false);
-
             var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
             {
                 OrganisationName = x.Name,
-                CompanyRegistrationName = x.CompanyRegistrationNumber
-            });
+                CompanyRegistrationNumber = x.CompanyRegistrationNumber,
+                OrganisationId = x.OrganisationId
+            }).ToList();
 
-            return organisationsMapped;
+            if (organisationsMapped.Any())
+            {
+                return new OrganisationExistsSearchResult
+                {
+                    Organisations = organisationsMapped,
+                    FoundType = OrganisationFoundType.CompanyName
+                };
+            }
+
+            return new OrganisationExistsSearchResult
+            {
+                Organisations = new List<OrganisationFoundViewModel>(),
+                FoundType = OrganisationFoundType.NotFound
+            };
         }
 
-        public async Task<ActionResult> OrganisationFound(IEnumerable<OrganisationFoundViewModel> orgs)
+        [HttpGet]
+        public async Task<ActionResult> OrganisationFound()
         {
-            var vm = new OrganisationsFoundViewModel
-            {
-                OrganisationFoundViewModels = orgs
-            };
+            TempData.Keep("FoundOrganisations");
 
-            return View("OrganisationFound", vm); //URL doesnt change here RedirectToAction isn't used. Can be sorted out as part of 71102
+            if (TempData["FoundOrganisations"] is OrganisationExistsSearchResult organisationsExistSearchResults)
+            {
+                var vm = new OrganisationsFoundViewModel
+                {
+                    OrganisationFoundViewModels = organisationsExistSearchResults.Organisations,
+                    OrganisationFoundType = organisationsExistSearchResults.FoundType
+                };
+
+                return View("OrganisationFound", vm);
+            }
+
+            return View(new OrganisationsFoundViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OrganisationFound(OrganisationsFoundViewModel orgsFoundViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(orgsFoundViewModel);
+            }
+
+            return RedirectToAction("JoinOrganisation", new
+            {
+                OrganisationId = orgsFoundViewModel.SelectedOrganisationId.Value
+            });
         }
 
         private async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
