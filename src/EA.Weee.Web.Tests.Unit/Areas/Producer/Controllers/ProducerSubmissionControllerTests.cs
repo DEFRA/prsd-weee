@@ -261,7 +261,7 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("CheckAnswers");
+            result.RouteValues["action"].Should().Be("TaskList");
             result.RouteValues["controller"].Should().Be("Producer");
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
         }
