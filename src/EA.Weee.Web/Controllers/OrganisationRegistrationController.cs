@@ -738,6 +738,8 @@
             var countries = await GetCountries();
             model.AddressData.Countries = countries;
 
+            model.HasAuthorisedRepresentitive = existingTransaction?.AuthorisedRepresentative == YesNoType.Yes;
+
             return View(model);
         }
 

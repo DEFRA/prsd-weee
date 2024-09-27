@@ -1488,6 +1488,29 @@
             var model = result.Model as ContactDetailsViewModel;
             model.Should().NotBeNull();
             model.Should().BeEquivalentTo(existingTransaction.ContactDetailsViewModel);
+            model.HasAuthorisedRepresentitive.Should().Be(existingTransaction.ContactDetailsViewModel.HasAuthorisedRepresentitive);
+            model.AddressData.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task ContactDetails_Get_WithoutExistingTransaction_ReturnsNewViewModel()
+        {
+            // Arrange
+            var countries = SetupCountries();
+
+            OrganisationTransactionData existingTransaction = null;
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.ContactDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as ContactDetailsViewModel;
+            model.Should().NotBeNull();
+            model.HasAuthorisedRepresentitive.Should().BeFalse();
             model.AddressData.Countries.Should().BeEquivalentTo(countries);
         }
 
