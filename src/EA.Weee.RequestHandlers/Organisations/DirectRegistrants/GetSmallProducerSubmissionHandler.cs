@@ -10,6 +10,7 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.DataReturns;
+    using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
     using System.Collections.Generic;
@@ -52,30 +53,7 @@
                     DirectRegistrantId = request.DirectRegistrantId,
                     OrganisationData = organisation,
                     HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
-                    CurrentSubmission = new SmallProducerSubmissionHistoryData()
-                    {
-                        EEEDetailsComplete = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null,
-                        RepresentingCompanyDetailsComplete = currentYearSubmission.CurrentSubmission.AuthorisedRepresentativeId.HasValue,
-                        OrganisationDetailsComplete = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue,
-                        ServiceOfNoticeComplete = currentYearSubmission.CurrentSubmission.ServiceOfNoticeAddressId.HasValue,
-                        ContactDetailsComplete = currentYearSubmission.CurrentSubmission.ContactAddressId.HasValue,
-                        BusinessAddressData = currentYearSubmission.CurrentSubmission.BusinessAddressId.HasValue ? mapper.Map<Domain.Organisation.Address, AddressData>(currentYearSubmission.CurrentSubmission.BusinessAddress) : mapper.Map<Domain.Organisation.Address, AddressData>(directRegistrant.Organisation.BusinessAddress),
-                        EEEBrandNames = currentYearSubmission.CurrentSubmission.BrandNameId.HasValue ? currentYearSubmission.CurrentSubmission.BrandName.Name : 
-                            (directRegistrant.BrandNameId.HasValue ? directRegistrant.BrandName.Name : string.Empty),
-                        CompanyName = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyName) ? currentYearSubmission.CurrentSubmission.CompanyName : directRegistrant.Organisation.Name,
-                        TradingName = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.TradingName) ? currentYearSubmission.CurrentSubmission.TradingName : directRegistrant.Organisation.TradingName,
-                        CompanyRegistrationNumber = !string.IsNullOrWhiteSpace(currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber) ? currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber : directRegistrant.Organisation.CompanyRegistrationNumber,
-                        SellingTechnique = currentYearSubmission.CurrentSubmission.SellingTechniqueType.HasValue ? (SellingTechniqueType?)currentYearSubmission.CurrentSubmission.SellingTechniqueType.Value : null,
-                        AdditionalCompanyDetailsData = mapper.Map<ICollection<AdditionalCompanyDetails>, IList<AdditionalCompanyDetailsData>>(currentYearSubmission.DirectRegistrant.AdditionalCompanyDetails),
-                        ContactData = currentYearSubmission.CurrentSubmission.ContactId.HasValue ? mapper.Map<Contact, ContactData>(currentYearSubmission.CurrentSubmission.Contact) :
-                            mapper.Map<Contact, ContactData>(directRegistrant.Contact),
-                        ContactAddressData = currentYearSubmission.CurrentSubmission.ContactId.HasValue ? mapper.Map<Domain.Organisation.Address, AddressData>(currentYearSubmission.CurrentSubmission.ContactAddress) :
-                            mapper.Map<Domain.Organisation.Address, AddressData>(directRegistrant.Address),
-                        AuthorisedRepresentitiveData = currentYearSubmission.CurrentSubmission.AuthorisedRepresentativeId.HasValue ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative) : (directRegistrant.AuthorisedRepresentativeId.HasValue ?
-                            mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative) : null),
-                        ServiceOfNoticeData = currentYearSubmission.CurrentSubmission.ServiceOfNoticeAddress != null ? mapper.Map<Domain.Organisation.Address, AddressData>(currentYearSubmission.CurrentSubmission.ServiceOfNoticeAddress) : null,
-                        TonnageData = currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion != null ? mapper.Map<EeeOutputReturnVersion, IList<Eee>>(currentYearSubmission.CurrentSubmission.EeeOutputReturnVersion) : new List<Eee>()
-                    }
+                    CurrentSubmission = mapper.Map<SmallProducerSubmissionHistoryData>(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))
                 };
             }
             return null;
