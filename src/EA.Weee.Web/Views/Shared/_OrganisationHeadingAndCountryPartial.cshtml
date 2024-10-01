@@ -23,7 +23,7 @@
     <div style="display: flex; align-items: center; gap: 10px;">
         @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, style = "width: 250px;" })
 
-        <input type="submit" value="Find Company" name="action" class="govuk-button govuk-button--secondary" style="margin: 0;" />
+        <input type="submit" value="Find Company" name="action" class="govuk-button govuk-button--secondary" data-prevent-double-click="true" style="margin: 0;" />
     </div>
 </div>
 

@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.Extensions
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
 
     public static class ValidationModel
@@ -14,18 +16,44 @@
                 throw new ArgumentNullException(nameof(model));
             }
 
+            bool isValid = true;
+
+            if (model is IEnumerable enumerable && !(model is string))
+            {
+                int index = 0;
+                foreach (var item in enumerable)
+                {
+                    string itemPrefix = string.IsNullOrEmpty(prefix) ? $"[{index}]" : $"{prefix}[{index}]";
+                    isValid &= ValidateObject(item, modelState, itemPrefix);
+                    index++;
+                }
+            }
+            else
+            {
+                isValid = ValidateObject(model, modelState, prefix);
+            }
+
+            return isValid;
+        }
+
+        private static bool ValidateObject(object obj, ModelStateDictionary modelState, string prefix)
+        {
             var validationResults = new List<ValidationResult>();
-            var validationContext = new ValidationContext(model, serviceProvider: null, items: null);
-            var isValid = Validator.TryValidateObject(model, validationContext, validationResults, validateAllProperties: true);
+            var validationContext = new ValidationContext(obj, serviceProvider: null, items: null);
+            bool isValid =
+                Validator.TryValidateObject(obj, validationContext, validationResults, validateAllProperties: true);
 
             foreach (var validationResult in validationResults)
             {
                 foreach (var memberName in validationResult.MemberNames)
                 {
-                    // If a prefix is provided, concatenate it with the member name using dot notation
                     var fullMemberName = string.IsNullOrEmpty(prefix) ? memberName : $"{prefix}.{memberName}";
-                    // Add the error to ModelState using the fully qualified member name
-                    modelState.AddModelError(fullMemberName, validationResult.ErrorMessage);
+
+                    if (!modelState.ContainsKey(fullMemberName) ||
+                        !modelState[fullMemberName].Errors.Any(e => e.ErrorMessage == validationResult.ErrorMessage))
+                    {
+                        modelState.AddModelError(fullMemberName, validationResult.ErrorMessage);
+                    }
                 }
             }
 

@@ -449,38 +449,34 @@
             return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
-        private async Task<OrganisationData> GetExistingByRegistrationNumber(OrganisationViewModel model)
+        private async Task<List<OrganisationData>> GetExistingByRegistrationNumber(OrganisationViewModel model)
         {
             using (var client = apiClient())
             {
                 var res = await client
                     .SendAsync(User.GetAccessToken(), new OrganisationByRegistrationNumberValue(model.CompaniesRegistrationNumber));
-
                 return res;
             }
         }
 
         private async Task<OrganisationExistsSearchResult> GetExistingOrganisations(OrganisationViewModel model)
         {
-            OrganisationData existing = null;
+            var existingOrganisations = new List<OrganisationData>();
             if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
             {
-                existing = await GetExistingByRegistrationNumber(model);
+                existingOrganisations = await GetExistingByRegistrationNumber(model);
             }
 
-            if (existing != null)
+            if (existingOrganisations.Any())
             {
                 return new OrganisationExistsSearchResult
                 {
-                    Organisations = new List<OrganisationFoundViewModel>
+                    Organisations = existingOrganisations.Select(existing => new OrganisationFoundViewModel
                     {
-                        new OrganisationFoundViewModel
-                        {
-                            OrganisationName = existing.Name,
-                            CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
-                            OrganisationId = existing.Id
-                        }
-                    },
+                        OrganisationName = existing.Name,
+                        CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
+                        OrganisationId = existing.Id
+                    }).ToList(),
                     FoundType = OrganisationFoundType.CompanyNumber
                 };
             }

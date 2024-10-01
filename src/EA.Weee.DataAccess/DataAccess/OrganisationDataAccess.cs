@@ -28,11 +28,11 @@
             return scheme.Organisation;
         }
 
-        public async Task<Organisation> GetByRegistrationNumber(string companyRegistrationNumber)
+        public async Task<List<Organisation>> GetByRegistrationNumber(string companyRegistrationNumber)
         {
             var organisation = await context
                 .Organisations
-               .SingleOrDefaultAsync(s => s.CompanyRegistrationNumber == companyRegistrationNumber);
+                .Where(s => s.CompanyRegistrationNumber == companyRegistrationNumber).ToListAsync();
 
             return organisation;
         }
