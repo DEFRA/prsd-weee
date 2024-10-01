@@ -42,9 +42,11 @@
                 Attributes =
                 {
                     ["href"] = "#",
-                    ["onclick"] = "window.scrollTo(0, 0); return false;"
+                    ["onclick"] = "window.scrollTo(0, 0); return false;",
+                    ["title"] = "Back to top"
                 }
             };
+
             linkTagBuilder.AddCssClass(CssBackToTopClass);
 
             var iconTagBuilder = new TagBuilder("i");
