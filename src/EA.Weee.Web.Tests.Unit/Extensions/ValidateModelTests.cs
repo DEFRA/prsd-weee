@@ -10,7 +10,6 @@
 
     public class ValidateModelTests
     {
-
         public class TestModel
         {
             [Required(ErrorMessage = "RequiredProperty is required")]
