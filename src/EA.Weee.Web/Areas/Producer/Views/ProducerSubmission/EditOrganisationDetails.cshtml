@@ -65,7 +65,7 @@
         </div>
 
         <h2 class="govuk-heading-s">Enter the registered office or principal place of business address.</h2>
-        <p class="govuk-body">For registered companies this should be the registered office address.</p>
+        <p class="form-hint text">For registered companies this should be the registered office address.</p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Address1)">
             @Html.Gds().LabelFor(m => m.Organisation.Address.Address1)
             @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Address1)
