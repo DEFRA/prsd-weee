@@ -4,7 +4,7 @@
     using AutoFixture;
     using Base;
     using EA.Prsd.Core;
-    using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.Integration.Tests.Builders;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using FluentAssertions;
@@ -14,16 +14,14 @@
     using System;
     using System.Security;
 
-    public class GetSmallProducerSubmissionHandlerTests : IntegrationTestBase
+    public class AddPaymentSessionRequestHandlerIntegrationTests : IntegrationTestBase
     {
         [Component]
-        public class WhenIGetSmallProducerSubmission : GetSmallProducerSubmissionHandlerTestsBase
+        public class WhenIAddAPaymentSession : AddPaymentSessionRequestHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
                 LocalSetup();
-
-                request = new GetSmallProducerSubmission(directRegistrant.Id);
             };
 
             private readonly Because of = () =>
@@ -31,53 +29,59 @@
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
             };
 
-            private readonly It shouldHaveRetrievedTheData = () =>
+            private readonly It shouldUpdateTheData = () =>
             {
-                var fullDirectRegistrant = Query.GetDirectRegistrantByOrganisationId(directRegistrant.OrganisationId);
+                var payment = Query.GetPaymentSessionById(result);
 
-                result.CurrentSubmission.Should().NotBeNull();
+                payment.UserId.Should().Be(UserId.ToString());
+                payment.Amount.Should().Be(request.Amount);
+                payment.DirectProducerSubmission.Should().BeEquivalentTo(directProducerSubmission);
+                payment.CreatedAt.Should().BeBefore(SystemTime.UtcNow);
+                payment.DirectRegistrant.Should().BeEquivalentTo(directRegistrant);
+                payment.InFinalState.Should().BeFalse();
+                payment.PaymentReference.Should().Be(request.PaymentReference);
+                payment.PaymentId.Should().Be(request.PaymentId);
+                payment.PaymentReturnToken.Should().Be(request.PaymentReturnToken);
+                payment.Status.Should().Be(PaymentState.New);
             };
         }
 
         [Component]
-        public class WhenUserIsNotAuthorised : GetSmallProducerSubmissionHandlerTestsBase
+        public class WhenUserIsNotAuthorised : AddPaymentSessionRequestHandlerIntegrationTestBase
         {
-            protected static IRequestHandler<AddSmallProducerSubmission, Guid> authHandler;
+            protected static IRequestHandler<AddPaymentSessionRequest, Guid> authHandler;
 
             private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings();
 
-                authHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
+                authHandler = Container.Resolve<IRequestHandler<AddPaymentSessionRequest, Guid>>();
             };
 
             private readonly Because of = () =>
             {
-                CatchExceptionAsync(() => authHandler.HandleAsync(new AddSmallProducerSubmission(Guid.NewGuid())));
+                CatchExceptionAsync(() => authHandler.HandleAsync(request));
             };
 
             private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
         }
 
-        public class GetSmallProducerSubmissionHandlerTestsBase : WeeeContextSpecification
+        public class AddPaymentSessionRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
-            protected static IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData> handler;
+            protected static IRequestHandler<AddPaymentSessionRequest, Guid> handler;
             protected static Fixture fixture;
-            protected static GetSmallProducerSubmission request;
-            protected static SmallProducerSubmissionData result;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
-            protected static Domain.Producer.DirectProducerSubmissionHistory directProducerSubmissionHistory;
+            protected static AddPaymentSessionRequest request;
             protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
+            protected static Guid result;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithExternalUserAccess();
-
-                handler = Container.Resolve<IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData>>();
+                .WithExternalUserAccess();
 
                 directRegistrant = DirectRegistrantDbSetup.Init()
                     .Create();
@@ -88,10 +92,20 @@
                     .WithDirectRegistrant(directRegistrant)
                     .Create();
 
-                directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
+
+                handler = Container.Resolve<IRequestHandler<AddPaymentSessionRequest, Guid>>();
+
+                fixture = new Fixture();
+
+                request = new AddPaymentSessionRequest(directRegistrant.Id, 
+                    "PaymentRef01",
+                    "http://test/",
+                    "PaymentId01",
+                    fixture.Create<decimal>());
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
 
