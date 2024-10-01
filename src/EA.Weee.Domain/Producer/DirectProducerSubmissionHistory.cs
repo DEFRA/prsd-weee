@@ -49,7 +49,7 @@
 
         public virtual Address BusinessAddress { get; private set; }
 
-        public virtual BrandName BrandName { get; private set; }
+        public virtual BrandName BrandName { get; set; }
 
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; set; }
 

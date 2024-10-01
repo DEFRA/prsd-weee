@@ -11,7 +11,7 @@
     using System;
     using System.Threading.Tasks;
 
-    internal class AddPaymentSessionRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<AddPaymentSessionRequest, bool>
+    internal class AddPaymentSessionRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<AddPaymentSessionRequest, Guid>
     {
         private readonly WeeeContext weeeContext;
         private readonly IUserContext userContext;
@@ -23,7 +23,7 @@
             this.userContext = userContext;
         }
 
-        public async Task<bool> HandleAsync(AddPaymentSessionRequest request)
+        public async Task<Guid> HandleAsync(AddPaymentSessionRequest request)
         {
             var currentYearSubmission = await Get(request.DirectRegistrantId);
 
@@ -45,7 +45,7 @@
 
             await weeeContext.SaveChangesAsync(); 
   
-            return true;
+            return paymentSession.Id;
         }
     }
 }

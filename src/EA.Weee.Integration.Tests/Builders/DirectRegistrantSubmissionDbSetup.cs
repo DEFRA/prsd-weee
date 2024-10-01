@@ -18,7 +18,7 @@
 
         public DirectRegistrantSubmissionDbSetup WithDefaultRegisteredProducer()
         {
-            var registeredProducer = new RegisteredProducer(SystemTime.UtcNow.Ticks.ToString(CultureInfo.InvariantCulture), SystemTime.UtcNow.Year);
+            var registeredProducer = new RegisteredProducer(SystemTime.UtcNow.Ticks.ToString(), SystemTime.UtcNow.Year);
 
             ObjectInstantiator<DirectProducerSubmission>.SetProperty(o => o.RegisteredProducer, registeredProducer, instance);
 
