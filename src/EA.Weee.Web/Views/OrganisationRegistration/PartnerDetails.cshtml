@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Constant
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
@@ -67,6 +68,9 @@
                 @Html.Gds().TextBoxFor(m => m.NotRequiredPartnerModels[i].LastName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
             </div>
 
+            <button class="govuk-button govuk-button govuk-button--secondary" name="action" value="@PostActionConstant.PartnerPostRemove" type="submit">Remove partner @Html.Gds().VisuallyHidden(string.Format("{0} {1}", Model.NotRequiredPartnerModels.ElementAt(i).FirstName, Model.NotRequiredPartnerModels.ElementAt(i).LastName))</button>
+            <input type="hidden" name="removeIndex" value="@i" />
+
             if (i < Model.NotRequiredPartnerModels.Count() - 1)
             {
                 <div class="border-divider govuk-!-margin-bottom-4 govuk-!-width-two-thirds"></div>
@@ -78,7 +82,7 @@
                 @(this.WeeeGds().Submit("Continue", new { name = "Action", value = "Submit", @class = "govuk-!-width-one-quarter" }))
 
                 <div>
-                    @(this.WeeeGds().Button("Add another partner", new { name = "Action", value = "AnotherPartner", @class = "govuk-!-width-one-quarter" }, secondaryButton: true))
+                    @(this.WeeeGds().Button("Add another partner", new { name = "Action", value = PostActionConstant.PartnerPostAdd, @class = "govuk-!-width-one-quarter" }, secondaryButton: true))
                 </div>
             </div>
         </div>

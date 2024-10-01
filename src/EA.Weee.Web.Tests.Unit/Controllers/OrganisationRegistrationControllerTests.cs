@@ -9,17 +9,17 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Search;
-    using EA.Weee.Requests.Aatf;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
-    using iText.Commons.Utils;
     using Services;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Controllers;
@@ -1595,7 +1595,35 @@
         [Fact]
         public async Task PartnerDetails_Get_ReturnsViewWithPopulatedViewModel()
         {
+            // Act
+            var result = (await controller.PartnerDetails()) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            var model = result.Model as PartnerViewModel;
+            model.Should().NotBeNull();
+
+            model.PartnerModels.Should().HaveCount(2);
+            model.NotRequiredPartnerModels.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Get_WithExistingTransaction_ReturnsViewWithSavedData()
+        {
             // Arrange
+            var organisationTransactionData = new OrganisationTransactionData()
+            {
+                PartnerModels = new List<AdditionalContactModel>
+                {
+                    new AdditionalContactModel { FirstName = "x", LastName = "y", Order = 1 },
+                    new AdditionalContactModel { FirstName = "a", LastName = "b", Order = 1 },
+                    new AdditionalContactModel { FirstName = "c", LastName = "d", Order = 2 },
+                }
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
 
             // Act
             var result = (await controller.PartnerDetails()) as ViewResult;
@@ -1607,6 +1635,10 @@
             model.Should().NotBeNull();
 
             model.PartnerModels.Should().HaveCount(2);
+            model.PartnerModels.Should().BeEquivalentTo(organisationTransactionData.PartnerModels.Where(p => p.Order <= 1));
+            model.NotRequiredPartnerModels.Should().HaveCount(1);
+            model.NotRequiredPartnerModels.First().FirstName.Should().Be("c");
+            model.NotRequiredPartnerModels.First().LastName.Should().Be("d");
         }
 
         [Theory]
@@ -1666,7 +1698,7 @@
             };
 
             // Act
-            var result = await controller.PartnerDetails(vm, "actionName") as RedirectToRouteResult;
+            var result = await controller.PartnerDetails(vm, null, null) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1678,7 +1710,7 @@
         }
 
         [Fact]
-        public async Task PartnerDetails_Post_AddsAnotherPartnerFields()
+        public async Task PartnerDetails_Post_AddsAnotherPartner()
         {
             // Arrange
             var vm = new PartnerViewModel
@@ -1686,11 +1718,12 @@
                 PartnerModels = new List<AdditionalContactModel>
                 {
                     new AdditionalContactModel { FirstName = "xx", LastName = "x" }
-                }
+                },
+                NotRequiredPartnerModels = new List<NotRequiredPartnerModel>()
             };
 
             // Act
-            var result = await controller.PartnerDetails(vm, "AnotherPartner") as ViewResult;
+            var result = await controller.PartnerDetails(vm, PostActionConstant.PartnerPostAdd, null) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1701,8 +1734,42 @@
 
             model.AllPartnerModels.Should().HaveCount(2);
 
-            model.AllPartnerModels[1].FirstName.Should().BeNull();
-            model.AllPartnerModels[1].LastName.Should().BeNull();
+            model.NotRequiredPartnerModels.Should().HaveCount(1);
+            model.NotRequiredPartnerModels.First().FirstName.Should().BeNull();
+            model.NotRequiredPartnerModels.First().LastName.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task PartnerDetails_Post_RemovesPartner()
+        {
+            // Arrange
+            var vm = new PartnerViewModel
+            {
+                PartnerModels = new List<AdditionalContactModel>
+                {
+                    new AdditionalContactModel { FirstName = "xx", LastName = "x" }
+                },
+                NotRequiredPartnerModels = new List<NotRequiredPartnerModel>
+                {
+                    new NotRequiredPartnerModel { FirstName = "yy", LastName = "y" },
+                    new NotRequiredPartnerModel { FirstName = "zz", LastName = "z" }
+                }
+            };
+
+            // Act
+            var result = await controller.PartnerDetails(vm, PostActionConstant.PartnerPostRemove, 0) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+
+            A.CallTo(() => transactionService.CaptureData(A<string>._, vm)).MustNotHaveHappened();
+
+            var model = result.Model as PartnerViewModel;
+
+            model.AllPartnerModels.Should().HaveCount(2);
+            model.NotRequiredPartnerModels.Should().HaveCount(1);
+            model.NotRequiredPartnerModels.First().FirstName.Should().Be("zz");
+            model.NotRequiredPartnerModels.First().LastName.Should().Be("z");
         }
 
         [Fact]
@@ -1714,24 +1781,13 @@
                 PartnerModels = new List<AdditionalContactModel>
                 {
                     new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
-                    new AdditionalContactModel { FirstName = "xx", LastName = "x" },
+                    new AdditionalContactModel { FirstName = "yy", LastName = "y" }
                 },
-                NotRequiredPartnerModels = new List<NotRequiredPartnerModel>
-                {
-                    new NotRequiredPartnerModel { FirstName = "xx", LastName = "x" },
-                    new NotRequiredPartnerModel { FirstName = "xx", LastName = "x" },
-                }
+                NotRequiredPartnerModels = Enumerable.Range(0, 8).Select(i => new NotRequiredPartnerModel { FirstName = $"First{i}", LastName = $"Last{i}" }).ToList()
             };
 
             // Act
-            var result = await controller.PartnerDetails(vm, "AnotherPartner") as ViewResult;
+            var result = await controller.PartnerDetails(vm, PostActionConstant.PartnerPostAdd, null) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1744,6 +1800,7 @@
                 .BeEquivalentTo("A maximum of 10 partners are allowed");
 
             var model = result.Model as PartnerViewModel;
+            model.AllPartnerModels.Should().HaveCount(10);
         }
 
         [Fact]
