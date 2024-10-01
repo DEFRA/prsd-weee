@@ -28,7 +28,7 @@
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return ExternalAddressValidator.Validate(AddressData.CountryId, AddressData.Postcode, "Address.CountryId", "Address.Postcode");
+            return ExternalAddressValidator.Validate(AddressData.CountryId, AddressData.Postcode, "AddressData.CountryId", "AddressData.Postcode");
         }
     }
 }
