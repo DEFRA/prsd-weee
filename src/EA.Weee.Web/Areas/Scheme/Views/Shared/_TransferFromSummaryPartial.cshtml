@@ -99,7 +99,7 @@
                                 @Html.Hidden("editEvidenceNoteId", Model.ViewTransferNoteViewModel.EvidenceNoteId, new { id = "deselect-evidence-id" + i })
                             }
 
-                            <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Add evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
+                            <button class="link-submit transfer-choose-notes-submit" type="submit">@Html.Gds().VisuallyHidden(string.Format("Remove evidence note with reference {0}", @Model.EvidenceNotesDataList[i].ReferenceDisplay))Remove</button>
                         }
                     </td>
                 </tr>
