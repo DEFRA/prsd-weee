@@ -30,7 +30,7 @@
 
                 authorisedRepresentative = AuthorisedRepDbSetup.Init().Create();
 
-                var registeredProducer = new RegisteredProducer("reg", SystemTime.UtcNow.Year);
+                var registeredProducer = new RegisteredProducer(SystemTime.UtcNow.Ticks.ToString(), SystemTime.UtcNow.Year);
 
                 directRegistrant = DirectRegistrantDbSetup.Init()
                     .WithAuthorisedRep(authorisedRepresentative)
@@ -61,9 +61,75 @@
 
             private readonly It shouldUpdateTheData = () =>
             {
-                var history = Query.CurrentSubmissionHistoryForComplianceYear(directRegistrant.Id, SystemTime.UtcNow.Year);
+                var entity = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
 
-                var authedRep = history.AuthorisedRepresentative;
+                entity.Should().NotBeNull();
+
+                var authedRep = entity.CurrentSubmission.AuthorisedRepresentative;
+
+                authedRep.OverseasProducerName.Should()
+                    .Be(authorisedRepresentative.OverseasProducerName);
+                authedRep.OverseasProducerTradingName.Should().Be(request.BusinessTradingName);
+                authedRep.OverseasContact.Address.PrimaryName.Should().Be(request.Address.Address1);
+                authedRep.OverseasContact.Address.SecondaryName.Should().BeEmpty();
+                authedRep.OverseasContact.Address.Street.Should().Be(request.Address.Address2);
+                authedRep.OverseasContact.Address.Town.Should().Be(request.Address.TownOrCity);
+                authedRep.OverseasContact.Address.AdministrativeArea.Should().Be(request.Address.CountyOrRegion);
+                authedRep.OverseasContact.Address.CountryId.Should().Be(request.Address.CountryId);
+                authedRep.OverseasContact.Address.PostCode.Should().Be(request.Address.Postcode);
+                authedRep.OverseasContact.Email.Should().Be(request.Address.Email);
+                authedRep.OverseasContact.Telephone.Should().Be(request.Address.Telephone);
+            };
+        }
+
+        [Component]
+        public class WhenIUpdateRepresentingOrganisationDetailsWithExistingSubmissionDetails : EditRepresentedOrganisationDetailsRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                authorisedRepresentative = AuthorisedRepDbSetup.Init().Create();
+
+                var registeredProducer = new RegisteredProducer(SystemTime.UtcNow.Ticks.ToString(), SystemTime.UtcNow.Year);
+
+                directRegistrant = DirectRegistrantDbSetup.Init()
+                    .WithAuthorisedRep(authorisedRepresentative)
+                    .Create();
+
+                var submissionAuthorisedRep = AuthorisedRepDbSetup.Init().Create();
+
+                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
+                    .WithDirectRegistrant(directRegistrant)
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
+                    .WithRegisteredProducer(registeredProducer)
+                    .Create();
+
+                directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithAuthorisedRep(submissionAuthorisedRep.Id)
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+
+                request = new RepresentedOrganisationDetailsRequest(
+                    directRegistrant.Id,
+                    "business trading name",
+                    representingCompanyDetails);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldUpdateTheData = () =>
+            {
+                var entity = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                entity.Should().NotBeNull();
+
+                var authedRep = entity.CurrentSubmission.AuthorisedRepresentative;
 
                 authedRep.OverseasProducerName.Should()
                     .Be(authorisedRepresentative.OverseasProducerName);
@@ -111,7 +177,6 @@
         public class EditRepresentedOrganisationDetailsRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<RepresentedOrganisationDetailsRequest, bool> handler;
-            protected static IRequestHandler<AddSmallProducerSubmission, Guid> createSubmissionHandler;
             protected static Fixture fixture;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
             protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
@@ -132,7 +197,6 @@
                 fixture = new Fixture();
 
                 handler = Container.Resolve<IRequestHandler<RepresentedOrganisationDetailsRequest, bool>>();
-                createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
 
                 country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
 

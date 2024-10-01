@@ -27,16 +27,7 @@
             private readonly Establish context = () =>
             {
                 LocalSetup();
-
-                directRegistrant = DirectRegistrantDbSetup.Init()
-                    .Create();
-
-                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
-                    .WithDefaultRegisteredProducer()
-                    .WithComplianceYear(SystemTime.UtcNow.Year)
-                    .WithDirectRegistrant(directRegistrant)
-                    .Create();
-
+                
                 var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 
@@ -87,15 +78,6 @@
             private readonly Establish context = () =>
             {
                 LocalSetup();
-
-                directRegistrant = DirectRegistrantDbSetup.Init()
-                    .Create();
-
-                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
-                    .WithDefaultRegisteredProducer()
-                    .WithComplianceYear(SystemTime.UtcNow.Year)
-                    .WithDirectRegistrant(directRegistrant)
-                    .Create();
 
                 outputReturnVersion = new EeeOutputReturnVersion();
 
@@ -166,7 +148,7 @@
                 CatchExceptionAsync(() => authHandler.HandleAsync(request));
             };
 
-            private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
+            private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<SecurityException>;
         }
 
         public class EditEeeDataRequestHandlerIntegrationTestBase : WeeeContextSpecification
@@ -185,6 +167,15 @@
                     .WithIoC()
                     .WithTestData()
                     .WithExternalUserAccess();
+
+                directRegistrant = DirectRegistrantDbSetup.Init()
+                    .Create();
+
+                directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
+                    .WithDefaultRegisteredProducer()
+                    .WithComplianceYear(SystemTime.UtcNow.Year)
+                    .WithDirectRegistrant(directRegistrant)
+                    .Create();
 
                 handler = Container.Resolve<IRequestHandler<EditEeeDataRequest, bool>>();
 

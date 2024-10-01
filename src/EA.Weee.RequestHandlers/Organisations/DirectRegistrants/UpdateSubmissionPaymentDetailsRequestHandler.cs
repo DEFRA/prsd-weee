@@ -8,7 +8,6 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
     using System;
-    using System.Data.Entity;
     using System.Threading.Tasks;
 
     internal class UpdateSubmissionPaymentDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<UpdateSubmissionPaymentDetailsRequest, bool>

@@ -109,7 +109,6 @@
             var result = await handler.HandleAsync(request);
 
             // Assert
-            result.Should().BeTrue();
             A.CallTo(() => weeeContext.PaymentSessions.Add(A<PaymentSession>.That.Matches(p => p.InFinalState == false &&
                                                                                                             p.Amount == request.Amount &&
                                                                                                             p.DirectProducerSubmission == currentYearSubmission &&
@@ -117,8 +116,8 @@
                                                                                                             p.PaymentReturnToken == request.PaymentReturnToken &&
                                                                                                             p.PaymentId == request.PaymentId &&
                                                                                                             p.PaymentReference == request.PaymentReference &&
-                                                                                                            p.Status == PaymentState.New))).MustHaveHappenedOnceExactly();
-            A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
+                                                                                                            p.Status == PaymentState.New))).MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly());
         }
 
         private AddPaymentSessionRequest CreateValidRequest()

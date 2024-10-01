@@ -35,9 +35,16 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithAddress(Guid addressId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithBusinessAddress(Guid addressId)
         {
             ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.BusinessAddressId, addressId, instance);
+
+            return this;
+        }
+
+        public DirectRegistrantSubmissionHistoryDbSetup WithContactAddress(Guid addressId)
+        {
+            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.ContactAddressId, addressId, instance);
 
             return this;
         }
