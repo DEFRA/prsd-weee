@@ -198,15 +198,8 @@
 
             if (model.SameAsOrganisationAddress)
             {
-                AddressData organisationAddress;
-                if (SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData != null)
-                {
-                    organisationAddress = SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData;
-                }
-                else
-                {
-                    organisationAddress = SmallProducerSubmissionData.OrganisationData.BusinessAddress;
-                }
+                var organisationAddress = SmallProducerSubmissionData.CurrentSubmission.BusinessAddressData ??
+                                          SmallProducerSubmissionData.OrganisationData.BusinessAddress;
                 model.Address = new ServiceOfNoticeAddressData
                 {
                     Address1 = organisationAddress.Address1,
@@ -378,6 +371,10 @@
                 using (var client = apiClient())
                 {
                     await client.SendAsync(User.GetAccessToken(), request);
+
+                    await weeeCache.InvalidateOrganisationNameCache(model.OrganisationId);
+
+                    await weeeCache.InvalidateOrganisationSearch();
                 }
 
                 return await RedirectToNextUrl();
