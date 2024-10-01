@@ -10,6 +10,11 @@
     </h2>
     <div class="govuk-form-group">
         <table class="govuk-table" title="This table lists the organisation you have applied to perform activities for.">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header"><span class="govuk-visually-hidden">status<span></th>
+                </tr>
+            </thead>
             <tbody class="govuk-table__body">
                 @foreach (OrganisationUserData item in Model)
                 {
