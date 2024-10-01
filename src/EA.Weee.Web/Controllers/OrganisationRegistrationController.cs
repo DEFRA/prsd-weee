@@ -11,6 +11,7 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Constant;
     using EA.Weee.Web.Extensions;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
@@ -19,7 +20,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
@@ -778,7 +778,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PartnerDetails(PartnerViewModel model, string action)
+        public async Task<ActionResult> PartnerDetails(PartnerViewModel model, string action, int? removeIndex)
         {
             if (!ModelState.IsValid)
             {
@@ -792,10 +792,19 @@
                 return View(model);
             }
 
-            if (action == "AnotherPartner")
+            if (action == PostActionConstant.PartnerPostAdd)
             {
-                model.NotRequiredPartnerModels.Add(new NotRequiredPartnerModel() { });
+                model.NotRequiredPartnerModels.Add(new NotRequiredPartnerModel());
+                return View(model);
+            }
 
+            if (action == PostActionConstant.PartnerPostRemove && removeIndex.HasValue)
+            {
+                if (removeIndex.Value >= 0 && removeIndex.Value < model.NotRequiredPartnerModels.Count)
+                {
+                    model.NotRequiredPartnerModels.RemoveAt(removeIndex.Value);
+                }
+                ModelState.Clear();
                 return View(model);
             }
 
@@ -815,7 +824,12 @@
 
             if (existingTransaction?.PartnerModels != null && existingTransaction.PartnerModels.Any())
             {
-                vm.PartnerModels = existingTransaction.PartnerModels;
+                vm.PartnerModels = existingTransaction.PartnerModels.Where(p => p.Order <= 1).ToList();
+                vm.NotRequiredPartnerModels = new List<NotRequiredPartnerModel>(existingTransaction.PartnerModels.Where(p => p.Order > 1).Select(p1 => new NotRequiredPartnerModel()
+                {
+                    FirstName = p1.FirstName,
+                    LastName = p1.LastName
+                }));
 
                 return View(vm);
             }
