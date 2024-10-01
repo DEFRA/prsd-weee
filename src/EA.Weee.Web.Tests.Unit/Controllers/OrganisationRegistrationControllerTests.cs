@@ -948,7 +948,7 @@
 
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
-                .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
+                .Returns(Task.FromResult(new List<EA.Weee.Core.Organisations.OrganisationData>()));
 
             A.CallTo(() => organisationSearcher.Search(A<string>._, A<int>._, A<bool>._))
                 .Returns(new List<OrganisationSearchResult>());
@@ -997,7 +997,6 @@
             await controller.OrganisationDetails(model);
 
             // Assert
-
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
                         .That
@@ -1006,8 +1005,7 @@
         }
 
         [Fact]
-        public async Task
-            OrganisationDetails_Post_ValidModel_ChecksOrganisationExistenceWithNameSearchIfRegReturnsNull()
+        public async Task OrganisationDetails_Post_ValidModel_ChecksOrganisationExistenceWithNameSearchIfRegReturnsEmptyList()
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
@@ -1026,7 +1024,7 @@
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
                         .That
                         .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
-                .Returns(Task.FromResult<EA.Weee.Core.Organisations.OrganisationData>(null));
+                .Returns(Task.FromResult(new List<EA.Weee.Core.Organisations.OrganisationData>()));
 
             // Act
             var result = await controller.OrganisationDetails(model) as ViewResult;
@@ -1059,7 +1057,7 @@
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
                         .That
                         .Matches(w => w.RegistrationNumber == model.CompaniesRegistrationNumber)))
-                .Returns(org);
+                .Returns(new List<EA.Weee.Core.Organisations.OrganisationData> { org });
 
             // Act
             var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
@@ -1807,8 +1805,7 @@
         }
 
         [Fact]
-        public async Task
-            OrganisationDetails_Post_WithEmptyRegistrationNumber_ShouldNotCallApiForRegistrationNumberSearch()
+        public async Task OrganisationDetails_Post_WithEmptyRegistrationNumber_ShouldNotCallApiForRegistrationNumberSearch()
         {
             // Arrange
             var model = new OrganisationViewModel
@@ -1823,14 +1820,13 @@
         }
 
         [Fact]
-        public async Task
-            OrganisationDetails_Post_WithValidRegistrationNumber_ShouldCallApiForRegistrationNumberSearch()
+        public async Task OrganisationDetails_Post_WithValidRegistrationNumber_ShouldCallApiForRegistrationNumberSearch()
         {
             // Arrange
             var model = new OrganisationViewModel
                 { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
-                .Returns(Task.FromResult<Core.Organisations.OrganisationData>(null));
+                .Returns(Task.FromResult(new List<Core.Organisations.OrganisationData>()));
 
             // Act
             await controller.OrganisationDetails(model);
@@ -1841,13 +1837,13 @@
         }
 
         [Fact]
-        public async Task OrganisationDetails_Post_WhenRegistrationNumberSearchReturnsNull_ShouldFallbackToNameSearch()
+        public async Task OrganisationDetails_Post_WhenRegistrationNumberSearchReturnsEmptyList_ShouldFallbackToNameSearch()
         {
             // Arrange
             var model = new OrganisationViewModel
                 { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
-                .Returns(Task.FromResult<Core.Organisations.OrganisationData>(null));
+                .Returns(Task.FromResult(new List<Core.Organisations.OrganisationData>()));
 
             // Act
             await controller.OrganisationDetails(model);
