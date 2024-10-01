@@ -544,7 +544,7 @@
 
                 var result = await organisationDataAccess.GetByRegistrationNumber(organisation.CompanyRegistrationNumber);
 
-                result.CompanyRegistrationNumber.Should().Be(organisation.CompanyRegistrationNumber);
+                result.ElementAt(0).CompanyRegistrationNumber.Should().Be(organisation.CompanyRegistrationNumber);
             }
         }
 
@@ -564,7 +564,7 @@
 
                 var result = await organisationDataAccess.GetByRegistrationNumber("ZZZZZZZZZZ");
 
-                result.Should().BeNull();
+                result.Should().BeEmpty();
             }
         }
     }
