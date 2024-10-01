@@ -12,7 +12,7 @@
 
         Task<Organisation> GetById(Guid organisationId);
 
-        Task<Organisation> GetByRegistrationNumber(string companyRegistrationNumber);
+        Task<List<Organisation>> GetByRegistrationNumber(string companyRegistrationNumber);
 
         Task Delete(Guid organisationId);
 

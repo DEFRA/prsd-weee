@@ -453,6 +453,7 @@
     <Compile Include="Areas\Aatf\ViewModels\EvidenceTonnageValueCopyPasteViewModelTests.cs" />
     <Compile Include="Areas\Aatf\ViewModels\ManageEvidenceOverviewDisplayOptionTests.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerControllerTests.cs" />
+    <Compile Include="Extensions\ValidateModelTests.cs" />
     <Compile Include="Service\OrganisationTransactionServiceUnitTests.cs" />
     <Compile Include="Service\PaymentReferenceGeneratorUnitTests.cs" />
     <Compile Include="Service\PaymentServiceUnitTests.cs" />
