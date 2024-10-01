@@ -7,10 +7,11 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Weee.Security;
 
-    public class OrganisationByRegistrationNumberHandler : IRequestHandler<OrganisationByRegistrationNumberValue, OrganisationData>
+    public class OrganisationByRegistrationNumberHandler : IRequestHandler<OrganisationByRegistrationNumberValue, List<OrganisationData>>
     {
         private readonly IOrganisationDataAccess organisationDataAccess;
         private readonly IWeeeAuthorization authorization;
@@ -23,20 +24,13 @@
             this.mapper = mapper;
         }
 
-        public async Task<OrganisationData> HandleAsync(OrganisationByRegistrationNumberValue message)
+        public async Task<List<OrganisationData>> HandleAsync(OrganisationByRegistrationNumberValue message)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var organisation = await organisationDataAccess.GetByRegistrationNumber(message.RegistrationNumber);
+            var organisations = await organisationDataAccess.GetByRegistrationNumber(message.RegistrationNumber);
 
-            if (organisation == null)
-            {
-                return null;
-            }
-
-            var organisationData = mapper.Map<Organisation, OrganisationData>(organisation);
-
-            return organisationData;
+            return organisations.Count == 0 ? new List<OrganisationData>() : organisations.Select(organisation => mapper.Map<Organisation, OrganisationData>(organisation)).ToList();
         }
     }
 }
