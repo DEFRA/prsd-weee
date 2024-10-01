@@ -121,10 +121,10 @@
     <value>Discard changes</value>
   </data>
   <data name="OrganisationDetailsWarningText" xml:space="preserve">
-    <value>Changing the details on this page will update your organisation details on your account.</value>
+    <value>Changing the details on this page, on submission of your application, will update your organisation details on your account.</value>
   </data>
   <data name="RepresentingCompanyDetailsWarningText" xml:space="preserve">
-    <value>Changing the details on this page will update your producer details on your account.</value>
+    <value>Changing the details on this page, on submission of your application, will update your producer details on your account.</value>
   </data>
   <data name="SaveAndReturnCheckAnswers" xml:space="preserve">
     <value>Save and return to check answers</value>
@@ -133,6 +133,6 @@
     <value>Save and return to task list</value>
   </data>
   <data name="WarningText" xml:space="preserve">
-    <value>Changing the details on this page will update your contact details on your account.</value>
+    <value>Changing the details on this page, on submission of your application, will update your contact details on your account.</value>
   </data>
 </root>
