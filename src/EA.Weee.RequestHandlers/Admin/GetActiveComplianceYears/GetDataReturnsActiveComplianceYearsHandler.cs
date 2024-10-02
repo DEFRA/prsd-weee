@@ -10,7 +10,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetDataReturnsActiveComplianceYearsDataAccess dataAccess;
-
+        
         public GetDataReturnsActiveComplianceYearsHandler(IWeeeAuthorization authorization, IGetDataReturnsActiveComplianceYearsDataAccess dataAccess)
         {
             this.authorization = authorization;
@@ -21,6 +21,9 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
+            if (message.IncludeDirectRegistrantSubmissions)
+            {
+            }
             return await dataAccess.Get();
         }
     }
