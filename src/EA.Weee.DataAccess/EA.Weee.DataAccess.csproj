@@ -101,8 +101,10 @@
     <Compile Include="DataAccess\EvidenceDataAccess.cs" />
     <Compile Include="DataAccess\EvidenceNoteResults.cs" />
     <Compile Include="DataAccess\GenericDataAccess.cs" />
+    <Compile Include="DataAccess\GetDirectProducerSubmissionActiveComplianceYearsDataAccess.cs" />
     <Compile Include="DataAccess\IEvidenceDataAccess.cs" />
     <Compile Include="DataAccess\IGenericDataAccess.cs" />
+    <Compile Include="DataAccess\IGetDirectProducerSubmissionActiveComplianceYearsDataAccess.cs" />
     <Compile Include="DataAccess\IObligationDataAccess.cs" />
     <Compile Include="DataAccess\IOrganisationTransactionDataAccess.cs" />
     <Compile Include="DataAccess\IPaymentSessionDataAccess.cs" />
