@@ -73,24 +73,24 @@
         [Fact]
         public void RepresentingCompanyAddressData_ShouldValidateAndPass()
         {
-            var t = new RepresentingCompanyAddressData
+            var address = new RepresentingCompanyAddressData
             {
                 CountryId = Guid.NewGuid()
             };
 
-            var res = t.Validate(null);
+            var res = address.Validate(null);
 
             res.Should().BeEquivalentTo(Enumerable.Empty<ValidationResult>());
         }
 
         private void RepresentingCompanyAddressData_ShouldValidateCountry(Guid country)
         {
-            var t = new RepresentingCompanyAddressData
+            var address = new RepresentingCompanyAddressData
             {
                 CountryId = country
             };
 
-            var res = t.Validate(null);
+            var res = address.Validate(null);
 
             var expected = new ValidationResult("Country cannot be UK - England, Scotland, Wales or Northern Ireland", new[] { "CountryId" });
 
