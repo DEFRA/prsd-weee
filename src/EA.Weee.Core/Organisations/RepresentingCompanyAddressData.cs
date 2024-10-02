@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
     using DataStandards;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
@@ -63,6 +64,13 @@
             if (CountryId == Guid.Empty)
             {
                 yield return new ValidationResult("Please select a country");
+            }
+
+            var invalidCountries = UkCountry.ValidIds;
+
+            if (invalidCountries.Contains(CountryId))
+            {
+                yield return new ValidationResult("Country cannot be UK - England, Scotland, Wales or Northern Ireland", new[] { nameof(CountryId) });
             }
         }
     }
