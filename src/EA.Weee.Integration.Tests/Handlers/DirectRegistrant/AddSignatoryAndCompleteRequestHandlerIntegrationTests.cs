@@ -51,7 +51,7 @@
                 submission.DirectRegistrant.AuthorisedRepresentative.Should().Be(submission.CurrentSubmission.AuthorisedRepresentative);
 
                 submission.CurrentSubmission.SubmittedDate.Should().NotBeNull();
-                submission.CurrentSubmission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
+                submission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
             };
         }
 
