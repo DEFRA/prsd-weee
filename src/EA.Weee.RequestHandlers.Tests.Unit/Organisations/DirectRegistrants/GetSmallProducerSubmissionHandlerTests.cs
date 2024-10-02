@@ -5,6 +5,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
@@ -180,6 +181,41 @@
 
             // Assert
             result.ContactData.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandleAsync_IncludesAddressData_WhenAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+            var address = A.Fake<Address>();
+            var addressData = A.Fake<AddressData>();
+
+            A.CallTo(() => directRegistrant.Address).Returns(address);
+            A.CallTo(() => mapper.Map<Address, AddressData>(address)).Returns(addressData);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.ContactAddressData.Should().Be(addressData);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsNullAddressData_WhenNotAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+
+            A.CallTo(() => directRegistrant.Address).Returns(null);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.ContactAddressData.Should().BeNull();
         }
 
         [Fact]

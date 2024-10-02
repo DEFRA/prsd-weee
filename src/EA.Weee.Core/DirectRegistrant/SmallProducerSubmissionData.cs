@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.DirectRegistrant
 {
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
 
@@ -9,6 +10,8 @@
         public OrganisationData OrganisationData { get; set; }
 
         public ContactData ContactData { get; set; }
+
+        public AddressData ContactAddressData { get; set; }
 
         public IDictionary<int, SmallProducerSubmissionHistoryData> SubmissionHistory {get; set; }
 
