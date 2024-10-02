@@ -64,6 +64,8 @@
             @Html.Gds().TextBoxFor(m => m.Organisation.Address.WebsiteAddress, new { @maxlength = CommonMaxFieldLengths.WebsiteAddress })
         </div>
 
+        <h2 class="govuk-heading-s">Enter the registered office or principal place of business address.</h2>
+        <p class="govuk-hint">For registered companies this should be the registered office address.</p>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Address1)">
             @Html.Gds().LabelFor(m => m.Organisation.Address.Address1)
             @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Address1)
@@ -94,7 +96,7 @@
             @Html.Gds().TextBoxFor(m => m.Organisation.Address.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
         </div>
 
-        <h2 class="govuk-heading-s">Enter the country your organisation is based in.</h2>
+        <h2 class="govuk-heading-s">Enter the country your organisation or business is based in.</h2>
         <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Organisation.Address.CountryId)" id="operator-country-dropdown-list">
             @Html.Gds().LabelFor(m => m.Organisation.Address.CountryId, new { id = "country-dropdown-list" })
             @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.CountryId)
