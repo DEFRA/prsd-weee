@@ -32,7 +32,7 @@
                 {
                     data = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetSmallProducerSubmission(guidDirectRegistrantId));
 
-                    if (data == null)
+                    if (data?.CurrentSubmission == null)
                     {
                         await client.SendAsync(context.HttpContext.User.GetAccessToken(), new AddSmallProducerSubmission(guidDirectRegistrantId));
 

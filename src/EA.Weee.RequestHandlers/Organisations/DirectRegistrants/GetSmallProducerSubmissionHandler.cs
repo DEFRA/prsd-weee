@@ -5,11 +5,8 @@
     using Domain.Producer;
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.DataReturns;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
@@ -45,18 +42,33 @@
 
             var systemTime = await systemDataDataAccess.GetSystemDateTime();
             var currentYearSubmission = directRegistrant.DirectProducerSubmissions.FirstOrDefault(r => r.ComplianceYear == systemTime.Year);
-            
-            if (currentYearSubmission != null)
+
+            var submissionHistory = directRegistrant.DirectProducerSubmissions;
+
+            var submissionData = new SmallProducerSubmissionData
             {
-                return new SmallProducerSubmissionData()
-                {
-                    DirectRegistrantId = request.DirectRegistrantId,
-                    OrganisationData = organisation,
-                    HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
-                    CurrentSubmission = mapper.Map<SmallProducerSubmissionHistoryData>(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))
-                };
+                DirectRegistrantId = request.DirectRegistrantId,
+                OrganisationData = organisation,
+                ContactData = directRegistrant.Contact != null
+                    ? mapper.Map<Contact, ContactData>(directRegistrant.Contact)
+                    : null,
+                HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
+                CurrentSubmission = currentYearSubmission != null
+                    ? mapper.Map<SmallProducerSubmissionHistoryData>(
+                        new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))
+                    : null,
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            };
+
+            foreach (var directProducerSubmission in submissionHistory)
+            {
+                var history = mapper.Map<SmallProducerSubmissionHistoryData>(
+                    new DirectProducerSubmissionSource(directRegistrant, directProducerSubmission));
+
+                submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
             }
-            return null;
+
+            return submissionData;
         }
     }
 }
