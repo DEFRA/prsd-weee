@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.DirectRegistrants
 {
+    using AutoFixture;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
@@ -26,6 +27,7 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IMapper mapper;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly GetSmallProducerSubmissionHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
 
@@ -34,7 +36,7 @@
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             mapper = A.Fake<IMapper>();
-            var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
             handler = new GetSmallProducerSubmissionHandler(authorization, genericDataAccess, mapper, systemDataDataAccess);
@@ -103,7 +105,7 @@
 
             var result = await handler.HandleAsync(request);
 
-            result.Should().BeNull();
+            result.CurrentSubmission.Should().BeNull();
         }
 
         [Fact]
@@ -119,7 +121,7 @@
             await handler.HandleAsync(request);
 
             A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>.That.Matches(s => s.DirectRegistrant == directRegistrant && 
-                s.DirectProducerSubmission == currentYearSubmission))).MustHaveHappenedOnceExactly();
+                s.DirectProducerSubmission == currentYearSubmission))).MustHaveHappenedTwiceExactly();
         }
 
         private DirectRegistrant SetupValidDirectRegistrant(bool hasCurrentYearSubmission = false, Guid? hasAuthorisedRep = null)
@@ -143,6 +145,135 @@
                 .Returns(Task.FromResult(directRegistrant));
 
             return directRegistrant;
+        }
+
+        [Fact]
+        public async Task HandleAsync_IncludesContactData_WhenAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+            var contact = A.Fake<Contact>();
+            var contactData = A.Fake<ContactData>();
+
+            A.CallTo(() => directRegistrant.Contact).Returns(contact);
+            A.CallTo(() => mapper.Map<Contact, ContactData>(contact)).Returns(contactData);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.ContactData.Should().Be(contactData);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsNullContactData_WhenNotAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+
+            A.CallTo(() => directRegistrant.Contact).Returns(null);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.ContactData.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandleAsync_IncludesSubmissionHistory()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+            var submissions = new List<DirectProducerSubmission>
+            {
+                CreateSubmission(2021),
+                CreateSubmission(2022),
+                CreateSubmission(2023)
+            };
+
+            var submissionHistory1 = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            var submissionHistory2 = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            var submissionHistory3 = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(submissions);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>._))
+                .ReturnsNextFromSequence(submissionHistory1, submissionHistory2, submissionHistory3);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.SubmissionHistory.Should().HaveCount(3);
+            result.SubmissionHistory.Should().ContainKeys(2021, 2022, 2023);
+            result.SubmissionHistory.Should().ContainValue(submissionHistory1);
+            result.SubmissionHistory.Should().ContainValue(submissionHistory2);
+            result.SubmissionHistory.Should().ContainValue(submissionHistory3);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsEmptySubmissionHistory_WhenNoSubmissions()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>());
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.SubmissionHistory.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task HandleAsync_SetsCurrentSubmission_WhenAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+            var currentYear = SystemTime.UtcNow.Year;
+            var currentSubmission = CreateSubmission(currentYear);
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission> { currentSubmission });
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>._))
+                .Returns(new SmallProducerSubmissionHistoryData { ComplianceYear = currentYear });
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.CurrentSubmission.Should().NotBeNull();
+            result.CurrentSubmission.ComplianceYear.Should().Be(currentYear);
+        }
+
+        [Fact]
+        public async Task HandleAsync_SetsCurrentSubmissionToNull_WhenNotAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>());
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.CurrentSubmission.Should().BeNull();
+        }
+
+        private DirectProducerSubmission CreateSubmission(int year)
+        {
+            var submission = A.Fake<DirectProducerSubmission>();
+            A.CallTo(() => submission.ComplianceYear).Returns(year);
+            return submission;
         }
     }
 }

@@ -103,7 +103,7 @@
             actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(Task.FromResult<SmallProducerSubmissionData>(null))
+                .Returns(Task.FromResult<SmallProducerSubmissionData>(new SmallProducerSubmissionData()))
                 .Once()
                 .Then
                 .Returns(Task.FromResult(new SmallProducerSubmissionData()));
