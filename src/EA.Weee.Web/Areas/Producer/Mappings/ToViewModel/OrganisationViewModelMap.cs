@@ -6,7 +6,7 @@
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
 
-    public class OrganisationViewModelMap : IMap<SmallProducerSubmissionData, OrganisationViewModel>
+    public class OrganisationViewModelMap : IMap<SubmissionsYearDetails, OrganisationViewModel>
     {
         private readonly IMapper mapper;
 
@@ -15,15 +15,29 @@
             this.mapper = mapper;
         }
 
-        public OrganisationViewModel Map(SmallProducerSubmissionData source)
+        public OrganisationViewModel Map(SubmissionsYearDetails source)
         {
+            if (source.Year.HasValue)
+            {
+                var sub = source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value];
+
+                return new OrganisationViewModel()
+                {
+                    Address = mapper.Map<AddressData, ExternalAddressData>(sub.BusinessAddressData),
+                    CompanyName = sub.CompanyName,
+                    BusinessTradingName = sub.TradingName,
+                    CompaniesRegistrationNumber = sub.CompanyRegistrationNumber,
+                    OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType)
+                };
+            }
+
             return new OrganisationViewModel()
             {
-                Address = mapper.Map<AddressData, ExternalAddressData>(source.OrganisationData.BusinessAddress),
-                CompanyName = source.OrganisationData.Name,
-                BusinessTradingName = source.OrganisationData.TradingName,
-                CompaniesRegistrationNumber = source.OrganisationData.CompanyRegistrationNumber,
-                OrganisationType = MapOrganisationType(source.OrganisationData.OrganisationType)
+                Address = mapper.Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress),
+                CompanyName = source.SmallProducerSubmissionData.OrganisationData.Name,
+                BusinessTradingName = source.SmallProducerSubmissionData.OrganisationData.TradingName,
+                CompaniesRegistrationNumber = source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber,
+                OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType)
             };
         }
 
