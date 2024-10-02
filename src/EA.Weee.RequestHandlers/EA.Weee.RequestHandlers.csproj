@@ -166,9 +166,11 @@
     <Compile Include="Mappings\AuthorisedRepresentitiveDataMap.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />
     <Compile Include="Mappings\AatfSimpleMap.cs" />
+    <Compile Include="Mappings\DirectProducerSubmissionSource.cs" />
     <Compile Include="Mappings\EvidenceNoteWitheCriteriaMapperBase.cs" />
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Mappings\EeeDataMap.cs" />
+    <Compile Include="Mappings\SmallProducerSubmissionHistoryDataMap.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetInProgressPaymentSessionRequestHandler.cs" />
