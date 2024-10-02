@@ -6,6 +6,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -51,6 +52,9 @@
                 OrganisationData = organisation,
                 ContactData = directRegistrant.Contact != null
                     ? mapper.Map<Contact, ContactData>(directRegistrant.Contact)
+                    : null,
+                ContactAddressData = directRegistrant.Address != null
+                    ? mapper.Map<Address, AddressData>(directRegistrant.Address)
                     : null,
                 HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
                 CurrentSubmission = currentYearSubmission != null
