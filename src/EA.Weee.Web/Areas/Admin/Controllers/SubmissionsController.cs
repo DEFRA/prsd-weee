@@ -273,7 +273,7 @@
                 {
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears());
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears(false));
                     GetEEEWEEEDataReturnSchemesByComplianceYear getSchemesRequest = new GetEEEWEEEDataReturnSchemesByComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
 
