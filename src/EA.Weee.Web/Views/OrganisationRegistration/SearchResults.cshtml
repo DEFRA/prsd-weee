@@ -27,7 +27,7 @@
             </ul>
             <p class="govuk-body">
                 If you are a small producer of electrical and electronic equipment (EEE) who hasn't previously been registered, you will need to create an account.
-                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("RegisterSmallProducer", "OrganisationRegistration", new {searchTerm = Model.SearchTerm})">Register for a small producer account</a>.
+                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("RegisterSmallProducer", "OrganisationRegistration", new {searchTerm = Model.SearchTerm})">Create a small producer account</a>.
             </p>
             <fieldset class="prsd-table-fieldset">
                 <legend class="govuk-visually-hidden">select organisation</legend>
@@ -86,7 +86,7 @@
         </ul>
         <p class="govuk-body">
             If you are a small producer of electrical and electronic equipment (EEE) who hasn't previously been registered, you will need to create an account.
-            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("RegisterSmallProducer", "OrganisationRegistration", new {searchTerm = Model.SearchTerm})">Register for a small producer account</a>.
+            <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("RegisterSmallProducer", "OrganisationRegistration", new {searchTerm = Model.SearchTerm})">Create for a small producer account</a>.
         </p>
         <p>
             @Html.ActionLink("Start another search", "Search", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "govuk-button" })
