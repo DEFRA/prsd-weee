@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Organisations
 {
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Validation;
     using FluentAssertions;
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using Xunit;
 
     public class RepresentingCompanyAddressDataTests
@@ -57,6 +59,42 @@
             var hasAttribute = Attribute.IsDefined(pi, typeof(GenericPhoneNumberAttribute));
 
             hasAttribute.Should().Be(true);
+        }
+
+        [Fact]
+        public void RepresentingCompanyAddressData_ShouldValidateAndReturnError()
+        {
+            RepresentingCompanyAddressData_ShouldValidateCountry(UkCountry.Ids.Wales);
+            RepresentingCompanyAddressData_ShouldValidateCountry(UkCountry.Ids.Scotland);
+            RepresentingCompanyAddressData_ShouldValidateCountry(UkCountry.Ids.England);
+            RepresentingCompanyAddressData_ShouldValidateCountry(UkCountry.Ids.NorthernIreland);
+        }
+
+        [Fact]
+        public void RepresentingCompanyAddressData_ShouldValidateAndPass()
+        {
+            var t = new RepresentingCompanyAddressData
+            {
+                CountryId = Guid.NewGuid()
+            };
+
+            var res = t.Validate(null);
+
+            res.Should().BeEquivalentTo(Enumerable.Empty<ValidationResult>());
+        }
+
+        private void RepresentingCompanyAddressData_ShouldValidateCountry(Guid country)
+        {
+            var t = new RepresentingCompanyAddressData
+            {
+                CountryId = country
+            };
+
+            var res = t.Validate(null);
+
+            var expected = new ValidationResult("Country cannot be UK - England, Scotland, Wales or Northern Ireland", new[] { "CountryId" });
+
+            res.First().Should().BeEquivalentTo(expected);
         }
     }
 }
