@@ -15,15 +15,71 @@
         @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
 
         <div class="govuk-tabs__panel" id="organisationDetails">
-            <h1 class="govuk-heading-m">
+            <h2 class="govuk-heading-m">
                 @title
-            </h1>
-            <table id="pcs-details-table" class="govuk-table">
+            </h2>
+            <table id="pcs-contact-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
-                   
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">First Name</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactData.FirstName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Last name</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactData.LastName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Position</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactData.Position</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Email</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.Email</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Phone number</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.Telephone</td>
+                    </tr>
                 </tbody>
             </table>
+            <h2 class="govuk-heading-m">Contact address</h2>
+            <table id="pcs-contact-address-table" class="govuk-table">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Address line 1</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.Address1</td>
+                    </tr>
 
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Address line 2</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.Address2</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Town</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.TownOrCity</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">County</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.CountyOrRegion</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Postcode</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.Postcode</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Country</th>
+                        <td class="govuk-table__cell">@Model.SmallProducerSubmissionData.ContactAddressData.CountryName</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
