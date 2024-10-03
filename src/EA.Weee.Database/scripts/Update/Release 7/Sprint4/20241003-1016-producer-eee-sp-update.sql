@@ -243,7 +243,8 @@ BEGIN
         ProducerCountry NVARCHAR(100),
         Quarter INT,
         WeeeCategory INT,
-        Tonnage DECIMAL(18, 3)
+        Tonnage DECIMAL(18, 3),
+        IsDirectProducer BIT
     )
 
     -- Insert data into temporary table
@@ -257,7 +258,8 @@ BEGIN
         COALESCE(ROC_A_C.Name, PPOB_A_C.Name, '') AS 'ProducerCountry',
         DR.Quarter,
         EEOA.WeeeCategory,
-        EEOA.Tonnage
+        EEOA.Tonnage,
+        0 AS IsDirectProducer  -- Not a direct producer
     FROM [PCS].DataReturn DR
     INNER JOIN [PCS].DataReturnVersion DRV ON DR.CurrentDataReturnVersionId = DRV.Id
     INNER JOIN [PCS].[EeeOutputReturnVersion] EEORV ON DRV.EeeOutputReturnVersionId = EEORV.Id
@@ -284,7 +286,7 @@ BEGIN
         AND EEOA.ObligationType = @ObligationType
         AND (@SchemeId IS NULL OR S.[Id] = @SchemeId)
 
-	UNION ALL
+    UNION ALL
 
     SELECT
         RP.ProducerRegistrationNumber as 'PRN',
@@ -295,7 +297,8 @@ BEGIN
         COALESCE(ac.Name, oc.Name, '') AS 'ProducerCountry',
         4 AS Quarter,
         eoa.WeeeCategory,
-        eoa.Tonnage
+        eoa.Tonnage,
+        1 AS IsDirectProducer  -- This is a direct producer
     FROM
         [Producer].[DirectProducerSubmission] dps
         INNER JOIN [Producer].[DirectRegistrant] dr ON dr.Id = dps.DirectRegistrantId
@@ -313,6 +316,7 @@ BEGIN
         LEFT JOIN [Lookup].[Country] ac ON ac.Id = pa.CountryId
     WHERE
         rp.Removed = 0 AND
+        dps.Removed = 0 AND
         eoa.ObligationType = @ObligationType AND
         dps.ComplianceYear = @ComplianceYear AND
         dps.[Status] = 2
@@ -321,7 +325,8 @@ BEGIN
     SELECT EeeData.PRN, EeeData.ProducerName, EeeData.ProducerCountry, EeeData.SchemeId, 
            EeeData.ApprovalNumber, EeeData.SchemeName, EeeData.Quarter,
            [1] AS Cat1, [2] AS Cat2, [3] AS Cat3, [4] AS Cat4, [5] AS Cat5, [6] AS Cat6, [7] AS Cat7, 
-           [8] AS Cat8, [9] AS Cat9, [10] AS Cat10, [11] AS Cat11, [12] AS Cat12, [13] AS Cat13, [14] AS Cat14
+           [8] AS Cat8, [9] AS Cat9, [10] AS Cat10, [11] AS Cat11, [12] AS Cat12, [13] AS Cat13, [14] AS Cat14,
+           EeeData.IsDirectProducer
     INTO #ProducerEEEData
     FROM 
     (
@@ -357,9 +362,9 @@ BEGIN
         Q1.Cat13Q1, Q2.Cat13Q2, Q3.Cat13Q3, Q4.Cat13Q4,  
         Q1.Cat14Q1, Q2.Cat14Q2, Q3.Cat14Q3, Q4.Cat14Q4 
     FROM (
-        SELECT PE.PRN, PE.SchemeId, PE.ApprovalNumber, PE.SchemeName, PE.ProducerName, PE.ProducerCountry
+        SELECT PE.PRN, PE.SchemeId, PE.ApprovalNumber, PE.SchemeName, PE.ProducerName, PE.ProducerCountry, PE.IsDirectProducer
         FROM #ProducerEEEData PE    
-        GROUP BY PE.PRN, PE.SchemeId, PE.ApprovalNumber, PE.SchemeName, PE.ProducerName, PE.ProducerCountry
+        GROUP BY PE.PRN, PE.SchemeId, PE.ApprovalNumber, PE.SchemeName, PE.ProducerName, PE.ProducerCountry, PE.IsDirectProducer
     ) AS Producers 
     INNER JOIN (
         SELECT E.PRN, E.SchemeId, SUM(COALESCE(E.Tonnage, 0)) AS 'TotalTonnage'
@@ -406,9 +411,10 @@ BEGIN
         FROM #ProducerEEEData EEEData
         WHERE EEEData.Quarter = 4
     ) AS Q4 ON (Producers.PRN = Q4.PRN AND Producers.SchemeId = Q4.SchemeId)
-    ORDER BY SchemeName, ProducerName
+    ORDER BY Producers.IsDirectProducer, SchemeName, ProducerName
 
     -- Clean up temporary tables
+        -- Clean up temporary tables
     DROP TABLE #EEETable
     DROP TABLE #ProducerEEEData
 END
