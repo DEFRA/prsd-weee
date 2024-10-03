@@ -103,6 +103,33 @@
         }
 
         [Fact]
+        public async Task CheckInProgressPaymentAsync_ShouldReturnNullWhenNoGovUkPaymentExists()
+        {
+            // Arrange
+            var accessToken = fixture.Create<string>();
+            var directRegistrantId = Guid.NewGuid();
+            var paymentId = fixture.Create<string>();
+            var paymentSessionId = fixture.Create<Guid>();
+
+            var existingPayment = new SubmissionPaymentDetails
+            {
+                PaymentId = paymentId,
+                PaymentSessionId = paymentSessionId
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetInProgressPaymentSessionRequest>._))
+                .Returns<SubmissionPaymentDetails>(existingPayment);
+
+            A.CallTo(() => payClient.GetPaymentAsync(paymentId)).Returns<PaymentWithAllLinks>(null);
+
+            // Act
+            var result = await paymentService.CheckInProgressPaymentAsync(accessToken, directRegistrantId);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
         public async Task CheckInProgressPaymentAsync_ShouldReturnPaymentWhenExists()
         {
             // Arrange

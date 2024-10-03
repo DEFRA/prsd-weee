@@ -60,18 +60,23 @@
             {
                 var payment = await client.SendAsync(accessToken, new GetInProgressPaymentSessionRequest(directRegistrantId));
 
-                if (payment != null)
+                if (payment == null)
                 {
-                    var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
-
-                    await client.SendAsync(accessToken,
-                        new UpdateSubmissionPaymentDetailsRequest(directRegistrantId, result.State.Status,
-                            payment.PaymentSessionId, result.State.IsInFinalState()));
-
-                    return result;
+                    return null;
                 }
 
-                return null;
+                var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                await client.SendAsync(accessToken,
+                    new UpdateSubmissionPaymentDetailsRequest(directRegistrantId, result.State.Status,
+                        payment.PaymentSessionId, result.State.IsInFinalState()));
+
+                return result;
             }
         }
 
