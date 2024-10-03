@@ -9,6 +9,7 @@
     {
         public DirectProducerSubmission()
         {
+            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
         }
 
         public virtual Guid DirectRegistrantId { get; set; }
@@ -20,6 +21,8 @@
         public virtual bool? PaymentFinished { get; set; }
 
         public virtual int ComplianceYear {get; set; }
+
+        public virtual DirectProducerSubmissionStatus DirectProducerSubmissionStatus { get; set; }
 
         public virtual DirectRegistrant DirectRegistrant { get; set; }
 
@@ -55,6 +58,7 @@
             DirectRegistrant = directRegistrant;
             ComplianceYear = complianceYear;
             SubmissionHistory = new List<DirectProducerSubmissionHistory>();
+            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
         }
 
         public DirectProducerSubmission(RegisteredProducer registeredProducer, 
@@ -66,6 +70,7 @@
             RegisteredProducer = registeredProducer;
             ComplianceYear = complianceYear;
             SubmissionHistory = new List<DirectProducerSubmissionHistory>();
+            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
         }
     }
 }

@@ -53,7 +53,7 @@
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
             currentYearSubmission.CurrentSubmission.SubmittedDate = systemDateTime.Date;
-            currentYearSubmission.CurrentSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
+            currentYearSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
 
             await weeeContext.SaveChangesAsync();
 
