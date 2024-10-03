@@ -228,6 +228,7 @@
     <Compile Include="DataHelpers\ProtocolData.cs" />
     <Compile Include="DataHelpers\WasteTypeData.cs" />
     <Compile Include="DbContextHelper.cs" />
+    <Compile Include="DirectRegistrantHelper.cs" />
     <Compile Include="DomainHelper.cs" />
     <Compile Include="Model\AATF.cs">
       <DependentUpon>Model1.tt</DependentUpon>
