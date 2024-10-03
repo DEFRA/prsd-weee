@@ -193,7 +193,7 @@
 
             // Assert
             currentSubmission.SubmittedDate.Should().Be(systemDate.Date);
-            currentSubmission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
+            directRegistrant.DirectProducerSubmissions.First().DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
         }
 
         [Fact]
