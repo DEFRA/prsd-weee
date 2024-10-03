@@ -9,27 +9,30 @@
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
+    using System.Security.AccessControl;
     using Xunit;
 
-    public class OrganisationViewModelMapTests
+    public class SubmissionsOrganisationViewModelMapTests
     {
         private readonly IFixture fixture;
-        private readonly OrganisationViewModelMap map;
+        private readonly SubmissionsOrganisationViewModelMap map;
         private readonly IMapper mapper;
 
-        public OrganisationViewModelMapTests()
+        public SubmissionsOrganisationViewModelMapTests()
         {
             fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
             mapper = fixture.Freeze<IMapper>();
 
-            map = new OrganisationViewModelMap(mapper);
+            map = new SubmissionsOrganisationViewModelMap(mapper);
         }
 
         [Fact]
         public void Map_ShouldMapValues()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Build<SubmissionsYearDetails>()
+             .With(x => x.SmallProducerSubmissionData, fixture.Create<SmallProducerSubmissionData>())
+             .Create();
 
             var expectedAddress = fixture.Create<ExternalAddressData>();
             A.CallTo(() => mapper.Map<AddressData, ExternalAddressData>(A<AddressData>._))
@@ -39,9 +42,9 @@
             Core.Organisations.Base.OrganisationViewModel result = map.Map(source);
 
             // Assert
-            result.BusinessTradingName.Should().Be(source.OrganisationData.TradingName);
-            result.CompanyName.Should().Be(source.OrganisationData.Name);
-            result.CompaniesRegistrationNumber.Should().Be(source.OrganisationData.CompanyRegistrationNumber);
+            result.BusinessTradingName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.TradingName);
+            result.CompanyName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.Name);
+            result.CompaniesRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber);
         }
 
         [Theory]
@@ -51,8 +54,9 @@
         public void Map_ShouldMapOrganisationTypeCorrectly(OrganisationType sourceType, ExternalOrganisationType expectedType)
         {
             // Arrange
-            var source = fixture.Build<SmallProducerSubmissionData>()
-                .With(x => x.OrganisationData, fixture.Build<OrganisationData>()
+            var source = fixture.Build<SubmissionsYearDetails>()
+                .With(x => x.SmallProducerSubmissionData, fixture.Create<SmallProducerSubmissionData>())
+                .With(x => x.SmallProducerSubmissionData.OrganisationData, fixture.Build<OrganisationData>()
                     .With(o => o.OrganisationType, sourceType)
                     .Create())
                 .Create();
@@ -68,14 +72,16 @@
         public void Map_ShouldMapAddress()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionData>();
+            var source = fixture.Build<SubmissionsYearDetails>()
+            .With(x => x.SmallProducerSubmissionData, fixture.Create<SmallProducerSubmissionData>())
+            .Create();
 
             // Act
             Core.Organisations.Base.OrganisationViewModel result = map.Map(source);
 
             // Assert
             A.CallTo(() => mapper
-                            .Map<AddressData, ExternalAddressData>(source.OrganisationData.BusinessAddress))
+                            .Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress))
                             .MustHaveHappenedOnceExactly();
         }
     }
