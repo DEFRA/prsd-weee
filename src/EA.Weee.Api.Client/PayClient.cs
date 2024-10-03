@@ -86,6 +86,11 @@
                 var response = await retryPolicy.ExecuteAsync(() =>
                     httpClient.GetAsync($"v1/payments/{paymentId}")).ConfigureAwait(false);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return jsonSerializer.Deserialize<PaymentWithAllLinks>(content);
