@@ -25,8 +25,6 @@
 
         public virtual string CompanyRegistrationNumber { get; set; }
 
-        public virtual DirectProducerSubmissionStatus DirectProducerSubmissionStatus { get; set; }
-
         public virtual DirectProducerSubmission DirectProducerSubmission { get; set; }
 
         public virtual Guid? ContactId { get; private set; }
@@ -59,18 +57,15 @@
 
         public DirectProducerSubmissionHistory()
         {
-            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
         }
 
         public DirectProducerSubmissionHistory(DirectProducerSubmission directProducerSubmission)
         {
-            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
             DirectProducerSubmission = directProducerSubmission;
         }
 
         public DirectProducerSubmissionHistory(DirectProducerSubmission directProducerSubmission, BrandName brandName, Address businessAddress, AuthorisedRepresentative authorisedRepresentative = null)
         {
-            DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Incomplete;
             DirectProducerSubmission = directProducerSubmission;
             BusinessAddress = businessAddress;
             BrandName = brandName;
