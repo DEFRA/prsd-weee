@@ -1,4 +1,7 @@
-﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
+﻿using System;
+using EA.Prsd.Core;
+
+namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
     using DataAccess;
     using EA.Prsd.Core.Mediator;
@@ -52,7 +55,15 @@
 
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
-            currentYearSubmission.CurrentSubmission.SubmittedDate = systemDateTime.Date;
+            var currentDateTime = DateTime.UtcNow;
+            currentYearSubmission.CurrentSubmission.SubmittedDate =
+                new DateTime(systemDateTime.Year,
+                    currentDateTime.Month,
+                    currentDateTime.Day,
+                    currentDateTime.Hour,
+                    currentDateTime.Minute,
+                    currentDateTime.Second);
+
             currentYearSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
 
             await weeeContext.SaveChangesAsync();
