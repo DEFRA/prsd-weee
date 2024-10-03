@@ -416,6 +416,7 @@
     <Content Include="scripts\Update\Release 7\Sprint3\2024918-1537-paymentupdates.sql" />
     <Content Include="scripts\Update\Release 7\Sprint4\20241003-0847-add-removed.sql" />
     <Content Include="scripts\Update\Release 7\Sprint4\20241002-1348-add-missing-foreign-key.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint4\20241003-1203-producer-details-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint4\20241003-1016-producer-eee-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint4\20241002-1011-move-status.sql" />
     <None Include="rebuild-development.bat" />
