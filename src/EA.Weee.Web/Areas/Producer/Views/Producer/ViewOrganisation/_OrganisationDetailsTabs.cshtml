@@ -23,8 +23,6 @@
     <h1 class="govuk-heading-l">@title</h1>
 </header>
 
-
-
 @if (hasYear)
 {
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Year)">
@@ -49,9 +47,14 @@
     Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails(Model.Year)),
     Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
 
-    @this.WeeeGds().Tab("Represented organisation details",
-    Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails(Model.Year)),
-    Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
+    @if (@Model.SmallProducerSubmissionData.HasAuthorisedRepresentitive && hasYear)
+    {
+        <span>
+            @this.WeeeGds().Tab("Represented organisation details",
+            Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails(Model.Year)),
+            Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
+        </span>
+    }
 
     @if (hasYear)
     {
