@@ -244,7 +244,7 @@ BEGIN
         Quarter INT,
         WeeeCategory INT,
         Tonnage DECIMAL(18, 3),
-        IsDirectProducer BIT
+        IsDirectProducer BIT  -- New column to differentiate direct producers
     )
 
     -- Insert data into temporary table
@@ -305,7 +305,7 @@ BEGIN
         INNER JOIN [Organisation].[Organisation] o ON o.Id = dr.OrganisationId
         INNER JOIN [Organisation].[Address] oa ON oa.Id = o.BusinessAddressId
         INNER JOIN [Lookup].[Country] oc ON oc.Id = oa.CountryId
-        INNER JOIN [Producer].[RegisteredProducer] rp ON dps.RegisteredProducerId = rp.Id AND dps.ComplianceYear = @ComplianceYear
+        INNER JOIN [Producer].[RegisteredProducer] rp ON dps.RegisteredProducerId = rp.Id AND dps.ComplianceYear = (@ComplianceYear - 1)
         INNER JOIN [Producer].[DirectProducerSubmissionHistory] dpsh ON dpsh.Id = dps.CurrentSubmissionId
         INNER JOIN [PCS].[EeeOutputReturnVersion] eorv ON eorv.Id = dpsh.EeeOutputReturnVersionId
         INNER JOIN [PCS].[EeeOutputReturnVersionAmount] eorva ON eorva.EeeOutputReturnVersionId = eorv.Id
@@ -318,7 +318,7 @@ BEGIN
         rp.Removed = 0 AND
         dps.Removed = 0 AND
         eoa.ObligationType = @ObligationType AND
-        dps.ComplianceYear = @ComplianceYear AND
+        dps.ComplianceYear = (@ComplianceYear - 1) AND
         dps.[Status] = 2
 
     -- Create pivot table
