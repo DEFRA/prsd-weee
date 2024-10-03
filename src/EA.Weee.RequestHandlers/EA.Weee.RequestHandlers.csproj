@@ -189,6 +189,9 @@
     <Compile Include="Organisations\DirectRegistrants\CompleteOrganisationTransactionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetUserOrganisationTransactionHandler.cs" />
     <Compile Include="Organisations\OrganisationByRegistrationNumberHandler.cs" />
+    <Compile Include="Search\FetchSmallProducerSearchResultsForCache\FetchSmallProducerSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchSmallProducerSearchResultsForCache\FetchSmallProducerSearchResultsForCacheHandler.cs" />
+    <Compile Include="Search\FetchSmallProducerSearchResultsForCache\IFetchSmallProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
