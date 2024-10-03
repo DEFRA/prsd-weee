@@ -448,6 +448,10 @@
 
             model.Should().NotBeNull();
             model.ServiceOfNoticeViewModel.Should().NotBeNull();
+
+            A.CallTo(() => mapper
+                            .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                            .MustHaveHappenedOnceExactly();
         }
     }
 }
