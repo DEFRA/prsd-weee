@@ -426,7 +426,7 @@
     <Compile Include="Areas\Producer\Mapping\ToRequest\ToEditOrganisationDetailsRequestCreatorUnitTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\AddSignatoryAndCompleteMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\EditContactDetailsMapTests.cs" />
-    <Compile Include="Areas\Producer\Mapping\ToViewModel\OrganisationViewModelMapTests.cs" />
+    <Compile Include="Areas\Producer\Mapping\ToViewModel\SubmissionsOrganisationViewModelMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\RepresentedOrganisationDetailsMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\CheckAnsweraMapTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ToViewModel\ServiceOfNoticeMapTests.cs" />

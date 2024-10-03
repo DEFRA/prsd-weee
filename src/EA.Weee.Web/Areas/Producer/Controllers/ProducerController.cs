@@ -3,6 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -169,12 +170,20 @@
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
 
+            var contactVm = mapper.Map<SubmissionsYearDetails, ContactDetailsViewModel>(
+               new SubmissionsYearDetails
+               {
+                   Year = year,
+                   SmallProducerSubmissionData = this.SmallProducerSubmissionData
+               });
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 Years = years,
                 Year = year,
                 ActiveOption = OrganisationDetailsDisplayOption.ContactDetails,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                ContactDetailsViewModel = contactVm
             };
 
             return View("ViewOrganisation/ContactDetails", vm);
@@ -188,12 +197,20 @@
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
 
+            var serviceOfNoticeViewModel = mapper.Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(
+              new SubmissionsYearDetails
+              {
+                  Year = year,
+                  SmallProducerSubmissionData = this.SmallProducerSubmissionData
+              });
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 Years = years,
                 Year = year,
                 ActiveOption = OrganisationDetailsDisplayOption.ServiceOfNoticeDetails,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                ServiceOfNoticeViewModel = serviceOfNoticeViewModel
             };
 
             return View("ViewOrganisation/ServiceOfNoticeDetails", vm);
@@ -207,12 +224,20 @@
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
 
+            var representingCompanyDetailsViewModel = mapper.Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(
+             new SubmissionsYearDetails
+             {
+                 Year = year,
+                 SmallProducerSubmissionData = this.SmallProducerSubmissionData
+             });
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 Years = years,
                 Year = year,
                 ActiveOption = OrganisationDetailsDisplayOption.RepresentedOrganisationDetails,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel
             };
 
             return View("ViewOrganisation/RepresentedOrganisationDetails", vm);

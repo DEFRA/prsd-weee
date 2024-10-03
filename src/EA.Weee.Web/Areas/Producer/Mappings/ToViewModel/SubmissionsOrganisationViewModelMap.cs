@@ -6,11 +6,11 @@
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
 
-    public class OrganisationViewModelMap : IMap<SubmissionsYearDetails, OrganisationViewModel>
+    public class SubmissionsOrganisationViewModelMap : IMap<SubmissionsYearDetails, OrganisationViewModel>
     {
         private readonly IMapper mapper;
 
-        public OrganisationViewModelMap(IMapper mapper)
+        public SubmissionsOrganisationViewModelMap(IMapper mapper)
         {
             this.mapper = mapper;
         }
