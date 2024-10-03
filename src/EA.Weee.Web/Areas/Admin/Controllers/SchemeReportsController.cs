@@ -567,12 +567,13 @@
         /// <returns></returns>
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
-            var request = new GetDataReturnsActiveComplianceYears();
+            var request = new GetDataReturnsActiveComplianceYears(true);
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
             }
         }
+
         private async Task PopulateFilters(UkEeeDataViewModel model)
         {
             var years = await FetchComplianceYearsForDataReturns();
