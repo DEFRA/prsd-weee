@@ -433,11 +433,6 @@
             // Arrange
             SetupDefaultControllerData();
 
-            var source = new SmallProducerSubmissionMapperData
-            {
-                SmallProducerSubmissionData = controller.SmallProducerSubmissionData
-            };
-
             // Act
             var result = (await controller.ServiceOfNoticeDetails()) as ViewResult;
 
