@@ -138,5 +138,31 @@
 
             A.CallTo(() => logger.Error(A<Exception>._, A<string>._)).MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public async Task GetPaymentAsync_ShouldReturnNullFor404Response()
+        {
+            // Arrange
+            var fakeHttpResponseMessage = new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
+
+            A.CallTo(() => httpClient.GetAsync(A<string>._)).Returns(fakeHttpResponseMessage);
+
+            A.CallTo(() => retryPolicy.ExecuteAsync(A<Func<Task<HttpResponseMessage>>>._))
+                .ReturnsLazily(call =>
+                {
+                    var func = call.GetArgument<Func<Task<HttpResponseMessage>>>(0);
+                    return func();
+                });
+
+            // Act
+            var result = await payClient.GetPaymentAsync("non-existent-payment-id");
+
+            // Assert
+            result.Should().BeNull();
+            A.CallTo(() => httpClient.GetAsync(A<string>.That.Contains("v1/payments/non-existent-payment-id")))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => jsonSerialiser.Deserialize<PaymentWithAllLinks>(A<string>._))
+                .MustNotHaveHappened();
+        }
     }
 }

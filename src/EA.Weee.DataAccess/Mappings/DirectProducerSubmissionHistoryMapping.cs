@@ -34,10 +34,6 @@
             HasOptional(e => e.ContactAddress).WithMany().HasForeignKey(e => e.ContactAddressId);
             HasOptional(e => e.BrandName).WithMany().HasForeignKey(e => e.BrandNameId);
             HasOptional(e => e.AuthorisedRepresentative).WithMany().HasForeignKey(e => e.AuthorisedRepresentativeId);
-
-            //HasOptional(e => e.EeeOutputReturnVersion)
-            //    .WithOptionalPrincipal()
-            //    .Map(m => m.MapKey("EeeOutputReturnVersionId"));
         }
     }
 }
