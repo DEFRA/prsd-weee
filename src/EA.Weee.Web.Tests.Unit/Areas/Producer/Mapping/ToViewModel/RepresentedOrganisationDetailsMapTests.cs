@@ -29,7 +29,7 @@
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionMapperData>();
-            source.UseCurrentVersion = false;
+            source.UseMasterVersion = false;
             var submissionData = source.SmallProducerSubmissionData;
             var fakeAddressData = fixture.Create<RepresentingCompanyAddressData>();
 
@@ -59,7 +59,7 @@
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionMapperData>();
-            source.UseCurrentVersion = true;
+            source.UseMasterVersion = true;
             var submissionData = source.SmallProducerSubmissionData;
             var fakeAddressData = fixture.Create<RepresentingCompanyAddressData>();
 
