@@ -335,6 +335,7 @@
     <Compile Include="Organisations\ExternalOrganisationType.cs" />
     <Compile Include="Organisations\OrganisationTransactionData.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
+    <Compile Include="Search\RegisteredProducerSearchResult.cs" />
     <Compile Include="Search\Simple\SimpleSmallProducerSearcher.cs" />
     <Compile Include="Search\SmallProducerSearchResult.cs" />
     <Compile Include="Shared\ServiceOfNoticeAddressData.cs" />
