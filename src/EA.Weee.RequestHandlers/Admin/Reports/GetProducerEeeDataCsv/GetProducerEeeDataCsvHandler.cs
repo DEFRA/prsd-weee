@@ -74,7 +74,7 @@
         {
             CsvWriter<ProducerEeeCsvData> csvWriter = csvWriterFactory.Create<ProducerEeeCsvData>();
 
-            csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
+            csvWriter.DefineColumn(@"Scheme name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
