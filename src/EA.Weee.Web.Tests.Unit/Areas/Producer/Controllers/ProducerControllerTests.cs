@@ -435,14 +435,14 @@
             // Arrange
             SetupDefaultControllerData();
 
-            var address = TestFixture.Create<ServiceOfNoticeAddressData>();
+            var expectedAddress = TestFixture.Create<ServiceOfNoticeAddressData>();
 
             A.CallTo(() => mapper
                     .Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
-                    .Returns(address);
+                    .Returns(expectedAddress);
 
             var expectedViewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
-            expectedViewModel.Address = address;
+            expectedViewModel.Address = expectedAddress;
 
             A.CallTo(() => mapper
                     .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
@@ -459,6 +459,7 @@
             model.Should().NotBeNull();
             model.ServiceOfNoticeViewModel.Should().NotBeNull();
             model.ServiceOfNoticeViewModel.Should().Be(expectedViewModel);
+            model.ServiceOfNoticeViewModel.Address.Should().Be(expectedAddress);
 
             A.CallTo(() => mapper
                             .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
