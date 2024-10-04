@@ -72,11 +72,13 @@
                     return null;
                 }
 
+                // update any in progress payments with the current payment status
                 await client.SendAsync(accessToken,
                     new UpdateSubmissionPaymentDetailsRequest(directRegistrantId, result.State.Status,
                         payment.PaymentSessionId, result.State.IsInFinalState()));
 
-                return result;
+                // if the current in progress payment has finished will need to start again
+                return result.State.Finished ? null : result;
             }
         }
 

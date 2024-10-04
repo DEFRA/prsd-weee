@@ -130,7 +130,7 @@
         }
 
         [Fact]
-        public async Task CheckInProgressPaymentAsync_ShouldReturnPaymentWhenExists()
+        public async Task CheckInProgressPaymentAsync_ShouldReturnPaymentWhenExistsAndNotFinished()
         {
             // Arrange
             var accessToken = fixture.Create<string>();
@@ -150,7 +150,7 @@
             var expectedPaymentResult = new PaymentWithAllLinks
             {
                 PaymentId = paymentId,
-                State = new PaymentState { Status = PaymentStatus.Created }
+                State = new PaymentState { Status = PaymentStatus.Created, Finished = false }
             };
 
             A.CallTo(() => payClient.GetPaymentAsync(paymentId))
@@ -161,7 +161,8 @@
 
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentResult);
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<UpdateSubmissionPaymentDetailsRequest>.That.Matches(u => u.IsFinalState == expectedPaymentResult.State.IsInFinalState() && 
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<UpdateSubmissionPaymentDetailsRequest>.That.Matches(u =>
+                    u.IsFinalState == expectedPaymentResult.State.IsInFinalState() &&
                     u.DirectRegistrantId == directRegistrantId &&
                     u.PaymentSessionId == existingPayment.PaymentSessionId &&
                     u.PaymentStatus == expectedPaymentResult.State.Status)))
@@ -181,6 +182,46 @@
 
             // Assert
             result.Should().Be(expectedResult);
+        }
+
+        [Fact]
+        public async Task CheckInProgressPaymentAsync_ShouldReturnNullWhenPaymentIsFinished()
+        {
+            // Arrange
+            var accessToken = fixture.Create<string>();
+            var directRegistrantId = Guid.NewGuid();
+            var paymentId = fixture.Create<string>();
+            var paymentSessionId = fixture.Create<Guid>();
+
+            var existingPayment = new SubmissionPaymentDetails
+            {
+                PaymentId = paymentId,
+                PaymentSessionId = paymentSessionId
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetInProgressPaymentSessionRequest>._))
+                .Returns(existingPayment);
+
+            var finishedPaymentResult = new PaymentWithAllLinks
+            {
+                PaymentId = paymentId,
+                State = new PaymentState { Status = PaymentStatus.Success, Finished = true }
+            };
+
+            A.CallTo(() => payClient.GetPaymentAsync(paymentId))
+                .Returns(finishedPaymentResult);
+
+            // Act
+            var result = await paymentService.CheckInProgressPaymentAsync(accessToken, directRegistrantId);
+
+            // Assert
+            result.Should().BeNull();
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<UpdateSubmissionPaymentDetailsRequest>.That.Matches(u =>
+                    u.IsFinalState == finishedPaymentResult.State.IsInFinalState() &&
+                    u.DirectRegistrantId == directRegistrantId &&
+                    u.PaymentSessionId == existingPayment.PaymentSessionId &&
+                    u.PaymentStatus == finishedPaymentResult.State.Status)))
+                .MustHaveHappenedOnceExactly();
         }
     }
 }
