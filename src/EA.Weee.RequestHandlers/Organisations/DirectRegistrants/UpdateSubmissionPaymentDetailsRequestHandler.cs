@@ -9,6 +9,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
+    using EA.Weee.Core.DirectRegistrant;
 
     internal class UpdateSubmissionPaymentDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<UpdateSubmissionPaymentDetailsRequest, bool>
     {
@@ -39,6 +40,10 @@
             if (request.IsFinalState)
             {
                 currentYearSubmission.FinalPaymentSession = paymentSession;
+                if (request.PaymentStatus == PaymentStatus.Success)
+                {
+                    currentYearSubmission.PaymentFinished = true;
+                }
             }
 
             await weeeContext.SaveChangesAsync();

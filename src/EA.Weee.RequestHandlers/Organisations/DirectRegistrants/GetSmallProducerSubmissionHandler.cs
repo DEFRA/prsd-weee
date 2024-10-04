@@ -61,7 +61,7 @@
                     ? mapper.Map<SmallProducerSubmissionHistoryData>(
                         new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))
                     : null,
-                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>(),
             };
 
             foreach (var directProducerSubmission in submissionHistory)
