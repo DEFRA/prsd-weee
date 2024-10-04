@@ -216,7 +216,8 @@
                         WebAddress = Guid.NewGuid().ToString(),
                         Telephone = "4567894563",
                         Postcode = Guid.NewGuid().ToString()
-                    }
+                    },
+                    AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
                 },
                 HasAuthorisedRepresentitive = true
             };
@@ -483,6 +484,15 @@
             // Arrange
             SetupDefaultControllerData();
 
+            var expectedAddress = TestFixture.Create<RepresentingCompanyAddressData>();
+
+            var expectedViewModel = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            expectedViewModel.Address = expectedAddress;
+
+            A.CallTo(() => mapper
+                    .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                    .Returns(expectedViewModel);
+
             // Act
             var result = (await controller.RepresentedOrganisationDetails()) as ViewResult;
 
@@ -492,11 +502,35 @@
             var model = viewResult.Model as OrganisationDetailsTabsViewModel;
 
             model.Should().NotBeNull();
-            model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
+            model.RepresentingCompanyDetailsViewModel.Should().Be(expectedViewModel);
+            model.RepresentingCompanyDetailsViewModel.Address.Should().Be(expectedAddress);
 
             A.CallTo(() => mapper
                             .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
                             .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task RepresentedOrganisationDetails_Get_NotHasAuthorisedRepresentitive_ReturnNullViewModel()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
+
+            // Act
+            var result = (await controller.RepresentedOrganisationDetails()) as ViewResult;
+
+            // Assert
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.RepresentingCompanyDetailsViewModel.Should().BeNull();
+
+            A.CallTo(() => mapper
+                            .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                            .MustNotHaveHappened();
         }
     }
 }

@@ -33,8 +33,11 @@
         Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails()),
         Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
 
-    @this.WeeeGds().Tab("Represented organisation details",
+    @if (Model.SmallProducerSubmissionData.HasAuthorisedRepresentitive)
+    {
+        this.WeeeGds().Tab("Represented organisation details",
         Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails()),
-        Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
+        Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor");
+    }
 </ul>
 
