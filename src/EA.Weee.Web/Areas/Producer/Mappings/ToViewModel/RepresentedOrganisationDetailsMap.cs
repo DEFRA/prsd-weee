@@ -17,7 +17,7 @@
         {
             var submissionData = source.SmallProducerSubmissionData;
 
-            if (!source.UseCurrentVersion)
+            if (!source.UseMasterVersion)
             {
                 return new RepresentingCompanyDetailsViewModel()
                 {
