@@ -17,7 +17,8 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        @Html.HiddenFor(m => m.SelectedRegistrationNumber);
+        @Html.HiddenFor(m => m.SelectedRegistrationNumber)
+        @Html.HiddenFor(m => m.SearchType)
 
         <p id="introJavaScriptEnabled" style="display:none;">
             Start typing the name or producer registration number to find a match.
@@ -48,11 +49,13 @@
             $("#introJavaScriptEnabled").show();
         });
 
-        initJQueryAutoComplete("@Url.Action("FetchSearchResultsJson")",
+        initJQueryAutoComplete(
+            "@Url.Action("FetchSearchResultsJson")",
             (item) => { return { label: item.Name + ', ' + item.RegistrationNumber, id: item.RegistrationNumber, name: item.Name } },
             (item) => { return "<span>" + item.name + "</span><span class=\"registrationNumber\">" + item.id + "</span>" },
-            $("#SelectedRegistrationNumber")
-        );
+            $("#SelectedRegistrationNumber"),
+            { searchType: $("#SearchType").val() }
+         );
 
     </script>
 }

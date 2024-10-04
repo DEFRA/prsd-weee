@@ -14,6 +14,12 @@
         public IList<RegisteredProducerSearchResult> Results { get; set; }
 
         [Required(ErrorMessage = "You must choose a producer")]
-        public string SelectedRegistrationNumber { get; set; }
+        public string SelectedValue { get; set; }
+
+        public SearchTypeEnum SearchType { get; set; }
+
+        public string SelectedRegistrationNumber => SelectedValue?.Split('|')[0];
+
+        public string SelectedProducerId => SelectedValue?.Split('|')[1];
     }
 }
