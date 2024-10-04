@@ -21,6 +21,7 @@
     {
         private readonly BreadcrumbService breadcrumb;
         private readonly ISearcher<ProducerSearchResult> producerSearcher;
+        private readonly ISearcher<SmallProducerSearchResult> smallProducerSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly int maximumSearchResults;
@@ -29,12 +30,13 @@
             ISearcher<ProducerSearchResult> producerSearcher,
             Func<IWeeeClient> apiClient,
             IWeeeCache cache,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService, ISearcher<SmallProducerSearchResult> smallProducerSearcher)
         {
             this.breadcrumb = breadcrumb;
             this.producerSearcher = producerSearcher;
             this.apiClient = apiClient;
             this.cache = cache;
+            this.smallProducerSearcher = smallProducerSearcher;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumProducerOrganisationSearchResults;
         }
@@ -91,7 +93,10 @@
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
             viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await producerSearcher.Search(searchTerm, maximumSearchResults, false);
+
+            var results = await producerSearcher.Search(searchTerm, maximumSearchResults, false);
+
+            viewModel.Results = results.ToList().ConvertAll(x => (RegisteredProducerSearchResult)x);
 
             return View(viewModel);
         }
