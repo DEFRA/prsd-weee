@@ -311,5 +311,41 @@
             A.CallTo(() => submission.ComplianceYear).Returns(year);
             return submission;
         }
+
+        [Fact]
+        public async Task HandleAsync_IncludesAuthorisedRepresentitiveData_WhenAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var authorisedRepId = Guid.NewGuid();
+            var directRegistrant = SetupValidDirectRegistrant(true, authorisedRepId);
+            var authorisedRepresentative = A.Fake<AuthorisedRepresentative>();
+            var authorisedRepresentitiveData = A.Fake<AuthorisedRepresentitiveData>();
+
+            A.CallTo(() => directRegistrant.AuthorisedRepresentative).Returns(authorisedRepresentative);
+            A.CallTo(() => mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(authorisedRepresentative)).Returns(authorisedRepresentitiveData);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.AuthorisedRepresentitiveData.Should().Be(authorisedRepresentitiveData);
+        }
+
+        [Fact]
+        public async Task HandleAsync_ReturnsNullAuthorisedRepresentitiveData_WhenNotAvailable()
+        {
+            // Arrange
+            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var directRegistrant = SetupValidDirectRegistrant();
+
+            A.CallTo(() => directRegistrant.AuthorisedRepresentative).Returns(null);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.AuthorisedRepresentitiveData.Should().BeNull();
+        }
     }
 }

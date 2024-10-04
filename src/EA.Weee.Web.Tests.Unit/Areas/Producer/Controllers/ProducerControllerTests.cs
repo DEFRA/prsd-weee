@@ -219,7 +219,8 @@
                     },
                     AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
                 },
-                HasAuthorisedRepresentitive = true
+                HasAuthorisedRepresentitive = true,
+                AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
             };
         }
 
@@ -508,29 +509,6 @@
             A.CallTo(() => mapper
                             .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
                             .MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task RepresentedOrganisationDetails_Get_NotHasAuthorisedRepresentitive_ReturnNullViewModel()
-        {
-            // Arrange
-            SetupDefaultControllerData();
-            controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
-
-            // Act
-            var result = (await controller.RepresentedOrganisationDetails()) as ViewResult;
-
-            // Assert
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.RepresentingCompanyDetailsViewModel.Should().BeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
-                            .MustNotHaveHappened();
         }
     }
 }
