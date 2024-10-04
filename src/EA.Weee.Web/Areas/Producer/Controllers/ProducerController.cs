@@ -166,10 +166,18 @@
         {
             await SetViewBreadcrumb();
 
+            var source = new SmallProducerSubmissionMapperData
+            {
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var serviceOfNoticeViewModel = mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(source);
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 ActiveOption = OrganisationDetailsDisplayOption.ServiceOfNoticeDetails,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                ServiceOfNoticeViewModel = serviceOfNoticeViewModel
             };
 
             return View("ViewOrganisation/ServiceOfNoticeDetails", vm);
