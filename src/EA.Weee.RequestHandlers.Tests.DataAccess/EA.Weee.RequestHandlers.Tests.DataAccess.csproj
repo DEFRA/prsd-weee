@@ -194,7 +194,6 @@
     <Compile Include="Admin\DeleteAatf\AatfDataAccessTests.cs" />
     <Compile Include="Admin\DeleteAatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsDataAccessTests.cs" />
-    <Compile Include="Admin\GetActiveComplianceYears\GetDirectProducerSubmissionActiveComplianceYearsDataAccessTests.cs" />
     <Compile Include="Evidence\EvidenceDataAccessUnitTests.cs" />
     <Compile Include="Factories\ReturnFactoryDataAccessTests.cs" />
     <Compile Include="AatfReturn\GenericDataAccessTests.cs" />

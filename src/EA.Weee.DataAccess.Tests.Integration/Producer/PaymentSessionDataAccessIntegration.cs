@@ -4,12 +4,14 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
@@ -32,16 +34,17 @@
                 const string paymentToken = "testToken";
                 const int year = 2023;
 
-                var producer = new Domain.Producer.RegisteredProducer("ABC12345", SystemTime.UtcNow.Year);
-                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
 
-                var validPaymentSession = CreatePaymentSession(user, year, producer, directRegistrant, paymentToken, "paymentId1", "paymentRef1");
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var validPaymentSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId1", "paymentRef1");
                 context.PaymentSessions.Add(validPaymentSession);
 
                 // Add sessions that shouldn't be returned
-                context.PaymentSessions.Add(CreatePaymentSession(user, year, producer, directRegistrant, "differentToken", "paymentId2", "paymentRef2", -1));
-                context.PaymentSessions.Add(CreatePaymentSession(user, year, producer, directRegistrant, paymentToken, "paymentId3", "paymentRef3", -2));
+                context.PaymentSessions.Add(CreatePaymentSession(user, year, directRegistrant, submission, "differentToken", "paymentId2", "paymentRef2", -1));
+                context.PaymentSessions.Add(CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId3", "paymentRef3", -2));
 
                 await context.SaveChangesAsync();
 
@@ -102,11 +105,12 @@
                 const string paymentToken = "testToken";
                 const int year = 2023;
 
-                var producer = new Domain.Producer.RegisteredProducer("ABC12345", SystemTime.UtcNow.Year);
-                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
 
-                var finalStatePaymentSession = CreatePaymentSession(user, year, producer, directRegistrant, paymentToken, "paymentId", "paymentRef");
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var finalStatePaymentSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId", "paymentRef");
                 finalStatePaymentSession.InFinalState = true; // This should prevent it from being returned
 
                 context.PaymentSessions.Add(finalStatePaymentSession);
@@ -153,17 +157,18 @@
 
                 const int year = 2023;
 
-                var producer = new Domain.Producer.RegisteredProducer("ABC12345", year);
-                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
 
-                var validPaymentSession = CreatePaymentSession(user, year, producer, directRegistrant, "testToken", "paymentId1", "paymentRef1", domainStatus);
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var validPaymentSession = CreatePaymentSession(user, year, directRegistrant, submission, "testToken", "paymentId1", "paymentRef1", domainStatus);
                 context.PaymentSessions.Add(validPaymentSession);
 
                 // Add sessions that shouldn't be returned
-                context.PaymentSessions.Add(CreatePaymentSession(notMatchedUser.Id, year, producer, directRegistrant, "token2", "paymentId2", "paymentRef2", domainStatus, -1)); // Different user
-                context.PaymentSessions.Add(CreatePaymentSession(user, year + 1, producer, directRegistrant, "token3", "paymentId3", "paymentRef3", domainStatus, -2)); // Different year
-                context.PaymentSessions.Add(CreatePaymentSession(user, year, producer, directRegistrant, "token4", "paymentId4", "paymentRef4", PaymentState.New, -3)); // Different state
+                context.PaymentSessions.Add(CreatePaymentSession(notMatchedUser.Id, year, directRegistrant, submission, "token2", "paymentId2", "paymentRef2", domainStatus, -1)); // Different user
+                context.PaymentSessions.Add(CreatePaymentSession(user, year + 1, directRegistrant, submission, "token3", "paymentId3", "paymentRef3", domainStatus, -2)); // Different year
+                context.PaymentSessions.Add(CreatePaymentSession(user, year, directRegistrant, submission, "token4", "paymentId4", "paymentRef4", PaymentState.New, -3)); // Different state
 
                 await context.SaveChangesAsync();
 
@@ -222,11 +227,12 @@
 
                 const int year = 2023;
 
-                var producer = new Domain.Producer.RegisteredProducer("ABC12345", year);
-                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), SystemTime.UtcNow.Year);
 
-                var finalStatePaymentSession = CreatePaymentSession(user, year, producer, directRegistrant, "testToken", "paymentId", "paymentRef", PaymentState.Created);
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, SystemTime.UtcNow.Year, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var finalStatePaymentSession = CreatePaymentSession(user, year, directRegistrant, submission, "testToken", "paymentId", "paymentRef", PaymentState.Created);
                 finalStatePaymentSession.InFinalState = true; // This should prevent it from being returned
 
                 context.PaymentSessions.Add(finalStatePaymentSession);
@@ -251,14 +257,15 @@
                 var userContext = A.Fake<IUserContext>();
                 A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
 
-                var producer = new Domain.Producer.RegisteredProducer("ABC12345", SystemTime.UtcNow.Year);
-                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var(_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), SystemTime.UtcNow.Year);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, SystemTime.UtcNow.Year, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
 
                 var dataAccess = new PaymentSessionDataAccess(context, userContext);
 
                 const string paymentToken = "existingToken";
-                var paymentSession = CreatePaymentSession(user, 2023, producer, directRegistrant, paymentToken, "paymentId1", "paymentRef1");
+                var paymentSession = CreatePaymentSession(user, 2023, directRegistrant, submission, paymentToken, "paymentId1", "paymentRef1");
                 context.PaymentSessions.Add(paymentSession);
                 await context.SaveChangesAsync();
 
@@ -306,11 +313,12 @@
 
                 var dataAccess = new PaymentSessionDataAccess(context, userContext);
 
-                var producer = new Domain.Producer.RegisteredProducer("ABC12345", SystemTime.UtcNow.Year);
-                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("My company", "123456789");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), 2023);
 
-                var paymentSession = CreatePaymentSession(user, 2023, producer, directRegistrant, "token", "paymentId1", "paymentRef1");
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, 2023, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var paymentSession = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1");
                 context.PaymentSessions.Add(paymentSession);
                 await context.SaveChangesAsync();
 
@@ -349,26 +357,26 @@
             }
         }
 
-        private static PaymentSession CreatePaymentSession(string userId, int year, Domain.Producer.RegisteredProducer producer, DirectRegistrant directRegistrant, string paymentToken, string paymentId, string paymentRef, int minutesOffset = 0)
+        private static PaymentSession CreatePaymentSession(string userId, int year, DirectRegistrant directRegistrant, DirectProducerSubmission submission, string paymentToken, string paymentId, string paymentRef, int minutesOffset = 0)
         {
             return new PaymentSession(
                 userId,
                 100m,
                 SystemTime.UtcNow.AddMinutes(minutesOffset),
-                new DirectProducerSubmission { ComplianceYear = year, RegisteredProducer = producer },
+                submission,
                 directRegistrant,
                 paymentToken,
                 paymentId,
                 paymentRef);
         }
 
-        private static PaymentSession CreatePaymentSession(string userId, int year, Domain.Producer.RegisteredProducer producer, DirectRegistrant directRegistrant, string paymentToken, string paymentId, string paymentRef, PaymentState state, int minutesOffset = 0)
+        private static PaymentSession CreatePaymentSession(string userId, int year, DirectRegistrant directRegistrant, DirectProducerSubmission submission, string paymentToken, string paymentId, string paymentRef, PaymentState state, int minutesOffset = 0)
         {
             var session = new PaymentSession(
                 userId,
                 100m,
                 SystemTime.UtcNow.AddMinutes(minutesOffset),
-                new DirectProducerSubmission { ComplianceYear = year, RegisteredProducer = producer },
+                submission,
                 directRegistrant,
                 paymentToken,
                 paymentId,
