@@ -448,5 +448,38 @@
                             .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
                             .MustHaveHappenedOnceExactly();
         }
+
+        [Fact]
+        public void RepresentedOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("RepresentedOrganisationDetails", new Type[0]);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task RepresentedOrganisationDetails_Get_ReturnViewModelAndMapsData()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            // Act
+            var result = (await controller.RepresentedOrganisationDetails()) as ViewResult;
+
+            // Assert
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
+
+            A.CallTo(() => mapper
+                            .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                            .MustHaveHappenedOnceExactly();
+        }
     }
 }

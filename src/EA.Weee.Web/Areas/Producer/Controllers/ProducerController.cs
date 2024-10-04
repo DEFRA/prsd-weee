@@ -3,6 +3,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -189,10 +190,18 @@
         {
             await SetViewBreadcrumb();
 
+            var source = new SmallProducerSubmissionMapperData
+            {
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
+            var representingCompanyDetailsViewModel = mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(source);
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 ActiveOption = OrganisationDetailsDisplayOption.RepresentedOrganisationDetails,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel
             };
 
             return View("ViewOrganisation/RepresentedOrganisationDetails", vm);
