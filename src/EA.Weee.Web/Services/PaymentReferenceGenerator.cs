@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using EA.Prsd.Core;
     using System;
     using System.Text;
 
@@ -16,9 +17,9 @@
 
             var builder = new StringBuilder("WEEE");
 
-            builder.Append(DateTime.UtcNow.Year);
+            builder.Append(SystemTime.UtcNow.Year);
 
-            builder.Append(DateTimeOffset.UtcNow.ToUnixTimeSeconds() % 1000000);
+            builder.Append((DateTimeOffset.UtcNow.ToUnixTimeSeconds() % 1000000).ToString("D6"));
 
             var remainingLength = length - builder.Length;
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
