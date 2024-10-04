@@ -55,7 +55,7 @@
         }
 
         [Fact]
-        public void Map_WhenUseCurrentVersionIsTrue_ShouldMapOnlyAddress()
+        public void Map_WhenUseCurrentVersionIsTrue_ShouldMapMasterProperties()
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionMapperData>();
@@ -74,8 +74,9 @@
             result.Address.Should().Be(fakeAddressData);
             result.DirectRegistrantId.Should().Be(Guid.Empty);
             result.OrganisationId.Should().Be(Guid.Empty);
-            result.BusinessTradingName.Should().BeNull();
-            result.CompanyName.Should().BeNull();
+            result.BusinessTradingName.Should()
+                .Be(source.SmallProducerSubmissionData.AuthorisedRepresentitiveData.BusinessTradingName);
+            result.CompanyName.Should().Be(source.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName);
             result.RedirectToCheckAnswers.Should().BeNull();
 
             A.CallTo(() => mapper.Map<AuthorisedRepresentitiveData, RepresentingCompanyAddressData>(

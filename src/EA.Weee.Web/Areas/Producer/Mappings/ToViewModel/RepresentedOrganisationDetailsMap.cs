@@ -33,6 +33,8 @@
             return new RepresentingCompanyDetailsViewModel()
             {
                 Address = mapper.Map<AuthorisedRepresentitiveData, RepresentingCompanyAddressData>(submissionData.AuthorisedRepresentitiveData),
+                BusinessTradingName = submissionData.AuthorisedRepresentitiveData.BusinessTradingName,
+                CompanyName = submissionData.AuthorisedRepresentitiveData.CompanyName
             };
         }
     }
