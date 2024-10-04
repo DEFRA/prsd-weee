@@ -591,16 +591,15 @@
         {
             using (var wrapper = new DatabaseWrapper())
             {
-                var setupData = DirectRegistrantHelper.SetupCommonTestData(wrapper);
-                var complianceYear = setupData.Item1;
+                var complianceYear = 1010;
 
-                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", 1000);
 
                 var amounts = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, complianceYear, amounts, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, 1000, amounts, DirectProducerSubmissionStatus.Complete);
 
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C");
 

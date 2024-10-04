@@ -52,6 +52,7 @@
             };
 
             var history = new DirectProducerSubmissionHistory(submission);
+            
             var returnVersion = new Domain.DataReturns.EeeOutputReturnVersion();
 
             foreach (var amount in amounts)
@@ -60,10 +61,17 @@
             }
 
             history.EeeOutputReturnVersion = returnVersion;
+
+            if (status == DirectProducerSubmissionStatus.Complete)
+            {
+                history.SubmittedDate = SystemTime.UtcNow;
+            }
+
             wrapper.WeeeContext.DirectProducerSubmissions.Add(submission);
             await wrapper.WeeeContext.SaveChangesAsync();
 
             submission.SetCurrentSubmission(history);
+            
             submission.DirectProducerSubmissionStatus = status;
             await wrapper.WeeeContext.SaveChangesAsync();
 

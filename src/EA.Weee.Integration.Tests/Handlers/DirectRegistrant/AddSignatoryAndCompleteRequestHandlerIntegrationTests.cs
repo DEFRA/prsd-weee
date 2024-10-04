@@ -46,7 +46,7 @@
                 submission.DirectRegistrant.Organisation.TradingName.Should().Be(submission.CurrentSubmission.TradingName);
 
                 submission.DirectRegistrant.Contact.Should().Be(submission.CurrentSubmission.Contact);
-                submission.DirectRegistrant.Address.Should().Be(submission.CurrentSubmission.BusinessAddress);
+                submission.DirectRegistrant.Address.Should().Be(submission.CurrentSubmission.ContactAddress);
                 submission.DirectRegistrant.BrandName.Should().Be(submission.CurrentSubmission.BrandName);
                 submission.DirectRegistrant.AuthorisedRepresentative.Should().Be(submission.CurrentSubmission.AuthorisedRepresentative);
 
@@ -115,6 +115,7 @@
 
                 var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
                     .WithBusinessAddress(address.Id)
+                    .WithContactAddress(address.Id)
                     .WithContact(contact.Id)
                     .WithBrandName("new brand")
                     .WithAuthorisedRep(authedRepSubmission.Id)

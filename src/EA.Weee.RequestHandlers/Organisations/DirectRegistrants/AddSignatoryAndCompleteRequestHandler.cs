@@ -1,7 +1,4 @@
-﻿using System;
-using EA.Prsd.Core;
-
-namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
+﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
     using DataAccess;
     using EA.Prsd.Core.Mediator;
@@ -11,7 +8,7 @@ namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Mappings;
     using Security;
-    using System.Data.Entity;
+    using System;
     using System.Threading.Tasks;
 
     internal class AddSignatoryAndCompleteRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<AddSignatoryAndCompleteRequest, bool>
@@ -40,8 +37,7 @@ namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
                 currentYearSubmission.CurrentSubmission.TradingName);
 
             currentYearSubmission.DirectRegistrant.AddOrUpdateMainContactPerson(currentYearSubmission.CurrentSubmission.Contact);
-
-            currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.BusinessAddress);
+            currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.ContactAddress);
 
             if (currentYearSubmission.CurrentSubmission.BrandName != null)
             {
