@@ -6,6 +6,8 @@
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -433,6 +435,19 @@
             // Arrange
             SetupDefaultControllerData();
 
+            var address = TestFixture.Create<ServiceOfNoticeAddressData>();
+
+            A.CallTo(() => mapper
+                    .Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
+                    .Returns(address);
+
+            var expectedViewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
+            expectedViewModel.Address = address;
+
+            A.CallTo(() => mapper
+                    .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                    .Returns(expectedViewModel);
+
             // Act
             var result = (await controller.ServiceOfNoticeDetails()) as ViewResult;
 
@@ -443,6 +458,7 @@
 
             model.Should().NotBeNull();
             model.ServiceOfNoticeViewModel.Should().NotBeNull();
+            model.ServiceOfNoticeViewModel.Should().Be(expectedViewModel);
 
             A.CallTo(() => mapper
                             .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
