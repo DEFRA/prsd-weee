@@ -149,7 +149,7 @@
                     Year = year,
                     SmallProducerSubmissionData = this.SmallProducerSubmissionData
                 });
-
+            
             var vm = new OrganisationDetailsTabsViewModel
             {
                 Years = years,

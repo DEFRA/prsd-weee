@@ -193,7 +193,7 @@
 
             // Assert
             currentSubmission.SubmittedDate.Should().Be(systemDate.Date);
-            currentSubmission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
+            directRegistrant.DirectProducerSubmissions.First().DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
         }
 
         [Fact]
@@ -296,8 +296,11 @@
                     new AuthorisedRepresentative("oldName", "oldTradingName", A.Fake<ProducerContact>());
             }
 
+            var directRegistrantAddress = new Address("address1", "address2", "town", "county", "gu21",
+                new Country(Guid.NewGuid(), "country"), "1245", "email@email.com", "http://");
+
             var directRegistrant = new DirectRegistrant(Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.Partnership, "companyName", "tradingName", "1231234"),
-                brandName, new Contact("First", "Last", "Position"), A.Fake<Address>(),
+                brandName, new Contact("First", "Last", "Position"), directRegistrantAddress,
                 authorisedRepresentative,
                 A.CollectionOfFake<AdditionalCompanyDetails>(2).ToList());
 
@@ -313,6 +316,11 @@
                     };
 
             directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContact(contact);
+
+            var submissionAddress = new Address("address2", "address2", "town", "county", "gu21",
+                new Country(Guid.NewGuid(), "country"), "1245", "email@email.com", "http://");
+
+            directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContactAddress(submissionAddress);
 
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionCurrentYear);
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionNotCurrentYear);

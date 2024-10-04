@@ -37,8 +37,7 @@
                 currentYearSubmission.CurrentSubmission.TradingName);
 
             currentYearSubmission.DirectRegistrant.AddOrUpdateMainContactPerson(currentYearSubmission.CurrentSubmission.Contact);
-
-            currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.BusinessAddress);
+            currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.ContactAddress);
 
             if (currentYearSubmission.CurrentSubmission.BrandName != null)
             {
@@ -53,7 +52,7 @@
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
             currentYearSubmission.CurrentSubmission.SubmittedDate = systemDateTime.Date;
-            currentYearSubmission.CurrentSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
+            currentYearSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
 
             await weeeContext.SaveChangesAsync();
 

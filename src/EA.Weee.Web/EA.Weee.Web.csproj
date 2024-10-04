@@ -551,6 +551,7 @@
       <DependentUpon>AatfResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProducerSubmissionController.cs" />
     <Compile Include="Areas\Admin\Controllers\TransferEvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
@@ -1134,6 +1135,7 @@
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentFailure.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationFound.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\Index.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\TotalEEEDetails.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
