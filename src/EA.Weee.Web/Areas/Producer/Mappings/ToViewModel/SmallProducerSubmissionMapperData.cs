@@ -7,5 +7,7 @@
         public SmallProducerSubmissionData SmallProducerSubmissionData { get; set; }
 
         public bool? RedirectToCheckAnswers { get; set; }
+
+        public bool UseCurrentVersion { get; set; }
     }
 }
