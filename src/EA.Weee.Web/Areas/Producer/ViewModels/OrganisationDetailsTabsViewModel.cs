@@ -29,5 +29,7 @@
         public ServiceOfNoticeViewModel ServiceOfNoticeViewModel { get; set; }
 
         public RepresentingCompanyDetailsViewModel RepresentingCompanyDetailsViewModel { get; set; }
+
+        public EditEeeDataViewModel EditEeeDataViewModel { get; set; }
     }
 }

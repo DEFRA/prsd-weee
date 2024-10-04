@@ -18,9 +18,32 @@
             <h1 class="govuk-heading-m">
                 @title
             </h1>
-            <table id="pcs-details-table" class="govuk-table">
+
+            <table class="govuk-table category-row-no-break">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Category</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 18%; ">B2C Tonnes</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 19%; ">B2B Tonnes</th>
+                    </tr>
+                </thead>
                 <tbody class="govuk-table__body">
-                   
+                    @foreach(var category in Model.EditEeeDataViewModel.CategoryValues)
+                    {
+                        <tr class="govuk-table__row category-row-no-break" id="category-row-@category.CategoryId">
+                            <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1 category-cell-no-break">
+                                <div class="category">
+                                    <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                                </div>
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
+                                @category.HouseHold
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
+                                @category.NonHouseHold
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
 

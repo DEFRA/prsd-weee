@@ -5,7 +5,9 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -179,6 +181,7 @@
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>() { { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() }, },
                 OrganisationData = new OrganisationData
                 {
                     Id = organisationId,
@@ -373,12 +376,39 @@
             model.OrganisationViewModel.Should().NotBeNull();
 
             A.CallTo(() => mapper
-                            .Map<SmallProducerSubmissionData, OrganisationViewModel>(controller.SmallProducerSubmissionData))
-                            .MustHaveHappenedOnceExactly();
+                            .Map<SubmissionsYearDetails, OrganisationViewModel>(
+                A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
+                .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task OrganisationDetails_SetViewBreadcrumb()
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public async Task OrganisationDetails_ReturnViewModelAndMapsDataForYear(int? year)
+        {
+            SetupDefaultControllerData();
+
+            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+
+            var result = (await controller.OrganisationDetails(year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.OrganisationViewModel.Should().NotBeNull();
+
+            A.CallTo(() => mapper
+                            .Map<SubmissionsYearDetails, OrganisationViewModel>(
+                A<SubmissionsYearDetails>.That.Matches(x => x.Year == year && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public async Task OrganisationDetails_SetViewBreadcrumb(int? year)
         {
             SetupDefaultControllerData();
 
@@ -388,18 +418,26 @@
             .FetchOrganisationName(controller.SmallProducerSubmissionData.OrganisationData.Id))
                 .Returns(expected);
 
-            var result = (await controller.OrganisationDetails()) as ViewResult;
+            var result = (await controller.OrganisationDetails(year)) as ViewResult;
 
-            Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
+            if (year.HasValue)
+            {
+                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+            }
+            else
+            {
+                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
+            }
+
             Assert.Equal(breadcrumb.OrganisationId, controller.SmallProducerSubmissionData.OrganisationData.Id);
             Assert.Equal(breadcrumb.ExternalOrganisation, expected);
         }
 
-        [Fact]
+        [Fact]      
         public void OrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerController).GetMethod("OrganisationDetails", new Type[0]);
+            var methodInfo = typeof(ProducerController).GetMethod("OrganisationDetails", new[] { typeof(int?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();

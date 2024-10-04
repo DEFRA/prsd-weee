@@ -17,48 +17,28 @@
     var @title = hasYear ? "Producer registration submissions" : "View organisation details";
 }
 
-@(this.WeeeGds()
-        .BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
+@(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">@title</h1>
 </header>
 
-
-@using (Html.BeginForm("OrganisationDetails", typeof(ProducerController).GetControllerName(), FormMethod.Get))
-{
-
-    <fieldset class="govuk-fieldset">
-        <legend class="govuk-visually-hidden">
-            select year
-        </legend>
-        <div class="govuk-grid-row">
-
-            <div class="govuk-form-group govuk-grid-column-one-half @Html.Gds().FormGroupClass(m => m.Year)">
-                <div class="font-bold govuk-body govuk-!-display-inline govuk-!-font-weight-bold">@Html.LabelFor(m => m.Year, new { @for = "ReturnsExternalSelectedComplianceYear" }):&nbsp;&nbsp;</div>
-                @Html.Gds().ValidationMessageFor(m => m.Year)
-                <div class="govuk-!-width-full govuk-!-display-inline">
-                    @Html.Gds().DropDownListFor(m => m.Year, new SelectList(Model.Years), new { id = "year-dropdown" })
-                </div>
-            </div>
-
-            <noscript>
-                <button class="govuk-button" data-module="govuk-button" type="submit" data-prevent-double-click="true">Select</button>
-            </noscript>
-            <div class="govuk-!-padding-bottom-5"></div>
-        </div>
-
-    </fieldset>
-
-}
-
 @if (hasYear)
 {
-    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Year)">
-        @Html.Gds().LabelFor(m => m.Year, new { @class = "govuk-label--s" })
-        @Html.Gds().ValidationMessageFor(m => m.Year)
-        @Html.Gds().DropDownListFor(m => m.Year, new SelectList(Model.Years), string.Empty, new { id = "year-dropdown" }, useHalfWidth: false, withLookAhead: false)
-    </div>
+    using (Html.BeginForm(ViewContext.RouteData.Values["action"].ToString(), typeof(ProducerController).GetControllerName(), FormMethod.Get))
+    {
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Year)">
+            @Html.Gds().LabelFor(m => m.Year, new { @class = "govuk-label--m" })
+            @Html.Gds().ValidationMessageFor(m => m.Year)
+            @Html.Gds().DropDownListFor(m => m.Year, new SelectList(Model.Years), new { id = "year-dropdown" }, useHalfWidth: false, withLookAhead: false)
+        </div>
+
+        <noscript>
+            <button class="govuk-button" data-module="govuk-button" type="submit" data-prevent-double-click="true">Select</button>
+        </noscript>
+
+        <div class="govuk-!-padding-bottom-5"></div>
+    }
 
     <p>If this information is not correct, please contact your agency and they will be able to return your application to you.</p>
 }
@@ -102,8 +82,6 @@
             font-size: 17px;
         }
     </style>
-
-    
 }
 
 <script>
