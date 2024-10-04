@@ -21,7 +21,7 @@
             return await context.DirectProducerSubmissions
                 .Where(dru => dru.CurrentSubmission != null)
                 .Where(dru => dru.DirectProducerSubmissionStatus.Value == DirectProducerSubmissionStatus.Complete.Value)
-                .Select(dru => (int)dru.ComplianceYear + 1)  // Add 1 to each year
+                .Select(dru => (int)dru.ComplianceYear)  // Add 1 to each year
                 .Distinct()
                 .OrderByDescending(year => year)
                 .ToListAsync();
