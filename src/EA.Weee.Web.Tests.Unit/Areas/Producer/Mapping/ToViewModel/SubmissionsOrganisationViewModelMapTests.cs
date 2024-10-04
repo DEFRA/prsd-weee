@@ -9,6 +9,7 @@
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using FakeItEasy;
     using FluentAssertions;
+    using System.Collections.Generic;
     using System.Security.AccessControl;
     using Xunit;
 
@@ -26,13 +27,24 @@
             map = new SubmissionsOrganisationViewModelMap(mapper);
         }
 
-        [Fact]
-        public void Map_ShouldMapValues()
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public void Map_ShouldMapValues(int? year)
         {
             // Arrange
+            var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { year.HasValue ? year.Value : 2024, fixture.Create<SmallProducerSubmissionHistoryData>() }
+            };
+
+            producerSubmission.OrganisationData = fixture.Build<OrganisationData>().Create();
+
             var source = fixture.Build<SubmissionsYearDetails>()
-             .With(x => x.SmallProducerSubmissionData, fixture.Create<SmallProducerSubmissionData>())
-             .Create();
+            .With(x => x.SmallProducerSubmissionData, producerSubmission)
+            .With(x => x.Year, year)
+            .Create();
 
             var expectedAddress = fixture.Create<ExternalAddressData>();
             A.CallTo(() => mapper.Map<AddressData, ExternalAddressData>(A<AddressData>._))
@@ -42,24 +54,43 @@
             Core.Organisations.Base.OrganisationViewModel result = map.Map(source);
 
             // Assert
-            result.BusinessTradingName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.TradingName);
-            result.CompanyName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.Name);
-            result.CompaniesRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber);
+            if (year.HasValue)
+            {
+                result.BusinessTradingName.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].TradingName);
+                result.CompanyName.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].CompanyName);
+                result.CompaniesRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].CompanyRegistrationNumber);
+            }
+            else
+            {
+                result.BusinessTradingName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.TradingName);
+                result.CompanyName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.Name);
+                result.CompaniesRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber);
+            }
         }
 
         [Theory]
-        [InlineData(OrganisationType.Partnership, ExternalOrganisationType.Partnership)]
-        [InlineData(OrganisationType.RegisteredCompany, ExternalOrganisationType.RegisteredCompany)]
-        [InlineData(OrganisationType.SoleTraderOrIndividual, ExternalOrganisationType.SoleTrader)]
-        public void Map_ShouldMapOrganisationTypeCorrectly(OrganisationType sourceType, ExternalOrganisationType expectedType)
+        [InlineData(OrganisationType.Partnership, ExternalOrganisationType.Partnership, null)]
+        [InlineData(OrganisationType.RegisteredCompany, ExternalOrganisationType.RegisteredCompany, null)]
+        [InlineData(OrganisationType.SoleTraderOrIndividual, ExternalOrganisationType.SoleTrader, null)]
+        [InlineData(OrganisationType.Partnership, ExternalOrganisationType.Partnership, 2024)]
+        [InlineData(OrganisationType.RegisteredCompany, ExternalOrganisationType.RegisteredCompany, 2024)]
+        [InlineData(OrganisationType.SoleTraderOrIndividual, ExternalOrganisationType.SoleTrader, 2024)]
+        public void Map_ShouldMapOrganisationTypeCorrectly(OrganisationType sourceType, ExternalOrganisationType expectedType, int? year)
         {
             // Arrange
-            var source = fixture.Build<SubmissionsYearDetails>()
-                .With(x => x.SmallProducerSubmissionData, fixture.Create<SmallProducerSubmissionData>())
-                .With(x => x.SmallProducerSubmissionData.OrganisationData, fixture.Build<OrganisationData>()
+            var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, fixture.Create<SmallProducerSubmissionHistoryData>() }
+            };
+
+            producerSubmission.OrganisationData = fixture.Build<OrganisationData>()
                     .With(o => o.OrganisationType, sourceType)
-                    .Create())
-                .Create();
+                    .Create();
+            var source = fixture.Build<SubmissionsYearDetails>()
+            .With(x => x.SmallProducerSubmissionData, producerSubmission)
+            .With(x => x.Year, year)
+            .Create();
 
             // Act
             var result = map.Map(source);
@@ -68,21 +99,39 @@
             result.OrganisationType.Should().Be(expectedType);
         }
 
-        [Fact]
-        public void Map_ShouldMapAddress()
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public void Map_ShouldMapAddress(int? year)
         {
             // Arrange
+            var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>() 
+            {
+                { 2024, fixture.Create<SmallProducerSubmissionHistoryData>() }
+            };
+
             var source = fixture.Build<SubmissionsYearDetails>()
-            .With(x => x.SmallProducerSubmissionData, fixture.Create<SmallProducerSubmissionData>())
+            .With(x => x.SmallProducerSubmissionData, producerSubmission)
+            .With(x => x.Year, year)
             .Create();
 
             // Act
             Core.Organisations.Base.OrganisationViewModel result = map.Map(source);
 
             // Assert
-            A.CallTo(() => mapper
-                            .Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress))
+            if (year.HasValue)
+            {
+                A.CallTo(() => mapper
+                            .Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].BusinessAddressData))
                             .MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => mapper
+                           .Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress))
+                           .MustHaveHappenedOnceExactly();
+            }
         }
     }
 }
