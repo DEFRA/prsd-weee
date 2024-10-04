@@ -195,12 +195,13 @@
                 SmallProducerSubmissionData = SmallProducerSubmissionData
             };
 
+            var representingCompanyDetailsViewModel = mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(source);
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 ActiveOption = OrganisationDetailsDisplayOption.RepresentedOrganisationDetails,
                 SmallProducerSubmissionData = this.SmallProducerSubmissionData,
-                RepresentingCompanyDetailsViewModel = SmallProducerSubmissionData.HasAuthorisedRepresentitive ? 
-                    mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(source) : null
+                RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel
             };
 
             return View("ViewOrganisation/RepresentedOrganisationDetails", vm);
