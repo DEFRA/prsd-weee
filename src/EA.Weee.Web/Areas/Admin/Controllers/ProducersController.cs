@@ -2,6 +2,7 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -46,10 +47,10 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> Search()
+        public async Task<ActionResult> Search(SearchTypeEnum searchType)
         {
             await SetBreadcrumb();
-            return View();
+            return View(new SearchViewModel() { SearchType = searchType });
         }
 
         /// <summary>
@@ -87,18 +88,43 @@
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> SearchResults(string searchTerm)
+        public async Task<ActionResult> SearchResults(string searchTerm, SearchTypeEnum searchType)
         {
             await SetBreadcrumb();
 
-            SearchResultsViewModel viewModel = new SearchResultsViewModel();
-            viewModel.SearchTerm = searchTerm;
+            SearchResultsViewModel viewModel = new SearchResultsViewModel
+            {
+                SearchTerm = searchTerm,
+                SearchType = searchType
+            };
 
-            var results = await producerSearcher.Search(searchTerm, maximumSearchResults, false);
+            var resultsList = await GetSearchResults(searchTerm, searchType);
 
-            viewModel.Results = results.ToList().ConvertAll(x => (RegisteredProducerSearchResult)x);
+            viewModel.Results = resultsList;
 
             return View(viewModel);
+        }
+
+        private async Task<List<RegisteredProducerSearchResult>> GetSearchResults(string searchTerm, SearchTypeEnum searchType)
+        {
+            var resultsList = new List<RegisteredProducerSearchResult>();
+
+            if (searchType == SearchTypeEnum.SmallProducer)
+            {
+                var smallProducerResults = await smallProducerSearcher.Search(searchTerm, maximumSearchResults, false);
+                var res = smallProducerResults.ToList().ConvertAll<RegisteredProducerSearchResult>(x => x);
+
+                resultsList.AddRange(res);
+            }
+            else
+            {
+                var producerResults = await producerSearcher.Search(searchTerm, maximumSearchResults, false);
+                var res = producerResults.ToList().ConvertAll<RegisteredProducerSearchResult>(x => x);
+
+                resultsList.AddRange(res);
+            }
+
+            return resultsList;
         }
 
         /// <summary>
@@ -114,9 +140,19 @@
 
             if (!ModelState.IsValid)
             {
-                viewModel.Results = await producerSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
+                var resultsList = await GetSearchResults(viewModel.SearchTerm, viewModel.SearchType);
+
+                viewModel.Results = resultsList;
 
                 return View(viewModel);
+            }
+
+            if (viewModel.SearchType == SearchTypeEnum.SmallProducer)
+            {
+                return RedirectToAction("Index", typeof(ProducerSubmissionController).GetControllerName(), new
+                {
+                    Id = viewModel.SelectedProducerId
+                });
             }
 
             return RedirectToAction("Details", new
@@ -132,7 +168,7 @@
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
+        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm, SearchTypeEnum searchType)
         {
             if (!Request.IsAjaxRequest())
             {
@@ -144,9 +180,9 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<ProducerSearchResult> searchResults = await producerSearcher.Search(searchTerm, maximumSearchResults, true);
+            var resultsList = await GetSearchResults(searchTerm, searchType);
 
-            return Json(searchResults, JsonRequestBehavior.AllowGet);
+            return Json(resultsList, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

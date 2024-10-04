@@ -21,18 +21,29 @@
         {
             var results = await context.DirectProducerSubmissions
                 .Where(s => s.DirectProducerSubmissionStatus.Value == DirectProducerSubmissionStatus.Complete.Value)
-                .Select(s => s.RegisteredProducer)
-                .GroupBy(rp => rp.ProducerRegistrationNumber)
-                .Select(group => group.OrderByDescending(rp => rp.ComplianceYear).FirstOrDefault())
-                .OrderBy(rp => rp.ProducerRegistrationNumber)
+                .GroupBy(s => s.RegisteredProducer.ProducerRegistrationNumber)
+                .Select(group => new
+                {
+                    ProducerRegistrationNumber = group.Key,
+                    LatestSubmission = group.OrderByDescending(s => s.RegisteredProducer.ComplianceYear)
+                        .FirstOrDefault()
+                })
+                .OrderBy(x => x.ProducerRegistrationNumber)
+                .Select(x => new
+                {
+                    x.ProducerRegistrationNumber,
+                    OrganisationName = x.LatestSubmission.DirectRegistrant.Organisation.Name,
+                    Id = x.LatestSubmission.DirectRegistrantId
+                })
                 .AsNoTracking()
                 .ToListAsync();
 
             return results.Select(r => new SmallProducerSearchResult()
-            {
-                RegistrationNumber = r.ProducerRegistrationNumber,
-                Name = r.CurrentSubmission.OrganisationName
-            })
+                {
+                    RegistrationNumber = r.ProducerRegistrationNumber,
+                    Name = r.OrganisationName,
+                    Id = r.Id
+                })
                 .ToList();
         }
     }
