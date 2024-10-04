@@ -18,6 +18,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.SearchType)
 
             <p>
                 Here are some producers that matched your search:
@@ -39,13 +40,13 @@
                             <td class="govuk-table__cell">@result.Name</td>
                             <td class="govuk-table__cell">@result.RegistrationNumber</td>
                             <td class="govuk-table__cell">
-                                @Html.RadioButtonFor(m => m.SelectedRegistrationNumber, result.RegistrationNumber)
+                                @Html.RadioButtonFor(m => m.SelectedValue, @result.RegistrationNumber + "|" + result.Id)
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <br/>
+            <br />
 
             @(this.WeeeGds().Submit("Continue"))
         }
@@ -56,7 +57,7 @@
     }
 
     <p>
-        <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>
+        <a href="@(Url.UrlFor<ProducersController>(a => a.Search(Model.SearchType)))">Back</a>
     </p>
 }
 

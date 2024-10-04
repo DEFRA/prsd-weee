@@ -575,6 +575,7 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidTransferNoteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\OrganisationDetailsDisplayOption.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\SearchTypeEnum.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\EvidenceAndObligationProgressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Payment\PaymentAreaRegistration.cs" />
