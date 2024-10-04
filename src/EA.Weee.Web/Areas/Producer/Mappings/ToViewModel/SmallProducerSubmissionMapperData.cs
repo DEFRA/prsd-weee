@@ -8,6 +8,7 @@
 
         public bool? RedirectToCheckAnswers { get; set; }
 
-        public bool UseCurrentVersion { get; set; }
+        // if ture the high level organisation data will be used rather than the current in progress data
+        public bool UseMasterVersion { get; set; }
     }
 }
