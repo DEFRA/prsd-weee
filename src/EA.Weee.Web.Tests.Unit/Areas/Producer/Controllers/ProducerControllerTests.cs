@@ -8,6 +8,7 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -207,9 +208,21 @@
                     ContactDetailsComplete = true,
                     ServiceOfNoticeComplete = true,
                     RepresentingCompanyDetailsComplete = true,
-                    EEEDetailsComplete = true
+                    EEEDetailsComplete = true,
+                    ServiceOfNoticeData = new Core.Shared.AddressData
+                    {
+                        Address1 = Guid.NewGuid().ToString(),
+                        Address2 = Guid.NewGuid().ToString(),
+                        TownOrCity = Guid.NewGuid().ToString(),
+                        CountryName = Guid.NewGuid().ToString(),
+                        WebAddress = Guid.NewGuid().ToString(),
+                        Telephone = "4567894563",
+                        Postcode = Guid.NewGuid().ToString()
+                    },
+                    AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
                 },
-                HasAuthorisedRepresentitive = true
+                HasAuthorisedRepresentitive = true,
+                AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
             };
         }
 
@@ -437,11 +450,113 @@
         public void OrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerController).GetMethod("OrganisationDetails", new[] { typeof(int?) });
+            var methodInfo = typeof(ProducerController).GetMethod("OrganisationDetails", new Type[0]);
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void ContactDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("ContactDetails", new Type[0]);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void ServiceOfNoticeDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("ServiceOfNoticeDetails", new Type[0]);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task ServiceOfNoticeDetails_Get_ReturnViewModelAndMapsData()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var expectedAddress = TestFixture.Create<ServiceOfNoticeAddressData>();
+
+            A.CallTo(() => mapper
+                    .Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
+                    .Returns(expectedAddress);
+
+            var expectedViewModel = TestFixture.Create<ServiceOfNoticeViewModel>();
+            expectedViewModel.Address = expectedAddress;
+
+            A.CallTo(() => mapper
+                    .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                    .Returns(expectedViewModel);
+
+            // Act
+            var result = (await controller.ServiceOfNoticeDetails()) as ViewResult;
+
+            // Assert
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.ServiceOfNoticeViewModel.Should().NotBeNull();
+            model.ServiceOfNoticeViewModel.Should().Be(expectedViewModel);
+            model.ServiceOfNoticeViewModel.Address.Should().Be(expectedAddress);
+
+            A.CallTo(() => mapper
+                            .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                            .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void RepresentedOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("RepresentedOrganisationDetails", new Type[0]);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task RepresentedOrganisationDetails_Get_ReturnViewModelAndMapsData()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var expectedAddress = TestFixture.Create<RepresentingCompanyAddressData>();
+
+            var expectedViewModel = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
+            expectedViewModel.Address = expectedAddress;
+
+            A.CallTo(() => mapper
+                    .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                    .Returns(expectedViewModel);
+
+            // Act
+            var result = (await controller.RepresentedOrganisationDetails()) as ViewResult;
+
+            // Assert
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.RepresentingCompanyDetailsViewModel.Should().Be(expectedViewModel);
+            model.RepresentingCompanyDetailsViewModel.Address.Should().Be(expectedAddress);
+
+            A.CallTo(() => mapper
+                            .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
+                            .MustHaveHappenedOnceExactly();
         }
     }
 }
