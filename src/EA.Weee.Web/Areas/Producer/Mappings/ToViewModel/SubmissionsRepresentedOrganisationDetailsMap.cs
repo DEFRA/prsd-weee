@@ -23,25 +23,15 @@
                 {
                     DirectRegistrantId = source.SmallProducerSubmissionData.DirectRegistrantId,
                     OrganisationId = source.SmallProducerSubmissionData.OrganisationData.Id,
-                    Address = new RepresentingCompanyAddressData
-                    {
-                        Address1 = submission.AuthorisedRepresentitiveData.Address1,
-                        Address2 = submission.AuthorisedRepresentitiveData.Address2,
-                        CountryId = submission.AuthorisedRepresentitiveData.CountryId,
-                        CountyOrRegion = submission.AuthorisedRepresentitiveData.CountyOrRegion,
-                        Email = submission.AuthorisedRepresentitiveData.Email,
-                        Postcode = submission.AuthorisedRepresentitiveData.Postcode,
-                        Telephone = submission.AuthorisedRepresentitiveData.Telephone,
-                        TownOrCity = submission.AuthorisedRepresentitiveData.TownOrCity,
-                        CountryName = submission.AuthorisedRepresentitiveData.CountryName
-                    },
                     BusinessTradingName = submission.AuthorisedRepresentitiveData.BusinessTradingName,
                     CompanyName = submission.AuthorisedRepresentitiveData.CompanyName,
+                    Address = mapper.Map<AuthorisedRepresentitiveData, RepresentingCompanyAddressData>(submission.AuthorisedRepresentitiveData)
                 };
             }
 
             var modelMapperData = new SmallProducerSubmissionMapperData()
             {
+                UseMasterVersion = false,
                 SmallProducerSubmissionData = source.SmallProducerSubmissionData
             };
 
