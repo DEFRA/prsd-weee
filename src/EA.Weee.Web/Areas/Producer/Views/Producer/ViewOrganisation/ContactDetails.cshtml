@@ -10,7 +10,6 @@
     ViewBag.Title = @title + " - GOV.UK";
 }
 @section full_main_content{
-    <div class="govuk-!-padding-bottom-8"></div>
     <div class="govuk-tabs">
         @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
 
@@ -21,27 +20,27 @@
             <table id="pcs-contact-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">First Name</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">First Name</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.FirstName</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Last name</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Last name</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.LastName</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Position</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Position</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.Position</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Email</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Email</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.Email</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Phone number</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Phone number</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.Telephone</td>
                     </tr>
                 </tbody>
@@ -50,32 +49,32 @@
             <table id="pcs-contact-address-table" class="govuk-table">
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Address line 1</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 1</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.Address1</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Address line 2</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 2</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.Address2</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Town</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Town</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.TownOrCity</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">County</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">County</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.CountyOrRegion</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Postcode</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Postcode</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.Postcode</td>
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Country</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Country</th>
                         <td class="govuk-table__cell">@Model.ContactDetailsViewModel.AddressData.CountryName</td>
                     </tr>
                 </tbody>

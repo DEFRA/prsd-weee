@@ -189,6 +189,11 @@
 
             var serviceOfNoticeViewModel = MapDetailsSubmissionYearModel<ServiceOfNoticeViewModel>(year);
 
+            var source = new SmallProducerSubmissionMapperData
+            {
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
+
             var vm = new OrganisationDetailsTabsViewModel
             {
                 Years = years,
@@ -210,6 +215,11 @@
             var years = YearsDropdownData(SmallProducerSubmissionData);
 
             var representingCompanyDetailsViewModel = MapDetailsSubmissionYearModel<RepresentingCompanyDetailsViewModel>(year);
+
+            var source = new SmallProducerSubmissionMapperData
+            {
+                SmallProducerSubmissionData = SmallProducerSubmissionData
+            };
 
             var vm = new OrganisationDetailsTabsViewModel
             {
