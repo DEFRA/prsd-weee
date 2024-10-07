@@ -19,7 +19,7 @@
         {
             if (source.Year.HasValue)
             {
-                var sub = source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value];
+                SmallProducerSubmissionHistoryData sub = source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value];
 
                 var editEeeDataViewModel = new EditEeeDataViewModel()
                 {
@@ -49,7 +49,8 @@
 
             var sourceMapperData = new SmallProducerSubmissionMapperData()
             {
-                SmallProducerSubmissionData = source.SmallProducerSubmissionData
+                SmallProducerSubmissionData = source.SmallProducerSubmissionData,
+                UseMasterVersion = false
             };
 
             var model = mapper.Map<SmallProducerSubmissionMapperData, EditEeeDataViewModel>(sourceMapperData);
