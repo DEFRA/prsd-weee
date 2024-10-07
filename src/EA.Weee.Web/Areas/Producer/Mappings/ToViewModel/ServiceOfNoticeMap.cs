@@ -23,7 +23,7 @@
             {
                 DirectRegistrantId = submissionData.DirectRegistrantId,
                 OrganisationId = submissionData.OrganisationData.Id,
-                Address = source.UseMasterVersion ? MapAddress(submissionData.ServiceOfNoticeData) : MapAddress(submissionData.CurrentSubmission.ServiceOfNoticeData),
+                Address = MapAddress(submissionData.CurrentSubmission.ServiceOfNoticeData),
                 HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
                 RedirectToCheckAnswers = source.RedirectToCheckAnswers
             };
