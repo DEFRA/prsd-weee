@@ -6,35 +6,96 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.Areas.Producer.Controllers
 @using EA.Weee.Web.Areas.Producer.ViewModels
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
 
 @model OrganisationDetailsTabsViewModel
 
 @{
-    var @title = "View organisation details";
+    var hasYear = Model.Year != null;
+
+    var @title = hasYear ? "Producer registration submissions" : "View organisation details";
 }
 
-@(this.WeeeGds()
-        .BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
+@(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">@title</h1>
 </header>
 
+@if (hasYear)
+{
+    using (Html.BeginForm(ViewContext.RouteData.Values["action"].ToString(), typeof(ProducerController).GetControllerName(), FormMethod.Get))
+    {
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Year)">
+            @Html.Gds().LabelFor(m => m.Year, new { @class = "govuk-label--m" })
+            @Html.Gds().ValidationMessageFor(m => m.Year)
+            @Html.Gds().DropDownListFor(m => m.Year, new SelectList(Model.Years), new { id = "year-dropdown" }, useHalfWidth: false, withLookAhead: false)
+        </div>
+
+        <noscript>
+            <button class="govuk-button" data-module="govuk-button" type="submit" data-prevent-double-click="true">Select</button>
+        </noscript>
+
+        <div class="govuk-!-padding-bottom-5"></div>
+    }
+
+    <p>If this information is not correct, please contact your agency and they will be able to return your application to you.</p>
+}
+
 <ul class="govuk-tabs__list" role="tablist">
     @this.WeeeGds().Tab("View organisation",
-        Url.UrlFor<ProducerController>(a => a.OrganisationDetails()),
-        Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
+    Url.UrlFor<ProducerController>(a => a.OrganisationDetails(Model.Year)),
+    Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
 
     @this.WeeeGds().Tab("Contact details",
-        Url.UrlFor<ProducerController>(a => a.ContactDetails()),
-        Model.ActiveOption == OrganisationDetailsDisplayOption.ContactDetails, "contactDetailsAnchor")
+    Url.UrlFor<ProducerController>(a => a.ContactDetails(Model.Year)),
+    Model.ActiveOption == OrganisationDetailsDisplayOption.ContactDetails, "contactDetailsAnchor")
 
     @this.WeeeGds().Tab("Service of notice details",
-        Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails()),
-        Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
+    Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails(Model.Year)),
+    Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
 
-    @this.WeeeGds().Tab("Represented organisation details",
-        Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails()),
-        Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
+    @if (@Model.SmallProducerSubmissionData.HasAuthorisedRepresentitive && hasYear)
+    {
+        <span>
+            @this.WeeeGds().Tab("Represented organisation details",
+            Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails(Model.Year)),
+            Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
+        </span>
+    }
+
+    @if (hasYear)
+    {
+        <span>
+            @this.WeeeGds().Tab("Total EEE",
+              Url.UrlFor<ProducerController>(a => a.TotalEEEDetails(Model.Year)),
+              Model.ActiveOption == OrganisationDetailsDisplayOption.TotalEEEDetails, "totalEEEDetailsAnchor")
+        </span>
+    }
 </ul>
 
+@if (hasYear)
+{
+    <style>
+        .govuk-tabs__tab:link, .govuk-tabs__tab:visited {
+            font-size: 17px;
+        }
+    </style>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $(() => {
+            let onChange = function () {
+                let currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set("year", $(this).val());
+                history.pushState(null, '', currentUrl);
+
+                document.location = currentUrl;
+            };
+
+            $("#year-dropdown").change(onChange);
+        });
+    });
+</script>
