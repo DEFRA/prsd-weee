@@ -1133,6 +1133,9 @@
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationFound.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\Index.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
+    <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />
+    <Content Include="Views\Shared\_DownloadSubmissionPdfLayout.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
