@@ -57,6 +57,9 @@
                     ? mapper.Map<Address, AddressData>(directRegistrant.Address)
                     : null,
                 HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
+                AuthorisedRepresentitiveData = directRegistrant.AuthorisedRepresentativeId.HasValue 
+                    ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative) 
+                    : null,
                 CurrentSubmission = currentYearSubmission != null
                     ? mapper.Map<SmallProducerSubmissionHistoryData>(
                         new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))

@@ -10,17 +10,49 @@
     ViewBag.Title = @title + " - GOV.UK";
 }
 @section full_main_content{
-    <div class="govuk-!-padding-bottom-8"></div>
     <div class="govuk-tabs">
         @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
 
         <div class="govuk-tabs__panel" id="organisationDetails">
-            <h1 class="govuk-heading-m">
+            <h2 class="govuk-heading-m">
                 @title
-            </h1>
-            <table id="pcs-details-table" class="govuk-table">
+            </h2>
+            <table id="pcs-service-of-notice-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
-                   
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 1</th>
+                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Address1</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 2</th>
+                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Address2</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Town</th>
+                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.TownOrCity</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">County</th>
+                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.CountyOrRegion</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Postcode</th>
+                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Postcode</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Country</th>
+                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.CountryName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Phone number</th>
+                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Telephone</td>
+                    </tr>
                 </tbody>
             </table>
 
