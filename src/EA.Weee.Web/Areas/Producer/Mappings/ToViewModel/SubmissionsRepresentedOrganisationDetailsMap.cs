@@ -31,7 +31,7 @@
 
             var modelMapperData = new SmallProducerSubmissionMapperData()
             {
-                UseMasterVersion = false,
+                UseMasterVersion = true,
                 SmallProducerSubmissionData = source.SmallProducerSubmissionData
             };
 
