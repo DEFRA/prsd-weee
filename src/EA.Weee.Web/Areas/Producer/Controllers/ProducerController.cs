@@ -6,6 +6,7 @@
     using EA.Weee.Core;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -19,6 +20,8 @@
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -33,7 +36,7 @@
         private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ProducerController(
-            BreadcrumbService breadcrumb, 
+            BreadcrumbService breadcrumb,
             IWeeeCache cache,
             IMapper mapper,
             IMvcTemplateExecutor templateExecutor,
@@ -62,21 +65,21 @@
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ProducerTaskModels = new List<ProducerTaskModel>
                 {
-                    new ProducerTaskModel 
-                    { 
-                        TaskLinkName = "Organisation details", 
+                    new ProducerTaskModel
+                    {
+                        TaskLinkName = "Organisation details",
                         Complete = submission.OrganisationDetailsComplete,
                         Action = nameof(ProducerSubmissionController.EditOrganisationDetails)
                     },
-                    new ProducerTaskModel 
-                    { 
-                        TaskLinkName = "Contact details", 
+                    new ProducerTaskModel
+                    {
+                        TaskLinkName = "Contact details",
                         Complete = submission.ContactDetailsComplete,
                         Action = nameof(ProducerSubmissionController.EditContactDetails)
                     },
-                    new ProducerTaskModel 
+                    new ProducerTaskModel
                     {
-                        TaskLinkName = "Service of notice", 
+                        TaskLinkName = "Service of notice",
                         Complete = submission.ServiceOfNoticeComplete,
                         Action = nameof(ProducerSubmissionController.ServiceOfNotice)
                     },
@@ -130,21 +133,31 @@
 
         [SmallProducerSubmissionContext]
         [HttpGet]
-        public ActionResult Submissions()
+        public async Task<ActionResult> Submissions(int? year = null)
         {
-            return View(SmallProducerSubmissionData.OrganisationData.Id);
+            await SetTabsCrumb(year);
+
+            var years = YearsDropdownData(SmallProducerSubmissionData);
+
+            var yearParam = year ?? years.First();
+
+            return await OrganisationDetails(yearParam);
         }
 
         [SmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> OrganisationDetails()
+        public async Task<ActionResult> OrganisationDetails(int? year = null)
         {
-            await SetViewBreadcrumb();
+            await SetTabsCrumb(year);
 
-            var organisationVM = mapper.Map<SmallProducerSubmissionData, OrganisationViewModel>(SmallProducerSubmissionData);
+            var years = YearsDropdownData(SmallProducerSubmissionData);
+
+            var organisationVM = MapDetailsSubmissionYearModel<OrganisationViewModel>(year);
 
             var vm = new OrganisationDetailsTabsViewModel
             {
+                Years = years,
+                Year = year,
                 ActiveOption = OrganisationDetailsDisplayOption.OrganisationDetails,
                 OrganisationViewModel = organisationVM,
                 SmallProducerSubmissionData = this.SmallProducerSubmissionData
@@ -155,14 +168,21 @@
 
         [SmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> ContactDetails()
+        public async Task<ActionResult> ContactDetails(int? year = null)
         {
-            await SetViewBreadcrumb();
+            await SetTabsCrumb(year);
+
+            var years = YearsDropdownData(SmallProducerSubmissionData);
+
+            var contactVm = MapDetailsSubmissionYearModel<ContactDetailsViewModel>(year);
 
             var vm = new OrganisationDetailsTabsViewModel
             {
+                Years = years,
+                Year = year,
                 ActiveOption = OrganisationDetailsDisplayOption.ContactDetails,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                ContactDetailsViewModel = contactVm
             };
 
             return View("ViewOrganisation/ContactDetails", vm);
@@ -170,19 +190,18 @@
 
         [SmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> ServiceOfNoticeDetails()
+        public async Task<ActionResult> ServiceOfNoticeDetails(int? year = null)
         {
-            await SetViewBreadcrumb();
+            await SetTabsCrumb(year);
 
-            var source = new SmallProducerSubmissionMapperData
-            {
-                SmallProducerSubmissionData = SmallProducerSubmissionData
-            };
+            var years = YearsDropdownData(SmallProducerSubmissionData);
 
-            var serviceOfNoticeViewModel = mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(source);
+            var serviceOfNoticeViewModel = MapDetailsSubmissionYearModel<ServiceOfNoticeViewModel>(year);
 
             var vm = new OrganisationDetailsTabsViewModel
             {
+                Years = years,
+                Year = year,
                 ActiveOption = OrganisationDetailsDisplayOption.ServiceOfNoticeDetails,
                 SmallProducerSubmissionData = this.SmallProducerSubmissionData,
                 ServiceOfNoticeViewModel = serviceOfNoticeViewModel
@@ -193,21 +212,56 @@
 
         [SmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> RepresentedOrganisationDetails()
+        public async Task<ActionResult> RepresentedOrganisationDetails(int? year = null)
         {
-            await SetViewBreadcrumb();
+            await SetTabsCrumb(year);
+
+            var years = YearsDropdownData(SmallProducerSubmissionData);
+
+            var representingCompanyDetailsViewModel = MapDetailsSubmissionYearModel<RepresentingCompanyDetailsViewModel>(year);
 
             var vm = new OrganisationDetailsTabsViewModel
             {
+                Years = years,
+                Year = year,
                 ActiveOption = OrganisationDetailsDisplayOption.RepresentedOrganisationDetails,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel
             };
 
             return View("ViewOrganisation/RepresentedOrganisationDetails", vm);
         }
 
+        [SmallProducerSubmissionContext]
+        [HttpGet]
+        public async Task<ActionResult> TotalEEEDetails(int? year = null)
+        {
+            await SetTabsCrumb(year);
+
+            var years = YearsDropdownData(SmallProducerSubmissionData);
+
+            var editEeeDataViewModel = MapDetailsSubmissionYearModel<EditEeeDataViewModel>(year);
+
+            var vm = new OrganisationDetailsTabsViewModel
+            {
+                Years = years,
+                Year = year,
+                ActiveOption = OrganisationDetailsDisplayOption.TotalEEEDetails,
+                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                EditEeeDataViewModel = editEeeDataViewModel
+            };
+
+            return View("ViewOrganisation/TotalEEEDetails", vm);
+        }
+
         [HttpGet]
         public ActionResult SubmitRegistration()
+        {
+            return View("SubmitRegistration");
+        }
+
+        [HttpGet]
+        public ActionResult RegistrationSubmissions()
         {
             return View("SubmitRegistration");
         }
@@ -236,5 +290,23 @@
         }
 
         private Task SetViewBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
+        private Task SetHistoricBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+
+        private Task SetTabsCrumb(int? year = null) => year.HasValue ? SetHistoricBreadcrumb() : SetViewBreadcrumb();
+
+        private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
+        {
+            return data.SubmissionHistory.OrderByDescending(x => x.Key).Select(x => x.Key);
+        }
+
+        private T MapDetailsSubmissionYearModel<T>(int? year)
+        {
+            return mapper.Map<SubmissionsYearDetails, T>(
+               new SubmissionsYearDetails
+               {
+                   Year = year,
+                   SmallProducerSubmissionData = this.SmallProducerSubmissionData
+               });
+        }
     }
 }
