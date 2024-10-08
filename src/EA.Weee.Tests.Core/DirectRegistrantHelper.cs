@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Weee.Core.DirectRegistrant;
 
     public static class DirectRegistrantHelper
     {
@@ -24,13 +25,23 @@
             return Tuple.Create(complianceYear, country);
         }
 
-        public static Tuple<Domain.Organisation.Organisation, DirectRegistrant, Domain.Producer.RegisteredProducer> CreateOrganisationWithRegisteredProducer(DatabaseWrapper wrapper, string companyName, string prn, int complianceYear)
+        public static Tuple<Domain.Organisation.Organisation, DirectRegistrant, Domain.Producer.RegisteredProducer> CreateOrganisationWithRegisteredProducer(DatabaseWrapper wrapper, string companyName, string prn, int complianceYear, string companyNumber = null, Domain.Producer.AuthorisedRepresentative authorisedRepresentative = null)
         {
+            companyNumber = companyNumber ?? "123456789";
             var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany(companyName, "123456789");
-            var address = new Domain.Organisation.Address("1", "street", "Woking", "Hampshire", "GU21 5EE", wrapper.WeeeContext.Countries.First(), "12345678", "test@co.uk");
+            var address = new Domain.Organisation.Address("primary 1", "street", "Woking", "Hampshire", "GU21 5EE", wrapper.WeeeContext.Countries.First(), "12345678", "test@co.uk");
             organisation.AddOrUpdateAddress(Domain.AddressType.RegisteredOrPPBAddress, address);
 
-            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+            var contact = new Domain.Organisation.Contact("first name", "last name", "position");
+
+            Domain.Producer.AuthorisedRepresentative authRep = null;
+            if (authorisedRepresentative != null)
+            {
+                authRep = authorisedRepresentative;
+            }
+
+            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, contact, null, authRep, null);
+
             var registeredProducer = new Domain.Producer.RegisteredProducer(prn, complianceYear);
 
             return Tuple.Create(organisation, directRegistrant, registeredProducer);
@@ -42,7 +53,8 @@
             Domain.Producer.RegisteredProducer registeredProducer,
             int complianceYear,
             IEnumerable<EeeOutputAmountData> amounts,
-            DirectProducerSubmissionStatus status)
+            DirectProducerSubmissionStatus status,
+            int? sellingTechniqueType = null)
         {
             var submission = new DirectProducerSubmission
             {
@@ -67,6 +79,11 @@
                 history.SubmittedDate = SystemTime.UtcNow;
             }
 
+            if (sellingTechniqueType.HasValue)
+            {
+                history.SellingTechniqueType = sellingTechniqueType;
+            }
+            
             wrapper.WeeeContext.DirectProducerSubmissions.Add(submission);
             await wrapper.WeeeContext.SaveChangesAsync();
 
