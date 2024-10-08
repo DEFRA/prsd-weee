@@ -6,29 +6,35 @@
 
     public class RepresentedOrganisationDetailsMap : IMap<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>
     {
+        private readonly IMapper mapper;
+
+        public RepresentedOrganisationDetailsMap(IMapper mapper)
+        {
+            this.mapper = mapper;
+        }
+
         public RepresentingCompanyDetailsViewModel Map(SmallProducerSubmissionMapperData source)
         {
             var submissionData = source.SmallProducerSubmissionData;
 
+            if (!source.UseMasterVersion)
+            {
+                return new RepresentingCompanyDetailsViewModel()
+                {
+                    DirectRegistrantId = submissionData.DirectRegistrantId,
+                    OrganisationId = submissionData.OrganisationData.Id,
+                    Address = mapper.Map<AuthorisedRepresentitiveData, RepresentingCompanyAddressData>(submissionData.CurrentSubmission.AuthorisedRepresentitiveData),
+                    BusinessTradingName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.BusinessTradingName,
+                    CompanyName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CompanyName,
+                    RedirectToCheckAnswers = source.RedirectToCheckAnswers
+                };
+            }
+
             return new RepresentingCompanyDetailsViewModel()
             {
-                DirectRegistrantId = submissionData.DirectRegistrantId,
-                OrganisationId = submissionData.OrganisationData.Id,
-                Address = new RepresentingCompanyAddressData
-                {
-                    Address1 = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Address1,
-                    Address2 = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Address2,
-                    CountryId = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountryId,
-                    CountyOrRegion = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountyOrRegion,
-                    Email = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Email,
-                    Postcode = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Postcode,
-                    Telephone = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.Telephone,
-                    TownOrCity = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.TownOrCity,
-                    CountryName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CountryName
-                },
-                BusinessTradingName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.BusinessTradingName,
-                CompanyName = submissionData.CurrentSubmission.AuthorisedRepresentitiveData.CompanyName,
-                RedirectToCheckAnswers = source.RedirectToCheckAnswers
+                Address = mapper.Map<AuthorisedRepresentitiveData, RepresentingCompanyAddressData>(submissionData.AuthorisedRepresentitiveData),
+                BusinessTradingName = submissionData.AuthorisedRepresentitiveData.BusinessTradingName,
+                CompanyName = submissionData.AuthorisedRepresentitiveData.CompanyName
             };
         }
     }
