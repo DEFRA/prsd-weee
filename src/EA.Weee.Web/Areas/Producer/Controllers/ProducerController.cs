@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Controllers
 {
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
@@ -10,14 +13,13 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using iText.Kernel.XMP.Options;
     using System;
     using System.Collections.Generic;
-    using System.Runtime;
     using System.Threading.Tasks;
-    using System.Web.Helpers;
     using System.Web.Mvc;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
@@ -27,15 +29,24 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
+        private readonly Func<IWeeeClient> apiClient;
 
         public ProducerController(
             BreadcrumbService breadcrumb, 
             IWeeeCache cache,
-            IMapper mapper)
+            IMapper mapper,
+            IMvcTemplateExecutor templateExecutor,
+            IPdfDocumentProvider pdfDocumentProvider,
+            Func<IWeeeClient> apiClient)
         {
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
+            this.templateExecutor = templateExecutor;
+            this.pdfDocumentProvider = pdfDocumentProvider;
+            this.apiClient = apiClient;
         }
 
         public ActionResult Index()
@@ -202,6 +213,32 @@
         public ActionResult SubmitRegistration()
         {
             return View("SubmitRegistration");
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> DownloadSubmission()
+        {
+            using (var client = apiClient())
+            {
+                var source = new SmallProducerSubmissionMapperData()
+                {
+                    SmallProducerSubmissionData = SmallProducerSubmissionData
+                };
+
+                var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+
+                model.IsPdfDownload = true;
+
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadSubmission", model);
+
+                var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+                var timestamp = SystemTime.Now;
+                var fileName = $"producer_submission_{timestamp.ToString(DateTimeConstants.SubmissionTimestamp)}.pdf";
+
+                return File(pdf, "application/pdf", fileName);
+            }
         }
 
         private Task SetViewBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
