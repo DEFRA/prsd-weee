@@ -11,16 +11,20 @@
         {
             var submissionData = source.SmallProducerSubmissionData;
 
+            var current = source.SmallProducerSubmissionData.CurrentSubmission;
+
+            var submission = source.Year.HasValue ? source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value] : current;
+
             var model = new EditEeeDataViewModel()
             {
                 OrganisationId = submissionData.OrganisationData.Id,
                 DirectRegistrantId = submissionData.DirectRegistrantId,
-                SellingTechnique = SellingTechniqueViewModel.FromSellingTechniqueType(submissionData.CurrentSubmission.SellingTechnique),
+                SellingTechnique = SellingTechniqueViewModel.FromSellingTechniqueType(submission.SellingTechnique),
                 HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
                 RedirectToCheckAnswers = source.RedirectToCheckAnswers
             };
 
-            foreach (var eee in submissionData.CurrentSubmission.TonnageData)
+            foreach (var eee in submission.TonnageData)
             {
                 foreach (var producerSubmissionCategoryValue in model.CategoryValues)
                 {
