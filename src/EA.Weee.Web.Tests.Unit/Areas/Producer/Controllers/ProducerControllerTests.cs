@@ -2,12 +2,12 @@
 {
     using AutoFixture;
     using Core.Organisations;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -15,6 +15,8 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
@@ -34,17 +36,23 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly Guid organisationId = Guid.NewGuid();
         private readonly IMapper mapper;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ProducerControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             weeeCache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
+            templateExecutor = A.Fake<IMvcTemplateExecutor>();
+            pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
 
             controller = new ProducerController(
                breadcrumb, 
                weeeCache, 
-               mapper);
+               mapper,
+               templateExecutor,
+               pdfDocumentProvider);
         }
 
         [Fact]
@@ -464,6 +472,47 @@
             A.CallTo(() => mapper
                             .Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(controller.SmallProducerSubmissionData))))
                             .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_GivenPdf_FileShouldBeReturned()
+        {
+            //arrange
+            var date = new DateTime(2022, 09, 2, 13, 22, 0);
+            SystemTime.Freeze(date);
+            var pdf = TestFixture.Create<byte[]>();
+
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData)))).Returns(viewModel);
+
+            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
+
+            //act
+            var result = controller.DownloadSubmission() as FileContentResult;
+
+            //assert
+            result.FileContents.Should().BeSameAs(pdf);
+            result.FileDownloadName.Should().Be("producer_submission_020922_1422.pdf");
+            result.ContentType.Should().Be("application/pdf");
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("DownloadSubmission");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
         }
     }
 }

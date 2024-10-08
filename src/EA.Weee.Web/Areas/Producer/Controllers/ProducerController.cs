@@ -31,22 +31,19 @@
         private readonly IMapper mapper;
         private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider pdfDocumentProvider;
-        private readonly Func<IWeeeClient> apiClient;
 
         public ProducerController(
             BreadcrumbService breadcrumb, 
             IWeeeCache cache,
             IMapper mapper,
             IMvcTemplateExecutor templateExecutor,
-            IPdfDocumentProvider pdfDocumentProvider,
-            Func<IWeeeClient> apiClient)
+            IPdfDocumentProvider pdfDocumentProvider)
         {
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
             this.templateExecutor = templateExecutor;
             this.pdfDocumentProvider = pdfDocumentProvider;
-            this.apiClient = apiClient;
         }
 
         public ActionResult Index()
@@ -217,10 +214,8 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public async Task<ActionResult> DownloadSubmission()
+        public ActionResult DownloadSubmission()
         {
-            using (var client = apiClient())
-            {
                 var source = new SmallProducerSubmissionMapperData()
                 {
                     SmallProducerSubmissionData = SmallProducerSubmissionData
@@ -235,10 +230,9 @@
                 var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
 
                 var timestamp = SystemTime.Now;
-                var fileName = $"producer_submission_{timestamp.ToString(DateTimeConstants.SubmissionTimestamp)}.pdf";
+                var fileName = $"producer_submission{timestamp.ToString(DateTimeConstants.SubmissionTimestamp)}.pdf";
 
                 return File(pdf, "application/pdf", fileName);
-            }
         }
 
         private Task SetViewBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
