@@ -594,12 +594,12 @@
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToServiceOfNoticeRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToRequest\ToEditOrganisationDetailsRequestCreator.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\AddSignatoryAndCompleteMap.cs" />
+    <Compile Include="Areas\Producer\Mappings\ToViewModel\SubmissionsEEEDataViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\SubmissionsRepresentedOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\SubmissionsContactDetailsViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditEeeDataViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\SubmissionsOrganisationViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\CheckAnswersMap.cs" />
-    <Compile Include="Areas\Producer\Mappings\ToViewModel\SubmissionsEEEDataViewModelMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\SubmissionsServiceOfNoticeMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\RepresentedCompanyAddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\ServiceOfNoticeMap.cs" />

@@ -10,5 +10,6 @@
 
         // if ture the high level organisation data will be used rather than the current in progress data
         public bool UseMasterVersion { get; set; }
+        public int? Year { get; set; }
     }
 }
