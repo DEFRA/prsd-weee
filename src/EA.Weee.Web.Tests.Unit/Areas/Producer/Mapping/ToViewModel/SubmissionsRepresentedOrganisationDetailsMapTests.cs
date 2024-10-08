@@ -70,7 +70,7 @@
             {
                 A.CallTo(() => mapper
                            .Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>.That
-                           .Matches(x => x.SmallProducerSubmissionData == producerSubmission && x.UseMasterVersion == false)))
+                           .Matches(x => x.SmallProducerSubmissionData == producerSubmission && x.UseMasterVersion == true)))
                            .MustHaveHappenedOnceExactly();
             }
         }
