@@ -182,6 +182,9 @@
         public async Task HandleAsync_SetsSubmissionDateAndStatus()
         {
             // Arrange
+            var date = new DateTime(2024, 1, 1, 12, 10, 1);
+            SystemTime.Freeze(date);
+
             var request = CreateValidRequest();
             var directRegistrant = SetupValidDirectRegistrant(true, true);
             var currentSubmission = directRegistrant.DirectProducerSubmissions.First().CurrentSubmission;
@@ -192,8 +195,9 @@
             await handler.HandleAsync(request);
 
             // Assert
-            currentSubmission.SubmittedDate.Should().Be(systemDate.Date);
+            currentSubmission.SubmittedDate.Value.Should().Be(date);
             directRegistrant.DirectProducerSubmissions.First().DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
+            SystemTime.Unfreeze();
         }
 
         [Fact]
