@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
     using DataAccess;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain;
@@ -10,7 +11,7 @@
     using Security;
     using System;
     using System.Threading.Tasks;
-
+    
     internal class AddSignatoryAndCompleteRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<AddSignatoryAndCompleteRequest, bool>
     {
         private readonly WeeeContext weeeContext;
@@ -51,7 +52,7 @@
 
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
-            var currentDateTime = DateTime.UtcNow;
+            var currentDateTime = SystemTime.UtcNow;
             currentYearSubmission.CurrentSubmission.SubmittedDate =
                 new DateTime(systemDateTime.Year,
                     currentDateTime.Month,
