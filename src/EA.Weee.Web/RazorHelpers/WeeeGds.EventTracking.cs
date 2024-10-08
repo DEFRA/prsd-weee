@@ -22,7 +22,7 @@
         public MvcHtmlString CreateButtonWithEventTracking(string buttonText, string eventCategory, string eventAction, string eventLabel)
         {
             return new MvcHtmlString(
-                $@"<input class=""govuk-button"" data-module=""govuk-button"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}"" type=""submit"" data-prevent-double-click=""true"" role=""link"" value=""{buttonText}"" />");
+                $@"<button class=""govuk-button"" data-module=""govuk-button"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}"" type=""submit"" data-prevent-double-click=""true"" >{buttonText}</button>");
         }
 
         public MvcHtmlString CreateLinkButtonWithEventTracking(string buttonText, string eventCategory, string eventAction, string eventLabel)
