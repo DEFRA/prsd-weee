@@ -22,6 +22,7 @@
         {
             // Arrange
             var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.Year = null;
             var submissionData = source.SmallProducerSubmissionData;
 
             // Act
@@ -39,6 +40,7 @@
         {
             // Arrange
             var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.Year = null;
             source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>
             {
                 new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
@@ -65,6 +67,7 @@
         {
             // Arrange
             var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.Year = null;
             source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>();
 
             // Act
@@ -84,6 +87,7 @@
         {
             // Arrange
             var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.Year = null;
             source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>
             {
                 new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C),
@@ -105,6 +109,7 @@
         {
             // Arrange
             var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.Year = null;
             source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>();
 
             // Act
@@ -120,6 +125,7 @@
         {
             // Arrange
             var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            source.Year = null;
             source.SmallProducerSubmissionData.CurrentSubmission.TonnageData = new List<Eee>
             {
                 new Eee(10.5m, WeeeCategory.ConsumerEquipment, ObligationType.B2C)
@@ -131,6 +137,32 @@
             // Assert
             var consumerEquipmentCategory = result.CategoryValues.Single(cv => cv.CategoryId == (int)WeeeCategory.ConsumerEquipment);
             consumerEquipmentCategory.CategoryDisplay.Should().Be(WeeeCategory.ConsumerEquipment.ToDisplayString());
+        }
+
+        [Fact]
+        public void Map_ShouldMapFromSubmissionsHistory()
+        {
+            // Arrange
+            var source = TestFixture.Create<SmallProducerSubmissionMapperData>();
+
+            var historyData = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            source.Year = 2024;
+
+            source.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>
+            { 
+                { source.Year.Value, historyData } 
+            };
+
+            var submissionData = source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value];
+
+            // Act
+            var result = map.Map(source);
+
+            // Assert
+            result.OrganisationId.Should().Be(source.SmallProducerSubmissionData.OrganisationData.Id);
+            result.DirectRegistrantId.Should().Be(source.SmallProducerSubmissionData.DirectRegistrantId);
+            result.SellingTechnique.Should().BeEquivalentTo(SellingTechniqueViewModel.FromSellingTechniqueType(submissionData.SellingTechnique));
+            result.HasAuthorisedRepresentitive.Should().Be(source.SmallProducerSubmissionData.HasAuthorisedRepresentitive);
         }
     }
 }
