@@ -5,6 +5,7 @@
         OrganisationDetails = 0,
         ContactDetails = 1,
         ServiceOfNoticeDetails = 2,
-        RepresentedOrganisationDetails = 3
+        RepresentedOrganisationDetails = 3,
+        TotalEEEDetails = 4
     }
 }

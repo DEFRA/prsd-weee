@@ -20,5 +20,9 @@
         public Guid DirectRegistrantId { get; set; }
 
         public bool HasAuthorisedRepresentitive { get; set; }
+
+        public AuthorisedRepresentitiveData AuthorisedRepresentitiveData { get; set; }
+
+        public AddressData ServiceOfNoticeData { get; set; }
     }
 }
