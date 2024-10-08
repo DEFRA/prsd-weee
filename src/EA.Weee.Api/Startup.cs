@@ -1,4 +1,6 @@
 ﻿using EA.Weee.Api;
+using EA.Weee.Api.App_Start;
+using Hangfire;
 using Microsoft.Owin;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -77,6 +79,12 @@ namespace EA.Weee.Api
             app.UseAutofacWebApi(config);
             app.UseClaimsTransformation(ClaimsTransformationOptionsFactory.Create());
             app.UseWebApi(config);
+
+            Hangfire.GlobalConfiguration.Configuration
+                .UseAutofacActivator(container)
+                .UseSqlServerStorage("Weee.DefaultConnection");
+
+            HangfireBootstrapper.Instance.Start();
 
             DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
