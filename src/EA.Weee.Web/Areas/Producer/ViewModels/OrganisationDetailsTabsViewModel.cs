@@ -12,5 +12,6 @@
         public SmallProducerSubmissionData SmallProducerSubmissionData { get; set; }
 
         public OrganisationViewModel OrganisationViewModel { get; set; }
+        public ServiceOfNoticeViewModel ServiceOfNoticeViewModel { get; set; }
     }
 }
