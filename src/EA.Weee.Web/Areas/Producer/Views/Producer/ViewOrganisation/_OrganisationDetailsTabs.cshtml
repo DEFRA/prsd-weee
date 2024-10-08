@@ -56,7 +56,7 @@
     Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails(Model.Year)),
     Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
 
-    @if (@Model.SmallProducerSubmissionData.HasAuthorisedRepresentitive && hasYear)
+    @if (@Model.SmallProducerSubmissionData.HasAuthorisedRepresentitive)
     {
         <span>
             @this.WeeeGds().Tab("Represented organisation details",
