@@ -25,7 +25,7 @@
             return Tuple.Create(complianceYear, country);
         }
 
-        public static Tuple<Domain.Organisation.Organisation, DirectRegistrant, Domain.Producer.RegisteredProducer> CreateOrganisationWithRegisteredProducer(DatabaseWrapper wrapper, string companyName, string prn, int complianceYear, string companyNumber = null, Domain.Producer.AuthorisedRepresentative authorisedRepresentative = null)
+        public static Tuple<Domain.Organisation.Organisation, DirectRegistrant, Domain.Producer.RegisteredProducer> CreateOrganisationWithRegisteredProducer(DatabaseWrapper wrapper, string companyName, string prn, int complianceYear, string companyNumber = null, Domain.Producer.AuthorisedRepresentative authorisedRepresentative = null, BrandName brandNames = null)
         {
             companyNumber = companyNumber ?? "123456789";
             var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany(companyName, "123456789");
@@ -34,13 +34,7 @@
 
             var contact = new Domain.Organisation.Contact("first name", "last name", "position");
 
-            Domain.Producer.AuthorisedRepresentative authRep = null;
-            if (authorisedRepresentative != null)
-            {
-                authRep = authorisedRepresentative;
-            }
-
-            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, contact, null, authRep, null);
+            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandNames, contact, null, authorisedRepresentative, null);
 
             var registeredProducer = new Domain.Producer.RegisteredProducer(prn, complianceYear);
 

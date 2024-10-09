@@ -548,7 +548,8 @@
                             "rep secondary", "rep street",
                             "rep town", "rep locality", "rep admin area", country, "rep postcode")));
 
-                var (organisation2, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear,  "987654321", authorisedRep);
+                var brandNames = new BrandName("brand name");
+                var (organisation2, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear,  "987654321", authorisedRep, brandNames);
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
@@ -722,6 +723,7 @@
                 result1.RemovedFromScheme.Should().Be("No");
                 result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.BrandNames.Should().Be("brand name");
 
                 var result2 = results.ElementAt(2);
                 result2.CompanyName.Should().Be("My company");
@@ -804,6 +806,7 @@
                 result2.RemovedFromScheme.Should().Be("No");
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result2.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result2.BrandNames.Should().BeNull();
             }
         }
     }

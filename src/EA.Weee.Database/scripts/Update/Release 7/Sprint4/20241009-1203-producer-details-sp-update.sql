@@ -709,9 +709,9 @@ BEGIN
             WHEN 1 THEN 
                 (SELECT STUFF((SELECT '; ' + BN.Name
                 FROM 
-					[Producer].[DirectProducerSubmissionHistory] dpsh
-					INNER JOIN [Producer].[BrandName] bn ON bn.Id = dpsh.BrandNameId
-                WHERE dpsh.DirectProducerSubmissionId = dps.Id
+					[Producer].[DirectRegistrant] drb
+					INNER JOIN [Producer].[BrandName] bn ON bn.Id = drb.BrandNameId
+                WHERE drb.Id = dr.Id
                 FOR XML PATH(''), TYPE)
                 .value('.', 'NVARCHAR(MAX)') 
                 , 1, 2, ''))
