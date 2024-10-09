@@ -37,7 +37,7 @@
             var organisation = new OrganisationViewModel
             {
                 OrganisationType = externalOrganisationType,
-                Address = businessAddressData,
+                Address = businessAddressData ?? new ExternalAddressData(),
                 EEEBrandNames = submissionData.CurrentSubmission.EEEBrandNames,
                 CompanyName = submissionData.CurrentSubmission.CompanyName,
                 BusinessTradingName = submissionData.CurrentSubmission.TradingName,
