@@ -1142,6 +1142,7 @@
     <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
     <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\AlreadySubmittedAndPaid.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

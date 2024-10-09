@@ -313,6 +313,80 @@
             Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
         }
 
+        [Theory]
+        [InlineData(true, SubmissionStatus.Submitted)]
+        [InlineData(true, SubmissionStatus.InComplete)]
+        [InlineData(false, SubmissionStatus.Submitted)]
+        public async Task TaskList_IfPaid_RedirectToAlreadyPaid(bool hasPaid, SubmissionStatus status)
+        {
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = Guid.Empty
+                },
+                CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
+                {
+                    HasPaid = hasPaid,
+                    Status = status,
+                    ComplianceYear = 2005,
+                    ContactDetailsComplete = true,
+                    EEEDetailsComplete = true,
+                    OrganisationDetailsComplete = true,
+                    RepresentingCompanyDetailsComplete = false,
+                    ServiceOfNoticeComplete = true
+                }
+            };
+
+            var result = await controller.TaskList();
+
+            var routeResult = result as RedirectToRouteResult;
+
+            if (hasPaid && status == SubmissionStatus.Submitted)
+            {
+                routeResult.RouteValues["action"].Should().Be("AlreadySubmittedAndPaid");
+            }
+            else
+            {
+                routeResult.Should().Be(null);
+            }
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ReturnView()
+        {
+            // Arrange
+
+            var id = Guid.NewGuid();
+
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = id
+                }
+            };
+
+            // Act
+            var result = controller.AlreadySubmittedAndPaid() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Model.Should().Be(id);
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("AlreadySubmittedAndPaid");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
         [Fact]
         public async Task CheckAnswers_Get_ShouldReturnViewWithMappedModel()
         {
