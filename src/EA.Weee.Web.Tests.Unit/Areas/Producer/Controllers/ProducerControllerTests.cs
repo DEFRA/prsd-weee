@@ -190,7 +190,10 @@
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
-                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>() { { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() }, },
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+                {
+                    { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() },
+                },
                 OrganisationData = new OrganisationData
                 {
                     Id = organisationId,
@@ -474,6 +477,51 @@
                             .Map<SubmissionsYearDetails, OrganisationViewModel>(
                 A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("OrganisationDetails")]
+        [InlineData("ContactDetails")]
+        [InlineData("ServiceOfNoticeDetails")]
+        [InlineData("RepresentedOrganisationDetails")]
+        [InlineData("TotalEEEDetails")]
+        public async Task TabDetails_ReturnViewModelWithCorrectYears(string method)
+        {
+            SetupDefaultControllerData();
+
+            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+
+            var firstSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            firstSub.Status = SubmissionStatus.Submitted;
+
+            var secondSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            secondSub.Status = SubmissionStatus.Submitted;
+
+            var thirdSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            thirdSub.Status = SubmissionStatus.InComplete;
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, firstSub },
+                { 2025, secondSub },
+                { 2026, thirdSub }
+            };
+
+            var methodInfo = typeof(ProducerController).GetMethod(method, new[] { typeof(int?) });
+            var task = (Task<ActionResult>)methodInfo.Invoke(controller, new object[] { null });
+
+            var result = (await task) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            var expected = controller.SmallProducerSubmissionData.SubmissionHistory
+                .Where(x => x.Value.Status == SubmissionStatus.Submitted)
+                .OrderByDescending(x => x.Key)
+                .Select(x => x.Key);
+
+            model.Years.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
