@@ -23,7 +23,7 @@ namespace EA.Weee.Web.RazorHelpers
             }
             else
             {
-                html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}2</caption>";
+                html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}</caption>";
                 html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\">" +
                         "<th class=\"govuk-table__header\" scope=\"col\"><span class=\"govuk-visually-hidden\">name</span></th>" +
                         "<th class=\"govuk-table__header\" scope=\"col\"><span class=\"govuk-visually-hidden\">value</span></th></tr></thead>";
