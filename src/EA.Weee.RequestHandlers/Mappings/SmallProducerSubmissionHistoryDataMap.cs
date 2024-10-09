@@ -1,16 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System;
-    using System.Collections.Generic;
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
+    using System.Collections.Generic;
 
     internal class SmallProducerSubmissionHistoryDataMap : IMap<DirectProducerSubmissionSource, SmallProducerSubmissionHistoryData>
     {
@@ -48,7 +48,9 @@
                 ContactAddressData = MapContactAddress(currentSubmission, directRegistrant),
                 AuthorisedRepresentitiveData = MapAuthorisedRepresentative(currentSubmission, directRegistrant),
                 ServiceOfNoticeData = MapServiceOfNoticeAddress(currentSubmission),
-                TonnageData = MapTonnageData(currentSubmission)
+                TonnageData = MapTonnageData(currentSubmission),
+                HasPaid = source.DirectProducerSubmission.PaymentFinished == true,
+                Status = source.DirectProducerSubmission.DirectProducerSubmissionStatus.ToCoreEnumeration<SubmissionStatus>()
             };
         }
 

@@ -18,13 +18,15 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public ServiceOfNoticeRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<bool> HandleAsync(ServiceOfNoticeRequest request)
@@ -35,7 +37,9 @@
 
             authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
 
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == SystemTime.UtcNow.Year);
+            var systemDate = await systemDataDataAccess.GetSystemDateTime();
+
+            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDate.Year);
             
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.Address.CountryId);
 

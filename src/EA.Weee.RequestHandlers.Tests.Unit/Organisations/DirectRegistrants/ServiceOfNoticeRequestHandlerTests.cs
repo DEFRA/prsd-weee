@@ -26,7 +26,6 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
-        private readonly WeeeContext weeeContext;
         private readonly ServiceOfNoticeRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid countryId = Guid.NewGuid();
@@ -37,7 +36,8 @@
         {
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
-            weeeContext = A.Fake<WeeeContext>();
+            var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
+            var weeeContext = A.Fake<WeeeContext>();
             var dbContextHelper = new DbContextHelper();
 
             country = new Country(countryId, "UK");
@@ -45,10 +45,14 @@
             var countries = dbContextHelper.GetAsyncEnabledDbSet(new List<Country> { country });
             A.CallTo(() => weeeContext.Countries).Returns(countries);
 
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime())
+                .Returns(new DateTime(SystemTime.UtcNow.Year, 1, 1));
+
             handler = new ServiceOfNoticeRequestHandler(
                 authorization,
                 genericDataAccess,
-                weeeContext);
+                weeeContext,
+                systemDataDataAccess);
         }
 
         [Fact]
