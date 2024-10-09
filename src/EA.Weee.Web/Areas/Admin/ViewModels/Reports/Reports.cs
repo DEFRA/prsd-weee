@@ -20,7 +20,7 @@
         public const string AatfAeDetails = "AATF / AE / PCS / organisation details";
         public const string PcsAatfDataDifference = "PCS v AATF WEEE data comparison";
         public const string AatfAePublicRegister = "AATF / AE public register";
-        public const string PcsReports = "PCS reports";
+        public const string PcsReports = "PCS and producer reports";
         public const string AatfReports = "AATF / AE reports";
         public const string EvidenceNotesReports = "Evidence and evidence transfers reports";
         public const string EvidenceNoteData = "Evidence notes report";
