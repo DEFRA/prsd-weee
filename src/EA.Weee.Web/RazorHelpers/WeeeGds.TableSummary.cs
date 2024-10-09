@@ -16,14 +16,17 @@ namespace EA.Weee.Web.RazorHelpers
             {
                 html += $"<caption class=\"govuk-table__caption\" style=\"font-size: 24px;\">{caption}</caption>";
                 // Add column widths only when displayCaption is true
-                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"></th>" +
-                        "<th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"></th></tr></thead>";
+                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\">" +
+                        "<th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"><span class=\"govuk-visually-hidden\">name</span></th>" +
+                        "<th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"><span class=\"govuk-visually-hidden\">value</span></th>" +
+                        "</tr></thead>";
             }
             else
             {
-                html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}</caption>";
-                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\"></th>" +
-                        "<th class=\"govuk-table__header\" scope=\"col\"></th></tr></thead>";
+                html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}2</caption>";
+                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\">" +
+                        "<th class=\"govuk-table__header\" scope=\"col\"><span class=\"govuk-visually-hidden\">name</span></th>" +
+                        "<th class=\"govuk-table__header\" scope=\"col\"><span class=\"govuk-visually-hidden\">value</span></th></tr></thead>";
             }
 
             html += "<tbody class=\"govuk-table__body\">";
