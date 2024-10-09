@@ -1138,7 +1138,7 @@
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentFailure.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationFound.cshtml" />
-    <Content Include="Areas\Admin\Views\ProducerSubmission\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\Submissions.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\TotalEEEDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
     <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />

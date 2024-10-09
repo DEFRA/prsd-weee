@@ -26,13 +26,14 @@
                 {
                     ProducerRegistrationNumber = group.Key,
                     LatestSubmission = group.OrderByDescending(s => s.RegisteredProducer.ComplianceYear)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
                 })
                 .OrderBy(x => x.ProducerRegistrationNumber)
                 .Select(x => new
                 {
                     x.ProducerRegistrationNumber,
-                    OrganisationName = x.LatestSubmission.DirectRegistrant.Organisation.Name,
+                    Name = x.LatestSubmission.DirectRegistrant.AuthorisedRepresentativeId.HasValue ? 
+                        x.LatestSubmission.DirectRegistrant.AuthorisedRepresentative.OverseasProducerName : x.LatestSubmission.DirectRegistrant.Organisation.Name,
                     Id = x.LatestSubmission.DirectRegistrantId
                 })
                 .AsNoTracking()
@@ -41,7 +42,7 @@
             return results.Select(r => new SmallProducerSearchResult()
                 {
                     RegistrationNumber = r.ProducerRegistrationNumber,
-                    Name = r.OrganisationName,
+                    Name = r.Name,
                     Id = r.Id
                 })
                 .ToList();
