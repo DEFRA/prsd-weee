@@ -49,8 +49,8 @@
                 AuthorisedRepresentitiveData = MapAuthorisedRepresentative(currentSubmission, directRegistrant),
                 ServiceOfNoticeData = MapServiceOfNoticeAddress(currentSubmission),
                 TonnageData = MapTonnageData(currentSubmission),
-                HasPaid = currentSubmission.DirectProducerSubmission.PaymentFinished == true,
-                Status = currentSubmission.DirectProducerSubmission.DirectProducerSubmissionStatus.ToCoreEnumeration<SubmissionStatus>()
+                HasPaid = source.DirectProducerSubmission.PaymentFinished == true,
+                Status = source.DirectProducerSubmission.DirectProducerSubmissionStatus.ToCoreEnumeration<SubmissionStatus>()
             };
         }
 
