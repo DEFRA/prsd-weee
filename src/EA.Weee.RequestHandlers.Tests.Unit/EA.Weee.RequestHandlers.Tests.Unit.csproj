@@ -237,6 +237,7 @@
     <Compile Include="Admin\Aatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfDeletionStatusTests.cs" />
     <Compile Include="Admin\Aatf\GetOrganisationDeletionStatusTests.cs" />
+    <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumberHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetAatfAeReturnDataCsvHandlerTests.cs" />
@@ -488,6 +489,7 @@
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
     <Compile Include="Security\WeeeAuthorizationTests.cs" />
+    <Compile Include="Shared\SmallProducerSubmissionServiceTests.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccessTests.cs" />
     <Compile Include="Users\GetOrganisationUserHandlerTests.cs" />
     <Compile Include="Users\GetUserDataHandlerTests.cs" />

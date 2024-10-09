@@ -40,7 +40,7 @@
                             <td class="govuk-table__cell">@result.Name</td>
                             <td class="govuk-table__cell">@result.RegistrationNumber</td>
                             <td class="govuk-table__cell">
-                                @Html.RadioButtonFor(m => m.SelectedValue, @result.RegistrationNumber + "|" + result.Id)
+                                @Html.RadioButtonFor(m => m.SelectedRegistrationNumber, result.RegistrationNumber)
                             </td>
                         </tr>
                     }

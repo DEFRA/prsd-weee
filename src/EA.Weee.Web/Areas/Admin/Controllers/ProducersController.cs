@@ -49,7 +49,7 @@
         [HttpGet]
         public async Task<ActionResult> Search(SearchTypeEnum searchType)
         {
-            await SetBreadcrumb();
+            await SetBreadcrumb(searchType);
             return View(new SearchViewModel() { SearchType = searchType });
         }
 
@@ -62,7 +62,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Search(SearchViewModel viewModel)
         {
-            await SetBreadcrumb();
+            await SetBreadcrumb(viewModel.SearchType);
 
             if (!ModelState.IsValid)
             {
@@ -78,7 +78,7 @@
                 });
             }
 
-            return RedirectToAction("SearchResults", new { viewModel.SearchTerm });
+            return RedirectToAction("SearchResults", new { viewModel.SearchTerm, searchType = viewModel.SearchType });
         }
 
         /// <summary>
@@ -90,7 +90,7 @@
         [HttpGet]
         public async Task<ActionResult> SearchResults(string searchTerm, SearchTypeEnum searchType)
         {
-            await SetBreadcrumb();
+            await SetBreadcrumb(searchType);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel
             {
@@ -136,7 +136,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SearchResults(SearchResultsViewModel viewModel)
         {
-            await SetBreadcrumb();
+            await SetBreadcrumb(viewModel.SearchType);
 
             if (!ModelState.IsValid)
             {
@@ -149,9 +149,9 @@
 
             if (viewModel.SearchType == SearchTypeEnum.SmallProducer)
             {
-                return RedirectToAction("Index", typeof(ProducerSubmissionController).GetControllerName(), new
+                return RedirectToAction(nameof(ProducerSubmissionController.Submissions), typeof(ProducerSubmissionController).GetControllerName(), new
                 {
-                    Id = viewModel.SelectedProducerId
+                    RegistrationNumber = viewModel.SelectedRegistrationNumber
                 });
             }
 
@@ -376,9 +376,9 @@
             }
         }
 
-        private async Task SetBreadcrumb()
+        private async Task SetBreadcrumb(SearchTypeEnum? searchType = null)
         {
-            breadcrumb.InternalActivity = InternalUserActivity.ProducerDetails;
+            breadcrumb.InternalActivity = searchType == SearchTypeEnum.SmallProducer ? InternalUserActivity.DirectRegistrantDetails : InternalUserActivity.ProducerDetails;
 
             await Task.Yield();
         }
