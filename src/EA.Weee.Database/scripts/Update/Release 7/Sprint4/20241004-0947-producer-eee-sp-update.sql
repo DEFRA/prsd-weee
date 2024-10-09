@@ -289,37 +289,46 @@ BEGIN
     UNION ALL
 
     SELECT
-        RP.ProducerRegistrationNumber as 'PRN',
-        dr.Id AS 'SchemeId',
-        '' AS 'ApprovalNumber',
-        'Direct registrant' AS SchemeName,
-        COALESCE(ap.OverseasProducerName, o.[Name], '') AS 'ProducerName',
-        COALESCE(ac.Name, oc.Name, '') AS 'ProducerCountry',
-        4 AS Quarter,
-        eoa.WeeeCategory,
-        eoa.Tonnage,
-        1 AS IsDirectProducer  -- This is a direct producer
-    FROM
-        [Producer].[DirectProducerSubmission] dps
-        INNER JOIN [Producer].[DirectRegistrant] dr ON dr.Id = dps.DirectRegistrantId
-        INNER JOIN [Organisation].[Organisation] o ON o.Id = dr.OrganisationId
-        INNER JOIN [Organisation].[Address] oa ON oa.Id = o.BusinessAddressId
-        INNER JOIN [Lookup].[Country] oc ON oc.Id = oa.CountryId
-        INNER JOIN [Producer].[RegisteredProducer] rp ON dps.RegisteredProducerId = rp.Id
-        INNER JOIN [Producer].[DirectProducerSubmissionHistory] dpsh ON dpsh.Id = dps.CurrentSubmissionId
-        INNER JOIN [PCS].[EeeOutputReturnVersion] eorv ON eorv.Id = dpsh.EeeOutputReturnVersionId
-        INNER JOIN [PCS].[EeeOutputReturnVersionAmount] eorva ON eorva.EeeOutputReturnVersionId = eorv.Id
-        INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
-        LEFT JOIN [Producer].[AuthorisedRepresentative] ap ON ap.Id = dr.AuthorisedRepresentativeId
-        LEFT JOIN [Producer].[Contact] pc ON pc.Id = ap.OverseasContactId
-        LEFT JOIN [Producer].[Address] pa ON pa.Id = pc.AddressId
-        LEFT JOIN [Lookup].[Country] ac ON ac.Id = pa.CountryId
+		RP.ProducerRegistrationNumber as 'PRN',
+		DR.Id AS 'SchemeId',
+		'' AS 'ApprovalNumber',
+		'Direct registrant' AS SchemeName,
+		COALESCE(AP.OverseasProducerName, O.[Name], '') AS 'ProducerName',
+		COALESCE(AC.Name, OC.Name, '') AS 'ProducerCountry',
+		4 AS Quarter,
+		EOA.WeeeCategory,
+		EOA.Tonnage,
+		1 AS IsDirectProducer
+	FROM
+		[Producer].[DirectProducerSubmission] DPS
+		INNER JOIN [Producer].[DirectRegistrant] DR ON DR.Id = DPS.DirectRegistrantId
+		INNER JOIN [Organisation].[Organisation] O ON O.Id = DR.OrganisationId
+		INNER JOIN [Organisation].[Address] OA ON OA.Id = O.BusinessAddressId
+		INNER JOIN [Lookup].[Country] OC ON OC.Id = OA.CountryId
+		INNER JOIN [Producer].[RegisteredProducer] RP ON DPS.RegisteredProducerId = RP.Id AND DPS.ComplianceYear = (@ComplianceYear - 1)
+		INNER JOIN (
+			SELECT 
+				DirectProducerSubmissionId,
+				EeeOutputReturnVersionId,
+				Id,
+				ROW_NUMBER() OVER (PARTITION BY DirectProducerSubmissionId ORDER BY SubmittedDate DESC) AS RowNum
+			FROM [Producer].[DirectProducerSubmissionHistory]
+			WHERE SubmittedDate IS NOT NULL
+		) DPSH ON DPSH.DirectProducerSubmissionId = DPS.Id AND DPSH.RowNum = 1
+		INNER JOIN [PCS].[EeeOutputReturnVersion] EORV ON EORV.Id = DPSH.EeeOutputReturnVersionId
+		INNER JOIN [PCS].[EeeOutputReturnVersionAmount] EORVA ON EORVA.EeeOutputReturnVersionId = EORV.Id
+		INNER JOIN [PCS].[EeeOutputAmount] EOA ON EOA.Id = EORVA.EeeOuputAmountId
+		LEFT JOIN [Producer].[AuthorisedRepresentative] AP ON AP.Id = DR.AuthorisedRepresentativeId
+		LEFT JOIN [Producer].[Contact] PC ON PC.Id = AP.OverseasContactId
+		LEFT JOIN [Producer].[Address] PA ON PA.Id = PC.AddressId
+		LEFT JOIN [Lookup].[Country] AC ON AC.Id = PA.CountryId
     WHERE
         rp.Removed = 0 AND
         dps.Removed = 0 AND
         eoa.ObligationType = @ObligationType AND
-        dps.ComplianceYear = (@ComplianceYear + 1) AND
+        dps.ComplianceYear = (@ComplianceYear - 1) AND
         dps.[Status] = 2
+
 
     -- Create pivot table
     SELECT EeeData.PRN, EeeData.ProducerName, EeeData.ProducerCountry, EeeData.SchemeId, 
