@@ -157,12 +157,13 @@
             model.PossibleValues[0].Should().Be(InternalUserActivity.ManageScheme);
             model.PossibleValues[1].Should().Be(InternalUserActivity.SubmissionsHistory);
             model.PossibleValues[2].Should().Be(InternalUserActivity.ProducerDetails);
-            model.PossibleValues[3].Should().Be(InternalUserActivity.ManageEvidenceNotes);
-            model.PossibleValues[4].Should().Be(InternalUserActivity.ManagePcsCharges);
-            model.PossibleValues[5].Should().Be(InternalUserActivity.ManageAatfs);
-            model.PossibleValues[6].Should().Be(InternalUserActivity.ManageAes);
-            model.PossibleValues[7].Should().Be(InternalUserActivity.ManageUsers);
-            model.PossibleValues[8].Should().Be(InternalUserActivity.ViewReports);
+            model.PossibleValues[3].Should().Be(InternalUserActivity.DirectRegistrantDetails);
+            model.PossibleValues[4].Should().Be(InternalUserActivity.ManageEvidenceNotes);
+            model.PossibleValues[5].Should().Be(InternalUserActivity.ManagePcsCharges);
+            model.PossibleValues[6].Should().Be(InternalUserActivity.ManageAatfs);
+            model.PossibleValues[7].Should().Be(InternalUserActivity.ManageAes);
+            model.PossibleValues[8].Should().Be(InternalUserActivity.ManageUsers);
+            model.PossibleValues[9].Should().Be(InternalUserActivity.ViewReports);
         }
 
         [Fact]
