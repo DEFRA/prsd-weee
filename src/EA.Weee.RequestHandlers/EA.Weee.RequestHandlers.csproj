@@ -144,6 +144,7 @@
     <Compile Include="AatfReturn\GetAatfByOrganisationFacilityTypeHandler.cs" />
     <Compile Include="AatfReturn\GetPreviousQuarterSchemesHandler.cs" />
     <Compile Include="Aatf\GetAatfByIdHandler.cs" />
+    <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumberHandler.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
     <Compile Include="Admin\GetComplianceYearsFilterHandler.cs" />
@@ -628,6 +629,8 @@
     <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Shared\ISmallProducerSubmissionService.cs" />
+    <Compile Include="Shared\SmallProducerSubmissionService.cs" />
     <Compile Include="Test\GetPcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Test\UpdatePcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccess.cs" />
@@ -693,7 +696,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Base\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

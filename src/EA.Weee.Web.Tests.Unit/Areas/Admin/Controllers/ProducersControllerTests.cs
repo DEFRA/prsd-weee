@@ -9,12 +9,12 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using FakeItEasy;
+    using FluentAssertions;
     using Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using FluentAssertions;
     using Web.Areas.Admin.Controllers.Base;
     using Xunit;
 
@@ -22,6 +22,7 @@
     {
         private readonly BreadcrumbService breadcumbService;
         private readonly ISearcher<ProducerSearchResult> producerSearcher;
+        private readonly ISearcher<SmallProducerSearchResult> smallProducerSearcher;
         private readonly IWeeeClient weeeClient;
         private readonly IWeeeCache cache;
         private readonly ConfigurationService configurationService;
@@ -32,6 +33,7 @@
             weeeClient = A.Fake<IWeeeClient>();
             cache = A.Fake<IWeeeCache>();
             configurationService = A.Fake<ConfigurationService>();
+            smallProducerSearcher = A.Fake<ISearcher<SmallProducerSearchResult>>();
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumProducerOrganisationSearchResults).Returns(10);
         }
@@ -42,24 +44,30 @@
             typeof(ProducersController).Should().BeDerivedFrom<AdminController>();
         }
 
-        [Fact]
-        public async Task GetSearch_ReturnsSearchView()
+        [Theory]
+        [InlineData(SearchTypeEnum.SmallProducer)]
+        [InlineData(SearchTypeEnum.Producer)]
+
+        public async Task GetSearch_ReturnsSearchView(SearchTypeEnum searchType)
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
 
             // Act
-            ActionResult result = await controller.Search();
+            ActionResult result = await controller.Search(searchType);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "search");
+
+            var model = viewResult.Model as SearchViewModel;
+            model.SearchType.Should().Be(searchType);
         }
 
         [Fact]
@@ -70,7 +78,7 @@
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
 
             SearchViewModel viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -93,7 +101,7 @@
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
 
             SearchViewModel viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedRegistrationNumber = null };
 
@@ -116,7 +124,7 @@
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
 
             SearchViewModel viewModel = new SearchViewModel
             {
@@ -135,8 +143,10 @@
             Assert.Equal("WEE/AA1111AA", redirectResult.RouteValues["RegistrationNumber"]);
         }
 
-        [Fact]
-        public async Task GetSearchResults_DoesSearchForTenResultsAndReturnsSearchReturnsView()
+        [Theory]
+        [InlineData(SearchTypeEnum.SmallProducer)]
+        [InlineData(SearchTypeEnum.Producer)]
+        public async Task GetSearchResults_DoesSearchForTenResultsAndReturnsSearchReturnsView(SearchTypeEnum searchType)
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
@@ -156,10 +166,10 @@
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
 
             // Act
-            ActionResult result = await controller.SearchResults("testSearchTerm");
+            ActionResult result = await controller.SearchResults("testSearchTerm", searchType);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -171,6 +181,7 @@
             Assert.NotNull(viewModel);
 
             Assert.Contains(viewModel.Results, r => r.RegistrationNumber == "WEE/AA1111AA");
+            viewModel.SearchType.Should().Be(searchType);
         }
 
         [Fact]
@@ -194,7 +205,7 @@
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -223,7 +234,7 @@
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
@@ -257,7 +268,7 @@
             A.CallTo(() => weeeClientFunc())
                 .Returns(weeeClient);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService, smallProducerSearcher);
 
             // Act
             ActionResult result = await controller.Details("WEE/AA1111AA");
@@ -299,7 +310,7 @@
             A.CallTo(() => weeeClientFunc())
                 .Returns(weeeClient);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService, smallProducerSearcher);
 
             // Act
             ActionResult result = await controller.Details("WEE/AA1111AA");
@@ -343,7 +354,7 @@
             A.CallTo(() => weeeClientFunc())
                 .Returns(weeeClient);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService, smallProducerSearcher);
 
             // Act
             ActionResult result = await controller.FetchDetails("WEE/AA1111AA", 2015);
@@ -381,7 +392,7 @@
             A.CallTo(() => weeeClientFunc())
                 .Returns(weeeClient);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService, smallProducerSearcher);
 
             //Act
             var result = await controller.DownloadProducerAmendmentsCsv("WEE/AA1111AA");
@@ -405,7 +416,8 @@
                 A.Dummy<ISearcher<ProducerSearchResult>>(),
                 () => weeeClient,
                 A.Dummy<IWeeeCache>(),
-                configurationService);
+                configurationService,
+                smallProducerSearcher);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
                 .Returns(
@@ -450,7 +462,7 @@
                 A.Dummy<ISearcher<ProducerSearchResult>>(),
                 () => weeeClient,
                 A.Dummy<IWeeeCache>(),
-                configurationService);
+                configurationService, smallProducerSearcher);
 
             // Act
             ActionResult result = await controller.ConfirmRemoval(registeredProducerId);
@@ -480,7 +492,8 @@
                 A.Dummy<ISearcher<ProducerSearchResult>>(),
                 () => weeeClient,
                 A.Dummy<IWeeeCache>(),
-                configurationService);
+                configurationService,
+                smallProducerSearcher);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
                 .Returns(
@@ -509,7 +522,7 @@
                 A.Dummy<ISearcher<ProducerSearchResult>>(),
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<IWeeeCache>(),
-                configurationService);
+                configurationService, smallProducerSearcher);
 
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
@@ -546,7 +559,8 @@
                 A.Dummy<ISearcher<ProducerSearchResult>>(),
                 () => weeeClient,
                 A.Dummy<IWeeeCache>(),
-                configurationService);
+                configurationService,
+                smallProducerSearcher);
 
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
@@ -721,7 +735,7 @@
             A.CallTo(() => weeeClientFunc())
                 .Returns(weeeClient);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache, configurationService, smallProducerSearcher);
 
             //Act
             var result = await controller.DownloadProducerEeeDataHistoryCsv("WEE/AA1111AA");
@@ -732,7 +746,7 @@
 
         private ProducersController ProducersController()
         {
-            return new ProducersController(breadcumbService, producerSearcher, () => weeeClient, cache, configurationService);
+            return new ProducersController(breadcumbService, producerSearcher, () => weeeClient, cache, configurationService, smallProducerSearcher);
         }
     }
 }

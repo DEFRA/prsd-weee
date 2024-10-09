@@ -87,7 +87,7 @@
                     return RedirectToAction("Search", "Producers", new { searchType = SearchTypeEnum.Producer });
 
                 case InternalUserActivity.DirectRegistrantDetails:
-                    return RedirectToAction("Search", "Producers");
+                    return RedirectToAction("Search", "Producers", new { searchType = SearchTypeEnum.SmallProducer });
 
                 case InternalUserActivity.ManageEvidenceNotes:
                     return RedirectToAction("Index", "ManageEvidenceNotes");
