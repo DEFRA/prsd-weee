@@ -444,8 +444,9 @@
         {
             using (var wrapper = new DatabaseWrapper())
             {
-                var (complianceYear, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
+                var complianceYear = 2060;
                 // Direct registrant data is for the previous year
                 var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear - 1);
 
@@ -569,7 +570,7 @@
             using (var wrapper = new DatabaseWrapper())
             {
                 var setupData = DirectRegistrantHelper.SetupCommonTestData(wrapper);
-                var complianceYear = setupData.Item1;
+                var complianceYear = 2070;
 
                 var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
