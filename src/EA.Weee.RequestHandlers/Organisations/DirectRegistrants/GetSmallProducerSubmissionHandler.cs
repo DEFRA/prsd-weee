@@ -57,11 +57,14 @@
                     ? mapper.Map<Address, AddressData>(directRegistrant.Address)
                     : null,
                 HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
+                AuthorisedRepresentitiveData = directRegistrant.AuthorisedRepresentativeId.HasValue 
+                    ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative) 
+                    : null,
                 CurrentSubmission = currentYearSubmission != null
                     ? mapper.Map<SmallProducerSubmissionHistoryData>(
                         new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))
                     : null,
-                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>(),
             };
 
             foreach (var directProducerSubmission in submissionHistory)

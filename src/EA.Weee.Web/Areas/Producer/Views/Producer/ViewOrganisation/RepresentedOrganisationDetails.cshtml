@@ -10,17 +10,64 @@
     ViewBag.Title = @title + " - GOV.UK";
 }
 @section full_main_content{
-    <div class="govuk-!-padding-bottom-8"></div>
     <div class="govuk-tabs">
         @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
 
         <div class="govuk-tabs__panel" id="organisationDetails">
-            <h1 class="govuk-heading-m">
+            <h2 class="govuk-heading-m">
                 @title
-            </h1>
+            </h2>
             <table id="pcs-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
-                   
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Producer name</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.CompanyName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Trading name</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.BusinessTradingName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 1</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.Address1</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 2</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.Address2</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Town</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.TownOrCity</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">County</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Postcode</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.Postcode</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Country</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.CountryName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Phone number</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.Telephone</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Email</th>
+                        <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.Email</td>
+                    </tr>
                 </tbody>
             </table>
 

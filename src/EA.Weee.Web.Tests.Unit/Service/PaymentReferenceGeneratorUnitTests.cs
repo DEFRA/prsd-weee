@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Service
 {
+    using EA.Prsd.Core;
     using EA.Weee.Web.Services;
     using FluentAssertions;
     using System;
     using Xunit;
-
     public class PaymentReferenceGeneratorTests
     {
         private readonly PaymentReferenceGenerator generator = new PaymentReferenceGenerator();
@@ -68,8 +68,12 @@
         [Fact]
         public void GeneratePaymentReferenceWithSeparators_ShouldHaveCorrectFormat()
         {
+            var dateTime = new DateTime(2024, 1, 1);
+
+            SystemTime.Freeze(dateTime);
             var reference = generator.GeneratePaymentReferenceWithSeparators(20);
             reference.Should().MatchRegex(@"^WEEE-\d{4}-\d{6}-[A-Z0-9]{3}$");
+            SystemTime.Unfreeze();
         }
 
         [Fact]

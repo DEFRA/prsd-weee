@@ -46,6 +46,8 @@
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            source.UseMasterVersion = false;
+
             var submissionData = source.SmallProducerSubmissionData;
             var expectedAddress = fixture.Create<ServiceOfNoticeAddressData>();
             A.CallTo(() => mapper.Map<AddressData, ServiceOfNoticeAddressData>(A<AddressData>._))
@@ -65,6 +67,7 @@
         {
             // Arrange
             var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            source.UseMasterVersion = false;
             var submissionData = source.SmallProducerSubmissionData;
             submissionData.CurrentSubmission.ServiceOfNoticeData = null;
             var expectedAddress = new ServiceOfNoticeAddressData();

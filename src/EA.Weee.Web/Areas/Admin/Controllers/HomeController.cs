@@ -86,6 +86,9 @@
                 case InternalUserActivity.ProducerDetails:
                     return RedirectToAction("Search", "Producers", new { searchType = SearchTypeEnum.Producer });
 
+                case InternalUserActivity.DirectRegistrantDetails:
+                    return RedirectToAction("Search", "Producers");
+
                 case InternalUserActivity.ManageEvidenceNotes:
                     return RedirectToAction("Index", "ManageEvidenceNotes");
 
@@ -140,6 +143,8 @@
             viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
             viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
             viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
+            viewModel.PossibleValues.Add(InternalUserActivity.DirectRegistrantDetails);
+
             viewModel.PossibleValues.Add(InternalUserActivity.ManageEvidenceNotes);
             if (configuration.EnablePCSObligations)
             {
