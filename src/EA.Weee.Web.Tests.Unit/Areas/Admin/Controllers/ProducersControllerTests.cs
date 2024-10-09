@@ -4,7 +4,9 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Admin.Controllers;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -18,7 +20,7 @@
     using Web.Areas.Admin.Controllers.Base;
     using Xunit;
 
-    public class ProducersControllerTests
+    public class ProducersControllerTests : SimpleUnitTestBase
     {
         private readonly BreadcrumbService breadcumbService;
         private readonly ISearcher<ProducerSearchResult> producerSearcher;
@@ -26,6 +28,8 @@
         private readonly IWeeeClient weeeClient;
         private readonly IWeeeCache cache;
         private readonly ConfigurationService configurationService;
+        private readonly ProducersController controller;
+
         public ProducersControllerTests()
         {
             breadcumbService = A.Fake<BreadcrumbService>();
@@ -36,6 +40,14 @@
             smallProducerSearcher = A.Fake<ISearcher<SmallProducerSearchResult>>();
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumProducerOrganisationSearchResults).Returns(10);
+
+            controller = new ProducersController(
+                breadcumbService,
+                producerSearcher,
+                () => weeeClient,
+                cache,
+                configurationService,
+                smallProducerSearcher);
         }
 
         [Fact]
@@ -141,47 +153,6 @@
 
             Assert.Equal("Details", redirectResult.RouteValues["action"]);
             Assert.Equal("WEE/AA1111AA", redirectResult.RouteValues["RegistrationNumber"]);
-        }
-
-        [Theory]
-        [InlineData(SearchTypeEnum.SmallProducer)]
-        [InlineData(SearchTypeEnum.Producer)]
-        public async Task GetSearchResults_DoesSearchForTenResultsAndReturnsSearchReturnsView(SearchTypeEnum searchType)
-        {
-            // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-
-            List<ProducerSearchResult> fakeResults = new List<ProducerSearchResult>()
-            {
-                new ProducerSearchResult()
-                {
-                    Name = "Producer1",
-                    RegistrationNumber = "WEE/AA1111AA"
-                }
-            };
-
-            ISearcher<ProducerSearchResult> producerSearcher = A.Fake<ISearcher<ProducerSearchResult>>();
-            A.CallTo(() => producerSearcher.Search("testSearchTerm", 10, false))
-                .Returns(fakeResults);
-
-            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient, cache, configurationService, smallProducerSearcher);
-
-            // Act
-            ActionResult result = await controller.SearchResults("testSearchTerm", searchType);
-
-            // Assert
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
-
-            SearchResultsViewModel viewModel = viewResult.Model as SearchResultsViewModel;
-            Assert.NotNull(viewModel);
-
-            Assert.Contains(viewModel.Results, r => r.RegistrationNumber == "WEE/AA1111AA");
-            viewModel.SearchType.Should().Be(searchType);
         }
 
         [Fact]
@@ -742,6 +713,80 @@
 
             //Assert
             Assert.IsType<FileContentResult>(result);
+        }
+
+        [Theory]
+        [InlineData(SearchTypeEnum.Producer, InternalUserActivity.ProducerDetails)]
+        [InlineData(SearchTypeEnum.SmallProducer, InternalUserActivity.DirectRegistrantDetails)]
+        public async Task GetSearch_ReturnsSearchView_WithCorrectSearchTypeAndBreadcrumb(SearchTypeEnum searchType, string expectedActivity)
+        {
+            // Act
+            var result = await controller.Search(searchType);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = result as ViewResult;
+            viewResult.Model.Should().BeOfType<SearchViewModel>();
+            var model = viewResult.Model as SearchViewModel;
+            model.SearchType.Should().Be(searchType);
+
+            breadcumbService.InternalActivity.Should().Be(expectedActivity);
+        }
+
+        [Theory]
+        [InlineData(SearchTypeEnum.Producer)]
+        [InlineData(SearchTypeEnum.SmallProducer)]
+        public async Task GetSearchResults_ReturnsCorrectResultsAndBreadcrumb(SearchTypeEnum searchType)
+        {
+            // Arrange
+            const string searchTerm = "test";
+            if (searchType == SearchTypeEnum.Producer)
+            {
+                A.CallTo(() => producerSearcher.Search(searchTerm, 10, false))
+                    .Returns(new List<ProducerSearchResult>() { new ProducerSearchResult() { RegistrationNumber = "WEE/AA1111AA" } });
+            }
+            else
+            {
+                A.CallTo(() => smallProducerSearcher.Search(searchTerm, 10, false))
+                    .Returns(new List<SmallProducerSearchResult>() { new SmallProducerSearchResult() { RegistrationNumber = "WEE/BB2222BB" } });
+            }
+
+            // Act
+            var result = await controller.SearchResults(searchTerm, searchType);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+            var viewResult = result as ViewResult;
+            viewResult.Model.Should().BeOfType<SearchResultsViewModel>();
+            var model = viewResult.Model as SearchResultsViewModel;
+
+            model.SearchType.Should().Be(searchType);
+            model.Results.Should().Contain(a =>
+                a.RegistrationNumber == (searchType == SearchTypeEnum.SmallProducer ? "WEE/BB2222BB" : "WEE/AA1111AA"));
+
+            var expectedActivity = searchType == SearchTypeEnum.Producer ? InternalUserActivity.ProducerDetails : InternalUserActivity.DirectRegistrantDetails;
+            breadcumbService.InternalActivity.Should().Be(expectedActivity);
+        }
+
+        [Theory]
+        [InlineData(SearchTypeEnum.Producer, "Details")]
+        [InlineData(SearchTypeEnum.SmallProducer, "Submissions")]
+        public async Task PostSearchResults_RedirectsToCorrectAction(SearchTypeEnum searchType, string expectedAction)
+        {
+            // Arrange
+            var viewModel = new SearchResultsViewModel { SearchType = searchType, SelectedRegistrationNumber = "WEE/AA1111AA" };
+
+            // Act
+            var result = await controller.SearchResults(viewModel);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>();
+            var redirectResult = result as RedirectToRouteResult;
+            redirectResult.RouteValues["action"].Should().Be(expectedAction);
+            redirectResult.RouteValues["RegistrationNumber"].Should().Be("WEE/AA1111AA");
+
+            var expectedActivity = searchType == SearchTypeEnum.Producer ? InternalUserActivity.ProducerDetails : InternalUserActivity.DirectRegistrantDetails;
+            breadcumbService.InternalActivity.Should().Be(expectedActivity);
         }
 
         private ProducersController ProducersController()
