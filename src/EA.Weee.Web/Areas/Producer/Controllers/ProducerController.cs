@@ -139,7 +139,7 @@
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
 
-            var yearParam = year ?? years.First();
+            int? yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
 
             return await OrganisationDetails(yearParam);
         }
@@ -296,7 +296,10 @@
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
         {
-            return data.SubmissionHistory.OrderByDescending(x => x.Key).Select(x => x.Key);
+            return data.SubmissionHistory
+                .Where(x => x.Value.Status == SubmissionStatus.Submitted)
+                .OrderByDescending(x => x.Key)
+                .Select(x => x.Key);
         }
 
         private T MapDetailsSubmissionYearModel<T>(int? year)
