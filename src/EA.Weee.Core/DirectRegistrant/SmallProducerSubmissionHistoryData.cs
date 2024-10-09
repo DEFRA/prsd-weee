@@ -42,5 +42,9 @@
         public AddressData ServiceOfNoticeData { get; set; }
 
         public IList<Eee> TonnageData { get; set; }
+
+        public bool HasPaid {get; set; }
+
+        public SubmissionStatus Status { get; set; }
     }
 }
