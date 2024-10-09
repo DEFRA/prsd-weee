@@ -54,11 +54,23 @@
             return View();
         }
 
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public ActionResult AlreadySubmittedAndPaid()
+        {
+            return View(SmallProducerSubmissionData.OrganisationData.Id);
+        }
+
         [SmallProducerSubmissionContext]
         [HttpGet]
         public async Task<ActionResult> TaskList()
         {
             var submission = SmallProducerSubmissionData.CurrentSubmission;
+
+            if (submission.HasPaid && submission.Status == SubmissionStatus.Submitted)
+            {
+                return RedirectToAction("AlreadySubmittedAndPaid");
+            }
 
             var model = new TaskListViewModel()
             {
