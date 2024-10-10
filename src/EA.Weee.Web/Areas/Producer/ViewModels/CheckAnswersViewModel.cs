@@ -18,5 +18,6 @@
         public EditEeeDataViewModel EeeData { get; set; }
         public bool? RedirectToCheckAnswers { get; set; }
         public bool? IsPdfDownload { get; set; } = false;
+        public int ComplianceYear { get; set; }
     }
 }
