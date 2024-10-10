@@ -9,6 +9,7 @@ namespace EA.Weee.Api
 {
     using Autofac;
     using Autofac.Integration.WebApi;
+    using EA.Weee.Api.HangfireServices;
     using EA.Weee.Core.Configuration;
     using Elmah.Contrib.WebApi;
     using IdentityServer3.AccessTokenValidation;
@@ -85,6 +86,8 @@ namespace EA.Weee.Api
                 .UseSqlServerStorage("Weee.DefaultConnection");
 
             HangfireBootstrapper.Instance.Start();
+            
+            RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(), Cron.Minutely());
 
             DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
