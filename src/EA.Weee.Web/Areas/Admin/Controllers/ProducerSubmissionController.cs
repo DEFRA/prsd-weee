@@ -5,8 +5,7 @@
 
     public class ProducerSubmissionController : AdminController
     {
-        // GET: Admin/ProducerSubmission
-        public ActionResult Index()
+        public ActionResult Submissions()
         {
             return View();
         }

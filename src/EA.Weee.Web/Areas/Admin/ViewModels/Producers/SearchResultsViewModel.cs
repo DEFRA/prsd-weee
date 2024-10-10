@@ -11,9 +11,11 @@
         [DisplayName("Search term")]
         public string SearchTerm { get; set; }
 
-        public IList<ProducerSearchResult> Results { get; set; }
+        public IList<RegisteredProducerSearchResult> Results { get; set; }
 
         [Required(ErrorMessage = "You must choose a producer")]
         public string SelectedRegistrationNumber { get; set; }
+
+        public SearchTypeEnum SearchType { get; set; }
     }
 }

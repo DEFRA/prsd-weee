@@ -75,6 +75,7 @@
             builder.RegisterType<WeeeCache>()
                 .As<IWeeeCache>()
                 .As<ISearchResultProvider<ProducerSearchResult>>()
+                .As<ISearchResultProvider<SmallProducerSearchResult>>()
                 .As<ISearchResultProvider<OrganisationSearchResult>>();
 
             // Breadcrumb
@@ -89,6 +90,10 @@
             // We're going to use the simple producer searcher.
             builder.RegisterType<SimpleProducerSearcher>()
                 .As<ISearcher<ProducerSearchResult>>()
+                .InstancePerRequest();
+
+            builder.RegisterType<SimpleSmallProducerSearcher>()
+                .As<ISearcher<SmallProducerSearchResult>>()
                 .InstancePerRequest();
 
             // We're going to use the fuzzy organisation searcher.
