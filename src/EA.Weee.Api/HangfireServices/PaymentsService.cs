@@ -96,8 +96,10 @@
 
                         freshPayment.DirectProducerSubmission.FinalPaymentSession = freshPayment;
                         freshPayment.LastProcessedAt = DateTime.UtcNow;
+                        
+                        context.SetCurrentJobId(jobId);
 
-                        await context.SaveChangesAsync(jobId, CancellationToken.None);
+                        await context.SaveChangesAsync(CancellationToken.None);
                         transaction.Commit();
 
                         logger.Information($"Successfully processed payment {payment.PaymentId}. Job ID: {jobId}");
