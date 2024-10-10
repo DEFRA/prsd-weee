@@ -54,7 +54,7 @@
                 var logger = cc.Resolve<ILogger>();
 
                 string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\" + config.CompaniesCertificateName;
-                X509Certificate2 certificate = new X509Certificate2(filePath, config.CompaniesHousePassword);
+                //X509Certificate2 certificate = new X509Certificate2(filePath, config.CompaniesHousePassword);
                 HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
                 {
                     ProxyEnabled = config.ProxyEnabled,
@@ -64,7 +64,7 @@
                 };
 
                     return new CompaniesHouseClient(config.CompaniesHouseBaseUrl, httpClient, retryPolicy, 
-                        jsonSerializer, httpClientHandlerConfig, certificate, logger);
+                        jsonSerializer, httpClientHandlerConfig, logger, new OAuthTokenProvider(httpClient, httpClientHandlerConfig, logger, "client", "secret", "scope", "tenant"));
                 }).As<ICompaniesHouseClient>();
 
             builder.Register(c =>
