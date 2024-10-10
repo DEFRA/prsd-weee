@@ -320,6 +320,7 @@
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Organisations\IProducerSubmissionViewModel.cs" />
     <Compile Include="Organisations\NotRequiredPartnerModel.cs" />
+    <Compile Include="Organisations\DirectRegistrantInfo.cs" />
     <Compile Include="Organisations\SoleTraderViewModel.cs" />
     <Compile Include="Organisations\AdditionalContactModel.cs" />
     <Compile Include="Organisations\PartnerViewModel.cs" />
