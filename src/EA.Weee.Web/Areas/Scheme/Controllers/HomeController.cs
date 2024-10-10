@@ -143,9 +143,11 @@
                 {
                     activities.Add(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
-                    foreach (var registrant in organisationDetails.DirectRegistrants)
+                    var firstRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
+
+                    if (firstRegistrant != null)
                     {
-                        if (registrant.YearSubmissionStarted)
+                        if (firstRegistrant.YearSubmissionStarted)
                         {
                             activities.Add(ProducerSubmissionConstant.ContinueProducerRegistrationSubmission);
                         }
