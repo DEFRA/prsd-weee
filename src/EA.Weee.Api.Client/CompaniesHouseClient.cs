@@ -1,21 +1,21 @@
 ﻿namespace EA.Weee.Api.Client
 {
+    using System;
+    using System.IdentityModel;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using CuttingEdge.Conditions;
     using EA.Weee.Api.Client.Models;
     using EA.Weee.Api.Client.Serlializer;
     using Serilog;
-    using System;
-    using System.IdentityModel;
-    using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading.Tasks;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
         private readonly IHttpClientWrapper httpClient;
-
+        private readonly OAuthTokenProvider tokenProvider;
         private bool disposed;
 
         public CompaniesHouseClient(
@@ -24,27 +24,26 @@
             IRetryPolicyWrapper retryPolicy,
             IJsonSerializer jsonSerializer,
             HttpClientHandlerConfig config,
-            X509Certificate2 certificate,
-            ILogger logger)
+            ILogger logger,
+            OAuthTokenProvider tokenProvider)
         {
             Condition.Requires(baseUrl).IsNotNullOrWhiteSpace();
             Condition.Requires(httpClientFactory).IsNotNull();
             Condition.Requires(retryPolicy).IsNotNull();
             Condition.Requires(jsonSerializer).IsNotNull();
             Condition.Requires(config).IsNotNull();
-            Condition.Requires(certificate).IsNotNull();
             Condition.Requires(logger).IsNotNull();
+            Condition.Requires(tokenProvider).IsNotNull();
 
-            this.httpClient = httpClientFactory.CreateHttpClientWithCertificate(baseUrl, config, logger, certificate);
-            
+            this.httpClient = httpClientFactory.CreateHttpClient(baseUrl, config, logger);
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;
+            this.tokenProvider = tokenProvider;
         }
 
         public async Task<DefraCompaniesHouseApiModel> GetCompanyDetailsAsync(string endpoint, string companyReference)
         {
             Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
-
             if (!IsValidCompanyReference(companyReference))
             {
                 return null;
@@ -52,12 +51,18 @@
 
             try
             {
+                var token = await tokenProvider.GetAccessTokenAsync();
+                var requestUri = $"{endpoint}/{companyReference}";
+
                 var response = await retryPolicy.ExecuteAsync(() =>
-                    httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
+                    httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri)
+                    {
+                        Headers = { { "Authorization", $"Bearer {token}" } }
+                    })).ConfigureAwait(false);
 
                 if (response.StatusCode == System.Net.HttpStatusCode.BadRequest || response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    throw new BadRequestException($"Companies house bad request");
+                    throw new BadRequestException("Companies house bad request");
                 }
 
                 response.EnsureSuccessStatusCode();
@@ -89,7 +94,7 @@
             }
             if (disposing)
             {
-                // Dispose of any disposable fields if necessary
+                (httpClient as IDisposable)?.Dispose();
             }
             disposed = true;
         }
