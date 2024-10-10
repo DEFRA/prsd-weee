@@ -276,9 +276,13 @@
             A.CallTo(() => directRegistrant.Id).Returns(directRegistrantId);
             A.CallTo(() => directRegistrant.OrganisationId).Returns(organisation.Id);
 
+            var knownComplianceDate = new DateTime(2024, 1, 1);
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(knownComplianceDate);
+
             A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>
             {
-                new DirectProducerSubmission { ComplianceYear = DateTime.UtcNow.Year }
+                new DirectProducerSubmission { ComplianceYear = knownComplianceDate.Year }
             });
 
             var directRegistrants = new List<DirectRegistrant> { directRegistrant };
@@ -292,6 +296,7 @@
             // Assert
             result.HasDirectRegistrant.Should().BeTrue();
             result.DirectRegistrants.Should().ContainSingle(dr => dr.DirectRegistrantId == directRegistrantId);
+            result.DirectRegistrants.First().YearSubmissionStarted.Should().BeTrue();
         }
 
         private Organisation GetOrganisationWithId(Guid id)
