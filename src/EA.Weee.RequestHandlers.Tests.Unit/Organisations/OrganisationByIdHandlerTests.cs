@@ -15,6 +15,7 @@
     using Requests.Organisations;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Weee.Tests.Core;
@@ -264,25 +265,33 @@
         [Fact]
         public async Task HandleAsync_GivenOrganisationHasDirectRegistrant_OrganisationShouldHaveDirectRegistrant()
         {
+            // Arrange
             var organisation = GetOrganisationWithId(organisationId);
-
             var expectedReturnValue = new OrganisationData();
             A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
 
             var directRegistrant = A.Fake<DirectRegistrant>();
-            A.CallTo(() => directRegistrant.Id).Returns(Guid.NewGuid());
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => directRegistrant.Id).Returns(directRegistrantId);
             A.CallTo(() => directRegistrant.OrganisationId).Returns(organisation.Id);
 
-            var directRegistrants = new List<DirectRegistrant> { directRegistrant };
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>
+            {
+                new DirectProducerSubmission { ComplianceYear = DateTime.UtcNow.Year }
+            });
 
+            var directRegistrants = new List<DirectRegistrant> { directRegistrant };
             A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(directRegistrants));
 
             var message = new GetOrganisationInfo(organisationId);
 
+            // Act
             var result = await handler.HandleAsync(message);
 
+            // Assert
             result.HasDirectRegistrant.Should().BeTrue();
-            result.DirectRegistrantId.Should().Be(directRegistrant.Id);
+            result.DirectRegistrants.Should().ContainSingle(dr => dr.DirectRegistrantId == directRegistrantId);
         }
 
         private Organisation GetOrganisationWithId(Guid id)
