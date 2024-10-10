@@ -27,15 +27,15 @@
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterTypeByEnvironment(typeof(WeeeContext), environment);
+            builder.RegisterTypeAsByEnvironmentInstancePerLifetimeScope(typeof(WeeeContext), environment);
             builder.RegisterTypeByEnvironment<EvidenceDataAccess, IEvidenceDataAccess>(environment);
             builder.RegisterTypeByEnvironment<GenericDataAccess, IGenericDataAccess>(environment);
-            builder.RegisterTypeByEnvironment<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
+            builder.RegisterTypeByEnvironmentInstancePerLifetimeScope<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
             builder.RegisterTypeByEnvironment<SystemDataDataAccess, ISystemDataDataAccess>(environment);
             builder.RegisterTypeByEnvironment<ObligationDataAccess, IObligationDataAccess>(environment);
             builder.RegisterTypeByEnvironment<OrganisationDataAccess, IOrganisationDataAccess>(environment);
             builder.RegisterTypeByEnvironment<OrganisationTransactionDataAccess, IOrganisationTransactionDataAccess>(environment);
-            builder.RegisterTypeByEnvironment<PaymentSessionDataAccess, IPaymentSessionDataAccess>(environment);
+            builder.RegisterTypeByEnvironmentInstancePerLifetimeScope<PaymentSessionDataAccess, IPaymentSessionDataAccess>(environment);
             builder.RegisterTypeByEnvironment<GetDirectProducerSubmissionActiveComplianceYearsDataAccess, IGetDirectProducerSubmissionActiveComplianceYearsDataAccess>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));

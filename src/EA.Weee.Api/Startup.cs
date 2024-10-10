@@ -1,4 +1,5 @@
-﻿using EA.Weee.Api;
+﻿using System.Collections.Generic;
+using EA.Weee.Api;
 using EA.Weee.Api.App_Start;
 using Hangfire;
 using Microsoft.Owin;
@@ -11,17 +12,20 @@ namespace EA.Weee.Api
     using Autofac.Integration.WebApi;
     using EA.Weee.Api.HangfireServices;
     using EA.Weee.Core.Configuration;
+    using EA.Weee.Core.Configuration.Logging;
     using Elmah.Contrib.WebApi;
     using IdentityServer3.AccessTokenValidation;
     using IdentityServer3.Core.Configuration;
     using IdSrv;
     using Infrastructure.Infrastructure;
     using Microsoft.Owin.Security.DataProtection;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using Owin;
     using Serilog;
     using Services;
     using System;
+    using System.Configuration;
     using System.Net;
     using System.Reflection;
     using System.Web;
@@ -55,6 +59,9 @@ namespace EA.Weee.Api
             builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
             builder.RegisterType<ElmahSqlLogger>().AsSelf().InstancePerRequest();
 
+            LoggerConfig.ConfigureSerilogWithSqlServer();
+            builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
+
             var container = AutofacBootstrapper.Initialize(builder, config);
             System.Net.ServicePointManager.SecurityProtocol |=
                 SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -87,7 +94,7 @@ namespace EA.Weee.Api
 
             HangfireBootstrapper.Instance.Start();
             
-            RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(), Cron.Minutely());
+            RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(Guid.NewGuid()), Cron.Minutely());
 
             DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
