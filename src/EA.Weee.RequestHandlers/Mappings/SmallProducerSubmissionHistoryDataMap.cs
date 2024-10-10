@@ -50,7 +50,9 @@
                 ServiceOfNoticeData = MapServiceOfNoticeAddress(currentSubmission),
                 TonnageData = MapTonnageData(currentSubmission),
                 HasPaid = source.DirectProducerSubmission.PaymentFinished == true,
-                Status = source.DirectProducerSubmission.DirectProducerSubmissionStatus.ToCoreEnumeration<SubmissionStatus>()
+                Status = source.DirectProducerSubmission.DirectProducerSubmissionStatus.ToCoreEnumeration<SubmissionStatus>(),
+
+                ComplianceYear = currentSubmission.DirectProducerSubmission.ComplianceYear
             };
         }
 
