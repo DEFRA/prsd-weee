@@ -19,34 +19,30 @@
         {
             using (var wrapper = new DatabaseWrapper())
             {
-                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+                var (_, _) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 const int complianceYear = 2000;
-                var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
-                var directRegistrant1Submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
 
-                var directRegistrant1Submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
 
-                var (organisation2, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear - 1);
+                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear - 1);
 
-                var directRegistrant2Submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
-
-                var (organisation3, directRegistrant3, registeredProducer3) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 3", "WEE/AG48365JY", complianceYear);
-
-                var directRegistrant3Submission3 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant3, registeredProducer3, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Incomplete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
 
                 var authorisedRepresentitive = new Domain.Producer.AuthorisedRepresentative("Not company 4");
 
-                var (organisation4, directRegistrant4, registeredProducer4) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 4", "WEE/AG49365JY", complianceYear);
+                var (_, directRegistrant3, registeredProducer3) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 4", "WEE/AG49365JY", complianceYear, null, authorisedRepresentitive);
 
-                var directRegistrant4Submission4 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant4, registeredProducer4, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant3, registeredProducer3, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
 
                 var dataAccess = new FetchSmallProducerSearchResultsForCacheDataAccess(wrapper.WeeeContext);
 
                 var result = await dataAccess.FetchLatestProducers();
 
-                // Assertions
+                // Assert
                 result.Should().NotBeNull();
                 result.Should().BeOfType<List<SmallProducerSearchResult>>();
                 result.Should().HaveCountGreaterOrEqualTo(2);
@@ -59,7 +55,9 @@
                 producer2.Name.Should().Be("My company 2");
                 producer2.Id.Should().NotBe(Guid.Empty);
 
-                result.Should().NotContain(c => c.RegistrationNumber == "WEE/AG48365JY");
+                var producer3 = result.Should().ContainSingle(p => p.RegistrationNumber == "WEE/AG49365JY").Subject;
+                producer3.Name.Should().Be("Not company 4");
+                producer3.Id.Should().NotBe(Guid.Empty);
 
                 result.Select(p => p.RegistrationNumber).Should().BeInAscendingOrder();
                 result.Select(p => p.RegistrationNumber).Should().OnlyHaveUniqueItems();
