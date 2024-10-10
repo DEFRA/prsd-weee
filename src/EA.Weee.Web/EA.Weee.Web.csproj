@@ -575,6 +575,7 @@
     <Compile Include="Areas\Admin\ViewModels\ManageEvidenceNotes\VoidTransferNoteViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Obligations\ViewObligationsAndEvidenceSummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Organisation\OrganisationDetailsDisplayOption.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\SearchTypeEnum.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\EvidenceAndObligationProgressViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Shared\ManageEvidenceNotesTabDisplayOptions.cs.cs" />
     <Compile Include="Areas\Payment\PaymentAreaRegistration.cs" />
@@ -1138,7 +1139,7 @@
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentFailure.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationFound.cshtml" />
-    <Content Include="Areas\Admin\Views\ProducerSubmission\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\Submissions.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\TotalEEEDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
     <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />

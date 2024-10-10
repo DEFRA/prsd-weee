@@ -113,6 +113,7 @@
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
     <Compile Include="DataAccess\IOrganisationDataAccess.cs" />
     <Compile Include="DataAccess\ISchemeDataAccess.cs" />
+    <Compile Include="DataAccess\ISmallProducerDataAccess.cs" />
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
     <Compile Include="DataAccess\ObligationDataAccess.cs" />
     <Compile Include="DataAccess\OrganisationTransactionDataAccess.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="DataAccess\ProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
     <Compile Include="DataAccess\OrganisationDataAccess.cs" />
+    <Compile Include="DataAccess\SmallProducerDataAccess.cs" />
     <Compile Include="DataAccess\SchemeDataAccess.cs" />
     <Compile Include="DataAccess\SystemDataDataAccess.cs" />
     <Compile Include="EntityFrameworkModule.cs" />

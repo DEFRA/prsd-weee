@@ -1,14 +1,14 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.DirectRegistrants
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.DirectRegistrants
 {
     using AutoFixture;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
-    using EA.Weee.RequestHandlers.Organisations.DirectRegistrants;
+    using EA.Weee.RequestHandlers.Admin.DirectRegistrants;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.RequestHandlers.Shared;
-    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
@@ -17,60 +17,48 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class GetSmallProducerSubmissionHandlerTests : SimpleUnitTestBase
+    public class GetSmallProducerSubmissionByRegistrationNumberHandlerTests : SimpleUnitTestBase
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
+        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
         private readonly ISmallProducerSubmissionService smallProducerSubmissionService;
-        private readonly GetSmallProducerSubmissionHandler handler;
-        private readonly Guid directRegistrantId = Guid.NewGuid();
+        private readonly GetSmallProducerSubmissionByRegistrationNumberHandler handler;
+        private const string RegisteredProducerNumber = "PRN";
 
-        public GetSmallProducerSubmissionHandlerTests()
+        public GetSmallProducerSubmissionByRegistrationNumberHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            genericDataAccess = A.Fake<IGenericDataAccess>();
-   
+            registeredProducerDataAccess = A.Fake<IRegisteredProducerDataAccess>();
             smallProducerSubmissionService = A.Fake<ISmallProducerSubmissionService>();
 
-            handler = new GetSmallProducerSubmissionHandler(authorization, genericDataAccess, smallProducerSubmissionService);
+            handler = new GetSmallProducerSubmissionByRegistrationNumberHandler(authorization, registeredProducerDataAccess, smallProducerSubmissionService);
         }
 
         [Fact]
         public async Task HandleAsync_AuthorizationCheck_IsCalled()
         {
-            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var request = new GetSmallProducerSubmissionByRegistrationNumber(RegisteredProducerNumber);
             SetupValidDirectRegistrant();
 
             await handler.HandleAsync(request);
 
-            A.CallTo(() => authorization.EnsureCanAccessExternalArea()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_AuthorizationCheck_NotAuthorized_ThrowsSecurityException()
         {
-            var request = new GetSmallProducerSubmission(directRegistrantId);
-            A.CallTo(() => authorization.EnsureCanAccessExternalArea()).Throws<SecurityException>();
+            var request = new GetSmallProducerSubmissionByRegistrationNumber(RegisteredProducerNumber);
+            A.CallTo(() => authorization.EnsureCanAccessInternalArea()).Throws<SecurityException>();
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(request));
-        }
-
-        [Fact]
-        public async Task HandleAsync_EnsureOrganisationAccess_IsCalled()
-        {
-            var request = new GetSmallProducerSubmission(directRegistrantId);
-            var directRegistrant = SetupValidDirectRegistrant();
-
-            await handler.HandleAsync(request);
-
-            A.CallTo(() => authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task HandleAsync_CallsSmallProducerService_ReturnsResult()
         {
             // Arrange
-            var request = new GetSmallProducerSubmission(directRegistrantId);
+            var request = new GetSmallProducerSubmissionByRegistrationNumber(RegisteredProducerNumber);
             var directRegistrant = SetupValidDirectRegistrant();
             var smallProducerData = TestFixture.Create<SmallProducerSubmissionData>();
 
@@ -88,10 +76,8 @@
             var directRegistrant = A.Fake<DirectRegistrant>();
             A.CallTo(() => directRegistrant.OrganisationId).Returns(Guid.NewGuid());
             A.CallTo(() => directRegistrant.Organisation).Returns(A.Fake<Organisation>());
-            A.CallTo(() => directRegistrant.Id).Returns(directRegistrantId);
-
-            A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
-                .Returns(Task.FromResult(directRegistrant));
+            A.CallTo(() => registeredProducerDataAccess.GetDirectRegistrantByRegistration(RegisteredProducerNumber))
+                .Returns(directRegistrant);
 
             return directRegistrant;
         }
