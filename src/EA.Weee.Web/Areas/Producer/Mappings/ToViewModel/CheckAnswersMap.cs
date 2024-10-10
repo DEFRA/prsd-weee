@@ -46,6 +46,7 @@
                 ServiceOfNoticeData = serviceOfNoticemodel,
                 RepresentingCompanyDetails = representingCompanyDetailsmodel,
                 EeeData = editEeeDatamodel,
+                ComplianceYear = submissionData.CurrentSubmission.ComplianceYear
             };
 
             return viewModel;

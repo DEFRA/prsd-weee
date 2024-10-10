@@ -5,5 +5,8 @@
     Layout = "~/Views/Shared/_PdfLayout.cshtml";
 }
 
+<header class="hgroup">
+    <h1 class="govuk-heading-l">Producer registration submission for @Model.ComplianceYear</h1>
+</header>
 
 @Html.Partial("_CheckAnswersContentPartial", Model)
