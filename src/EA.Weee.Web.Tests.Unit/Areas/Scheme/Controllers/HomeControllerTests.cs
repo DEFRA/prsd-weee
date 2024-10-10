@@ -2047,7 +2047,12 @@
         {
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
-            var organisationData = new OrganisationData { DirectRegistrantId = directRegistrantId };
+
+            var directRegistrant = new DirectRegistrantInfo { DirectRegistrantId = directRegistrantId, YearSubmissionStarted = false };
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo> { directRegistrant }
+            };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
@@ -2064,23 +2069,49 @@
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
 
-            var organisationData = new OrganisationData { DirectRegistrantId = directRegistrantId };
+            var directRegistrant = new DirectRegistrantInfo { DirectRegistrantId = directRegistrantId, YearSubmissionStarted = false };
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo> { directRegistrant }
+            };
 
             var activities = await HomeController().GetActivities(organisationId, organisationData);
 
             Assert.Contains(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission, activities);
-            Assert.Contains(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission, activities);
+            Assert.Contains(ProducerSubmissionConstant.NewProducerRegistrationSubmission, activities);
             Assert.Contains(ProducerSubmissionConstant.ViewOrganisation, activities);
         }
 
         [Fact]
-        public async Task ChooseActivityPOST_NewContinueProducerRegistration_ShouldRedirectToProducerTaskList()
+        public async Task ChooseActivityPOST_NewProducerRegistration_ShouldRedirectToProducerTaskList()
         {
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
             var model = new ChooseActivityViewModel
             {
-                SelectedValue = ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission,
+                SelectedValue = ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var result = await HomeController().ChooseActivity(model) as RedirectToRouteResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("TaskList", result.RouteValues["action"]);
+            Assert.Equal("Producer", result.RouteValues["controller"]);
+            Assert.Equal("Producer", result.RouteValues["area"]);
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+            Assert.Equal(directRegistrantId, result.RouteValues["directRegistrantId"]);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_ContinueProducerRegistration_ShouldRedirectToProducerTaskList()
+        {
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = ProducerSubmissionConstant.ContinueProducerRegistrationSubmission,
                 OrganisationId = organisationId,
                 DirectRegistrantId = directRegistrantId
             };
