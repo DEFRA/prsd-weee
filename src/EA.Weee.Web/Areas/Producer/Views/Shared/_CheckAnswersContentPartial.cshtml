@@ -1,6 +1,7 @@
 ﻿@using EA.Prsd.Core.Helpers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.DirectRegistrant
 @model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
 
 @{
@@ -157,6 +158,12 @@
                 </td>
             </tr>
         }
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s)</th>
+            <td class="govuk-table__cell" colspan="2">
+                @Model.EeeData.SellingTechnique.ToSellingTechniqueTypeString()
+            </td>
+        </tr>
     </tbody>
 </table>
 @if (!(Model.IsPdfDownload ?? false))
