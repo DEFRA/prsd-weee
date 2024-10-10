@@ -271,7 +271,7 @@
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission)
                 {
-                    return this.RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                    return this.RedirectToAction(nameof(ProducerController.RepresentedCompanies), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)

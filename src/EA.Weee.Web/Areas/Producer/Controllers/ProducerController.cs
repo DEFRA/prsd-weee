@@ -6,6 +6,7 @@
     using EA.Weee.Core;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
@@ -50,20 +51,45 @@
             this.pdfDocumentProvider = pdfDocumentProvider;
         }
 
-        public ActionResult Index()
+        //[SmallProducerSubmissionContext]
+        [HttpGet]
+        public async Task<ActionResult> RepresentedCompanies(Guid organisationId)
         {
-            return View();
+            var possibleValues = new List<(Guid DirectRegistrantId, Guid RepresentedCompanyId)>
+            {
+                (new Guid("425216C0-4AD7-4CE9-9235-82C3C1E26FE7"), new Guid("3091CD16-329D-4111-B1F7-B1F000DAA5E1")),
+                (new Guid("324D2CD9-618B-46CD-B272-B1EE00BB0918"), new Guid("8A0C6A16-C218-4620-8CD0-B1EE00BB0918"))
+            };
+
+            var model = new RepresentedCompaniesViewModel
+            {
+                PossibleValues = possibleValues.Select(v => $"{v.DirectRegistrantId}|{v.RepresentedCompanyId}").ToList(),
+                OrganisationId = organisationId
+            };
+
+            // need to retrieve the direct registrants represented companies by organisation id here 
+            return View(model);
         }
 
-        [SmallProducerSubmissionContext]
-        [HttpGet]
-        public async Task<ActionResult> RepresentedCompanies()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RepresentedCompanies(RepresentedCompaniesViewModel model)
         {
-            var model = new RepresentedCompaniesViewModel();
-
-
-
-
+            if (ModelState.IsValid)
+            {
+                var selectedIds = model.SelectedValue.Split('|');
+                if (selectedIds.Length == 2 && Guid.TryParse(selectedIds[0], out var directRegistrantId) && Guid.TryParse(selectedIds[1], out var representedCompanyId))
+                {
+                    return RedirectToAction(nameof(ProducerController.TaskList),
+                        typeof(ProducerController).GetControllerName(),
+                        new
+                        {
+                            area = "Producer",
+                            organisationId = model.OrganisationId,
+                            directRegistrantId
+                        });
+                }
+            }
 
             return View(model);
         }

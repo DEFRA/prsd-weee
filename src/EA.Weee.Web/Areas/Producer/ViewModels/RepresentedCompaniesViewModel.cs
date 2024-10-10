@@ -8,5 +8,6 @@
 
     public class RepresentedCompaniesViewModel : RadioButtonStringCollectionViewModel
     {
+        public Guid OrganisationId { get; set; }
     }
 }
