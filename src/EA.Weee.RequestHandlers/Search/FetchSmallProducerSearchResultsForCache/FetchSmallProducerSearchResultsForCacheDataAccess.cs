@@ -19,7 +19,7 @@
 
         public async Task<IList<SmallProducerSearchResult>> FetchLatestProducers()
         {
-            var results = await context.DirectProducerSubmissions
+            return await context.DirectProducerSubmissions
                 .GroupBy(s => s.RegisteredProducer.ProducerRegistrationNumber)
                 .Select(group => new
                 {
@@ -34,17 +34,14 @@
                     Name = x.LatestSubmission.DirectRegistrant.AuthorisedRepresentativeId.HasValue ? 
                         x.LatestSubmission.DirectRegistrant.AuthorisedRepresentative.OverseasProducerName : x.LatestSubmission.DirectRegistrant.Organisation.Name,
                     Id = x.LatestSubmission.DirectRegistrantId
-                })
-                .AsNoTracking()
-                .ToListAsync();
-
-            return results.Select(r => new SmallProducerSearchResult()
+                }).Select(r => new SmallProducerSearchResult()
                 {
                     RegistrationNumber = r.ProducerRegistrationNumber,
                     Name = r.Name,
                     Id = r.Id
                 })
-                .ToList();
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }
