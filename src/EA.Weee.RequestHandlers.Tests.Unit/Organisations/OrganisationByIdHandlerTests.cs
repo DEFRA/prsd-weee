@@ -4,6 +4,7 @@
     using DataAccess;
     using Domain;
     using Domain.Lookup;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Security;
@@ -14,6 +15,7 @@
     using Requests.Organisations;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Weee.Tests.Core;
@@ -27,12 +29,14 @@
         private readonly DbContextHelper dbHelper = new DbContextHelper();
         private readonly OrganisationByIdHandler handler;
         private readonly Guid organisationId;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public OrganisationByIdHandlerTests()
         {
             map = A.Fake<IMap<Organisation, OrganisationData>>();
             context = A.Fake<WeeeContext>();
             organisationId = Guid.NewGuid();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
             {
@@ -45,7 +49,8 @@
 
             handler = new OrganisationByIdHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(),
                 context,
-                map);
+                map,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -53,7 +58,7 @@
         {
             var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new OrganisationByIdHandler(authorization, context, map);
+            var handler = new OrganisationByIdHandler(authorization, context, map, systemDataDataAccess);
             var message = new GetOrganisationInfo(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
@@ -66,7 +71,7 @@
 
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var handler = new OrganisationByIdHandler(authorization, context, map);
+            var handler = new OrganisationByIdHandler(authorization, context, map, systemDataDataAccess);
             var message = new GetOrganisationInfo(organisationId);
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
@@ -219,7 +224,7 @@
                 .DenyRole(Roles.InternalAdmin)
                 .Build();
 
-            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map);
+            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map, systemDataDataAccess);
 
             var message = new GetOrganisationInfo(organisationId);
 
@@ -260,25 +265,38 @@
         [Fact]
         public async Task HandleAsync_GivenOrganisationHasDirectRegistrant_OrganisationShouldHaveDirectRegistrant()
         {
+            // Arrange
             var organisation = GetOrganisationWithId(organisationId);
-
             var expectedReturnValue = new OrganisationData();
             A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
 
             var directRegistrant = A.Fake<DirectRegistrant>();
-            A.CallTo(() => directRegistrant.Id).Returns(Guid.NewGuid());
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => directRegistrant.Id).Returns(directRegistrantId);
             A.CallTo(() => directRegistrant.OrganisationId).Returns(organisation.Id);
 
-            var directRegistrants = new List<DirectRegistrant> { directRegistrant };
+            var knownComplianceDate = new DateTime(2024, 1, 1);
 
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(knownComplianceDate);
+
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>
+            {
+                new DirectProducerSubmission { ComplianceYear = knownComplianceDate.Year }
+            });
+
+            var directRegistrants = new List<DirectRegistrant> { directRegistrant };
             A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(directRegistrants));
 
             var message = new GetOrganisationInfo(organisationId);
 
+            // Act
             var result = await handler.HandleAsync(message);
 
+            // Assert
             result.HasDirectRegistrant.Should().BeTrue();
-            result.DirectRegistrantId.Should().Be(directRegistrant.Id);
+            result.DirectRegistrants.Should().ContainSingle(dr => dr.DirectRegistrantId == directRegistrantId);
+            result.DirectRegistrants.First().YearSubmissionStarted.Should().BeTrue();
         }
 
         private Organisation GetOrganisationWithId(Guid id)
