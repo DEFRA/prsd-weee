@@ -6,7 +6,9 @@
     using Domain.Audit;
     using Domain.Charges;
     using Domain.DataReturns;
+    using Domain.Evidence;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
@@ -17,12 +19,11 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
+    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Domain.Evidence;
-    using Domain.Obligation;
 
     public class WeeeContext : DbContext
     {
@@ -278,6 +279,36 @@
 
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
+            AuditEntities();
+
+            int result;
+            if (alreadyHasTransaction)
+            {
+                result = await base.SaveChangesAsync(cancellationToken);
+
+                await this.DispatchEvents(dispatcher);
+            }
+            else
+            {
+                using (var transaction = Database.BeginTransaction())
+                {
+                    result = await base.SaveChangesAsync(cancellationToken);
+
+                    await this.DispatchEvents(dispatcher);
+
+                    transaction.Commit();
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<int> SaveChangesAsync(Guid jobId, CancellationToken cancellationToken)
+        {
+            bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
+
+            this.SetEntityId();
+            this.AuditChanges(jobId);
             AuditEntities();
 
             int result;
