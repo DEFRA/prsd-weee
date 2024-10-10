@@ -215,6 +215,13 @@
 
         public virtual IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
 
+        public void SetCurrentJobId(Guid job)
+        {
+            jobId = job;
+        }
+
+        private Guid jobId;
+
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)
             : base("name=Weee.DefaultConnection")
         {
@@ -278,37 +285,7 @@
             bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
 
             this.SetEntityId();
-            this.AuditChanges(userContext.UserId);
-            AuditEntities();
-
-            int result;
-            if (alreadyHasTransaction)
-            {
-                result = await base.SaveChangesAsync(cancellationToken);
-
-                await this.DispatchEvents(dispatcher);
-            }
-            else
-            {
-                using (var transaction = Database.BeginTransaction())
-                {
-                    result = await base.SaveChangesAsync(cancellationToken);
-
-                    await this.DispatchEvents(dispatcher);
-
-                    transaction.Commit();
-                }
-            }
-
-            return result;
-        }
-
-        public async Task<int> SaveChangesAsync(Guid jobId, CancellationToken cancellationToken)
-        {
-            bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
-
-            this.SetEntityId();
-            this.AuditChanges(jobId);
+            this.AuditChanges((jobId != Guid.Empty) ? jobId : userContext.UserId);
             AuditEntities();
 
             int result;
