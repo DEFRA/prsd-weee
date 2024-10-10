@@ -54,7 +54,15 @@
             return View();
         }
 
+        [HttpGet]
         [SmallProducerSubmissionContext]
+        public ActionResult AlreadySubmittedAndPaid()
+        {
+            return View(SmallProducerSubmissionData.OrganisationData.Id);
+        }
+
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> TaskList()
         {
