@@ -8,12 +8,20 @@
     {
         public ExistingProducerRegistrationNumbers(WeeeContext context)
         {
-            query = () => context
-                .RegisteredProducers
-                .Where(rp => rp.CurrentSubmission != null)
-                .Select(p => p.ProducerRegistrationNumber)
-                .Distinct()
-                .ToList();
+            query = () =>
+            {
+                var registeredProducerNumbers = context.RegisteredProducers
+                    .Where(rp => rp.CurrentSubmission != null)
+                    .Select(p => p.ProducerRegistrationNumber);
+
+                var directProducerNumbers = context.DirectProducerSubmissions
+                    .Select(a => a.RegisteredProducer.ProducerRegistrationNumber);
+
+                return registeredProducerNumbers
+                    .Union(directProducerNumbers)
+                    .Distinct()
+                    .ToList();
+            };
         }
     }
 }
