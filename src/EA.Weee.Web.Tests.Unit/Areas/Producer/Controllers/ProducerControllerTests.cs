@@ -316,43 +316,14 @@
             Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
         }
 
-        [Theory]
-        [InlineData(true, SubmissionStatus.Submitted)]
-        [InlineData(true, SubmissionStatus.InComplete)]
-        [InlineData(false, SubmissionStatus.Submitted)]
-        public async Task TaskList_IfPaid_RedirectToAlreadyPaid(bool hasPaid, SubmissionStatus status)
+        [Fact]
+        public void TaskList_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute()
         {
-            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
-            {
-                OrganisationData = new OrganisationData
-                {
-                    Id = Guid.Empty
-                },
-                CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
-                {
-                    HasPaid = hasPaid,
-                    Status = status,
-                    ComplianceYear = 2005,
-                    ContactDetailsComplete = true,
-                    EEEDetailsComplete = true,
-                    OrganisationDetailsComplete = true,
-                    RepresentingCompanyDetailsComplete = false,
-                    ServiceOfNoticeComplete = true
-                }
-            };
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("TaskList");
 
-            var result = await controller.TaskList();
-
-            var routeResult = result as RedirectToRouteResult;
-
-            if (hasPaid && status == SubmissionStatus.Submitted)
-            {
-                routeResult.RouteValues["action"].Should().Be("AlreadySubmittedAndPaid");
-            }
-            else
-            {
-                routeResult.Should().Be(null);
-            }
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
         }
 
         [Fact]
