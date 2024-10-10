@@ -20,7 +20,6 @@
         public async Task<IList<SmallProducerSearchResult>> FetchLatestProducers()
         {
             var results = await context.DirectProducerSubmissions
-                .Where(s => s.DirectProducerSubmissionStatus.Value == DirectProducerSubmissionStatus.Complete.Value)
                 .GroupBy(s => s.RegisteredProducer.ProducerRegistrationNumber)
                 .Select(group => new
                 {
