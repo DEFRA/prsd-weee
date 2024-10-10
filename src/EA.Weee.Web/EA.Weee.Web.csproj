@@ -613,6 +613,7 @@
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\PaymentResultModel.cs" />
+    <Compile Include="Areas\Producer\ViewModels\RepresentedCompaniesViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditEeeDataViewModel.cs" />
@@ -1104,7 +1105,6 @@
     <Content Include="Views\OrganisationRegistration\ContactDetails.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RepresentingCompanyAddressData.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\Index.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\Index.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegistrationComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationDetails.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RegisteredCompanyDetailsViewModel.cshtml" />
@@ -1143,6 +1143,7 @@
     <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
     <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\RepresentedCompanies.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

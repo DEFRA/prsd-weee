@@ -18,6 +18,7 @@
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Shared;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -52,6 +53,19 @@
         public ActionResult Index()
         {
             return View();
+        }
+
+        [SmallProducerSubmissionContext]
+        [HttpGet]
+        public async Task<ActionResult> RepresentedCompanies()
+        {
+            var model = new RepresentedCompaniesViewModel();
+
+
+
+
+
+            return View(model);
         }
 
         [SmallProducerSubmissionContext]
