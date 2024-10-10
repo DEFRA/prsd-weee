@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Api.HangfireServices
 {
     using Hangfire;
+    using System;
     using System.Threading.Tasks;
 
     public class PaymentsJob
@@ -12,10 +13,10 @@
             this.paymentsService = paymentsService;
         }
 
-        //[DisableConcurrentExecution(timeoutInSeconds: 3600)]
-        public async Task Execute()
+        [DisableConcurrentExecution(timeoutInSeconds: 3600)]
+        public async Task Execute(Guid jobId)
         {
-            await paymentsService.PerformTask();
+            await paymentsService.RunMopUpJob(jobId);
         }
     }
 }
