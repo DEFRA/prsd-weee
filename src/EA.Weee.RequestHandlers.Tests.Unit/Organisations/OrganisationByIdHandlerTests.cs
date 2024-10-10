@@ -4,6 +4,7 @@
     using DataAccess;
     using Domain;
     using Domain.Lookup;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Security;
@@ -27,12 +28,14 @@
         private readonly DbContextHelper dbHelper = new DbContextHelper();
         private readonly OrganisationByIdHandler handler;
         private readonly Guid organisationId;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public OrganisationByIdHandlerTests()
         {
             map = A.Fake<IMap<Organisation, OrganisationData>>();
             context = A.Fake<WeeeContext>();
             organisationId = Guid.NewGuid();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
             {
@@ -45,7 +48,8 @@
 
             handler = new OrganisationByIdHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(),
                 context,
-                map);
+                map,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -53,7 +57,7 @@
         {
             var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new OrganisationByIdHandler(authorization, context, map);
+            var handler = new OrganisationByIdHandler(authorization, context, map, systemDataDataAccess);
             var message = new GetOrganisationInfo(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
@@ -66,7 +70,7 @@
 
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var handler = new OrganisationByIdHandler(authorization, context, map);
+            var handler = new OrganisationByIdHandler(authorization, context, map, systemDataDataAccess);
             var message = new GetOrganisationInfo(organisationId);
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
@@ -219,7 +223,7 @@
                 .DenyRole(Roles.InternalAdmin)
                 .Build();
 
-            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map);
+            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map, systemDataDataAccess);
 
             var message = new GetOrganisationInfo(organisationId);
 
