@@ -40,6 +40,7 @@
             result.DirectRegistrantId.Should().Be(submissionData.DirectRegistrantId);
             result.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
             result.HasAuthorisedRepresentitive.Should().Be(submissionData.HasAuthorisedRepresentitive);
+            result.ComplianceYear.Should().Be(submissionData.CurrentSubmission.ComplianceYear);
         }
 
         [Fact]
