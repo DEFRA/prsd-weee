@@ -40,6 +40,8 @@
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
+        public SingleItemCache<IList<SmallProducerSearchResult>> SmallProducerSearchResultList { get; private set; }
+
         public SingleItemCache<DateTime> CurrentDate { get; private set; }
 
         private readonly string accessToken;
@@ -103,6 +105,12 @@
                 "ProducerPublicInfoList",
                 TimeSpan.FromDays(1),
                 () => FetchProducerSearchResultListFromApi());
+
+            SmallProducerSearchResultList = new SingleItemCache<IList<SmallProducerSearchResult>>(
+                provider,
+                "SmallProducerPublicInfoList",
+                TimeSpan.FromDays(1),
+                FetchSmallProducerSearchResultListFromApi);
 
             OrganisationSearchResultList = new SingleItemCache<IList<OrganisationSearchResult>>(
                 provider,
@@ -221,6 +229,17 @@
             }
         }
 
+        private async Task<IList<SmallProducerSearchResult>> FetchSmallProducerSearchResultListFromApi()
+        {
+            using (var client = apiClient())
+            {
+                var request = new FetchSmallProducerSearchResultsForCache();
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         private async Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultListFromApi()
         {
             using (var client = apiClient())
@@ -284,6 +303,11 @@
             return ProducerSearchResultList.Fetch();
         }
 
+        public Task<IList<SmallProducerSearchResult>> FetchSmallProducerSearchResultList()
+        {
+            return SmallProducerSearchResultList.Fetch();
+        }
+
         Task<IList<ProducerSearchResult>> ISearchResultProvider<ProducerSearchResult>.FetchAll()
         {
             return FetchProducerSearchResultList();
@@ -302,6 +326,11 @@
         Task<IList<OrganisationSearchResult>> ISearchResultProvider<OrganisationSearchResult>.FetchAll()
         {
             return FetchOrganisationSearchResultList();
+        }
+
+        Task<IList<SmallProducerSearchResult>> ISearchResultProvider<SmallProducerSearchResult>.FetchAll()
+        {
+            return FetchSmallProducerSearchResultList();
         }
 
         public async Task InvalidateOrganisationSearch()

@@ -5,6 +5,7 @@
     using Core.Shared;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Security;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using Infrastructure;
     using Services;
     using System;
@@ -83,10 +84,10 @@
                     return RedirectToAction("ManageAatfs", "Aatf", new { facilityType = FacilityType.Ae });
 
                 case InternalUserActivity.ProducerDetails:
-                    return RedirectToAction("Search", "Producers");
+                    return RedirectToAction("Search", "Producers", new { searchType = SearchTypeEnum.Producer });
 
                 case InternalUserActivity.DirectRegistrantDetails:
-                    return RedirectToAction("Search", "Producers");
+                    return RedirectToAction("Search", "Producers", new { searchType = SearchTypeEnum.SmallProducer });
 
                 case InternalUserActivity.ManageEvidenceNotes:
                     return RedirectToAction("Index", "ManageEvidenceNotes");

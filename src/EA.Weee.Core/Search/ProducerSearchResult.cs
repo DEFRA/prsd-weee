@@ -1,9 +1,6 @@
 ﻿namespace EA.Weee.Core.Search
 {
-    public class ProducerSearchResult : SearchResult
+    public class ProducerSearchResult : RegisteredProducerSearchResult
     {
-        public string RegistrationNumber { get; set; }
-
-        public string Name { get; set; }
     }
 }
