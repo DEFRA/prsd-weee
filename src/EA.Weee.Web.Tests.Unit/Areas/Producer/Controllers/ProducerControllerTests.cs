@@ -190,7 +190,10 @@
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
-                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>() { { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() }, },
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+                {
+                    { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() },
+                },
                 OrganisationData = new OrganisationData
                 {
                     Id = organisationId,
@@ -314,6 +317,51 @@
         }
 
         [Fact]
+        public void TaskList_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("TaskList");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ReturnView()
+        {
+            // Arrange
+
+            var id = Guid.NewGuid();
+
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = id
+                }
+            };
+
+            // Act
+            var result = controller.AlreadySubmittedAndPaid() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Model.Should().Be(id);
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("AlreadySubmittedAndPaid");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task CheckAnswers_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
@@ -400,6 +448,51 @@
                             .Map<SubmissionsYearDetails, OrganisationViewModel>(
                 A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("OrganisationDetails")]
+        [InlineData("ContactDetails")]
+        [InlineData("ServiceOfNoticeDetails")]
+        [InlineData("RepresentedOrganisationDetails")]
+        [InlineData("TotalEEEDetails")]
+        public async Task TabDetails_ReturnViewModelWithCorrectYears(string method)
+        {
+            SetupDefaultControllerData();
+
+            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+
+            var firstSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            firstSub.Status = SubmissionStatus.Submitted;
+
+            var secondSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            secondSub.Status = SubmissionStatus.Submitted;
+
+            var thirdSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            thirdSub.Status = SubmissionStatus.InComplete;
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, firstSub },
+                { 2025, secondSub },
+                { 2026, thirdSub }
+            };
+
+            var methodInfo = typeof(ProducerController).GetMethod(method, new[] { typeof(int?) });
+            var task = (Task<ActionResult>)methodInfo.Invoke(controller, new object[] { null });
+
+            var result = (await task) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            var expected = controller.SmallProducerSubmissionData.SubmissionHistory
+                .Where(x => x.Value.Status == SubmissionStatus.Submitted)
+                .OrderByDescending(x => x.Key)
+                .Select(x => x.Key);
+
+            model.Years.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
