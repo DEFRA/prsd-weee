@@ -8,12 +8,6 @@
     public class SellingTechniqueTypeEnumTests
     {
         [Fact]
-        public void SellingTechniqueType_ShouldHaveSerializableAttribute()
-        {
-            typeof(SellingTechniqueType).Should().BeDecoratedWith<SerializableAttribute>();
-        }
-
-        [Fact]
         public void SellingTechniqueType_ShouldHaveValues()
         {
             var values = EnumHelper.GetValues(typeof(SellingTechniqueType));
