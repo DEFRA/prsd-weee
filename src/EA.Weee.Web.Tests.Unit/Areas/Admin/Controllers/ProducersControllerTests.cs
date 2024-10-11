@@ -128,8 +128,10 @@
             Assert.Equal("testSearchTerm", redirectResult.RouteValues["SearchTerm"]);
         }
 
-        [Fact]
-        public async Task PostSearch_WithSelectedPRN_RedirectsToDetailsAction()
+        [Theory]
+        [InlineData(SearchTypeEnum.SmallProducer, "ProducerSubmission", "Submissions")]
+        [InlineData(SearchTypeEnum.Producer, "Producers", "Details")]
+        public async Task PostSearch_WithSelectedPRN_RedirectsToDetailsAction(SearchTypeEnum searchTypeEnum, string expectedController, string expectedAction)
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
@@ -141,7 +143,8 @@
             SearchViewModel viewModel = new SearchViewModel
             {
                 SearchTerm = "testSearchTerm, WEE/AA1111AA",
-                SelectedRegistrationNumber = "WEE/AA1111AA"
+                SelectedRegistrationNumber = "WEE/AA1111AA",
+                SearchType = searchTypeEnum
             };
 
             // Act
@@ -151,7 +154,8 @@
             RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
-            Assert.Equal("Details", redirectResult.RouteValues["action"]);
+            Assert.Equal(expectedAction, redirectResult.RouteValues["action"]);
+            Assert.Equal(expectedController, redirectResult.RouteValues["controller"]);
             Assert.Equal("WEE/AA1111AA", redirectResult.RouteValues["RegistrationNumber"]);
         }
 
@@ -769,9 +773,9 @@
         }
 
         [Theory]
-        [InlineData(SearchTypeEnum.Producer, "Details")]
-        [InlineData(SearchTypeEnum.SmallProducer, "Submissions")]
-        public async Task PostSearchResults_RedirectsToCorrectAction(SearchTypeEnum searchType, string expectedAction)
+        [InlineData(SearchTypeEnum.SmallProducer, "ProducerSubmission", "Submissions")]
+        [InlineData(SearchTypeEnum.Producer, "Producers", "Details")]
+        public async Task PostSearchResults_RedirectsToCorrectAction(SearchTypeEnum searchType, string expectedController, string expectedAction)
         {
             // Arrange
             var viewModel = new SearchResultsViewModel { SearchType = searchType, SelectedRegistrationNumber = "WEE/AA1111AA" };
@@ -783,6 +787,7 @@
             result.Should().BeOfType<RedirectToRouteResult>();
             var redirectResult = result as RedirectToRouteResult;
             redirectResult.RouteValues["action"].Should().Be(expectedAction);
+            redirectResult.RouteValues["controller"].Should().Be(expectedController);
             redirectResult.RouteValues["RegistrationNumber"].Should().Be("WEE/AA1111AA");
 
             var expectedActivity = searchType == SearchTypeEnum.Producer ? InternalUserActivity.ProducerDetails : InternalUserActivity.DirectRegistrantDetails;
