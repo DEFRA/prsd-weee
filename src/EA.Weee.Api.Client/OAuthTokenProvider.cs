@@ -6,13 +6,12 @@
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    public class OAuthTokenProvider
+    public class OAuthTokenProvider : IOAuthTokenProvider
     {
         private readonly IHttpClientWrapper httpClientWrapper;
         private readonly string clientId;
         private readonly string clientSecret;
         private readonly string scope;
-        private readonly string tenantId;
 
         public OAuthTokenProvider(
             IHttpClientWrapperFactory httpClientFactory,
@@ -21,14 +20,12 @@
             string clientId,
             string clientSecret,
             string scope,
-            string tenantId)
+            string tokenEndPoint)
         {
-            var tokenEndpoint = $"https://login.microsoftonline.com/{this.tenantId}/oauth2/v2.0/";
-            httpClientWrapper = httpClientFactory.CreateHttpClient(tokenEndpoint, config, logger);
-            //this.clientId = clientId;
-            //this.clientSecret = clientSecret;
-            //this.scope = scope;
-            //this.tenantId = tenantId;
+            httpClientWrapper = httpClientFactory.CreateHttpClient(tokenEndPoint, config, logger);
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.scope = scope;
         }
 
         public async Task<string> GetAccessTokenAsync()
@@ -42,7 +39,7 @@
             });
 
             var response = await httpClientWrapper.PostAsync("token", content);
-            var responseContent2 = await response.Content.ReadAsStringAsync();
+
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
