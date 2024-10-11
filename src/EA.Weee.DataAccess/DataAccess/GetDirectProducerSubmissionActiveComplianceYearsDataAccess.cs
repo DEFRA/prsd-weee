@@ -15,13 +15,13 @@
             this.context = context;
         }
 
-        public async Task<List<int>> Get()
+        public async Task<List<int>> Get(int offSet)
         {
             // direct registrant reports should have the next years compliance years as direct registrant reports return previous years
             return await context.DirectProducerSubmissions
                 .Where(dru => dru.CurrentSubmission != null)
                 .Where(dru => dru.DirectProducerSubmissionStatus.Value == DirectProducerSubmissionStatus.Complete.Value)
-                .Select(dru => (int)dru.ComplianceYear - 1) // remove a year as small producers submit the next year
+                .Select(dru => (int)dru.ComplianceYear - offSet) // remove a year as small producers submit the next year
                 .Distinct()
                 .OrderByDescending(year => year)
                 .ToListAsync();
