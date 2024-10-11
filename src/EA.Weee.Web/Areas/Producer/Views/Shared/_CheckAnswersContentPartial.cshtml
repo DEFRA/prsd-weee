@@ -2,10 +2,12 @@
 @using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.DirectRegistrant
+@using EA.Weee.Web.Areas.Producer.ViewModels
 @model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
 
 @{
     var representingOrg = @Model.HasAuthorisedRepresentitive;
+    var sellingTechniqueType = string.Empty;
 }
 
 @{
@@ -32,16 +34,16 @@
         var contact = sortedContacts[i];
         var index = Model.OrganisationDetails.AdditionalContactModels.IndexOf(contact);
 
-        @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
-        @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
-        @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
+    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
+    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
+    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
 
-        var partnerIndex = (i + 1).ToString();
-        organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
-        organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
-    }
+    var partnerIndex = (i + 1).ToString();
+    organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
+    organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
+}
 
-    var contactDetails = new Dictionary<string, object>
+var contactDetails = new Dictionary<string, object>
 {
             { "First name", Model.ContactDetails.ContactDetails.FirstName },
             { "Last name", Model.ContactDetails.ContactDetails.LastName },
@@ -56,7 +58,7 @@
             { "Country", Model.ContactDetails.ContactDetails.AddressData.CountryName }
     };
 
-    var serviceOfNoticeData = new Dictionary<string, object>
+var serviceOfNoticeData = new Dictionary<string, object>
 {
             { "Address line 1", Model.ServiceOfNoticeData.Address.Address1 },
             { "Address line 2", Model.ServiceOfNoticeData.Address.Address2 },
@@ -67,10 +69,10 @@
             { "Phone number", Model.ServiceOfNoticeData.Address.Telephone },
     };
 
-    var representingCompanyDetails = new Dictionary<string, object>();
-    if (representingOrg)
-    {
-        representingCompanyDetails = new Dictionary<string, object>
+var representingCompanyDetails = new Dictionary<string, object>();
+if (representingOrg)
+{
+    representingCompanyDetails = new Dictionary<string, object>
 {
                 { "Producer name", Model.RepresentingCompanyDetails.CompanyName },
                 { "Trading name", Model.RepresentingCompanyDetails.BusinessTradingName },
@@ -83,7 +85,7 @@
                 { "Phone number", Model.RepresentingCompanyDetails.Address.Telephone },
                 { "Email", Model.RepresentingCompanyDetails.Address.Email },
         };
-    }
+}
 }
 
 <div>
@@ -161,7 +163,21 @@
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s) that you use</th>
             <td class="govuk-table__cell" colspan="2">
-                @Model.EeeData.SellingTechnique.ToSellingTechniqueTypeString()
+                @switch(Model.EeeData.SellingTechnique.ToSellingTechniqueType())
+                {
+                    case SellingTechniqueType.DirectSellingToEndUser:
+                        sellingTechniqueType = Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsDirectSelling).ToString();
+                        break;
+                    case SellingTechniqueType.IndirectSellingToEndUser:
+                        sellingTechniqueType = Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsIndirectSelling).ToString();
+                        break;
+                    case SellingTechniqueType.Both:
+                        sellingTechniqueType = Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsDirectSelling).ToString();
+                        sellingTechniqueType += " and ";
+                        sellingTechniqueType += Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsIndirectSelling).ToString();
+                        break;
+                }
+                @sellingTechniqueType
             </td>
         </tr>
     </tbody>

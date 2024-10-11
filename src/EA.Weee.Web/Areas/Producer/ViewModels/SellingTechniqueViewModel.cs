@@ -30,21 +30,6 @@
             throw new InvalidOperationException();
         }
 
-        public string ToSellingTechniqueTypeString() 
-        {
-            switch (ToSellingTechniqueType())
-            {
-                case SellingTechniqueType.DirectSellingToEndUser:
-                    return "Direct selling to end user (mail, order, internet etc)";
-                case SellingTechniqueType.IndirectSellingToEndUser:
-                    return "Indirect selling (other)";
-                case SellingTechniqueType.Both:
-                    return "Direct selling to end user (mail, order, internet etc) and Indirect selling (other)";
-                default:
-                    return string.Empty;
-            }
-        }
-
         public static SellingTechniqueViewModel FromSellingTechniqueType(SellingTechniqueType? type)
         {
             return new SellingTechniqueViewModel
