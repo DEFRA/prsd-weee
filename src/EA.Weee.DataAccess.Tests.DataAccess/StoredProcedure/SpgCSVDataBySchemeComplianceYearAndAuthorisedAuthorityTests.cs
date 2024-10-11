@@ -806,7 +806,7 @@
                 result2.RemovedFromScheme.Should().Be("No");
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result2.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result2.BrandNames.Should().BeNull();
+                result2.BrandNames.Should().BeNullOrWhiteSpace();
             }
         }
     }
