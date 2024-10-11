@@ -58,7 +58,13 @@
         [SmallProducerSubmissionContext]
         public ActionResult AlreadySubmittedAndPaid()
         {
-            return View(SmallProducerSubmissionData.OrganisationData.Id);
+            var model = new AlreadySubmittedAndPaidViewModel()
+            {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
+            };
+
+            return View(model);
         }
 
         [SmallProducerSubmissionContext(Order = 1)]
