@@ -160,21 +160,7 @@
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s) that you use</th>
             <td class="govuk-table__cell" colspan="2">
-                @switch(Model.EeeData.SellingTechnique.ToSellingTechniqueType())
-                {
-                    case SellingTechniqueType.DirectSellingToEndUser:
-                        sellingTechniqueType = Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsDirectSelling).ToString();
-                        break;
-                    case SellingTechniqueType.IndirectSellingToEndUser:
-                        sellingTechniqueType = Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsIndirectSelling).ToString();
-                        break;
-                    case SellingTechniqueType.Both:
-                        sellingTechniqueType = Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsDirectSelling).ToString();
-                        sellingTechniqueType += " and ";
-                        sellingTechniqueType += Html.DisplayNameFor(m => m.EeeData.SellingTechnique.IsIndirectSelling).ToString();
-                        break;
-                }
-                @sellingTechniqueType
+                @Model.EeeData.SellingTechnique.ToSellingTechniqueType().GetDisplayName()
             </td>
         </tr>
     </tbody>
