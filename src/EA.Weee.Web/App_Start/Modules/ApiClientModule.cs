@@ -59,7 +59,7 @@
                     ByPassProxyOnLocal = config.ByPassProxyOnLocal
                 };
 
-                var oauthProvider = new OAuthTokenProvider(httpClient, httpClientHandlerConfig, logger,
+                var oauthProvider = new OAuthTokenProvider(httpClient, httpClientHandlerConfig, retryPolicy, logger,
                     config.OAuthTokenClientId, config.OAuthTokenClientSecret, config.CompaniesHouseScope,
                     config.OAuthTokenEndpoint);
 
