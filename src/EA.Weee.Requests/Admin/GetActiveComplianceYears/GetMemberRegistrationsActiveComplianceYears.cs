@@ -5,5 +5,11 @@
 
     public class GetMemberRegistrationsActiveComplianceYears : IRequest<List<int>>
     {
+        public bool IncludeDirectRegistrantSubmissions { get; private set; }
+
+        public GetMemberRegistrationsActiveComplianceYears(bool includeDirectRegistrantSubmissions = false)
+        {
+            IncludeDirectRegistrantSubmissions = includeDirectRegistrantSubmissions;
+        }
     }
 }
