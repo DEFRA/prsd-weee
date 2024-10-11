@@ -9,8 +9,8 @@
     var title = "Service of notice details";
     ViewBag.Title = title + " - GOV.UK";
 
-    var hasSubmission = Model.SmallProducerSubmissionData.CurrentSubmission != null;
-    if (!hasSubmission)
+    var hasServiceOfNotice = Model.ServiceOfNoticeViewModel != null;
+    if (!hasServiceOfNotice)
     {
         title = "No service of notice details have been submitted yet.";
     }
@@ -23,7 +23,7 @@
             <h2 class="govuk-heading-m">
                 @title
             </h2>
-            @if (hasSubmission)
+            @if (hasServiceOfNotice)
             {
                 <table id="pcs-service-of-notice-details-table" class="govuk-table">
                     <tbody class="govuk-table__body">
