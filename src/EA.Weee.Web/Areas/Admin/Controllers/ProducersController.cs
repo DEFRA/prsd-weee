@@ -72,10 +72,7 @@
             // Check to see if a registration number was selected.
             if (!string.IsNullOrEmpty(viewModel.SelectedRegistrationNumber))
             {
-                return RedirectToAction("Details", new
-                {
-                    RegistrationNumber = viewModel.SelectedRegistrationNumber
-                });
+                return RedirectBySearchType(viewModel.SearchType, viewModel.SelectedRegistrationNumber);
             }
 
             return RedirectToAction("SearchResults", new { viewModel.SearchTerm, searchType = viewModel.SearchType });
@@ -147,18 +144,7 @@
                 return View(viewModel);
             }
 
-            if (viewModel.SearchType == SearchTypeEnum.SmallProducer)
-            {
-                return RedirectToAction(nameof(ProducerSubmissionController.Submissions), typeof(ProducerSubmissionController).GetControllerName(), new
-                {
-                    RegistrationNumber = viewModel.SelectedRegistrationNumber
-                });
-            }
-
-            return RedirectToAction("Details", new
-            {
-                RegistrationNumber = viewModel.SelectedRegistrationNumber
-            });
+            return RedirectBySearchType(viewModel.SearchType, viewModel.SelectedRegistrationNumber);
         }
 
         /// <summary>
@@ -381,6 +367,22 @@
             breadcrumb.InternalActivity = searchType == SearchTypeEnum.SmallProducer ? InternalUserActivity.DirectRegistrantDetails : InternalUserActivity.ProducerDetails;
 
             await Task.Yield();
+        }
+
+        private ActionResult RedirectBySearchType(SearchTypeEnum searchType, string registrationNumber)
+        {
+            if (searchType == SearchTypeEnum.SmallProducer)
+            {
+                return RedirectToAction(nameof(ProducerSubmissionController.Submissions), typeof(ProducerSubmissionController).GetControllerName(), new
+                {
+                    RegistrationNumber = registrationNumber
+                });
+            }
+
+            return RedirectToAction(nameof(Details), typeof(ProducersController).GetControllerName(), new
+            {
+                RegistrationNumber = registrationNumber
+            });
         }
     }
 }
