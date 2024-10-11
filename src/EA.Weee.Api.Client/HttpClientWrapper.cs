@@ -40,21 +40,28 @@
             {
                 var fullUrl = GetFullUrl(request.RequestUri);
                 logger.Information("Starting {Method} request to {FullUrl}", request.Method, fullUrl);
+
                 var response = await httpClient.SendAsync(request, cancellationToken);
+
                 stopwatch.Stop();
+
                 logger.Information(
                     "Completed {Method} request to {FullUrl} with status code {StatusCode} in {ElapsedMilliseconds} ms",
                     request.Method,
                     fullUrl,
                     (int)response.StatusCode,
                     stopwatch.ElapsedMilliseconds);
+
                 if (!response.IsSuccessStatusCode)
                 {
+                    var responseBody = await response.Content.ReadAsStringAsync();
                     logger.Warning(
-                        "{Method} request to {FullUrl} returned non-success status code {StatusCode}",
+                        "{Method} request to {FullUrl} returned non-success status code {StatusCode} with reason: {ReasonPhrase}. Response body: {ResponseBody}",
                         request.Method,
                         fullUrl,
-                        (int)response.StatusCode);
+                        (int)response.StatusCode,
+                        response.ReasonPhrase,
+                        responseBody);
                 }
                 return response;
             }

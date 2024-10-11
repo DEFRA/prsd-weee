@@ -15,7 +15,7 @@
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
         private readonly IHttpClientWrapper httpClient;
-        private readonly OAuthTokenProvider tokenProvider;
+        private readonly IOAuthTokenProvider tokenProvider;
         private bool disposed;
 
         public CompaniesHouseClient(
@@ -25,7 +25,7 @@
             IJsonSerializer jsonSerializer,
             HttpClientHandlerConfig config,
             ILogger logger,
-            OAuthTokenProvider tokenProvider)
+            IOAuthTokenProvider tokenProvider)
         {
             Condition.Requires(baseUrl).IsNotNullOrWhiteSpace();
             Condition.Requires(httpClientFactory).IsNotNull();
