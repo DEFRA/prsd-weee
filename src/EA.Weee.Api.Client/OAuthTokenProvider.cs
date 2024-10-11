@@ -9,6 +9,7 @@
     public class OAuthTokenProvider : IOAuthTokenProvider
     {
         private readonly IHttpClientWrapper httpClientWrapper;
+        private readonly IRetryPolicyWrapper retryPolicyWrapper;
         private readonly string clientId;
         private readonly string clientSecret;
         private readonly string scope;
@@ -16,6 +17,7 @@
         public OAuthTokenProvider(
             IHttpClientWrapperFactory httpClientFactory,
             HttpClientHandlerConfig config,
+            IRetryPolicyWrapper retryPolicyWrapper,
             ILogger logger,
             string clientId,
             string clientSecret,
@@ -23,6 +25,7 @@
             string tokenEndPoint)
         {
             httpClientWrapper = httpClientFactory.CreateHttpClient(tokenEndPoint, config, logger);
+            this.retryPolicyWrapper = retryPolicyWrapper;
             this.clientId = clientId;
             this.clientSecret = clientSecret;
             this.scope = scope;
@@ -38,7 +41,8 @@
                 new KeyValuePair<string, string>("scope", scope)
             });
 
-            var response = await httpClientWrapper.PostAsync("token", content);
+            var response = await retryPolicyWrapper.ExecuteAsync(() =>
+                httpClientWrapper.PostAsync("token", content)).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 

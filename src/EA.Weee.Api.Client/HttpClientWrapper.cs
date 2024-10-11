@@ -20,7 +20,6 @@
 
         public async Task<HttpResponseMessage> GetAsync(string requestUri)
         {
-            logger.Debug("Test debug log");
             return await SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri));
         }
 
