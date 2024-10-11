@@ -23,6 +23,17 @@
             </h1>
         </header>
 
+        <p>
+            If you are taking on the legal responsibilities of a non - UK based EEE producer under the WEEE regulations you will be registering yourself as their Authorised Representative and will need to provide information on their behalf.
+        </p>
+
+        <p>
+            An Authorised Representative of a non-UK EEE Producer must be established in the UK and be appointed by way of a written mandate as required by the WEEE regulations.
+        </p>
+        <p>
+            If this situation does not apply, select 'no'.
+        </p>
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
@@ -32,13 +43,7 @@
                 RadioButtonLayout.Stacked)
         </div>
 
-        <div>
-            @this.WeeeGds().CreateProgressiveDisclosure("Authorised representative guidance",
-                @Html.Partial("_AuthorisedRepresentativeGuidance").ToString(),
-                "Hidden content",
-                "Progressive disclosure",
-                "Authorised representative guidance")
-        </div>
+
 
         @(this.WeeeGds().Submit("Continue"))
     }
