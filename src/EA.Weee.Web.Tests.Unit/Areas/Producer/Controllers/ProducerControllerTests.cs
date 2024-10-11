@@ -852,6 +852,66 @@
         }
 
         [Fact]
+        public async Task TotalEEEDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.TotalEEEDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task RepresentedOrganisationDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.RepresentedOrganisationDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task ServiceOfNoticeDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.ServiceOfNoticeDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task ContactDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.ContactDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.OrganisationDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
         public async Task TotalEEEDetails_ReturnViewModelAndMapsData()
         {
             SetupDefaultControllerData();
