@@ -330,14 +330,18 @@
         public void AlreadySubmittedAndPaid_Get_ReturnView()
         {
             // Arrange
-
             var id = Guid.NewGuid();
+            const int complianceYear = 2024;
 
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
                 OrganisationData = new OrganisationData
                 {
                     Id = id
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                {
+                    ComplianceYear = complianceYear
                 }
             };
 
@@ -346,7 +350,12 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.Model.Should().Be(id);
+            result.Model.Should().BeOfType<AlreadySubmittedAndPaidViewModel>();
+
+            var model = result.Model as AlreadySubmittedAndPaidViewModel;
+            model.OrganisationId.Should().Be(id);
+            model.ComplianceYear.Should().Be(complianceYear);
+
             result.ViewName.Should().BeEmpty();
         }
 
