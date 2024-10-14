@@ -212,6 +212,7 @@
     <Compile Include="AatfReturn\WeeObligatedTests.cs" />
     <Compile Include="Constant\UKCountryUnitTests.cs" />
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValueUnitTests.cs" />
+    <Compile Include="DirectRegistrant\SellingTechniqueTypeEnumTests.cs" />
     <Compile Include="Helpers\CategoryValueTotalCalculatorTests.cs" />
     <Compile Include="Helpers\CompanyRegistrationNumberFormatterTests.cs" />
     <Compile Include="Helpers\ComplexObject.cs" />
