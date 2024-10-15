@@ -17,44 +17,55 @@
             <h2 class="govuk-heading-m">
                 @title
             </h2>
-            <table id="pcs-service-of-notice-details-table" class="govuk-table">
-                <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 1</th>
-                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Address1</td>
-                    </tr>
+            @if (Model.ServiceOfNoticeViewModel.Address.CountryName != null)
+            {
+                <table id="pcs-service-of-notice-details-table" class="govuk-table">
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 1</th>
+                            <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Address1</td>
+                        </tr>
 
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 2</th>
-                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Address2</td>
-                    </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Address line 2</th>
+                            <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Address2</td>
+                        </tr>
 
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">Town</th>
-                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.TownOrCity</td>
-                    </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Town</th>
+                            <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.TownOrCity</td>
+                        </tr>
 
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">County</th>
-                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.CountyOrRegion</td>
-                    </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">County</th>
+                            <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.CountyOrRegion</td>
+                        </tr>
 
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">Postcode</th>
-                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Postcode</td>
-                    </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Postcode</th>
+                            <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Postcode</td>
+                        </tr>
 
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">Country</th>
-                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.CountryName</td>
-                    </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Country</th>
+                            <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.CountryName</td>
+                        </tr>
 
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">Phone number</th>
-                        <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Telephone</td>
-                    </tr>
-                </tbody>
-            </table>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Phone number</th>
+                            <td class="govuk-table__cell">@Model.ServiceOfNoticeViewModel.Address.Telephone</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>
+                    No service of notice details have been submitted yet. When service of notice details
+                    have been submitted as part of a registration submission, they will appear here.
+                </p>
+            }
+
 
         </div>
     </div>
