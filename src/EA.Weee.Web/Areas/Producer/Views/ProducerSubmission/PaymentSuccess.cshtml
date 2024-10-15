@@ -12,7 +12,7 @@
     <div class="govuk-!-padding-bottom-5"></div>
     <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
         <h1 class="govuk-panel__title">
-            You are now registered as a small producer
+            You are now registered as a small producer for @Model.ComplianceYear
         </h1>
         <div class="govuk-panel__body">
             Payment reference number:<br><strong>@Model.PaymentReference</strong>
@@ -20,6 +20,15 @@
     </div>
     <p class="govuk-body">You have been emailed a receipt to the email address provided during the payment.</p>
     <div class="govuk-!-width-two-thirds">
+        <h2 class="govuk-heading-m">Payment summary</h2>
+        <table id="pcs-service-of-notice-details-table" class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" style="width: 30%;" scope="row">Total amount</th>
+                    <td class="govuk-table__cell">£@Model.TotalAmount.ToString("0.##")</td>
+                </tr>
+            </tbody>
+        </table>
         <p class="govuk-body"></p>
         <h2 class="govuk-heading-m">What happens next</h2>
         <p class="govuk-body">
@@ -40,7 +49,7 @@
         @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, FormMethod.Post, new { id = "logout" }))
         {
             <p class="govuk-body">
-                You can 
+                You can
                 @Html.AntiForgeryToken()
                 @this.WeeeGds().CreateLinkButtonWithEventTracking("sign out", "Producer Registration", "sign out", "Sign out")
                 or proceed to perform more activities.
