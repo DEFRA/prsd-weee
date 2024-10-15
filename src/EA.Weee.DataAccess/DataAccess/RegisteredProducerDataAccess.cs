@@ -64,6 +64,14 @@
             return null;
         }
 
+        public async Task<DirectRegistrant> GetDirectRegistrantByRegistration(string producerRegistrationNumber)
+        {
+            return await context.DirectProducerSubmissions
+                .Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber)
+                .Select(p => p.DirectRegistrant)
+                .FirstOrDefaultAsync();
+        }
+
         public bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
         {
             var insert = context.ProducerSubmissions.Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber

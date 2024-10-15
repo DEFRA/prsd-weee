@@ -312,6 +312,7 @@
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
     <Compile Include="DirectRegistrant\SubmissionPaymentDetails.cs" />
+    <Compile Include="DirectRegistrant\SubmissionStatus.cs" />
     <Compile Include="DirectRegistrant\TonnageData.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\IJsonSerialiser.cs" />
@@ -320,6 +321,7 @@
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="Organisations\IProducerSubmissionViewModel.cs" />
     <Compile Include="Organisations\NotRequiredPartnerModel.cs" />
+    <Compile Include="Organisations\DirectRegistrantInfo.cs" />
     <Compile Include="Organisations\SoleTraderViewModel.cs" />
     <Compile Include="Organisations\AdditionalContactModel.cs" />
     <Compile Include="Organisations\PartnerViewModel.cs" />
@@ -336,6 +338,9 @@
     <Compile Include="Organisations\ExternalOrganisationType.cs" />
     <Compile Include="Organisations\OrganisationTransactionData.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
+    <Compile Include="Search\RegisteredProducerSearchResult.cs" />
+    <Compile Include="Search\Simple\SimpleSmallProducerSearcher.cs" />
+    <Compile Include="Search\SmallProducerSearchResult.cs" />
     <Compile Include="Shared\ServiceOfNoticeAddressData.cs" />
     <Compile Include="Shared\AddressPostcodeRequiredData.cs" />
     <Compile Include="Shared\EntityIdDisplayNameData.cs" />
