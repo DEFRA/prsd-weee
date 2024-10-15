@@ -35,12 +35,7 @@
 
             try
             {
-                var threeHoursAgo = DateTime.UtcNow.AddHours(-3);
-                var lastProcessed = DateTime.UtcNow.AddMinutes(-30);
-                var incompletePayments = await context.PaymentSessions
-                    .Where(p => !p.InFinalState && p.CreatedAt < threeHoursAgo
-                                                && (p.LastProcessedAt == null ||
-                                                    p.LastProcessedAt < lastProcessed)).ToListAsync();
+                var incompletePayments = await paymentSessionDataAccess.GetIncompletePaymentSessions();
 
                 logger.Information($"Found {incompletePayments.Count} incomplete payments to process. Job ID: {jobId}");
 
@@ -72,6 +67,7 @@
                 {
                     // Double-check the payment hasn't been processed
                     var freshPayment = await paymentSessionDataAccess.GetByIdAsync(payment.Id);
+
                     if (freshPayment != null)
                     {
                         if (freshPayment.InFinalState)

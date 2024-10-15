@@ -357,6 +357,51 @@
             }
         }
 
+        [Fact]
+        public async Task GetIncompletePaymentSessions_ReturnsValidIncompletePayments()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), 2023);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, 2023, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                // first payment session should be returned, older than 3 hours and not in final state
+                var paymentSession1 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.Started, -181, false);
+                context.PaymentSessions.Add(paymentSession1);
+
+                // second payment session should not be returned, younger than 3 hours and not in final state
+                var paymentSession2 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.New, -179, false);
+                context.PaymentSessions.Add(paymentSession2);
+
+                // third payment session should be returned, younger than 3 hours and not in final state but is at 'New'
+                var paymentSession3 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.New, -1, false);
+                context.PaymentSessions.Add(paymentSession3);
+
+                // fourth payment session should not be returned in final state
+                var paymentSession4 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.Success, -1, true);
+                context.PaymentSessions.Add(paymentSession4);
+
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetIncompletePaymentSessions();
+
+                // Assert
+                result.Count.Should().Be(1);
+                result.ElementAt(0).Id.Should().Be(paymentSession1.Id);
+            }
+        }
+
         private static PaymentSession CreatePaymentSession(string userId, int year, DirectRegistrant directRegistrant, DirectProducerSubmission submission, string paymentToken, string paymentId, string paymentRef, int minutesOffset = 0)
         {
             return new PaymentSession(
@@ -370,7 +415,7 @@
                 paymentRef);
         }
 
-        private static PaymentSession CreatePaymentSession(string userId, int year, DirectRegistrant directRegistrant, DirectProducerSubmission submission, string paymentToken, string paymentId, string paymentRef, PaymentState state, int minutesOffset = 0)
+        private static PaymentSession CreatePaymentSession(string userId, int year, DirectRegistrant directRegistrant, DirectProducerSubmission submission, string paymentToken, string paymentId, string paymentRef, PaymentState state, int minutesOffset = 0, bool inFinalState = false)
         {
             var session = new PaymentSession(
                 userId,
@@ -382,7 +427,8 @@
                 paymentId,
                 paymentRef)
             {
-                Status = state
+                Status = state,
+                InFinalState = inFinalState
             };
             return session;
         }

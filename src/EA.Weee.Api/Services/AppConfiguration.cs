@@ -22,14 +22,7 @@
 
         public string GovUkPayApiKey { get; set; }
 
-        public string GovUkPayReturnBaseUrl { get; set; }
-
-        public string GovUkPayDescription { get; set; }
-
-        [DefaultValue(3000)]
-        public int GovUkPayAmountInPence { get; set; }
-
-        public string GovUkPayTokenSecret { get; set; }
+        public string GovUkPayMopUpJobSchedule { get; set; }
 
         [DefaultValue(false)]
         public bool ProxyEnabled { get; set; }

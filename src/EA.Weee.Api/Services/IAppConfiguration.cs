@@ -12,13 +12,7 @@
 
         string GovUkPayApiKey { get; set; }
 
-        string GovUkPayReturnBaseUrl { get; set; }
-
-        string GovUkPayDescription { get; set; }
-
-        int GovUkPayAmountInPence { get; set; }
-
-        string GovUkPayTokenSecret { get; set; }
+        string GovUkPayMopUpJobSchedule { get; set; }
 
         bool ProxyEnabled { get; set; }
 
