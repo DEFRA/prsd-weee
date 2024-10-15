@@ -6,8 +6,11 @@
 @model OrganisationDetailsTabsViewModel
 
 @{
-    var @title = "Service of notice details";
-    ViewBag.Title = @title + " - GOV.UK";
+    var title = "Service of notice details";
+    ViewBag.Title = title + " - GOV.UK";
+
+    var hasServiceOfNotice = Model.ServiceOfNoticeViewModel.Address.CountryId != Guid.Empty;
+   
 }
 @section full_main_content{
     <div class="govuk-tabs">
@@ -17,7 +20,7 @@
             <h2 class="govuk-heading-m">
                 @title
             </h2>
-            @if (Model.ServiceOfNoticeViewModel.Address.CountryName != null)
+            @if (hasServiceOfNotice)
             {
                 <table id="pcs-service-of-notice-details-table" class="govuk-table">
                     <tbody class="govuk-table__body">
@@ -60,7 +63,7 @@
             }
             else
             {
-                <p>
+                <p class="govuk-body">
                     No service of notice details have been submitted yet. When service of notice details
                     have been submitted as part of a registration submission, they will appear here.
                 </p>
