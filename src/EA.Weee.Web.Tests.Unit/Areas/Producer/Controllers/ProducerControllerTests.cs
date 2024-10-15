@@ -2,13 +2,13 @@
 {
     using AutoFixture;
     using Core.Organisations;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -16,6 +16,8 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
@@ -35,17 +37,23 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly Guid organisationId = Guid.NewGuid();
         private readonly IMapper mapper;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ProducerControllerTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
             weeeCache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
+            templateExecutor = A.Fake<IMvcTemplateExecutor>();
+            pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
 
             controller = new ProducerController(
                breadcrumb, 
                weeeCache, 
-               mapper);
+               mapper,
+               templateExecutor,
+               pdfDocumentProvider);
         }
 
         [Fact]
@@ -182,7 +190,10 @@
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
-                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>() { { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() }, },
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+                {
+                    { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() },
+                },
                 OrganisationData = new OrganisationData
                 {
                     Id = organisationId,
@@ -306,6 +317,60 @@
         }
 
         [Fact]
+        public void TaskList_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("TaskList");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ReturnView()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            const int complianceYear = 2024;
+
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = id
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                {
+                    ComplianceYear = complianceYear
+                }
+            };
+
+            // Act
+            var result = controller.AlreadySubmittedAndPaid() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Model.Should().BeOfType<AlreadySubmittedAndPaidViewModel>();
+
+            var model = result.Model as AlreadySubmittedAndPaidViewModel;
+            model.OrganisationId.Should().Be(id);
+            model.ComplianceYear.Should().Be(complianceYear);
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("AlreadySubmittedAndPaid");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task CheckAnswers_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
@@ -392,6 +457,51 @@
                             .Map<SubmissionsYearDetails, OrganisationViewModel>(
                 A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("OrganisationDetails")]
+        [InlineData("ContactDetails")]
+        [InlineData("ServiceOfNoticeDetails")]
+        [InlineData("RepresentedOrganisationDetails")]
+        [InlineData("TotalEEEDetails")]
+        public async Task TabDetails_ReturnViewModelWithCorrectYears(string method)
+        {
+            SetupDefaultControllerData();
+
+            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+
+            var firstSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            firstSub.Status = SubmissionStatus.Submitted;
+
+            var secondSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            secondSub.Status = SubmissionStatus.Submitted;
+
+            var thirdSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
+            thirdSub.Status = SubmissionStatus.InComplete;
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, firstSub },
+                { 2025, secondSub },
+                { 2026, thirdSub }
+            };
+
+            var methodInfo = typeof(ProducerController).GetMethod(method, new[] { typeof(int?) });
+            var task = (Task<ActionResult>)methodInfo.Invoke(controller, new object[] { null });
+
+            var result = (await task) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            var expected = controller.SmallProducerSubmissionData.SubmissionHistory
+                .Where(x => x.Value.Status == SubmissionStatus.Submitted)
+                .OrderByDescending(x => x.Key)
+                .Select(x => x.Key);
+
+            model.Years.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
@@ -742,6 +852,66 @@
         }
 
         [Fact]
+        public async Task TotalEEEDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.TotalEEEDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task RepresentedOrganisationDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.RepresentedOrganisationDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task ServiceOfNoticeDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.ServiceOfNoticeDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task ContactDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.ContactDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var result = (await controller.OrganisationDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
         public async Task TotalEEEDetails_ReturnViewModelAndMapsData()
         {
             SetupDefaultControllerData();
@@ -820,6 +990,47 @@
         {
             // Arrange
             var methodInfo = typeof(ProducerController).GetMethod("TotalEEEDetails", new[] { typeof(int?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_GivenPdf_FileShouldBeReturned()
+        {
+            //arrange
+            var date = new DateTime(2022, 09, 2, 13, 22, 0);
+            SystemTime.Freeze(date);
+            var pdf = TestFixture.Create<byte[]>();
+
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData)))).Returns(viewModel);
+
+            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) &&
+                    sd.RedirectToCheckAnswers.Equals(submissionData.RedirectToCheckAnswers)))).Returns(viewModel);
+
+            //act
+            var result = controller.DownloadSubmission() as FileContentResult;
+
+            //assert
+            result.FileContents.Should().BeSameAs(pdf);
+            result.FileDownloadName.Should().Be("producer_submission_020922_1422.pdf");
+            result.ContentType.Should().Be("application/pdf");
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("DownloadSubmission");
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();

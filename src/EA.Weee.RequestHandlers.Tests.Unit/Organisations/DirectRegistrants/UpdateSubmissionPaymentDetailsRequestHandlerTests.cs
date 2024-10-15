@@ -185,11 +185,45 @@
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
 
-        private UpdateSubmissionPaymentDetailsRequest CreateValidRequest(bool isFinalState = false)
+        [Fact]
+        public async Task HandleAsync_WhenFinalStateAndPaymentSuccessful_SetsPaymentFinishedToTrue()
+        {
+            // Arrange
+            var request = CreateValidRequest(isFinalState: true, paymentStatus: PaymentStatus.Success);
+            var directRegistrant = SetupValidDirectRegistrant();
+            SetupValidPaymentSession();
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            currentYearSubmission.PaymentFinished.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenNotFinalStateOrPaymentUnsuccessful_DoesNotSetPaymentFinishedToTrue()
+        {
+            // Arrange
+            var request = CreateValidRequest(isFinalState: false, paymentStatus: PaymentStatus.Success);
+            var directRegistrant = SetupValidDirectRegistrant();
+            SetupValidPaymentSession();
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            currentYearSubmission.PaymentFinished.Should().BeNull();
+
+            request = CreateValidRequest(isFinalState: true, paymentStatus: PaymentStatus.Failed);
+            await handler.HandleAsync(request);
+            currentYearSubmission.PaymentFinished.Should().BeNull();
+        }
+
+        private UpdateSubmissionPaymentDetailsRequest CreateValidRequest(bool isFinalState = false, PaymentStatus paymentStatus = PaymentStatus.Success)
         {
             return new UpdateSubmissionPaymentDetailsRequest(
                 directRegistrantId,
-                TestFixture.Create<PaymentStatus>(),
+                paymentStatus,
                 paymentSessionId,
                 isFinalState);
         }

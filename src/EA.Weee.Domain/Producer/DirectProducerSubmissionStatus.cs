@@ -6,6 +6,7 @@
     {
         public static readonly DirectProducerSubmissionStatus Incomplete = new DirectProducerSubmissionStatus(1, "Incomplete");
         public static readonly DirectProducerSubmissionStatus Complete = new DirectProducerSubmissionStatus(2, "Submitted");
+        public static readonly DirectProducerSubmissionStatus Returned = new DirectProducerSubmissionStatus(3, "Returned");
 
         protected DirectProducerSubmissionStatus()
         {

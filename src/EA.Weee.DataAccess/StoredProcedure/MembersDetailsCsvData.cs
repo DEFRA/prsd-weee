@@ -27,7 +27,7 @@
 
         public string SICCodes { get; set; }
 
-        public bool VATRegistered { get; set; }
+        public bool? VATRegistered { get; set; }
 
         public decimal? AnnualTurnover { get; set; }
 
