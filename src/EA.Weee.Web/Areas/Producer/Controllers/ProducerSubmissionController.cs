@@ -80,7 +80,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -134,7 +135,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditEeeeData(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -178,7 +180,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress, bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -248,7 +251,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditRepresentedOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -295,7 +299,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditContactDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()

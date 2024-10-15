@@ -6,6 +6,8 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -36,11 +38,13 @@
             var breadcrumbService = A.Fake<BreadcrumbService>();
             var weeeCache = A.Fake<IWeeeCache>();
             var mapper = A.Fake<IMapper>();
+            var templateExecutor = A.Fake<IMvcTemplateExecutor>();
+            var pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
 
             actionExecutingContext = new ActionExecutingContext
             {
                 ActionParameters = new System.Web.Routing.RouteValueDictionary(),
-                Controller = new ProducerController(breadcrumbService, weeeCache, mapper),
+                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider),
                 HttpContext = fakeHttpContext,
                 RouteData = new System.Web.Routing.RouteData()
             };

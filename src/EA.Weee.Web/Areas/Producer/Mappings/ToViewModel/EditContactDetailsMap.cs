@@ -4,6 +4,7 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Web.Areas.Aatf.ViewModels;
     using EA.Weee.Web.Areas.Producer.ViewModels;
 
     public class EditContactDetailsMap : IMap<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>
@@ -24,17 +25,22 @@
                 DirectRegistrantId = submissionData.DirectRegistrantId,
                 OrganisationId = submissionData.OrganisationData.Id,
                 HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
-                RedirectToCheckAnswers = source.RedirectToCheckAnswers
+                RedirectToCheckAnswers = source.RedirectToCheckAnswers,
+                ContactDetails = new Core.Organisations.ContactDetailsViewModel()
+                {
+                    AddressData = new AddressPostcodeRequiredData()
+                }
             };
 
-            var contactDetailsViewModel = viewModel.ContactDetails = new ContactDetailsViewModel();
+            if (submissionData.CurrentSubmission.ContactData != null)
+            {
+                viewModel.ContactDetails.FirstName = submissionData.CurrentSubmission.ContactData.FirstName;
+                viewModel.ContactDetails.LastName = submissionData.CurrentSubmission.ContactData.LastName;
+                viewModel.ContactDetails.Position = submissionData.CurrentSubmission.ContactData.Position;
 
-            contactDetailsViewModel.FirstName = submissionData.CurrentSubmission.ContactData.FirstName;
-            contactDetailsViewModel.LastName = submissionData.CurrentSubmission.ContactData.LastName;
-            contactDetailsViewModel.Position = submissionData.CurrentSubmission.ContactData.Position;
-
-            contactDetailsViewModel.AddressData =
-                mapper.Map<AddressData, AddressPostcodeRequiredData>(submissionData.CurrentSubmission.ContactAddressData);
+                viewModel.ContactDetails.AddressData =
+                    mapper.Map<AddressData, AddressPostcodeRequiredData>(submissionData.CurrentSubmission.ContactAddressData);
+            }
 
             return viewModel;
         }

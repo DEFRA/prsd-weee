@@ -89,6 +89,20 @@
             result.CompanyRegistrationNumber.Should().Be(directRegistrant.Organisation.CompanyRegistrationNumber);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_SetsHasPaidCorrectly(bool paymentFinished)
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            A.CallTo(() => currentYearSubmission.PaymentFinished).Returns(paymentFinished);
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.HasPaid.Should().Be(paymentFinished);
+        }
+
         private DirectRegistrant CreateDirectRegistrant(bool hasCurrentYearSubmission)
         {
             var directRegistrant = A.Fake<DirectRegistrant>();

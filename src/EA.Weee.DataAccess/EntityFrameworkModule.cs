@@ -36,6 +36,7 @@
             builder.RegisterTypeByEnvironment<OrganisationDataAccess, IOrganisationDataAccess>(environment);
             builder.RegisterTypeByEnvironment<OrganisationTransactionDataAccess, IOrganisationTransactionDataAccess>(environment);
             builder.RegisterTypeByEnvironmentInstancePerLifetimeScope<PaymentSessionDataAccess, IPaymentSessionDataAccess>(environment);
+            builder.RegisterTypeByEnvironment<SmallProducerDataAccess, ISmallProducerDataAccess>(environment);
             builder.RegisterTypeByEnvironment<GetDirectProducerSubmissionActiveComplianceYearsDataAccess, IGetDirectProducerSubmissionActiveComplianceYearsDataAccess>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));

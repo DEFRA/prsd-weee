@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Controllers
 {
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
@@ -11,15 +14,15 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using iText.Kernel.XMP.Options;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime;
     using System.Threading.Tasks;
-    using System.Web.Helpers;
     using System.Web.Mvc;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
@@ -29,15 +32,21 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ProducerController(
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
-            IMapper mapper)
+            IMapper mapper,
+            IMvcTemplateExecutor templateExecutor,
+            IPdfDocumentProvider pdfDocumentProvider)
         {
             this.breadcrumb = breadcrumb;
             this.cache = cache;
             this.mapper = mapper;
+            this.templateExecutor = templateExecutor;
+            this.pdfDocumentProvider = pdfDocumentProvider;
         }
 
         public ActionResult Index()
@@ -45,7 +54,34 @@
             return View();
         }
 
+        [HttpGet]
         [SmallProducerSubmissionContext]
+        public ActionResult AlreadySubmittedAndPaid()
+        {
+            var model = new AlreadySubmittedAndPaidViewModel()
+            {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public ActionResult OrganisationHasNoSubmissions()
+        {
+            var model = new AlreadySubmittedAndPaidViewModel()
+            {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
+            };
+
+            return View(model);
+        }
+
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> TaskList()
         {
@@ -126,11 +162,16 @@
         [HttpGet]
         public async Task<ActionResult> Submissions(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
 
-            var yearParam = year ?? years.First();
+            int? yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
 
             return await OrganisationDetails(yearParam);
         }
@@ -139,6 +180,11 @@
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -161,6 +207,11 @@
         [HttpGet]
         public async Task<ActionResult> ContactDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -183,6 +234,11 @@
         [HttpGet]
         public async Task<ActionResult> ServiceOfNoticeDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -205,6 +261,11 @@
         [HttpGet]
         public async Task<ActionResult> RepresentedOrganisationDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -227,6 +288,11 @@
         [HttpGet]
         public async Task<ActionResult> TotalEEEDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -257,6 +323,29 @@
             return View("SubmitRegistration");
         }
 
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public ActionResult DownloadSubmission()
+        {
+                var source = new SmallProducerSubmissionMapperData()
+                {
+                    SmallProducerSubmissionData = SmallProducerSubmissionData
+                };
+
+                var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+
+                model.IsPdfDownload = true;
+
+                var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadSubmission", model);
+
+                var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+                var timestamp = SystemTime.Now;
+                var fileName = $"producer_submission{timestamp.ToString(DateTimeConstants.SubmissionTimestamp)}.pdf";
+
+                return File(pdf, "application/pdf", fileName);
+        }
+
         private Task SetViewBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
         private Task SetHistoricBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
@@ -264,7 +353,10 @@
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
         {
-            return data.SubmissionHistory.OrderByDescending(x => x.Key).Select(x => x.Key);
+            return data.SubmissionHistory
+                .Where(x => x.Value.Status == SubmissionStatus.Submitted)
+                .OrderByDescending(x => x.Key)
+                .Select(x => x.Key);
         }
 
         private T MapDetailsSubmissionYearModel<T>(int? year)
@@ -275,6 +367,11 @@
                    Year = year,
                    SmallProducerSubmissionData = this.SmallProducerSubmissionData
                });
+        }
+
+        private ActionResult RedirectToOrganisationHasNoSubmissions()
+        {
+             return RedirectToAction("OrganisationHasNoSubmissions");
         }
     }
 }
