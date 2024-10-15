@@ -2,6 +2,7 @@
 {
     using System;
 
+    [Serializable]
     public class DirectRegistrantInfo
     {
         public Guid DirectRegistrantId { get; set; }
