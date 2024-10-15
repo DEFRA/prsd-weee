@@ -850,7 +850,8 @@
             model.PaymentReference.Should().Be(reference);
             model.OrganisationId.Should().Be(organisationId);
             model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
-            model.TotalAmount.Should().Be(configurationService.CurrentConfiguration.GovUkPayAmountInPence);
+            model.TotalAmount.Should().Be(configurationService.CurrentConfiguration.GovUkPayAmountInPence / 100);
+            model.TotalAmount.ToString("0.00").Should().Be("30.00");
         }
 
         [Fact]

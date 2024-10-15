@@ -427,7 +427,7 @@
                 PaymentReference = reference,
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
-                TotalAmount = configurationService.CurrentConfiguration.GovUkPayAmountInPence
+                TotalAmount = configurationService.CurrentConfiguration.GovUkPayAmountInPence / 100
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
