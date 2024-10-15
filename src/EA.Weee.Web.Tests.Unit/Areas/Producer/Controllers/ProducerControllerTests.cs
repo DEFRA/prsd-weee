@@ -192,7 +192,7 @@
             {
                 SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
                 {
-                    { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() },
+                    { 2024, TestFixture.Build<SmallProducerSubmissionHistoryData>().With(s => s.Status, SubmissionStatus.Submitted).Create() },
                 },
                 OrganisationData = new OrganisationData
                 {
@@ -595,8 +595,6 @@
         {
             SetupDefaultControllerData();
 
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
-
             var result = (await controller.ContactDetails(year)) as ViewResult;
 
             var viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -852,11 +850,10 @@
         }
 
         [Fact]
-        public async Task TotalEEEDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        public async Task TotalEEEDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-
-            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+            SetupInCompleteSubmission();
 
             var result = (await controller.TotalEEEDetails(2000)) as RedirectToRouteResult;
 
@@ -864,11 +861,10 @@
         }
 
         [Fact]
-        public async Task RepresentedOrganisationDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        public async Task RepresentedOrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-
-            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+            SetupInCompleteSubmission();
 
             var result = (await controller.RepresentedOrganisationDetails(2000)) as RedirectToRouteResult;
 
@@ -876,11 +872,10 @@
         }
 
         [Fact]
-        public async Task ServiceOfNoticeDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        public async Task ServiceOfNoticeDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-
-            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+            SetupInCompleteSubmission();
 
             var result = (await controller.ServiceOfNoticeDetails(2000)) as RedirectToRouteResult;
 
@@ -888,11 +883,10 @@
         }
 
         [Fact]
-        public async Task ContactDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        public async Task ContactDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-
-            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+            SetupInCompleteSubmission();
 
             var result = (await controller.ContactDetails(2000)) as RedirectToRouteResult;
 
@@ -900,11 +894,10 @@
         }
 
         [Fact]
-        public async Task OrganisationDetails_IfNoSubmissions_RedirectToOrganisationHasNoSubmissions()
+        public async Task OrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-
-            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+            SetupInCompleteSubmission();
 
             var result = (await controller.OrganisationDetails(2000)) as RedirectToRouteResult;
 
@@ -1035,6 +1028,15 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        private void SetupInCompleteSubmission()
+        {
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+            controller.SmallProducerSubmissionData.SubmissionHistory.Add(2000, new SmallProducerSubmissionHistoryData()
+            {
+                Status = SubmissionStatus.InComplete
+            });
         }
     }
 }
