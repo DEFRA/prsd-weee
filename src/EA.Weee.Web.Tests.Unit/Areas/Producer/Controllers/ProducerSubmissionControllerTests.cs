@@ -50,6 +50,7 @@
         private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
             addSignatoryAndCompleteRequestCreator;
         private readonly IPaymentService paymentService;
+        private readonly ConfigurationService configurationService;
 
         public ProducerSubmissionControllerTests()
         {
@@ -68,7 +69,8 @@
             editEeeDataRequestCreator = A.Fake<IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest>>();
             addSignatoryAndCompleteRequestCreator = A.Fake<IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>>();
             paymentService = A.Fake<IPaymentService>();
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService);
+            configurationService = A.Fake<ConfigurationService>();
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService, configurationService);
         }
 
         [Fact]
@@ -828,11 +830,14 @@
         public async Task PaymentSuccess_ShouldReturnViewWithCorrectModel()
         {
             // Arrange
+            configurationService.CurrentConfiguration.GovUkPayAmountInPence = 3000;
+
             var reference = TestFixture.Create<string>();
             var organisationId = Guid.NewGuid();
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
-                OrganisationData = new OrganisationData { Id = organisationId }
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = 2024 }
             };
 
             // Act
@@ -844,6 +849,8 @@
             var model = (PaymentResultModel)result.Model;
             model.PaymentReference.Should().Be(reference);
             model.OrganisationId.Should().Be(organisationId);
+            model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
+            model.TotalAmount.Should().Be(configurationService.CurrentConfiguration.GovUkPayAmountInPence);
         }
 
         [Fact]
