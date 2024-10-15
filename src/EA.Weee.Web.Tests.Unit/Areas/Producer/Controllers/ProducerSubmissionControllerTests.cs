@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Controllers
 {
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Client.Models.Pay;
@@ -837,7 +838,7 @@
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
                 OrganisationData = new OrganisationData { Id = organisationId },
-                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = 2024 }
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
             };
 
             // Act
@@ -863,7 +864,8 @@
             var organisationName = TestFixture.Create<string>();
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
-                OrganisationData = new OrganisationData { Id = organisationId }
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
             };
 
             A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
