@@ -299,7 +299,13 @@
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)
                 {
-                    return this.RedirectToAction(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                    using (var client = apiClient())
+                    {
+                        var systemTime = new GetApiUtcDate();
+                        var date = await client.SendAsync(User.GetAccessToken(), systemTime);
+
+                        return this.RedirectToAction(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId, year = date.Year });
+                    }
                 }
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.ViewOrganisation)
