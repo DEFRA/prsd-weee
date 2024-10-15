@@ -5,6 +5,7 @@
     using Requests.Admin.GetActiveComplianceYears;
     using Security;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     internal class GetMemberRegistrationsActiveComplianceYearsHandler : IRequestHandler<GetMemberRegistrationsActiveComplianceYears, List<int>>
@@ -31,7 +32,7 @@
                 years.AddRange(await directProducerSubmissionActiveComplianceYearsDataAccess.Get(0));
             }
 
-            return await dataAccess.Get();
+            return years.Distinct().OrderByDescending(y => y).ToList();
         }
     }
 }
