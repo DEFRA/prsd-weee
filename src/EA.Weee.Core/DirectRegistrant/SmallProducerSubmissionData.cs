@@ -4,6 +4,7 @@
     using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class SmallProducerSubmissionData
     {
@@ -14,6 +15,14 @@
         public AddressData ContactAddressData { get; set; }
 
         public IDictionary<int, SmallProducerSubmissionHistoryData> SubmissionHistory {get; set; }
+
+        public bool AnySubmissionSubmitted
+        {
+            get
+            {
+                return SubmissionHistory.Any(s => s.Value.Status == SubmissionStatus.Submitted);
+            }
+        }
 
         public SmallProducerSubmissionHistoryData CurrentSubmission { get; set; }
 
