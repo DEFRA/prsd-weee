@@ -94,7 +94,7 @@ namespace EA.Weee.Api
 
             HangfireBootstrapper.Instance.Start();
             
-            RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(Guid.NewGuid()), Cron.Minutely());
+            RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(Guid.NewGuid()), configurationService.CurrentConfiguration.GovUkPayMopUpJobSchedule);
 
             DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
