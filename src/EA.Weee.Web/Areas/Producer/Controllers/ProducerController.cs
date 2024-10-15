@@ -58,7 +58,26 @@
         [SmallProducerSubmissionContext]
         public ActionResult AlreadySubmittedAndPaid()
         {
-            return View(SmallProducerSubmissionData.OrganisationData.Id);
+            var model = new AlreadySubmittedAndPaidViewModel()
+            {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public ActionResult OrganisationHasNoSubmissions()
+        {
+            var model = new AlreadySubmittedAndPaidViewModel()
+            {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
+            };
+
+            return View(model);
         }
 
         [SmallProducerSubmissionContext(Order = 1)]
@@ -143,6 +162,11 @@
         [HttpGet]
         public async Task<ActionResult> Submissions(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -156,6 +180,11 @@
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -178,6 +207,11 @@
         [HttpGet]
         public async Task<ActionResult> ContactDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -200,6 +234,11 @@
         [HttpGet]
         public async Task<ActionResult> ServiceOfNoticeDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -222,6 +261,11 @@
         [HttpGet]
         public async Task<ActionResult> RepresentedOrganisationDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -244,6 +288,11 @@
         [HttpGet]
         public async Task<ActionResult> TotalEEEDetails(int? year = null)
         {
+            if (SmallProducerSubmissionData.SubmissionHistory.Any() == false && year.HasValue)
+            {
+                return RedirectToOrganisationHasNoSubmissions();
+            }
+
             await SetTabsCrumb(year);
 
             var years = YearsDropdownData(SmallProducerSubmissionData);
@@ -318,6 +367,11 @@
                    Year = year,
                    SmallProducerSubmissionData = this.SmallProducerSubmissionData
                });
+        }
+
+        private ActionResult RedirectToOrganisationHasNoSubmissions()
+        {
+             return RedirectToAction("OrganisationHasNoSubmissions");
         }
     }
 }

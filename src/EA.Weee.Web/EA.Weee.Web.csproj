@@ -609,6 +609,7 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\EditOrganisationDetailsMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ReverseAddressMap.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\RepresentedOrganisationDetailsMap.cs" />
+    <Compile Include="Areas\Producer\ViewModels\AlreadySubmittedAndPaidViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\AppropriateSignatoryViewModel.cs" />
     <Compile Include="Areas\Producer\Mappings\ToViewModel\SmallProducerSubmissionMapperData.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
@@ -1145,6 +1146,7 @@
     <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\AlreadySubmittedAndPaid.cshtml" />
+    <Content Include="Areas\Producer\Views\Producer\OrganisationHasNoSubmissions.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

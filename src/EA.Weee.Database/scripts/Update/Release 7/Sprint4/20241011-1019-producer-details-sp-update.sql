@@ -592,32 +592,26 @@ BEGIN
           CASE 
             WHEN EXISTS (
                 SELECT 1
-                FROM [PCS].[EeeOutputReturnVersionAmount] eorva
-                INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
+                    FROM [PCS].[EeeOutputReturnVersionAmount] eorva
+                    INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
                 WHERE eorva.EeeOutputReturnVersionId = eorv.Id
-                AND eoa.ObligationType = 'B2B'
-            ) AND EXISTS (
-                SELECT 1
-                FROM [PCS].[EeeOutputReturnVersionAmount] eorva
-                INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
-                WHERE eorva.EeeOutputReturnVersionId = eorv.Id
-                AND eoa.ObligationType = 'B2C'
+                GROUP BY eoa.ObligationType
+                HAVING COUNT(DISTINCT eoa.ObligationType) = 2
             ) THEN 'Both'
             WHEN EXISTS (
                 SELECT 1
-                FROM [PCS].[EeeOutputReturnVersionAmount] eorva
-                INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
-                WHERE eorva.EeeOutputReturnVersionId = eorv.Id
-                AND eoa.ObligationType = 'B2B'
+                    FROM [PCS].[EeeOutputReturnVersionAmount] eorva
+                    INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
+                WHERE eorva.EeeOutputReturnVersionId = eorv.Id AND eoa.ObligationType = 'B2B'
             ) THEN 'B2B'
             WHEN EXISTS (
                 SELECT 1
-                FROM [PCS].[EeeOutputReturnVersionAmount] eorva
-                INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
-                WHERE eorva.EeeOutputReturnVersionId = eorv.Id
-                AND eoa.ObligationType = 'B2C'
+                    FROM [PCS].[EeeOutputReturnVersionAmount] eorva
+                    INNER JOIN [PCS].[EeeOutputAmount] eoa ON eoa.Id = eorva.EeeOuputAmountId
+                WHERE eorva.EeeOutputReturnVersionId = eorv.Id AND eoa.ObligationType = 'B2C'
             ) THEN 'B2C'
-            ELSE 'Unknown' END AS 'ObligationType',
+            ELSE 'Unknown' 
+        END AS 'ObligationType',
         NULL 'ChargeBandType',
         CASE dpsh.SellingTechniqueType
             WHEN 0 THEN 'Direct Selling to End User'
@@ -707,15 +701,16 @@ BEGIN
         -- Brand Names (if requested)
         CASE @IncludeBrandNames
             WHEN 1 THEN 
-                (SELECT STUFF((SELECT '; ' + BN.Name
-                FROM 
-					[Producer].[DirectRegistrant] drb
-					INNER JOIN [Producer].[BrandName] bn ON bn.Id = drb.BrandNameId
-                WHERE drb.Id = dr.Id
-                FOR XML PATH(''), TYPE)
-                .value('.', 'NVARCHAR(MAX)') 
-                , 1, 2, ''))
-            WHEN 0 THEN NULL
+                ISNULL(NULLIF(
+                    (SELECT STUFF((SELECT '; ' + BN.Name
+                    FROM 
+                    [Producer].[DirectRegistrant] drb
+                    INNER JOIN [Producer].[BrandName] bn ON bn.Id = drb.BrandNameId
+                    WHERE drb.Id = dr.Id
+                    FOR XML PATH(''), TYPE)
+                    .value('.', 'NVARCHAR(MAX)') 
+                    , 1, 2, '')), ''), '')
+            WHEN 0 THEN ''
         END AS 'BrandNames',
 		1 AS IsDirectProducer
 
@@ -739,22 +734,18 @@ BEGIN
 		(
 			-- Subquery to get the first submission date for each producer
 			SELECT
-				ps.ComplianceYear,
-				ps.RegisteredProducerId,
-				dpsh.CreatedDate,
-				dpsh.SubmittedDate,
-				ROW_NUMBER() OVER (
-					PARTITION BY ps.RegisteredProducerId
-					ORDER BY dpsh.CreatedDate
-				) AS RowNumber
-			FROM
-				[Producer].[DirectProducerSubmission] ps
-				INNER JOIN [Producer].[DirectProducerSubmissionHistory] dpsh ON dpsh.DirectProducerSubmissionId = ps.Id
-				INNER JOIN [Producer].[RegisteredProducer] rp ON ps.RegisteredProducerId = rp.Id
-			WHERE
-				dpsh.SubmittedDate IS NOT NULL
-				AND (@IncludeRemovedProducer = 1 OR RP.Removed = 0)
-		) firstSubmitted ON dps.RegisteredProducerId = firstSubmitted.RegisteredProducerId AND firstSubmitted.RowNumber = 1
+                ps.RegisteredProducerId,
+                MIN(dpsh.SubmittedDate) AS SubmittedDate
+            FROM
+                [Producer].[DirectProducerSubmission] ps
+                INNER JOIN [Producer].[DirectProducerSubmissionHistory] dpsh ON dpsh.DirectProducerSubmissionId = ps.Id
+                INNER JOIN [Producer].[RegisteredProducer] rp ON ps.RegisteredProducerId = rp.Id
+            WHERE
+                dpsh.SubmittedDate IS NOT NULL
+                AND (@IncludeRemovedProducer = 1 OR RP.Removed = 0)
+            GROUP BY
+                ps.RegisteredProducerId
+		) firstSubmitted ON dps.RegisteredProducerId = firstSubmitted.RegisteredProducerId
 		LEFT JOIN 
 		(
 			 SELECT

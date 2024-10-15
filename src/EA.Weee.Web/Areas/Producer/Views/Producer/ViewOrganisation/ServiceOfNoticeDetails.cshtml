@@ -9,11 +9,8 @@
     var title = "Service of notice details";
     ViewBag.Title = title + " - GOV.UK";
 
-    var hasServiceOfNotice = Model.ServiceOfNoticeViewModel != null;
-    if (!hasServiceOfNotice)
-    {
-        title = "No service of notice details have been submitted yet.";
-    }
+    var hasServiceOfNotice = Model.ServiceOfNoticeViewModel.Address.CountryId != Guid.Empty;
+   
 }
 @section full_main_content{
     <div class="govuk-tabs">
@@ -64,6 +61,15 @@
                     </tbody>
                 </table>
             }
+            else
+            {
+                <p class="govuk-body">
+                    No service of notice details have been submitted yet. When service of notice details
+                    have been submitted as part of a registration submission, they will appear here.
+                </p>
+            }
+
+
         </div>
     </div>
 
