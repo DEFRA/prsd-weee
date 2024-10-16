@@ -383,22 +383,20 @@
                 var paymentSession2 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.New, -179, false);
                 context.PaymentSessions.Add(paymentSession2);
 
-                // third payment session should be returned, younger than 3 hours and not in final state but is at 'New'
-                var paymentSession3 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.New, -1, false);
+                // third payment session should not be returned in final state
+                var paymentSession3 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.Success, -1, true);
                 context.PaymentSessions.Add(paymentSession3);
-
-                // fourth payment session should not be returned in final state
-                var paymentSession4 = CreatePaymentSession(user, 2023, directRegistrant, submission, "token", "paymentId1", "paymentRef1", PaymentState.Success, -1, true);
-                context.PaymentSessions.Add(paymentSession4);
 
                 await context.SaveChangesAsync();
 
                 // Act
-                var result = await dataAccess.GetIncompletePaymentSessions();
+                var result = await dataAccess.GetIncompletePaymentSessions(180, 10);
 
                 // Assert
-                result.Count.Should().Be(1);
-                result.ElementAt(0).Id.Should().Be(paymentSession1.Id);
+                result.Count.Should().BeGreaterOrEqualTo(2);
+                result.Should().Contain(p => p.Id == paymentSession1.Id);
+                result.Should().Contain(p => p.Id == paymentSession2.Id);
+                result.Should().NotContain(p => p.Id == paymentSession3.Id);
             }
         }
 

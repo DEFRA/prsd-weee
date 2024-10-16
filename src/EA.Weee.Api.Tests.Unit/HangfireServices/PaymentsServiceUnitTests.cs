@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Api.Tests.Unit.HangfireServices
 {
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Client.Models.Pay;
     using EA.Weee.Api.HangfireServices;
+    using EA.Weee.Api.Services;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess;
@@ -28,6 +30,7 @@
         private readonly IPayClient payClient;
         private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
         private readonly PaymentsService paymentsService;
+        private readonly ConfigurationService configurationService;
 
         public PaymentsServiceTests()
         {
@@ -36,13 +39,15 @@
             transactionAdapter = A.Fake<IWeeeTransactionAdapter>();
             payClient = A.Fake<IPayClient>();
             paymentSessionDataAccess = A.Fake<IPaymentSessionDataAccess>();
+            configurationService = A.Fake<ConfigurationService>();
 
             paymentsService = new PaymentsService(
                 logger,
                 context,
                 transactionAdapter,
                 payClient,
-                paymentSessionDataAccess);
+                paymentSessionDataAccess,
+                configurationService);
         }
 
         [Fact]
@@ -57,7 +62,7 @@
                 new PaymentSession()
             };
 
-            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions())
+            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions(configurationService.CurrentConfiguration.GovUkPayWindowMinutes, configurationService.CurrentConfiguration.GovUkPayLastProcessedMinutes))
                 .Returns(incompletePayments);
 
             // Act
@@ -74,14 +79,14 @@
         {
             // Arrange
             var jobId = Guid.NewGuid();
-            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions())
+            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions(configurationService.CurrentConfiguration.GovUkPayWindowMinutes, configurationService.CurrentConfiguration.GovUkPayLastProcessedMinutes))
                 .Throws(new Exception("Test exception"));
 
             // Act
             await paymentsService.RunMopUpJob(jobId);
 
             // Assert
-            A.CallTo(() => logger.Error(A<Exception>.Ignored, A<string>.That.Contains("Error in RunMopUpJob"))).MustHaveHappenedOnceExactly();
+            A.CallTo(() => logger.Error(A<Exception>._, A<string>.That.Contains("Error in RunMopUpJob"))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -102,7 +107,7 @@
 
             A.CallTo(() => paymentSessionDataAccess.GetByIdAsync(payment.Id))
                 .Returns(payment);
-            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions())
+            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions(configurationService.CurrentConfiguration.GovUkPayWindowMinutes, configurationService.CurrentConfiguration.GovUkPayLastProcessedMinutes))
                 .Returns(incompletePayments);
 
             // Act
@@ -139,7 +144,7 @@
                 .Returns(payment);
             A.CallTo(() => payClient.GetPaymentAsync(payment.PaymentId))
                 .Returns(paymentStatus);
-            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions())
+            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions(configurationService.CurrentConfiguration.GovUkPayWindowMinutes, configurationService.CurrentConfiguration.GovUkPayLastProcessedMinutes))
                 .Returns(incompletePayments);
 
             // Act
@@ -148,7 +153,7 @@
             // Assert
             payment.Status.Should().Be(paymentStatus.State.Status.ToDomainEnumeration<PaymentState>());
             payment.InFinalState.Should().BeTrue();
-            payment.LastProcessedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            payment.LastProcessedAt.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
             A.CallTo(() => context.SaveChangesAsync(default)).MustHaveHappenedOnceExactly();
         }
 
@@ -177,7 +182,7 @@
             A.CallTo(() => paymentSessionDataAccess.GetByIdAsync(payment.Id))
                 .Returns(payment);
             A.CallTo(() => payClient.GetPaymentAsync(A<string>._)).Returns<PaymentWithAllLinks>(null);
-            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions())
+            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions(configurationService.CurrentConfiguration.GovUkPayWindowMinutes, configurationService.CurrentConfiguration.GovUkPayLastProcessedMinutes))
                 .Returns(incompletePayments);
 
             // Act
@@ -186,7 +191,7 @@
             // Assert
             payment.Status.Should().Be(PaymentState.Error);
             payment.InFinalState.Should().BeTrue();
-            payment.LastProcessedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            payment.LastProcessedAt.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
             A.CallTo(() => context.SaveChangesAsync(default)).MustHaveHappenedOnceExactly();
         }
     }

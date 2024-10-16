@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Api.Services
 {
+    using System.ComponentModel;
+
     public interface IAppConfiguration
     {
         string Environment { get; set; }
@@ -21,5 +23,9 @@
         string ProxyWebAddress { get; set; }
 
         bool ProxyUseDefaultCredentials { get; set; }
+
+        int GovUkPayLastProcessedMinutes { get; set; }
+
+        int GovUkPayWindowMinutes { get; set; }
     }
 }

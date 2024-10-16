@@ -34,5 +34,11 @@
 
         [DefaultValue(false)]
         public bool ProxyUseDefaultCredentials { get; set; }
+
+        [DefaultValue(30)]
+        public int GovUkPayLastProcessedMinutes { get; set; }
+
+        [DefaultValue(180)]
+        public int GovUkPayWindowMinutes { get; set; }
     }
 }
