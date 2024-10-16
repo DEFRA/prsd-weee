@@ -84,6 +84,15 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Hangfire.Autofac, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Autofac.2.6.0\lib\net45\Hangfire.Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.8.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.8.14\lib\net46\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.8.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.8.14\lib\net451\Hangfire.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="IdentityModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IdentityModel.1.13.1\lib\net45\IdentityModel.dll</HintPath>
     </Reference>
@@ -376,12 +385,17 @@
   <ItemGroup>
     <Compile Include="App_Start\AutofacBootstrapper.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\HangfireBootstrapper.cs" />
+    <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\Modules\SecurityModule.cs" />
     <Compile Include="App_Start\Modules\UserContextModule.cs" />
     <Compile Include="Controllers\ErrorLogController.cs" />
     <Compile Include="Controllers\SmokeTestController.cs" />
     <Compile Include="Controllers\WarmUpController.cs" />
     <Compile Include="Filters\MaintenanceModeFilter.cs" />
+    <Compile Include="HangfireServices\IPaymentsService.cs" />
+    <Compile Include="HangfireServices\PaymentsJob.cs" />
+    <Compile Include="HangfireServices\PaymentsService.cs" />
     <Compile Include="Identity\ApplicationUserManagerBase.cs" />
     <Compile Include="Identity\ISecurityEventAuditor.cs" />
     <Compile Include="Identity\SecurityEventService.cs" />

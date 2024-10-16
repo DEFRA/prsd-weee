@@ -17,6 +17,18 @@
             }
         }
 
+        public static void RegisterTypeAsByEnvironmentInstancePerLifetimeScope(this ContainerBuilder builder, Type type, EnvironmentResolver environment)
+        {
+            if (environment.HostEnvironment.Equals(HostEnvironmentType.Console))
+            {
+                builder.RegisterType(type).AsSelf().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType(type).AsSelf().InstancePerLifetimeScope();
+            }
+        }
+
         public static void RegisterTypeByEnvironment<T, TI>(this ContainerBuilder builder, EnvironmentResolver environment)
         {
             if (environment.HostEnvironment.Equals(HostEnvironmentType.Console))
@@ -26,6 +38,18 @@
             else
             {
                 builder.RegisterType<T>().As<TI>().InstancePerRequest();
+            }
+        }
+
+        public static void RegisterTypeByEnvironmentInstancePerLifetimeScope<T, TI>(this ContainerBuilder builder, EnvironmentResolver environment)
+        {
+            if (environment.HostEnvironment.Equals(HostEnvironmentType.Console))
+            {
+                builder.RegisterType<T>().As<TI>().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType<T>().As<TI>().InstancePerLifetimeScope();
             }
         }
     }

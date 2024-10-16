@@ -32,6 +32,8 @@
 
         public virtual DateTime? UpdatedAt { get; set; }
 
+        public virtual DateTime? LastProcessedAt { get; set; }
+
         public virtual string UpdatedById { get; set; }
 
         public virtual DirectRegistrant DirectRegistrant { get; set; }

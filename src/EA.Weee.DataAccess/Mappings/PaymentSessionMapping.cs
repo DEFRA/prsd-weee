@@ -15,6 +15,8 @@
             Property(e => e.PaymentReturnToken).IsRequired().HasMaxLength(150);
             Property(e => e.Amount).HasPrecision(18, 2);
             Property(e => e.UpdatedById).IsOptional();
+            Property(e => e.CreatedAt).IsRequired();
+            Property(e => e.LastProcessedAt).IsOptional();
             Property(e => e.InFinalState).IsRequired();
             Property(e => e.RowVersion).IsRowVersion();
 
