@@ -4,7 +4,7 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
-    using EA.Weee.Web.Services;
+    using EA.Weee.Core.Helpers;
     using Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -17,7 +17,7 @@
     public class OrganisationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        
+
         public OrganisationController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
@@ -38,7 +38,8 @@
                 return await ShowOrganisations();
             }
 
-            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.SelectedOrganisationId.Value });
+            return RedirectToAction("ChooseActivity", "Home",
+                new { area = "Scheme", pcsId = model.SelectedOrganisationId.Value });
         }
 
         private async Task<ActionResult> ShowOrganisations()
@@ -64,7 +65,8 @@
                 YourOrganisationsViewModel model = new YourOrganisationsViewModel();
                 model.Organisations = accessibleOrganisations;
 
-                ViewBag.InaccessibleOrganisations = inaccessibleOrganisations.Where(o => o.UserStatus == UserStatus.Pending);
+                ViewBag.InaccessibleOrganisations =
+                    inaccessibleOrganisations.Where(o => o.UserStatus == UserStatus.Pending);
                 return View("YourOrganisations", model);
             }
 
@@ -111,9 +113,9 @@
             using (var client = apiClient())
             {
                 organisations = await
-                 client.SendAsync(
-                     User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(new int[0]));
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new GetUserOrganisationsByStatus(new int[0]));
             }
 
             return organisations
@@ -127,7 +129,8 @@
         /// </summary>
         /// <param name="organisations"></param>
         /// <returns></returns>
-        private IEnumerable<OrganisationUserData> FilterOutDuplicateOrganisations(IEnumerable<OrganisationUserData> organisations)
+        private IEnumerable<OrganisationUserData> FilterOutDuplicateOrganisations(
+            IEnumerable<OrganisationUserData> organisations)
         {
             List<UserStatus> userStatuesInOrderOfPreference = new List<UserStatus>()
             {
@@ -145,10 +148,9 @@
 
                 foreach (OrganisationUserData organistion in organisationsWithMatchingUserStatus)
                 {
-                    bool alreadyAdded = results
+                    var alreadyAdded = results
                         .Where(r => r.OrganisationId == organistion.OrganisationId)
-                        .Where(r => r.UserId == organistion.UserId)
-                        .Any();
+                        .Any(r => r.UserId == organistion.UserId);
 
                     if (!alreadyAdded)
                     {
@@ -165,6 +167,51 @@
                     yield return organisation;
                 }
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RepresentingCompanies(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var organisationInfo =
+                    await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+
+                var model = new RepresentingCompaniesViewModel()
+                {
+                    OrganisationId = organisationId,
+                    Organisations = new List<RepresentingCompany>()
+                };
+
+                foreach (var directRegistrant in organisationInfo.DirectRegistrants.Where(a =>
+                             !string.IsNullOrWhiteSpace(a.RepresentedCompanyName)))
+                {
+                    model.Organisations.Add(new RepresentingCompany()
+                    {
+                        DirectRegistrantId = directRegistrant.DirectRegistrantId,
+                        Name = directRegistrant.RepresentedCompanyName
+                    });
+                }
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RepresentingCompanies(RepresentingCompaniesViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.SelectedDirectRegistrant != null)
+                {
+                    return RedirectToAction(nameof(Areas.Scheme.Controllers.HomeController.ChooseActivity),
+                        typeof(Areas.Scheme.Controllers.HomeController).GetControllerName(),
+                        new { area = "Scheme", pcsId = model.OrganisationId, directRegistrantId = model.SelectedDirectRegistrant.Value });
+                }
+            }
+
+            return View(model);
         }
     }
 }
