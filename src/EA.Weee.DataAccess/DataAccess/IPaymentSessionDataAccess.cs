@@ -15,6 +15,6 @@
 
         Task<PaymentSession> GetByIdAsync(Guid paymentSessionId);
 
-        Task<List<PaymentSession>> GetIncompletePaymentSessions();
+        Task<List<PaymentSession>> GetIncompletePaymentSessions(int windowMinutes, int lastProcessMinutes);
     }
 }

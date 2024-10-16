@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.Api.HangfireServices
 {
     using EA.Weee.Api.Client;
+    using EA.Weee.Api.Services;
     using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Producer;
     using Serilog;
     using System;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -19,14 +18,16 @@
         private readonly IWeeeTransactionAdapter transactionAdapter;
         private readonly IPayClient payClient;
         private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
+        private readonly ConfigurationService configurationService;
 
-        public PaymentsService(ILogger logger, WeeeContext context, IWeeeTransactionAdapter transactionAdapter, IPayClient payClient, IPaymentSessionDataAccess paymentSessionDataAccess)
+        public PaymentsService(ILogger logger, WeeeContext context, IWeeeTransactionAdapter transactionAdapter, IPayClient payClient, IPaymentSessionDataAccess paymentSessionDataAccess, ConfigurationService configurationService)
         {
             this.logger = logger;
             this.context = context;
             this.transactionAdapter = transactionAdapter;
             this.payClient = payClient;
             this.paymentSessionDataAccess = paymentSessionDataAccess;
+            this.configurationService = configurationService;
         }
 
         public async Task RunMopUpJob(Guid jobId)
@@ -35,7 +36,7 @@
 
             try
             {
-                var incompletePayments = await paymentSessionDataAccess.GetIncompletePaymentSessions();
+                var incompletePayments = await paymentSessionDataAccess.GetIncompletePaymentSessions(configurationService.CurrentConfiguration.GovUkPayWindowMinutes, configurationService.CurrentConfiguration.GovUkPayLastProcessedMinutes);
 
                 logger.Information($"Found {incompletePayments.Count} incomplete payments to process. Job ID: {jobId}");
 
