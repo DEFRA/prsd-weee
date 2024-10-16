@@ -17,5 +17,7 @@
         Task<bool> ProducerRegistrationExists(string producerRegistrationNumber);
 
         Task<RegisteredProducer> FetchRegisteredProducerOrDefault(string producerRegistrationNumber, int complianceYear, Guid schemeId);
+
+        Task<bool> SchemeProducerRegistrationExists(string producerRegistrationNumber);
     }
 }
