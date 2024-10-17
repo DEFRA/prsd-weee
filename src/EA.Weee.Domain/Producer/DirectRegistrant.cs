@@ -13,7 +13,7 @@
             DirectProducerSubmissions = new List<DirectProducerSubmission>();
         }
 
-        public DirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative authorisedRepresentative, List<AdditionalCompanyDetails> additionalCompanyDetails)
+        public DirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative authorisedRepresentative, List<AdditionalCompanyDetails> additionalCompanyDetails, string producerRegistrationNumber = null)
         {
             Condition.Requires(organisation).IsNotNull();
 
@@ -24,6 +24,7 @@
             AuthorisedRepresentative = authorisedRepresentative;
             AdditionalCompanyDetails = additionalCompanyDetails;
             DirectProducerSubmissions = new List<DirectProducerSubmission>();
+            ProducerRegistrationNumber = producerRegistrationNumber;
         }
 
         public DirectRegistrant(Organisation organisation)
@@ -36,8 +37,6 @@
 
         public virtual Guid OrganisationId { get; private set; }
 
-        public virtual Guid? SICCodeId { get; private set; }
-
         public virtual Guid? BrandNameId { get; private set; }
 
         public virtual Guid? AuthorisedRepresentativeId { get; private set; }
@@ -46,9 +45,9 @@
 
         public virtual Guid? AddressId { get; private set; }
 
-        public virtual Organisation Organisation { get; private set; }
+        public virtual string ProducerRegistrationNumber { get; private set; }
 
-        public virtual SICCode SICCode { get; private set; }
+        public virtual Organisation Organisation { get; private set; }
 
         public virtual BrandName BrandName { get; private set; }
 
