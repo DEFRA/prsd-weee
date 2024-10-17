@@ -615,6 +615,8 @@
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\PaymentResultModel.cs" />
+    <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMap.cs" />
+    <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMapSource.cs" />
     <Compile Include="ViewModels\Organisation\RepresentingCompany.cs" />
     <Compile Include="ViewModels\Organisation\RepresentingCompaniesViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
