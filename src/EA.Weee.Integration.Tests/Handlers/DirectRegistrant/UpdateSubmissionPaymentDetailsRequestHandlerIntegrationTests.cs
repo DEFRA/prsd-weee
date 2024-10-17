@@ -12,6 +12,7 @@
     using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
+    using System;
     using System.Security;
 
     public class UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTests : IntegrationTestBase
@@ -43,6 +44,8 @@
 
                 updatedPaymentSession.Status.Should().Be(PaymentState.Failed);
                 updatedPaymentSession.InFinalState.Should().BeFalse();
+                updatedPaymentSession.UpdatedAt.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(30));
+                updatedPaymentSession.UpdatedById.Should().Be(UserId.ToString());
             };
         }
 
@@ -76,6 +79,8 @@
                 updatedPaymentSession.InFinalState.Should().BeTrue();
 
                 updatedSubmission.FinalPaymentSessionId.Should().Be(updatedPaymentSession.Id);
+                updatedPaymentSession.UpdatedAt.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(30));
+                updatedPaymentSession.UpdatedById.Should().Be(UserId.ToString());
             };
         }
 
