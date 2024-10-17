@@ -5,6 +5,6 @@
 
     public interface IGetDirectProducerSubmissionActiveComplianceYearsDataAccess
     {
-        Task<List<int>> Get();
+        Task<List<int>> Get(int offSet);
     }
 }

@@ -553,7 +553,7 @@
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
-                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2B }
                 };
 
                 var submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
@@ -654,7 +654,7 @@
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
                 result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result1.ObligationType.Should().Be("B2C");
+                result1.ObligationType.Should().Be("B2B");
                 result1.ChargeBandType.Should().BeNull();
                 result1.SellingTechniqueType.Should().Be("Indirect Selling to End User");
                 result1.CeaseToExist.Should().BeNull();
