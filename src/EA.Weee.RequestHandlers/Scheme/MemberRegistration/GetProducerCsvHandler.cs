@@ -51,7 +51,7 @@
             csvWriter.DefineColumn("Obligation Type", i => i.ObligationType);
             csvWriter.DefineColumn("Date & time (GMT) registered", i => i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn("Date & time (GMT) last updated", i => (i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")) ? string.Empty : i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")));
-            csvWriter.DefineColumn("Authorised representative", i => i.AuthorisedRepresentative);
+            csvWriter.DefineColumn("Authorised Representative", i => i.AuthorisedRepresentative);
             csvWriter.DefineColumn("Overseas producer", i => i.OverseasProducer);
 
             string fileContent = csvWriter.Write(items);
