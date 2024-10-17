@@ -1150,6 +1150,7 @@
     <Content Include="Areas\Producer\Views\Producer\AlreadySubmittedAndPaid.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationHasNoSubmissions.cshtml" />
     <Content Include="Views\Organisation\RepresentingCompanies.cshtml" />
+    <Content Include="Views\Organisation\RepresentingOrganisation.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -1975,6 +1976,7 @@
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\_OrganisationAddressCountryPartial.cshtml" />
+    <Content Include="Views\Shared\_RepresentingCompanyPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
