@@ -11,7 +11,7 @@
 }
 @section full_main_content{
     <div class="govuk-tabs">
-        @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
+        @Html.Partial("Producer/ViewOrganisation/_OrganisationDetailsTabs", Model)
 
         <div class="govuk-tabs__panel" id="organisationDetails">
             <h1 class="govuk-heading-m">
@@ -27,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    @foreach(var category in Model.EditEeeDataViewModel.CategoryValues)
+                    @foreach (var category in Model.EditEeeDataViewModel.CategoryValues)
                     {
                         <tr class="govuk-table__row category-row-no-break" id="category-row-@category.CategoryId">
                             <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1 category-cell-no-break">

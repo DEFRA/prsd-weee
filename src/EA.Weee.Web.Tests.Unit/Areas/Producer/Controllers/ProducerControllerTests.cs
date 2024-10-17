@@ -19,6 +19,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services.SubmissionService;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
@@ -48,12 +49,15 @@
             templateExecutor = A.Fake<IMvcTemplateExecutor>();
             pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
 
+            var submissionService = A.Fake<ISubmissionService>();
+
             controller = new ProducerController(
                breadcrumb, 
                weeeCache, 
                mapper,
                templateExecutor,
-               pdfDocumentProvider);
+               pdfDocumentProvider,
+               submissionService);
         }
 
         [Fact]
