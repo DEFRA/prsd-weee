@@ -29,7 +29,7 @@
 
             if (message.IncludeDirectRegistrantSubmissions)
             {
-                years.AddRange(await directProducerSubmissionActiveComplianceYearsDataAccess.Get());
+                years.AddRange(await directProducerSubmissionActiveComplianceYearsDataAccess.Get(1));
             }
 
             return years.Distinct().OrderByDescending(y => y).ToList();
