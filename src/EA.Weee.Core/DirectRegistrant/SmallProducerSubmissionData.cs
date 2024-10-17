@@ -33,5 +33,7 @@
         public AuthorisedRepresentitiveData AuthorisedRepresentitiveData { get; set; }
 
         public AddressData ServiceOfNoticeData { get; set; }
+
+        public string ProducerRegistrationNumber { get; set; }
     }
 }
