@@ -23,7 +23,6 @@
     {
         private readonly IWeeeClient fakeClient;
         private readonly ActionExecutingContext actionExecutingContextProducer;
-        private readonly ActionExecutingContext actionExecutingContextProducerSubmission;
         private readonly SmallProducerSubmissionSubmittedAttribute filter;
 
         public SmallProducerSubmissionSubmittedAttributeTests()
