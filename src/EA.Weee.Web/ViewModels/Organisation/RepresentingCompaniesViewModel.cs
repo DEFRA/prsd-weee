@@ -14,5 +14,7 @@
         public Guid? SelectedDirectRegistrant { get; set; }
 
         public IList<RepresentingCompany> Organisations { get; set; }
+
+        public bool ShowBackButton { get; set; }
     }
 }
