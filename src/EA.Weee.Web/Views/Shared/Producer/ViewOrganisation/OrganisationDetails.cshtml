@@ -28,17 +28,17 @@
 
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Registration date</th>
-                            <td class="govuk-table__cell">Date</td>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.RegistrationDate</td>
                         </tr>
 
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Submission date</th>
-                            <td class="govuk-table__cell">Sub Date</td>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.SubmittedDate</td>
                         </tr>
 
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Producer registration number (PRN)</th>
-                            <td class="govuk-table__cell">Producer registration number (PRN)</td>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.ProducerRegistrationNumber</td>
                         </tr>
 
                         <tr class="govuk-table__row">
@@ -48,7 +48,7 @@
 
                                 @if (Model.OrganisationViewModel.HasPaid)
                                 {
-                                    <div style="float: right"> @Html.ActionLink("Add payment details", "Index", "Home", null, new { @class = "govuk-link" })</div>
+                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", null, new { @class = "govuk-link" })</div>
                                 }
                             </td>
                         </tr>

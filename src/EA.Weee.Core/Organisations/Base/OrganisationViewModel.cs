@@ -41,7 +41,13 @@
         public bool HasPaid { get; set; } = false;
 
         public SubmissionStatus Status { get; set; }
-        public DateTime RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string PaymentReference { get; set; }
+
+        public string ProducerRegistrationNumber { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
