@@ -429,6 +429,11 @@
                 OrganisationType = existingTransaction != null ? existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany : ExternalOrganisationType.RegisteredCompany,
             };
 
+            if (existingTransaction.PreviousRegistration.Value == PreviouslyRegisteredProducerType.YesPreviousSchemeMember)
+            {
+                model.IsPreviousSchemeMember = true;
+            }
+
             model.Address.Countries = await GetCountries();
 
             var specificViewModel = model.CastToSpecificViewModel(model);
@@ -670,8 +675,8 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
 
-            var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
-            if (previousRegistration == YesNoType.Yes)
+            var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<PreviouslyRegisteredProducerType>();
+            if (previousRegistration == PreviouslyRegisteredProducerType.YesPreviousSmallProducer)
             {
                 return RedirectToAction("Search", "OrganisationRegistration");
             }

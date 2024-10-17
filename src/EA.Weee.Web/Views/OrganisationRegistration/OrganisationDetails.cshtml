@@ -19,6 +19,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.IsPreviousSchemeMember)
 
         @Html.Partial("_OrganisationHeadingAndCountryPartial", Model)
 
