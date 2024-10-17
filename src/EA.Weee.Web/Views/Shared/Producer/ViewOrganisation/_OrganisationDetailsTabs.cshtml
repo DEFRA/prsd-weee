@@ -8,13 +8,18 @@
 @using EA.Weee.Web.Areas.Producer.ViewModels
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
-
+@using EA.Weee.Web.Areas.Admin.Controllers;
 @model OrganisationDetailsTabsViewModel
 
 @{
     var hasYear = Model.Year != null;
 
     var @title = hasYear ? "Producer registration submissions" : "View organisation details";
+
+    var isAdmin = Model.IsInternal;
+
+    var area = Model.IsInternal ? "Admin" : "Producer";
+    var controller = Model.IsInternal ? "ProducerSubmission" : "Producer";
 }
 
 @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
@@ -45,22 +50,22 @@
 
 <ul class="govuk-tabs__list" role="tablist">
     @this.WeeeGds().Tab("View organisation",
-    Url.UrlFor<ProducerController>(a => a.OrganisationDetails(Model.Year)),
-    Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
+        Url.Action("OrganisationDetails", controller, new { area = area, RegistrationNumber = Model.RegistrationNumber, year = Model.Year }),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.OrganisationDetails, "organisationDetailsAnchor")
 
     @this.WeeeGds().Tab("Contact details",
-    Url.UrlFor<ProducerController>(a => a.ContactDetails(Model.Year)),
-    Model.ActiveOption == OrganisationDetailsDisplayOption.ContactDetails, "contactDetailsAnchor")
+        Url.Action("ContactDetails", controller, new { area = area, RegistrationNumber = Model.RegistrationNumber, year = Model.Year }),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.ContactDetails, "contactDetailsAnchor")
 
     @this.WeeeGds().Tab("Service of notice details",
-    Url.UrlFor<ProducerController>(a => a.ServiceOfNoticeDetails(Model.Year)),
-    Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
+        Url.Action("ServiceOfNoticeDetails", controller, new { area = area, RegistrationNumber = Model.RegistrationNumber, year = Model.Year }),
+        Model.ActiveOption == OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, "serviceOfNoticeDetailsAnchor")
 
     @if (@Model.SmallProducerSubmissionData.HasAuthorisedRepresentitive)
     {
         <span>
             @this.WeeeGds().Tab("Represented organisation details",
-            Url.UrlFor<ProducerController>(a => a.RepresentedOrganisationDetails(Model.Year)),
+            Url.Action("RepresentedOrganisationDetails", controller, new { area = area, RegistrationNumber = Model.RegistrationNumber, year = Model.Year }),
             Model.ActiveOption == OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, "representedOrganisationDetailsAnchor")
         </span>
     }
@@ -69,8 +74,8 @@
     {
         <span>
             @this.WeeeGds().Tab("Total EEE",
-              Url.UrlFor<ProducerController>(a => a.TotalEEEDetails(Model.Year)),
-              Model.ActiveOption == OrganisationDetailsDisplayOption.TotalEEEDetails, "totalEEEDetailsAnchor")
+            Url.Action("TotalEEEDetails", controller, new { area = area, RegistrationNumber = Model.RegistrationNumber, year = Model.Year }),
+            Model.ActiveOption == OrganisationDetailsDisplayOption.TotalEEEDetails, "totalEEEDetailsAnchor")
         </span>
     }
 </ul>

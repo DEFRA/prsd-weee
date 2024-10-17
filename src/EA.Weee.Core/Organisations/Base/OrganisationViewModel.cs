@@ -2,7 +2,9 @@
 {
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Validation;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -35,6 +37,11 @@
 
         [DisplayName("Organisation type")]
         public ExternalOrganisationType? OrganisationType { get; set; }
+
+        public bool HasPaid { get; set; } = false;
+
+        public SubmissionStatus Status { get; set; }
+        public DateTime RegistrationDate { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

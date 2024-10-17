@@ -18,6 +18,10 @@
 
         public IEnumerable<int> Years { get; set; }
 
+        public bool IsInternal { get; set; } = false;
+
+        public string RegistrationNumber { get; set; }
+
         public OrganisationDetailsDisplayOption ActiveOption { get; set; }
 
         public SmallProducerSubmissionData SmallProducerSubmissionData { get; set; }
