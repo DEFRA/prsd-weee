@@ -1,5 +1,15 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using EA.Prsd.Core;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.Domain.Lookup;
+    using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.Producer.Classfication;
+    using EA.Weee.Domain.Producer.Classification;
+    using EA.Weee.Tests.Core;
+    using FakeItEasy;
+    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -33,7 +43,7 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
                 producerSubmission1.Business.Company.Contact1.Telephone = "55 5555 5555";
                 producerSubmission1.Business.Company.Contact1.Email = "email@test.com";
 
@@ -52,7 +62,7 @@
                 memberUpload2.ComplianceYear = 2017;
                 memberUpload2.IsSubmitted = true;
 
-                ProducerSubmission producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
                 producerSubmission2.Business.Company.Contact1.Telephone = "55 5555 5555";
                 producerSubmission2.Business.Company.Contact1.Email = "email@test.com";
 
@@ -103,7 +113,7 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = false;
 
-                ProducerSubmission producerSubmission = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
 
                 db.Model.SaveChanges();
 
@@ -137,7 +147,7 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                ProducerSubmission producerSubmission = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
 
                 db.Model.SaveChanges();
 
@@ -174,7 +184,7 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                ProducerSubmission producerSubmission = helper.CreateProducerAsPartnership(memberUpload1, "WEE/99ZZZZ99");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission = helper.CreateProducerAsPartnership(memberUpload1, "WEE/99ZZZZ99");
 
                 db.Model.SaveChanges();
 
@@ -213,10 +223,10 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
                 producerSubmission1.Business.Company.Name = "A company name";
 
-                ProducerSubmission producerSubmission2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/88ZZZZ88");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/88ZZZZ88");
                 producerSubmission2.Business.Company.Name = "B company name";
 
                 Scheme scheme2 = helper.CreateScheme();
@@ -234,10 +244,10 @@
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                ProducerSubmission producerSubmission3 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission3 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
                 producerSubmission3.Business.Company.Name = "C company name";
 
-                ProducerSubmission producerSubmission4 = helper.CreateProducerAsCompany(memberUpload2, "WEE/22ZZZZ22");
+                Weee.Tests.Core.Model.ProducerSubmission producerSubmission4 = helper.CreateProducerAsCompany(memberUpload2, "WEE/22ZZZZ22");
                 producerSubmission4.Business.Company.Name = "D company name";
 
                 db.Model.SaveChanges();
@@ -251,6 +261,213 @@
                 Assert.True(results.FindIndex(i => i.SchemeName == "Aston Martin" && i.ProducerName == "C company name") < results.FindIndex(i => i.SchemeName == "Aston Martin" && i.ProducerName == "D company name"));
                 Assert.True(results.FindIndex(i => i.SchemeName == "Lamborghini" && i.ProducerName == "A company name") < results.FindIndex(i => i.SchemeName == "Lamborghini" && i.ProducerName == "B company name"));
                 Assert.True(results.FindIndex(i => i.SchemeName == "Aston Martin" && i.ProducerName == "C company name") < results.FindIndex(i => i.SchemeName == "Lamborghini" && i.ProducerName == "B company name"));
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissions_ReturnsResults()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                var complianceYear = 2060;
+                var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+
+                var authorisedRep = new Domain.Producer.AuthorisedRepresentative("authed rep name",
+                    new ProducerContact("rep title", "rep first name", "rep surname",
+                        "rep tel", "rep mob", "rep fax", "rep email", new ProducerAddress("rep address1",
+                            "rep secondary", "rep street",
+                            "rep town", "rep locality", "rep admin area", country, "rep postcode")));
+
+                var brandNames = new BrandName("brand name");
+                var (organisation2, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear, "987654321", authorisedRep, brandNames);
+
+                var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2B },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                var submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
+
+                // Create a scheme for test or ordering
+                var organisation =
+                    Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                organisation.AddOrUpdateAddress(Domain.AddressType.RegisteredOrPPBAddress, new Domain.Organisation.Address("address1", "address2", "town", "county", "gu", country, "1234", "1@1.com"));
+
+                var authority =
+                    wrapper.WeeeContext.UKCompetentAuthorities.Single(c =>
+                        c.Abbreviation == UKCompetentAuthorityAbbreviationType.EA);
+                var chargeBandAmount = wrapper.WeeeContext.ChargeBandAmounts.First();
+                var quarter = new Quarter(complianceYear, QuarterType.Q1);
+
+                wrapper.WeeeContext.Organisations.Add(organisation);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var scheme1 = new Domain.Scheme.Scheme(organisation);
+                scheme1.UpdateScheme("Test Scheme 1", "WEE/AH7453NF/SCH", "WEE9462846",
+                    Domain.Obligation.ObligationType.B2C, authority);
+                scheme1.SetStatus(Domain.Scheme.SchemeStatus.Approved);
+
+                var schemeRegisteredProducer1 =
+                    new Domain.Producer.RegisteredProducer("WEE/AG48365JE", complianceYear, scheme1);
+
+                var memberUpload1 = new Domain.Scheme.MemberUpload(
+                    organisation.Id,
+                    "data",
+                    new List<Domain.Scheme.MemberUploadError>(),
+                    0,
+                    complianceYear,
+                    scheme1,
+                    "file name",
+                    null,
+                    false);
+
+                memberUpload1.SetSubmittedDate(SystemTime.UtcNow);
+                memberUpload1.Submit(wrapper.WeeeContext.Users.First());
+
+                var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
+                    schemeRegisteredProducer1, memberUpload1,
+                    new Domain.Producer.ProducerBusiness(),
+                    new Domain.Producer.AuthorisedRepresentative("Foo"),
+                    new DateTime(complianceYear, 1, 1),
+                    0,
+                    true,
+                    null,
+                    "Trading Name 1",
+                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
+                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    Domain.Obligation.ObligationType.B2C,
+                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<Domain.Producer.BrandName>(),
+                    new List<Domain.Producer.SICCode>(),
+                    chargeBandAmount,
+                    0,
+                    A.Dummy<StatusType>());
+
+                memberUpload1.ProducerSubmissions.Add(schemeSubmission1);
+
+                wrapper.WeeeContext.MemberUploads.Add(memberUpload1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                schemeRegisteredProducer1.SetCurrentSubmission(schemeSubmission1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var dataReturn1 = new Domain.DataReturns.DataReturn(scheme1, quarter);
+
+                var version1 = new Domain.DataReturns.DataReturnVersion(dataReturn1);
+
+                var amount1 = new Domain.DataReturns.EeeOutputAmount(
+                    Domain.Obligation.ObligationType.B2C,
+                    WeeeCategory.LargeHouseholdAppliances,
+                    123.457m,
+                    schemeRegisteredProducer1);
+
+                version1.EeeOutputReturnVersion.AddEeeOutputAmount(amount1);
+
+                wrapper.WeeeContext.DataReturnVersions.Add(version1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                dataReturn1.SetCurrentVersion(version1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.StoredProcedures.SpgProducerPublicRegisterCSVDataByComplianceYear(complianceYear);
+
+                var schemeResult = results.ElementAt(0);
+                schemeResult.SchemeName.Should().Be(scheme1.SchemeName);
+
+                var result1 = results.ElementAt(1);
+                result1.CompanyName.Should().Be("My company 2");
+                result1.SchemeName.Should().Be("Direct registrant");
+                result1.TradingName.Should().BeNullOrWhiteSpace();
+                result1.ProducerName.Should().Be("authed rep name");
+                result1.PRN.Should().Be("WEE/AG48365JX");
+                result1.ObligationType.Should().Be("Both");
+                result1.ROAPrimaryName.Should().Be("primary 1");
+                result1.ROASecondaryName.Should().BeNull();
+                result1.ROATown.Should().Be("Woking");
+                result1.ROALocality.Should().Be("Hampshire");
+                result1.ROAAdministrativeArea.Should().BeNull();
+                result1.ROAPostCode.Should().Be("GU21 5EE");
+                result1.ROACountry.Should().Be("Azerbaijan");
+                result1.ROATelephone.Should().Be("12345678");
+                result1.ROAEmail.Should().Be("test@co.uk");
+                result1.CSROAAddress1.Should().BeNull();
+                result1.CSROAAddress2.Should().BeNull();
+                result1.CSROATownOrCity.Should().BeNull();
+                result1.CSROATownOrCity.Should().BeNull();
+                result1.CSROACountyOrRegion.Should().BeNull();
+                result1.CSROAPostcode.Should().BeNull();
+                result1.CSROACountry.Should().BeNull();
+                result1.OPNAName.Should().Be("authed rep name");
+                result1.OPNAPrimaryName.Should().Be("rep address1");
+                result1.OPNASecondaryName.Should().Be("rep secondary");
+                result1.OPNAStreet.Should().Be("rep street");
+                result1.OPNATown.Should().Be("rep town");
+                result1.OPNALocality.Should().Be("rep locality");
+                result1.OPNAAdministrativeArea.Should().Be("rep admin area");
+                result1.OPNACountry.Should().Be("Azerbaijan");
+                result1.OPNAPostCode.Should().Be("rep postcode");
+                result1.ComplianceYear.Should().Be(complianceYear);
+                result1.PPOBPrimaryName.Should().BeNull();
+                result1.PPOBSecondaryName.Should().BeNull();
+                result1.PPOBStreet.Should().BeNull();
+                result1.PPOBTown.Should().BeNull();
+                result1.PPOBLocality.Should().BeNull();
+                result1.PPOBAdministrativeArea.Should().BeNull();
+                result1.PPOBCountry.Should().BeNull();
+                result1.PPOBPostcode.Should().BeNull();
+
+                var result2 = results.ElementAt(2);
+                result2.CompanyName.Should().Be("My company");
+                result2.SchemeName.Should().Be("Direct registrant");
+                result2.TradingName.Should().BeNullOrWhiteSpace();
+                result2.ProducerName.Should().Be("My company");
+                result2.PRN.Should().Be("WEE/AG48365JN");
+                result2.ObligationType.Should().Be("B2C");
+                result2.ROAPrimaryName.Should().Be("primary 1");
+                result2.ROASecondaryName.Should().BeNull();
+                result2.ROATown.Should().Be("Woking");
+                result2.ROALocality.Should().Be("Hampshire");
+                result2.ROAAdministrativeArea.Should().BeNull();
+                result2.ROAPostCode.Should().Be("GU21 5EE");
+                result2.ROACountry.Should().Be("Azerbaijan");
+                result2.ROATelephone.Should().Be("12345678");
+                result2.ROAEmail.Should().Be("test@co.uk");
+                result2.CSROAAddress1.Should().BeNull();
+                result2.CSROAAddress2.Should().BeNull();
+                result2.CSROATownOrCity.Should().BeNull();
+                result2.CSROATownOrCity.Should().BeNull();
+                result2.CSROACountyOrRegion.Should().BeNull();
+                result2.CSROAPostcode.Should().BeNull();
+                result2.CSROACountry.Should().BeNull();
+                result2.OPNAName.Should().BeNull();
+                result2.OPNAPrimaryName.Should().BeNull();
+                result2.OPNASecondaryName.Should().BeNull();
+                result2.OPNAStreet.Should().BeNull();
+                result2.OPNATown.Should().BeNull();
+                result2.OPNALocality.Should().BeNull();
+                result2.OPNAAdministrativeArea.Should().BeNull();
+                result2.OPNACountry.Should().BeNull();
+                result2.OPNAPostCode.Should().BeNull();
+                result2.ComplianceYear.Should().Be(complianceYear);
+                result2.PPOBPrimaryName.Should().BeNull();
+                result2.PPOBSecondaryName.Should().BeNull();
+                result2.PPOBStreet.Should().BeNull();
+                result2.PPOBTown.Should().BeNull();
+                result2.PPOBLocality.Should().BeNull();
+                result2.PPOBAdministrativeArea.Should().BeNull();
+                result2.PPOBCountry.Should().BeNull();
+                result2.PPOBPostcode.Should().BeNull();
             }
         }
     }
