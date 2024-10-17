@@ -5,6 +5,8 @@
     using Core.Organisations;
     using Core.Shared;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Requests.Shared;
     using Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -170,6 +172,47 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> RepresentingOrganisation(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                RepresentingCompanyDetailsViewModel model = null;
+
+                model = new RepresentingCompanyDetailsViewModel()
+                {
+                    OrganisationId = organisationId
+                };
+
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> RepresentingOrganisation(RepresentingCompanyDetailsViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await client.SendAsync(User.GetAccessToken(),
+                        new AddRepresentingCompany(model.OrganisationId, model));
+
+                    return RedirectToAction(nameof(Areas.Scheme.Controllers.HomeController.ChooseActivity),
+                        typeof(Areas.Scheme.Controllers.HomeController).GetControllerName(),
+                        new { pcsId = model.OrganisationId, directRegistrantId = result, area = "Scheme" });
+                }
+
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> RepresentingCompanies(Guid organisationId)
         {
             using (var client = apiClient())
@@ -177,10 +220,16 @@
                 var organisationInfo =
                     await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
 
+                var organisations = await GetOrganisations();
+                var accessibleOrganisations = organisations
+                    .Where(o => o.UserStatus == UserStatus.Active)
+                    .ToList();
+
                 var model = new RepresentingCompaniesViewModel()
                 {
                     OrganisationId = organisationId,
-                    Organisations = new List<RepresentingCompany>()
+                    Organisations = new List<RepresentingCompany>(),
+                    ShowBackButton = accessibleOrganisations.Count > 1
                 };
 
                 foreach (var directRegistrant in organisationInfo.DirectRegistrants.Where(a =>
@@ -199,7 +248,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RepresentingCompanies(RepresentingCompaniesViewModel model)
+        public ActionResult RepresentingCompanies(RepresentingCompaniesViewModel model)
         {
             if (ModelState.IsValid)
             {
