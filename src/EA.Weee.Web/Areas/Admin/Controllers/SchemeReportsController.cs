@@ -582,7 +582,7 @@
 
         private async Task<List<int>> FetchComplianceYearsForMemberRegistrations()
         {
-            var request = new GetMemberRegistrationsActiveComplianceYears();
+            var request = new GetMemberRegistrationsActiveComplianceYears(true);
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
