@@ -17,7 +17,7 @@
                 if (!overseasContact.IsOverseas)
                 {
                     string errorMessage =
-                        "The overseas producer of an authorised representative cannot be based in the UK.";
+                        "The overseas producer of an Authorised Representative cannot be based in the UK.";
                     throw new ArgumentException(errorMessage);
                 }
             }
