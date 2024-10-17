@@ -8,8 +8,6 @@
     using Serilog;
     using Services;
     using System;
-    using System.IO;
-    using System.Security.Cryptography.X509Certificates;
 
     public class ApiClientModule : Module
     {
@@ -53,8 +51,6 @@
                 var jsonSerializer = cc.Resolve<IJsonSerializer>();
                 var logger = cc.Resolve<ILogger>();
 
-                string filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) + @"\Cert\" + config.CompaniesCertificateName;
-                X509Certificate2 certificate = new X509Certificate2(filePath, config.CompaniesHousePassword);
                 HttpClientHandlerConfig httpClientHandlerConfig = new HttpClientHandlerConfig
                 {
                     ProxyEnabled = config.ProxyEnabled,
@@ -63,8 +59,12 @@
                     ByPassProxyOnLocal = config.ByPassProxyOnLocal
                 };
 
-                    return new CompaniesHouseClient(config.CompaniesHouseBaseUrl, httpClient, retryPolicy, 
-                        jsonSerializer, httpClientHandlerConfig, certificate, logger);
+                var oauthProvider = new OAuthTokenProvider(httpClient, httpClientHandlerConfig, retryPolicy, logger,
+                    config.OAuthTokenClientId, config.OAuthTokenClientSecret, config.CompaniesHouseScope,
+                    config.OAuthTokenEndpoint);
+
+                return new CompaniesHouseClient(config.CompaniesHouseBaseUrl, httpClient, retryPolicy, 
+                        jsonSerializer, httpClientHandlerConfig, logger, oauthProvider);
                 }).As<ICompaniesHouseClient>();
 
             builder.Register(c =>
