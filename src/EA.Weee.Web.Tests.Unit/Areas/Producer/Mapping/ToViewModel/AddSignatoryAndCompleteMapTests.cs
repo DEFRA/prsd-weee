@@ -10,7 +10,7 @@
     public class AddSignatoryAndCompleteMapTests
     {
         private readonly IFixture fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
-        private readonly AddSignatoryAndCompleteMap map = new AddSignatoryAndCompleteMap();
+        private readonly RepresentingCompaniesViewModelMap map = new RepresentingCompaniesViewModelMap();
 
         [Fact]
         public void Map_ShouldMapHighLevelSourceFields()

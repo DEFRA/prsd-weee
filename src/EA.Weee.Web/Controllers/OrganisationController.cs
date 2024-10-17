@@ -4,9 +4,11 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.ViewModels.Organisation.Mapping.ToViewModel;
     using Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -19,10 +21,12 @@
     public class OrganisationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IMapper mapper;
 
-        public OrganisationController(Func<IWeeeClient> apiClient)
+        public OrganisationController(Func<IWeeeClient> apiClient, IMapper mapper)
         {
             this.apiClient = apiClient;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -176,9 +180,7 @@
         {
             using (var client = apiClient())
             {
-                RepresentingCompanyDetailsViewModel model = null;
-
-                model = new RepresentingCompanyDetailsViewModel()
+                var model = new RepresentingCompanyDetailsViewModel()
                 {
                     OrganisationId = organisationId
                 };
@@ -221,26 +223,8 @@
                     await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
 
                 var organisations = await GetOrganisations();
-                var accessibleOrganisations = organisations
-                    .Where(o => o.UserStatus == UserStatus.Active)
-                    .ToList();
 
-                var model = new RepresentingCompaniesViewModel()
-                {
-                    OrganisationId = organisationId,
-                    Organisations = new List<RepresentingCompany>(),
-                    ShowBackButton = accessibleOrganisations.Count > 1
-                };
-
-                foreach (var directRegistrant in organisationInfo.DirectRegistrants.Where(a =>
-                             !string.IsNullOrWhiteSpace(a.RepresentedCompanyName)))
-                {
-                    model.Organisations.Add(new RepresentingCompany()
-                    {
-                        DirectRegistrantId = directRegistrant.DirectRegistrantId,
-                        Name = directRegistrant.RepresentedCompanyName
-                    });
-                }
+                var model = mapper.Map<RepresentingCompaniesViewModelMapSource, RepresentingCompaniesViewModel>(new RepresentingCompaniesViewModelMapSource(organisations.ToList(), organisationInfo));
 
                 return View(model);
             }
