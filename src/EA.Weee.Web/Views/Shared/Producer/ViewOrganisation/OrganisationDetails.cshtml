@@ -10,7 +10,7 @@
 }
 @section full_main_content{
     <div class="govuk-tabs">
-        @Html.Partial("ViewOrganisation/_OrganisationDetailsTabs", Model)
+        @Html.Partial("Producer/ViewOrganisation/_OrganisationDetailsTabs", Model)
 
         <div class="govuk-tabs__panel" id="organisationDetails">
             <h1 class="govuk-heading-m">
@@ -18,6 +18,47 @@
             </h1>
             <table id="pcs-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
+
+                    @if (Model.IsInternal)
+                    {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Registration status</th>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.Status.GetDisplayName()</td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Registration date</th>
+                            <td class="govuk-table__cell">Date</td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Submission date</th>
+                            <td class="govuk-table__cell">Sub Date</td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Producer registration number (PRN)</th>
+                            <td class="govuk-table__cell">Producer registration number (PRN)</td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Payment status</th>
+                            <td class="govuk-table__cell">
+                                @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
+
+                                @if (Model.OrganisationViewModel.HasPaid)
+                                {
+                                    <div style="float: right"> @Html.ActionLink("Add payment details", "Index", "Home", null, new { @class = "govuk-link" })</div>
+                                }
+                            </td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Payment reference</th>
+                            <td class="govuk-table__cell">Payment reference</td>
+                        </tr>
+                    }
+
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" style="width: 30%;" scope="row">Organisation type</th>
                         <td class="govuk-table__cell">@Model.OrganisationViewModel.OrganisationType.GetDisplayName()</td>
@@ -76,6 +117,12 @@
             </table>
 
         </div>
+
+        @if (Model.IsInternal && (Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete
+    && Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted))
+        {
+            @(this.WeeeGds().Button("Return submission to user"));
+        }
     </div>
 
     @(this.WeeeGds().BackToTopLink())

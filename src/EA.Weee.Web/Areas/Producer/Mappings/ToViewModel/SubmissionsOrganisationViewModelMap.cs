@@ -20,9 +20,11 @@
             if (source.Year.HasValue)
             {
                 var sub = source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value];
-
+ 
                 return new OrganisationViewModel()
                 {
+                    Status = sub.Status,
+                    HasPaid = sub.HasPaid,
                     Address = mapper.Map<AddressData, ExternalAddressData>(sub.BusinessAddressData),
                     CompanyName = sub.CompanyName,
                     BusinessTradingName = sub.TradingName,
