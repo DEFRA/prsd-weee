@@ -4,13 +4,13 @@
     using Shared;
     using System.ComponentModel.DataAnnotations;
 
-    public class PreviousRegistrationViewModel : YesNoChoiceViewModel
+    public class PreviousRegistrationViewModel : RadioButtonStringCollectionViewModel
     {
-        [Required(ErrorMessage = "Have you previously been registered as a small producer?")]
+        [Required(ErrorMessage = "Have you previously been registered as a producer?")]
         public override string SelectedValue { get; set; }
 
         public PreviousRegistrationViewModel()
-            : base(CreateFromEnum<YesNoType>().PossibleValues)
+            : base(CreateFromEnum<PreviouslyRegisteredProducerType>().PossibleValues)
         {
         }
     }
