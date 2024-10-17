@@ -56,7 +56,7 @@
             csvWriter.DefineColumn(@"Registered office phone number", i => !string.IsNullOrEmpty(i.CompanyName) ? i.ROATelephone : string.Empty, true);
             csvWriter.DefineColumn(@"Registered office email address", i => !string.IsNullOrEmpty(i.CompanyName) ? i.ROAEmail : string.Empty);
             csvWriter.DefineColumn(@"Producer registration number (PRN)", i => i.PRN);
-            csvWriter.DefineColumn(@"Producer compliance scheme (PCS) name", i => i.SchemeName);
+            csvWriter.DefineColumn(@"Producer compliance scheme (PCS) name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS operator name", i => i.SchemeOperator);
 
             csvWriter.DefineColumn(@"PCS registered office", i => ConcatAddress(new[] { i.CSROAAddress1, i.CSROAAddress2, i.CSROATownOrCity, i.CSROACountyOrRegion, i.CSROACountry, i.CSROAPostcode }));

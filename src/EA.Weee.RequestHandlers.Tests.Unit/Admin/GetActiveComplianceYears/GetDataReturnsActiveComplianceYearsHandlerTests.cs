@@ -26,7 +26,7 @@
                 () => Handler().HandleAsync(new GetDataReturnsActiveComplianceYears(false)));
 
             A.CallTo(() => dataAccess.Get()).MustNotHaveHappened();
-            A.CallTo(() => directProducerDataAccess.Get()).MustNotHaveHappened();
+            A.CallTo(() => directProducerDataAccess.Get(1)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -38,20 +38,20 @@
 
             A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
             A.CallTo(() => dataAccess.Get()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => directProducerDataAccess.Get()).MustNotHaveHappened();
+            A.CallTo(() => directProducerDataAccess.Get(1)).MustNotHaveHappened();
         }
 
         [Fact]
         public async Task HandleAsync_IncludeDirectRegistrantSubmissions_UsesAllYears()
         {
             A.CallTo(() => dataAccess.Get()).Returns(new List<int> { 2020, 2021 });
-            A.CallTo(() => directProducerDataAccess.Get()).Returns(new List<int> { 2019, 2021 });
+            A.CallTo(() => directProducerDataAccess.Get(1)).Returns(new List<int> { 2019, 2021 });
 
             var result = await Handler().HandleAsync(new GetDataReturnsActiveComplianceYears(true));
 
             A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
             A.CallTo(() => dataAccess.Get()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => directProducerDataAccess.Get()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => directProducerDataAccess.Get(1)).MustHaveHappenedOnceExactly();
 
             Assert.Equal(new List<int> { 2021, 2020, 2019 }, result);
         }
@@ -60,7 +60,7 @@
         public async Task HandleAsync_ReturnsDistinctSortedYears()
         {
             A.CallTo(() => dataAccess.Get()).Returns(new List<int> { 2020, 2021, 2019 });
-            A.CallTo(() => directProducerDataAccess.Get()).Returns(new List<int> { 2019, 2021, 2022 });
+            A.CallTo(() => directProducerDataAccess.Get(1)).Returns(new List<int> { 2019, 2021, 2022 });
 
             var result = await Handler().HandleAsync(new GetDataReturnsActiveComplianceYears(true));
 
@@ -71,13 +71,13 @@
         public async Task HandleAsync_IncludeDirectRegistrantSubmissionsFalse_OnlyUsesDataAccess()
         {
             A.CallTo(() => dataAccess.Get()).Returns(new List<int> { 2020, 2021 });
-            A.CallTo(() => directProducerDataAccess.Get()).Returns(new List<int> { 2019, 2022 });
+            A.CallTo(() => directProducerDataAccess.Get(1)).Returns(new List<int> { 2019, 2022 });
 
             var result = await Handler().HandleAsync(new GetDataReturnsActiveComplianceYears(false));
 
             A.CallTo(() => authorization.EnsureCanAccessInternalArea()).MustHaveHappenedOnceExactly();
             A.CallTo(() => dataAccess.Get()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => directProducerDataAccess.Get()).MustNotHaveHappened();
+            A.CallTo(() => directProducerDataAccess.Get(1)).MustNotHaveHappened();
 
             Assert.Equal(new List<int> { 2021, 2020 }, result);
         }
