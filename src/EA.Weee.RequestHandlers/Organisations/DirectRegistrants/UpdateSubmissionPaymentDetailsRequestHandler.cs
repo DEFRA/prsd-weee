@@ -17,7 +17,7 @@
         private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
 
         public UpdateSubmissionPaymentDetailsRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, ISystemDataDataAccess systemDataDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess, ISmallProducerDataAccess smallProducerDataAccess) : base(authorization, genericDataAccess, systemDataAccess, smallProducerDataAccess)
         {
             this.weeeContext = weeeContext;
             this.paymentSessionDataAccess = paymentSessionDataAccess;
