@@ -77,7 +77,9 @@
 
                     var additionalCompanyDetails = CreateAdditionalCompanyDetails(organisationTransactionData);
 
-                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails);
+                    var producerRegistrationNumber = organisationTransactionData.OrganisationViewModel.ProducerRegistrationNumber;
+
+                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails, producerRegistrationNumber);
                     
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
