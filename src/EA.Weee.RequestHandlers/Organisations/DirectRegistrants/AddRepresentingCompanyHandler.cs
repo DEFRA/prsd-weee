@@ -17,14 +17,16 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
 
         public AddRepresentingCompanyHandler(IWeeeAuthorization authorization, 
             IGenericDataAccess genericDataAccess, 
-            WeeeContext weeeContext)
+            WeeeContext weeeContext, ISmallProducerDataAccess smallProducerDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
+            this.smallProducerDataAccess = smallProducerDataAccess;
         }
 
         public async Task<Guid> HandleAsync(AddRepresentingCompany request)
@@ -33,12 +35,7 @@
             authorization.EnsureOrganisationAccess(request.OrganisationId);
 
             var existingDirectRegistrant =
-                await weeeContext.DirectRegistrants.Include(directRegistrant1 => directRegistrant1.Organisation)
-                    .Include(directRegistrant2 => directRegistrant2.BrandName)
-                    .Include(directRegistrant3 => directRegistrant3.Contact)
-                    .Include(directRegistrant4 => directRegistrant4.Address)
-                    .Include(directRegistrant5 => directRegistrant5.AdditionalCompanyDetails).FirstOrDefaultAsync(d =>
-                    d.OrganisationId == request.OrganisationId);
+                await smallProducerDataAccess.GetDirectRegistrantByOrganisationId(request.OrganisationId);
 
             if (existingDirectRegistrant == null)
             {
@@ -50,11 +47,9 @@
 
             var directRegistrant = DirectRegistrant.CreateDirectRegistrant(existingDirectRegistrant.Organisation, existingDirectRegistrant.BrandName, existingDirectRegistrant.Contact, existingDirectRegistrant.Address, representingCompany, existingDirectRegistrant.AdditionalCompanyDetails.ToList());
 
-            await genericDataAccess.Add(directRegistrant);
+            var newRegistrant = await genericDataAccess.Add(directRegistrant);
 
-            await weeeContext.SaveChangesAsync();
-
-            return directRegistrant.Id;
+            return newRegistrant.Id;
         }
 
         private async Task<AuthorisedRepresentative> CreateRepresentingCompany(RepresentingCompanyDetailsViewModel representingCompanyDetails)
