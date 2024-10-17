@@ -123,6 +123,18 @@
             return View("Producer/ViewOrganisation/TotalEEEDetails", model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> AddPaymentDetails()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RemoveSubmission()
+        {
+            return View();
+        }
+
         private ActionResult RedirectToOrganisationHasNoSubmissions()
         {
             return RedirectToAction("OrganisationHasNoSubmissions");
