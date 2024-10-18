@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.DirectRegistrants
 {
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess;
@@ -28,15 +29,21 @@
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid paymentSessionId = Guid.NewGuid();
         private readonly Guid organisationId = Guid.NewGuid();
+        private readonly Guid userId = Guid.NewGuid();
         private readonly int year;
 
         private DirectProducerSubmission currentYearSubmission;
+
         public UpdateSubmissionPaymentDetailsRequestHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
+            var userContext = A.Fake<IUserContext>();
+
+            A.CallTo(() => userContext.UserId).Returns(userId);
+
             var systemDataAccess = A.Fake<ISystemDataDataAccess>();
             paymentSessionDataAccess = A.Fake<IPaymentSessionDataAccess>();
 
@@ -50,6 +57,7 @@
                 weeeContext,
                 systemDataAccess,
                 paymentSessionDataAccess,
+                userContext,
                 smallProducerDataAccess);
         }
 
@@ -124,6 +132,8 @@
 
             // Assert
             paymentSession.Status.Should().Be(request.PaymentStatus.ToDomainEnumeration<PaymentState>());
+            paymentSession.UpdatedAt.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(20));
+            paymentSession.UpdatedById.Should().Be(userId.ToString());
         }
 
         [Fact]
