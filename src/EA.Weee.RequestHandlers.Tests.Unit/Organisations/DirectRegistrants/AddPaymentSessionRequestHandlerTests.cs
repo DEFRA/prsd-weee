@@ -2,8 +2,6 @@
 {
     using AutoFixture;
     using EA.Prsd.Core;
-    using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Producer;
@@ -12,7 +10,6 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
-    using FluentAssertions;
     using Prsd.Core.Domain;
     using System;
     using System.Security;
@@ -23,6 +20,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly AddPaymentSessionRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
@@ -34,6 +32,7 @@
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
             var systemDataAccess = A.Fake<ISystemDataDataAccess>();
             var userContext = A.Fake<IUserContext>();
 
@@ -45,8 +44,8 @@
                 genericDataAccess,
                 weeeContext,
                 systemDataAccess,
-                systemDataAccess,
-                userContext);
+                userContext,
+                smallProducerDataAccess);
         }
 
         [Fact]
@@ -152,6 +151,10 @@
 
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns(currentYearSubmission);
 
             return directRegistrant;
         }

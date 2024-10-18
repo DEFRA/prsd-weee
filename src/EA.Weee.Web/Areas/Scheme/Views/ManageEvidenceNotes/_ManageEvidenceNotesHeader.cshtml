@@ -10,7 +10,7 @@
     ViewBag.Title = mainTitle + " - GOV.UK";
 }
 
-@(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
+@(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId, null))))
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">

@@ -1,6 +1,4 @@
-﻿@using EA.Weee.Core.DataStandards
-@using EA.Weee.Core.Organisations
-@using MvcNavigationHelpers
+﻿@using MvcNavigationHelpers
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
@@ -11,8 +9,8 @@
 @section full_main_content
 {
 
-    @this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.RepresentingCompanyRedirect()))
-    
+    @this.WeeeGds().BackLink(@Url.UrlFor<OrganisationController>(a => a.RepresentingCompanies(Model.OrganisationId)))
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>

@@ -45,6 +45,17 @@
         {
             return dbContext.DirectRegistrants.First(c => c.OrganisationId.Equals(organisationId));
         }
+        public DirectRegistrant GetDirectRegistrantById(Guid id)
+        {
+            return dbContext.DirectRegistrants.Where(c => c.Id.Equals(id))
+                .Include(d => d.Contact)
+                .Include(d => d.Address)
+                .Include(d => d.BrandName)
+                .Include(d => d.Organisation)
+                .Include(d => d.AdditionalCompanyDetails)
+                .Include(d => d.AuthorisedRepresentative.OverseasContact.Address)
+                .FirstOrDefault();
+        }
 
         public DirectProducerSubmission GetDirectProducerSubmissionById(Guid directSubmissionId)
         {

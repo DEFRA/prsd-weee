@@ -15,7 +15,7 @@
         private readonly WeeeContext weeeContext;
 
         public EditOrganisationDetailsRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataDataAccess) : base(authorization, genericDataAccess, systemDataDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataDataAccess, ISmallProducerDataAccess smallProducerDataAccess) : base(authorization, genericDataAccess, systemDataDataAccess, smallProducerDataAccess)
         {
             this.weeeContext = weeeContext;
         }

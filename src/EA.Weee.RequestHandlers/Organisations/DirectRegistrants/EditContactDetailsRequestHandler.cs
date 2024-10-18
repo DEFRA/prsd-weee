@@ -14,7 +14,7 @@
         private readonly WeeeContext weeeContext;
 
         public EditContactDetailsRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, ISmallProducerDataAccess smallProducerDataAccess) : base(authorization, genericDataAccess, systemDataAccess, smallProducerDataAccess)
         {
             this.weeeContext = weeeContext;
         }

@@ -11,21 +11,16 @@
 
     internal class EditRepresentedOrganisationDetailsRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<RepresentedOrganisationDetailsRequest, bool>
     {
-        private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
-        private readonly ISystemDataDataAccess systemDataAccess;
 
         public EditRepresentedOrganisationDetailsRequestHandler(
             IWeeeAuthorization authorization,
             IGenericDataAccess genericDataAccess,
             WeeeContext weeeContext, 
-            ISystemDataDataAccess systemDataAccess) : base(authorization, genericDataAccess, systemDataAccess)
+            ISystemDataDataAccess systemDataAccess,
+            ISmallProducerDataAccess smallProducerDataAccess) : base(authorization, genericDataAccess, systemDataAccess, smallProducerDataAccess)
         {
-            this.authorization = authorization;
-            this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
-            this.systemDataAccess = systemDataAccess;
         }
 
         public async Task<bool> HandleAsync(RepresentedOrganisationDetailsRequest request)

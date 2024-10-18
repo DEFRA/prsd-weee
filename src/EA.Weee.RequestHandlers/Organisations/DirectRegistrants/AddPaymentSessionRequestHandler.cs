@@ -17,7 +17,7 @@
         private readonly IUserContext userContext;
 
         public AddPaymentSessionRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, ISystemDataDataAccess systemDataDataAccess, IUserContext userContext) : base(authorization, genericDataAccess, systemDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IUserContext userContext, ISmallProducerDataAccess smallProducerDataAccess) : base(authorization, genericDataAccess, systemDataAccess, smallProducerDataAccess)
         {
             this.weeeContext = weeeContext;
             this.userContext = userContext;

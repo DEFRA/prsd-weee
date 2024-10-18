@@ -17,7 +17,7 @@
     var @title = hasYear ? "Producer registration submissions" : "View organisation details";
 }
 
-@(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
+@(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id, null))))
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">@title</h1>

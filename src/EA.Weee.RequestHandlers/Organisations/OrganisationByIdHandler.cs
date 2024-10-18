@@ -1,16 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using Core.Organisations;
-    using DataAccess;
-    using Domain.AatfReturn;
-    using Domain.Organisation;
-    using EA.Prsd.Core;
+    using EA.Prsd.Core.Mapper;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Organisations;
+    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.Producer;
-    using Prsd.Core.Mapper;
-    using Prsd.Core.Mediator;
-    using Requests.Organisations;
-    using Security;
+    using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Requests.Organisations;
     using System;
     using System.Data.Entity;
     using System.Linq;
@@ -23,10 +21,10 @@
         private readonly IMap<Organisation, OrganisationData> organisationMap;
         private readonly ISystemDataDataAccess systemDataDataAccess;
 
-        public OrganisationByIdHandler(IWeeeAuthorization authorization,
+        public OrganisationByIdHandler(
+            IWeeeAuthorization authorization,
             WeeeContext context,
-            IMap<Organisation, 
-            OrganisationData> organisationMap,
+            IMap<Organisation, OrganisationData> organisationMap,
             ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
@@ -39,7 +37,6 @@
         {
             authorization.EnsureInternalOrOrganisationAccess(query.OrganisationId);
 
-            // Need to materialize EF request before mapping (because mapping parses enums)
             var org = await context.Organisations
                 .SingleOrDefaultAsync(o => o.Id == query.OrganisationId);
 
@@ -50,20 +47,58 @@
 
             var organisationData = organisationMap.Map(org);
 
-            var schemes = await context.Schemes.SingleOrDefaultAsync(o => o.OrganisationId == query.OrganisationId);
+            await PopulateAdditionalData(organisationData, query.OrganisationId);
+
+            return organisationData;
+        }
+
+        private async Task PopulateAdditionalData(OrganisationData organisationData, Guid organisationId)
+        {
+            await SetSchemeId(organisationData, organisationId);
+            await SetFacilityInfo(organisationData, organisationId);
+            await SetIsRepresentingCompany(organisationData, organisationId);
+            await SetDirectRegistrants(organisationData, organisationId);
+        }
+
+        private async Task SetSchemeId(OrganisationData organisationData, Guid organisationId)
+        {
+            var schemes = await context.Schemes
+                .SingleOrDefaultAsync(o => o.OrganisationId == organisationId);
 
             if (schemes != null)
             {
                 organisationData.SchemeId = schemes.Id;
             }
+        }
 
-            organisationData.HasAatfs = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Aatf.Value);
-            organisationData.HasAes = await context.Aatfs.AnyAsync(o => o.Organisation.Id == query.OrganisationId && o.FacilityType.Value == (int)FacilityType.Ae.Value);
+        private async Task SetFacilityInfo(OrganisationData organisationData, Guid organisationId)
+        {
+            var facilities = await context.Aatfs
+                .Where(o => o.Organisation.Id == organisationId)
+                .Select(o => o.FacilityType.Value)
+                .Distinct()
+                .ToListAsync();
 
-            var directRegistrants = await context.DirectRegistrants.Where(o => o.OrganisationId == query.OrganisationId).ToListAsync();
+            organisationData.HasAatfs = facilities.Contains((int)FacilityType.Aatf.Value);
+            organisationData.HasAes = facilities.Contains((int)FacilityType.Ae.Value);
+        }
+
+        private async Task SetIsRepresentingCompany(OrganisationData organisationData, Guid organisationId)
+        {
+            organisationData.IsRepresentingCompany = await context.DirectRegistrants
+                .AnyAsync(d => d.AuthorisedRepresentativeId.HasValue);
+        }
+
+        private async Task SetDirectRegistrants(OrganisationData organisationData, Guid organisationId)
+        {
+            var directRegistrants = await context.DirectRegistrants
+                .Where(o => o.OrganisationId == organisationId)
+                .Include(directRegistrant => directRegistrant.DirectProducerSubmissions)
+                .Include(directRegistrant1 => directRegistrant1.AuthorisedRepresentative)
+                .ToListAsync();
 
             var systemTime = await systemDataDataAccess.GetSystemDateTime();
-            int currentYear = systemTime.Year;
+            var currentYear = systemTime.Year;
 
             foreach (var directRegistrant in directRegistrants)
             {
@@ -73,11 +108,10 @@
                 organisationData.DirectRegistrants.Add(new DirectRegistrantInfo
                 {
                     DirectRegistrantId = directRegistrant.Id,
-                    YearSubmissionStarted = yearSubmissionStarted
+                    YearSubmissionStarted = yearSubmissionStarted,
+                    RepresentedCompanyName = directRegistrant.AuthorisedRepresentativeId.HasValue ? directRegistrant.AuthorisedRepresentative.OverseasProducerName : null
                 });
             }
-
-            return organisationData;
         }
     }
 }

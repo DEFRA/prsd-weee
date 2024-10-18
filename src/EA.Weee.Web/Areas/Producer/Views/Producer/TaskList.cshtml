@@ -10,7 +10,7 @@
 }
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.OrganisationId, null))))
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>

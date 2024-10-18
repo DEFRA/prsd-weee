@@ -20,7 +20,7 @@
         private readonly IUserContext userContext;
 
         public UpdateSubmissionPaymentDetailsRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, ISystemDataDataAccess systemDataDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess, IUserContext userContext) : base(authorization, genericDataAccess, systemDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess, IUserContext userContext, ISmallProducerDataAccess smallProducerDataAccess) : base(authorization, genericDataAccess, systemDataAccess, smallProducerDataAccess)
         {
             this.weeeContext = weeeContext;
             this.paymentSessionDataAccess = paymentSessionDataAccess;

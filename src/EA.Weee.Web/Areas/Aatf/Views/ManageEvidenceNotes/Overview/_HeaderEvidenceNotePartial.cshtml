@@ -11,7 +11,7 @@
 
 @if (Model.SingleAatf)
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<HomeController>(a => a.ChooseActivity(Model.OrganisationId, null))))
 }
 else
 {
