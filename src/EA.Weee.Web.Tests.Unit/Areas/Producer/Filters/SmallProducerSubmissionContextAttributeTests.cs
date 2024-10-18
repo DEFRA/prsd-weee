@@ -10,6 +10,7 @@
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services.SubmissionService;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -29,6 +30,7 @@
         private readonly IWeeeClient fakeClient;
         private readonly ActionExecutingContext actionExecutingContext;
         private readonly SmallProducerSubmissionContextAttribute filter;
+        private readonly ISubmissionService submissionService;
 
         public SmallProducerSubmissionContextAttributeTests()
         {
@@ -40,11 +42,12 @@
             var mapper = A.Fake<IMapper>();
             var templateExecutor = A.Fake<IMvcTemplateExecutor>();
             var pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
+            submissionService = A.Fake<ISubmissionService>();
 
             actionExecutingContext = new ActionExecutingContext
             {
                 ActionParameters = new System.Web.Routing.RouteValueDictionary(),
-                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider),
+                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider, submissionService),
                 HttpContext = fakeHttpContext,
                 RouteData = new System.Web.Routing.RouteData()
             };

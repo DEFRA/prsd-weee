@@ -172,9 +172,9 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
 
-            var model = await serv.Submissions(year);
+            var model = await submissionService.Submissions(year);
 
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
@@ -188,9 +188,9 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
 
-            var model = await serv.OrganisationDetails(year);
+            var model = await submissionService.OrganisationDetails(year);
 
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
@@ -204,9 +204,9 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
 
-            var model = await serv.ContactDetails(year);
+            var model = await submissionService.ContactDetails(year);
             
             return View("Producer/ViewOrganisation/ContactDetails", model);
         }
@@ -220,9 +220,9 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
 
-            var model = await serv.ServiceOfNoticeDetails(year);
+            var model = await submissionService.ServiceOfNoticeDetails(year);
           
             return View("Producer/ViewOrganisation/ServiceOfNoticeDetails", model);
         }
@@ -236,9 +236,9 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
 
-            var model = await serv.RepresentedOrganisationDetails(year);
+            var model = await submissionService.RepresentedOrganisationDetails(year);
           
             return View("Producer/ViewOrganisation/RepresentedOrganisationDetails", model);
         }
@@ -252,9 +252,9 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
 
-            var model = await serv.TotalEEEDetails(year);
+            var model = await submissionService.TotalEEEDetails(year);
 
             return View("Producer/ViewOrganisation/TotalEEEDetails", model);
         }
