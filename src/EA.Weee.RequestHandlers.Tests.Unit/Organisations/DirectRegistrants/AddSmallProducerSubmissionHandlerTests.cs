@@ -25,6 +25,8 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly IGenerateFromXmlDataAccess generateFromXmlDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
+        private DirectProducerSubmission directProducerSubmission;
         private readonly AddSmallProducerSubmissionHandler handler;
 
         public AddSmallProducerSubmissionHandlerTests()
@@ -33,6 +35,7 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             generateFromXmlDataAccess = A.Fake<IGenerateFromXmlDataAccess>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
             var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(new DateTime(SystemTime.UtcNow.Year,
@@ -43,7 +46,8 @@
                 genericDataAccess,
                 weeeContext,
                 generateFromXmlDataAccess,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                smallProducerDataAccess);
         }
 
         [Fact]
@@ -194,6 +198,10 @@
 
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns<DirectProducerSubmission>(null);
 
             return directRegistrant;
         }
