@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.Api.Tests.Unit.Client
 {
-    using System;
-    using System.Net.Http;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading.Tasks;
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Client.Models;
     using EA.Weee.Api.Client.Serlializer;
     using FakeItEasy;
     using FluentAssertions;
     using Serilog;
+    using System;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class CompaniesHouseClientTests
@@ -18,6 +18,7 @@
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
         private readonly ILogger logger;
+        private readonly IOAuthTokenProvider tokenProvider;
         private readonly CompaniesHouseClient companiesHouseClient;
 
         public CompaniesHouseClientTests()
@@ -26,20 +27,21 @@
             retryPolicy = A.Fake<IRetryPolicyWrapper>();
             jsonSerializer = A.Fake<IJsonSerializer>();
             logger = A.Fake<ILogger>();
+            tokenProvider = A.Fake<IOAuthTokenProvider>();
 
-            var fakeHttpClientFactory = A.Fake<IHttpClientWrapperFactory>();
-            A.CallTo(() => fakeHttpClientFactory.CreateHttpClientWithCertificate(
-                A<string>._, A<HttpClientHandlerConfig>._, A<ILogger>._, A<X509Certificate2>._))
+            var httpClientFactory = A.Fake<IHttpClientWrapperFactory>();
+            A.CallTo(() => httpClientFactory.CreateHttpClient(
+                A<string>._, A<HttpClientHandlerConfig>._, A<ILogger>._))
                 .Returns(httpClient);
 
             companiesHouseClient = new CompaniesHouseClient(
                 "http://example.com",
-                fakeHttpClientFactory,
+                httpClientFactory,
                 retryPolicy,
                 jsonSerializer,
                 new HttpClientHandlerConfig(),
-                new X509Certificate2(),
-                logger);
+                logger,
+                tokenProvider);
         }
 
         [Fact]
@@ -48,13 +50,15 @@
             // Arrange
             const string endpoint = "api/companies";
             const string companyReference = "12345678";
-            var fakeHttpResponseMessage = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            const string token = "token";
+            var httpResponseMessage = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
             {
                 Content = new StringContent("{}")
             };
 
-            A.CallTo(() => httpClient.GetAsync(A<string>._))
-                .Returns(fakeHttpResponseMessage);
+            A.CallTo(() => tokenProvider.GetAccessTokenAsync()).Returns(token);
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._))
+                .Returns(httpResponseMessage);
 
             A.CallTo(() => retryPolicy.ExecuteAsync(A<Func<Task<HttpResponseMessage>>>._))
                 .ReturnsLazily(call =>
@@ -71,13 +75,16 @@
             var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
 
             // Assert
-            A.CallTo(() => httpClient.GetAsync(A<string>.That.Contains($"{endpoint}/{companyReference}")))
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>.That.Matches(
+                    r => r.RequestUri.ToString().Contains($"{endpoint}/{companyReference}") &&
+                         r.Headers.Authorization.Scheme == "Bearer" &&
+                         r.Headers.Authorization.Parameter == token), A<CancellationToken>._))
                 .MustHaveHappenedOnceExactly();
             result.Should().BeEquivalentTo(expectedResult);
         }
 
         [Fact]
-        public async Task GetCompanyDetailsAsync_WithInvalidCompanyReference_ShouldReturnNull()
+        public async Task GetCompanyDetailsAsync_WithInvalidCompanyReference_ShouldReturnError()
         {
             // Arrange
             const string endpoint = "api/companies";
@@ -87,20 +94,23 @@
             var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
 
             // Assert
-            result.Should().BeNull();
-            A.CallTo(() => httpClient.GetAsync(A<string>._)).MustNotHaveHappened();
+            result.InvalidReference.Should().BeTrue();
+            result.HasError.Should().BeTrue();
+            result.Error.Should().BeFalse();
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._)).MustNotHaveHappened();
         }
 
         [Fact]
-        public async Task GetCompanyDetailsAsync_WhenApiReturnsBadRequest_ShouldReturnNull()
+        public async Task GetCompanyDetailsAsync_WhenApiReturnsBadRequest_ShouldReturnHasError()
         {
             // Arrange
-            var endpoint = "api/companies";
-            var companyReference = "12345678";
-            var fakeHttpResponseMessage = new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+            const string endpoint = "api/companies";
+            const string companyReference = "12345678";
+            var httpResponseMessage = new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
 
-            A.CallTo(() => httpClient.GetAsync(A<string>._))
-                .Returns(fakeHttpResponseMessage);
+            A.CallTo(() => tokenProvider.GetAccessTokenAsync()).Returns("token");
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._))
+                .Returns(httpResponseMessage);
 
             A.CallTo(() => retryPolicy.ExecuteAsync(A<Func<Task<HttpResponseMessage>>>._))
                 .ReturnsLazily(call =>
@@ -113,7 +123,9 @@
             var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
 
             // Assert
-            result.Should().BeNull();
+            result.InvalidReference.Should().BeFalse();
+            result.HasError.Should().BeTrue();
+            result.Error.Should().BeTrue();
         }
 
         [Fact]
@@ -122,7 +134,47 @@
             // Act
             companiesHouseClient.Dispose();
 
+            // Assert
             companiesHouseClient.Invoking(c => c.Dispose()).Should().NotThrow();
+        }
+
+        [Fact]
+        public async Task GetCompanyDetailsAsync_WithInvalidCompanyReference_ShouldReturnModelWithInvalidReferenceTrue()
+        {
+            // Arrange
+            const string endpoint = "api/companies";
+            const string companyReference = "invalid123";
+
+            // Act
+            var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.InvalidReference.Should().BeTrue();
+            A.CallTo(() => logger.Warning("Not calling companies house API invalid reference")).MustHaveHappenedOnceExactly();
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetCompanyDetailsAsync_WhenApiThrowsBadRequestException_ShouldReturnModelWithErrorTrue()
+        {
+            // Arrange
+            const string endpoint = "api/companies";
+            const string companyReference = "12345678";
+            var badRequestException = new Exception("Companies house bad request");
+
+            A.CallTo(() => tokenProvider.GetAccessTokenAsync()).Returns("token");
+            A.CallTo(() => retryPolicy.ExecuteAsync(A<Func<Task<HttpResponseMessage>>>._))
+                .ThrowsAsync(badRequestException);
+
+            // Act
+            var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Error.Should().BeTrue();
+            A.CallTo(() => logger.Error(A<string>.That.Contains($"Error attempting to access companies house API for {companyReference}"),
+                badRequestException)).MustHaveHappenedOnceExactly();
         }
     }
 }

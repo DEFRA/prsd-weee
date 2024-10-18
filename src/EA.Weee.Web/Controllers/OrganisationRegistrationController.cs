@@ -364,7 +364,7 @@
 
                     ModelState.Clear();
 
-                    if (result == null)
+                    if (result.HasError)
                     {
                         model.LookupFound = false;
 
