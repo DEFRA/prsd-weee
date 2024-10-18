@@ -16,7 +16,7 @@
 
     public class SubmissionService : ISubmissionService
     {
-        public SmallProducerSubmissionData SmallProducerSubmissionData;
+        private SmallProducerSubmissionData smallProducerSubmissionData;
 
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache cache;
@@ -35,7 +35,7 @@
 
         public SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false)
         {
-            SmallProducerSubmissionData = data;
+            smallProducerSubmissionData = data;
             this.isInternal = isInternal;
 
             return this;
@@ -45,7 +45,7 @@
         {
             await SetTabsCrumb(year);
 
-            var years = YearsDropdownData(SmallProducerSubmissionData);
+            var years = YearsDropdownData(smallProducerSubmissionData);
 
             int? yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
 
@@ -56,9 +56,7 @@
         {
             var tabModel = await GetSubmissionTabModel(OrganisationDetailsDisplayOption.OrganisationDetails, year);
 
-            var organisationVM = MapDetailsSubmissionYearModel<OrganisationViewModel>(year);
-
-            tabModel.OrganisationViewModel = organisationVM;
+            tabModel.OrganisationViewModel = MapDetailsSubmissionYearModel<OrganisationViewModel>(year);
 
             return tabModel;
         }
@@ -67,9 +65,7 @@
         {
             var tabModel = await GetSubmissionTabModel(OrganisationDetailsDisplayOption.ContactDetails, year);
 
-            var vm = MapDetailsSubmissionYearModel<ContactDetailsViewModel>(year);
-
-            tabModel.ContactDetailsViewModel = vm;
+            tabModel.ContactDetailsViewModel = MapDetailsSubmissionYearModel<ContactDetailsViewModel>(year);
 
             return tabModel;
         }
@@ -78,9 +74,7 @@
         {
             var tabModel = await GetSubmissionTabModel(OrganisationDetailsDisplayOption.ServiceOfNoticeDetails, year);
 
-            var vm = MapDetailsSubmissionYearModel<ServiceOfNoticeViewModel>(year);
-
-            tabModel.ServiceOfNoticeViewModel = vm;
+            tabModel.ServiceOfNoticeViewModel = MapDetailsSubmissionYearModel<ServiceOfNoticeViewModel>(year);
 
             return tabModel;
         }
@@ -89,9 +83,7 @@
         {
             var tabModel = await GetSubmissionTabModel(OrganisationDetailsDisplayOption.RepresentedOrganisationDetails, year);
 
-            var vm = MapDetailsSubmissionYearModel<RepresentingCompanyDetailsViewModel>(year);
-
-            tabModel.RepresentingCompanyDetailsViewModel = vm;
+            tabModel.RepresentingCompanyDetailsViewModel = MapDetailsSubmissionYearModel<RepresentingCompanyDetailsViewModel>(year);
 
             return tabModel;
         }
@@ -100,9 +92,7 @@
         {
             var tabModel = await GetSubmissionTabModel(OrganisationDetailsDisplayOption.TotalEEEDetails, year);
 
-            var vm = MapDetailsSubmissionYearModel<EditEeeDataViewModel>(year);
-
-            tabModel.EditEeeDataViewModel = vm;
+            tabModel.EditEeeDataViewModel = MapDetailsSubmissionYearModel<EditEeeDataViewModel>(year);
 
             return tabModel;
         }
@@ -111,18 +101,14 @@
         {
             await SetTabsCrumb(year);
 
-            var years = YearsDropdownData(SmallProducerSubmissionData);
-
-            var vm = new OrganisationDetailsTabsViewModel
+            return new OrganisationDetailsTabsViewModel
             {
-                Years = years,
+                Years = YearsDropdownData(smallProducerSubmissionData),
                 Year = year,
                 ActiveOption = option,
-                SmallProducerSubmissionData = this.SmallProducerSubmissionData,
+                SmallProducerSubmissionData = this.smallProducerSubmissionData,
                 IsInternal = this.isInternal
             };
-
-            return vm;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -143,8 +129,8 @@
             }
         }
 
-        private Task SetViewBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
-        private Task SetHistoricBreadcrumb() => SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+        private Task SetViewBreadcrumb() => SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
+        private Task SetHistoricBreadcrumb() => SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
         private Task SetTabsCrumb(int? year = null) => year.HasValue ? SetHistoricBreadcrumb() : SetViewBreadcrumb();
 
@@ -169,7 +155,7 @@
                new SubmissionsYearDetails
                {
                    Year = year,
-                   SmallProducerSubmissionData = this.SmallProducerSubmissionData
+                   SmallProducerSubmissionData = this.smallProducerSubmissionData
                });
         }
     }
