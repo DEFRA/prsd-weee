@@ -193,6 +193,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RepresentingOrganisation(RepresentingCompanyDetailsViewModel model)
         {
             using (var client = apiClient())

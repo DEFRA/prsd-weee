@@ -146,7 +146,10 @@
             var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
             var currentYear = SystemTime.UtcNow.Year;
             var currentYearSubmission = new DirectProducerSubmission(directRegistrant, A.Fake<RegisteredProducer>(), currentYear);
-            directRegistrant.DirectProducerSubmissions.Add(currentYearSubmission);
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(A<Guid>._,
+                    SystemTime.UtcNow.Year)).Returns(currentYearSubmission);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(
