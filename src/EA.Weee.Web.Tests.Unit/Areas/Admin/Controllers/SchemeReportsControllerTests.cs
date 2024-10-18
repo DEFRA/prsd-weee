@@ -193,7 +193,7 @@
         public async Task GetProducerDetails_Always_PopulatesFiltersAndReturnsProducerDetailsView()
         {
             var years = new List<int>() { 2001, 2002 };
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>.That.Matches(g => g.IncludeDirectRegistrantSubmissions == true))).Returns(years);
 
             var authority1 = new UKCompetentAuthorityData()
             {
@@ -268,7 +268,7 @@
         public async Task PostProducerDetails_WithInvalidViewModel_ReturnsSchemeWeeeDataProducerDataViewModel()
         {
             var years = new List<int>() { 2001, 2002 };
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._)).Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>.That.Matches(g => g.IncludeDirectRegistrantSubmissions == true))).Returns(years);
 
             var authority1 = new UKCompetentAuthorityData()
             {
