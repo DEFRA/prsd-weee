@@ -897,7 +897,6 @@
                 if (!string.IsNullOrWhiteSpace(producerRegistrationNumber))
                 {
                     var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(producerRegistrationNumber));
-                    exists = false;
                     if (!exists)
                     {
                         ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
