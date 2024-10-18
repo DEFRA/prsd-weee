@@ -80,6 +80,11 @@
                     new UpdateSubmissionPaymentDetailsRequest(directRegistrantId, result.State.Status,
                         payment.PaymentSessionId, result.State.IsInFinalState()));
 
+                if (result.State.Finished && result.State.Status != PaymentStatus.Success)
+                {
+                    return null;
+                }
+
                 return result;
             }
         }
@@ -104,21 +109,21 @@
 
                 var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
 
-                await client.SendAsync(accessToken, new UpdateSubmissionPaymentDetailsRequest(payment.DirectRegistrantId, result.State.Status, payment.PaymentSessionId, result.State.IsInFinalState()));
-
-                if (result.State.Status == PaymentStatus.Success)
+                if (result != null)
                 {
+                    await client.SendAsync(accessToken,
+                        new UpdateSubmissionPaymentDetailsRequest(payment.DirectRegistrantId, result.State.Status,
+                            payment.PaymentSessionId, result.State.IsInFinalState()));
+
                     return new PaymentResult()
                     {
                         PaymentReference = payment.PaymentReference,
-                        DirectRegistrantId = payment.DirectRegistrantId
+                        DirectRegistrantId = payment.DirectRegistrantId,
+                        Status = result.State.Status,
                     };
                 }
 
-                return new PaymentResult()
-                {
-                    DirectRegistrantId = payment.DirectRegistrantId
-                };
+                return null;
             }
         }
 
