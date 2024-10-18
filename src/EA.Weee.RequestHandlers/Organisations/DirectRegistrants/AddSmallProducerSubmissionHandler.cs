@@ -18,17 +18,19 @@
         private readonly WeeeContext weeeContext;
         private readonly IGenerateFromXmlDataAccess generateFromXmlDataAccess;
         private readonly ISystemDataDataAccess systemDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
 
         public AddSmallProducerSubmissionHandler(IWeeeAuthorization authorization, 
             IGenericDataAccess genericDataAccess, 
             WeeeContext weeeContext, 
-            IGenerateFromXmlDataAccess generateFromXmlDataAccess, ISystemDataDataAccess systemDataAccess)
+            IGenerateFromXmlDataAccess generateFromXmlDataAccess, ISystemDataDataAccess systemDataAccess, ISmallProducerDataAccess smallProducerDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
             this.generateFromXmlDataAccess = generateFromXmlDataAccess;
             this.systemDataAccess = systemDataAccess;
+            this.smallProducerDataAccess = smallProducerDataAccess;
         }
 
         public async Task<Guid> HandleAsync(AddSmallProducerSubmission request)
@@ -42,9 +44,9 @@
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
             var currentYearSubmission =
-                directRegistrant.DirectProducerSubmissions.Where(d => d.ComplianceYear == systemDateTime.Year);
+                await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(request.DirectRegistrantId, systemDateTime.Year);
 
-            if (currentYearSubmission.Any())
+            if (currentYearSubmission != null)
             {
                 throw new InvalidOperationException($"Producer submission for compliance year {systemDateTime.Year} already exists");
             }
