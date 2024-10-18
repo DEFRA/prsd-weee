@@ -73,9 +73,12 @@
                 labelTag.Attributes.Add("id",
                     $"{htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName)}-label");
             }
-            
-            labelTag.Attributes.Add("for",
-                htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+
+            if (!labelTag.Attributes.ContainsKey("for"))
+            {
+                labelTag.Attributes.Add("for",
+               htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+            }
 
             labelTag.InnerHtml = labelText + " " + appendOptional;
 

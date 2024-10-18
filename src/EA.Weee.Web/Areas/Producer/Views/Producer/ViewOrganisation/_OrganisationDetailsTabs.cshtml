@@ -28,7 +28,7 @@
     using (Html.BeginForm(ViewContext.RouteData.Values["action"].ToString(), typeof(ProducerController).GetControllerName(), FormMethod.Get))
     {
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Year)">
-            @Html.Gds().LabelFor(m => m.Year, new { @class = "govuk-label--m" })
+            @Html.Gds().LabelFor(m => m.Year, new { @class = "govuk-label--m", @for = "year-dropdown" })
             @Html.Gds().ValidationMessageFor(m => m.Year)
             @Html.Gds().DropDownListFor(m => m.Year, new SelectList(Model.Years), new { id = "year-dropdown" }, useHalfWidth: false, withLookAhead: false)
         </div>

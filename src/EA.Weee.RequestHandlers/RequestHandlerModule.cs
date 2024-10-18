@@ -8,13 +8,13 @@
     using Charges.IssuePendingCharges;
     using Charges.IssuePendingCharges.Errors;
     using Core.Shared.CsvReading;
+    using EA.Weee.RequestHandlers.Shared;
     using Email;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
     using Scheme.MemberUploadTesting;
     using Shared.DomainUser;
-
     public class RequestHandlerModule : Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -92,6 +92,7 @@
             builder.RegisterType<ObligationCsvReader>().As<IObligationCsvReader>();
             builder.RegisterType<ObligationUploadValidator>().As<IObligationUploadValidator>();
             builder.RegisterType<EvidenceReportsAuthenticationCheck>().As<IEvidenceReportsAuthenticationCheck>();
+            builder.RegisterType<SmallProducerSubmissionService>().As<ISmallProducerSubmissionService>();
         }
     }
 }

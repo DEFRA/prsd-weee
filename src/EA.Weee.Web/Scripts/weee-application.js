@@ -377,18 +377,23 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
 })(jQuery);
 
 
-function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl) {
+function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl, additionalData = {}) {
     var searchTerm = '';
     $("#SearchTerm")
         .focus(function () { searchTerm = $(this).val(); })
         .blur(function () { if (searchTerm != $(this).val()) { selectedValueControl.val(""); } })
         .autocomplete({
             source: function (request, response) {
+                var data = {
+                    SearchTerm: request.term,
+                    __RequestVerificationToken: $("[name=__RequestVerificationToken]").val(),
+                    ...additionalData  // Spread the additional data here
+                };
                 $.ajax({
                     type: "POST",
                     url: searchUrl,
                     context: document.body,
-                    data: { SearchTerm: request.term, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                    data: data,
                     success: (data) => {
                         var data = $.map(data, mapFunction);
                         response(data);
