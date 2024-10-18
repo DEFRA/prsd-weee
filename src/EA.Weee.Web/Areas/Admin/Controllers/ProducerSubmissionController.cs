@@ -49,9 +49,9 @@
         [HttpGet]
         public async Task<ActionResult> Submissions(string registrationNumber, int? year = null)
         {
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
 
-            var model = await serv.Submissions(year);
+            var model = await submissionService.Submissions(year);
 
             model.RegistrationNumber = registrationNumber;
 
@@ -62,9 +62,9 @@
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails(string registrationNumber, int? year = null)
         {
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
 
-            var model = await serv.OrganisationDetails(year);
+            var model = await submissionService.OrganisationDetails(year);
 
             model.RegistrationNumber = registrationNumber;
 
@@ -75,9 +75,9 @@
         [HttpGet]
         public async Task<ActionResult> ContactDetails(string registrationNumber, int? year = null)
         {
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
 
-            var model = await serv.ContactDetails(year);
+            var model = await submissionService.ContactDetails(year);
 
             model.RegistrationNumber = registrationNumber;
 
@@ -88,9 +88,9 @@
         [HttpGet]
         public async Task<ActionResult> ServiceOfNoticeDetails(string registrationNumber, int? year = null)
         {
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
 
-            var model = await serv.ServiceOfNoticeDetails(year);
+            var model = await submissionService.ServiceOfNoticeDetails(year);
 
             model.RegistrationNumber = registrationNumber;
 
@@ -101,9 +101,9 @@
         [HttpGet]
         public async Task<ActionResult> RepresentedOrganisationDetails(string registrationNumber, int? year = null)
         {
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
 
-            var model = await serv.RepresentedOrganisationDetails(year);
+            var model = await submissionService.RepresentedOrganisationDetails(year);
 
             model.RegistrationNumber = registrationNumber;
 
@@ -114,9 +114,9 @@
         [HttpGet]
         public async Task<ActionResult> TotalEEEDetails(string registrationNumber, int? year = null)
         {
-            var serv = submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
 
-            var model = await serv.TotalEEEDetails(year);
+            var model = await submissionService.TotalEEEDetails(year);
 
             model.RegistrationNumber = registrationNumber;
 
