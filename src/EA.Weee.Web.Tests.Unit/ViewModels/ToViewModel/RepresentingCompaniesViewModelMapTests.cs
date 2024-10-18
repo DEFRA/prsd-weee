@@ -1,13 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.ViewModels.ToViewModel
 {
-    using System;
-    using System.Collections.Generic;
     using AutoFixture;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.ViewModels.Organisation.Mapping.ToViewModel;
     using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class RepresentingCompaniesViewModelMapTests : SimpleUnitTestBase
@@ -74,8 +75,10 @@
                     new DirectRegistrantInfo { DirectRegistrantId = Guid.NewGuid(), RepresentedCompanyName = null }
                 };
 
+            var organisationUsers = TestFixture.CreateMany<OrganisationUserData>().ToList();
+
             var source =
-                new RepresentingCompaniesViewModelMapSource(new List<OrganisationUserData>(), new OrganisationData()
+                new RepresentingCompaniesViewModelMapSource(organisationUsers, new OrganisationData()
                 {
                     DirectRegistrants = directRegistrants
                 });
